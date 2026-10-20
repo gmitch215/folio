@@ -1,0 +1,222 @@
+{
+  "name": "cfw-folio-6f050255",
+  "invocationsObserved": 48,
+  "laneEvents": 38,
+  "summary": {
+    "ordinaryByteRpcExact": true,
+    "rpcDistinctIsolates": true,
+    "localSabCloneAlias": true,
+    "localChannelSabAlias": false,
+    "bundledAtomicExact": true,
+    "sharedRpc": {
+      "sab": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "sharedMemory": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "ordinaryMemory": {
+        "ok": false,
+        "error": {
+          "name": "DataCloneError",
+          "message": "#<Memory> could not be cloned."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "returnSab": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        }
+      },
+      "returnSharedMemory": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        }
+      },
+      "rpcMessagePort": {
+        "ok": false,
+        "error": {
+          "name": "DataCloneError",
+          "message": "Could not serialize object of type \"MessagePort\". This type does not support serialization."
+        }
+      }
+    },
+    "invocationsUpperBound": 57,
+    "cpu": [
+      {
+        "lanes": 1,
+        "n": 2,
+        "medianWallMs": 122.5,
+        "minWallMs": 122,
+        "maxWallMs": 123,
+        "pairedSpeedups": [
+          1,
+          1
+        ],
+        "distinctIsolates": [
+          1,
+          1
+        ]
+      },
+      {
+        "lanes": 2,
+        "n": 2,
+        "medianWallMs": 67.5,
+        "minWallMs": 67,
+        "maxWallMs": 68,
+        "pairedSpeedups": [
+          1.8088235294117647,
+          1.8208955223880596
+        ],
+        "distinctIsolates": [
+          2,
+          2
+        ]
+      },
+      {
+        "lanes": 4,
+        "n": 2,
+        "medianWallMs": 45,
+        "minWallMs": 39,
+        "maxWallMs": 51,
+        "pairedSpeedups": [
+          2.411764705882353,
+          3.128205128205128
+        ],
+        "distinctIsolates": [
+          4,
+          4
+        ]
+      },
+      {
+        "lanes": 8,
+        "n": 2,
+        "medianWallMs": 32.5,
+        "minWallMs": 31,
+        "maxWallMs": 34,
+        "pairedSpeedups": [
+          3.967741935483871,
+          3.588235294117647
+        ],
+        "distinctIsolates": [
+          8,
+          8
+        ]
+      }
+    ],
+    "coResidentObjects": []
+  },
+  "rows": [
+    {
+      "lanes": 8,
+      "round": 1,
+      "wallMs": 31,
+      "cpuMs": 127,
+      "observedLaneEvents": 8,
+      "completeTelemetry": true,
+      "cpuPerWall": 4.096774193548387,
+      "conservativeCpuOverlap": 3.71875,
+      "isolateCount": 8,
+      "exact": true
+    },
+    {
+      "lanes": 4,
+      "round": 1,
+      "wallMs": 51,
+      "cpuMs": 131,
+      "observedLaneEvents": 4,
+      "completeTelemetry": true,
+      "cpuPerWall": 2.5686274509803924,
+      "conservativeCpuOverlap": 2.4423076923076925,
+      "isolateCount": 4,
+      "exact": true
+    },
+    {
+      "lanes": 2,
+      "round": 1,
+      "wallMs": 68,
+      "cpuMs": 59,
+      "observedLaneEvents": 1,
+      "completeTelemetry": false,
+      "cpuPerWall": 0.8676470588235294,
+      "conservativeCpuOverlap": 0.8405797101449275,
+      "isolateCount": 2,
+      "exact": true
+    },
+    {
+      "lanes": 1,
+      "round": 1,
+      "wallMs": 123,
+      "cpuMs": 117,
+      "observedLaneEvents": 1,
+      "completeTelemetry": true,
+      "cpuPerWall": 0.9512195121951219,
+      "conservativeCpuOverlap": 0.9354838709677419,
+      "isolateCount": 1,
+      "exact": true
+    },
+    {
+      "lanes": 1,
+      "round": 2,
+      "wallMs": 122,
+      "cpuMs": 116,
+      "observedLaneEvents": 1,
+      "completeTelemetry": true,
+      "cpuPerWall": 0.9508196721311475,
+      "conservativeCpuOverlap": 0.9349593495934959,
+      "isolateCount": 1,
+      "exact": true
+    },
+    {
+      "lanes": 2,
+      "round": 2,
+      "wallMs": 67,
+      "cpuMs": 0,
+      "observedLaneEvents": 0,
+      "completeTelemetry": false,
+      "cpuPerWall": 0,
+      "conservativeCpuOverlap": 0,
+      "isolateCount": 2,
+      "exact": true
+    },
+    {
+      "lanes": 4,
+      "round": 2,
+      "wallMs": 39,
+      "cpuMs": 59,
+      "observedLaneEvents": 2,
+      "completeTelemetry": false,
+      "cpuPerWall": 1.5128205128205128,
+      "conservativeCpuOverlap": 1.425,
+      "isolateCount": 4,
+      "exact": true
+    },
+    {
+      "lanes": 8,
+      "round": 2,
+      "wallMs": 34,
+      "cpuMs": 93,
+      "observedLaneEvents": 6,
+      "completeTelemetry": false,
+      "cpuPerWall": 2.735294117647059,
+      "conservativeCpuOverlap": 2.4857142857142858,
+      "isolateCount": 8,
+      "exact": true
+    }
+  ],
+  "baselineRestored": true
+}

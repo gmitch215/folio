@@ -1,0 +1,1496 @@
+{
+  "raw": {
+    "collectedAt": "2026-10-20T02:08:53.059Z",
+    "origin": "http://folio.local",
+    "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+    "capabilities": {
+      "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+      "objectId": null,
+      "moduleObjects": [],
+      "worker": "undefined",
+      "navigatorConcurrency": 1,
+      "sharedBuffer": {
+        "ok": true,
+        "value": 16
+      },
+      "sharedMemory": {
+        "ok": true,
+        "value": true
+      },
+      "cloneBytes": {
+        "ok": true,
+        "value": {
+          "cloneType": "[object ArrayBuffer]",
+          "separateWrapper": true,
+          "forwardVisible": false,
+          "reverseVisible": false
+        }
+      },
+      "cloneSab": {
+        "ok": true,
+        "value": {
+          "cloneType": "[object SharedArrayBuffer]",
+          "separateWrapper": true,
+          "forwardVisible": true,
+          "reverseVisible": true
+        }
+      },
+      "cloneMemory": {
+        "ok": true,
+        "value": {
+          "cloneType": "[object WebAssembly.Memory]",
+          "separateWrapper": true,
+          "forwardVisible": true,
+          "reverseVisible": true
+        }
+      },
+      "localChannelSab": {
+        "ok": false,
+        "error": {
+          "name": "TypeError",
+          "message": "SharedArrayBuffer is unsupported with MessagePort"
+        }
+      },
+      "bundledWasmAtomics": {
+        "ok": true,
+        "value": {
+          "before": 17,
+          "after": 29,
+          "valid": true
+        }
+      },
+      "atomicsWait": {
+        "ok": false,
+        "error": {
+          "name": "TypeError",
+          "message": "Atomics.wait cannot be called in this context"
+        }
+      },
+      "nodeWorkerThreads": {
+        "isMainThread": true,
+        "threadId": 0,
+        "worker": {
+          "ok": false,
+          "error": {
+            "name": "Error",
+            "message": "The Worker method is not implemented"
+          }
+        },
+        "broadcastChannel": {
+          "ok": false,
+          "error": {
+            "name": "Error",
+            "message": "The BroadcastChannel method is not implemented"
+          }
+        }
+      }
+    },
+    "rpc": {
+      "caller": {
+        "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+        "objectId": null,
+        "moduleObjects": []
+      },
+      "callee": {
+        "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+        "objectId": "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+        "moduleObjects": [
+          "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d"
+        ]
+      },
+      "distinctIsolates": false,
+      "bytes": {
+        "ok": true,
+        "value": {
+          "sourceAfter": 17,
+          "remoteBefore": 17,
+          "remoteAfter": 29,
+          "echoedAfter": 29,
+          "callerUnaffected": true,
+          "remote": {
+            "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+            "objectId": "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d"
+          }
+        }
+      },
+      "sab": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "sharedMemory": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "ordinaryMemory": {
+        "ok": false,
+        "error": {
+          "name": "DataCloneError",
+          "message": "#<Memory> could not be cloned."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "returnSab": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        }
+      },
+      "returnSharedMemory": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        }
+      },
+      "rpcMessagePort": {
+        "ok": false,
+        "error": {
+          "name": "DataCloneError",
+          "message": "Could not serialize object of type \"MessagePort\". This type does not support serialization."
+        }
+      },
+      "rpcInvocationsUpperBound": 8
+    },
+    "cpu": {
+      "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+      "objectId": "8d3f6dd2da9e6f0cf108a8190ea1995420d4a8e0f8539af8a0150ef891971cf8",
+      "moduleObjects": [
+        "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+        "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+        "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+        "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+        "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+        "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+        "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+        "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+        "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+      ],
+      "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+      "count": 1024,
+      "rounds": 3,
+      "expected": 3494971828,
+      "exact": true,
+      "laneInvocations": 45,
+      "rows": [
+        {
+          "lanes": 1,
+          "round": 0,
+          "phase": "warmup",
+          "wallMs": 4,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 1,
+              "round": 0,
+              "phase": "warmup",
+              "start": 0,
+              "count": 1024,
+              "rounds": 3,
+              "checksum": 3494971828,
+              "modulePreviousObject": null
+            }
+          ]
+        },
+        {
+          "lanes": 2,
+          "round": 0,
+          "phase": "warmup",
+          "wallMs": 1,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 2,
+              "round": 0,
+              "phase": "warmup",
+              "start": 0,
+              "count": 512,
+              "rounds": 3,
+              "checksum": 1740104890,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 2,
+              "round": 0,
+              "phase": "warmup",
+              "start": 512,
+              "count": 512,
+              "rounds": 3,
+              "checksum": 1754866938,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            }
+          ]
+        },
+        {
+          "lanes": 4,
+          "round": 0,
+          "phase": "warmup",
+          "wallMs": 4,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 0,
+              "phase": "warmup",
+              "start": 0,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 3012778267,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 0,
+              "phase": "warmup",
+              "start": 256,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 3022293919,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 0,
+              "phase": "warmup",
+              "start": 512,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 347451735,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 0,
+              "phase": "warmup",
+              "start": 768,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 1407415203,
+              "modulePreviousObject": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6"
+            }
+          ]
+        },
+        {
+          "lanes": 8,
+          "round": 0,
+          "phase": "warmup",
+          "wallMs": 4,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 0,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 164953195,
+              "modulePreviousObject": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 128,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2847825072,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 256,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2321967279,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 384,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 700326640,
+              "modulePreviousObject": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 512,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 3128167847,
+              "modulePreviousObject": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 640,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 1514251184,
+              "modulePreviousObject": "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 768,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2040633779,
+              "modulePreviousObject": "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 0,
+              "phase": "warmup",
+              "start": 896,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 3661748720,
+              "modulePreviousObject": "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f"
+            }
+          ]
+        },
+        {
+          "lanes": 8,
+          "round": 1,
+          "phase": "measure",
+          "wallMs": 3,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 0,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 164953195,
+              "modulePreviousObject": "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 128,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2847825072,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 256,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2321967279,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 384,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 700326640,
+              "modulePreviousObject": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 512,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 3128167847,
+              "modulePreviousObject": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 640,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 1514251184,
+              "modulePreviousObject": "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 768,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2040633779,
+              "modulePreviousObject": "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 1,
+              "phase": "measure",
+              "start": 896,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 3661748720,
+              "modulePreviousObject": "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f"
+            }
+          ]
+        },
+        {
+          "lanes": 4,
+          "round": 1,
+          "phase": "measure",
+          "wallMs": 0,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 1,
+              "phase": "measure",
+              "start": 0,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 3012778267,
+              "modulePreviousObject": "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 1,
+              "phase": "measure",
+              "start": 256,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 3022293919,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 1,
+              "phase": "measure",
+              "start": 512,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 347451735,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 1,
+              "phase": "measure",
+              "start": 768,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 1407415203,
+              "modulePreviousObject": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6"
+            }
+          ]
+        },
+        {
+          "lanes": 2,
+          "round": 1,
+          "phase": "measure",
+          "wallMs": 0,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 2,
+              "round": 1,
+              "phase": "measure",
+              "start": 0,
+              "count": 512,
+              "rounds": 3,
+              "checksum": 1740104890,
+              "modulePreviousObject": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 2,
+              "round": 1,
+              "phase": "measure",
+              "start": 512,
+              "count": 512,
+              "rounds": 3,
+              "checksum": 1754866938,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            }
+          ]
+        },
+        {
+          "lanes": 1,
+          "round": 1,
+          "phase": "measure",
+          "wallMs": 0,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 1,
+              "round": 1,
+              "phase": "measure",
+              "start": 0,
+              "count": 1024,
+              "rounds": 3,
+              "checksum": 3494971828,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            }
+          ]
+        },
+        {
+          "lanes": 1,
+          "round": 2,
+          "phase": "measure",
+          "wallMs": 0,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 1,
+              "round": 2,
+              "phase": "measure",
+              "start": 0,
+              "count": 1024,
+              "rounds": 3,
+              "checksum": 3494971828,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            }
+          ]
+        },
+        {
+          "lanes": 2,
+          "round": 2,
+          "phase": "measure",
+          "wallMs": 0,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 2,
+              "round": 2,
+              "phase": "measure",
+              "start": 0,
+              "count": 512,
+              "rounds": 3,
+              "checksum": 1740104890,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 2,
+              "round": 2,
+              "phase": "measure",
+              "start": 512,
+              "count": 512,
+              "rounds": 3,
+              "checksum": 1754866938,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            }
+          ]
+        },
+        {
+          "lanes": 4,
+          "round": 2,
+          "phase": "measure",
+          "wallMs": 1,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 2,
+              "phase": "measure",
+              "start": 0,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 3012778267,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 2,
+              "phase": "measure",
+              "start": 256,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 3022293919,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 2,
+              "phase": "measure",
+              "start": 512,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 347451735,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 4,
+              "round": 2,
+              "phase": "measure",
+              "start": 768,
+              "count": 256,
+              "rounds": 3,
+              "checksum": 1407415203,
+              "modulePreviousObject": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6"
+            }
+          ]
+        },
+        {
+          "lanes": 8,
+          "round": 2,
+          "phase": "measure",
+          "wallMs": 0,
+          "checksum": 3494971828,
+          "exact": true,
+          "distinctIsolates": 1,
+          "parts": [
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 0,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 164953195,
+              "modulePreviousObject": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 128,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2847825072,
+              "modulePreviousObject": "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 256,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2321967279,
+              "modulePreviousObject": "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 384,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 700326640,
+              "modulePreviousObject": "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 512,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 3128167847,
+              "modulePreviousObject": "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 640,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 1514251184,
+              "modulePreviousObject": "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 768,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 2040633779,
+              "modulePreviousObject": "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d"
+            },
+            {
+              "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+              "objectId": "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53",
+              "moduleObjects": [
+                "b7cc3791f9da121a17868562784f8b57005d8d14af529a7ec2888bcb76272e5d",
+                "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+                "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+                "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+                "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+                "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+                "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+                "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+                "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+              ],
+              "nonce": "folio-586ac200-5bd9-4eee-bb35-dbd48d8695ff",
+              "lanes": 8,
+              "round": 2,
+              "phase": "measure",
+              "start": 896,
+              "count": 128,
+              "rounds": 3,
+              "checksum": 3661748720,
+              "modulePreviousObject": "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "summary": {
+    "ordinaryByteRpcExact": true,
+    "rpcDistinctIsolates": false,
+    "localSabCloneAlias": true,
+    "localChannelSabAlias": false,
+    "bundledAtomicExact": true,
+    "sharedRpc": {
+      "sab": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "sharedMemory": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "ordinaryMemory": {
+        "ok": false,
+        "error": {
+          "name": "DataCloneError",
+          "message": "#<Memory> could not be cloned."
+        },
+        "sourceAfterAttempt": 17
+      },
+      "returnSab": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        }
+      },
+      "returnSharedMemory": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Unable to deserialize cloned data."
+        }
+      },
+      "rpcMessagePort": {
+        "ok": false,
+        "error": {
+          "name": "DataCloneError",
+          "message": "Could not serialize object of type \"MessagePort\". This type does not support serialization."
+        }
+      }
+    },
+    "invocationsUpperBound": 57,
+    "cpu": [
+      {
+        "lanes": 1,
+        "n": 2,
+        "medianWallMs": 0,
+        "minWallMs": 0,
+        "maxWallMs": 0,
+        "pairedSpeedups": [
+          null,
+          null
+        ],
+        "distinctIsolates": [
+          1,
+          1
+        ]
+      },
+      {
+        "lanes": 2,
+        "n": 2,
+        "medianWallMs": 0,
+        "minWallMs": 0,
+        "maxWallMs": 0,
+        "pairedSpeedups": [
+          null,
+          null
+        ],
+        "distinctIsolates": [
+          1,
+          1
+        ]
+      },
+      {
+        "lanes": 4,
+        "n": 2,
+        "medianWallMs": 0.5,
+        "minWallMs": 0,
+        "maxWallMs": 1,
+        "pairedSpeedups": [
+          null,
+          0
+        ],
+        "distinctIsolates": [
+          1,
+          1
+        ]
+      },
+      {
+        "lanes": 8,
+        "n": 2,
+        "medianWallMs": 1.5,
+        "minWallMs": 0,
+        "maxWallMs": 3,
+        "pairedSpeedups": [
+          0,
+          null
+        ],
+        "distinctIsolates": [
+          1,
+          1
+        ]
+      }
+    ],
+    "coResidentObjects": [
+      {
+        "isolateId": "320e831b-b439-4482-a78e-0becb3e1e9e9",
+        "objectIds": [
+          "ca17ca4d351602ba6e6a11116a455e3b4e566daa9a8f02e5c08d2c6cb4656866",
+          "21a68e1a2aba1c8cc6798dc6855fd2dafbb6b485a3ca0b21868d3e250ac378f2",
+          "f2b4de250aad7b426cb0461483aa484f1628905d39a452b0debbb3138ba4b4e6",
+          "c3265918cb9db78a3623b406aa4fd876d014b29ce34fad9fca82b30efbf2dc82",
+          "d216a3fa68939c034b5a3d1a99b9936d4e127bce92eb37a8db3c52971ef4e086",
+          "2cd7ccc64812f99e5e303a8ed18ac7e65d30c21cf302cfbcccd4279b4bb8ea0d",
+          "d5218477fa93b762465eba574494ed8abf36e9c3c0e47ca173495906e7c4109f",
+          "ee3e15124613c43059101523a6a82f22431531f55f89b2e0934a62ea2e7cac53"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "collectedAt": "2026-10-20T03:01:53.484Z",
+  "runtime": {
+    "node": "v26.8.2",
+    "miniflare": "5.20260815.0-alpha"
+  },
+  "mechanism": "stock-workerd service binding -> authenticated Node execution host -> shared Folio isolates",
+  "boundary": "edge-to-host payloads are serialized; physical shared backing is within the Node execution host",
+  "input": {
+    "count": 4097,
+    "rounds": 64,
+    "activeBytes": 16388,
+    "checkedBytes": 131072
+  },
+  "assertions": {
+    "exactWholeMemory": true,
+    "bigintExact": true,
+    "voidResultExact": true,
+    "portableClientHasNoNodeImports": true,
+    "portableClientDoesNotCompileWasm": true
+  },
+  "report": {
+    "mode": "native-shared",
+    "workers": 4,
+    "regions": 4,
+    "replayed": 0,
+    "fallbacks": 0,
+    "voidResultExact": true
+  },
+  "threadIds": [
+    2,
+    3,
+    4,
+    1
+  ],
+  "distinctThreads": 4,
+  "hostRequests": 8,
+  "createdGroups": 2,
+  "disposedGroups": 2,
+  "wallMs": 368.9419159999999,
+  "cleanup": {
+    "activeGroups": 0,
+    "joined": true,
+    "miniflareDisposed": true
+  }
+}

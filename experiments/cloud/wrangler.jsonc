@@ -1,0 +1,15 @@
+{
+	"name": "cfw-folio-capability-probe",
+	"main": "worker.ts",
+	"compatibility_date": "2026-10-19",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": true,
+	"durable_objects": {
+		"bindings": [
+			{ "name": "LANES", "class_name": "Lane" },
+			{ "name": "COORDINATORS", "class_name": "Coordinator" }
+		]
+	},
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["Lane", "Coordinator"] }],
+	"observability": { "enabled": true, "head_sampling_rate": 1 }
+}
