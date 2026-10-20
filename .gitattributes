@@ -1,0 +1,11 @@
+* text eol=lf
+*.png binary
+*.jpg binary
+*.wasm binary
+*.tar binary
+*.gz binary
+results/** linguist-generated
+experiments/**/results-*.json linguist-generated
+
+tests/ export-ignore
+.github/ export-ignore
