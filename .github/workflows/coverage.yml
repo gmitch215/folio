@@ -1,0 +1,68 @@
+name: Check Test Coverage
+
+on:
+  push:
+    branches: [master, ver/*, feat/*, renovate/*]
+  pull_request:
+    branches: [master, ver/*, feat/*, renovate/*]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  coverage:
+    name: Gate Suite Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 'latest'
+      - name: Set up Node with JSPI
+        uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+      - name: Install clang and lld
+        run: sudo apt-get install -y clang lld
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+      - name: Build the Experiment Artifacts
+        run: bun run build:c && bun run build:experiments
+      - name: Run the Suites with Coverage
+        run: bun run test:report
+      - name: Upload Coverage to Codecov
+        if: success() || failure()
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: gmitch215/folio
+          fail_ci_if_error: false
+          report_type: coverage
+          flags: unit,integration
+          files: coverage/clover.xml
+      - name: Upload Test Results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: gmitch215/folio
+          fail_ci_if_error: false
+          report_type: test_results
+          flags: unit,integration
+          files: test-report.junit.xml
+      - name: Archive Coverage
+        if: success() || failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 30

@@ -1,0 +1,64 @@
+name: Report a Bug
+description: Report a Bug.
+labels: ['unconfirmed bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug. Please fill out the information below.
+  - type: dropdown
+    attributes:
+      label: Area
+      description: Which part of Folio is affected?
+      multiple: true
+      options:
+        - Compiler or region extraction
+        - Ordered validation or replay
+        - Native guards
+        - Execution host or remote client
+        - Managed backend
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Library Version
+      description: What version of the library are you using?
+      placeholder: |
+        Ex: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Runtime
+      description: Node or workerd version, and whether WebAssembly JSPI is available.
+      placeholder: |
+        Ex: "Node 26.10.0"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description
+      placeholder: |
+        Ex: "A run returns a different memory image than native execution"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: What you expect the library to do.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual Behavior
+      description: What does the library do? Include the report from `run()` and any error messages.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: A minimal Wasm module or C source that reproduces the difference helps most.
+    validations:
+      required: false
