@@ -1,0 +1,759 @@
+{
+  "environment": "local-chromium-only",
+  "kind": "browser-native-sharing",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+  "hardwareConcurrency": 12,
+  "crossOriginIsolated": true,
+  "jspi": true,
+  "sharedArrayBuffer": true,
+  "raw": [
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 65536,
+      "elapsedMs": 7.949999809265137
+    },
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 131072,
+      "elapsedMs": 14.800000190734863
+    },
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 262144,
+      "elapsedMs": 29.47000026702881
+    },
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 524288,
+      "elapsedMs": 59.66499996185303
+    },
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 1048576,
+      "elapsedMs": 117.99499988555908
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 0,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 119.46000003814697,
+      "lanes": [],
+      "outputExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 1,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 121.69500064849854,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 120.96500015258789
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 2,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 61.67500019073486,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 61.140000343322754
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 61.480000495910645
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 4,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 31.789999961853027,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 31.34999942779541
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 31.139999389648438
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 31.604999542236328
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 31.335000038146973
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 8,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 17.600000381469727,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 16.925000190734863
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 17.0649995803833
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 16.764999389648438
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 16.850000381469727
+        },
+        {
+          "id": "a63a4a0b-caa8-4d78-b173-28bcc94beab7",
+          "wallMs": 17.195000648498535
+        },
+        {
+          "id": "f6a16786-f051-4b88-a934-a1aece390ad6",
+          "wallMs": 17.03499984741211
+        },
+        {
+          "id": "1895c23a-b7d8-4600-b953-61db761d629f",
+          "wallMs": 16.9399995803833
+        },
+        {
+          "id": "113e75a4-793f-4ef7-8547-d814feabb68a",
+          "wallMs": 16.934999465942383
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 1,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 120.1899995803833,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 120.02999973297119
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 2,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 60.295000076293945,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 60.195000648498535
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 60.08500003814697
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 4,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 30.90999984741211,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 30.489999771118164
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 30.835000038146973
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 30.440000534057617
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 30.8149995803833
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 8,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 18.994999885559082,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 18.774999618530273
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 18.929999351501465
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 18.78499984741211
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 17.635000228881836
+        },
+        {
+          "id": "a63a4a0b-caa8-4d78-b173-28bcc94beab7",
+          "wallMs": 15.59999942779541
+        },
+        {
+          "id": "f6a16786-f051-4b88-a934-a1aece390ad6",
+          "wallMs": 17.625
+        },
+        {
+          "id": "1895c23a-b7d8-4600-b953-61db761d629f",
+          "wallMs": 15.614999771118164
+        },
+        {
+          "id": "113e75a4-793f-4ef7-8547-d814feabb68a",
+          "wallMs": 15.59000015258789
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 0,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 117.15499973297119,
+      "lanes": [],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 2,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 60.78999996185303,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 60.68499946594238
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 60.614999771118164
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 4,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 31,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 30.894999504089355
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 29.984999656677246
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 30.160000801086426
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 30.920000076293945
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 8,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 15.75,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 15.635000228881836
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 15.704999923706055
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 15.619999885559082
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 15.540000915527344
+        },
+        {
+          "id": "a63a4a0b-caa8-4d78-b173-28bcc94beab7",
+          "wallMs": 15.535000801086426
+        },
+        {
+          "id": "f6a16786-f051-4b88-a934-a1aece390ad6",
+          "wallMs": 15.53499984741211
+        },
+        {
+          "id": "1895c23a-b7d8-4600-b953-61db761d629f",
+          "wallMs": 15.53499984741211
+        },
+        {
+          "id": "113e75a4-793f-4ef7-8547-d814feabb68a",
+          "wallMs": 15.649999618530273
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 0,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 119.81500053405762,
+      "lanes": [],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 1,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 117.5,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 117.36499977111816
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 4,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 30.96500015258789,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 30.90499973297119
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 30.789999961853027
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 30.84000015258789
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 30.219999313354492
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 8,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 15.819999694824219,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 15.694999694824219
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 15.755000114440918
+        },
+        {
+          "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+          "wallMs": 15.589999198913574
+        },
+        {
+          "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+          "wallMs": 15.654999732971191
+        },
+        {
+          "id": "a63a4a0b-caa8-4d78-b173-28bcc94beab7",
+          "wallMs": 15.529999732971191
+        },
+        {
+          "id": "f6a16786-f051-4b88-a934-a1aece390ad6",
+          "wallMs": 15.524999618530273
+        },
+        {
+          "id": "1895c23a-b7d8-4600-b953-61db761d629f",
+          "wallMs": 15.519999504089355
+        },
+        {
+          "id": "113e75a4-793f-4ef7-8547-d814feabb68a",
+          "wallMs": 15.520000457763672
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 0,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 118.15999984741211,
+      "lanes": [],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 1,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 116.59000015258789,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 116.42500019073486
+        }
+      ],
+      "outputExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 2,
+      "rounds": 1048576,
+      "count": 64,
+      "wallMs": 60.765000343322754,
+      "lanes": [
+        {
+          "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+          "wallMs": 60.64999961853027
+        },
+        {
+          "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+          "wallMs": 60.67499923706055
+        }
+      ],
+      "outputExact": true
+    }
+  ],
+  "attached": [
+    {
+      "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    },
+    {
+      "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    },
+    {
+      "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    },
+    {
+      "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    },
+    {
+      "id": "a63a4a0b-caa8-4d78-b173-28bcc94beab7",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    },
+    {
+      "id": "f6a16786-f051-4b88-a934-a1aece390ad6",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    },
+    {
+      "id": "1895c23a-b7d8-4600-b953-61db761d629f",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    },
+    {
+      "id": "113e75a4-793f-4ef7-8547-d814feabb68a",
+      "sum": 458752,
+      "length": 268435456,
+      "shared": true
+    }
+  ],
+  "alias": {
+    "atomics": 40000,
+    "mutations": [
+      {
+        "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+        "before": 20,
+        "value": 100
+      },
+      {
+        "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+        "before": 21,
+        "value": 101
+      },
+      {
+        "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+        "before": 22,
+        "value": 102
+      },
+      {
+        "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+        "before": 23,
+        "value": 103
+      }
+    ],
+    "crossReads": [
+      {
+        "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+        "value": 101
+      },
+      {
+        "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+        "value": 102
+      },
+      {
+        "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+        "value": 103
+      },
+      {
+        "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+        "value": 100
+      }
+    ],
+    "passed": true
+  },
+  "copyControl": {
+    "parent": 91,
+    "copies": [
+      {
+        "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+        "before": 91,
+        "after": 200,
+        "length": 65536
+      },
+      {
+        "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+        "before": 91,
+        "after": 201,
+        "length": 65536
+      },
+      {
+        "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+        "before": 91,
+        "after": 202,
+        "length": 65536
+      },
+      {
+        "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+        "before": 91,
+        "after": 203,
+        "length": 65536
+      }
+    ],
+    "copyReads": [
+      {
+        "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+        "value": 200
+      },
+      {
+        "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+        "value": 201
+      },
+      {
+        "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+        "value": 202
+      },
+      {
+        "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+        "value": 203
+      }
+    ],
+    "passed": true
+  },
+  "growth": {
+    "observations": [
+      {
+        "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+        "zero": true,
+        "oldLength": 268435456,
+        "newLength": 268500992
+      },
+      {
+        "id": "4bed0687-3e22-4ea2-b8b7-b3130c106c88",
+        "zero": true,
+        "oldLength": 268435456,
+        "newLength": 268500992
+      },
+      {
+        "id": "196ad6aa-ae4f-47f6-8b3b-b6bc3f0bbdfc",
+        "zero": true,
+        "oldLength": 268435456,
+        "newLength": 268500992
+      },
+      {
+        "id": "4a3981b3-34ec-48bb-9076-7b16f2601b74",
+        "zero": true,
+        "oldLength": 268435456,
+        "newLength": 268500992
+      }
+    ],
+    "passed": true
+  },
+  "cpu": {
+    "rounds": 1048576,
+    "count": 64,
+    "samplesPerWidth": 3,
+    "outputWords": [
+      2174976903,
+      977753923,
+      3152336068,
+      3676576303,
+      1518836136,
+      3781381484,
+      1623248619,
+      4134183755,
+      2009669836,
+      3425563656,
+      1301182351,
+      760133988,
+      2901228259,
+      386526759,
+      2527751584,
+      2743266808,
+      572616319,
+      2579872443,
+      409352508,
+      2024208343,
+      4177884240,
+      1122082964,
+      3275891475,
+      1441287859,
+      3561737524,
+      1873746416,
+      3993803383,
+      2395755676,
+      258987803,
+      3029009375,
+      891846744,
+      1505697046,
+      3625754257,
+      1677216341,
+      3797666258,
+      2191198009,
+      54035646,
+      3101446266,
+      964678653,
+      2950020701,
+      779501018,
+      2509433118,
+      338782873,
+      1961993330,
+      4115802101,
+      1320612657,
+      3474288822,
+      4198363374,
+      2073981801,
+      3229263789,
+      1104749610,
+      555346625,
+      2696571206,
+      459193730,
+      2600287749,
+      207049637,
+      2381631522,
+      907019494,
+      3081996129,
+      3614656906,
+      1456523789,
+      3979615945,
+      1821875534,
+      54155704
+    ],
+    "aggregateCpuMeasured": false
+  },
+  "creatorTermination": {
+    "survivor": {
+      "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+      "sum": 47,
+      "length": 131072,
+      "shared": true
+    },
+    "lifetimeMutation": {
+      "id": "f035b55c-299c-4b95-ad0c-8c2d945dd78a",
+      "before": 0,
+      "value": 999
+    },
+    "terminationRequested": true,
+    "passed": true
+  },
+  "initialBytes": 268435456,
+  "finalBytes": 268500992,
+  "elapsedMs": 1763.7900009155273,
+  "passed": true
+}
