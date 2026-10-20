@@ -1,0 +1,1391 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>TECHNICAL_REPORT | @gmitch215/folio - v1.0.0</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@gmitch215/folio - v1.0.0</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb" aria-label="Breadcrumb">
+<li><a href="" aria-current="page">TECHNICAL_REPORT</a></li></ul></div>
+<div class="tsd-panel tsd-typography"><h1 id="technical-report-shared-webassembly-memory-and-ordered-speculation" class="tsd-anchor-link">Technical Report: Shared WebAssembly Memory and Ordered Speculation<a href="#technical-report-shared-webassembly-memory-and-ordered-speculation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Folio runs native WebAssembly across several V8 isolates over one physical memory allocation. A
+compiler discovers regions of an ordinary Wasm program that can run apart, workers execute them
+against the shared bytes, and an ordered validator keeps the serial result. The original Wasm
+instance stays the coordinator: it keeps scalar results, control flow, mutable globals, tables and
+host effects.</p>
+<p>This document is the engineering reference. It records what the library does, which platform limits
+shape each backend, what every route costs, and which claims the evidence does not support.
+<code>src/</code> holds the library, <code>tests/</code> the gate, <code>scripts/</code> the build, measurement and analysis tools,
+and <code>experiments/</code> the deployed and local Cloudflare probes. <code>results/</code> holds the raw samples, the
+exact source snapshots and the deterministic summaries behind every figure. Each figure names the
+instrument that produced it, because a Node wall clock, a deployed <code>cpuTime</code> reading and a platform
+tail event are not interchangeable.</p>
+<hr>
+<h2 id="🧭-executive-summary" class="tsd-anchor-link">🧭 Executive Summary<a href="#🧭-executive-summary" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Folio has three execution backends. They were measured separately and are not one combined system.</p>
+<table>
+<thead>
+<tr>
+<th>backend</th>
+<th>where it runs</th>
+<th>memory model</th>
+<th>best measured result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node</td>
+<td>co-located <code>worker_threads</code> isolates</td>
+<td>one physical allocation, zero copy</td>
+<td><strong>7.519x</strong> elapsed speedup on eight pinned workers, 4.87% extra CPU work</td>
+</tr>
+<tr>
+<td>Managed Workers</td>
+<td>named Durable Object lanes, JSPI owner</td>
+<td>copied frozen snapshots, ordered validation</td>
+<td><strong>1.618x</strong> end to end (four lanes, binary fetch)</td>
+</tr>
+<tr>
+<td>Browser Run</td>
+<td>Chromium Web Workers</td>
+<td>one physical 256 MiB Wasm allocation</td>
+<td><strong>3.874x</strong> with four workers (explicit partitions, no automatic extraction)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>measured</th>
+<th>instrument</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical sharing across isolates</td>
+<td>additional RSS <strong>3.871 MiB</strong> for four isolates on a touched 64 MiB backing, against <strong>259.930 MiB</strong> for copied buffers</td>
+<td>Node 26.10.0, <code>results/20261019/</code></td>
+</tr>
+<tr>
+<td>One unannotated entry on several CPUs</td>
+<td><strong>7.619x</strong> at eight workers on a compute kernel, CPU ratio 1.037, 207 byte-exact samples</td>
+<td>Paisley Park, <code>results/20261019-d/</code></td>
+</tr>
+<tr>
+<td>Normally inlined C, automatic region discovery</td>
+<td><strong>7.519x</strong> median at eight pinned workers; <strong>5.636x</strong> unpinned</td>
+<td>Paisley Park, <code>results/20261020-affinity-final/</code></td>
+</tr>
+<tr>
+<td>Streaming workload</td>
+<td>stops improving near four workers (3.497x at four, 3.474x at eight)</td>
+<td>same sweep family, shared memory system</td>
+</tr>
+<tr>
+<td>Managed Workers, deployed</td>
+<td>all <strong>39</strong> rows exact, 64 regions, 2/4/8 distinct module UUIDs per row</td>
+<td>STUDENT account, <code>experiments/managed/runs/cfw-folio-managed-a627504d/</code></td>
+</tr>
+<tr>
+<td>Browser Run, deployed</td>
+<td>eight workers, <strong>40000</strong> exact atomic increments, 256 MiB arena, growth and zero fill</td>
+<td>STUDENT account, <code>experiments/browser/runs/cfw-folio-browser-0e66d825/</code></td>
+</tr>
+<tr>
+<td>Cross-isolate shared memory through managed Worker RPC</td>
+<td>refused in both directions; <code>MessageChannel</code> refuses SAB</td>
+<td>deployed capability probe</td>
+</tr>
+<tr>
+<td>Stock workerd to the Node host</td>
+<td>four distinct Folio threads, all 131072 bytes exact, i64 and void results exact</td>
+<td>Miniflare on workerd 1.20260815.1 and again on 1.20261019.1</td>
+</tr>
+<tr>
+<td>Real consumer artifacts</td>
+<td>tinyimg (809,683 bytes) and gmux core (4,303 bytes) match native returns and every memory byte</td>
+<td><code>results/integration-generalized-final.json</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="what-decides-the-design" class="tsd-anchor-link">What Decides the Design<a href="#what-decides-the-design" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Sharing is a host property.</strong> V8 can attach several wrappers to one backing store. Ordinary
+Worker RPC drops the backing-store table before delivery, <code>MessageChannel</code> refuses it, and managed
+Workers expose no way to create parallel agents over one allocation. Physical sharing therefore
+needs a host Folio controls: Node <code>worker_threads</code>, a self-hosted runtime, or a browser.</p>
+<p><strong>The original stack is the continuation.</strong> Folio does not serialize Wasm frames. JSPI suspends the
+original Wasm stack while regions run elsewhere, so scalar carry, branches, nested calls and host
+effects keep their native semantics.</p>
+<p><strong>Dependencies are validated, not assumed.</strong> Regions with a proved footprint run directly. Others
+run on private overlays over a frozen base and commit in original order, with replay on conflict.</p>
+<p><strong>Copying is the managed cost.</strong> The managed route copies one frozen snapshot per lane batch and
+measured 1.618x end to end including setup, a serial oracle and close. No isolated kernel timing
+exists, so the data neither refutes nor supports fan-out for compute-heavy work on a small arena.
+It does show that copying whole arenas will not scale past the owner's memory.</p>
+<hr>
+<h2 id="🎯-scope-and-acceptance" class="tsd-anchor-link">🎯 Scope and Acceptance<a href="#🎯-scope-and-acceptance" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The acceptance answer is &quot;Arbitrary input; preserve serial dependencies.&quot; It means Folio accepts
+any valid program the host engine accepts, with its required host bindings, and keeps the serial
+result. It does not make an unknown dependency a proved serial one, and it does not promise that
+every program speeds up.</p>
+<p>The input domain is WebAssembly supported by the host engine. It is not arbitrary JavaScript, and
+it is not machine code without an adapter. A JS runtime compiled to Wasm can own its guest heap,
+and gmux can provide decoded blocks and explicit machine state. Required imports remain the
+program's host ABI. No claim covers joining independent JS or Wasm GC heaps through linear memory.</p>
+<p>Extraction has explicit admission rules (see Region Extraction). Nothing here claims that a finite
+test corpus proves every optimizer transformation correct, that every safe region is recognized, or
+that every accepted program is faster.</p>
+<table>
+<thead>
+<tr>
+<th>Objective</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Physical zero-copy backing across distinct isolates</td>
+<td>Implemented and measured on Node: native handle trace, aliasing, atomics, RSS controls, growth, lifetime</td>
+</tr>
+<tr>
+<td>One entry automatically uses several CPUs</td>
+<td>Final unannotated inlined C: 7.519x median, eight pinned workers, exact full memory</td>
+</tr>
+<tr>
+<td>Engine-valid Wasm input accepted</td>
+<td>Original native instance retained; bytes, ArrayBuffer and Module inputs, memories, opaque refs, initialization, async effects</td>
+</tr>
+<tr>
+<td>Dependence preservation</td>
+<td>Ordered validation and replay, byte overlaps, trap prefixes, budget fallback; scalar carry stays native</td>
+</tr>
+<tr>
+<td>General automatic region extraction</td>
+<td>Native CFG coordinator, inline numeric-memory spans, pure call regions, ordered state and effect boundaries</td>
+</tr>
+<tr>
+<td>Managed Workers CPU fan-out</td>
+<td>Deployed; eight distinct module UUIDs; platform CPU overlap observed</td>
+</tr>
+<tr>
+<td>Workerd execution route</td>
+<td>Portable client plus authenticated host; stock workerd to four Node isolates</td>
+</tr>
+<tr>
+<td>Physical shared memory through managed RPC and ports</td>
+<td>Refused in deployed tests; the execution host is the workaround</td>
+</tr>
+<tr>
+<td>Real consumer compatibility</td>
+<td>tinyimg and gmux core match native; no full consumer adapter</td>
+</tr>
+<tr>
+<td>PHP boot and render over shared execution</td>
+<td>Not proved (see Consumer Boundaries and Open Questions)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="🔬-mechanism-and-correctness" class="tsd-anchor-link">🔬 Mechanism and Correctness<a href="#🔬-mechanism-and-correctness" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="physical-sharing" class="tsd-anchor-link">Physical Sharing<a href="#physical-sharing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Each isolate gets its own wrapper around the same native backing store. It keeps its own instance,
+VM stack, globals, tables and JS heap. The allocation is neither duplicated nor moved away from its
+creator.</p>
+<p>On Node 26.10.0 the sender retains <code>GetBackingStore()</code> and the receiver builds another SAB wrapper
+from the same native handle [1][2]. V8 keeps the allocation alive while backing-store references
+remain [3]. The mutation, lifetime and copy-control probes test the observable consequences of
+that implementation.</p>
+<h3 id="region-extraction" class="tsd-anchor-link">Region Extraction<a href="#region-extraction" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The fast path recognizes whole void countdown entries with affine i32 parameter updates. It accepts
+inline scalar temporaries when every read of a written local is dominated by a write in the same
+iteration, merges conditional definitions by intersection, and preserves Wasm operand order,
+including <code>select</code> and <code>local.tee</code>. It refuses reads of the changing remaining count, extra
+control-variable mutation, escaping or nested control, and scalar carry. A refusal records analysis
+coverage. It does not assert that no parallel algorithm exists.</p>
+<p>The generalized compiler (<code>src/extract.ts</code>) outlines contiguous inline scalar-memory statements
+with numeric live-ins. Modified locals must have no reads outside the span and must be definitely
+assigned before reads on every admitted path. Branch targets stay inside the region. These rules
+exclude scalar carry across repeated invocations, because capturing a stale local on each loop
+iteration would be wrong. The same path extracts discarded calls to transitive effect-free numeric
+functions, and tracks loads, stores and bulk operations inside a region.</p>
+<p>The original Wasm engine remains the coordinator. It runs branches, nested loops and calls,
+switches, reductions and return values. Helpers evaluate operands in native order, then join
+pending regions before canonical memory, global state, growth, host effects or opaque calls.
+Opaque calls run with native execution forced, so synchronous reentry cannot spawn untracked work.
+Start and data initialization run once in this instance, and workers hold only the outlined or
+pure function closure plus the imported shared arena.</p>
+<p>JSPI suspends the original stack during joins [4]. Numeric-result controller exports get an
+internal promising wrapper; reference-returning exports keep their original ABI. Raw exports and
+serial paths select the original bodies through an imported mode global. Float region arguments are
+reinterpreted to i32 or i64 before crossing JS and worker messages, so operands keep their bits. A
+native coordinator trap drains earlier queued regions before it surfaces, and bounded polling
+prevents an earlier queued trap hiding behind later unbounded control flow.</p>
+<h3 id="ordered-speculation" class="tsd-anchor-link">Ordered Speculation<a href="#ordered-speculation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Queues hold at most 16 regions per participating worker, and one message carries one lane. Each
+worker runs its lane against the frozen base with a separate overlay per region. All lanes finish
+before the first commit. Commits and replays follow original region order.</p>
+<ol>
+<li>Workers read a frozen canonical allocation and keep private byte writes. Reads see their own
+earlier writes, and external reads are tracked.</li>
+<li>All speculative workers stop before any canonical commit.</li>
+<li>Regions validate in order. A preceding write that intersects a later read forces replay against
+the committed state. Blind writes commit in order, and byte granularity catches partial and
+unaligned overlaps.</li>
+<li>A validated trap commits that region's preceding writes, throws at the ordered head and discards
+later speculative results.</li>
+<li>Fuel or tracking exhaustion discards the overlay. If tracked replay also exhausts, the original
+native head and the rest of that batch run serially.</li>
+</ol>
+<p>The lane shares one retained tracking allowance across its results rather than multiplying it by
+16, and exhausted later jobs return empty sentinels. A failed snapshot allocation or growth keeps
+native execution: an optimization resource refusal never becomes a Wasm trap. The same fallback
+covers explicit <code>runAll</code> batches whose shared-mirror refresh fails before dispatch.</p>
+<p>For deterministic admitted instructions, equal externally sourced reads imply the same region
+computation, so ordered writes and return values match serial execution. Fuel lets a region stuck
+on stale state yield to the native head. It does not make a nonterminating program terminate. The
+design follows established ordered speculative execution [5].</p>
+<p>A native guard additionally proves complete memory footprints, finite loops and nontrapping i32
+arithmetic for the kernels it admits. Runtime checks reject bounds violations, pointer wrap and
+every cross-region read/write or write/write overlap before concurrent canonical writes. Guarded
+payload execution has no per-access translation, private overlay, byte log or commit copy.</p>
+<h3 id="resource-limits-and-recursion" class="tsd-anchor-link">Resource Limits and Recursion<a href="#resource-limits-and-recursion" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The equivalence argument covers admitted deterministic instructions and their instruction-defined
+traps. Engine resource exhaustion is a separate boundary: native stack capacity, allocation failure
+and process termination vary with placement and instrumentation. Folio does not promise identical
+resource-limit thresholds in every isolate. A review found this through recursive calls, so direct
+and mutually recursive call components now keep their original bodies at the owner with ordered
+joins before entry. Whole-module legacy tracking refuses recursive call graphs. Tests cover native
+stack exhaustion and its exact preceding writes.</p>
+<h3 id="contract-with-the-host" class="tsd-anchor-link">Contract With the Host<a href="#contract-with-the-host" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The host gives Folio exclusive access to the arena while a run is active. External writes or
+growth, concurrent raw-export calls, and callbacks that mutate tracked state outside this protocol
+break the contract. Prepared plans are trusted build artifacts, and Node JS imports are trusted
+host code. They are not a tenant sandbox.</p>
+<hr>
+<h2 id="🧱-memory-and-program-state" class="tsd-anchor-link">🧱 Memory and Program State<a href="#🧱-memory-and-program-state" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>State or operation</th>
+<th>Behavior</th>
+<th>Beyond the optimized path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shared wasm32 linear bytes</td>
+<td>One physical backing across Node workers</td>
+<td>Remote memory needs an explicit ownership and transport backend</td>
+</tr>
+<tr>
+<td>i32 scalar memory, narrow and unaligned</td>
+<td>Byte-exact tracking, guarded native subset</td>
+<td>Unproved footprints use validation</td>
+</tr>
+<tr>
+<td>i64 scalar memory</td>
+<td>Signed and unsigned narrow reads, all store widths, bit-exact overlay</td>
+<td>Typed i64 helper ABI</td>
+</tr>
+<tr>
+<td>f32 and f64 memory</td>
+<td>Reinterpreted around integer helpers; NaN payloads and signed zero preserved in copied memory</td>
+<td>No intermediate Number conversion for stored bits</td>
+</tr>
+<tr>
+<td>Numeric return values</td>
+<td>Scalar and tuple transport, NaN bit metadata where structured clone canonicalizes</td>
+<td>Opaque identities stay native</td>
+</tr>
+<tr>
+<td>memory.copy and memory.fill</td>
+<td>Complete bounds before mutation, memmove ordering, bounded tracking</td>
+<td>Large speculative operations fall back at the native head</td>
+</tr>
+<tr>
+<td>Start and data initialization</td>
+<td>Coordinator initializes once; worker module has neither</td>
+<td>Source module owns initialization</td>
+</tr>
+<tr>
+<td>Mutable globals, tables, funcrefs, GC objects</td>
+<td>State stays in the original instance; controlled accesses join preceding regions</td>
+<td>Owner handles or explicit lowering could widen coverage</td>
+</tr>
+<tr>
+<td>Atomics, size and grow, SIMD memory</td>
+<td>Coordinator and opaque boundaries keep semantics; growth joins first</td>
+<td>Guarded lowering could admit more computation</td>
+</tr>
+<tr>
+<td>Memory 64 and multiple memories</td>
+<td>Native path with original declarations</td>
+<td>Wide address ABI and per-memory read/write sets</td>
+</tr>
+<tr>
+<td>Owned, unshared memory</td>
+<td>Original identity, buffer kind and detachment kept; workers share a snapshot</td>
+<td>Copy once per batch; report copied bytes</td>
+</tr>
+<tr>
+<td>Imported memory</td>
+<td>Allocate declared wasm32 limits or use a supplied binding</td>
+<td>Compiled Module and memory64 limits need explicit bindings</td>
+</tr>
+<tr>
+<td>externref and JS identity</td>
+<td>Values stay at the native call site</td>
+<td>Owner-side capabilities or an explicit guest heap</td>
+</tr>
+<tr>
+<td>Host exceptions and effects</td>
+<td>Drain preceding regions, run once at the owner, keep exception identity</td>
+<td>Native Wasm stack with JSPI is the continuation</td>
+</tr>
+<tr>
+<td>JSPI suspension</td>
+<td>Explicit suspending imports and promising exports</td>
+<td>No suspension through arbitrary synchronous JS frames</td>
+</tr>
+<tr>
+<td>C linear stacks, TLS, allocator state</td>
+<td>Owner keeps opaque and global state</td>
+<td>Concurrent mutation needs disjoint stack or TLS ownership</td>
+</tr>
+<tr>
+<td>Cancellation</td>
+<td>Worker termination joined; repeated close shares the join</td>
+<td>Native partial writes need checkpoint restoration</td>
+</tr>
+</tbody>
+</table>
+<p>No hard 190 to 200 MiB cutoff exists in the library. Native allocation limits, the module's
+declared maximum and the host's memory budget apply. A shared 256 MiB backing on Node does not
+prove that a managed provider accounts it once or fits it inside four 128 MB isolate budgets.
+Logical address space, committed memory, RSS and provider quota are four different quantities.</p>
+<p>An ordinary source memory needs an explicit copy into the worker group before speculative batches,
+and committed writes update the owner and the mirror. <code>memoryMode</code> and <code>snapshotBytes</code> report the
+difference. A singleton region at an observation boundary runs at its owner, which avoids both the
+message and the snapshot.</p>
+<hr>
+<h2 id="📏-measurements-physical-sharing" class="tsd-anchor-link">📏 Measurements: Physical Sharing<a href="#📏-measurements-physical-sharing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Paisley Park, Ryzen 9 9900X, Node 26.10.0 with V8 14.6, <code>nice 19</code>. Raw sets and exact source
+snapshots are in <code>results/20261019/</code>, <code>results/20261019-b/</code> and <code>results/20261019-c/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attach one touched 64 MiB shared backing to four isolates, n=3</td>
+<td>additional RSS median 3.871 MiB [3.773 to 3.961]</td>
+</tr>
+<tr>
+<td>Give four isolates copied 64 MiB buffers, n=3</td>
+<td>additional RSS 259.930 MiB [259.523 to 260.004]</td>
+</tr>
+<tr>
+<td>Attach a 256 MiB shared backing</td>
+<td>about 4 MiB attachment overhead</td>
+</tr>
+<tr>
+<td>Wasm atomics plus disjoint ordinary stores</td>
+<td>40,000 atomic adds and all ordinary outputs exact</td>
+</tr>
+<tr>
+<td>Shared growth</td>
+<td>new pages visible and zero-filled through fresh views; old views keep stale lengths</td>
+</tr>
+<tr>
+<td>Creator exits</td>
+<td>backing stays usable from 4 of 4 surviving holders</td>
+</tr>
+</tbody>
+</table>
+<p>RSS alone does not prove identity. The native-handle implementation, bidirectional mutation,
+atomic contention and the copied-buffer control together separate sharing from coincidentally
+equal copies. None of this implies zero total private overhead per isolate.</p>
+<p>The earlier combined C proof used one unannotated entry over 67,108,864 words, one 268,500,992-byte
+shared allocation and a separate expected-output copy used only for verification. All 14 measured
+whole-allocation comparisons passed.</p>
+<table>
+<thead>
+<tr>
+<th>Combined 256 MiB proof, n=7 per arm</th>
+<th>median [observed range]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serial elapsed</td>
+<td>38.985 ms [38.916 to 39.229]</td>
+</tr>
+<tr>
+<td>Automatic four-isolate elapsed</td>
+<td>10.625 ms [10.536 to 14.105]</td>
+</tr>
+<tr>
+<td>Paired speedup</td>
+<td>3.663x [2.766 to 3.699]</td>
+</tr>
+<tr>
+<td>Total CPU ratio</td>
+<td>1.063 [1.054 to 1.069]</td>
+</tr>
+<tr>
+<td>Process CPU over elapsed</td>
+<td>3.896 [2.958 to 3.932]</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="⚙️-measurements-cpu-scaling-and-taxes" class="tsd-anchor-link">⚙️ Measurements: CPU Scaling and Taxes<a href="#⚙️-measurements-cpu-scaling-and-taxes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The sweep uses the same unannotated C entry, one shared arena and a serial oracle. CPU affinity
+4 to 11 spans eight distinct physical cores on this host (the earlier mask 4,6,8,10 supplied four).
+Workers may migrate inside the mask; individual pinning is not claimed. The governor stayed
+<code>powersave</code>, services kept running and priority was <code>nice 19</code>.</p>
+<p>Two warmup rounds precede nine rotating measured rounds per arm. Initialization, worker
+construction, reference creation and the full byte comparison sit outside the timed span.
+Planning, guards, dispatch, join and optional profiling sit inside it. All 207 samples compare the
+complete 268,500,992-byte allocation exactly and none was discarded. Peak process RSS was
+1,137.20 MiB, which includes several idle pools and the reference allocations. One-minute load
+ranged 0 to 0.44. The fixture SHA256 is
+<code>7891b9c96268aef30999ac335abe3ac6f3646d9d1f565c8d5e9365e047abb726</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Compute: 4096 words, 32768 mixes</th>
+<th style="text-align:right">Elapsed median</th>
+<th style="text-align:right">Paired speedup [range]</th>
+<th style="text-align:right">Total CPU ratio</th>
+<th style="text-align:right">CPU / wall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Untouched serial</td>
+<td style="text-align:right">150.706 ms</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1.000</td>
+</tr>
+<tr>
+<td>Two native workers</td>
+<td style="text-align:right">76.191 ms</td>
+<td style="text-align:right">1.976 [1.952 to 1.987]</td>
+<td style="text-align:right">1.009</td>
+<td style="text-align:right">1.995</td>
+</tr>
+<tr>
+<td>Four native workers</td>
+<td style="text-align:right">38.591 ms</td>
+<td style="text-align:right">3.903 [3.892 to 3.932]</td>
+<td style="text-align:right">1.017</td>
+<td style="text-align:right">3.974</td>
+</tr>
+<tr>
+<td>Eight native workers</td>
+<td style="text-align:right">19.780 ms</td>
+<td style="text-align:right">7.619 [7.525 to 7.705]</td>
+<td style="text-align:right">1.037</td>
+<td style="text-align:right">7.899</td>
+</tr>
+<tr>
+<td>Four tracked workers</td>
+<td style="text-align:right">41.398 ms</td>
+<td style="text-align:right">3.640 [3.550 to 3.661]</td>
+<td style="text-align:right">1.070</td>
+<td style="text-align:right">3.889</td>
+</tr>
+</tbody>
+</table>
+<p>More isolates unlock more simultaneous CPU when cores and independent work exist. Eight workers
+did about the same computation in one eighth of the time. They did not reduce total CPU work.</p>
+<p>With S as serial time over parallel time, R as parallel CPU over serial CPU and A as parallel CPU
+over parallel time, A equals S times R times (serial CPU over serial time). The earlier 3.663x
+speedup and 1.063x CPU ratio imply about 3.89 simultaneous CPU equivalents, or 91.57% of the
+four-core ideal, with 6.274% extra work. The compute result reaches 95.23% of the eight-core ideal
+with 3.65% extra CPU. Products of separately summarized medians are approximations, not per-sample
+identities.</p>
+<table>
+<thead>
+<tr>
+<th>Streaming 256 MiB, one mix per word</th>
+<th style="text-align:right">Elapsed median</th>
+<th style="text-align:right">Paired speedup</th>
+<th style="text-align:right">Total CPU ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Untouched serial</td>
+<td style="text-align:right">38.777 ms</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>Two workers</td>
+<td style="text-align:right">20.415 ms</td>
+<td style="text-align:right">1.898</td>
+<td style="text-align:right">1.040</td>
+</tr>
+<tr>
+<td>Four workers</td>
+<td style="text-align:right">11.096 ms</td>
+<td style="text-align:right">3.497</td>
+<td style="text-align:right">1.097</td>
+</tr>
+<tr>
+<td>Eight workers</td>
+<td style="text-align:right">11.166 ms</td>
+<td style="text-align:right">3.474</td>
+<td style="text-align:right">1.791</td>
+</tr>
+</tbody>
+</table>
+<p>Compute scales to eight while streaming stops near four. That fits a shared memory system or cache
+contention, but no bandwidth or stall counters were collected, so no causal breakdown is claimed.
+<code>maximumWorkers</code> exposes the cap per run; four is the better choice for the streaming case.</p>
+<table>
+<thead>
+<tr>
+<th>Cost, compute case</th>
+<th style="text-align:right">Four native</th>
+<th style="text-align:right">Four tracked</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Longest worker active elapsed, median</td>
+<td style="text-align:right">38.428 ms</td>
+<td style="text-align:right">39.418 ms</td>
+</tr>
+<tr>
+<td>Sum of worker thread CPU, median</td>
+<td style="text-align:right">150.959 ms</td>
+<td style="text-align:right">155.655 ms</td>
+</tr>
+<tr>
+<td>Run elapsed minus longest worker, median</td>
+<td style="text-align:right">0.128 ms</td>
+<td style="text-align:right">2.085 ms</td>
+</tr>
+<tr>
+<td>Validation, median</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0.245 ms</td>
+</tr>
+<tr>
+<td>Commit, median</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0.488 ms</td>
+</tr>
+<tr>
+<td>Tracked read and write bytes</td>
+<td style="text-align:right">0 and 0</td>
+<td style="text-align:right">16384 and 16384</td>
+</tr>
+</tbody>
+</table>
+<p>The residual includes dispatch, receipt, scheduling, orchestration and log serialization.
+Validation and commit sit inside it, and sums of medians need not equal a median total. Profiling
+is opt-in so ordinary jobs do not pay for it.</p>
+<p>On the generalized path <code>workerWallMs</code> and <code>workerCpuMs</code> hold per-region observations. The
+no-replay harness knows its round-robin placement and sums each lane before taking the longest.
+Taking the largest single region would undercount worker time, and the public arrays do not carry
+enough lane metadata to rebuild arbitrary replay schedules.</p>
+<p>Tiny jobs lose to dispatch overhead. For a 4096-word stream in the profiled large-arena sweep, raw
+execution took 0.01089 ms, the four-worker pool's automatic serial route took 0.02490 ms, and
+forced tracking took 3.47807 ms. Work thresholds avoid the large tracking tax but not the API cost,
+and microsecond values depend on timers and cache state.</p>
+<p>Implemented levers: whole-range native guards remove per-access tracking and commit copies;
+pools reuse modules, instances and shared backing; work thresholds keep small proved kernels at
+the original entry; <code>maximumWorkers</code> limits contention; fuel and byte budgets bound failed
+speculation; profiling makes a routing mistake measurable. Further levers have prerequisites and
+need matched tests: range or page interval logs instead of per-byte sets, transferable compact
+commit logs, guarded SIMD and bulk kernels, NUMA-aware placement, chunk and load-balance tuning,
+and learned worker counts per workload.</p>
+<h3 id="generalized-c-entry" class="tsd-anchor-link">Generalized C Entry<a href="#generalized-c-entry" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>tests/c/generalized.c</code> compiles to 511 bytes at <code>-O2</code> with inlining on. It has branches, a count-up
+loop, an inlined compute kernel and a scalar return carried across iterations, with no
+caller-defined chunks or access annotations. The compiler discovers 64 dynamic regions while the
+owner computes the scalar. Each sample runs 64 words with 2097152 mixes in a 268500992-byte
+arena. Two warmup rounds precede seven rotating measured rounds, and all 45 executions compare the
+whole arena and return against untouched native execution.</p>
+<table>
+<thead>
+<tr>
+<th>Normally inlined C, n=7 per arm</th>
+<th style="text-align:right">Elapsed median</th>
+<th style="text-align:right">Paired speedup [range]</th>
+<th style="text-align:right">Total CPU ratio</th>
+<th style="text-align:right">CPU / wall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Untouched serial</td>
+<td style="text-align:right">150.485 ms</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1.000</td>
+</tr>
+<tr>
+<td>One-worker native route</td>
+<td style="text-align:right">150.555 ms</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">1.000</td>
+</tr>
+<tr>
+<td>Two workers</td>
+<td style="text-align:right">77.759 ms</td>
+<td style="text-align:right">1.937 [1.902 to 1.941]</td>
+<td style="text-align:right">1.037</td>
+<td style="text-align:right">2.008</td>
+</tr>
+<tr>
+<td>Four workers</td>
+<td style="text-align:right">39.125 ms</td>
+<td style="text-align:right">3.832 [2.180 to 3.877]</td>
+<td style="text-align:right">1.031</td>
+<td style="text-align:right">3.954</td>
+</tr>
+<tr>
+<td>Eight workers</td>
+<td style="text-align:right">31.827 ms</td>
+<td style="text-align:right">4.721 [3.830 to 4.909]</td>
+<td style="text-align:right">1.051</td>
+<td style="text-align:right">5.021</td>
+</tr>
+</tbody>
+</table>
+<p>This is tracked speculation with zero replays and fallbacks, shared canonical backing and zero
+snapshots. Four-worker validation and commit medians are 0.015110 and 0.020590 ms; eight-worker
+medians are 0.011690 and 0.016300 ms. Eight-worker lane wall times exceed their thread CPU times,
+which motivated the placement check below. Peak RSS was 1690.637 MiB, with five comparison arenas,
+a verification copy and 14 worker wrappers across pools. Source artifact SHA256 is
+<code>9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19</code>, the measured
+<code>source.tar.gz</code> is <code>5deff99fe587108b3f378bcf8adcd1244ab7d035930c6bc60e702f00233d601c</code>, and the raw
+<code>control.jsonl</code> is <code>ba815a8e1b60d2febe695061fc04cc1c4ce5dec30ccb907db5c4b0a68d10becf</code>.
+<code>scripts/analyze/control.ts</code> regenerates the summary. This is a different workload from the
+207-sample sweep, so the speedups are not a matched before and after.</p>
+<p>The initial <code>results/20261020-control/</code> run stays on record separately. Its eight-worker median was
+7.437x with a 4.979 to 7.575x range, but it predates the final lane-budget, allocation-fallback and
+idle-lifetime fixes and is not substituted for the final implementation.</p>
+<h3 id="worker-placement" class="tsd-anchor-link">Worker Placement<a href="#worker-placement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>results/20261020-affinity-final/</code> tests the final production source and the same C artifact. Each
+width reuses one pool for both placement arms. Linux worker TIDs are found before and after pool
+creation, checked to belong to this process and verified after every affinity change. Unpinned
+workers may use CPUs 4 to 11; pinned workers each use a distinct physical core in that mask.
+Affinity commands and full-memory checks sit outside timed intervals. Two warmup rounds and seven
+rotating measured rounds give 72 exact executions (56 measured), and every return and all
+268500992 bytes match untouched native execution. No sample was discarded.</p>
+<table>
+<thead>
+<tr>
+<th>Workers / placement</th>
+<th style="text-align:right">Elapsed median</th>
+<th style="text-align:right">Paired speedup [range]</th>
+<th style="text-align:right">CPU work / serial</th>
+<th style="text-align:right">CPU / wall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serial oracle</td>
+<td style="text-align:right">150.676 ms</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1.000</td>
+</tr>
+<tr>
+<td>Two, unpinned</td>
+<td style="text-align:right">77.738 ms</td>
+<td style="text-align:right">1.935 [1.665 to 1.943]</td>
+<td style="text-align:right">1.031</td>
+<td style="text-align:right">1.995</td>
+</tr>
+<tr>
+<td>Two, pinned</td>
+<td style="text-align:right">77.992 ms</td>
+<td style="text-align:right">1.935 [1.927 to 1.941]</td>
+<td style="text-align:right">1.033</td>
+<td style="text-align:right">1.996</td>
+</tr>
+<tr>
+<td>Four, unpinned</td>
+<td style="text-align:right">41.962 ms</td>
+<td style="text-align:right">3.595 [2.357 to 3.866]</td>
+<td style="text-align:right">1.030</td>
+<td style="text-align:right">3.710</td>
+</tr>
+<tr>
+<td>Four, pinned</td>
+<td style="text-align:right">39.148 ms</td>
+<td style="text-align:right">3.853 [3.824 to 3.861]</td>
+<td style="text-align:right">1.030</td>
+<td style="text-align:right">3.968</td>
+</tr>
+<tr>
+<td>Eight, unpinned</td>
+<td style="text-align:right">26.627 ms</td>
+<td style="text-align:right">5.636 [3.438 to 6.354]</td>
+<td style="text-align:right">1.058</td>
+<td style="text-align:right">5.982</td>
+</tr>
+<tr>
+<td>Eight, pinned</td>
+<td style="text-align:right">20.062 ms</td>
+<td style="text-align:right">7.519 [6.349 to 7.550]</td>
+<td style="text-align:right">1.049</td>
+<td style="text-align:right">7.893</td>
+</tr>
+</tbody>
+</table>
+<p>Pinning improves the eight-worker paired result by 1.215x median [1.188 to 2.032]. The largest
+per-lane gap between wall time and thread CPU falls from 3.543 ms to 0.871 ms. Worker CPU and total
+process CPU stay similar, so placement recovers elapsed concurrency without reducing arithmetic
+work. The earlier <code>results/20261020-affinity/</code> run stays intact (eight-worker paired median
+improvement 1.291x, with a slower paired sample in the 0.739 to 1.552 range). The final run has no
+slower eight-worker pair, but seven pairs do not establish a universal improvement. Per-core procfs
+counters use 10 ms ticks, so no scheduler or hardware-stall attribution is claimed.</p>
+<p>Pinning is a verified Linux probe mechanism, not a portable default. Node's Worker API has no
+affinity parameter. A production host can apply native thread placement under its own scheduler.
+Worker caps, batching, singleton routing and shared arenas do not depend on affinity.</p>
+<p>Final run: peak RSS 1699.129 MiB, minimum free RAM 24293.6 MiB, one-minute load 0 to 0.37. Source
+archive SHA256 is <code>7390d5558f8c2b39d58152a52b2a8b33a31cdbfe545eecd1b4f394413cfbc634</code> and the raw
+<code>affinity.jsonl</code> is <code>def380244cf05c12866462c091a1f8276980dcfa3b57575b8afa947d657521a8</code>. All 12
+production source files and their built output matched that archive byte for byte when the run
+was recorded (<code>results/source-manifest.json</code>). The repository was formatted with Prettier and
+documented with TSDoc afterwards, which changed whitespace, import order and comments only. The
+measured sources remain in each set's source archive, and the full gate passes on the formatted
+tree.</p>
+<hr>
+<h2 id="☁️-managed-cloudflare-deployment" class="tsd-anchor-link">☁️ Managed Cloudflare Deployment<a href="#☁️-managed-cloudflare-deployment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="capability-probe" class="tsd-anchor-link">Capability Probe<a href="#capability-probe" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>experiments/cloud/</code> holds the first deployed probe. Its bundled Wasm atomic control uses the
+freestanding C build and compiles nothing at request time. Each deployed run was bounded to three
+external requests, at most 57 Worker and Durable Object invocations and zero SQL or storage calls,
+and nothing enabled a paid plan. Two measured runs used at most 114 invocations. The published
+Free allowance is 100,000 Durable Object requests and 13,000 GB-s a day [6].</p>
+<table>
+<thead>
+<tr>
+<th>Deployed mechanism</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ordinary byte RPC</td>
+<td>exact independent copy: recipient 17 to 29, caller stays 17</td>
+</tr>
+<tr>
+<td>Same-isolate SAB clone</td>
+<td>bidirectional aliasing</td>
+</tr>
+<tr>
+<td>Bundled C Wasm atomic control</td>
+<td>exact</td>
+</tr>
+<tr>
+<td>MessageChannel SAB</td>
+<td>explicitly refused</td>
+</tr>
+<tr>
+<td>SAB and shared Memory as RPC arguments</td>
+<td>unable to deserialize cloned data</td>
+</tr>
+<tr>
+<td>SAB and shared Memory as RPC returns</td>
+<td>unable to deserialize cloned data</td>
+</tr>
+<tr>
+<td>Ordinary Memory and MessagePort over RPC</td>
+<td>clone or serialization refusal</td>
+</tr>
+<tr>
+<td>Eight CPU lanes</td>
+<td>eight distinct module UUIDs, exact checksums, no co-residency observed</td>
+</tr>
+<tr>
+<td>Account cleanup</td>
+<td>delete-class migration, then script deletion; resource lists equal baseline</td>
+</tr>
+</tbody>
+</table>
+<p>Corrected telemetry run <code>cfw-folio-6f050255</code> kept two measured rounds after one warmup. Coordinator
+spans for K=1, 2, 4, 8 were 122.5, 67.5, 45 and 32.5 ms (medians), with eight-lane paired speedups
+of 3.968x and 3.588x. The first run's 195.5 ms serial baseline and 4.775 to 5.405x ratios stay on
+record; different runs are never combined into one matched speedup. Workers clocks freeze during
+synchronous JS, so a lane's own <code>Date.now</code> delta is not CPU telemetry [7]. The tail captured 38 of
+45 lane events and every incomplete row is marked. One complete eight-lane row used 127 ms of
+platform CPU inside 31 ms of coordinator wall time (4.097 CPU over wall, 3.719 after subtracting one
+millisecond per lane for resolution). Missing events are never invented. This shows CPU overlap and
+says nothing about memory sharing.</p>
+<p>The sanitized summary is <code>experiments/cloud/results-managed.json</code> and the local workerd control is
+<code>experiments/cloud/results-local.json</code>. Raw tails, baselines and logs live in the ignored
+<code>experiments/cloud/runs/</code>. Both successful runs restored the one pre-existing Worker and namespace
+exactly.</p>
+<h3 id="what-blocks-sharing-on-managed-workers" class="tsd-anchor-link">What Blocks Sharing on Managed Workers<a href="#what-blocks-sharing-on-managed-workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>At workerd release v1.20261019.1 (commit <code>781048bc05cb205c92e503c1062ef3266ab959b5</code>), JSG local
+cloning keeps a <code>shared_ptr&lt;v8::BackingStore&gt;</code>. Worker RPC keeps serialized bytes and drops the
+shared backing-store array, so the receiver has no matching handle. <code>MessageChannel</code> refuses
+shared backing stores outright, and the <code>worker_threads</code> shim does not create an execution agent
+[8][9][10][11]. The deployed failures agree with these source boundaries.</p>
+<p>Three independent blockers follow. RPC loses the backing-store table. <code>MessagePort</code> rejects SAB and
+only entangles ports inside one isolate. Managed Workers expose neither process-local placement nor
+a scheduler for parallel agents over one allocation. Enabling <code>nodejs_compat</code> changes available
+APIs and polyfills, and <code>worker_threads</code>, <code>vm</code>, <code>cluster</code>, <code>child_process</code> and <code>v8</code> stay stubs.
+The Free and Paid plans show no difference in these semantics in anything measured here; the
+published limits (128 MB per isolate, no threads) are the same for both.</p>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Physical sharing</th>
+<th>Required work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Folio Node execution host</td>
+<td>Between its co-located isolates</td>
+<td>Transport, authorization, admission and lifetime exist; the consumer registers artifacts and bindings</td>
+</tr>
+<tr>
+<td>Self-hosted workerd arena channel</td>
+<td>Native building block identified, adapter not built</td>
+<td>Retain handles in a process-local authenticated channel; add a separately scheduled isolate group</td>
+</tr>
+<tr>
+<td>Managed Workers with copied owners or pages</td>
+<td>None</td>
+<td>Ownership, coherence, resumable guest accesses and a production adapter; never label copied pages zero-copy</td>
+</tr>
+</tbody>
+</table>
+<p>A native workerd adapter needs a tenant-scoped arena registry, an unforgeable membership
+capability, same-process placement, retained backing-store lifetime, growth coordination,
+cancellation and explicit physical and private accounting. It must reject remote and cross-tenant
+attachments, and revocation stops new attachments while existing native references run down.
+Managed JS cannot install this registry through the tested RPC interface. That is a missing host
+capability, not evidence that V8 cannot share memory.</p>
+<h3 id="managed-coherent-backend" class="tsd-anchor-link">Managed Coherent Backend<a href="#managed-coherent-backend" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>src/managed.ts</code> with <code>src/frames.ts</code> (<code>@gmitch215/folio/managed</code>) runs entirely in managed Workers
+and Durable Objects. The coordinator and its JSPI stack stay in a Durable Object. It sends bounded
+binary region batches and a frozen memory snapshot to named lane objects, and validates results in
+order. This is copied coherent memory, not shared memory. Neither route depends on Node
+compatibility creating operating-system threads.</p>
+<p>Final run <code>experiments/managed/runs/cfw-folio-managed-a627504d/</code>: all 39 rows pass (13 warmups,
+26 measured). Every parallel row discovers 64 regions, has zero replay, native or transport
+fallbacks, and matches the native scalar and all 131072 memory bytes. Two, four and eight lanes
+report 2, 4 and 8 distinct module UUIDs in every measured row. JSPI is present and exercised by the
+extracted coordinator.</p>
+<table>
+<thead>
+<tr>
+<th>Transport</th>
+<th style="text-align:right">Two lanes</th>
+<th style="text-align:right">Four lanes</th>
+<th style="text-align:right">Eight lanes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Batched RPC bytes</td>
+<td style="text-align:right">473.5 ms</td>
+<td style="text-align:right">370.0 ms</td>
+<td style="text-align:right">358.0 ms</td>
+</tr>
+<tr>
+<td>Binary fetch</td>
+<td style="text-align:right">472.5 ms</td>
+<td style="text-align:right">353.5 ms</td>
+<td style="text-align:right">357.0 ms</td>
+</tr>
+<tr>
+<td>Streamed binary fetch</td>
+<td style="text-align:right">537.5 ms</td>
+<td style="text-align:right">398.5 ms</td>
+<td style="text-align:right">360.0 ms</td>
+</tr>
+<tr>
+<td>Persistent binary WebSocket</td>
+<td style="text-align:right">453.0 ms</td>
+<td style="text-align:right">381.0 ms</td>
+<td style="text-align:right">357.5 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Medians of two samples. Serial is 572.0 ms [570 to 574]. Each timed row includes preparation, lane
+admission, a serial oracle and joined close, so these are end-to-end figures. The best paired
+improvement is 1.618x (four-lane binary fetch). They are not isolated kernel speedups, no
+aggregate CPU claim is made, and every raw sample and byte count stays in the result files.</p>
+<p>The backend copies a whole frozen arena per lane batch, with a default snapshot limit of 32 MiB.
+It has no distributed page ownership, residency leases or native memory larger than the owner's
+budget. WebSocket events need <code>binaryType = 'arraybuffer'</code>; the default blob events produced
+invalid frames and correctly triggered native fallback.</p>
+<p>Earlier attempts stay in their own cleaned-up run directories. The first hit route propagation
+(404) before any workload ran, which now has an unauthenticated readiness check ahead of the
+protected call. The second finished three exact serial rows and then found the prepared pool gone
+on a later RPC. The final <code>runPrepared</code> keeps preparation, execution and close in one owner
+invocation, so nothing assumes in-memory state survives between independent calls. A cleanup
+timeout was recovered with <code>experiments/cleanup.ts</code>, and account scripts and namespaces match
+baseline.</p>
+<h3 id="browser-run" class="tsd-anchor-link">Browser Run<a href="#browser-run" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>experiments/browser/</code> serves a cross-origin-isolated page from a deployed Worker and drives it
+through the Browser Run binding. Run <code>cfw-folio-browser-0e66d825</code> (STUDENT) passes cross-origin
+isolation, eight distinct worker UUIDs, a 256 MiB shared Wasm attachment, 40000 native atomic
+increments, bidirectional and cross-worker aliasing, an isolated copied-buffer control, growth and
+zero fill. Creator termination is requested and surviving holders keep access; the browser API
+gives no termination acknowledgement.</p>
+<table>
+<thead>
+<tr>
+<th>Elapsed median (three samples)</th>
+<th style="text-align:right">owner</th>
+<th style="text-align:right">one worker</th>
+<th style="text-align:right">two</th>
+<th style="text-align:right">four</th>
+<th style="text-align:right">eight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Native kernel</td>
+<td style="text-align:right">119.250 ms</td>
+<td style="text-align:right">128.695 ms</td>
+<td style="text-align:right">63.620 ms</td>
+<td style="text-align:right">30.785 ms</td>
+<td style="text-align:right">36.790 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Four workers give 3.874x over the owner. The kernel partitions are explicit, so this proves the
+memory and CPU mechanism and not automatic extraction. No native aggregate CPU meter exists; the
+whole session reports 5257 ms and its page 2487.435 ms. Browser JSPI is absent, so the generalized
+controller needs a fallback or another configuration before it can use this arena. A compiler-proved
+countdown adapter without JSPI could bridge it for the guarded subset. Account resources matched
+baseline after cleanup. This result says nothing about ordinary Worker or Durable Object backing
+allocations.</p>
+<hr>
+<h2 id="🌉-execution-host-and-portable-client" class="tsd-anchor-link">🌉 Execution Host and Portable Client<a href="#🌉-execution-host-and-portable-client" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>An edge Worker can keep its URL and stream a response from a Folio execution host. Sharing happens
+inside that host, and the request and result cross a network transport. This moves execution and
+does not merge Cloudflare isolate quotas.</p>
+<p><code>src/remote.ts</code> and <code>src/host.ts</code> (<code>@gmitch215/folio/remote</code> and <code>/host</code>) implement it. The client
+uses fetch or service bindings, has no Node imports and compiles no Wasm. The host registers
+trusted artifacts and export allowlists, creates real Folio groups, and exposes ordered run, read,
+write and close commands. Number bit patterns, BigInts and void values have an explicit codec.
+Object identity and executable JS stay at the host.</p>
+<p>Each session has an unforgeable random capability and a monotonic sequence. An exact duplicate gets
+its cached response, and conflicting duplicates and gaps are refused. Lost success and trap
+responses are tested without replaying effects, and <code>retryPending()</code> recovers explicitly. The cache
+is bounded and in memory, so it gives no exactly-once effects across host restarts. Authorization,
+live groups, worker count, request, response, read and write bytes, argument count, idle expiry
+and retained sessions are bounded, and disposal joins workers and pending effects before releasing
+its admission slot.</p>
+<p>Memory admission is an initial check of the accessible backing, including a hidden primary arena
+exposed by the coordinator. It is not a hard V8 heap or growth quota: trusted artifact factories
+enforce declared maxima, reserve snapshot and private overhead, and account for hidden
+allocations.</p>
+<p><code>experiments/cloud/host-probe.ts</code> runs the portable module in stock workerd (Miniflare) with a
+service binding to the authenticated Node host. Four distinct Folio threads execute the C entry,
+all 131072 bytes match an untouched oracle, i64 and void results match, and eight host requests
+create and dispose two groups with zero active groups at the end. Evidence:
+<code>experiments/cloud/results-host-20261020.json</code> (workerd 1.20260815.1, Miniflare 5.20260815.0-alpha,
+compatibility date 2026-08-22, Node 26.8.2), with the earlier <code>results-host-local.json</code>,
+<code>results-host-local-v2.json</code> and <code>results-host-final.json</code> kept. The probe passes again on workerd
+1.20261019.1 and Miniflare 5.20261019.0-beta (<code>results-host-consolidated.json</code>). This route is
+tested in local stock workerd. A publicly deployed Worker to host endpoint and its network latency
+are not measured.</p>
+<hr>
+<h2 id="🧩-api-and-compatibility-evidence" class="tsd-anchor-link">🧩 API and Compatibility Evidence<a href="#🧩-api-and-compatibility-evidence" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The package root exports <code>Folio</code>, <code>prepare</code>, <code>suspending</code> and types. <code>/node</code>, <code>/compiler</code>,
+<code>/remote</code>, <code>/host</code> and <code>/managed</code> are subpaths. Inputs may be source bytes, ArrayBuffer, a compiled
+Module or a trusted <code>PreparedProgram</code>; a compiled Module keeps its native path because its bodies
+cannot be inspected through reflection. Multiple memory imports bind by name, and ordinary wasm32
+imported memories can be allocated from their original limits. Owned memory keeps its identity and
+buffer semantics, and a coordinator plan can expose its single hidden arena through <code>memory</code>.</p>
+<p><code>run</code> owns automatic discovery and <code>runAll</code> is the lower-level ordered-call API. Reports carry
+serial, speculative or native-shared mode, participating workers, region, replay and fallback
+counts, a routing reason and optional timing. Generalized runs also report <code>extraction</code>,
+<code>memoryMode</code> and <code>snapshotBytes</code>. <code>inspect(entry)</code> separates native guards, counted-loop plans and
+control-flow plans. A serial report has zero participating workers even when singleton regions were
+found and run at their owner.</p>
+<p>For JSPI, <code>suspending(asyncHostImport)</code> wraps an import and <code>promising</code> lists the asynchronous
+exports. Wrapping reference-returning exports would change an externref Promise's identity through
+Promise assimilation, so they keep the native ABI. Numeric coercions happen once at the original
+call site and host exceptions keep their identity. Concurrent runs are refused. Close joins worker
+termination and outstanding JSPI calls; a suspended external operation may still need to finish.</p>
+<p>Integrated checks cover compiler discovery, private locals and conditionals, scalar carry refusal,
+dynamic conflicts, blind and partial writes, guard overlap, bounds and wrap, trap prefixes,
+budgets, initialization, growth, imports, refs, async effects, numeric bit preservation and
+cancellation. Import accessor order and receivers match native instantiation, and cross-realm
+bytes, compiled modules and shared memory keep their native brands.</p>
+<p>Real consumer artifacts were compared with original native instances:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tinyimg 809,683-byte ABI 2 module</td>
+<td>14 create, fill, invert, size, destroy and free calls; every return and the complete 1 MiB final memory agree</td>
+</tr>
+<tr>
+<td>gmux 4,303-byte core ABI 1 module</td>
+<td>10 queue, version and reset calls with imported table and globals; return sequence and entire memory agree</td>
+</tr>
+</tbody>
+</table>
+<p>The generalized implementation repeats the comparisons in
+<code>results/integration-generalized-final.json</code>. tinyimg image creation runs three regions on two
+workers; fill finds 24576 singleton regions that stay local after the singleton routing fix; invert
+stays native. No image speedup is claimed. The gmux queue stays serial through <code>runAll</code> with its
+imported global and table state. This is artifact compatibility and observed extraction, not a full
+consumer adapter. SHA256: tinyimg
+<code>b6b52b8c2b9341191795d589d2bf8590f728539766c9914f900ae0fe96a914bb</code>, gmux core
+<code>0a92cb8087557b71c763e5aa38c72d17b3cf47fafa67352150df30f2a1340a22</code>.</p>
+<p>Two defects were caught in review before measurement: scalar carry was lost when an outlined local
+was captured again on the next iteration, and an earlier queued trap could starve behind infinite
+tail recursion. Both have dedicated regressions. tinyimg also exposed missing Binaryen feature flags
+for sign-extension and saturating conversions.</p>
+<h3 id="extraction-coverage" class="tsd-anchor-link">Extraction Coverage<a href="#extraction-coverage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Current implementation</th>
+<th>Extension that would raise coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admitted scalar CFG</td>
+<td>Engine coordinator; nested loops, calls, switches, returns, tail calls</td>
+<td>Larger region selection and alias guards</td>
+</tr>
+<tr>
+<td>Inline memory kernels</td>
+<td>Outlined with capture, remap, local-use and definite-assignment proofs</td>
+<td>Full CFG liveness instead of conservative outside-use counts</td>
+</tr>
+<tr>
+<td>Scalar carry and reductions</td>
+<td>Original owner stack; independent surrounding regions still extract</td>
+<td>Future-valued scalars and proved scan or reduction transforms</td>
+</tr>
+<tr>
+<td>Used callee return</td>
+<td>Coordinator runs the result dependency; inner regions may extract</td>
+<td>Def-use scheduling of independent later calls</td>
+</tr>
+<tr>
+<td>Globals, tables, allocator, C stack, TLS</td>
+<td>Kept at owner; joins before opaque state and effects</td>
+<td>Owner capabilities, disjoint private stacks or tracked state slots</td>
+</tr>
+<tr>
+<td>SIMD, GC and refs, EH and longjmp</td>
+<td>Whole native function boundary</td>
+<td>Typed continuation and state lowering</td>
+</tr>
+<tr>
+<td>Memory 64 and multiple memories</td>
+<td>Original native module and supplied bindings</td>
+<td>Wide address ABI and memory IDs in transaction sets</td>
+</tr>
+<tr>
+<td>Irreversible host effects</td>
+<td>Join, run once at owner, resume the original stack</td>
+<td>Consumer-specific effect routing; no generic rollback of external I/O</td>
+</tr>
+<tr>
+<td>Direct and mutual recursion</td>
+<td>Original native owner; legacy tracking refuses it</td>
+<td>Resource-aware continuation model</td>
+</tr>
+<tr>
+<td>Modules Binaryen cannot inspect</td>
+<td>Original native module</td>
+<td>Another frontend</td>
+</tr>
+</tbody>
+</table>
+<p>An unrecognized feature is an analysis exclusion and never proof of a serial dependency; every
+exclusion keeps a working native path. Polly [12], LLVM runtime alias guards [13] and NewAge [14]
+remain relevant prior art without being dependencies. A next-input chain that depends on an
+unpredictable external response keeps its order, and independent surrounding work can still
+overlap. A memory recurrence may admit a proved scan; speculative replay alone need not speed it
+up. The proof obligation for each region is captured scalar inputs, complete tracked effects,
+ordered validation and observation barriers, exercised by finite differential tests and not by a
+formal whole-compiler verification.</p>
+<hr>
+<h2 id="🧑💻-consumer-boundaries" class="tsd-anchor-link">🧑‍💻 Consumer Boundaries<a href="#🧑💻-consumer-boundaries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><strong>PHP and Thunder.</strong> An earlier census found 1,183,236 scalar memory sites in the 13,401,751-byte
+PHP 8.5 artifact (active data ended at 4,206,482), plus 260 HEAP references and 21 invoke or
+JS-longjmp trampolines in the 400,452-byte glue. These are artifact-specific measurements, not a
+new census. A paged or shared integration must preserve initialization, stack and TLS, typed
+accesses, growth, libc bulk operations and every glue HEAP access. A wasm-SjLj build removes the
+JS longjmp trampolines, but synchronous vrzno Proxy callbacks still need an explicit value-based
+boundary before suspension [15][4]. An earlier re-entry interpreter loaded the real PHP module and
+returned PHP 8.5.2, extension API 20250925 and stack pointer 37916928, with 40,370,176 bytes of
+interpreter memory plus 64 MiB of contiguous guest memory. That proves binary compatibility and
+does not prove PHP boot or a Drupal render. For Thunder, an admitted backend is chosen before
+execution, URL, session, headers and cache metadata are kept, and a destructive out-of-memory is
+never recovered by replaying writes blindly. A real render with SQLite, ROM, callback and longjmp
+coverage and an effects comparison remains required.</p>
+<p><strong>gmux.</strong> Linux mappings, protection, fds and scheduling stay in gmux. Folio supplies execution,
+arena and validation primitives. Independent process execution is the natural first consumer;
+shared writable mappings and futex or atomic coherence need explicit semantics. Neither consumer
+takes a dependency on the other.</p>
+<hr>
+<h2 id="📜-historical-copied-memory-results" class="tsd-anchor-link">📜 Historical Copied-Memory Results<a href="#📜-historical-copied-memory-results" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>These predate physical sharing and serve as evidence for a managed capacity workaround. They are
+not shared backing.</p>
+<table>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>256 MiB virtual space, 16 MiB executor cache, 4x 64 MiB owners</td>
+<td>67,108,864 words exact; dirty eviction and boundary tests</td>
+</tr>
+<tr>
+<td>Resident checked paging</td>
+<td>6.532 ms native, 32.627 ms checked, 4.995x paired tax, n=7</td>
+</tr>
+<tr>
+<td>Local workerd per-page fetch</td>
+<td>24,584 exchanges, 3,268 ms, exact</td>
+</tr>
+<tr>
+<td>Local duplex streams</td>
+<td>four executor fetches, same 24,584 exchanges, 7,339 ms, exact; fewer requests, slower on localhost</td>
+</tr>
+<tr>
+<td>Mutable stencil, 4 MiB, 8 epochs, 16 mixes</td>
+<td>172.73 ms serial, 50.99 ms four owners; 3.396x, CPU ratio 1.003</td>
+</tr>
+<tr>
+<td>Stencil, 32 MiB stream</td>
+<td>78.83 ms serial, 31.71 ms four owners; 2.537x paired</td>
+</tr>
+<tr>
+<td>Stencil, tiny 16 KiB</td>
+<td>0.198 ms serial, 0.556 ms four owners; parallelism loses</td>
+</tr>
+<tr>
+<td>Flat 48-pass 16 MiB sum</td>
+<td>38.632 ms ordinary, 357.478 ms per-load checked</td>
+</tr>
+<tr>
+<td>Translate once per page</td>
+<td>39.179 ms; 1.014x of the matched ordinary loop</td>
+</tr>
+<tr>
+<td>Validate a contiguous span once</td>
+<td>38.660 ms; 1.0002x</td>
+</tr>
+<tr>
+<td>Irregular bounded indexing</td>
+<td>4.872 ms ordinary, 8.271 ms checked, 4.888 ms whole-span guarded</td>
+</tr>
+</tbody>
+</table>
+<p>The stencil work uses explicit partitions and epoch barriers. The paging prototypes have no durable
+fencing or recovery and no coherent arbitrary concurrent writers. Fast spans need complete range,
+residency and permission proofs, no escaping physical views, and no remapping or yield inside the
+lease. Burrow's earlier deployed eight 96 MiB isolates show aggregate capacity; resets near 190 to
+200 MiB are empirical and not an entitlement, so admission follows the provider's published memory
+contract [16]. A copied ownership backend needs bounded frames and credits, tenant and epoch checks
+at every owner, acknowledged dirty writeback before eviction, explicit missing-page errors,
+zero-page manifests, growth semantics and checkpoints for owner loss, with no SQL write per load,
+store or fault.</p>
+<hr>
+<h2 id="⚠️-limits-and-open-questions" class="tsd-anchor-link">⚠️ Limits and Open Questions<a href="#⚠️-limits-and-open-questions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>These came out of two external audits of the first managed-bridge draft. Each row names its status:
+open work, a reporting rule, or a claim this report does not make.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The shipping PHP fails <code>prepare()</code> with a 1,258,580-function count against V8's 1,000,000 function cap. The original module's defined and imported function counts, the transformed count and the number of generated helpers have not been compared. The prepared count sits 75,344 above the 1,183,236 memory-site census, which suggests per-access helper generation.</td>
+<td>Open. Unresolved until the original and prepared counts are recorded</td>
+</tr>
+<tr>
+<td><code>module UUID</code> counts distinct module instances. It is not a native V8 isolate identifier, and named objects can share an isolate. Managed rows report the identities they measured and no more.</td>
+<td>Reported as measured; no native isolate identity exists for managed runs</td>
+</tr>
+<tr>
+<td>The recorded deployed runs name the STUDENT account. A run on the account labelled FREE is not on record. <code>experiments/deploy.ts</code> now accepts <code>FREE_*</code> credentials and records which account ran.</td>
+<td>Open until a FREE run is recorded</td>
+</tr>
+<tr>
+<td>Managed medians use two samples per arm and include preparation, admission, a serial oracle and close. No isolated kernel timing, warm and cold split, or snapshot scaling curve toward the 32 MiB limit exists.</td>
+<td>Open</td>
+</tr>
+<tr>
+<td>Managed Workers have no aggregate CPU measurement and Folio has no energy measurement on any route.</td>
+<td>Not claimed; energy is open</td>
+</tr>
+<tr>
+<td>7x on managed Workers needs a small serial fraction. Nothing here shows it, and nothing here proves a 1.6x ceiling either.</td>
+<td>Not claimed in either direction</td>
+</tr>
+<tr>
+<td>Node's 7.519x is a synthetic kernel result. No measured gmux or Thunder speedup exists, and <code>folio.inspect()</code> coverage on the gmux machine core and a lifted region is unrecorded.</td>
+<td>Open</td>
+</tr>
+<tr>
+<td>Capacity: the managed backend needs canonical memory inside the owner runtime and copies a snapshot per batch, so it is no fallback for Thunder-class memory. Distributed page ownership is unbuilt.</td>
+<td>Known limit</td>
+</tr>
+<tr>
+<td>Browser Run is a separate managed product with no JSPI in the tested configuration, so it has no automatic extraction. Its plan limits and cost were not checked beyond the published Free allowance.</td>
+<td>Known limit</td>
+</tr>
+<tr>
+<td>The 101 library and probe tests in the earlier record came from a log that was read and not re-run by the auditors. The current gate is listed under Reproduction and Verification.</td>
+<td>Superseded</td>
+</tr>
+</tbody>
+</table>
+<p>Free and Paid show no measured difference in memory semantics, and nothing here argues that
+upgrading changes the cross-isolate barrier.</p>
+<hr>
+<h2 id="✅-reproduction-and-verification" class="tsd-anchor-link">✅ Reproduction and Verification<a href="#✅-reproduction-and-verification" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>From the repository root, with Node 26 on <code>PATH</code>, Bun, and an LLVM toolchain with <code>wasm-ld</code>:</p>
+<pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build:c</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">typecheck</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test:integration</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">examples/basic.ts</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">scripts/analyze/run.ts</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>bun run build:c</code> compiles the three C fixtures in <code>tests/c/</code> with the existing freestanding
+LLVM and clang flags, without Emscripten. Builds strip <code>node_modules/.bin</code> from <code>PATH</code> because
+binaryen's <code>wasm-opt</code> there changed a 511-byte fixture into a 458-byte one; a regression test
+covers it. Measurements run on Paisley Park through <code>scripts/rig/run.sh</code>, which holds the timing
+lock and applies <code>nice 19</code> with a fixed CPU mask. Local probes and the live deploy:</p>
+<pre><code class="sh"><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">experiments/cloud/host-probe.ts</span><br/><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">experiments/cloud/local.ts</span><br/><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">experiments/managed/prepare.ts</span><br/><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">experiments/managed/local.ts</span><br/><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">experiments/deploy.ts</span><span class="hl-1"> </span><span class="hl-2">managed</span><br/><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">experiments/cleanup.ts</span><span class="hl-1"> </span><span class="hl-2">NAME</span><span class="hl-1"> </span><span class="hl-2">KIND</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Live deploys read <code>FREE_CLOUDFLARE_ACCOUNT_ID</code> and <code>FREE_CLOUDFLARE_API_TOKEN</code> (falling back to
+<code>STUDENT_*</code>), snapshot the account's scripts and namespaces first, and compare them afterwards.
+Real-artifact comparison: <code>node scripts/probe/integration-probe.ts TINYIMG.wasm GMUX-CORE.wasm</code>.</p>
+<p>The scaling record is <code>results/20261019-d/</code>: 207 raw samples, a deterministic summary, the runner
+log and the exact measured <code>source.tar.gz</code>. The final placement run keeps 56 measured samples and
+16 warmups in <code>results/20261020-affinity-final/</code>. <code>results/verification.json</code> and
+<code>results/managed-bridge-verification.json</code> index the earlier gates, with their logs beside them.
+The summaries in <code>results/*/summary.json</code> regenerate byte for byte from the raw samples with
+<code>scripts/analyze/</code>, apart from the row order of <code>results/20261019/summary.json</code>, which now sorts
+its input files.</p>
+<p>Current gate on Node 26.8.2, run during repository consolidation: typecheck passes for the library
+and the three Worker projects; <strong>111 tests pass</strong> (108 unit, 3 integration) with no failures or
+skips; the unit and integration projects together cover 88.55% of statements, 83.15% of branches,
+91.34% of functions and 91.91% of lines of <code>src/</code>; the library builds; <code>examples/basic.ts</code> reports
+four workers and 37 regions with zero replays and fallbacks. The integration project runs the host
+probe, the capability probe and all 39 managed rows in local workerd (1.20261019.1).
+<code>worker.ts</code> counts as uncovered because it runs in worker threads that the coverage provider does
+not instrument. The live deploy test skips without Cloudflare credentials and has not been run from
+this repository.</p>
+<p>Rig footprints on Paisley Park stayed small (control 752 KiB, placement 1020 KiB, the earlier rigs
+200 to 264 KiB), with 133 GiB free on <code>/</code> and over 25 GiB of available RAM afterwards. No server
+setting, package installation, unrelated service restart or protected mount access was involved.</p>
+<hr>
+<h2 id="📚-references" class="tsd-anchor-link">📚 References<a href="#📚-references" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Numbers appear in order of first use. Sources with a pinned commit or tag name it.</p>
+<p>[1] Node.js, <code>node_messaging.cc</code> sender, v26.10.0: <a href="https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L371">https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L371</a></p>
+<p>[2] Node.js, <code>node_messaging.cc</code> receiver, v26.10.0: <a href="https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L196">https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L196</a></p>
+<p>[3] V8, backing-store lifetime contract, as vendored in Node.js v26.10.0: <a href="https://github.com/nodejs/node/blob/v26.10.0/deps/v8/include/v8-array-buffer.h#L556">https://github.com/nodejs/node/blob/v26.10.0/deps/v8/include/v8-array-buffer.h#L556</a></p>
+<p>[4] V8, &quot;WebAssembly JavaScript Promise Integration&quot;: <a href="https://v8.dev/blog/jspi">https://v8.dev/blog/jspi</a></p>
+<p>[5] Hammond et al., &quot;The Stanford Hydra CMP,&quot; sections 3 and 4: <a href="https://ppl.stanford.edu/papers/hydra_ASPLOS98.pdf">https://ppl.stanford.edu/papers/hydra_ASPLOS98.pdf</a></p>
+<p>[6] Cloudflare, Durable Objects pricing: <a href="https://developers.cloudflare.com/durable-objects/platform/pricing/">https://developers.cloudflare.com/durable-objects/platform/pricing/</a></p>
+<p>[7] Cloudflare, Workers timing behavior: <a href="https://developers.cloudflare.com/workers/runtime-apis/performance/">https://developers.cloudflare.com/workers/runtime-apis/performance/</a></p>
+<p>[8] workerd, <code>jsg/ser.c++</code>, commit 781048b: <a href="https://github.com/cloudflare/workerd/blob/781048bc05cb205c92e503c1062ef3266ab959b5/src/workerd/jsg/ser.c%2B%2B">https://github.com/cloudflare/workerd/blob/781048bc05cb205c92e503c1062ef3266ab959b5/src/workerd/jsg/ser.c%2B%2B</a></p>
+<p>[9] workerd, <code>api/worker-rpc.c++</code>, commit 781048b: <a href="https://github.com/cloudflare/workerd/blob/781048bc05cb205c92e503c1062ef3266ab959b5/src/workerd/api/worker-rpc.c%2B%2B">https://github.com/cloudflare/workerd/blob/781048bc05cb205c92e503c1062ef3266ab959b5/src/workerd/api/worker-rpc.c%2B%2B</a></p>
+<p>[10] workerd, <code>api/messagechannel.c++</code>: <a href="https://github.com/cloudflare/workerd/blob/main/src/workerd/api/messagechannel.c%2B%2B">https://github.com/cloudflare/workerd/blob/main/src/workerd/api/messagechannel.c%2B%2B</a></p>
+<p>[11] workerd, <code>node/worker_threads.ts</code>: <a href="https://github.com/cloudflare/workerd/blob/main/src/node/worker_threads.ts">https://github.com/cloudflare/workerd/blob/main/src/node/worker_threads.ts</a></p>
+<p>[12] LLVM, Polly architecture: <a href="https://polly.llvm.org/docs/Architecture.html">https://polly.llvm.org/docs/Architecture.html</a></p>
+<p>[13] LLVM, runtime checks of pointers: <a href="https://llvm.org/docs/Vectorizers.html#runtime-checks-of-pointers">https://llvm.org/docs/Vectorizers.html#runtime-checks-of-pointers</a></p>
+<p>[14] NewAge: <a href="https://arxiv.org/html/1809.07684">https://arxiv.org/html/1809.07684</a></p>
+<p>[15] Emscripten, setjmp and longjmp: <a href="https://emscripten.org/docs/porting/setjmp-longjmp.html">https://emscripten.org/docs/porting/setjmp-longjmp.html</a></p>
+<p>[16] Cloudflare, Workers memory limits: <a href="https://developers.cloudflare.com/workers/platform/limits/#memory">https://developers.cloudflare.com/workers/platform/limits/#memory</a></p>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#technical-report-shared-webassembly-memory-and-ordered-speculation"><span>Technical <wbr/>Report: <wbr/>Shared <wbr/>Web<wbr/>Assembly <wbr/>Memory and <wbr/>Ordered <wbr/>Speculation</span></a>
+<ul>
+<li><a href="#🧭-executive-summary"><span>🧭 <wbr/>Executive <wbr/>Summary</span></a></li>
+<li>
+<ul>
+<li><a href="#what-decides-the-design"><span>What <wbr/>Decides the <wbr/>Design</span></a></li></ul></li>
+<li><a href="#🎯-scope-and-acceptance"><span>🎯 <wbr/>Scope and <wbr/>Acceptance</span></a></li>
+<li><a href="#🔬-mechanism-and-correctness"><span>🔬 <wbr/>Mechanism and <wbr/>Correctness</span></a></li>
+<li>
+<ul>
+<li><a href="#physical-sharing"><span>Physical <wbr/>Sharing</span></a></li>
+<li><a href="#region-extraction"><span>Region <wbr/>Extraction</span></a></li>
+<li><a href="#ordered-speculation"><span>Ordered <wbr/>Speculation</span></a></li>
+<li><a href="#resource-limits-and-recursion"><span>Resource <wbr/>Limits and <wbr/>Recursion</span></a></li>
+<li><a href="#contract-with-the-host"><span>Contract <wbr/>With the <wbr/>Host</span></a></li></ul></li>
+<li><a href="#🧱-memory-and-program-state"><span>🧱 <wbr/>Memory and <wbr/>Program <wbr/>State</span></a></li>
+<li><a href="#📏-measurements-physical-sharing"><span>📏 <wbr/>Measurements: <wbr/>Physical <wbr/>Sharing</span></a></li>
+<li><a href="#⚙️-measurements-cpu-scaling-and-taxes"><span>⚙️ <wbr/>Measurements: <wbr/>CPU <wbr/>Scaling and <wbr/>Taxes</span></a></li>
+<li>
+<ul>
+<li><a href="#generalized-c-entry"><span>Generalized <wbr/>C <wbr/>Entry</span></a></li>
+<li><a href="#worker-placement"><span>Worker <wbr/>Placement</span></a></li></ul></li>
+<li><a href="#☁️-managed-cloudflare-deployment"><span>☁️ <wbr/>Managed <wbr/>Cloudflare <wbr/>Deployment</span></a></li>
+<li>
+<ul>
+<li><a href="#capability-probe"><span>Capability <wbr/>Probe</span></a></li>
+<li><a href="#what-blocks-sharing-on-managed-workers"><span>What <wbr/>Blocks <wbr/>Sharing on <wbr/>Managed <wbr/>Workers</span></a></li>
+<li><a href="#managed-coherent-backend"><span>Managed <wbr/>Coherent <wbr/>Backend</span></a></li>
+<li><a href="#browser-run"><span>Browser <wbr/>Run</span></a></li></ul></li>
+<li><a href="#🌉-execution-host-and-portable-client"><span>🌉 <wbr/>Execution <wbr/>Host and <wbr/>Portable <wbr/>Client</span></a></li>
+<li><a href="#🧩-api-and-compatibility-evidence"><span>🧩 <wbr/>API and <wbr/>Compatibility <wbr/>Evidence</span></a></li>
+<li>
+<ul>
+<li><a href="#extraction-coverage"><span>Extraction <wbr/>Coverage</span></a></li></ul></li>
+<li><a href="#🧑💻-consumer-boundaries"><span>🧑‍💻 <wbr/>Consumer <wbr/>Boundaries</span></a></li>
+<li><a href="#📜-historical-copied-memory-results"><span>📜 <wbr/>Historical <wbr/>Copied-<wbr/>Memory <wbr/>Results</span></a></li>
+<li><a href="#⚠️-limits-and-open-questions"><span>⚠️ <wbr/>Limits and <wbr/>Open <wbr/>Questions</span></a></li>
+<li><a href="#✅-reproduction-and-verification"><span>✅ <wbr/>Reproduction and <wbr/>Verification</span></a></li>
+<li><a href="#📚-references"><span>📚 <wbr/>References</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="../modules.html">@gmitch215/folio - v1.0.0</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@gmitch215/folio - v1.0.0</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="index.html" class="title">@gmitch215/folio - v1.0.0</a>
+<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<h1>@gmitch215/folio - v1.0.0</h1></div>
+<div class="tsd-panel tsd-typography"><h1 id="🚋-folio" class="tsd-anchor-link">🚋 Folio<a href="#🚋-folio" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<blockquote>
+<p>⚡ Shared WebAssembly memory and ordered speculative execution across isolates</p>
+</blockquote>
+<p>Folio runs native WebAssembly across several V8 isolates that share one physical memory allocation.
+It finds inline memory regions and pure calls in ordinary programs, validates the ones it cannot
+prove independent, and keeps the serial result. Scalar results, control flow and opaque state stay
+in the original Wasm instance. A portable client connects workerd and managed Cloudflare Workers to
+the same engine.</p>
+<h2 id="table-of-contents" class="tsd-anchor-link">Table of Contents<a href="#table-of-contents" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="#-why-folio">Why Folio</a></li>
+<li><a href="#-features">Features</a></li>
+<li><a href="#-install">Install</a></li>
+<li><a href="#-getting-started">Getting Started</a></li>
+<li><a href="#-asynchronous-host-effects">Asynchronous Host Effects</a></li>
+<li><a href="#-execution-host">Execution Host</a></li>
+<li><a href="#-managed-workers">Managed Workers</a></li>
+<li><a href="#-execution-and-memory">Execution and Memory</a></li>
+<li><a href="#-api-reference">API Reference</a></li>
+<li><a href="#-measured-results">Measured Results</a></li>
+<li><a href="#-development">Development</a></li>
+<li><a href="#-contributing">Contributing</a></li>
+<li><a href="#-license">License</a></li>
+</ul>
+<h2 id="🧭-why-folio" class="tsd-anchor-link">🧭 Why Folio<a href="#🧭-why-folio" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>A Worker, a Linux machine in a Durable Object and a PHP interpreter all end up as one Wasm
+instance on one thread. Folio spreads the work of that instance across cores without asking the
+program to be rewritten. The caller passes one ordinary entry point. The compiler discovers the
+regions, so there are no access annotations and no caller-created chunks.</p>
+<ul>
+<li><strong>Native Sharing.</strong> Isolates map the same backing allocation, so a 256 MiB arena costs about 4 MiB
+to attach to another isolate instead of a copy.</li>
+<li><strong>Serial Semantics.</strong> Uncertain dependencies run on private overlays and commit in original
+order. A conflict replays against committed state, and a trap keeps its preceding writes.</li>
+<li><strong>Original Stack.</strong> JSPI suspends the program's own Wasm stack at joins, so branches, scalar
+carry and host effects behave as they do natively.</li>
+<li><strong>Portable.</strong> The client and the managed backend use fetch, WebSockets and Durable Objects, with
+no Node imports and no request-time Wasm compilation.</li>
+</ul>
+<p>Accepted input does not guarantee a speedup. A program with a true serial dependency runs serially,
+and a small job loses to dispatch overhead.</p>
+<h2 id="✨-features" class="tsd-anchor-link">✨ Features<a href="#✨-features" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>🧵 <strong>Automatic region discovery</strong> across branches, loops, switches, nested calls and reductions.</li>
+<li>🧠 <strong>Ordered validation</strong> with byte-granular conflict detection, replay and budget fallback.</li>
+<li>🛡️ <strong>Native guards</strong> that prove footprints, bounds and finite loops, then run on plain native
+instructions with no tracking.</li>
+<li>🔌 <strong>Arbitrary Wasm input</strong> as bytes, <code>ArrayBuffer</code>, <code>WebAssembly.Module</code> or a prepared plan,
+with imported memories, tables, globals and host functions bound as in native instantiation.</li>
+<li>⏳ <strong>Asynchronous host effects</strong> through JSPI, executed once and in call order.</li>
+<li>🌐 <strong>Execution host and portable client</strong> for workerd, with sessions, quotas and joined cleanup.</li>
+<li>☁️ <strong>Managed backend</strong> that runs entirely in Workers and Durable Objects, with binary frames and
+copied snapshots between lanes.</li>
+<li>📊 <strong>Opt-in profiling</strong> of worker time, validation, commit and replay cost.</li>
+</ul>
+<h2 id="📦-install" class="tsd-anchor-link">📦 Install<a href="#📦-install" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@gmitch215/folio</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@gmitch215/folio</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Folio needs Node 26 or later. Async host imports and the managed backend need WebAssembly JSPI.
+Builds from the main branch publish to the <code>snapshot</code> tag.</p>
+<h2 id="🚀-getting-started" class="tsd-anchor-link">🚀 Getting Started<a href="#🚀-getting-started" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">readFileSync</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;node:fs&#39;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Folio</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">folio</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Folio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-0">readFileSync</span><span class="hl-1">(</span><span class="hl-2">&#39;./build/fixture.wasm&#39;</span><span class="hl-1">), { </span><span class="hl-5">workers:</span><span class="hl-1"> </span><span class="hl-8">4</span><span class="hl-1"> });</span><br/><span class="hl-4">try</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Uint32Array</span><span class="hl-1">(</span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-5">memory</span><span class="hl-1">.</span><span class="hl-5">buffer</span><span class="hl-1">, </span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-8">37</span><span class="hl-1">).</span><span class="hl-0">fill</span><span class="hl-1">(</span><span class="hl-8">1</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;program&#39;</span><span class="hl-1">, [</span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-8">37</span><span class="hl-1">, </span><span class="hl-8">10000</span><span class="hl-1">]);</span><br/><span class="hl-1">  </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">report</span><span class="hl-1">.</span><span class="hl-5">mode</span><span class="hl-1">, </span><span class="hl-5">report</span><span class="hl-1">.</span><span class="hl-5">workers</span><span class="hl-1">, </span><span class="hl-5">report</span><span class="hl-1">.</span><span class="hl-5">regions</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">inspect</span><span class="hl-1">(</span><span class="hl-2">&#39;program&#39;</span><span class="hl-1">));</span><br/><span class="hl-1">} </span><span class="hl-4">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>Folio.open(input, options)</code> accepts a <code>Uint8Array</code>, an <code>ArrayBuffer</code>, a <code>WebAssembly.Module</code> or the
+result of <code>prepare(bytes)</code>. A compiled module has no inspectable bytes and uses its native entry.
+Imported memory is allocated from the module's limits when omitted. Pass <code>memory</code> to bind an
+existing single imported memory, or bind several by their exact names in <code>imports</code>. Missing host
+functions, tables, globals, tags and memory64 bindings are supplied as with native instantiation.
+<code>prepare(bytes, { parallel: 'off' })</code> disables optimization and leaves the program unchanged.
+Prepared plans are trusted build artifacts.</p>
+<h2 id="⏳-asynchronous-host-effects" class="tsd-anchor-link">⏳ Asynchronous Host Effects<a href="#⏳-asynchronous-host-effects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Folio</span><span class="hl-1">, </span><span class="hl-5">suspending</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">folio</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Folio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-9">module</span><span class="hl-1">, {</span><br/><span class="hl-1">  </span><span class="hl-5">imports:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">host:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-5">read:</span><span class="hl-1"> </span><span class="hl-0">suspending</span><span class="hl-1">(</span><span class="hl-6">async</span><span class="hl-1"> (</span><span class="hl-5">key</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> (</span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">URL</span><span class="hl-1">(</span><span class="hl-0">String</span><span class="hl-1">(</span><span class="hl-5">key</span><span class="hl-1">), </span><span class="hl-5">storageUrl</span><span class="hl-1">))).</span><span class="hl-5">status</span><span class="hl-1">)</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">promising:</span><span class="hl-1"> [</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">]</span><br/><span class="hl-1">});</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">, [</span><span class="hl-8">42</span><span class="hl-1">]);</span><br/><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
+
+<p>This needs a runtime with WebAssembly JSPI. Listed async exports and numeric-result coordinator
+entries receive a promising wrapper. Reference-returning exports keep their native ABI, because
+Promise assimilation would change an externref Promise's identity. Host effects run once in call
+order and exceptions keep their identity. Opaque references stay in the original isolate. Closing
+joins a suspended native call; it cannot cancel an arbitrary external Promise.</p>
+<h2 id="🌉-execution-host" class="tsd-anchor-link">🌉 Execution Host<a href="#🌉-execution-host" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@gmitch215/folio/host</code> registers trusted artifacts, bindings and export allowlists through
+<code>FolioHost</code>. Its authenticated fetch handler exposes ordered run, read, write and close operations
+with joined disposal and bounded admission. <code>@gmitch215/folio/remote</code> is the client for it.</p>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">RemoteFolio</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/remote&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">remote</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">RemoteFolio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-5">endpoint</span><span class="hl-1">, </span><span class="hl-2">&#39;fixture&#39;</span><span class="hl-1">, {</span><br/><span class="hl-1">  </span><span class="hl-5">headers:</span><span class="hl-1"> { </span><span class="hl-5">authorization:</span><span class="hl-1"> </span><span class="hl-2">`Bearer </span><span class="hl-6">${</span><span class="hl-5">token</span><span class="hl-6">}</span><span class="hl-2">`</span><span class="hl-1"> },</span><br/><span class="hl-1">  </span><span class="hl-5">workers:</span><span class="hl-1"> </span><span class="hl-8">4</span><br/><span class="hl-1">});</span><br/><span class="hl-4">try</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">remote</span><span class="hl-1">.</span><span class="hl-0">write</span><span class="hl-1">(</span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-5">inputBytes</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">remote</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;program&#39;</span><span class="hl-1">, [</span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-5">wordCount</span><span class="hl-1">, </span><span class="hl-5">rounds</span><span class="hl-1">]);</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">output</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">remote</span><span class="hl-1">.</span><span class="hl-0">read</span><span class="hl-1">(</span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-5">inputBytes</span><span class="hl-1">.</span><span class="hl-5">length</span><span class="hl-1">);</span><br/><span class="hl-1">} </span><span class="hl-4">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">remote</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The client runs in stock workerd with no Node imports and no runtime Wasm compilation. Requests and
+results cross a serialized transport, and physical sharing happens inside the host. Each session
+caches its last accepted result, so <code>retryPending()</code> recovers a lost response without repeating
+effects. The cache is bounded and held in memory. Memory admission checks the initial accessible
+backing, and trusted artifact factories enforce growth maxima and private-memory budgets.</p>
+<h2 id="📡-managed-workers" class="tsd-anchor-link">📡 Managed Workers<a href="#📡-managed-workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@gmitch215/folio/managed</code> exports <code>ManagedFolio</code> and <code>FolioLane</code> for execution entirely in managed
+Workers and Durable Objects. <code>ManagedFolio</code> takes precompiled artifact modules and lane transports
+whose <code>execute(frame)</code> returns a binary response, and <code>FolioLane</code> runs the tracked region module.
+The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
+ordered byte validation connect independent lanes. A transport failure falls back to native owner
+execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
+must fit the owner runtime. See <a href="media/METHOD.md">the managed procedure</a>.</p>
+<h2 id="🧱-execution-and-memory" class="tsd-anchor-link">🧱 Execution and Memory<a href="#🧱-execution-and-memory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Proved finite, nontrapping i32 kernels use runtime bounds and cross-region overlap checks, then
+run native instructions against the shared allocation with no tracking or commit copy. A failed
+guard falls back to tracked execution.</p>
+<p>Tracked regions read a frozen shared base and keep private byte overlays. Once every reader stops,
+Folio validates and commits in order. Conflicts replay against committed state, budgets discard
+speculation, and ordered traps keep their preceding writes while later results are discarded.</p>
+<p>The coordinator keeps admitted scalar control flow and live results. Inline numeric-memory spans
+become regions when modified locals have no external live-outs and are assigned before reads on
+every admitted path. Pure nonrecursive calls with unused results also qualify. Opaque functions,
+recursion, host effects and state operations join preceding regions and run at their original
+owner. Transactional memory covers i32, i64, f32 and f64 scalar operations plus <code>memory.copy</code> and
+<code>memory.fill</code>, including unaligned access, overlap, NaN payloads, bounds and traps. Growth and
+initialization stay at the coordinator. Unsupported instructions, reference and vector state,
+memory64 and multiple memories keep native execution.</p>
+<p>Shared source memory has zero-copy physical backing across the worker group. Ordinary source memory
+keeps its original identity and buffer semantics, with an explicit shared snapshot per speculative
+batch and ordered writeback, and the report counts the snapshot bytes. Regions travel in batches of
+up to 16 per worker, and a singleton at a join runs locally.</p>
+<p>Each isolate keeps its own stack, globals, table, JS heap and instance. Shared linear bytes do not
+merge GC heaps or make arbitrary callbacks transferable. Give Folio exclusive access to its
+memories and native exports until a run settles, and refresh views after shared growth. A failure
+during direct native writes can leave partial memory, so the failed group closes and the
+application restores a checkpoint before retrying. Instruction-defined traps keep their order and
+writes. Native stack capacity and allocation failure can differ between isolates.</p>
+<h2 id="📖-api-reference" class="tsd-anchor-link">📖 API Reference<a href="#📖-api-reference" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run(name, args?, options?)</code></td>
+<td>One entry, automatic region discovery when supported</td>
+</tr>
+<tr>
+<td><code>runAll([{ export, args }], options?)</code></td>
+<td>Ordered sequence of calls; the lower-level speculation primitive</td>
+</tr>
+<tr>
+<td><code>inspect(name)</code></td>
+<td>Automatic plan and native guard availability, with analysis diagnostics</td>
+</tr>
+<tr>
+<td><code>diagnostics</code></td>
+<td>Module-wide optimization refusals</td>
+</tr>
+<tr>
+<td><code>capabilities</code></td>
+<td>Active same-process sharing, automatic extraction and validation mode</td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td>The unique accessible arena, including a coordinator-exposed hidden memory</td>
+</tr>
+<tr>
+<td><code>memories</code></td>
+<td>Named imported and exported memory wrappers</td>
+</tr>
+<tr>
+<td><code>exports</code></td>
+<td>Original native exports for trusted host integration</td>
+</tr>
+<tr>
+<td><code>close()</code> and async disposal</td>
+<td>Join worker termination and outstanding JSPI calls; repeated close shares it</td>
+</tr>
+</tbody>
+</table>
+<p>A run returns <code>values</code>, <code>mode</code>, participating <code>workers</code>, <code>regions</code>, <code>replayed</code>, <code>fallbacks</code> and an
+optional routing <code>reason</code>. Generalized execution also reports <code>extraction</code>, <code>memoryMode</code> and
+<code>snapshotBytes</code>. Mode is <code>serial</code>, <code>speculative</code> or <code>native-shared</code>, and a serial run reports zero
+participating workers. An analysis refusal is distinct from a runtime dependency, a failed guard
+and a small-workload decision.</p>
+<p>Run options:</p>
+<ul>
+<li><code>parallel: 'auto' | 'off' | 'speculate'</code> chooses automatic routing, original execution or tracked
+regions.</li>
+<li><code>maximumWorkers</code> caps participating workers without recreating the group, which limits
+contention or leaves CPU for other jobs.</li>
+</ul>
+<p>Pool options are <code>workers</code> (up to four by default), <code>memory</code>, <code>imports</code>, <code>minimumParallelWork</code>
+(100,000 estimated iterations for proved kernels), <code>fuel</code> (100,000,000), <code>maxTransactionBytes</code>
+(262,144), <code>promising</code> and <code>profile</code>. A one-worker pool uses its native entry and creates no idle
+worker.</p>
+<p>Profiling is opt-in. <code>report.profile</code> holds elapsed time, worker observations, validation, commit
+and replay time, and tracked read and write bytes. On generalized batches <code>workerWallMs</code> and
+<code>workerCpuMs</code> hold per-region observations. Measure process CPU once at the coordinator, because
+summing overlapping process-wide counters double counts.</p>
+<p>The generated API reference is published to GitHub Pages from <code>bun run docs:build</code>.</p>
+<h2 id="📈-measured-results" class="tsd-anchor-link">📈 Measured Results<a href="#📈-measured-results" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>Environment</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node, shared allocation</td>
+<td>Ryzen 9 9900X, eight pinned workers, 256 MiB arena</td>
+<td>7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact</td>
+</tr>
+<tr>
+<td>Node, compute kernel</td>
+<td>eight workers, 207 byte-exact samples</td>
+<td>7.62x, with total CPU 1.037x of serial</td>
+</tr>
+<tr>
+<td>Managed Workers</td>
+<td>deployed Durable Object lanes</td>
+<td>39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes</td>
+</tr>
+<tr>
+<td>Browser Run</td>
+<td>deployed Chromium, eight workers on one 256 MiB allocation</td>
+<td>3.87x with four workers on explicit partitions</td>
+</tr>
+</tbody>
+</table>
+<p>A streaming workload stops improving near four workers, and <code>maximumWorkers</code> caps the pool per run.
+Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The
+<a href="documents/TECHNICAL_REPORT.html">technical report</a> lists every figure with its instrument, the raw samples
+live in <a href="media/results">results/</a>, and the Cloudflare probes are described in
+<a href="media/README.md">experiments/</a>.</p>
+<h2 id="🔧-development" class="tsd-anchor-link">🔧 Development<a href="#🔧-development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build:c</span><span class="hl-1"> </span><span class="hl-3"># compile the C fixtures in tests/c with LLVM</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">typecheck</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test</span><span class="hl-1">             </span><span class="hl-3"># unit gate</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test:integration</span><span class="hl-1"> </span><span class="hl-3"># local workerd probes and the managed lanes</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">example</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Fixtures need <code>clang</code> and <code>wasm-ld</code> with the <code>wasm32</code> target. Tests need Node 26 for JSPI.
+<code>bun run test:coverage</code> runs the unit and integration projects with coverage, and <code>bun run test:e2e</code> deploys the probes to a Cloudflare account when <code>FREE_CLOUDFLARE_ACCOUNT_ID</code> and
+<code>FREE_CLOUDFLARE_API_TOKEN</code> are set. Layout notes live in <a href="media/README-1.md">tests/</a>,
+<a href="media/README-2.md">scripts/</a> and <a href="media/README.md">experiments/</a>.</p>
+<h2 id="🤝-contributing" class="tsd-anchor-link">🤝 Contributing<a href="#🤝-contributing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Open an issue before a large change. Run <code>bun run typecheck</code>, <code>bun run test</code> and
+<code>bun run prettier:check</code> before sending a pull request. Changes to the compiler need a differential
+test against native execution, and a performance claim needs a paired measurement with its raw
+samples.</p>
+<h2 id="📄-license" class="tsd-anchor-link">📄 License<a href="#📄-license" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>MIT. See <a href="media/LICENSE">LICENSE</a>.</p>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div>
+<div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>
+<h3>On This Page</h3></summary>
+<div class="tsd-accordion-details"><a href="#🚋-folio"><span>🚋 <wbr/>Folio</span></a>
+<ul>
+<li><a href="#table-of-contents"><span>Table of <wbr/>Contents</span></a></li>
+<li><a href="#🧭-why-folio"><span>🧭 <wbr/>Why <wbr/>Folio</span></a></li>
+<li><a href="#✨-features"><span>✨ <wbr/>Features</span></a></li>
+<li><a href="#📦-install"><span>📦 <wbr/>Install</span></a></li>
+<li><a href="#🚀-getting-started"><span>🚀 <wbr/>Getting <wbr/>Started</span></a></li>
+<li><a href="#⏳-asynchronous-host-effects"><span>⏳ <wbr/>Asynchronous <wbr/>Host <wbr/>Effects</span></a></li>
+<li><a href="#🌉-execution-host"><span>🌉 <wbr/>Execution <wbr/>Host</span></a></li>
+<li><a href="#📡-managed-workers"><span>📡 <wbr/>Managed <wbr/>Workers</span></a></li>
+<li><a href="#🧱-execution-and-memory"><span>🧱 <wbr/>Execution and <wbr/>Memory</span></a></li>
+<li><a href="#📖-api-reference"><span>📖 <wbr/>API <wbr/>Reference</span></a></li>
+<li><a href="#📈-measured-results"><span>📈 <wbr/>Measured <wbr/>Results</span></a></li>
+<li><a href="#🔧-development"><span>🔧 <wbr/>Development</span></a></li>
+<li><a href="#🤝-contributing"><span>🤝 <wbr/>Contributing</span></a></li>
+<li><a href="#📄-license"><span>📄 <wbr/>License</span></a></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="modules.html">@gmitch215/folio - v1.0.0</a>
+<ul class="tsd-small-nested-navigation" id="tsd-nav-container">
+<li>Loading...</li></ul></nav></div></div></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>
