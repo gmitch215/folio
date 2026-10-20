@@ -1,0 +1,541 @@
+{
+  "environment": {
+    "file": "cpu.jsonl",
+    "kind": "environment",
+    "node": "v26.10.0",
+    "v8": "14.6.202.34-node.34",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "threadIds": [
+      [
+        2,
+        1
+      ],
+      [
+        5,
+        4,
+        6,
+        3
+      ]
+    ],
+    "sha256": "ac9e2b69a1cf3e420d40d44767b6ab95462306db8b08d4c58e9f3debf4f592ec"
+  },
+  "measuredSamples": 84,
+  "cpu": {
+    "tiny": {
+      "native": {
+        "wallMs": {
+          "n": 7,
+          "median": 0.0007200000000011642,
+          "min": 0.0003300000000052705,
+          "max": 0.002440000000007103
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 0.002,
+          "min": 0.001,
+          "max": 0.003
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 2.8985507246130955,
+          "min": 1.2295081967177321,
+          "max": 4.54545454547982
+        }
+      },
+      "serial-api": {
+        "wallMs": {
+          "n": 7,
+          "median": 0.005290000000002237,
+          "min": 0.0023300000000006094,
+          "max": 0.009510000000005903
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 0.006,
+          "min": 0.003,
+          "max": 1.01
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 0.14163090128977862,
+          "min": 0.09253417455253005,
+          "max": 0.40871021775727
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 3,
+          "min": 1.5,
+          "max": 336.6666666666667
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.2875536480683327,
+          "min": 1.039861351820068,
+          "max": 106.20399579383523
+        }
+      },
+      "two": {
+        "wallMs": {
+          "n": 7,
+          "median": 0.061458999999999264,
+          "min": 0.03638899999999978,
+          "max": 0.08507899999999324
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 0.089,
+          "min": 0.06,
+          "max": 0.12
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 0.011226996859790443,
+          "min": 0.007045636509168377,
+          "max": 0.052665659400112946
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 44.5,
+          "min": 28.333333333333336,
+          "max": 60
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.6488499271758046,
+          "min": 1.2747063878546128,
+          "max": 1.834664364342856
+        }
+      },
+      "four": {
+        "wallMs": {
+          "n": 7,
+          "median": 0.07082900000000336,
+          "min": 0.05079999999999529,
+          "max": 0.11578900000000658
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 0.13,
+          "min": 0.105,
+          "max": 1.123
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 0.009181011997862485,
+          "min": 0.005423171733858,
+          "max": 0.03444916630203712
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 65,
+          "min": 52.5,
+          "max": 374.3333333333333
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.7419884963023236,
+          "min": 1.2436414512604117,
+          "max": 15.855087605358634
+        }
+      }
+    },
+    "stream": {
+      "native": {
+        "wallMs": {
+          "n": 7,
+          "median": 0.012818999999979042,
+          "min": 0.007929999999987558,
+          "max": 0.014009999999984757
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 0.014,
+          "min": 0.008,
+          "max": 0.016
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.127214170690609,
+          "min": 1.0088272383370178,
+          "max": 1.1876484560568685
+        }
+      },
+      "serial-api": {
+        "wallMs": {
+          "n": 7,
+          "median": 0.016379000000000588,
+          "min": 0.009109999999992624,
+          "max": 0.023940000000010286
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 0.017,
+          "min": 0.01,
+          "max": 0.025
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 0.7831021437589729,
+          "min": 0.5538847117793148,
+          "max": 0.8704720087808978
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 1.2142857142857144,
+          "min": 1.125,
+          "max": 1.7857142857142858
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.044277360066385,
+          "min": 1.010101010100988,
+          "max": 1.0976948408351368
+        }
+      },
+      "two": {
+        "wallMs": {
+          "n": 7,
+          "median": 2.9059319999999786,
+          "min": 2.4626149999999996,
+          "max": 4.127754999999979
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 5.177,
+          "min": 4.322,
+          "max": 9.912
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 0.004274016047182168,
+          "min": 0.0027877156305027143,
+          "max": 0.005384520113782501
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 470.5625,
+          "min": 308.7142857142857,
+          "max": 660.8000000000001
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.8199248195630762,
+          "min": 1.5674833409728903,
+          "max": 2.60230616379148
+        }
+      },
+      "four": {
+        "wallMs": {
+          "n": 7,
+          "median": 2.872472999999985,
+          "min": 2.358056000000005,
+          "max": 5.056070000000005
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 6.272,
+          "min": 4.664,
+          "max": 15.715
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 0.004396908169372362,
+          "min": 0.002549461826682545,
+          "max": 0.00526705048566279
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 448,
+          "min": 333.1428571428571,
+          "max": 982.1875
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 2.1655386182896166,
+          "min": 1.9227862501292723,
+          "max": 3.1081452590648433
+        }
+      }
+    },
+    "compute": {
+      "native": {
+        "wallMs": {
+          "n": 7,
+          "median": 38.26714399999992,
+          "min": 37.66794799999991,
+          "max": 38.869731
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 38.268,
+          "min": 37.67,
+          "max": 38.866
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 0.9999357401597245,
+          "min": 0.999420808556758,
+          "max": 1.0000544760229597
+        }
+      },
+      "serial-api": {
+        "wallMs": {
+          "n": 7,
+          "median": 37.658078000000046,
+          "min": 37.597087999999985,
+          "max": 38.736381999999935
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 37.66,
+          "min": 37.599,
+          "max": 38.738
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 1.0034735973514102,
+          "min": 0.9995375129191328,
+          "max": 1.031050356878704
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 0.996706633046879,
+          "min": 0.9699963882152622,
+          "max": 1.0004512874966816
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.0000417695178674,
+          "min": 1.000030342596609,
+          "max": 1.000051038186281
+        }
+      },
+      "two": {
+        "wallMs": {
+          "n": 7,
+          "median": 20.23554999999999,
+          "min": 19.806212999999957,
+          "max": 20.475018999999975
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 39.771,
+          "min": 39.184,
+          "max": 40.27
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 1.881312799093048,
+          "min": 1.8397027128521812,
+          "max": 1.9571884337505663
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 1.0453381415281697,
+          "min": 1.0134409989164646,
+          "max": 1.0690204406689674
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 1.9667869416873338,
+          "min": 1.961844016457488,
+          "max": 1.9833675422959496
+        }
+      },
+      "four": {
+        "wallMs": {
+          "n": 7,
+          "median": 12.952933999999914,
+          "min": 10.182050000000004,
+          "max": 16.666471
+        },
+        "cpuMs": {
+          "n": 7,
+          "median": 40.658,
+          "min": 39.619,
+          "max": 41.032
+        },
+        "pairedSpeedup": {
+          "n": 7,
+          "median": 2.909294372996902,
+          "min": 2.325896766028034,
+          "max": 3.7113240457471757
+        },
+        "pairedCpuRatio": {
+          "n": 7,
+          "median": 1.054526148128484,
+          "min": 1.045895464630308,
+          "max": 1.0788908053602229
+        },
+        "cpuPerWall": {
+          "n": 7,
+          "median": 3.1389027381750165,
+          "min": 2.4324885574156636,
+          "max": 3.8943192877132633
+        }
+      }
+    }
+  },
+  "sharing": {
+    "shared": {
+      "attachDeltaMiB": {
+        "n": 3,
+        "median": 3.87109375,
+        "min": 3.7734375,
+        "max": 3.9609375
+      },
+      "rssAttachedMiB": {
+        "n": 3,
+        "median": 145.5234375,
+        "min": 145.43359375,
+        "max": 145.5234375
+      }
+    },
+    "copied": {
+      "attachDeltaMiB": {
+        "n": 3,
+        "median": 259.9296875,
+        "min": 259.5234375,
+        "max": 260.00390625
+      },
+      "rssAttachedMiB": {
+        "n": 3,
+        "median": 401.3046875,
+        "min": 401.0859375,
+        "max": 401.75390625
+      }
+    }
+  },
+  "large": {
+    "file": "sharing-large.jsonl",
+    "kind": "sharing",
+    "mode": "shared",
+    "mib": 256,
+    "isolates": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "rssIdle": 81592320,
+    "rssAllocated": 349962240,
+    "rssAttached": 354156544,
+    "attachDelta": 4194304,
+    "passed": true,
+    "node": "v26.10.0",
+    "v8": "14.6.202.34-node.34",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "load": [
+      0,
+      0,
+      0
+    ]
+  },
+  "growth": [
+    {
+      "file": "sharing-large.jsonl",
+      "kind": "growth",
+      "zero": 0,
+      "oldLength": 268435456,
+      "newLength": 268500992,
+      "passed": true
+    },
+    {
+      "file": "sharing-shared-0.jsonl",
+      "kind": "growth",
+      "zero": 0,
+      "oldLength": 67108864,
+      "newLength": 67174400,
+      "passed": true
+    },
+    {
+      "file": "sharing-shared-1.jsonl",
+      "kind": "growth",
+      "zero": 0,
+      "oldLength": 67108864,
+      "newLength": 67174400,
+      "passed": true
+    },
+    {
+      "file": "sharing-shared-2.jsonl",
+      "kind": "growth",
+      "zero": 0,
+      "oldLength": 67108864,
+      "newLength": 67174400,
+      "passed": true
+    }
+  ],
+  "creatorExit": [
+    {
+      "file": "sharing-large.jsonl",
+      "kind": "creator-exit",
+      "survived": true,
+      "passed": true
+    },
+    {
+      "file": "sharing-shared-0.jsonl",
+      "kind": "creator-exit",
+      "survived": true,
+      "passed": true
+    },
+    {
+      "file": "sharing-shared-1.jsonl",
+      "kind": "creator-exit",
+      "survived": true,
+      "passed": true
+    },
+    {
+      "file": "sharing-shared-2.jsonl",
+      "kind": "creator-exit",
+      "survived": true,
+      "passed": true
+    }
+  ],
+  "hashes": {
+    "cpu.jsonl": "6cc8e4d8ed72784824419644a4dacce1acecc05e75210f88826cc8cbfa59e1e2",
+    "sharing-copied-0.jsonl": "3c42cb96c5628fbe5920ddb0bc1c6fb6163e2e431686be3eeb5a787068732760",
+    "sharing-copied-1.jsonl": "8ed0cc4000b8a06ee6518af6b1cb6019a03bf695c2bdb9dfb771036c4ae80ac4",
+    "sharing-copied-2.jsonl": "7abe326caadaff270a8a1918e3df50ceea41f918c7ca4f28351f633a7937dbee",
+    "sharing-large.jsonl": "f65e3e840a3b3abe6f53023ba393b1686288e8abe18cb6d43d60dda39fe9e408",
+    "sharing-shared-0.jsonl": "6d26d56d991c9b47f76baac6a4da40479d7bade49edd0f0091daab0f3d46a14b",
+    "sharing-shared-1.jsonl": "9f3948ba7d681e485bc100c4b811378f4184f9d52f95767657d3d2c9ebd96ffc",
+    "sharing-shared-2.jsonl": "4baa982ac4eeb956ba60495ed5fa8c600043e1b225357a1b8c32fde7c1024243",
+    "source.tar": "8d10928872d99cd2f6446fbe288ea57ea3d1e7d96d8f803d558edfb83991f953"
+  }
+}

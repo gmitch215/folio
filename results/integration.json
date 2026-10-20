@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "workload": "actual tinyimg ABI2 image create/fill/invert/destroy",
+      "bytes": 809683,
+      "sha256": "b6b52b8c2b9341191795d589d2bf8590f728539766c9914f900ae0fe96a914bb",
+      "calls": 14,
+      "exactWholeMemoryAfterEveryCall": true,
+      "mode": "serial",
+      "diagnostics": [
+        "one imported memory required",
+        "additional defined memory"
+      ],
+      "memoryBytes": 1048576
+    },
+    {
+      "workload": "actual gmux core ABI1 queue and imported globals/table",
+      "bytes": 4303,
+      "sha256": "0a92cb8087557b71c763e5aa38c72d17b3cf47fafa67352150df30f2a1340a22",
+      "calls": 10,
+      "exactWholeMemoryAndReturns": true,
+      "mode": "serial",
+      "diagnostics": [
+        "host or non-memory imports"
+      ]
+    }
+  ]
+}

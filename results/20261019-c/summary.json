@@ -1,0 +1,59 @@
+{
+  "environment": {
+    "file": "large.jsonl",
+    "kind": "environment",
+    "node": "v26.10.0",
+    "v8": "14.6.202.34-node.34",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "sha256": "7891b9c96268aef30999ac335abe3ac6f3646d9d1f565c8d5e9365e047abb726",
+    "threadIds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "physicalBytes": 268500992,
+    "activeBytes": 268435456
+  },
+  "measuredSamples": 14,
+  "nativeWallMs": {
+    "n": 7,
+    "median": 38.98540200000002,
+    "min": 38.915801999999985,
+    "max": 39.22853200000009
+  },
+  "parallelWallMs": {
+    "n": 7,
+    "median": 10.62501300000008,
+    "min": 10.535812999999962,
+    "max": 14.104804000000058
+  },
+  "pairedSpeedup": {
+    "n": 7,
+    "median": 3.662659236275729,
+    "min": 2.7661725040631477,
+    "max": 3.699138452818025
+  },
+  "pairedCpuRatio": {
+    "n": 7,
+    "median": 1.06274208028729,
+    "min": 1.0544921626099146,
+    "max": 1.0693312836279785
+  },
+  "cpuPerWall": {
+    "n": 7,
+    "median": 3.8964173714182717,
+    "min": 2.9584762170633083,
+    "max": 3.932397053744229
+  },
+  "observedRssMiB": {
+    "n": 14,
+    "median": 657.0703125,
+    "min": 656.6953125,
+    "max": 657.0703125
+  },
+  "hashes": {
+    "large.jsonl": "f33ddcfada9dd8eda2fb743362003513838bed416d4027eb12270a476bfc3a0f",
+    "source.tar": "30758fe9e7aaa07374683dfb8e715973dfdc44ca47d1b8c1de208671b9a0f3a1"
+  }
+}

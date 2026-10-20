@@ -1,0 +1,1943 @@
+{
+  "metadata": {
+    "node": "v26.10.0",
+    "v8": "14.6.202.34-node.34",
+    "model": "AMD Ryzen 9 9900X 12-Core Processor",
+    "pid": 2452102,
+    "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+    "pages": 4097,
+    "count": 64,
+    "rounds": 2097152,
+    "repeats": 7,
+    "warmups": 2,
+    "checkedBytes": 268500992,
+    "mask": "4-11",
+    "topology": [
+      {
+        "cpu": 4,
+        "core": "4",
+        "package": "0"
+      },
+      {
+        "cpu": 5,
+        "core": "5",
+        "package": "0"
+      },
+      {
+        "cpu": 6,
+        "core": "8",
+        "package": "0"
+      },
+      {
+        "cpu": 7,
+        "core": "9",
+        "package": "0"
+      },
+      {
+        "cpu": 8,
+        "core": "10",
+        "package": "0"
+      },
+      {
+        "cpu": 9,
+        "core": "11",
+        "package": "0"
+      },
+      {
+        "cpu": 10,
+        "core": "12",
+        "package": "0"
+      },
+      {
+        "cpu": 11,
+        "core": "13",
+        "package": "0"
+      }
+    ],
+    "discovered": [
+      {
+        "width": 1,
+        "threads": []
+      },
+      {
+        "width": 2,
+        "threads": [
+          {
+            "tid": 2452110,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452111,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          }
+        ]
+      },
+      {
+        "width": 4,
+        "threads": [
+          {
+            "tid": 2452114,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452115,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452116,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452117,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          }
+        ]
+      },
+      {
+        "width": 8,
+        "threads": [
+          {
+            "tid": 2452122,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452123,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452124,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452125,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452126,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452127,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452128,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          },
+          {
+            "tid": 2452129,
+            "comm": "WorkerThread",
+            "affinity": "4-11"
+          }
+        ]
+      }
+    ],
+    "arms": [
+      "raw",
+      "auto-1",
+      "auto-2-unpinned",
+      "auto-2-pinned",
+      "auto-4-unpinned",
+      "auto-4-pinned",
+      "auto-8-unpinned",
+      "auto-8-pinned"
+    ],
+    "clockTicksPerSecond": 100,
+    "coreCounterFields": [
+      "user",
+      "nice",
+      "system",
+      "idle",
+      "iowait",
+      "irq",
+      "softirq",
+      "steal",
+      "guest",
+      "guest_nice"
+    ],
+    "comparison": "same Folio pool per width; own worker TIDs pinned or restored before timing",
+    "processCpuCounter": "one process.cpuUsage delta per invocation, outside affinity commands",
+    "batchLimit": "16 regions per worker",
+    "flags": "see scripts/build-generalized.sh"
+  },
+  "rawSha256": "6cbde183bda0ca341e82c0e38822cb0396f5783380da2cae550ac5ccf59fe167",
+  "sourceArchiveSha256": "5a90749d81dbb125dd7b24426f9b047c9f92ce6e5cc849b7d9146e36afc084db",
+  "samples": 56,
+  "warmupSamples": 16,
+  "allWholeMemoryAndReturnsExact": true,
+  "discardedSamples": 0,
+  "maximumRssMiB": 1698.59765625,
+  "minimumFreeMiB": 24310.4140625,
+  "load1": {
+    "median": 0.26,
+    "minimum": 0.19,
+    "maximum": 0.32
+  },
+  "arms": {
+    "raw": {
+      "samples": 7,
+      "wallMs": {
+        "median": 150.67619999999988,
+        "minimum": 150.42588000000023,
+        "maximum": 151.04407700000047
+      },
+      "cpuMs": {
+        "median": 150.684,
+        "minimum": 150.432,
+        "maximum": 151.045
+      },
+      "pairedSpeedup": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      },
+      "pairedCpuRatio": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      },
+      "cpuPerWall": {
+        "median": 1.0000445627205043,
+        "minimum": 1.000006110799032,
+        "maximum": 1.0000673890910001
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": []
+        },
+        {
+          "iteration": 1,
+          "threads": []
+        },
+        {
+          "iteration": 2,
+          "threads": []
+        },
+        {
+          "iteration": 3,
+          "threads": []
+        },
+        {
+          "iteration": 4,
+          "threads": []
+        },
+        {
+          "iteration": 5,
+          "threads": []
+        },
+        {
+          "iteration": 6,
+          "threads": []
+        }
+      ]
+    },
+    "auto-1": {
+      "samples": 7,
+      "wallMs": {
+        "median": 150.78174899999976,
+        "minimum": 150.5906500000001,
+        "maximum": 151.65179400000034
+      },
+      "cpuMs": {
+        "median": 150.788,
+        "minimum": 150.597,
+        "maximum": 151.66
+      },
+      "pairedSpeedup": {
+        "median": 0.9998913611170379,
+        "minimum": 0.993566881246387,
+        "maximum": 1.0017521737625086
+      },
+      "pairedCpuRatio": {
+        "median": 1.0001125492402927,
+        "minimum": 0.9981981623906147,
+        "maximum": 1.0064771309495368
+      },
+      "cpuPerWall": {
+        "median": 1.0000421672925903,
+        "minimum": 0.9999698551512172,
+        "maximum": 1.0000720999348
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": []
+        },
+        {
+          "iteration": 1,
+          "threads": []
+        },
+        {
+          "iteration": 2,
+          "threads": []
+        },
+        {
+          "iteration": 3,
+          "threads": []
+        },
+        {
+          "iteration": 4,
+          "threads": []
+        },
+        {
+          "iteration": 5,
+          "threads": []
+        },
+        {
+          "iteration": 6,
+          "threads": []
+        }
+      ],
+      "execution": {
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "regions": [
+          1
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0,
+          "minimum": 0,
+          "maximum": 0
+        },
+        "commitMs": {
+          "median": 0,
+          "minimum": 0,
+          "maximum": 0
+        }
+      }
+    },
+    "auto-2-unpinned": {
+      "samples": 7,
+      "wallMs": {
+        "median": 77.79219999999987,
+        "minimum": 77.59532099999979,
+        "maximum": 78.27336700000023
+      },
+      "cpuMs": {
+        "median": 155.295,
+        "minimum": 154.789,
+        "maximum": 156.356
+      },
+      "pairedSpeedup": {
+        "median": 1.9382589514115873,
+        "minimum": 1.9242541335930987,
+        "maximum": 1.9416697791554005
+      },
+      "pairedCpuRatio": {
+        "median": 1.0298759864712514,
+        "minimum": 1.0272424411350907,
+        "maximum": 1.037469793132751
+      },
+      "cpuPerWall": {
+        "median": 1.996215725430151,
+        "minimum": 1.994668855769428,
+        "maximum": 1.999101992072489
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 4,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 5,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 6,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        }
+      ],
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          2
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.011830000006739283,
+          "minimum": 0.008579999999710708,
+          "maximum": 0.018959000001814275
+        },
+        "commitMs": {
+          "median": 0.016920000000027358,
+          "minimum": 0.01571999999578111,
+          "maximum": 0.02285899999924368
+        },
+        "maximumLaneWallMs": {
+          "median": 77.29644299999745,
+          "minimum": 77.08665400000154,
+          "maximum": 77.78099999999813
+        },
+        "maximumLaneCpuMs": {
+          "median": 76.48400000000001,
+          "minimum": 76.15,
+          "maximum": 76.987
+        },
+        "maximumLaneWallMinusCpuMs": {
+          "median": 0.9396540000015534,
+          "minimum": 0.6357709999980727,
+          "maximum": 1.6379999999981294
+        }
+      }
+    },
+    "auto-2-pinned": {
+      "samples": 7,
+      "wallMs": {
+        "median": 77.82196000000022,
+        "minimum": 77.44820200000004,
+        "maximum": 78.50228599999991
+      },
+      "cpuMs": {
+        "median": 155.65,
+        "minimum": 155.04,
+        "maximum": 158.702
+      },
+      "pairedSpeedup": {
+        "median": 1.936240641995224,
+        "minimum": 1.9240723384794252,
+        "maximum": 1.9422772396962833
+      },
+      "pairedCpuRatio": {
+        "median": 1.0329563855485653,
+        "minimum": 1.0281848928974069,
+        "maximum": 1.0506935019365091
+      },
+      "cpuPerWall": {
+        "median": 1.998106003470897,
+        "minimum": 1.993365800567155,
+        "maximum": 2.0216226569503997
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            }
+          ]
+        },
+        {
+          "iteration": 4,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            }
+          ]
+        },
+        {
+          "iteration": 5,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            }
+          ]
+        },
+        {
+          "iteration": 6,
+          "threads": [
+            {
+              "tid": 2452110,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452111,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            }
+          ]
+        }
+      ],
+      "pairedPinningSpeedup": {
+        "median": 1.001752469960187,
+        "minimum": 0.99165277811145,
+        "maximum": 1.0058005092649942
+      },
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          2
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.011799999994764221,
+          "minimum": 0.008519999999862193,
+          "maximum": 0.01266000000123313
+        },
+        "commitMs": {
+          "median": 0.017039999998814892,
+          "minimum": 0.012460000000373839,
+          "maximum": 0.021019999999225547
+        },
+        "maximumLaneWallMs": {
+          "median": 77.33546299999807,
+          "minimum": 76.84395600000107,
+          "maximum": 78.06762900000103
+        },
+        "maximumLaneCpuMs": {
+          "median": 76.331,
+          "minimum": 75.524,
+          "maximum": 77.18199999999999
+        },
+        "maximumLaneWallMinusCpuMs": {
+          "median": 1.0913119999942467,
+          "minimum": 0.1771629999987283,
+          "maximum": 2.5436820000007287
+        }
+      }
+    },
+    "auto-4-unpinned": {
+      "samples": 7,
+      "wallMs": {
+        "median": 39.32456700000057,
+        "minimum": 38.90504999999985,
+        "maximum": 39.58354599999984
+      },
+      "cpuMs": {
+        "median": 155.887,
+        "minimum": 154.112,
+        "maximum": 158.487
+      },
+      "pairedSpeedup": {
+        "median": 3.839111834038679,
+        "minimum": 3.8039616258735425,
+        "maximum": 3.8664872555105525
+      },
+      "pairedCpuRatio": {
+        "median": 1.0330227495951794,
+        "minimum": 1.0244628802382472,
+        "maximum": 1.052503303869678
+      },
+      "cpuPerWall": {
+        "median": 3.9641123066910753,
+        "minimum": 3.945827434512285,
+        "maximum": 4.0038605939953085
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 4,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 5,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 6,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        }
+      ],
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          4
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.008799999999610009,
+          "minimum": 0.008160000006682822,
+          "maximum": 0.01600999999573105
+        },
+        "commitMs": {
+          "median": 0.02087999999639578,
+          "minimum": 0.011479999999210122,
+          "maximum": 0.029838999999810767
+        },
+        "maximumLaneWallMs": {
+          "median": 38.9642490000042,
+          "minimum": 38.48158300000023,
+          "maximum": 39.16454799999792
+        },
+        "maximumLaneCpuMs": {
+          "median": 38.332,
+          "minimum": 38.09,
+          "maximum": 38.898999999999994
+        },
+        "maximumLaneWallMinusCpuMs": {
+          "median": 0.866470000000092,
+          "minimum": 0.6795830000002283,
+          "maximum": 1.696021999998237
+        }
+      }
+    },
+    "auto-4-pinned": {
+      "samples": 7,
+      "wallMs": {
+        "median": 39.167349000000286,
+        "minimum": 39.10335899999973,
+        "maximum": 39.66036500000064
+      },
+      "cpuMs": {
+        "median": 155.404,
+        "minimum": 155.237,
+        "maximum": 159.758
+      },
+      "pairedSpeedup": {
+        "median": 3.844917105554645,
+        "minimum": 3.7991632200056014,
+        "maximum": 3.860296707502809
+      },
+      "pairedCpuRatio": {
+        "median": 1.0319318257178858,
+        "minimum": 1.0283524447359182,
+        "maximum": 1.0602187358976403
+      },
+      "cpuPerWall": {
+        "median": 3.969653998336382,
+        "minimum": 3.948959650231304,
+        "maximum": 4.028152539695422
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            }
+          ]
+        },
+        {
+          "iteration": 4,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            }
+          ]
+        },
+        {
+          "iteration": 5,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            }
+          ]
+        },
+        {
+          "iteration": 6,
+          "threads": [
+            {
+              "tid": 2452114,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452115,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452116,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452117,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            }
+          ]
+        }
+      ],
+      "pairedPinningSpeedup": {
+        "median": 1.004259160113975,
+        "minimum": 0.9934119581055312,
+        "maximum": 1.0106261212623697
+      },
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          4
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.008959999999206048,
+          "minimum": 0.008340000001226144,
+          "maximum": 0.016018999989682925
+        },
+        "commitMs": {
+          "median": 0.015989000001354725,
+          "minimum": 0.011370000001534208,
+          "maximum": 0.021479999998518906
+        },
+        "maximumLaneWallMs": {
+          "median": 38.80590099999972,
+          "minimum": 38.62307099999816,
+          "maximum": 39.33362800000123
+        },
+        "maximumLaneCpuMs": {
+          "median": 38.552,
+          "minimum": 38.239000000000004,
+          "maximum": 39.375
+        },
+        "maximumLaneWallMinusCpuMs": {
+          "median": 0.735559000000066,
+          "minimum": 0.2702600000012936,
+          "maximum": 0.8896619999998521
+        }
+      }
+    },
+    "auto-8-unpinned": {
+      "samples": 7,
+      "wallMs": {
+        "median": 26.170795,
+        "minimum": 20.116691000001083,
+        "maximum": 31.606732999998712
+      },
+      "cpuMs": {
+        "median": 158.771,
+        "minimum": 157.938,
+        "maximum": 160.924
+      },
+      "pairedSpeedup": {
+        "median": 5.757417762815378,
+        "minimum": 4.778857625051176,
+        "maximum": 7.495339467111768
+      },
+      "pairedCpuRatio": {
+        "median": 1.0537916470205406,
+        "minimum": 1.0474036739836858,
+        "maximum": 1.0654043496971102
+      },
+      "cpuPerWall": {
+        "median": 6.122893859357349,
+        "minimum": 5.091446812930857,
+        "maximum": 7.887662136774236
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 4,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 5,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        },
+        {
+          "iteration": 6,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "4-11"
+            }
+          ]
+        }
+      ],
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          8
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.012029999999867869,
+          "minimum": 0.00825999999869964,
+          "maximum": 0.01622000000133994
+        },
+        "commitMs": {
+          "median": 0.01565999999820633,
+          "minimum": 0.011509999998907006,
+          "maximum": 0.021310000000994478
+        },
+        "maximumLaneWallMs": {
+          "median": 25.789458000000195,
+          "minimum": 19.741382999998677,
+          "maximum": 29.555655000000115
+        },
+        "maximumLaneCpuMs": {
+          "median": 19.66,
+          "minimum": 19.013,
+          "maximum": 20.162
+        },
+        "maximumLaneWallMinusCpuMs": {
+          "median": 5.627458000000196,
+          "minimum": 0.5229619999993851,
+          "maximum": 10.054655000000114
+        }
+      }
+    },
+    "auto-8-pinned": {
+      "samples": 7,
+      "wallMs": {
+        "median": 20.268489999999474,
+        "minimum": 19.94517199999973,
+        "maximum": 27.230078999999023
+      },
+      "cpuMs": {
+        "median": 158.517,
+        "minimum": 157.049,
+        "maximum": 162.623
+      },
+      "pairedSpeedup": {
+        "median": 7.433856974268672,
+        "minimum": 5.5373114415131015,
+        "maximum": 7.549410453818178
+      },
+      "pairedCpuRatio": {
+        "median": 1.0537452137843013,
+        "minimum": 1.042628196616831,
+        "maximum": 1.0784733735658862
+      },
+      "cpuPerWall": {
+        "median": 7.833709904107892,
+        "minimum": 5.972182453088212,
+        "maximum": 7.878798939412612
+      },
+      "affinities": [
+        {
+          "iteration": 0,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "8"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "9"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "10"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "11"
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "8"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "9"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "10"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "11"
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "8"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "9"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "10"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "11"
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "8"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "9"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "10"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "11"
+            }
+          ]
+        },
+        {
+          "iteration": 4,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "8"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "9"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "10"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "11"
+            }
+          ]
+        },
+        {
+          "iteration": 5,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "8"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "9"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "10"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "11"
+            }
+          ]
+        },
+        {
+          "iteration": 6,
+          "threads": [
+            {
+              "tid": 2452122,
+              "comm": "WorkerThread",
+              "affinity": "4"
+            },
+            {
+              "tid": 2452123,
+              "comm": "WorkerThread",
+              "affinity": "5"
+            },
+            {
+              "tid": 2452124,
+              "comm": "WorkerThread",
+              "affinity": "6"
+            },
+            {
+              "tid": 2452125,
+              "comm": "WorkerThread",
+              "affinity": "7"
+            },
+            {
+              "tid": 2452126,
+              "comm": "WorkerThread",
+              "affinity": "8"
+            },
+            {
+              "tid": 2452127,
+              "comm": "WorkerThread",
+              "affinity": "9"
+            },
+            {
+              "tid": 2452128,
+              "comm": "WorkerThread",
+              "affinity": "10"
+            },
+            {
+              "tid": 2452129,
+              "comm": "WorkerThread",
+              "affinity": "11"
+            }
+          ]
+        }
+      ],
+      "pairedPinningSpeedup": {
+        "median": 1.2912059556484314,
+        "minimum": 0.7387672654200454,
+        "maximum": 1.5517526675745354
+      },
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          8
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.008499999998548446,
+          "minimum": 0.008279999999103893,
+          "maximum": 0.02013999999871885
+        },
+        "commitMs": {
+          "median": 0.012369000000035157,
+          "minimum": 0.011379999998098356,
+          "maximum": 0.020999999995183316
+        },
+        "maximumLaneWallMs": {
+          "median": 19.904901999999765,
+          "minimum": 19.580453999999918,
+          "maximum": 26.822232000004078
+        },
+        "maximumLaneCpuMs": {
+          "median": 19.538,
+          "minimum": 19.269000000000002,
+          "maximum": 19.796999999999997
+        },
+        "maximumLaneWallMinusCpuMs": {
+          "median": 0.8380219999999525,
+          "minimum": 0.6537960000000531,
+          "maximum": 7.092232000004078
+        }
+      }
+    }
+  }
+}

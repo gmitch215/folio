@@ -1,0 +1,62 @@
+{
+  "verifiedAt": "2026-10-20T04:09:18.986182+00:00",
+  "node": "v26.8.2",
+  "tests": {
+    "passed": 83,
+    "failed": 0,
+    "skipped": 0,
+    "log": "verification-tests.log",
+    "logSha256": "ef11617b88e5508c216520c4711180fca08c9b394afb7e687993bea6e8719307"
+  },
+  "typecheck": "passed",
+  "javascriptAndDeclarationBuild": "passed",
+  "builtPublicExports": [
+    ".",
+    "./node",
+    "./compiler",
+    "./host",
+    "./remote"
+  ],
+  "builtExample": {
+    "mode": "native-shared",
+    "workers": 4,
+    "regions": 4,
+    "replayed": 0,
+    "fallbacks": 0
+  },
+  "wasmFixturesValidate": [
+    "fixture",
+    "generalized",
+    "generalized-inline",
+    "sharing"
+  ],
+  "integration": "integration-generalized-final.json",
+  "sourceManifest": "source-manifest.json",
+  "finalMeasurement": {
+    "summary": "20261020-affinity-final/summary.json",
+    "measuredSamples": 56,
+    "warmupSamples": 16,
+    "discardedSamples": 0,
+    "allWholeMemoryAndReturnsExact": true,
+    "sourceArchiveSha256": "7390d5558f8c2b39d58152a52b2a8b33a31cdbfe545eecd1b4f394413cfbc634",
+    "rawSha256": "def380244cf05c12866462c091a1f8276980dcfa3b57575b8afa947d657521a8",
+    "allProductionAndBuiltFilesMatch": true,
+    "eightPinnedPairedMedianSpeedup": 7.519444345859254,
+    "eightPinnedPairedMedianCpuWorkRatio": 1.048703938162191,
+    "eightUnpinnedPairedMedianSpeedup": 5.635835618385041,
+    "eightPairedPinningMedianSpeedup": 1.2153539540721252
+  },
+  "priorScaling": "20261019-d/summary.json",
+  "priorGeneralizedControl": "20261020-control-b/summary.json",
+  "priorPlacement": "20261020-affinity/summary.json",
+  "stockWorkerdHost": "../experiments/cloud/results-host-20261020.json",
+  "managedCloud": "../experiments/cloud/results-managed.json",
+  "scope": {
+    "input": "arbitrary host-engine-valid WebAssembly with required host bindings",
+    "parallelization": "automatic admitted regions; original native fallback preserves serial dependencies",
+    "sharedBacking": "co-located Node isolates; edge-to-host transport is serialized",
+    "resourceLimits": "instruction semantics do not guarantee identical engine resource-exhaustion thresholds",
+    "universalExtractionOrSpeedupClaim": false,
+    "consumerPhpAndGmuxAdapters": "consumer projects"
+  }
+}

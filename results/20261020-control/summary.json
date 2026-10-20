@@ -1,0 +1,264 @@
+{
+  "metadata": {
+    "node": "v26.10.0",
+    "v8": "14.6.202.34-node.34",
+    "model": "AMD Ryzen 9 9900X 12-Core Processor",
+    "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+    "pages": 4097,
+    "count": 64,
+    "rounds": 2097152,
+    "repeats": 7,
+    "warmups": 2,
+    "checkedBytes": 268500992,
+    "newPath": "numeric-result branching controller; automatic inlined-loop outlining",
+    "batchLimit": "16 regions per worker",
+    "flags": "see scripts/build-generalized.sh"
+  },
+  "rawSha256": "458207c7e79a51a75f7369f3809f21245e4f6125fcc998aac7ddb495f4af5e2a",
+  "sourceArchiveSha256": "253910acc0458cd92692b9beb8f0239bbe096869518ae4cb80d60f0bb5f87c4a",
+  "samples": 35,
+  "warmupSamples": 10,
+  "allWholeMemoryAndReturnsExact": true,
+  "discardedSamples": 0,
+  "maximumRssMiB": 1690.09375,
+  "minimumFreeMiB": 24713.91796875,
+  "load1": {
+    "median": 0.08,
+    "minimum": 0,
+    "maximum": 0.08
+  },
+  "arms": {
+    "raw": {
+      "samples": 7,
+      "wallMs": {
+        "median": 150.45961800000032,
+        "minimum": 150.26288999999997,
+        "maximum": 151.23112499999934
+      },
+      "cpuMs": {
+        "median": 150.47,
+        "minimum": 150.263,
+        "maximum": 151.241
+      },
+      "pairedSpeedup": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      },
+      "pairedCpuRatio": {
+        "median": 1,
+        "minimum": 1,
+        "maximum": 1
+      },
+      "cpuPerWall": {
+        "median": 1.0000511260263014,
+        "minimum": 1.0000007320503421,
+        "maximum": 1.0000690019032195
+      }
+    },
+    "auto-1": {
+      "samples": 7,
+      "wallMs": {
+        "median": 150.51420700000017,
+        "minimum": 150.26919899999984,
+        "maximum": 151.05046500000026
+      },
+      "cpuMs": {
+        "median": 150.519,
+        "minimum": 150.277,
+        "maximum": 151.057
+      },
+      "pairedSpeedup": {
+        "median": 0.9999350588338692,
+        "minimum": 0.998487457594848,
+        "maximum": 1.001196024123455
+      },
+      "pairedCpuRatio": {
+        "median": 1.0000931699753097,
+        "minimum": 0.9987833986815743,
+        "maximum": 1.0014952252473768
+      },
+      "cpuPerWall": {
+        "median": 1.0000432636867402,
+        "minimum": 1.0000315462759506,
+        "maximum": 1.0000519134995864
+      },
+      "execution": {
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "regions": [
+          1
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0,
+          "minimum": 0,
+          "maximum": 0
+        },
+        "commitMs": {
+          "median": 0,
+          "minimum": 0,
+          "maximum": 0
+        }
+      }
+    },
+    "auto-2": {
+      "samples": 7,
+      "wallMs": {
+        "median": 77.55358400000023,
+        "minimum": 77.28631499999983,
+        "maximum": 78.74853799999983
+      },
+      "cpuMs": {
+        "median": 155.655,
+        "minimum": 153.765,
+        "maximum": 157.192
+      },
+      "pairedSpeedup": {
+        "median": 1.9423518665249393,
+        "minimum": 1.9106337948775716,
+        "maximum": 1.9465962255415648
+      },
+      "pairedCpuRatio": {
+        "median": 1.0343968261352081,
+        "minimum": 1.023305803823962,
+        "maximum": 1.0446733568153121
+      },
+      "cpuPerWall": {
+        "median": 2.0004639351705493,
+        "minimum": 1.9883715855473998,
+        "maximum": 2.0136682671440647
+      },
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          2
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.01707900000110385,
+          "minimum": 0.008939999998347048,
+          "maximum": 0.021180000000640575
+        },
+        "commitMs": {
+          "median": 0.023379999995995604,
+          "minimum": 0.012560000000121363,
+          "maximum": 0.09726000000000568
+        }
+      }
+    },
+    "auto-4": {
+      "samples": 7,
+      "wallMs": {
+        "median": 39.241383999999925,
+        "minimum": 39.129155999999966,
+        "maximum": 39.55141300000014
+      },
+      "cpuMs": {
+        "median": 156.126,
+        "minimum": 155.81,
+        "maximum": 157.46
+      },
+      "pairedSpeedup": {
+        "median": 3.836309564000486,
+        "minimum": 3.8041527871583196,
+        "maximum": 3.852449676651906
+      },
+      "pairedCpuRatio": {
+        "median": 1.037966597910706,
+        "minimum": 1.0322994426114611,
+        "maximum": 1.0463918553419413
+      },
+      "cpuPerWall": {
+        "median": 3.981941240950869,
+        "minimum": 3.9401626434939114,
+        "maximum": 4.012600574944051
+      },
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          4
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.013930000000982545,
+          "minimum": 0.00831999999945765,
+          "maximum": 0.02129000000013548
+        },
+        "commitMs": {
+          "median": 0.02055000000018481,
+          "minimum": 0.012199999998301791,
+          "maximum": 0.04838000000017928
+        }
+      }
+    },
+    "auto-8": {
+      "samples": 7,
+      "wallMs": {
+        "median": 20.20625999999993,
+        "minimum": 19.866331999999602,
+        "maximum": 30.21999500000038
+      },
+      "cpuMs": {
+        "median": 158.458,
+        "minimum": 156.445,
+        "maximum": 160.452
+      },
+      "pairedSpeedup": {
+        "median": 7.437305023294788,
+        "minimum": 4.979196952216531,
+        "maximum": 7.574888358857767
+      },
+      "pairedCpuRatio": {
+        "median": 1.05302400999475,
+        "minimum": 1.0397089120754968,
+        "maximum": 1.067807777030939
+      },
+      "cpuPerWall": {
+        "median": 7.858752683574325,
+        "minimum": 5.2434820058705505,
+        "maximum": 7.897331022153618
+      },
+      "execution": {
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          8
+        ],
+        "regions": [
+          64
+        ],
+        "replayed": 0,
+        "fallbacks": 0,
+        "validationMs": {
+          "median": 0.010360000004766334,
+          "minimum": 0.008360000001630397,
+          "maximum": 0.022510000001602748
+        },
+        "commitMs": {
+          "median": 0.016409999998359126,
+          "minimum": 0.014109999998254352,
+          "maximum": 0.06149900000082198
+        }
+      }
+    }
+  }
+}

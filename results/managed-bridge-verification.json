@@ -1,0 +1,63 @@
+{
+  "verifiedAt": "2026-10-20T05:25:03.846Z",
+  "tests": {
+    "passed": 101,
+    "failed": 0,
+    "skipped": 0,
+    "log": "managed-bridge-tests.log",
+    "sha256": "e431f5a32265914639605351accf955d8f0d81333bdc2d250f719eb109842323"
+  },
+  "typecheck": "passed",
+  "build": "passed",
+  "managedPublicExport": "loaded",
+  "browser": {
+    "result": "../experiments/browser/runs/cfw-folio-browser-0e66d825/result.json",
+    "summary": "../experiments/browser/runs/cfw-folio-browser-0e66d825/summary.json",
+    "sourceArchiveSha256": "786707033b57a820de5eb821e64763efa2c5d76eb9cfbcef92c75d4fe1f20e67",
+    "physicalSharedBytes": 268435456,
+    "distinctWorkers": 8,
+    "fourWorkerSpeedup": 3.873639759626416,
+    "jspi": false,
+    "automaticExtraction": false,
+    "baselineRestored": true
+  },
+  "managed": {
+    "result": "../experiments/managed/runs/cfw-folio-managed-a627504d/result.json",
+    "summary": "../experiments/managed/runs/cfw-folio-managed-a627504d/summary.json",
+    "sourceArchiveSha256": "19260b3ed5b9c84fc98eb6ad96537733316e75863c4ab73b4747211ff518c9d8",
+    "rows": 39,
+    "exactWholeMemoryAndScalar": true,
+    "automaticRegions": 64,
+    "isolateCounts": [
+      2,
+      4,
+      8
+    ],
+    "jspi": true,
+    "physicalSharedMemoryAcrossLanes": false,
+    "preparationIncludedInWallTime": true,
+    "baselineRestored": true
+  },
+  "currentSourceSha256": {
+    "src/compiler.ts": "2c8e4e0c5a583f8708e747a03f67ee0d6deef4646410b24eca6bad093e9184fb",
+    "src/coordinator.ts": "416069d3587e31b40421e9bc8a82a7404f6e0b5f5bf34a4e1d88e1e0a094695c",
+    "src/extract.ts": "08ff2a7f856d3223668b425ae75a49b7105cf2e604350bbbd708edfb5c6a5ba3",
+    "src/frames.ts": "4c68a0d7d1eac750525c640480dc2162e469f19f8bfb5b8063161138fdaaa273",
+    "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
+    "src/host.ts": "e3f08f2887bc28201ec87f65804d3f0362f04695f6ec4bb26724cf74fcd53b3e",
+    "src/index.ts": "d5eb22487dcb6fc21a5237273e83ceefca8303eafad77627245b1fdfcb7411c1",
+    "src/managed.ts": "33f841bead8bb76f0bb10ac7ff1b4dbcf1e8049ac2c6a15f0bbd7144f4b14ee7",
+    "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+    "src/node.ts": "e86ad4f9ae9fff265416d02f94e78bc8f2bf4966d63a57b041896c2dd42c9e65",
+    "src/remote.ts": "6ce58927064f8372b157342b525cf5e382698b3a217165b0e3dec4ffa695955f",
+    "src/transaction.ts": "c4ae45c13c8e980ecb9811f69aedc243561d73d39a6eb855bfeeb51bf600c4f4",
+    "src/values.ts": "56b4c8777a3856441480eee0cb585a2b40e6b03966c3efc245e17a2536196374",
+    "src/worker.ts": "c13375e6b0e67515757c2f47a1f84ede3872ea10a7ddefc3dd71a443decc7d8b"
+  },
+  "remaining": [
+    "Browser automatic-extraction adapter without JSPI",
+    "Distributed page owners/residency leases",
+    "Full PHP/gmux consumer integration"
+  ],
+  "servicesLeftRunning": []
+}
