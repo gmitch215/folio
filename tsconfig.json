@@ -1,0 +1,43 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"lib": ["ES2022", "DOM"],
+		"types": ["node"],
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"noFallthroughCasesInSwitch": true,
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
+		"paths": {
+			"@gmitch215/folio": ["./src/index.ts"],
+			"@gmitch215/folio/*": ["./src/*.ts"]
+		}
+	},
+	"include": [
+		"src/**/*.ts",
+		"tests/**/*.ts",
+		"scripts/**/*.ts",
+		"examples/**/*.ts",
+		"experiments/**/*.ts",
+		"vitest.config.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"dist",
+		"build",
+		"coverage",
+		"typedoc",
+		"experiments/cloud/wasm.d.ts",
+		"experiments/managed/wasm.d.ts",
+		"experiments/**/runs",
+		"experiments/**/worker.ts",
+		"experiments/**/artifact.ts",
+		"experiments/browser/probe.ts"
+	]
+}

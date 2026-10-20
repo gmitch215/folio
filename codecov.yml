@@ -1,0 +1,59 @@
+coverage:
+  precision: 2
+  round: down
+  range: '70...95'
+  status:
+    project:
+      default:
+        target: 85%
+        threshold: 2%
+    patch:
+      default:
+        target: 70%
+        threshold: 5%
+
+comment:
+  layout: 'condensed_header, condensed_files, condensed_footer'
+  require_changes: true
+
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: unit
+      paths:
+        - src/
+    - name: integration
+      paths:
+        - src/
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        informational: true
+  individual_components:
+    - component_id: compiler
+      name: folio/compiler
+      paths: ['src/compiler.ts', 'src/extract.ts', 'src/guards.ts']
+    - component_id: execution
+      name: folio/execution
+      paths: ['src/node.ts', 'src/coordinator.ts', 'src/transaction.ts', 'src/worker.ts']
+    - component_id: host
+      name: folio/host
+      paths: ['src/host.ts', 'src/remote.ts']
+    - component_id: managed
+      name: folio/managed
+      paths: ['src/managed.ts', 'src/frames.ts']
+    - component_id: support
+      name: folio/support
+      paths: ['src/memory.ts', 'src/values.ts']
+
+ignore:
+  - 'tests/**/*'
+  - 'experiments/**/*'
+  - 'scripts/**/*'
+  - 'coverage/**/*'
+  - 'dist/**/*'
+  - 'vitest.config.ts'

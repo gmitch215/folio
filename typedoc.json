@@ -1,0 +1,24 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": [
+		"src/index.ts",
+		"src/node.ts",
+		"src/compiler.ts",
+		"src/remote.ts",
+		"src/host.ts",
+		"src/managed.ts"
+	],
+	"out": "typedoc",
+	"name": "@gmitch215/folio",
+	"readme": "README.md",
+	"projectDocuments": ["TECHNICAL_REPORT.md"],
+	"includeVersion": true,
+	"excludeInternal": true,
+	"excludePrivate": true,
+	"validation": {
+		"notExported": true,
+		"invalidLink": true,
+		"notDocumented": true
+	},
+	"treatWarningsAsErrors": false
+}
