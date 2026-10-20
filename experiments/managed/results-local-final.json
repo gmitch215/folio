@@ -1,0 +1,2945 @@
+{
+  "passed": true,
+  "nonce": "827b0a88-3cf6-415d-b709-5702171f8c86",
+  "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+  "jspi": true,
+  "count": 64,
+  "rounds": 2097152,
+  "rows": [
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "backend": "managed-coherent",
+        "memoryMode": "copied",
+        "transportBytes": {
+          "sent": 0,
+          "received": 0
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "serial",
+      "width": 0,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [],
+      "wallMs": 353,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "backend": "managed-coherent",
+        "memoryMode": "copied",
+        "transportBytes": {
+          "sent": 0,
+          "received": 0
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "serial",
+      "width": 0,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [],
+      "wallMs": 238,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "backend": "managed-coherent",
+        "memoryMode": "copied",
+        "transportBytes": {
+          "sent": 0,
+          "received": 0
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "serial",
+      "width": 0,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [],
+      "wallMs": 238,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 247,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 241,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "0caa539e-7396-48a4-bbda-fec080cae433",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 239,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "ea8a10df-5ae2-467d-b446-a7b70b5ba075",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 238,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 4
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 5
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 6
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 7
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 1,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 240,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 9
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 10
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 11
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 12
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 13
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 14
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 15
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 2,
+          "sequence": 16
+        }
+      ],
+      "wallMs": 246,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 17
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 18
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 19
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 20
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 21
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 22
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 23
+        },
+        {
+          "session": "6fa6f630-0fbb-461c-93ef-a6085214ef20",
+          "epoch": 3,
+          "sequence": 24
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 242,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "8b5b5f63-0503-4bc9-a9a5-ad53db5ba25f",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 242,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 241,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "79ee1555-1d79-41b7-9d5d-c00db9e63541",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 4
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 5
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 6
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 7
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 1,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 240,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 9
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 10
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 11
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 12
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 13
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 14
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 15
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 2,
+          "sequence": 16
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 17
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 18
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 19
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 20
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 21
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 22
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 23
+        },
+        {
+          "session": "1ea6ed54-b2dc-430b-9e1c-ddc472431e5e",
+          "epoch": 3,
+          "sequence": 24
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 243,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 242,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "b63dcb88-554d-4f8a-b258-5a10c157208e",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 242,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 241,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "f4b16fed-0c04-42d0-a5b8-2d1cff84ce09",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 4
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 5
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 6
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 7
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 1,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 241,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 9
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 10
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 11
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 12
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 13
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 14
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 15
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 2,
+          "sequence": 16
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 17
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 18
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 19
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 20
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 21
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 22
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 23
+        },
+        {
+          "session": "7a219bc1-df08-42f0-a977-6e64313a70b7",
+          "epoch": 3,
+          "sequence": 24
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 242,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "b0dc6eb1-bb52-4605-9f7b-b8abb1105110",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 237,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 239,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 238,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "90d26f00-363f-452b-9a88-c8c33284d176",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 241,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 4
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 5
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 6
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 7
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 1,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 242,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 9
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 10
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 11
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 12
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 13
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 14
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 15
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 2,
+          "sequence": 16
+        }
+      ],
+      "wallMs": 242,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "websocket",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "72ce96bbec088be2fa7453589b84aaeca98b81bc85481dd0c56f6f2804dd8991"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "354bffce8d9f961a29993bb74fa7b8a23ce6fb7a689c3fc49533356598949c59"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a3ecac934c1737bcaa065a94402224cb8840a1f5d6d999a603944f4e083dd3df"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "49a67f411507aadaec60ad03004971c7dafaea6bf89769ac99703a29ab30384f"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "d5afacf713b19d69fefb00c976b892ac65cc4c4c94eea00ca9bdeef7d2f23fd3"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "a2648e4f934ecd2700b708d05e4266c6ad7ec84d6fe8a5820f936bbbe88b77e2"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "e3d418859dcb6c57858337a3473a8ec946cf77487b9343397924378df733098e"
+        },
+        {
+          "isolate": "e79f6f5e-a78e-459b-a2ad-8db09c442f22",
+          "object": "42a960753a331eaa6ece62e13686c0dad39e9a758701602428863999de3a32a8"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 17
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 18
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 19
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 20
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 21
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 22
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 23
+        },
+        {
+          "session": "20e4f89b-0f6b-45d5-bc29-a4b165eccded",
+          "epoch": 3,
+          "sequence": 24
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 1,
+      "phase": "measured"
+    }
+  ],
+  "discardedSamples": 0
+}

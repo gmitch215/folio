@@ -1,0 +1,2236 @@
+{
+  "passed": false,
+  "nonce": "9fb0836a-15f7-484d-828f-27ed0992fb5a",
+  "error": "Error: Unexpected fallback\n    at async Object.fetch (file:///private/tmp/folio-managed-bundle/worker.js:1054:25)",
+  "rows": [
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "backend": "managed-coherent",
+        "memoryMode": "copied",
+        "transportBytes": {
+          "sent": 0,
+          "received": 0
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "serial",
+      "width": 0,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [],
+      "wallMs": 364,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "backend": "managed-coherent",
+        "memoryMode": "copied",
+        "transportBytes": {
+          "sent": 0,
+          "received": 0
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "serial",
+      "width": 0,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [],
+      "wallMs": 241,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "backend": "managed-coherent",
+        "memoryMode": "copied",
+        "transportBytes": {
+          "sent": 0,
+          "received": 0
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "serial",
+      "width": 0,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [],
+      "wallMs": 239,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 249,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 242,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "a9368979-e52e-4dcd-ad46-15d1e92530cb",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 240,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "fb4a1e45-3f27-4dbf-89ab-8a93b5ebbd9a",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 4
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 5
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 6
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 7
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 1,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 290,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 9
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 10
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 11
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 12
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 13
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 14
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 15
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 2,
+          "sequence": 16
+        }
+      ],
+      "wallMs": 241,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "rpc",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 17
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 18
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 19
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 20
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 21
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 22
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 23
+        },
+        {
+          "session": "8776ad52-69a5-41f5-9887-3b85f42a1237",
+          "epoch": 3,
+          "sequence": 24
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 246,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 243,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "6a48c44d-50b6-47b8-8b05-9d315a77e6e9",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 245,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 240,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "0b065fca-5252-4eaf-a29c-d24dc1c65f40",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 237,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 4
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 5
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 6
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 7
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 1,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 242,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 9
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 10
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 11
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 12
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 13
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 14
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 15
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 2,
+          "sequence": 16
+        }
+      ],
+      "wallMs": 248,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "fetch",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 17
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 18
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 19
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 20
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 21
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 22
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 23
+        },
+        {
+          "session": "ca8cf78c-c9a7-409c-8044-4a97ce6180af",
+          "epoch": 3,
+          "sequence": 24
+        }
+      ],
+      "wallMs": 256,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 736,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 1002,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 2,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 2,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "4b045fdb-da68-4c9a-bac1-71de3e66f99e",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 244,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 1,
+          "sequence": 4
+        }
+      ],
+      "wallMs": 240,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 2,
+          "sequence": 5
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 2,
+          "sequence": 6
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 2,
+          "sequence": 7
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 2,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 241,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 4,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 524288,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 541948,
+          "received": 9828
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 4,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 3,
+          "sequence": 9
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 3,
+          "sequence": 10
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 3,
+          "sequence": 11
+        },
+        {
+          "session": "9441b1b8-607b-4b7f-adcc-4eea0704abe1",
+          "epoch": 3,
+          "sequence": 12
+        }
+      ],
+      "wallMs": 241,
+      "iteration": 1,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 1
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 2
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 3
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 4
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 5
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 6
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 7
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 1,
+          "sequence": 8
+        }
+      ],
+      "wallMs": 240,
+      "iteration": -1,
+      "phase": "warmup"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 9
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 10
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 11
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 12
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 13
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 14
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 15
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 2,
+          "sequence": 16
+        }
+      ],
+      "wallMs": 239,
+      "iteration": 0,
+      "phase": "measured"
+    },
+    {
+      "report": {
+        "values": [
+          6055
+        ],
+        "workers": 8,
+        "regions": 64,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "speculative",
+        "extraction": "control-flow",
+        "memoryMode": "copied",
+        "snapshotBytes": 1048576,
+        "backend": "managed-coherent",
+        "transportBytes": {
+          "sent": 1067192,
+          "received": 10504
+        },
+        "transportFallbacks": 0
+      },
+      "exact": true,
+      "checkedBytes": 131072,
+      "scalar": 6055,
+      "mode": "stream",
+      "width": 8,
+      "identities": [
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "94024b70ad1add6d9b54ff4525640b2fdb96a2ebd523c99a4f804abc80044137"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "580980a20e2e890ace7b9aa1ea30bbfb226eaa55c4b84c315c52457d98c8ffbf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "73effd077f1e4908b33ac056bde454aa89f8eaf86b31ea30d679d517d971a608"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "2536de07ca7cbaef5410efd99706fce841b9bdead3c0f09833670d60d5a174d0"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c014ec66ed7eda9b8bb310ac06804aa585766b87c0a159d3cb32f845e4786c6b"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1e8871acf60b5922555adcb10c1360582d43ab34d07c6da49130b33d7702c0d9"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "1fe29ec2e2826bfbdf51bcb6e603658479cd18a7dd69ea8525caa58502718dcf"
+        },
+        {
+          "isolate": "793f51a2-49d5-4bae-93b9-bf017ed03f5a",
+          "object": "c846ad64cfa394de6d44dcc69447dd80bcf1f598d9b00bc44d86e53bd3988d74"
+        }
+      ],
+      "dispatches": [
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 17
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 18
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 19
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 20
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 21
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 22
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 23
+        },
+        {
+          "session": "e81299fa-34b0-4cea-b349-b571937c4050",
+          "epoch": 3,
+          "sequence": 24
+        }
+      ],
+      "wallMs": 246,
+      "iteration": 1,
+      "phase": "measured"
+    }
+  ]
+}
