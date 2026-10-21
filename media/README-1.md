@@ -4,6 +4,7 @@
 | -------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------- |
 | `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`                   | compiled to `build/*.wasm` by `bun run build:c` |
 | `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, host, remote, managed, probes | `bun run test`, under 5 seconds                 |
+| `tests/helpers/`     | worker entry points the unit tests spawn: the browser bridge and the task pool       | imported by `tests/unit/`                       |
 | `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes   | `bun run test:integration`, about 25 seconds    |
 | `tests/e2e/`         | live deploys to a Cloudflare account                                                 | `bun run test:e2e`, skipped without credentials |
 
