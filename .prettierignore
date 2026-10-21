@@ -6,7 +6,10 @@ build/
 dist/
 coverage/
 typedoc/
-results/
+results/*/
+results/*.json
+results/*.log
+results/*.tar.gz
 .husky/
 .remember/
 experiments/*/build/

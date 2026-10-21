@@ -42,6 +42,18 @@
 			"types": "./dist/managed.d.ts",
 			"import": "./dist/managed.js"
 		},
+		"./browser": {
+			"types": "./dist/browser.d.ts",
+			"import": "./dist/browser.js"
+		},
+		"./pages": {
+			"types": "./dist/pages.d.ts",
+			"import": "./dist/pages.js"
+		},
+		"./tasks": {
+			"types": "./dist/tasks.d.ts",
+			"import": "./dist/tasks.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -56,8 +68,9 @@
 		"build": "tsc -p tsconfig.build.json",
 		"build:c": "bun scripts/build/fixtures.ts",
 		"build:prepared": "bun scripts/build/prepare.ts",
-		"build:experiments": "node experiments/managed/prepare.ts && node experiments/browser/prepare.ts",
-		"typecheck": "bun run build:c && bun run build:experiments && tsc --noEmit -p tsconfig.json && tsc --noEmit -p experiments/cloud/tsconfig.json && tsc --noEmit -p experiments/managed/tsconfig.json && tsc --noEmit -p experiments/browser/tsconfig.json",
+		"build:experiments": "node experiments/managed/prepare.ts && node experiments/browser/prepare.ts && node experiments/browser/extraction/prepare.ts && node experiments/consumer/prepare.ts kernel-control",
+		"typecheck": "bun run build:c && bun run build:experiments && tsc --noEmit -p tsconfig.json && tsc --noEmit -p experiments/cloud/tsconfig.json && tsc --noEmit -p experiments/managed/tsconfig.json && tsc --noEmit -p experiments/browser/tsconfig.json && tsc --noEmit -p experiments/consumer/tsconfig.json",
+		"typecheck:php": "node experiments/consumer/php/prepare.ts && tsc --noEmit -p experiments/consumer/php/tsconfig.json",
 		"test": "vitest run --project unit",
 		"test:watch": "vitest --project unit",
 		"test:integration": "vitest run --project integration",
@@ -81,6 +94,7 @@
 		"@cloudflare/workers-types": "^5.20260925.1",
 		"@types/node": "^26.0.0",
 		"@vitest/coverage-v8": "^5.0.1",
+		"esbuild": "0.28.2",
 		"husky": "^9.1.7",
 		"lint-staged": "^17.6.0",
 		"prettier": "^3.9.10",
