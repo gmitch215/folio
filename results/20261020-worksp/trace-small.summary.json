@@ -169,7 +169,10 @@
           "only_removed": 1,
           "all_but": 1.1046989502871856
         }
-      }
+      },
+      "recorder": {},
+      "taskRungs": [],
+      "siblings": []
     },
     "hash-chains#0": {
       "mode": "trace",
@@ -342,7 +345,10 @@
           "only_removed": 1,
           "all_but": 1.0000808937464845
         }
-      }
+      },
+      "recorder": {},
+      "taskRungs": [],
+      "siblings": []
     },
     "dependent-chain#0": {
       "mode": "trace",
@@ -514,7 +520,10 @@
           "only_removed": 1,
           "all_but": 1.0010813913672651
         }
-      }
+      },
+      "recorder": {},
+      "taskRungs": [],
+      "siblings": []
     },
     "serialize-json#0": {
       "mode": "trace",
@@ -685,7 +694,10 @@
           "only_removed": 1,
           "all_but": 1.0210740644690073
         }
-      }
+      },
+      "recorder": {},
+      "taskRungs": [],
+      "siblings": []
     },
     "twig-render#0": {
       "mode": "trace",
@@ -856,6 +868,291 @@
           "only_removed": 1,
           "all_but": 52.221605194258586
         }
+      },
+      "recorder": {},
+      "taskRungs": [],
+      "siblings": []
+    }
+  },
+  "spread": {
+    "calls": {
+      "M0_spawn_join": {
+        "n": 1,
+        "min": 1.105,
+        "median": 1.105,
+        "max": 1.105
+      },
+      "M1_all_conflicts": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 1,
+        "min": 0.874,
+        "median": 0.874,
+        "max": 0.874
+      },
+      "X1_privatize_static": {
+        "n": 1,
+        "min": 0.874,
+        "median": 0.874,
+        "max": 0.874
+      }
+    },
+    "hash-chains": {
+      "M0_spawn_join": {
+        "n": 1,
+        "min": 7.971,
+        "median": 7.971,
+        "max": 7.971
+      },
+      "M1_all_conflicts": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "X1_privatize_static": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      }
+    },
+    "dependent-chain": {
+      "M0_spawn_join": {
+        "n": 1,
+        "min": 264.365,
+        "median": 264.365,
+        "max": 264.365
+      },
+      "M1_all_conflicts": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "X1_privatize_static": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      }
+    },
+    "serialize-json": {
+      "M0_spawn_join": {
+        "n": 1,
+        "min": 8.129,
+        "median": 8.129,
+        "max": 8.129
+      },
+      "M1_all_conflicts": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 1,
+        "min": 0.51,
+        "median": 0.51,
+        "max": 0.51
+      },
+      "X1_privatize_static": {
+        "n": 1,
+        "min": 0.51,
+        "median": 0.51,
+        "max": 0.51
+      }
+    },
+    "twig-render": {
+      "M0_spawn_join": {
+        "n": 1,
+        "min": 179.507,
+        "median": 179.507,
+        "max": 179.507
+      },
+      "M1_all_conflicts": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 1,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 1,
+        "min": 0.799,
+        "median": 0.799,
+        "max": 0.799
+      },
+      "X1_privatize_static": {
+        "n": 1,
+        "min": 0.799,
+        "median": 0.799,
+        "max": 0.799
       }
     }
   },

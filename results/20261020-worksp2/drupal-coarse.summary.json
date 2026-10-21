@@ -1,0 +1,3534 @@
+{
+  "inputs": {
+    "drupal-render#0": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 776.76953125,
+      "instrumentedMs": 120513.57679199999,
+      "slowdown": 155.15,
+      "counters": {
+        "n": 7714006390,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 32281049,
+        "spw": 56823857
+      },
+      "invocations": 291161,
+      "granularity": "php-userfunc",
+      "work": 7714006390,
+      "nodes": {
+        "total": 2338587,
+        "real": 873484,
+        "virtual": 1465103
+      },
+      "intervalRecords": 40730518,
+      "checks": {
+        "stackRawCross": 4,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 20.434,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.879,
+          "binding": [
+            "heap"
+          ],
+          "replays": 282806
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.891,
+          "binding": [
+            "heap"
+          ],
+          "replays": 272666
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 1035220572,
+        "deadStackReads": 68387,
+        "opcodeChunks": 0
+      },
+      "taskRungs": [
+        {
+          "name": "auto:Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw#2802",
+          "tasks": 3,
+          "parallelism": 1,
+          "work": 7714006390,
+          "ownerWork": 889341508,
+          "longestTask": 4967914606,
+          "dependenceSpan": 7713616691,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 280,
+            "static": 4032,
+            "host": 21,
+            "heap": 6410,
+            "spawn": 3501
+          },
+          "crossings": [
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "fromOp": 113,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "fromOp": 60,
+              "toOp": 115,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "fromOp": -1,
+              "toOp": 60,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\Renderer::doRender#7006",
+          "tasks": 3,
+          "parallelism": 1.003,
+          "work": 7714006390,
+          "ownerWork": 3657694825,
+          "longestTask": 2246127651,
+          "dependenceSpan": 7693827933,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 8842,
+            "static": 240427,
+            "host": 278,
+            "heap": 375437,
+            "spawn": 201283
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 124,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 51,
+              "toOp": 82,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "fromOp": 152,
+              "toOp": 51,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 112,
+              "toOp": 112,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "fromOp": -1,
+              "toOp": 112,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments#130840",
+          "tasks": 2,
+          "parallelism": 1.002,
+          "work": 7714006390,
+          "ownerWork": 6296139854,
+          "longestTask": 852437864,
+          "dependenceSpan": 7694938031,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 9409,
+            "static": 153904,
+            "host": 373,
+            "heap": 245148,
+            "spawn": 129285
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "to": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\views\\ViewExecutable::executeDisplay#22202",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7714006390,
+          "ownerWork": 5590586220,
+          "longestTask": 1625567140,
+          "dependenceSpan": 7692880484,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 10117,
+            "static": 280299,
+            "host": 365,
+            "heap": 432483,
+            "spawn": 231133
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "to": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "fromOp": 94,
+              "toOp": 127,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "to": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "fromOp": 17,
+              "toOp": 94,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\views\\Plugin\\views\\display\\DisplayPluginBase::preExecute",
+              "to": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "fromOp": 131,
+              "toOp": 17,
+              "edge": "heap",
+              "byte": 58497560,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "to": "Drupal\\views\\Plugin\\views\\display\\DisplayPluginBase::preExecute",
+              "fromOp": 24,
+              "toOp": 131,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare#6962",
+          "tasks": 2,
+          "parallelism": 1.001,
+          "work": 7714006390,
+          "ownerWork": 3108628964,
+          "longestTask": 4163837936,
+          "dependenceSpan": 7704176410,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 7541,
+            "static": 215921,
+            "host": 171,
+            "heap": 335643,
+            "spawn": 179836
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "fromOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\PlaceholderingRenderCache::set",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 42661672,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\Core\\Render\\PlaceholderingRenderCache::set",
+              "fromOp": 62,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Theme\\Registry::build#81944",
+          "tasks": 3,
+          "parallelism": 1.004,
+          "work": 7714006390,
+          "ownerWork": 6608952386,
+          "longestTask": 529152496,
+          "dependenceSpan": 7687062114,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 15217,
+            "static": 330411,
+            "host": 451,
+            "heap": 518106,
+            "spawn": 276007
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "fromOp": 60,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle#2212",
+          "tasks": 2,
+          "parallelism": 1,
+          "work": 7714006390,
+          "ownerWork": 428390152,
+          "longestTask": 6987061339,
+          "dependenceSpan": 7713795182,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 242,
+            "static": 2652,
+            "host": 12,
+            "heap": 4299,
+            "spawn": 2328
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "to": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "to": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "fromOp": 23,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\DrupalKernel::preHandle",
+              "to": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "fromOp": 20,
+              "toOp": 23,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "to": "Drupal\\Core\\DrupalKernel::preHandle",
+              "fromOp": 93,
+              "toOp": 20,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo#183051",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7714006390,
+          "ownerWork": 7079380760,
+          "longestTask": 346426718,
+          "dependenceSpan": 7689150878,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 11056,
+            "static": 227190,
+            "host": 483,
+            "heap": 360254,
+            "spawn": 189927
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "to": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse#6961",
+          "tasks": 2,
+          "parallelism": 1.001,
+          "work": 7714006390,
+          "ownerWork": 2780072461,
+          "longestTask": 4670574240,
+          "dependenceSpan": 7704941379,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 6885,
+            "static": 201389,
+            "host": 161,
+            "heap": 311709,
+            "spawn": 167295
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "to": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "fromOp": 23,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\views\\ViewExecutable::initHandlers#22239",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7714006390,
+          "ownerWork": 6219170811,
+          "longestTask": 1263263452,
+          "dependenceSpan": 7692069429,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 11705,
+            "static": 298402,
+            "host": 405,
+            "heap": 460185,
+            "spawn": 245583
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\views\\ViewExecutable::_initHandler",
+              "to": "Drupal\\views\\ViewExecutable::initHandlers",
+              "fromOp": -1,
+              "toOp": 124,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::initHandlers",
+              "to": "Drupal\\views\\ViewExecutable::_initHandler",
+              "fromOp": -1,
+              "toOp": -1,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::_initHandler",
+              "to": "Drupal\\views\\ViewExecutable::initHandlers",
+              "fromOp": -1,
+              "toOp": -1,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::initHandlers",
+              "to": "Drupal\\views\\ViewExecutable::_initHandler",
+              "fromOp": 82,
+              "toOp": -1,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        }
+      ],
+      "siblings": [
+        {
+          "id": 2802,
+          "label": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+          "depth": 16,
+          "share": 0.9025,
+          "children": 19,
+          "first": 0.644,
+          "second": 0.1913,
+          "groups": [
+            {
+              "label": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "n": 4,
+              "share": 0.6939
+            },
+            {
+              "label": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "n": 1,
+              "share": 0.1913
+            },
+            {
+              "label": "Drupal\\Core\\EventSubscriber\\EarlyRenderingControllerWrapperSubscriber::{closure:Drupal\\Core\\EventSubscriber\\EarlyRenderingControllerWrapperSubscriber::onController():9",
+              "n": 1,
+              "share": 0.0149
+            }
+          ]
+        },
+        {
+          "id": 7006,
+          "label": "Drupal\\Core\\Render\\Renderer::doRender",
+          "depth": 28,
+          "share": 0.5398,
+          "children": 18,
+          "first": 0.2912,
+          "second": 0.1667,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "n": 1,
+              "share": 0.2912
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::doRender",
+              "n": 1,
+              "share": 0.1667
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "n": 1,
+              "share": 0.068
+            }
+          ]
+        },
+        {
+          "id": 130840,
+          "label": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+          "depth": 22,
+          "share": 0.1838,
+          "children": 8,
+          "first": 0.1105,
+          "second": 0.0733,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "n": 1,
+              "share": 0.1105
+            },
+            {
+              "label": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "n": 1,
+              "share": 0.0733
+            },
+            {
+              "label": "Symfony\\Component\\HttpFoundation\\Response::__clone",
+              "n": 2,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 22202,
+          "label": "Drupal\\views\\ViewExecutable::executeDisplay",
+          "depth": 32,
+          "share": 0.2753,
+          "children": 4,
+          "first": 0.2107,
+          "second": 0.0645,
+          "groups": [
+            {
+              "label": "Drupal\\views\\ViewExecutable::preExecute",
+              "n": 1,
+              "share": 0.2107
+            },
+            {
+              "label": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "n": 1,
+              "share": 0.0645
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::postExecute",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 6962,
+          "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+          "depth": 22,
+          "share": 0.6055,
+          "children": 17,
+          "first": 0.5398,
+          "second": 0.0572,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "n": 2,
+              "share": 0.5453
+            },
+            {
+              "label": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "n": 1,
+              "share": 0.0572
+            },
+            {
+              "label": "Drupal\\Component\\Plugin\\PluginManagerBase::createInstance",
+              "n": 1,
+              "share": 0.0026
+            }
+          ]
+        },
+        {
+          "id": 81944,
+          "label": "Drupal\\Core\\Theme\\Registry::build",
+          "depth": 35,
+          "share": 0.1476,
+          "children": 20,
+          "first": 0.0686,
+          "second": 0.0479,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "n": 1,
+              "share": 0.0686
+            },
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "n": 1,
+              "share": 0.0479
+            },
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "n": 2,
+              "share": 0.0274
+            }
+          ]
+        },
+        {
+          "id": 2212,
+          "label": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+          "depth": 13,
+          "share": 0.9445,
+          "children": 2,
+          "first": 0.9058,
+          "second": 0.0387,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "n": 1,
+              "share": 0.9058
+            },
+            {
+              "label": "Drupal\\Core\\DrupalKernel::preHandle",
+              "n": 1,
+              "share": 0.0387
+            }
+          ]
+        },
+        {
+          "id": 183051,
+          "label": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+          "depth": 36,
+          "share": 0.0823,
+          "children": 5,
+          "first": 0.0449,
+          "second": 0.0374,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "n": 1,
+              "share": 0.0449
+            },
+            {
+              "label": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "n": 1,
+              "share": 0.0374
+            },
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::alter",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 6961,
+          "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+          "depth": 21,
+          "share": 0.6408,
+          "children": 8,
+          "first": 0.6055,
+          "second": 0.0341,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "n": 1,
+              "share": 0.6055
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "n": 1,
+              "share": 0.0341
+            },
+            {
+              "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::buildPageTopAndBottom",
+              "n": 1,
+              "share": 0.0009
+            }
+          ]
+        },
+        {
+          "id": 22239,
+          "label": "Drupal\\views\\ViewExecutable::initHandlers",
+          "depth": 35,
+          "share": 0.2033,
+          "children": 10,
+          "first": 0.1638,
+          "second": 0.03,
+          "groups": [
+            {
+              "label": "Drupal\\views\\ViewExecutable::_initHandler",
+              "n": 8,
+              "share": 0.2032
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::getHandlerTypes",
+              "n": 1,
+              "share": 0.0001
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::initDisplay",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 22825,
+          "label": "Drupal\\views\\Hook\\ViewsViewsHooks::viewsData",
+          "depth": 43,
+          "share": 0.1406,
+          "children": 267,
+          "first": 0.04,
+          "second": 0.0289,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Entity\\EntityTypeManager::getHandler",
+              "n": 6,
+              "share": 0.042
+            },
+            {
+              "label": "Drupal\\views\\FieldViewsDataProvider::defaultFieldImplementation",
+              "n": 2,
+              "share": 0.0411
+            },
+            {
+              "label": "Drupal\\block_content\\BlockContentViewsData::getViewsData",
+              "n": 1,
+              "share": 0.0212
+            }
+          ]
+        },
+        {
+          "id": 331,
+          "label": "cfw_serve",
+          "depth": 2,
+          "share": 0.9919,
+          "children": 23,
+          "first": 0.9508,
+          "second": 0.0278,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\DrupalKernel::handle",
+              "n": 1,
+              "share": 0.9508
+            },
+            {
+              "label": "Drupal::service",
+              "n": 3,
+              "share": 0.0314
+            },
+            {
+              "label": "Drupal\\drupflare\\RequestResetter::reset",
+              "n": 1,
+              "share": 0.0058
+            }
+          ]
+        },
+        {
+          "id": 82038,
+          "label": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+          "depth": 36,
+          "share": 0.0686,
+          "children": 47,
+          "first": 0.0336,
+          "second": 0.0226,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::{closure:Drupal\\Core\\Theme\\Registry::build():456}",
+              "n": 22,
+              "share": 0.035
+            },
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::getHookImplementationList",
+              "n": 1,
+              "share": 0.0336
+            },
+            {
+              "label": "Drupal\\Core\\Hook\\ImplementationList::iterateByModule",
+              "n": 24,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 68541,
+          "label": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+          "depth": 33,
+          "share": 0.0645,
+          "children": 4,
+          "first": 0.0464,
+          "second": 0.0181,
+          "groups": [
+            {
+              "label": "Drupal\\views\\Plugin\\views\\display\\PathPluginBase::execute",
+              "n": 1,
+              "share": 0.0464
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::render",
+              "n": 1,
+              "share": 0.0181
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::getTitle",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 132157,
+          "label": "Drupal\\Component\\Plugin\\Discovery\\DerivativeDiscoveryDecorator::getDefinitions",
+          "depth": 52,
+          "share": 0.0302,
+          "children": 2,
+          "first": 0.0159,
+          "second": 0.0143,
+          "groups": [
+            {
+              "label": "Drupal\\Component\\Plugin\\Discovery\\DerivativeDiscoveryDecorator::getDerivatives",
+              "n": 1,
+              "share": 0.0159
+            },
+            {
+              "label": "Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery::getDefinitions",
+              "n": 1,
+              "share": 0.0143
+            }
+          ]
+        }
+      ]
+    },
+    "drupal-render#1": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 776.76953125,
+      "instrumentedMs": 116940.20812499998,
+      "slowdown": 150.55,
+      "counters": {
+        "n": 7713836256,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 32281006,
+        "spw": 56823825
+      },
+      "invocations": 291161,
+      "granularity": "php-userfunc",
+      "work": 7713836256,
+      "nodes": {
+        "total": 2337241,
+        "real": 873484,
+        "virtual": 1463757
+      },
+      "intervalRecords": 40721965,
+      "checks": {
+        "stackRawCross": 4,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 20.434,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.879,
+          "binding": [
+            "heap"
+          ],
+          "replays": 282811
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.891,
+          "binding": [
+            "heap"
+          ],
+          "replays": 272676
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 1035215913,
+        "deadStackReads": 68387,
+        "opcodeChunks": 0
+      },
+      "taskRungs": [
+        {
+          "name": "auto:Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw#2802",
+          "tasks": 3,
+          "parallelism": 1,
+          "work": 7713836256,
+          "ownerWork": 889344427,
+          "longestTask": 4967893839,
+          "dependenceSpan": 7713446517,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 280,
+            "static": 4032,
+            "host": 21,
+            "heap": 6410,
+            "spawn": 3501
+          },
+          "crossings": [
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "fromOp": 113,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "fromOp": 60,
+              "toOp": 115,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "fromOp": -1,
+              "toOp": 60,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\Renderer::doRender#7006",
+          "tasks": 3,
+          "parallelism": 1.003,
+          "work": 7713836256,
+          "ownerWork": 3657529174,
+          "longestTask": 2246123597,
+          "dependenceSpan": 7693656815,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 8842,
+            "static": 240427,
+            "host": 280,
+            "heap": 375439,
+            "spawn": 201283
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 124,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 51,
+              "toOp": 82,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "fromOp": 152,
+              "toOp": 51,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 112,
+              "toOp": 112,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "fromOp": -1,
+              "toOp": 112,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments#130840",
+          "tasks": 2,
+          "parallelism": 1.002,
+          "work": 7713836256,
+          "ownerWork": 6296127053,
+          "longestTask": 852264609,
+          "dependenceSpan": 7694766539,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 9409,
+            "static": 153904,
+            "host": 373,
+            "heap": 245149,
+            "spawn": 129285
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "to": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\views\\ViewExecutable::executeDisplay#22202",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7713836256,
+          "ownerWork": 5590420140,
+          "longestTask": 1625562178,
+          "dependenceSpan": 7692709366,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 10117,
+            "static": 280299,
+            "host": 367,
+            "heap": 432485,
+            "spawn": 231133
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "to": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "fromOp": 94,
+              "toOp": 127,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "to": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "fromOp": 17,
+              "toOp": 94,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\views\\Plugin\\views\\display\\DisplayPluginBase::preExecute",
+              "to": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "fromOp": 131,
+              "toOp": 17,
+              "edge": "heap",
+              "byte": 58497560,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "to": "Drupal\\views\\Plugin\\views\\display\\DisplayPluginBase::preExecute",
+              "fromOp": 24,
+              "toOp": 131,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare#6962",
+          "tasks": 2,
+          "parallelism": 1.001,
+          "work": 7713836256,
+          "ownerWork": 3108459050,
+          "longestTask": 4163837574,
+          "dependenceSpan": 7704005292,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 7541,
+            "static": 215921,
+            "host": 173,
+            "heap": 335645,
+            "spawn": 179836
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "fromOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\PlaceholderingRenderCache::set",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 42661672,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\Core\\Render\\PlaceholderingRenderCache::set",
+              "fromOp": 62,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Theme\\Registry::build#81944",
+          "tasks": 3,
+          "parallelism": 1.004,
+          "work": 7713836256,
+          "ownerWork": 6608782228,
+          "longestTask": 529152520,
+          "dependenceSpan": 7686890996,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 15217,
+            "static": 330411,
+            "host": 453,
+            "heap": 518108,
+            "spawn": 276007
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "fromOp": 60,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle#2212",
+          "tasks": 2,
+          "parallelism": 1,
+          "work": 7713836256,
+          "ownerWork": 428392739,
+          "longestTask": 6986888618,
+          "dependenceSpan": 7713625048,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 242,
+            "static": 2652,
+            "host": 12,
+            "heap": 4299,
+            "spawn": 2328
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "to": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "to": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "fromOp": 23,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\DrupalKernel::preHandle",
+              "to": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "fromOp": 20,
+              "toOp": 23,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "to": "Drupal\\Core\\DrupalKernel::preHandle",
+              "fromOp": 93,
+              "toOp": 20,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo#183051",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7713836256,
+          "ownerWork": 7079408681,
+          "longestTask": 346219309,
+          "dependenceSpan": 7688979817,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 11056,
+            "static": 227190,
+            "host": 485,
+            "heap": 360256,
+            "spawn": 189927
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "to": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse#6961",
+          "tasks": 2,
+          "parallelism": 1.001,
+          "work": 7713836256,
+          "ownerWork": 2779919765,
+          "longestTask": 4670572405,
+          "dependenceSpan": 7704771592,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 6885,
+            "static": 201389,
+            "host": 163,
+            "heap": 311710,
+            "spawn": 167295
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "to": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "fromOp": 23,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\views\\ViewExecutable::initHandlers#22239",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7713836256,
+          "ownerWork": 6219004678,
+          "longestTask": 1263257943,
+          "dependenceSpan": 7691898311,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 11705,
+            "static": 298402,
+            "host": 407,
+            "heap": 460187,
+            "spawn": 245583
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\views\\ViewExecutable::_initHandler",
+              "to": "Drupal\\views\\ViewExecutable::initHandlers",
+              "fromOp": -1,
+              "toOp": 124,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::initHandlers",
+              "to": "Drupal\\views\\ViewExecutable::_initHandler",
+              "fromOp": -1,
+              "toOp": -1,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::_initHandler",
+              "to": "Drupal\\views\\ViewExecutable::initHandlers",
+              "fromOp": -1,
+              "toOp": -1,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::initHandlers",
+              "to": "Drupal\\views\\ViewExecutable::_initHandler",
+              "fromOp": 82,
+              "toOp": -1,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        }
+      ],
+      "siblings": [
+        {
+          "id": 2802,
+          "label": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+          "depth": 16,
+          "share": 0.9025,
+          "children": 19,
+          "first": 0.644,
+          "second": 0.1913,
+          "groups": [
+            {
+              "label": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "n": 4,
+              "share": 0.6939
+            },
+            {
+              "label": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "n": 1,
+              "share": 0.1913
+            },
+            {
+              "label": "Drupal\\Core\\EventSubscriber\\EarlyRenderingControllerWrapperSubscriber::{closure:Drupal\\Core\\EventSubscriber\\EarlyRenderingControllerWrapperSubscriber::onController():9",
+              "n": 1,
+              "share": 0.0149
+            }
+          ]
+        },
+        {
+          "id": 7006,
+          "label": "Drupal\\Core\\Render\\Renderer::doRender",
+          "depth": 28,
+          "share": 0.5398,
+          "children": 18,
+          "first": 0.2912,
+          "second": 0.1667,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "n": 1,
+              "share": 0.2912
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::doRender",
+              "n": 1,
+              "share": 0.1667
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "n": 1,
+              "share": 0.068
+            }
+          ]
+        },
+        {
+          "id": 130840,
+          "label": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+          "depth": 22,
+          "share": 0.1838,
+          "children": 8,
+          "first": 0.1105,
+          "second": 0.0733,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "n": 1,
+              "share": 0.1105
+            },
+            {
+              "label": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "n": 1,
+              "share": 0.0733
+            },
+            {
+              "label": "Symfony\\Component\\HttpFoundation\\Response::__clone",
+              "n": 2,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 22202,
+          "label": "Drupal\\views\\ViewExecutable::executeDisplay",
+          "depth": 32,
+          "share": 0.2753,
+          "children": 4,
+          "first": 0.2107,
+          "second": 0.0645,
+          "groups": [
+            {
+              "label": "Drupal\\views\\ViewExecutable::preExecute",
+              "n": 1,
+              "share": 0.2107
+            },
+            {
+              "label": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "n": 1,
+              "share": 0.0645
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::postExecute",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 6962,
+          "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+          "depth": 22,
+          "share": 0.6055,
+          "children": 17,
+          "first": 0.5398,
+          "second": 0.0572,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "n": 2,
+              "share": 0.5454
+            },
+            {
+              "label": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "n": 1,
+              "share": 0.0572
+            },
+            {
+              "label": "Drupal\\Component\\Plugin\\PluginManagerBase::createInstance",
+              "n": 1,
+              "share": 0.0026
+            }
+          ]
+        },
+        {
+          "id": 81944,
+          "label": "Drupal\\Core\\Theme\\Registry::build",
+          "depth": 35,
+          "share": 0.1476,
+          "children": 20,
+          "first": 0.0686,
+          "second": 0.0479,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "n": 1,
+              "share": 0.0686
+            },
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "n": 1,
+              "share": 0.0479
+            },
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "n": 2,
+              "share": 0.0274
+            }
+          ]
+        },
+        {
+          "id": 2212,
+          "label": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+          "depth": 13,
+          "share": 0.9445,
+          "children": 2,
+          "first": 0.9058,
+          "second": 0.0387,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "n": 1,
+              "share": 0.9058
+            },
+            {
+              "label": "Drupal\\Core\\DrupalKernel::preHandle",
+              "n": 1,
+              "share": 0.0387
+            }
+          ]
+        },
+        {
+          "id": 183051,
+          "label": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+          "depth": 36,
+          "share": 0.0823,
+          "children": 5,
+          "first": 0.0449,
+          "second": 0.0374,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "n": 1,
+              "share": 0.0449
+            },
+            {
+              "label": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "n": 1,
+              "share": 0.0374
+            },
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::alter",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 6961,
+          "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+          "depth": 21,
+          "share": 0.6408,
+          "children": 8,
+          "first": 0.6055,
+          "second": 0.0341,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "n": 1,
+              "share": 0.6055
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "n": 1,
+              "share": 0.0341
+            },
+            {
+              "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::buildPageTopAndBottom",
+              "n": 1,
+              "share": 0.0009
+            }
+          ]
+        },
+        {
+          "id": 22239,
+          "label": "Drupal\\views\\ViewExecutable::initHandlers",
+          "depth": 35,
+          "share": 0.2033,
+          "children": 10,
+          "first": 0.1638,
+          "second": 0.03,
+          "groups": [
+            {
+              "label": "Drupal\\views\\ViewExecutable::_initHandler",
+              "n": 8,
+              "share": 0.2032
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::getHandlerTypes",
+              "n": 1,
+              "share": 0.0001
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::initDisplay",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 22825,
+          "label": "Drupal\\views\\Hook\\ViewsViewsHooks::viewsData",
+          "depth": 43,
+          "share": 0.1406,
+          "children": 267,
+          "first": 0.04,
+          "second": 0.0289,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Entity\\EntityTypeManager::getHandler",
+              "n": 6,
+              "share": 0.042
+            },
+            {
+              "label": "Drupal\\views\\FieldViewsDataProvider::defaultFieldImplementation",
+              "n": 2,
+              "share": 0.0411
+            },
+            {
+              "label": "Drupal\\block_content\\BlockContentViewsData::getViewsData",
+              "n": 1,
+              "share": 0.0212
+            }
+          ]
+        },
+        {
+          "id": 331,
+          "label": "cfw_serve",
+          "depth": 2,
+          "share": 0.9919,
+          "children": 23,
+          "first": 0.9508,
+          "second": 0.0278,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\DrupalKernel::handle",
+              "n": 1,
+              "share": 0.9508
+            },
+            {
+              "label": "Drupal::service",
+              "n": 3,
+              "share": 0.0314
+            },
+            {
+              "label": "Drupal\\drupflare\\RequestResetter::reset",
+              "n": 1,
+              "share": 0.0058
+            }
+          ]
+        },
+        {
+          "id": 82038,
+          "label": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+          "depth": 36,
+          "share": 0.0686,
+          "children": 47,
+          "first": 0.0336,
+          "second": 0.0226,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::{closure:Drupal\\Core\\Theme\\Registry::build():456}",
+              "n": 22,
+              "share": 0.035
+            },
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::getHookImplementationList",
+              "n": 1,
+              "share": 0.0336
+            },
+            {
+              "label": "Drupal\\Core\\Hook\\ImplementationList::iterateByModule",
+              "n": 24,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 68541,
+          "label": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+          "depth": 33,
+          "share": 0.0645,
+          "children": 4,
+          "first": 0.0464,
+          "second": 0.0181,
+          "groups": [
+            {
+              "label": "Drupal\\views\\Plugin\\views\\display\\PathPluginBase::execute",
+              "n": 1,
+              "share": 0.0464
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::render",
+              "n": 1,
+              "share": 0.0181
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::getTitle",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 132157,
+          "label": "Drupal\\Component\\Plugin\\Discovery\\DerivativeDiscoveryDecorator::getDefinitions",
+          "depth": 52,
+          "share": 0.0302,
+          "children": 2,
+          "first": 0.0159,
+          "second": 0.0143,
+          "groups": [
+            {
+              "label": "Drupal\\Component\\Plugin\\Discovery\\DerivativeDiscoveryDecorator::getDerivatives",
+              "n": 1,
+              "share": 0.0159
+            },
+            {
+              "label": "Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery::getDefinitions",
+              "n": 1,
+              "share": 0.0143
+            }
+          ]
+        }
+      ]
+    },
+    "drupal-render#2": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 776.76953125,
+      "instrumentedMs": 116885.27979200002,
+      "slowdown": 150.48,
+      "counters": {
+        "n": 7713976840,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 32281043,
+        "spw": 56823867
+      },
+      "invocations": 291161,
+      "granularity": "php-userfunc",
+      "work": 7713976840,
+      "nodes": {
+        "total": 2338450,
+        "real": 873484,
+        "virtual": 1464966
+      },
+      "intervalRecords": 40730248,
+      "checks": {
+        "stackRawCross": 4,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 20.434,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.879,
+          "binding": [
+            "heap"
+          ],
+          "replays": 282806
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.891,
+          "binding": [
+            "heap"
+          ],
+          "replays": 272666
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 1035213751,
+        "deadStackReads": 68387,
+        "opcodeChunks": 0
+      },
+      "taskRungs": [
+        {
+          "name": "auto:Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw#2802",
+          "tasks": 3,
+          "parallelism": 1,
+          "work": 7713976840,
+          "ownerWork": 889341916,
+          "longestTask": 4967927621,
+          "dependenceSpan": 7713587101,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 280,
+            "static": 4032,
+            "host": 21,
+            "heap": 6410,
+            "spawn": 3501
+          },
+          "crossings": [
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "fromOp": 113,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "to": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "fromOp": 60,
+              "toOp": 115,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+              "to": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "fromOp": -1,
+              "toOp": 60,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\Renderer::doRender#7006",
+          "tasks": 3,
+          "parallelism": 1.003,
+          "work": 7713976840,
+          "ownerWork": 3657659043,
+          "longestTask": 2246132559,
+          "dependenceSpan": 7693798291,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 8842,
+            "static": 240427,
+            "host": 278,
+            "heap": 375437,
+            "spawn": 201283
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 124,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 51,
+              "toOp": 82,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "fromOp": 152,
+              "toOp": 51,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "to": "Drupal\\Core\\Render\\Renderer::doRender",
+              "fromOp": 112,
+              "toOp": 112,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::doRender",
+              "to": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "fromOp": -1,
+              "toOp": 112,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments#130840",
+          "tasks": 2,
+          "parallelism": 1.002,
+          "work": 7713976840,
+          "ownerWork": 6296120839,
+          "longestTask": 852431362,
+          "dependenceSpan": 7694908389,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 9409,
+            "static": 153904,
+            "host": 373,
+            "heap": 245148,
+            "spawn": 129285
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "to": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+              "to": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\views\\ViewExecutable::executeDisplay#22202",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7713976840,
+          "ownerWork": 5590551762,
+          "longestTask": 1625566219,
+          "dependenceSpan": 7692850842,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 10117,
+            "static": 280299,
+            "host": 365,
+            "heap": 432483,
+            "spawn": 231133
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "to": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "fromOp": 94,
+              "toOp": 127,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "to": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "fromOp": 17,
+              "toOp": 94,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\views\\Plugin\\views\\display\\DisplayPluginBase::preExecute",
+              "to": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "fromOp": 131,
+              "toOp": 17,
+              "edge": "heap",
+              "byte": 58497560,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::executeDisplay",
+              "to": "Drupal\\views\\Plugin\\views\\display\\DisplayPluginBase::preExecute",
+              "fromOp": 24,
+              "toOp": 131,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare#6962",
+          "tasks": 2,
+          "parallelism": 1.001,
+          "work": 7713976840,
+          "ownerWork": 3108588935,
+          "longestTask": 4163848529,
+          "dependenceSpan": 7704146768,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 7541,
+            "static": 215921,
+            "host": 171,
+            "heap": 335643,
+            "spawn": 179836
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "fromOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\PlaceholderingRenderCache::set",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 42661672,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\Core\\Render\\PlaceholderingRenderCache::set",
+              "fromOp": 62,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Theme\\Registry::build#81944",
+          "tasks": 3,
+          "parallelism": 1.004,
+          "work": 7713976840,
+          "ownerWork": 6608922808,
+          "longestTask": 529152524,
+          "dependenceSpan": 7687032472,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 15217,
+            "static": 330411,
+            "host": 451,
+            "heap": 518106,
+            "spawn": 276007
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "to": "Drupal\\Core\\Theme\\Registry::build",
+              "fromOp": 0,
+              "toOp": 0,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Theme\\Registry::build",
+              "to": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "fromOp": 60,
+              "toOp": 0,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle#2212",
+          "tasks": 2,
+          "parallelism": 1,
+          "work": 7713976840,
+          "ownerWork": 428390484,
+          "longestTask": 6987031457,
+          "dependenceSpan": 7713765632,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 242,
+            "static": 2652,
+            "host": 12,
+            "heap": 4299,
+            "spawn": 2328
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "to": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "to": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "fromOp": 23,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\DrupalKernel::preHandle",
+              "to": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "fromOp": 20,
+              "toOp": 23,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+              "to": "Drupal\\Core\\DrupalKernel::preHandle",
+              "fromOp": 93,
+              "toOp": 20,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo#183051",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7713976840,
+          "ownerWork": 7079351068,
+          "longestTask": 346426860,
+          "dependenceSpan": 7689121236,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 11056,
+            "static": 227190,
+            "host": 483,
+            "heap": 360254,
+            "spawn": 189927
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "to": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+              "to": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse#6961",
+          "tasks": 2,
+          "parallelism": 1.001,
+          "work": 7713976840,
+          "ownerWork": 2780029927,
+          "longestTask": 4670584857,
+          "dependenceSpan": 7704911737,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 6885,
+            "static": 201389,
+            "host": 161,
+            "heap": 311709,
+            "spawn": 167295
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "to": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+              "to": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "fromOp": 23,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "auto:Drupal\\views\\ViewExecutable::initHandlers#22239",
+          "tasks": 2,
+          "parallelism": 1.003,
+          "work": 7713976840,
+          "ownerWork": 6219142943,
+          "longestTask": 1263260262,
+          "dependenceSpan": 7692039787,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "stack": 11705,
+            "static": 298402,
+            "host": 405,
+            "heap": 460185,
+            "spawn": 245583
+          },
+          "crossings": [
+            {
+              "from": "Drupal\\views\\ViewExecutable::_initHandler",
+              "to": "Drupal\\views\\ViewExecutable::initHandlers",
+              "fromOp": -1,
+              "toOp": 124,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::initHandlers",
+              "to": "Drupal\\views\\ViewExecutable::_initHandler",
+              "fromOp": -1,
+              "toOp": -1,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::_initHandler",
+              "to": "Drupal\\views\\ViewExecutable::initHandlers",
+              "fromOp": -1,
+              "toOp": -1,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "Drupal\\views\\ViewExecutable::initHandlers",
+              "to": "Drupal\\views\\ViewExecutable::_initHandler",
+              "fromOp": 82,
+              "toOp": -1,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        }
+      ],
+      "siblings": [
+        {
+          "id": 2802,
+          "label": "Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw",
+          "depth": 16,
+          "share": 0.9025,
+          "children": 19,
+          "first": 0.644,
+          "second": 0.1913,
+          "groups": [
+            {
+              "label": "Symfony\\Component\\EventDispatcher\\EventDispatcher::dispatch",
+              "n": 4,
+              "share": 0.6939
+            },
+            {
+              "label": "Symfony\\Component\\HttpKernel\\HttpKernel::filterResponse",
+              "n": 1,
+              "share": 0.1913
+            },
+            {
+              "label": "Drupal\\Core\\EventSubscriber\\EarlyRenderingControllerWrapperSubscriber::{closure:Drupal\\Core\\EventSubscriber\\EarlyRenderingControllerWrapperSubscriber::onController():9",
+              "n": 1,
+              "share": 0.0149
+            }
+          ]
+        },
+        {
+          "id": 7006,
+          "label": "Drupal\\Core\\Render\\Renderer::doRender",
+          "depth": 28,
+          "share": 0.5398,
+          "children": 18,
+          "first": 0.2912,
+          "second": 0.1667,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::doCallback",
+              "n": 1,
+              "share": 0.2912
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::doRender",
+              "n": 1,
+              "share": 0.1667
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::loadElementDefaults",
+              "n": 1,
+              "share": 0.068
+            }
+          ]
+        },
+        {
+          "id": 130840,
+          "label": "Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments",
+          "depth": 22,
+          "share": 0.1838,
+          "children": 8,
+          "first": 0.1105,
+          "second": 0.0733,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::processAttachments",
+              "n": 1,
+              "share": 0.1105
+            },
+            {
+              "label": "Drupal\\Core\\Render\\HtmlResponseAttachmentsProcessor::renderPlaceholders",
+              "n": 1,
+              "share": 0.0733
+            },
+            {
+              "label": "Symfony\\Component\\HttpFoundation\\Response::__clone",
+              "n": 2,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 22202,
+          "label": "Drupal\\views\\ViewExecutable::executeDisplay",
+          "depth": 32,
+          "share": 0.2753,
+          "children": 4,
+          "first": 0.2107,
+          "second": 0.0645,
+          "groups": [
+            {
+              "label": "Drupal\\views\\ViewExecutable::preExecute",
+              "n": 1,
+              "share": 0.2107
+            },
+            {
+              "label": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+              "n": 1,
+              "share": 0.0645
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::postExecute",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 6962,
+          "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+          "depth": 22,
+          "share": 0.6055,
+          "children": 17,
+          "first": 0.5398,
+          "second": 0.0572,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "n": 2,
+              "share": 0.5453
+            },
+            {
+              "label": "Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant::build",
+              "n": 1,
+              "share": 0.0572
+            },
+            {
+              "label": "Drupal\\Component\\Plugin\\PluginManagerBase::createInstance",
+              "n": 1,
+              "share": 0.0026
+            }
+          ]
+        },
+        {
+          "id": 81944,
+          "label": "Drupal\\Core\\Theme\\Registry::build",
+          "depth": 35,
+          "share": 0.1476,
+          "children": 20,
+          "first": 0.0686,
+          "second": 0.0479,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+              "n": 1,
+              "share": 0.0686
+            },
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::postProcessExtension",
+              "n": 1,
+              "share": 0.0479
+            },
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::processExtension",
+              "n": 2,
+              "share": 0.0274
+            }
+          ]
+        },
+        {
+          "id": 2212,
+          "label": "Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle",
+          "depth": 13,
+          "share": 0.9445,
+          "children": 2,
+          "first": 0.9058,
+          "second": 0.0387,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\StackMiddleware\\Session::handle",
+              "n": 1,
+              "share": 0.9058
+            },
+            {
+              "label": "Drupal\\Core\\DrupalKernel::preHandle",
+              "n": 1,
+              "share": 0.0387
+            }
+          ]
+        },
+        {
+          "id": 183051,
+          "label": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo",
+          "depth": 36,
+          "share": 0.0823,
+          "children": 5,
+          "first": 0.0449,
+          "second": 0.0374,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Asset\\LibraryDiscoveryParser::librariesForComponents",
+              "n": 1,
+              "share": 0.0449
+            },
+            {
+              "label": "Drupal\\Core\\Utility\\FileParsingCacheCollectorBase::get",
+              "n": 1,
+              "share": 0.0374
+            },
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::alter",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 6961,
+          "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse",
+          "depth": 21,
+          "share": 0.6408,
+          "children": 8,
+          "first": 0.6055,
+          "second": 0.0341,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare",
+              "n": 1,
+              "share": 0.6055
+            },
+            {
+              "label": "Drupal\\Core\\Render\\Renderer::executeInRenderContext",
+              "n": 1,
+              "share": 0.0341
+            },
+            {
+              "label": "Drupal\\Core\\Render\\MainContent\\HtmlRenderer::buildPageTopAndBottom",
+              "n": 1,
+              "share": 0.0009
+            }
+          ]
+        },
+        {
+          "id": 22239,
+          "label": "Drupal\\views\\ViewExecutable::initHandlers",
+          "depth": 35,
+          "share": 0.2033,
+          "children": 10,
+          "first": 0.1638,
+          "second": 0.03,
+          "groups": [
+            {
+              "label": "Drupal\\views\\ViewExecutable::_initHandler",
+              "n": 8,
+              "share": 0.2032
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::getHandlerTypes",
+              "n": 1,
+              "share": 0.0001
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::initDisplay",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 22825,
+          "label": "Drupal\\views\\Hook\\ViewsViewsHooks::viewsData",
+          "depth": 43,
+          "share": 0.1406,
+          "children": 267,
+          "first": 0.04,
+          "second": 0.0289,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Entity\\EntityTypeManager::getHandler",
+              "n": 6,
+              "share": 0.042
+            },
+            {
+              "label": "Drupal\\views\\FieldViewsDataProvider::defaultFieldImplementation",
+              "n": 2,
+              "share": 0.0411
+            },
+            {
+              "label": "Drupal\\block_content\\BlockContentViewsData::getViewsData",
+              "n": 1,
+              "share": 0.0212
+            }
+          ]
+        },
+        {
+          "id": 331,
+          "label": "cfw_serve",
+          "depth": 2,
+          "share": 0.9919,
+          "children": 23,
+          "first": 0.9508,
+          "second": 0.0278,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\DrupalKernel::handle",
+              "n": 1,
+              "share": 0.9508
+            },
+            {
+              "label": "Drupal::service",
+              "n": 3,
+              "share": 0.0314
+            },
+            {
+              "label": "Drupal\\drupflare\\RequestResetter::reset",
+              "n": 1,
+              "share": 0.0058
+            }
+          ]
+        },
+        {
+          "id": 82038,
+          "label": "Drupal\\Core\\Extension\\ModuleHandler::invokeAllWith",
+          "depth": 36,
+          "share": 0.0686,
+          "children": 47,
+          "first": 0.0336,
+          "second": 0.0226,
+          "groups": [
+            {
+              "label": "Drupal\\Core\\Theme\\Registry::{closure:Drupal\\Core\\Theme\\Registry::build():456}",
+              "n": 22,
+              "share": 0.035
+            },
+            {
+              "label": "Drupal\\Core\\Extension\\ModuleHandler::getHookImplementationList",
+              "n": 1,
+              "share": 0.0336
+            },
+            {
+              "label": "Drupal\\Core\\Hook\\ImplementationList::iterateByModule",
+              "n": 24,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 68541,
+          "label": "Drupal\\views\\Plugin\\views\\display\\Page::execute",
+          "depth": 33,
+          "share": 0.0645,
+          "children": 4,
+          "first": 0.0464,
+          "second": 0.0181,
+          "groups": [
+            {
+              "label": "Drupal\\views\\Plugin\\views\\display\\PathPluginBase::execute",
+              "n": 1,
+              "share": 0.0464
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::render",
+              "n": 1,
+              "share": 0.0181
+            },
+            {
+              "label": "Drupal\\views\\ViewExecutable::getTitle",
+              "n": 1,
+              "share": 0
+            }
+          ]
+        },
+        {
+          "id": 132157,
+          "label": "Drupal\\Component\\Plugin\\Discovery\\DerivativeDiscoveryDecorator::getDefinitions",
+          "depth": 52,
+          "share": 0.0302,
+          "children": 2,
+          "first": 0.0159,
+          "second": 0.0143,
+          "groups": [
+            {
+              "label": "Drupal\\Component\\Plugin\\Discovery\\DerivativeDiscoveryDecorator::getDerivatives",
+              "n": 1,
+              "share": 0.0159
+            },
+            {
+              "label": "Drupal\\Core\\Plugin\\Discovery\\YamlDiscovery::getDefinitions",
+              "n": 1,
+              "share": 0.0143
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "spread": {
+    "drupal-render": {
+      "M0_spawn_join": {
+        "n": 3,
+        "min": 20.434,
+        "median": 20.434,
+        "max": 20.434
+      },
+      "M1_all_conflicts": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 3,
+        "min": 0.879,
+        "median": 0.879,
+        "max": 0.879
+      },
+      "X1_privatize_static": {
+        "n": 3,
+        "min": 0.891,
+        "median": 0.891,
+        "max": 0.891
+      },
+      "auto:Symfony\\Component\\HttpKernel\\HttpKernel::handleRaw#2802": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "auto:Drupal\\Core\\Render\\Renderer::doRender#7006": {
+        "n": 3,
+        "min": 1.003,
+        "median": 1.003,
+        "max": 1.003
+      },
+      "auto:Drupal\\big_pipe\\Render\\BigPipeResponseAttachmentsProcessor::processAttachments#130840": {
+        "n": 3,
+        "min": 1.002,
+        "median": 1.002,
+        "max": 1.002
+      },
+      "auto:Drupal\\views\\ViewExecutable::executeDisplay#22202": {
+        "n": 3,
+        "min": 1.003,
+        "median": 1.003,
+        "max": 1.003
+      },
+      "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::prepare#6962": {
+        "n": 3,
+        "min": 1.001,
+        "median": 1.001,
+        "max": 1.001
+      },
+      "auto:Drupal\\Core\\Theme\\Registry::build#81944": {
+        "n": 3,
+        "min": 1.004,
+        "median": 1.004,
+        "max": 1.004
+      },
+      "auto:Drupal\\Core\\StackMiddleware\\KernelPreHandle::handle#2212": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "auto:Drupal\\Core\\Asset\\LibraryDiscoveryParser::parseLibraryInfo#183051": {
+        "n": 3,
+        "min": 1.003,
+        "median": 1.003,
+        "max": 1.003
+      },
+      "auto:Drupal\\Core\\Render\\MainContent\\HtmlRenderer::renderResponse#6961": {
+        "n": 3,
+        "min": 1.001,
+        "median": 1.001,
+        "max": 1.001
+      },
+      "auto:Drupal\\views\\ViewExecutable::initHandlers#22239": {
+        "n": 3,
+        "min": 1.003,
+        "median": 1.003,
+        "max": 1.003
+      }
+    }
+  },
+  "rawSha256": "353b8e96f71f53ad972ba9dda88757e3c2817882aae704f0c1352d2010713857"
+}

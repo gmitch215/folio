@@ -163,7 +163,10 @@
           "only_removed": 1,
           "all_but": 1.4010753406184102
         }
-      }
+      },
+      "recorder": {},
+      "taskRungs": [],
+      "siblings": []
     },
     "drupal-render#1": {
       "mode": "trace",
@@ -328,6 +331,67 @@
           "only_removed": 1,
           "all_but": 1.40149675051995
         }
+      },
+      "recorder": {},
+      "taskRungs": [],
+      "siblings": []
+    }
+  },
+  "spread": {
+    "drupal-render": {
+      "M0_spawn_join": {
+        "n": 2,
+        "min": 20.435,
+        "median": 20.435,
+        "max": 20.435
+      },
+      "M1_all_conflicts": {
+        "n": 2,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 2,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 2,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 2,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 2,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 2,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 2,
+        "min": 0.882,
+        "median": 0.882,
+        "max": 0.882
+      },
+      "X1_privatize_static": {
+        "n": 2,
+        "min": 0.884,
+        "median": 0.884,
+        "max": 0.884
       }
     }
   },

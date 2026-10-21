@@ -1,0 +1,2952 @@
+{
+  "inputs": {
+    "hash-chains#0": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 23.71875,
+      "instrumentedMs": 5261.683208,
+      "slowdown": 221.84,
+      "counters": {
+        "n": 633907441,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 94019,
+        "spw": 119184
+      },
+      "invocations": 17,
+      "granularity": "php-userfunc",
+      "work": 633907441,
+      "nodes": {
+        "total": 5778,
+        "real": 4633,
+        "virtual": 1145
+      },
+      "intervalRecords": 126874,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 7.97,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 17
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 16
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 130152116,
+        "deadStackReads": 96,
+        "opcodeChunks": 4614
+      },
+      "taskRungs": [
+        {
+          "name": "T_w_hash",
+          "tasks": 8,
+          "parallelism": 7.966,
+          "work": 633907441,
+          "ownerWork": 431946,
+          "longestTask": 79185672,
+          "dependenceSpan": 79580904,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 12,
+            "heap": 39,
+            "spawn": 10,
+            "stack": 8
+          },
+          "crossings": [
+            {
+              "from": "w_hash",
+              "to": "{main}",
+              "fromOp": 22,
+              "toOp": 8,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "w_hash",
+              "fromOp": 129,
+              "toOp": 22,
+              "edge": "spawn",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 633907441,
+          "ownerWork": 633907441,
+          "longestTask": 0,
+          "dependenceSpan": 633649420,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 36,
+            "heap": 2511,
+            "host": 480,
+            "stack": 8,
+            "spawn": 9
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9995,
+          "children": 16,
+          "first": 0.1249,
+          "second": 0.1249,
+          "groups": [
+            {
+              "label": "w_hash",
+              "n": 8,
+              "share": 0.9993
+            },
+            {
+              "label": "{closure:php-wasm run script:1}",
+              "n": 8,
+              "share": 0
+            }
+          ]
+        }
+      ]
+    },
+    "hash-chains#1": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 23.71875,
+      "instrumentedMs": 5457.236249999998,
+      "slowdown": 230.08,
+      "counters": {
+        "n": 633907441,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 94019,
+        "spw": 119184
+      },
+      "invocations": 17,
+      "granularity": "php-userfunc",
+      "work": 633907441,
+      "nodes": {
+        "total": 5778,
+        "real": 4633,
+        "virtual": 1145
+      },
+      "intervalRecords": 126874,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 7.97,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 17
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 16
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 130152116,
+        "deadStackReads": 96,
+        "opcodeChunks": 4614
+      },
+      "taskRungs": [
+        {
+          "name": "T_w_hash",
+          "tasks": 8,
+          "parallelism": 7.966,
+          "work": 633907441,
+          "ownerWork": 431946,
+          "longestTask": 79185672,
+          "dependenceSpan": 79580904,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 12,
+            "heap": 39,
+            "spawn": 10,
+            "stack": 8
+          },
+          "crossings": [
+            {
+              "from": "w_hash",
+              "to": "{main}",
+              "fromOp": 22,
+              "toOp": 8,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "w_hash",
+              "fromOp": 129,
+              "toOp": 22,
+              "edge": "spawn",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 633907441,
+          "ownerWork": 633907441,
+          "longestTask": 0,
+          "dependenceSpan": 633649420,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 36,
+            "heap": 2511,
+            "host": 480,
+            "stack": 8,
+            "spawn": 9
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9995,
+          "children": 16,
+          "first": 0.1249,
+          "second": 0.1249,
+          "groups": [
+            {
+              "label": "w_hash",
+              "n": 8,
+              "share": 0.9993
+            },
+            {
+              "label": "{closure:php-wasm run script:1}",
+              "n": 8,
+              "share": 0
+            }
+          ]
+        }
+      ]
+    },
+    "hash-chains#2": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 23.71875,
+      "instrumentedMs": 5597.178333,
+      "slowdown": 235.98,
+      "counters": {
+        "n": 633907441,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 94019,
+        "spw": 119184
+      },
+      "invocations": 17,
+      "granularity": "php-userfunc",
+      "work": 633907441,
+      "nodes": {
+        "total": 5778,
+        "real": 4633,
+        "virtual": 1145
+      },
+      "intervalRecords": 126874,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 7.97,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 17
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 16
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 130152116,
+        "deadStackReads": 96,
+        "opcodeChunks": 4614
+      },
+      "taskRungs": [
+        {
+          "name": "T_w_hash",
+          "tasks": 8,
+          "parallelism": 7.966,
+          "work": 633907441,
+          "ownerWork": 431946,
+          "longestTask": 79185672,
+          "dependenceSpan": 79580904,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 12,
+            "heap": 39,
+            "spawn": 10,
+            "stack": 8
+          },
+          "crossings": [
+            {
+              "from": "w_hash",
+              "to": "{main}",
+              "fromOp": 22,
+              "toOp": 8,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "w_hash",
+              "fromOp": 129,
+              "toOp": 22,
+              "edge": "spawn",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 633907441,
+          "ownerWork": 633907441,
+          "longestTask": 0,
+          "dependenceSpan": 633649420,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 36,
+            "heap": 2511,
+            "host": 480,
+            "stack": 8,
+            "spawn": 9
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9995,
+          "children": 16,
+          "first": 0.1249,
+          "second": 0.1249,
+          "groups": [
+            {
+              "label": "w_hash",
+              "n": 8,
+              "share": 0.9993
+            },
+            {
+              "label": "{closure:php-wasm run script:1}",
+              "n": 8,
+              "share": 0
+            }
+          ]
+        }
+      ]
+    },
+    "dependent-chain#0": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 19.71142578125,
+      "instrumentedMs": 4678.326375000001,
+      "slowdown": 237.34,
+      "counters": {
+        "n": 519419494,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 74955,
+        "spw": 93626
+      },
+      "invocations": 401,
+      "granularity": "php-userfunc",
+      "work": 519419494,
+      "nodes": {
+        "total": 9209,
+        "real": 6409,
+        "virtual": 2800
+      },
+      "intervalRecords": 122912,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 264.365,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 401
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 401
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 106726036,
+        "deadStackReads": 77,
+        "opcodeChunks": 6006
+      },
+      "taskRungs": [
+        {
+          "name": "T_f",
+          "tasks": 400,
+          "parallelism": 1,
+          "work": 519419494,
+          "ownerWork": 671581,
+          "longestTask": 1299846,
+          "dependenceSpan": 519184452,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 2,
+            "heap": 1203,
+            "spawn": 1
+          },
+          "crossings": [
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 519419494,
+          "ownerWork": 519419494,
+          "longestTask": 0,
+          "dependenceSpan": 519047616,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 801,
+            "heap": 3204,
+            "spawn": 400
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": []
+    },
+    "dependent-chain#1": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 19.71142578125,
+      "instrumentedMs": 4400.4127080000035,
+      "slowdown": 223.24,
+      "counters": {
+        "n": 519419494,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 74955,
+        "spw": 93626
+      },
+      "invocations": 401,
+      "granularity": "php-userfunc",
+      "work": 519419494,
+      "nodes": {
+        "total": 9209,
+        "real": 6409,
+        "virtual": 2800
+      },
+      "intervalRecords": 122912,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 264.365,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 401
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 401
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 106726036,
+        "deadStackReads": 77,
+        "opcodeChunks": 6006
+      },
+      "taskRungs": [
+        {
+          "name": "T_f",
+          "tasks": 400,
+          "parallelism": 1,
+          "work": 519419494,
+          "ownerWork": 671581,
+          "longestTask": 1299846,
+          "dependenceSpan": 519184452,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 2,
+            "heap": 1203,
+            "spawn": 1
+          },
+          "crossings": [
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 519419494,
+          "ownerWork": 519419494,
+          "longestTask": 0,
+          "dependenceSpan": 519047616,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 801,
+            "heap": 3204,
+            "spawn": 400
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": []
+    },
+    "dependent-chain#2": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 19.71142578125,
+      "instrumentedMs": 4301.224000000002,
+      "slowdown": 218.21,
+      "counters": {
+        "n": 519419494,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 74955,
+        "spw": 93626
+      },
+      "invocations": 401,
+      "granularity": "php-userfunc",
+      "work": 519419494,
+      "nodes": {
+        "total": 9209,
+        "real": 6409,
+        "virtual": 2800
+      },
+      "intervalRecords": 122912,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 264.365,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 401
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "heap"
+          ],
+          "replays": 401
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 106726036,
+        "deadStackReads": 77,
+        "opcodeChunks": 6006
+      },
+      "taskRungs": [
+        {
+          "name": "T_f",
+          "tasks": 400,
+          "parallelism": 1,
+          "work": 519419494,
+          "ownerWork": 671581,
+          "longestTask": 1299846,
+          "dependenceSpan": 519184452,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 2,
+            "heap": 1203,
+            "spawn": 1
+          },
+          "crossings": [
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            },
+            {
+              "from": "f",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "f",
+              "edge": "heap",
+              "byte": 39894104,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 519419494,
+          "ownerWork": 519419494,
+          "longestTask": 0,
+          "dependenceSpan": 519047616,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 801,
+            "heap": 3204,
+            "spawn": 400
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": []
+    },
+    "shared-var#0": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 90.8818359375,
+      "instrumentedMs": 26819.620209,
+      "slowdown": 295.1,
+      "counters": {
+        "n": 3111028864,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 433228,
+        "spw": 530644
+      },
+      "invocations": 9,
+      "granularity": "php-userfunc",
+      "work": 3111028864,
+      "nodes": {
+        "total": 29083,
+        "real": 26560,
+        "virtual": 2523
+      },
+      "intervalRecords": 573414,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 7.993,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 9
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 9
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 639319420,
+        "deadStackReads": 122,
+        "opcodeChunks": 26549
+      },
+      "taskRungs": [
+        {
+          "name": "T_g",
+          "tasks": 8,
+          "parallelism": 7.992,
+          "work": 3111028864,
+          "ownerWork": 456994,
+          "longestTask": 388840372,
+          "dependenceSpan": 389287411,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 3,
+            "heap": 12,
+            "spawn": 1
+          },
+          "crossings": [
+            {
+              "from": "g",
+              "to": "{main}",
+              "fromOp": 22,
+              "toOp": 22,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "g",
+              "fromOp": 22,
+              "toOp": 22,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 3111028864,
+          "ownerWork": 3111028864,
+          "longestTask": 0,
+          "dependenceSpan": 3109276482,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 18,
+            "heap": 12077,
+            "spawn": 8
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9999,
+          "children": 8,
+          "first": 0.125,
+          "second": 0.125,
+          "groups": [
+            {
+              "label": "g",
+              "n": 8,
+              "share": 0.9999
+            }
+          ]
+        }
+      ]
+    },
+    "shared-var#1": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 90.8818359375,
+      "instrumentedMs": 26120.606,
+      "slowdown": 287.41,
+      "counters": {
+        "n": 3111028864,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 433228,
+        "spw": 530644
+      },
+      "invocations": 9,
+      "granularity": "php-userfunc",
+      "work": 3111028864,
+      "nodes": {
+        "total": 29083,
+        "real": 26560,
+        "virtual": 2523
+      },
+      "intervalRecords": 573414,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 7.993,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 9
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 9
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 639319420,
+        "deadStackReads": 122,
+        "opcodeChunks": 26549
+      },
+      "taskRungs": [
+        {
+          "name": "T_g",
+          "tasks": 8,
+          "parallelism": 7.992,
+          "work": 3111028864,
+          "ownerWork": 456994,
+          "longestTask": 388840372,
+          "dependenceSpan": 389287411,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 3,
+            "heap": 12,
+            "spawn": 1
+          },
+          "crossings": [
+            {
+              "from": "g",
+              "to": "{main}",
+              "fromOp": 22,
+              "toOp": 22,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "g",
+              "fromOp": 22,
+              "toOp": 22,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 3111028864,
+          "ownerWork": 3111028864,
+          "longestTask": 0,
+          "dependenceSpan": 3109276482,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 18,
+            "heap": 12077,
+            "spawn": 8
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9999,
+          "children": 8,
+          "first": 0.125,
+          "second": 0.125,
+          "groups": [
+            {
+              "label": "g",
+              "n": 8,
+              "share": 0.9999
+            }
+          ]
+        }
+      ]
+    },
+    "shared-var#2": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 90.8818359375,
+      "instrumentedMs": 25978.015874999997,
+      "slowdown": 285.84,
+      "counters": {
+        "n": 3111028864,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 433228,
+        "spw": 530644
+      },
+      "invocations": 9,
+      "granularity": "php-userfunc",
+      "work": 3111028864,
+      "nodes": {
+        "total": 29083,
+        "real": 26560,
+        "virtual": 2523
+      },
+      "intervalRecords": 573414,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 7.993,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 9
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 9
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 639319420,
+        "deadStackReads": 122,
+        "opcodeChunks": 26549
+      },
+      "taskRungs": [
+        {
+          "name": "T_g",
+          "tasks": 8,
+          "parallelism": 7.992,
+          "work": 3111028864,
+          "ownerWork": 456994,
+          "longestTask": 388840372,
+          "dependenceSpan": 389287411,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 3,
+            "heap": 12,
+            "spawn": 1
+          },
+          "crossings": [
+            {
+              "from": "g",
+              "to": "{main}",
+              "fromOp": 22,
+              "toOp": 22,
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "g",
+              "fromOp": 22,
+              "toOp": 22,
+              "edge": "spawn+heap",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 3111028864,
+          "ownerWork": 3111028864,
+          "longestTask": 0,
+          "dependenceSpan": 3109276482,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 18,
+            "heap": 12077,
+            "spawn": 8
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9999,
+          "children": 8,
+          "first": 0.125,
+          "second": 0.125,
+          "groups": [
+            {
+              "label": "g",
+              "n": 8,
+              "share": 0.9999
+            }
+          ]
+        }
+      ]
+    },
+    "twig-render#0": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 19.517822265625,
+      "instrumentedMs": 6262.759250000003,
+      "slowdown": 320.87,
+      "counters": {
+        "n": 168717651,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 971975,
+        "spw": 1845152
+      },
+      "invocations": 22713,
+      "granularity": "php-userfunc",
+      "work": 168717651,
+      "nodes": {
+        "total": 770426,
+        "real": 462345,
+        "virtual": 308081
+      },
+      "intervalRecords": 7682001,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 159.546,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.008,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.038,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 21697
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1.048,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 20977
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 27895531,
+        "deadStackReads": 100,
+        "opcodeChunks": 439630
+      },
+      "taskRungs": [
+        {
+          "name": "T_w_render",
+          "tasks": 8,
+          "parallelism": 7.054,
+          "work": 168717651,
+          "ownerWork": 4207834,
+          "longestTask": 20589355,
+          "dependenceSpan": 23916539,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 356,
+            "heap": 3311,
+            "spawn": 322,
+            "stack": 320
+          },
+          "crossings": [
+            {
+              "from": "w_render",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "w_render",
+              "edge": "spawn",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 168717651,
+          "ownerWork": 168717651,
+          "longestTask": 0,
+          "dependenceSpan": 101806077,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 22754,
+            "heap": 128190,
+            "stack": 2616,
+            "spawn": 7681,
+            "host": 2
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9981,
+          "children": 16,
+          "first": 0.122,
+          "second": 0.122,
+          "groups": [
+            {
+              "label": "w_render",
+              "n": 8,
+              "share": 0.9751
+            },
+            {
+              "label": "{closure:php-wasm run script:1}",
+              "n": 8,
+              "share": 0.0223
+            }
+          ]
+        }
+      ]
+    },
+    "twig-render#1": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 19.517822265625,
+      "instrumentedMs": 6068.50662499998,
+      "slowdown": 310.92,
+      "counters": {
+        "n": 168717651,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 971975,
+        "spw": 1845152
+      },
+      "invocations": 22713,
+      "granularity": "php-userfunc",
+      "work": 168717651,
+      "nodes": {
+        "total": 770426,
+        "real": 462345,
+        "virtual": 308081
+      },
+      "intervalRecords": 7682001,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 159.546,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.008,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.038,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 21697
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1.048,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 20977
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 27895531,
+        "deadStackReads": 100,
+        "opcodeChunks": 439630
+      },
+      "taskRungs": [
+        {
+          "name": "T_w_render",
+          "tasks": 8,
+          "parallelism": 7.054,
+          "work": 168717651,
+          "ownerWork": 4207834,
+          "longestTask": 20589355,
+          "dependenceSpan": 23916539,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 356,
+            "heap": 3311,
+            "spawn": 322,
+            "stack": 320
+          },
+          "crossings": [
+            {
+              "from": "w_render",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "w_render",
+              "edge": "spawn",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 168717651,
+          "ownerWork": 168717651,
+          "longestTask": 0,
+          "dependenceSpan": 101806077,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 22754,
+            "heap": 128190,
+            "stack": 2616,
+            "spawn": 7681,
+            "host": 2
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9981,
+          "children": 16,
+          "first": 0.122,
+          "second": 0.122,
+          "groups": [
+            {
+              "label": "w_render",
+              "n": 8,
+              "share": 0.9751
+            },
+            {
+              "label": "{closure:php-wasm run script:1}",
+              "n": 8,
+              "share": 0.0223
+            }
+          ]
+        }
+      ]
+    },
+    "twig-render#2": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 19.517822265625,
+      "instrumentedMs": 6669.38166699998,
+      "slowdown": 341.71,
+      "counters": {
+        "n": 168717651,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 971975,
+        "spw": 1845152
+      },
+      "invocations": 22713,
+      "granularity": "php-userfunc",
+      "work": 168717651,
+      "nodes": {
+        "total": 770426,
+        "real": 462345,
+        "virtual": 308081
+      },
+      "intervalRecords": 7682001,
+      "checks": {
+        "stackRawCross": 0,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 159.546,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "interp"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.008,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.014,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1.038,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 21697
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": true,
+          "parallelism": 1.048,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 20977
+        }
+      ],
+      "recorder": {
+        "ownWriteReads": 27895531,
+        "deadStackReads": 100,
+        "opcodeChunks": 439630
+      },
+      "taskRungs": [
+        {
+          "name": "T_w_render",
+          "tasks": 8,
+          "parallelism": 7.054,
+          "work": 168717651,
+          "ownerWork": 4207834,
+          "longestTask": 20589355,
+          "dependenceSpan": 23916539,
+          "binding": "dependence",
+          "pathEdgeClasses": {
+            "static": 356,
+            "heap": 3311,
+            "spawn": 322,
+            "stack": 320
+          },
+          "crossings": [
+            {
+              "from": "w_render",
+              "to": "{main}",
+              "edge": "heap",
+              "byte": 8589934584,
+              "fromTask": true,
+              "toTask": false
+            },
+            {
+              "from": "{main}",
+              "to": "w_render",
+              "edge": "spawn",
+              "byte": 8589934584,
+              "fromTask": false,
+              "toTask": true
+            }
+          ]
+        },
+        {
+          "name": "T_none",
+          "tasks": 0,
+          "parallelism": 1,
+          "work": 168717651,
+          "ownerWork": 168717651,
+          "longestTask": 0,
+          "dependenceSpan": 101806077,
+          "binding": "owner thread",
+          "pathEdgeClasses": {
+            "static": 22754,
+            "heap": 128190,
+            "stack": 2616,
+            "spawn": 7681,
+            "host": 2
+          },
+          "crossings": []
+        }
+      ],
+      "siblings": [
+        {
+          "id": 1,
+          "label": "{main}",
+          "depth": 1,
+          "share": 0.9981,
+          "children": 16,
+          "first": 0.122,
+          "second": 0.122,
+          "groups": [
+            {
+              "label": "w_render",
+              "n": 8,
+              "share": 0.9751
+            },
+            {
+              "label": "{closure:php-wasm run script:1}",
+              "n": 8,
+              "share": 0.0223
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "spread": {
+    "hash-chains": {
+      "M0_spawn_join": {
+        "n": 3,
+        "min": 7.97,
+        "median": 7.97,
+        "max": 7.97
+      },
+      "M1_all_conflicts": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "X1_privatize_static": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "T_w_hash": {
+        "n": 3,
+        "min": 7.966,
+        "median": 7.966,
+        "max": 7.966
+      },
+      "T_none": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      }
+    },
+    "dependent-chain": {
+      "M0_spawn_join": {
+        "n": 3,
+        "min": 264.365,
+        "median": 264.365,
+        "max": 264.365
+      },
+      "M1_all_conflicts": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "X1_privatize_static": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "T_f": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "T_none": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      }
+    },
+    "shared-var": {
+      "M0_spawn_join": {
+        "n": 3,
+        "min": 7.993,
+        "median": 7.993,
+        "max": 7.993
+      },
+      "M1_all_conflicts": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M3_rename_alloc": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M4_refcount_delta": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M5_output_ordered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M6_host_buffered": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M7_speculation": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "X1_privatize_static": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "T_g": {
+        "n": 3,
+        "min": 7.992,
+        "median": 7.992,
+        "max": 7.992
+      },
+      "T_none": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      }
+    },
+    "twig-render": {
+      "M0_spawn_join": {
+        "n": 3,
+        "min": 159.546,
+        "median": 159.546,
+        "max": 159.546
+      },
+      "M1_all_conflicts": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      },
+      "M2_rename_sp": {
+        "n": 3,
+        "min": 1.008,
+        "median": 1.008,
+        "max": 1.008
+      },
+      "M3_rename_alloc": {
+        "n": 3,
+        "min": 1.014,
+        "median": 1.014,
+        "max": 1.014
+      },
+      "M4_refcount_delta": {
+        "n": 3,
+        "min": 1.014,
+        "median": 1.014,
+        "max": 1.014
+      },
+      "M5_output_ordered": {
+        "n": 3,
+        "min": 1.014,
+        "median": 1.014,
+        "max": 1.014
+      },
+      "M6_host_buffered": {
+        "n": 3,
+        "min": 1.014,
+        "median": 1.014,
+        "max": 1.014
+      },
+      "M7_speculation": {
+        "n": 3,
+        "min": 1.038,
+        "median": 1.038,
+        "max": 1.038
+      },
+      "X1_privatize_static": {
+        "n": 3,
+        "min": 1.048,
+        "median": 1.048,
+        "max": 1.048
+      },
+      "T_w_render": {
+        "n": 3,
+        "min": 7.054,
+        "median": 7.054,
+        "max": 7.054
+      },
+      "T_none": {
+        "n": 3,
+        "min": 1,
+        "median": 1,
+        "max": 1
+      }
+    }
+  },
+  "rawSha256": "11f3373e11a06f07afd1466abca64054a88a37ad337ae0b1a812bb1a056db2ae"
+}
