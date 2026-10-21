@@ -114,6 +114,10 @@ export interface FolioOptions {
 	promising?: readonly string[];
 	/** Collect execution timings; disabled by default to keep the hot path small. */
 	profile?: boolean;
+	/** Static admission threshold used when `open` prepares raw bytes; a prepared plan keeps its own. */
+	minimumRegionWork?: number;
+	/** Iterations assumed for loops with no constant bound when `open` prepares raw bytes. */
+	assumedTripCount?: number;
 }
 
 interface Pending {
@@ -178,6 +182,7 @@ export class Folio {
 	get diagnostics(): readonly string[] {
 		return [
 			...this.#program.reasons,
+			...(this.#program.controlReasons ?? []),
 			...(this.#control?.diagnostics ?? []),
 			...this.#runtimeDiagnostics
 		];
@@ -207,6 +212,7 @@ export class Folio {
 	#workerMemory?: WebAssembly.Memory;
 	#control?: NonNullable<PreparedProgram['control']>;
 	#serial?: WebAssembly.Global;
+	#queued?: WebAssembly.Global;
 	#coordinator?: Coordinator;
 	readonly #controlled = new Map<string, (...args: any[]) => Promise<unknown>>();
 	readonly #workerExports = new Set<string>();
@@ -259,6 +265,7 @@ export class Folio {
 				this.#control = control;
 				executable = candidate;
 				this.#serial = new WebAssembly.Global({ value: 'i32', mutable: true }, 1);
+				this.#queued = new WebAssembly.Global({ value: 'i32', mutable: true }, 0);
 			} else
 				this.#runtimeDiagnostics.push(
 					'control extraction retained native binding order: rewritten import sequence differs'
@@ -275,13 +282,16 @@ export class Folio {
 		} catch {}
 		const supplied = options.imports ?? Object.create(null);
 		const automatic = new Map<string, WebAssembly.Memory>();
+		let controlBindings: Record<string, WebAssembly.ImportValue> | undefined;
 		// Resolve bindings when the engine asks for them, in its original order.
 		// Enumerating/spreading caller namespaces would invoke accessors early or twice.
 		const imports: WebAssembly.Imports = new Proxy(Object.create(null), {
 			get: (_, module: string) => {
 				if (this.#control && module === this.#control.namespace) {
+					if (controlBindings) return controlBindings;
 					const bindings: Record<string, WebAssembly.ImportValue> = {
 						[this.#control.serialGlobal]: this.#serial!,
+						[this.#control.pendingGlobal]: this.#queued!,
 						barrier: new runtime.Suspending!(() => this.#coordinator?.flush()),
 						poll: new runtime.Suspending!(() => this.#coordinator?.poll())
 					};
@@ -301,7 +311,7 @@ export class Folio {
 							}
 						);
 					}
-					return bindings;
+					return (controlBindings = bindings);
 				}
 				const namespace = Reflect.get(supplied, module, supplied);
 				const memories = imported.filter((item) => item.module === module);
@@ -410,7 +420,11 @@ export class Folio {
 				}
 			: isUint8Array(input) || isArrayBuffer(input)
 				? (await import('./compiler.ts')).prepare(
-						isUint8Array(input) ? input : new Uint8Array(input)
+						isUint8Array(input) ? input : new Uint8Array(input),
+						{
+							minimumRegionWork: options.minimumRegionWork,
+							assumedTripCount: options.assumedTripCount
+						}
 					)
 				: input;
 		const size = options.workers ?? Math.min(4, availableParallelism());
@@ -672,6 +686,7 @@ export class Folio {
 			workerMemory: this.#workerMemory!,
 			width,
 			profile: this.#profile,
+			pending: this.#queued,
 			dispatch: (worker, calls) => this.#dispatchBatch(this.#workers[worker]!, calls),
 			native: (call) => {
 				const previous = this.#serial!.value;
@@ -710,6 +725,7 @@ export class Folio {
 				coordinator.report.profile.wallMs = performance.now() - started;
 			this.#nativePending.delete(pending);
 			this.#serial!.value = 1;
+			this.#queued!.value = 0;
 			this.#coordinator = undefined;
 			this.#busy = false;
 		}

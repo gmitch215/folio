@@ -29,6 +29,7 @@ test('bytes, ArrayBuffer and compiled modules keep native initialization and own
 	]) {
 		let starts = 0;
 		const folio = await Folio.open(input, {
+			minimumRegionWork: 0,
 			imports: {
 				host: {
 					start: () => {
@@ -68,7 +69,7 @@ test('imported ordinary memory is allocated from its original limits', async () 
 	assert.deepEqual(memoryImports(bytes), [
 		{ module: 'heap', name: 'arena', initial: 2, maximum: 3, shared: false, memory64: false }
 	]);
-	const folio = await Folio.open(bytes);
+	const folio = await Folio.open(bytes, { minimumRegionWork: 0 });
 	try {
 		assert.equal(folio.memory.buffer.byteLength, 131072);
 		assert.equal(folio.memory.buffer instanceof SharedArrayBuffer, false);
@@ -87,7 +88,7 @@ test('native externref results preserve identity including Promise objects', asy
 	const bytes = wasm(
 		'(module (func (export "echo") (param externref) (result externref) (local.get 0)))'
 	);
-	const folio = await Folio.open(bytes);
+	const folio = await Folio.open(bytes, { minimumRegionWork: 0 });
 	try {
 		const object = { original: true };
 		const promise = Promise.resolve(19);
@@ -106,7 +107,7 @@ test('native externref results preserve identity including Promise objects', asy
 test('opaque numeric coercions execute once at the native call site', async () => {
 	const bytes = readFileSync(new URL('../../build/fixture.wasm', import.meta.url));
 	const memory = new WebAssembly.Memory({ initial: 2, maximum: 8192, shared: true });
-	const folio = await Folio.open(bytes, { memory, workers: 2 });
+	const folio = await Folio.open(bytes, { minimumRegionWork: 0, memory, workers: 2 });
 	try {
 		let coerced = 0;
 		const pointer = {
@@ -131,6 +132,7 @@ test('native host exceptions keep exact identity and stop following effects', as
 	const failure = { reason: 'same identity' };
 	const effects: number[] = [];
 	const folio = await Folio.open(bytes, {
+		minimumRegionWork: 0,
 		imports: {
 			host: {
 				effect(value: number) {
@@ -161,6 +163,7 @@ test('JSPI suspends the original stack, preserves effect order and joins close',
 		release = resolve;
 	});
 	const folio = await Folio.open(bytes, {
+		minimumRegionWork: 0,
 		promising: ['main'],
 		imports: {
 			host: {
@@ -195,6 +198,7 @@ test('invalid promising configuration is rejected before a start effect', async 
 	let starts = 0;
 	await assert.rejects(
 		Folio.open(bytes, {
+			minimumRegionWork: 0,
 			promising: ['missing'],
 			imports: {
 				host: {
@@ -211,7 +215,7 @@ test('invalid promising configuration is rejected before a start effect', async 
 
 test('worker limits and per-entry diagnostics remain explicit', async () => {
 	const source = readFileSync(new URL('../../build/fixture.wasm', import.meta.url));
-	const folio = await Folio.open(source, { workers: 4 });
+	const folio = await Folio.open(source, { minimumRegionWork: 0, workers: 4 });
 	try {
 		assert.equal(folio.inspect('program').nativeGuard, true);
 		assert.equal(folio.inspect('increment').automatic, false);
@@ -241,7 +245,7 @@ test('speculative return values retain native NaN payload bits across the worker
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)), {
 		env: { memory }
 	});
-	const folio = await Folio.open(source, { memory, workers: 2 });
+	const folio = await Folio.open(source, { minimumRegionWork: 0, memory, workers: 2 });
 	try {
 		const bits = (value: unknown) => {
 			const view = new DataView(new ArrayBuffer(8));
@@ -267,7 +271,7 @@ test('import and export names do not alias JavaScript prototype properties', asy
 	const source = wasm(
 		'(module (import "__proto__" "arena" (memory 1 2)) (func (export "__proto__") (result i32) (memory.size)) (func (export "constructor") (result i32) (i32.const 5)))'
 	);
-	const folio = await Folio.open(source);
+	const folio = await Folio.open(source, { minimumRegionWork: 0 });
 	try {
 		assert.deepEqual((await folio.run('__proto__')).values, [1]);
 		assert.deepEqual((await folio.run('constructor')).values, [5]);
@@ -285,7 +289,7 @@ test('multiple imported memories bind distinct original allocations', async () =
 		118, 1, 98, 2, 1, 1, 2
 	]);
 	assert.equal(WebAssembly.validate(source), true);
-	const folio = await Folio.open(source);
+	const folio = await Folio.open(source, { minimumRegionWork: 0 });
 	try {
 		assert.notEqual(folio.memories['env.a'], folio.memories['env.b']);
 		new Uint8Array(folio.memories['env.a']!.buffer)[0] = 71;
@@ -337,7 +341,7 @@ test('native import accessors retain their original lookup order and receiver', 
 	const expected = make(),
 		actual = make();
 	new WebAssembly.Instance(module, expected.imports);
-	const folio = await Folio.open(source, { imports: actual.imports });
+	const folio = await Folio.open(source, { minimumRegionWork: 0, imports: actual.imports });
 	try {
 		assert.deepEqual(actual.events, expected.events);
 	} finally {
@@ -359,7 +363,11 @@ test('native modules, bytes and shared memories from another realm retain their 
 	assert.equal(foreign.module instanceof WebAssembly.Module, false);
 	assert.equal(foreign.memory instanceof WebAssembly.Memory, false);
 	for (const input of [foreign.bytes, foreign.buffer, foreign.module]) {
-		const folio = await Folio.open(input, { memory: foreign.memory, workers: 2 });
+		const folio = await Folio.open(input, {
+			minimumRegionWork: 0,
+			memory: foreign.memory,
+			workers: 2
+		});
 		try {
 			assert.equal(folio.memory, foreign.memory);
 			const report = await folio.run('program', [1024, 37, 10000] as const);

@@ -37,7 +37,7 @@ const module = binaryen.parseText(`(module
 module.setFeatures(binaryen.Features.Atomics | binaryen.Features.BulkMemory);
 const source = module.emitBinary();
 module.dispose();
-const prepared = prepare(source);
+const prepared = prepare(source, { minimumRegionWork: 0 });
 const memory = () => new WebAssembly.Memory({ initial: 1, maximum: 4, shared: true });
 
 function initialized(): WebAssembly.Memory {
@@ -59,7 +59,7 @@ test('native-valid sign-extension and saturating conversion survive worker prepa
 	const bytes = fixture.emitBinary();
 	fixture.dispose();
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(bytes)));
-	const pool = await Folio.open(bytes, { workers: 2 });
+	const pool = await Folio.open(bytes, { minimumRegionWork: 0, workers: 2 });
 	try {
 		const expected = (native.exports.main as CallableFunction)();
 		const report = await pool.run('main');
@@ -83,7 +83,7 @@ test('typed scalar lowering retains all bits across NaN, integer and unaligned m
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)), {
 		env: { memory: expected }
 	});
-	const pool = await Folio.open(prepared, { memory: actual, workers: 2 });
+	const pool = await Folio.open(prepared, { minimumRegionWork: 0, memory: actual, workers: 2 });
 	try {
 		const values32 = [0x7f800001, 0x7fc12345, 0xff812345, 0x80000000, 0x7f800000];
 		const values64 = [
@@ -166,7 +166,7 @@ test('bulk operations preserve overlapping moves, ordered conflicts and trap pre
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)), {
 		env: { memory: expected }
 	});
-	const pool = await Folio.open(prepared, { memory: actual, workers: 2 });
+	const pool = await Folio.open(prepared, { minimumRegionWork: 0, memory: actual, workers: 2 });
 	try {
 		for (const args of [
 			[101, 100, 31],
@@ -242,7 +242,7 @@ test('additional linear memories retain native memory selection', () => {
 		3, 1, 4, 5, 3, 1, 0, 1
 	]);
 	assert.equal(WebAssembly.validate(bytes), true);
-	const result = prepare(bytes);
+	const result = prepare(bytes, { minimumRegionWork: 0 });
 	assert.equal(result.transactional, undefined);
 	assert.deepEqual(result.reasons, ['additional defined memory']);
 });

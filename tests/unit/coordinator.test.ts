@@ -48,7 +48,7 @@ test('unavailable shared snapshot allocation retains a usable native instance', 
 	let pool: Folio | undefined;
 	try {
 		WebAssembly.Memory = replacement;
-		pool = await Folio.open(bytes, { workers: 2 });
+		pool = await Folio.open(bytes, { minimumRegionWork: 0, workers: 2 });
 	} finally {
 		WebAssembly.Memory = original;
 	}
@@ -72,7 +72,7 @@ test('runAll snapshot growth refusal preserves native results and trap prefixes'
 			(drop (call $put (i32.const 4) (i32.const 2)))))`);
 	const source = module.emitBinary();
 	module.dispose();
-	const pool = await Folio.open(source, { workers: 2 });
+	const pool = await Folio.open(source, { minimumRegionWork: 0, workers: 2 });
 	const originalGrow = WebAssembly.Memory.prototype.grow;
 	let refusals = 0;
 	try {
@@ -113,4 +113,65 @@ test('runAll snapshot growth refusal preserves native results and trap prefixes'
 		WebAssembly.Memory.prototype.grow = originalGrow;
 		await pool.close();
 	}
+});
+
+test('the pending flag rises with a queued region and falls once the queue has joined', async () => {
+	const memory = new WebAssembly.Memory({ initial: 1, maximum: 1 });
+	const flag = { value: 0 as unknown };
+	let fail = false;
+	const scheduler = new Coordinator({
+		memory,
+		workerMemory: memory,
+		width: 2,
+		profile: false,
+		pending: flag,
+		dispatch: async (_, calls) => {
+			if (fail) throw new Error('lane lost');
+			return calls.map(() => ({ reads: [], writes: [], value: undefined }) as any);
+		},
+		native: () => {}
+	});
+	assert.equal(flag.value, 0);
+	scheduler.enqueue({ export: 'put', args: [0] });
+	assert.equal(flag.value, 1);
+	scheduler.enqueue({ export: 'put', args: [4] });
+	assert.equal(flag.value, 1);
+	await scheduler.flush();
+	assert.equal(flag.value, 0);
+	assert.equal(scheduler.flush(), undefined);
+	fail = true;
+	scheduler.enqueue({ export: 'put', args: [0] });
+	scheduler.enqueue({ export: 'put', args: [4] });
+	await assert.rejects(async () => scheduler.flush(), /lane lost/);
+	assert.equal(flag.value, 0);
+});
+
+test('the pending flag stays raised while a flush is in flight and while a region is left queued', async () => {
+	const memory = new WebAssembly.Memory({ initial: 1, maximum: 1 });
+	const flag = { value: 0 as unknown };
+	const inFlight: unknown[] = [];
+	let late: (() => void) | undefined;
+	const scheduler = new Coordinator({
+		memory,
+		workerMemory: memory,
+		width: 2,
+		profile: false,
+		pending: flag,
+		dispatch: async (_, calls) => {
+			inFlight.push(flag.value);
+			await Promise.resolve();
+			late?.();
+			late = undefined;
+			return calls.map(() => ({ reads: [], writes: [], value: undefined }) as any);
+		},
+		native: () => {}
+	});
+	scheduler.enqueue({ export: 'put', args: [0] });
+	scheduler.enqueue({ export: 'put', args: [4] });
+	late = () => scheduler.enqueue({ export: 'put', args: [8] });
+	await scheduler.flush();
+	assert.deepEqual(inFlight, [1, 1]);
+	assert.equal(flag.value, 1);
+	await scheduler.flush();
+	assert.equal(flag.value, 0);
 });

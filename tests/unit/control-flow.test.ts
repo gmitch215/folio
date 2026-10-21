@@ -1,6 +1,8 @@
 import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
 import { test } from 'vitest';
+import { prepare } from '../../src/compiler.ts';
+import { Coordinator } from '../../src/coordinator.ts';
 import { Folio, suspending } from '../../src/node.ts';
 
 function wasm(text: string): Uint8Array {
@@ -20,6 +22,48 @@ const kernels = `
 	(func $bad (param $at i32)
 		(i32.store (local.get $at) (i32.const 91)) (unreachable))
 `;
+
+test('each generated region binding is constructed once across engine namespace lookups', async () => {
+	const functions = Array.from(
+		{ length: 64 },
+		(_, index) =>
+			`(func $put${index} (i32.store (i32.const ${index * 4}) (i32.const ${index})))`
+	).join('\n');
+	const calls = Array.from(
+		{ length: 64 },
+		(_, index) => `(call $put${index}) (call $observe)`
+	).join('\n');
+	const source = wasm(`(module (import "host" "observe" (func $observe))
+		(memory (export "memory") 1 2 shared) ${functions}
+		(func (export "run") ${calls}))`);
+	const program = prepare(source, { minimumRegionWork: 0 });
+	assert.ok(program.control && program.control.regions.length >= 64);
+	const runtime = WebAssembly as any;
+	const descriptor = Object.getOwnPropertyDescriptor(runtime, 'Suspending')!;
+	const original = runtime.Suspending;
+	let constructed = 0;
+	Object.defineProperty(runtime, 'Suspending', {
+		...descriptor,
+		value: function (fn: unknown) {
+			constructed++;
+			return Reflect.construct(original, [fn]);
+		}
+	});
+	let pool: Folio | undefined;
+	try {
+		pool = await Folio.open(program, {
+			minimumRegionWork: 0,
+			workers: 2,
+			imports: { host: { observe() {} } }
+		});
+		assert.equal(constructed, program.control.regions.length + 2);
+		await pool.run('run');
+		assert.equal(new Uint32Array(pool.memory.buffer)[63], 63);
+	} finally {
+		Object.defineProperty(runtime, 'Suspending', descriptor);
+		await pool?.close();
+	}
+});
 
 test('single entry extracts regions across count-up loops, branches, nested calls and scalar live state', async () => {
 	const source = wasm(`(module
@@ -48,6 +92,7 @@ test('single entry extracts regions across count-up loops, branches, nested call
 		host: { effect: (value: number) => expectedEffects.push(value) }
 	});
 	const pool = await Folio.open(source, {
+		minimumRegionWork: 0,
 		workers: 4,
 		imports: {
 			host: { effect: (value: number) => actualEffects.push(value) }
@@ -97,7 +142,7 @@ test('inline heavy loops are outlined with captured locals and an owner-side sca
 				(br $outer)))
 			(local.get $sum)))`);
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
-	const pool = await Folio.open(source, { workers: 4 });
+	const pool = await Folio.open(source, { minimumRegionWork: 0, workers: 4 });
 	try {
 		for (const [count, rounds] of [
 			[1, 0],
@@ -133,7 +178,7 @@ test('dynamic dependencies replay in order and memory observations join the extr
 			(call $put (i32.const 0) (i32.const 3))
 			(call $put (i32.const 0) (i32.const 4))
 			(i32.load (i32.const 0))))`);
-	const pool = await Folio.open(source, { workers: 4 });
+	const pool = await Folio.open(source, { minimumRegionWork: 0, workers: 4 });
 	try {
 		const report = await pool.run('main');
 		assert.deepEqual(report.values, [10]);
@@ -155,6 +200,7 @@ test('earlier worker traps commit their own prefix and suppress later coordinato
 			(call $effect)))`);
 	let effects = 0;
 	const pool = await Folio.open(source, {
+		minimumRegionWork: 0,
 		workers: 4,
 		imports: {
 			host: {
@@ -187,6 +233,7 @@ test('ordinary owned memory keeps initialization and ABI while snapshots grow wi
 			(i32.load (i32.const 65540))))`);
 	let starts = 0;
 	const pool = await Folio.open(source, {
+		minimumRegionWork: 0,
 		workers: 2,
 		imports: {
 			host: {
@@ -228,6 +275,7 @@ test('asynchronous host effects observe committed bytes and synchronous reentry 
 	let pool!: Folio;
 	let observed = 0;
 	pool = await Folio.open(source, {
+		minimumRegionWork: 0,
 		workers: 4,
 		promising: ['main'],
 		imports: {
@@ -257,7 +305,11 @@ test('budget exhaustion discards all speculative writes and executes the exact n
 			(call $put (i32.const 0) (i32.const 5))
 			(call $put (i32.const 4) (i32.const 7))
 			(i32.load (i32.const 4))))`);
-	const pool = await Folio.open(source, { workers: 2, maxTransactionBytes: 1 });
+	const pool = await Folio.open(source, {
+		minimumRegionWork: 0,
+		workers: 2,
+		maxTransactionBytes: 1
+	});
 	try {
 		const report = await pool.run('main');
 		assert.deepEqual(report.values, [7]);
@@ -283,7 +335,7 @@ test('indirect calls and opaque SIMD keep ordered owner state between extracted 
 			(call $put (i32.const 8) (i32.const 11))
 			(i32.add (i32.load (i32.const 0)) (i32.load (i32.const 12)))))`);
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
-	const pool = await Folio.open(source, { workers: 4 });
+	const pool = await Folio.open(source, { minimumRegionWork: 0, workers: 4 });
 	try {
 		const expected = (native.exports.main as CallableFunction)();
 		const report = await pool.run('main');
@@ -308,7 +360,7 @@ test('region argument encoding preserves signaling NaN payloads through real wor
 				(f64.reinterpret_i64 (i64.const 9219188693200907213))))
 			(drop (call $put (i32.const 16) (f32.const -0) (f64.const -0)))))`);
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
-	const pool = await Folio.open(source, { workers: 2 });
+	const pool = await Folio.open(source, { minimumRegionWork: 0, workers: 2 });
 	try {
 		(native.exports.main as CallableFunction)();
 		const report = await pool.run('main');
@@ -338,6 +390,7 @@ test('closing a suspended coordinator joins its effect and refuses subsequent wo
 		entered = resolve;
 	});
 	const pool = await Folio.open(source, {
+		minimumRegionWork: 0,
 		workers: 2,
 		promising: ['main'],
 		imports: {
@@ -378,6 +431,7 @@ test('batched regions share one retained transaction budget per worker', async (
 			(i32.load (i32.const 20))))`);
 	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
 	const pool = await Folio.open(source, {
+		minimumRegionWork: 0,
 		workers: 2,
 		maxTransactionBytes: 8,
 		profile: true
@@ -423,7 +477,7 @@ test('recursive stack traps retain their native owner and ordered memory prefix'
 		}
 	}
 	assert.ok(trapped, 'bounded native recursion must reach the host stack limit');
-	const pool = await Folio.open(source, { workers: 2 });
+	const pool = await Folio.open(source, { minimumRegionWork: 0, workers: 2 });
 	try {
 		assert.equal(pool.inspect('main').automatic, true);
 		await assert.rejects(pool.run('main', [depth]), RangeError);
@@ -448,7 +502,7 @@ test('recursive call batches and counted loops retain the native owner', async (
 					(local.set $at (i32.add (local.get $at) (i32.const 4)))
 					(br_if $again (local.tee $count
 						(i32.add (local.get $count) (i32.const -1))))))))`);
-	const pool = await Folio.open(source, { workers: 2 });
+	const pool = await Folio.open(source, { minimumRegionWork: 0, workers: 2 });
 	try {
 		const batch = await pool.runAll([
 			{ export: 'recursive', args: [8] },
@@ -464,5 +518,92 @@ test('recursive call batches and counted loops retain the native owner', async (
 		assert.ok(pool.diagnostics.some((reason) => reason.includes('recursive call graph')));
 	} finally {
 		await pool.close();
+	}
+});
+
+const spinSource = `(module (memory (export "memory") 2)
+	(func (export "chain") (param $n i32) (result i32) (local $i i32) (local $x i32)
+		(local.set $x (i32.const 1))
+		(loop $next
+			(local.set $x (i32.add (i32.mul (local.get $x) (i32.const 1664525)) (i32.const 1013904223)))
+			(i32.store (i32.and (i32.shl (local.get $i) (i32.const 2)) (i32.const 65532)) (local.get $x))
+			(local.set $i (i32.add (local.get $i) (i32.const 1)))
+			(br_if $next (i32.lt_u (local.get $i) (local.get $n))))
+		(local.get $x)))`;
+
+test('a plan with no region above the threshold leaves the entry on the original module', async () => {
+	const source = wasm(spinSource);
+	const prepared = prepare(source);
+	assert.equal(prepared.control, undefined);
+	assert.ok(prepared.controlReasons?.some((reason) => reason.includes('no region reached')));
+	const counts = { flush: 0, poll: 0, enqueue: 0 };
+	const proto = Coordinator.prototype as unknown as Record<
+		string,
+		(this: unknown, ...args: unknown[]) => unknown
+	>;
+	const originals = Object.fromEntries(Object.keys(counts).map((name) => [name, proto[name]!]));
+	for (const name of Object.keys(counts) as (keyof typeof counts)[])
+		proto[name] = function (this: unknown, ...args: unknown[]) {
+			counts[name]++;
+			return originals[name]!.apply(this, args);
+		};
+	const reference = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
+	const pool = await Folio.open(prepared, { workers: 2 });
+	try {
+		const expected = (reference.exports.chain as CallableFunction)(20_000);
+		const report = await pool.run('chain', [20_000]);
+		assert.deepEqual(report.values, [expected]);
+		assert.equal(report.mode, 'serial');
+		assert.equal(report.workers, 0);
+		assert.equal(pool.inspect('chain').automatic, false);
+		assert.ok(pool.diagnostics.some((reason) => reason.includes('no region reached')));
+		assert.deepEqual(counts, { flush: 0, poll: 0, enqueue: 0 });
+	} finally {
+		Object.assign(proto, originals);
+		await pool.close();
+	}
+});
+
+const kernelRun = `(module (memory (export "memory") 2 8 shared)
+	(func $kernel (param $at i32) (param $rounds i32) (local $i i32) (local $v i32)
+		(local.set $v (i32.load (local.get $at)))
+		(loop $l
+			(local.set $v (i32.xor (local.get $v) (i32.shl (local.get $v) (i32.const 13))))
+			(local.set $v (i32.xor (local.get $v) (i32.shr_u (local.get $v) (i32.const 17))))
+			(local.set $v (i32.xor (local.get $v) (i32.shl (local.get $v) (i32.const 5))))
+			(local.set $i (i32.add (local.get $i) (i32.const 1)))
+			(br_if $l (i32.ne (local.get $i) (local.get $rounds))))
+		(i32.store (local.get $at) (local.get $v)))
+	(func (export "run") (param $count i32) (param $rounds i32) (result i32) (local $j i32)
+		(loop $o
+			(call $kernel (i32.add (i32.const 1024) (i32.shl (local.get $j) (i32.const 2))) (local.get $rounds))
+			(local.set $j (i32.add (local.get $j) (i32.const 1)))
+			(br_if $o (i32.lt_u (local.get $j) (local.get $count))))
+		(i32.load (i32.const 1024))))`;
+
+test('a compute-bound region still dispatches at the default threshold and a short one stays at the owner', async () => {
+	const source = wasm(kernelRun);
+	for (const [rounds, regions, workers] of [
+		[200_000, 16, 2],
+		[100, 0, 0]
+	] as const) {
+		const reference = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
+		const seeded = new Uint32Array((reference.exports.memory as WebAssembly.Memory).buffer);
+		for (let i = 0; i < 16; i++) seeded[256 + i] = Math.imul(i + 1, 2654435761) >>> 0;
+		const pool = await Folio.open(source, { workers: 2 });
+		try {
+			new Uint32Array(pool.memory.buffer).set(seeded.subarray(256, 272), 256);
+			const expected = (reference.exports.run as CallableFunction)(16, rounds);
+			const report = await pool.run('run', [16, rounds]);
+			assert.deepEqual(report.values, [expected]);
+			assert.equal(report.regions, regions, `rounds ${rounds}`);
+			assert.equal(report.workers, workers);
+			assert.deepEqual(
+				new Uint8Array(pool.memory.buffer, 1024, 64),
+				new Uint8Array((reference.exports.memory as WebAssembly.Memory).buffer, 1024, 64)
+			);
+		} finally {
+			await pool.close();
+		}
 	}
 });

@@ -1,4 +1,24 @@
 import binaryen from 'binaryen';
+import { restoreImportOrder } from './import-order.ts';
+
+/** Region admission. Both values are estimates in instruction units, not guarantees. */
+export interface AdmissionOptions {
+	/**
+	 * Net work a region needs before dispatch, join and validation can pay for themselves; 0 admits
+	 * every pure region. A loop bounded by a parameter is checked against the call's arguments.
+	 */
+	minimumRegionWork?: number;
+	/** Iterations assumed for a loop whose bound is neither a constant nor a parameter. */
+	assumedTripCount?: number;
+}
+
+/** Calibrated on Apple M2 Pro; see `results/20261020-regress/admission-calibration.summary.json`. */
+export const DEFAULT_MINIMUM_REGION_WORK = 200_000;
+export const DEFAULT_ASSUMED_TRIP_COUNT = 1000;
+// a tracked load or store costs about this many plain instructions in a speculative lane
+const ACCESS_COST = 3600;
+const CALL_COST = 2;
+const SCALE_LIMIT = 2 ** 50;
 
 export interface ControlPlan {
 	coordinator: Uint8Array;
@@ -6,6 +26,7 @@ export interface ControlPlan {
 	transactional: Uint8Array;
 	namespace: string;
 	serialGlobal: string;
+	pendingGlobal: string;
 	memoryExport: string;
 	shared: boolean;
 	initial: number;
@@ -126,10 +147,241 @@ function memoryName(module: binaryen.Module): string {
 	return new TextDecoder().decode(new Uint8Array(bytes));
 }
 
+export interface Work {
+	compute: number;
+	accesses: number;
+}
+
+/** Work that grows with the product of the listed parameters, each bounding a loop. */
+export interface Term extends Work {
+	params: number[];
+}
+
+const comparisons = new Set([
+	binaryen.LtUInt32,
+	binaryen.LtSInt32,
+	binaryen.LeUInt32,
+	binaryen.LeSInt32,
+	binaryen.GtUInt32,
+	binaryen.GtSInt32,
+	binaryen.GeUInt32,
+	binaryen.GeSInt32,
+	binaryen.NeInt32
+]);
+
+type Bound = { constant: number } | { parameter: number };
+
+/** Which locals feed a loop bound untouched, and which are written and so can count. */
+export interface LoopInputs {
+	input(index: number): boolean;
+	counter(index: number): boolean;
+}
+
+// a counted loop ends on a comparison of a counter local against a constant or an untouched input
+function loopBound(loop: Info, inputs?: LoopInputs): Bound | undefined {
+	const body = info(loop.body);
+	const tail = body.id === binaryen.BlockId ? body.children.at(-1) : loop.body;
+	if (tail === undefined) return;
+	const branch = info(tail);
+	if (branch.id !== binaryen.BreakId || branch.name !== loop.name || !branch.condition) return;
+	const test = info(branch.condition);
+	if (test.id !== binaryen.BinaryId || !comparisons.has(test.op)) return;
+	const sides = [info(test.left), info(test.right)];
+	for (const [index, bound] of sides.entries()) {
+		if (bound.id === binaryen.ConstId && typeof bound.value === 'number' && bound.value >= 1)
+			return { constant: bound.value };
+		const counter = sides[1 - index]!;
+		if (
+			inputs &&
+			bound.id === binaryen.LocalGetId &&
+			inputs.input(bound.index) &&
+			counter.id === binaryen.LocalGetId &&
+			inputs.counter(counter.index)
+		)
+			return { parameter: bound.index };
+	}
+}
+
+// a countdown loop ends on `local.tee $c (c - 1)`, so it runs for the value $c held on entry
+function countdownLocal(loop: Info): number | undefined {
+	const body = info(loop.body);
+	const tail = body.id === binaryen.BlockId ? body.children.at(-1) : loop.body;
+	if (tail === undefined) return;
+	const branch = info(tail);
+	if (branch.id !== binaryen.BreakId || branch.name !== loop.name || !branch.condition) return;
+	const step = info(branch.condition);
+	if (step.id !== binaryen.LocalSetId || !step.isTee) return;
+	const next = info(step.value);
+	if (next.id !== binaryen.BinaryId) return;
+	const [from, by] = [info(next.left), info(next.right)];
+	if (from.id !== binaryen.LocalGetId || from.index !== step.index || by.id !== binaryen.ConstId)
+		return;
+	const down =
+		(next.op === binaryen.AddInt32 && by.value === -1) ||
+		(next.op === binaryen.SubInt32 && by.value === 1);
+	return down ? step.index : undefined;
+}
+
+/**
+ * Trip-weighted instruction and tracked-access counts of one body, calls included. A loop bounded
+ * by an untouched input makes a term in that local; other unknown bounds use `assumedTrips`.
+ */
+export function estimateTerms(
+	body: number,
+	callee: (name: string) => Work | undefined,
+	assumedTrips: number,
+	inputs?: LoopInputs
+): Term[] {
+	const terms = new Map<string, Term>();
+	const add = (factor: number, params: number[], compute: number, accesses: number): void => {
+		const key = params.join(',');
+		const term = terms.get(key) ?? { params, compute: 0, accesses: 0 };
+		term.compute = Math.min(term.compute + factor * compute, SCALE_LIMIT);
+		term.accesses = Math.min(term.accesses + factor * accesses, SCALE_LIMIT);
+		terms.set(key, term);
+	};
+	// what a local was last set to in program order: an untouched input or a constant
+	const initial = new Map<number, Bound>();
+	const visit = (expression: number, factor: number, params: number[]): void => {
+		const v = info(expression);
+		let inner = factor;
+		let innerParams = params;
+		let countdown: number | undefined;
+		switch (v.id) {
+			case binaryen.LocalSetId: {
+				const value = info(v.value);
+				if (value.id === binaryen.LocalGetId && inputs?.input(value.index))
+					initial.set(v.index, { parameter: value.index });
+				else if (
+					value.id === binaryen.ConstId &&
+					typeof value.value === 'number' &&
+					value.value >= 1
+				)
+					initial.set(v.index, { constant: value.value });
+				else initial.delete(v.index);
+				add(factor, params, 1, 0);
+				break;
+			}
+			case binaryen.LoopId: {
+				countdown = countdownLocal(v);
+				const bound =
+					(countdown === undefined ? undefined : initial.get(countdown)) ??
+					loopBound(v, inputs);
+				if (bound && 'parameter' in bound)
+					innerParams = [...params, bound.parameter].sort((a, b) => a - b);
+				else
+					inner = Math.min(
+						factor * (bound && 'constant' in bound ? bound.constant : assumedTrips),
+						SCALE_LIMIT
+					);
+				break;
+			}
+			case binaryen.CallId: {
+				const known = callee(v.target);
+				add(factor, params, CALL_COST + (known?.compute ?? 0), known?.accesses ?? 0);
+				break;
+			}
+			case binaryen.LoadId:
+			case binaryen.StoreId:
+				add(factor, params, 1, 1);
+				break;
+			case binaryen.MemoryCopyId:
+			case binaryen.MemoryFillId: {
+				const size = info(v.size);
+				add(
+					factor,
+					params,
+					1,
+					size.id === binaryen.ConstId ? Number(size.value) >>> 0 : assumedTrips
+				);
+				break;
+			}
+			case binaryen.BlockId:
+			case binaryen.ConstId:
+			case binaryen.LocalGetId:
+			case binaryen.NopId:
+			case binaryen.DropId:
+				break;
+			default:
+				add(factor, params, 1, 0);
+		}
+		for (const child of children(v)) visit(child, inner, innerParams);
+		if (countdown !== undefined) initial.delete(countdown);
+	};
+	visit(body, 1, []);
+	return [...terms.values()];
+}
+
+function mergeTerms(lists: readonly (readonly Term[])[]): Term[] {
+	const merged = new Map<string, Term>();
+	for (const term of lists.flat()) {
+		const key = term.params.join(',');
+		const known = merged.get(key) ?? { params: term.params, compute: 0, accesses: 0 };
+		known.compute += term.compute;
+		known.accesses += term.accesses;
+		merged.set(key, known);
+	}
+	return [...merged.values()];
+}
+
+/** Numeric work with every parameter-bounded loop assumed to run `assumedTrips` times. */
+export function settleWork(terms: readonly Term[], assumedTrips: number): Work {
+	const total: Work = { compute: 0, accesses: 0 };
+	for (const term of terms) {
+		const factor = Math.min(assumedTrips ** term.params.length, SCALE_LIMIT);
+		total.compute = Math.min(total.compute + factor * term.compute, SCALE_LIMIT);
+		total.accesses = Math.min(total.accesses + factor * term.accesses, SCALE_LIMIT);
+	}
+	return total;
+}
+
+export function estimateWork(
+	body: number,
+	callee: (name: string) => Work | undefined,
+	assumedTrips: number
+): Work {
+	return settleWork(estimateTerms(body, callee, assumedTrips), assumedTrips);
+}
+
+export const netWork = (work: Work): number => work.compute - ACCESS_COST * work.accesses;
+
+/**
+ * `static` regions always run as regions, `dynamic` ones when their parameters make the estimate
+ * reach the threshold at the call, and the rest never. A threshold of zero admits every region.
+ */
+function classify(terms: readonly Term[], minimum: number): 'static' | 'dynamic' | 'refused' {
+	if (minimum === 0) return 'static';
+	const fixed = terms.filter((term) => !term.params.length);
+	if (fixed.reduce((sum, term) => sum + netWork(term), 0) >= minimum) return 'static';
+	return terms.some((term) => term.params.length && netWork(term) > 0) ? 'dynamic' : 'refused';
+}
+
+/** Resolves defaults and rejects values the estimate cannot use. */
+export function admission(options: AdmissionOptions) {
+	const minimumWork = options.minimumRegionWork ?? DEFAULT_MINIMUM_REGION_WORK;
+	const assumedTrips = options.assumedTripCount ?? DEFAULT_ASSUMED_TRIP_COUNT;
+	if (!Number.isFinite(minimumWork) || minimumWork < 0)
+		throw new RangeError('invalid minimumRegionWork');
+	if (!Number.isInteger(assumedTrips) || assumedTrips < 1)
+		throw new RangeError('invalid assumedTripCount');
+	return { minimumWork, assumedTrips };
+}
+
 export function extract(
 	original: Uint8Array,
-	prepareTracked: (bytes: Uint8Array) => { transactional?: Uint8Array }
+	prepareTracked: (bytes: Uint8Array) => { transactional?: Uint8Array },
+	options: AdmissionOptions & {
+		refused?: (reason: string) => void;
+		/** called once per candidate span or pure function with its estimate and verdict */
+		observed?: (site: {
+			name: string;
+			kind: string;
+			compute: number;
+			accesses: number;
+		}) => void;
+	} = {}
 ): ControlPlan | undefined {
+	const { minimumWork, assumedTrips } = admission(options);
 	let module: binaryen.Module | undefined;
 	let worker: binaryen.Module | undefined;
 	try {
@@ -378,6 +630,21 @@ export function extract(
 				}
 				if (!spans.some((span) => span.memoryWrite) || !spans.some((span) => span.compute))
 					return spans.map((span) => span.expression);
+				const written = new Set(spans.flatMap((span) => [...span.writes]));
+				const spanned = mergeTerms(
+					spans.map((span) =>
+						estimateTerms(span.expression, () => undefined, assumedTrips, {
+							input: (index) => !written.has(index),
+							counter: (index) => written.has(index)
+						})
+					)
+				);
+				const verdict = classify(spanned, minimumWork);
+				if (options.observed) {
+					const work = settleWork(spanned, assumedTrips);
+					options.observed({ name: `span in ${f.name}`, kind: verdict, ...work });
+				}
+				if (verdict === 'refused') return spans.map((span) => span.expression);
 				const captured = [...new Set(spans.flatMap((span) => [...span.locals]))].sort(
 					(a, b) => a - b
 				);
@@ -528,11 +795,101 @@ export function extract(
 				}
 			}
 		}
+		if (!pure.size) {
+			options.refused?.('no pure function to run as a region');
+			return;
+		}
+		const known = new Map<string, Term[]>();
+		const termsOf = (name: string): Term[] => {
+			let terms = known.get(name);
+			if (!terms) {
+				const f = functions.get(name)!;
+				const written = new Set<number>();
+				const scan = (e: number): void => {
+					const v = info(e);
+					if (v.id === binaryen.LocalSetId) written.add(v.index);
+					for (const child of children(v)) scan(child);
+				};
+				scan(f.body);
+				const count = binaryen.expandType(f.params).length;
+				terms = estimateTerms(f.body, workOf, assumedTrips, {
+					input: (index) => index < count && !written.has(index),
+					counter: (index) => written.has(index)
+				});
+				known.set(name, terms);
+			}
+			return terms;
+		};
+		const workOf = (name: string): Work | undefined =>
+			pure.has(name) ? settleWork(termsOf(name), assumedTrips) : undefined;
+		const admitted = new Set<string>();
+		const guarded = new Map<string, Term[]>();
+		for (const name of pure) {
+			const kind = classify(termsOf(name), minimumWork);
+			options.observed?.({
+				name,
+				kind,
+				...settleWork(termsOf(name), assumedTrips)
+			});
+			if (kind !== 'refused') admitted.add(name);
+			if (kind === 'dynamic') guarded.set(name, termsOf(name));
+		}
+		const enqueued = new Set<string>();
+		const queued = new Set<string>();
+		const enqueues = (v: Info): string | undefined => {
+			const call = v.id === binaryen.DropId ? info(v.value) : v;
+			const direct = v.id === binaryen.CallId && v.type === binaryen.none;
+			if (
+				call.id === binaryen.CallId &&
+				!call.isReturn &&
+				(direct || v.id === binaryen.DropId) &&
+				admitted.has(call.target)
+			)
+				return call.target;
+		};
+		for (const name of controllers) {
+			const visit = (e: number): void => {
+				const v = info(e);
+				const target = enqueues(v);
+				if (target) {
+					enqueued.add(target);
+					queued.add(name);
+				}
+				for (const child of children(v)) visit(child);
+			};
+			visit(functions.get(name)!.body);
+		}
+		if (!enqueued.size) {
+			options.refused?.(
+				admitted.size
+					? `no admitted region has a call site (${pure.size} pure functions, ${admitted.size} admitted)`
+					: `no region reached ${minimumWork} net work (${pure.size} pure functions, none admitted)`
+			);
+			return;
+		}
+		for (let changed = true; changed;) {
+			changed = false;
+			for (const name of controllers) {
+				if (
+					!queued.has(name) &&
+					[...calls.get(name)!].some(
+						(target) => controllers.has(target) && queued.has(target)
+					)
+				) {
+					queued.add(name);
+					changed = true;
+				}
+			}
+		}
+		// a function that never reaches a region keeps its original body and runs natively
+		for (const name of [...controllers]) if (!queued.has(name)) controllers.delete(name);
 		for (const f of originals) {
 			if (f.body && !controllers.has(f.name))
 				raw._BinaryenFunctionSetBody(m.getFunction(f.name), originalBodies.get(f.name)!);
 		}
-		if (!pure.size) return;
+		diagnostics.push(
+			`region admission: ${enqueued.size} regions from ${admitted.size} of ${pure.size} pure functions at ${minimumWork} net work; ${queued.size} instrumented`
+		);
 		let namespace = '__folio_control';
 		const imported = WebAssembly.Module.imports(
 			new WebAssembly.Module(Uint8Array.from(original))
@@ -540,6 +897,8 @@ export function extract(
 		while (imported.some((item) => item.module === namespace)) namespace += '_';
 		let serial = '__folio_control_serial';
 		while (m.getGlobal(serial)) serial += '_';
+		let pending = '__folio_control_pending';
+		while (m.getGlobal(pending)) pending += '_';
 		let memoryExport = '__folio_control_memory';
 		while (m.getExport(memoryExport)) memoryExport += '_';
 		const unique = (stem: string) => {
@@ -552,6 +911,7 @@ export function extract(
 		const poll = unique('__folio_control_poll');
 		m.addFunctionImport(poll, namespace, 'poll', binaryen.none, binaryen.none);
 		m.addGlobalImport(serial, namespace, 'serial', binaryen.i32, true);
+		m.addGlobalImport(pending, namespace, 'pending', binaryen.i32, true);
 		m.addMemoryExport(internalMemory, memoryExport);
 		worker = new binaryen.Module();
 		const w = worker;
@@ -570,7 +930,7 @@ export function extract(
 		}
 		const regions: ControlPlan['regions'] = [];
 		const enqueueFor = new Map<string, string>();
-		for (const name of pure) {
+		for (const name of enqueued) {
 			const f = functions.get(name)!;
 			const params = binaryen.expandType(f.params);
 			const encoded = params.map((t) =>
@@ -617,7 +977,6 @@ export function extract(
 				binaryen.none
 			);
 		}
-		const queued = new Set<string>();
 		const labels = new Map<string, Map<string, string>>();
 		for (const name of controllers) {
 			const map = new Map<string, string>();
@@ -638,6 +997,7 @@ export function extract(
 			labels.set(name, map);
 		}
 		let helperIndex = 0;
+		const memoryHelpers = new Map<string, { name: string; result: number }>();
 		const trappedUnary = new Set([
 			binaryen.TruncSFloat32ToInt32,
 			binaryen.TruncUFloat32ToInt32,
@@ -658,7 +1018,93 @@ export function extract(
 			binaryen.RemSInt64,
 			binaryen.RemUInt64
 		]);
-		const drain = () => m.call(barrier, [], binaryen.none);
+		// the host raises `pending` while regions are queued; an empty queue never crosses into JSPI
+		const whenPending = (target: string) =>
+			m.if(m.global.get(pending, binaryen.i32), m.call(target, [], binaryen.none));
+		const drain = () => whenPending(barrier);
+		const joinPoll = () => whenPending(poll);
+		// a call the owner makes natively: queued regions join first, and callees see serial set
+		const hostCalls = new Map<string, string>();
+		const hostCall = (target: string): string => {
+			const known = hostCalls.get(target);
+			if (known) return known;
+			const callee = functions.get(target)!;
+			const types = binaryen.expandType(callee.params);
+			const result = callee.results;
+			const name = unique(`__folio_control_host_${helperIndex++}`);
+			const native = m.call(
+				target,
+				types.map((t, i) => m.local.get(i, t)),
+				result
+			);
+			const prefix = [drain(), m.global.set(serial, m.i32.const(1))];
+			const vars = result === binaryen.none ? [] : [result];
+			const code = vars.length
+				? m.block(
+						null,
+						[
+							...prefix,
+							m.local.set(types.length, native),
+							m.global.set(serial, m.i32.const(0)),
+							m.local.get(types.length, result)
+						],
+						result
+					)
+				: m.block(null, [...prefix, native, m.global.set(serial, m.i32.const(0))], result);
+			m.addFunction(name, binaryen.createType(types), result, vars, code);
+			hostCalls.set(target, name);
+			return name;
+		};
+		// a region with a parameter-bounded loop compares its estimate with the threshold per call
+		const routes = new Map<string, { callee: string; encoded: boolean }>();
+		for (const name of enqueued) {
+			const entry = enqueueFor.get(name)!;
+			const terms = guarded.get(name);
+			if (!terms) {
+				routes.set(name, { callee: entry, encoded: true });
+				continue;
+			}
+			const f = functions.get(name)!;
+			const params = binaryen.expandType(f.params);
+			const local = (i: number) => m.local.get(i, params[i]!);
+			let work = m.f64.const(0);
+			for (const term of terms) {
+				if (!netWork(term)) continue;
+				let product = m.f64.const(netWork(term));
+				for (const parameter of term.params)
+					product = m.f64.mul(product, m.f64.convert_u.i32(local(parameter)));
+				work = m.f64.add(work, product);
+			}
+			const queue = m.call(
+				entry,
+				params.map((t, i) =>
+					t === binaryen.f32
+						? m.i32.reinterpret(local(i))
+						: t === binaryen.f64
+							? m.i64.reinterpret(local(i))
+							: local(i)
+				),
+				binaryen.none
+			);
+			const native = m.call(
+				hostCall(name),
+				params.map((_, i) => local(i)),
+				f.results
+			);
+			const dispatch = unique(`__folio_dispatch_${routes.size}`);
+			m.addFunction(
+				dispatch,
+				binaryen.createType(params),
+				binaryen.none,
+				[],
+				m.if(
+					m.f64.ge(work, m.f64.const(minimumWork)),
+					queue,
+					f.results === binaryen.none ? native : m.drop(native)
+				)
+			);
+			routes.set(name, { callee: dispatch, encoded: false });
+		}
 		const helper = (
 			expression: number,
 			operands: number[],
@@ -670,6 +1116,18 @@ export function extract(
 			const types = operands.map((e) => info(e).type);
 			if (types.some((type) => !numeric.has(type)))
 				throw new Error('non-scalar helper operand');
+			// One memory is admitted. Retain every opcode attribute; only operands become parameters.
+			const memoryKey =
+				v.id === binaryen.LoadId || v.id === binaryen.StoreId
+					? JSON.stringify([
+							types,
+							Object.entries(v).filter(([key]) => key !== 'ptr' && key !== 'value')
+						])
+					: undefined;
+			if (memoryKey !== undefined) {
+				const existing = memoryHelpers.get(memoryKey);
+				if (existing) return existing;
+			}
 			const body =
 				v.id === binaryen.CallIndirectId && v.isReturn
 					? m.call_indirect(v.table, v.target, v.operands, v.params, v.results)
@@ -708,7 +1166,9 @@ export function extract(
 			}
 			const result = resultType === binaryen.unreachable ? binaryen.none : resultType;
 			m.addFunction(name, binaryen.createType(types), result, vars, code);
-			return { name, result };
+			const reference = { name, result };
+			if (memoryKey !== undefined) memoryHelpers.set(memoryKey, reference);
+			return reference;
 		};
 		const lower = (expression: number, owner: string): number => {
 			const v = info(expression);
@@ -721,17 +1181,19 @@ export function extract(
 					: m.call(h.name, values, h.result);
 			};
 			const enqueue = (call: Info) => {
-				queued.add(owner);
+				const route = routes.get(call.target)!;
 				const values = call.operands.map((e: number) => {
 					const value = lower(e, owner);
 					const type = info(e).type;
-					return type === binaryen.f32
-						? m.i32.reinterpret(value)
-						: type === binaryen.f64
-							? m.i64.reinterpret(value)
-							: value;
+					return !route.encoded
+						? value
+						: type === binaryen.f32
+							? m.i32.reinterpret(value)
+							: type === binaryen.f64
+								? m.i64.reinterpret(value)
+								: value;
 				});
-				return m.call(enqueueFor.get(call.target)!, values, binaryen.none);
+				return m.call(route.callee, values, binaryen.none);
 			};
 			switch (v.id) {
 				case binaryen.BlockId:
@@ -749,11 +1211,7 @@ export function extract(
 				case binaryen.LoopId:
 					return m.loop(
 						label(v.name),
-						m.block(
-							null,
-							[m.call(poll, [], binaryen.none), lower(v.body, owner)],
-							info(v.body).type
-						)
+						m.block(null, [joinPoll(), lower(v.body, owner)], info(v.body).type)
 					);
 				case binaryen.BreakId:
 					return m.br(
@@ -769,7 +1227,7 @@ export function extract(
 						v.value ? lower(v.value, owner) : undefined
 					);
 				case binaryen.CallId: {
-					if (!v.isReturn && v.type === binaryen.none && pure.has(v.target))
+					if (!v.isReturn && v.type === binaryen.none && enqueueFor.has(v.target))
 						return enqueue(v);
 					const result = functions.get(v.target)!.results;
 					const args = v.operands.map((e: number) => lower(e, owner));
@@ -777,32 +1235,7 @@ export function extract(
 						return v.isReturn
 							? m.return_call(v.target, args, result)
 							: m.call(v.target, args, result);
-					const types = v.operands.map((e: number) => info(e).type);
-					const target = unique(`__folio_control_host_${helperIndex++}`);
-					const native = m.call(
-						v.target,
-						types.map((t: number, i: number) => m.local.get(i, t)),
-						result
-					);
-					const prefix = [drain(), m.global.set(serial, m.i32.const(1))];
-					const vars = result === binaryen.none ? [] : [result];
-					const code = vars.length
-						? m.block(
-								null,
-								[
-									...prefix,
-									m.local.set(types.length, native),
-									m.global.set(serial, m.i32.const(0)),
-									m.local.get(types.length, result)
-								],
-								result
-							)
-						: m.block(
-								null,
-								[...prefix, native, m.global.set(serial, m.i32.const(0))],
-								result
-							);
-					m.addFunction(target, binaryen.createType(types), result, vars, code);
+					const target = hostCall(v.target);
 					return v.isReturn
 						? m.return_call(target, args, result)
 						: m.call(target, args, result);
@@ -887,7 +1320,9 @@ export function extract(
 					);
 				case binaryen.DropId: {
 					const child = info(v.value);
-					return child.id === binaryen.CallId && !child.isReturn && pure.has(child.target)
+					return child.id === binaryen.CallId &&
+						!child.isReturn &&
+						enqueueFor.has(child.target)
 						? enqueue(child)
 						: m.drop(lower(v.value, owner));
 				}
@@ -901,11 +1336,7 @@ export function extract(
 		};
 		for (const name of controllers) {
 			const f = functions.get(name)!;
-			const transformed = m.block(
-				null,
-				[m.call(poll, [], binaryen.none), lower(f.body, name)],
-				f.results
-			);
+			const transformed = m.block(null, [joinPoll(), lower(f.body, name)], f.results);
 			raw._BinaryenFunctionSetBody(
 				m.getFunction(name),
 				m.if(
@@ -914,20 +1345,6 @@ export function extract(
 					transformed
 				)
 			);
-		}
-		for (let changed = true; changed;) {
-			changed = false;
-			for (const name of controllers) {
-				if (
-					!queued.has(name) &&
-					[...calls.get(name)!].some(
-						(target) => controllers.has(target) && queued.has(target)
-					)
-				) {
-					queued.add(name);
-					changed = true;
-				}
-			}
 		}
 		const entries: string[] = [];
 		for (let i = 0; i < m.getNumExports(); i++) {
@@ -939,9 +1356,15 @@ export function extract(
 			)
 				entries.push(exported.name);
 		}
-		if (!entries.length) return;
+		if (!entries.length) {
+			options.refused?.('no exported function reaches an admitted region');
+			return;
+		}
 		if (!m.validate() || !w.validate()) throw new Error('invalid control extraction');
-		const coordinator = m.emitBinary();
+		const coordinator = restoreImportOrder(
+			m.emitBinary(),
+			WebAssembly.Module.imports(new WebAssembly.Module(Uint8Array.from(original)))
+		);
 		const workerOriginal = w.emitBinary();
 		new WebAssembly.Module(Uint8Array.from(coordinator));
 		new WebAssembly.Module(Uint8Array.from(workerOriginal));
@@ -954,6 +1377,7 @@ export function extract(
 			transactional,
 			namespace,
 			serialGlobal: 'serial',
+			pendingGlobal: 'pending',
 			memoryExport,
 			shared: memory.shared,
 			initial: memory.initial,

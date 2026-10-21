@@ -199,6 +199,7 @@ export class ManagedFolio {
 	readonly #lanes: readonly ManagedLaneTransport[];
 	readonly #instance: WebAssembly.Instance;
 	readonly #serial = new WebAssembly.Global({ value: 'i32', mutable: true }, 1);
+	readonly #pendingGlobal = new WebAssembly.Global({ value: 'i32', mutable: true }, 0);
 	readonly #controlled = new Map<string, (...args: any[]) => Promise<unknown>>();
 	readonly #promising = new Map<string, (...args: any[]) => Promise<unknown>>();
 	readonly #maximumSnapshotBytes: number;
@@ -283,6 +284,7 @@ export class ManagedFolio {
 				if (enabled && namespace === control!.namespace) {
 					const bindings: Record<string, WebAssembly.ImportValue> = {
 						[control!.serialGlobal]: this.#serial,
+						[control!.pendingGlobal]: this.#pendingGlobal,
 						barrier: new runtime.Suspending!(() => this.#scheduler?.flush()),
 						poll: new runtime.Suspending!(() => this.#scheduler?.poll())
 					};
@@ -459,6 +461,7 @@ export class ManagedFolio {
 			workerMemory: this.memory,
 			width,
 			profile: false,
+			pending: this.#pendingGlobal,
 			native: (call) => {
 				const previous = this.#serial.value;
 				this.#serial.value = 1;
@@ -516,6 +519,7 @@ export class ManagedFolio {
 			return finish(scheduler.report);
 		} finally {
 			this.#serial.value = 1;
+			this.#pendingGlobal.value = 0;
 			this.#scheduler = undefined;
 		}
 	}

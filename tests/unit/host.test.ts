@@ -166,7 +166,13 @@ test('admission counts a hidden owned arena exposed by the coordinator', async (
 	const server = new FolioHost({
 		authorize: () => true,
 		limits: { memoryBytesPerGroup: 65536 },
-		artifacts: { hidden: { program, exports: ['main'] } }
+		artifacts: {
+			hidden: {
+				program,
+				exports: ['main'],
+				create: () => ({ options: { minimumRegionWork: 0 } })
+			}
+		}
 	});
 	try {
 		await assert.rejects(

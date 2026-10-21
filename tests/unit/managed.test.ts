@@ -9,7 +9,7 @@ import { FolioLane, ManagedFolio } from '../../src/managed.ts';
 import { memoryImports } from '../../src/memory.ts';
 
 function artifact(bytes: Uint8Array): ManagedArtifact {
-	const program = prepare(bytes);
+	const program = prepare(bytes, { minimumRegionWork: 0 });
 	const plan = program.control;
 	if (!plan)
 		return {

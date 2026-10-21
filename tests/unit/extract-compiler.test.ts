@@ -2,6 +2,8 @@ import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { test } from 'vitest';
+import { prepare } from '../../src/compiler.ts';
+import type { AdmissionOptions } from '../../src/extract.ts';
 import { extract } from '../../src/extract.ts';
 
 function compile(wat: string): Uint8Array {
@@ -22,17 +24,24 @@ function harness(
 	options: {
 		imports?: WebAssembly.Imports;
 		beforeBarrier?: () => void;
+		admission?: AdmissionOptions;
 	} = {}
 ) {
-	const plan = extract(source, (bytes) => ({ transactional: bytes }));
+	const plan = extract(
+		source,
+		(bytes) => ({ transactional: bytes }),
+		options.admission ?? { minimumRegionWork: 0 }
+	);
 	assert.ok(plan);
 	assert.ok(WebAssembly.validate(Uint8Array.from(plan.coordinator)));
 	assert.ok(WebAssembly.validate(Uint8Array.from(plan.workerOriginal)));
 	const serial = new WebAssembly.Global({ value: 'i32', mutable: true }, 1);
+	const queued = new WebAssembly.Global({ value: 'i32', mutable: true }, 0);
 	const pending: { name: string; args: unknown[] }[] = [];
 	let instance: WebAssembly.Instance;
 	let regions = 0;
 	let maximumPending = 0;
+	let crossings = 0;
 	const drain = () => {
 		options.beforeBarrier?.();
 		const previous = serial.value;
@@ -47,16 +56,23 @@ function harness(
 			throw error;
 		} finally {
 			serial.value = previous;
+			queued.value = pending.length ? 1 : 0;
 		}
 	};
+	const cross = () => {
+		crossings++;
+		drain();
+	};
 	const imports: Record<string, WebAssembly.ImportValue> = {
-		barrier: drain,
-		poll: drain,
-		serial
+		barrier: cross,
+		poll: cross,
+		serial,
+		[plan.pendingGlobal]: queued
 	};
 	for (const region of plan.regions)
 		imports[region.importName] = (...args: unknown[]) => {
 			pending.push({ name: region.exportName, args });
+			queued.value = 1;
 			regions++;
 			maximumPending = Math.max(maximumPending, pending.length);
 		};
@@ -75,6 +91,9 @@ function harness(
 		get maximumPending() {
 			return maximumPending;
 		},
+		get crossings() {
+			return crossings;
+		},
 		run(name: string, ...args: unknown[]): unknown {
 			serial.value = 0;
 			try {
@@ -90,6 +109,51 @@ function harness(
 		}
 	};
 }
+
+test('memory barrier helpers are shared across access sites without merging opcode attributes', () => {
+	const accesses = Array.from(
+		{ length: 256 },
+		(_, i) => `(call $observe (i32.load (i32.const ${i * 4})))`
+	).join('\n');
+	const source = compile(`(module
+		(import "host" "observe" (func $observe (param i32)))
+		(memory (export "memory") 1 2 shared)
+		(func $put (i32.store (i32.const 0) (i32.const -2130771969)))
+		(func (export "run")
+			(call $put)
+			${accesses}
+			(call $observe (i32.load8_s (i32.const 0)))
+			(call $observe (i32.load8_u (i32.const 0)))
+			(call $observe (i32.load8_u offset=1 (i32.const 0)))
+			(call $observe (i32.load16_u (i32.const 0)))
+			(call $observe (i32.load align=1 (i32.const 1))))
+		(func (export "trap") (call $put)
+			(call $observe (i32.load offset=4 (i32.const 65532)))))`);
+	const expected: number[] = [],
+		actual: number[] = [];
+	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)), {
+		host: { observe: (value: number) => expected.push(value) }
+	});
+	const transformed = harness(source, {
+		imports: { host: { observe: (value: number) => actual.push(value) } }
+	});
+	(native.exports.run as CallableFunction)();
+	transformed.run('run');
+	assert.deepEqual(actual, expected);
+	assert.deepEqual(
+		new Uint8Array(transformed.memory.buffer),
+		new Uint8Array((native.exports.memory as WebAssembly.Memory).buffer)
+	);
+	const module = binaryen.readBinary(transformed.plan.coordinator);
+	try {
+		// Emission strips names. Even including host-call helpers, access-site duplication cannot fit.
+		assert.ok(module.getNumFunctions() < 2 * 256);
+	} finally {
+		module.dispose();
+	}
+	assert.throws(() => (native.exports.trap as CallableFunction)(), WebAssembly.RuntimeError);
+	assert.throws(() => transformed.run('trap'), WebAssembly.RuntimeError);
+});
 
 test('outlining preserves locals carried through a loop backedge', () => {
 	const source = compile(`(module (memory (export "memory") 1 2 shared)
@@ -118,7 +182,7 @@ test('a pending trap joins before unbounded tail recursion', async () => {
 		(func $bad (i32.store (i32.const 0) (i32.const 71)) (unreachable))
 		(func $spin (return_call $spin))
 		(func (export "run") (call $bad) (return_call $spin)))`);
-	const plan = extract(source, (bytes) => ({ transactional: bytes }));
+	const plan = extract(source, (bytes) => ({ transactional: bytes }), { minimumRegionWork: 0 });
 	assert.ok(plan);
 	const child = spawn(
 		process.execPath,
@@ -127,6 +191,7 @@ test('a pending trap joins before unbounded tail recursion', async () => {
 			`
 		process.once('message', plan => {
 		const serial = new WebAssembly.Global({ value: 'i32', mutable: true }, 1);
+		const queued = new WebAssembly.Global({ value: 'i32', mutable: true }, 0);
 		const pending = [];
 		let instance;
 		const drain = () => {
@@ -136,11 +201,11 @@ test('a pending trap joins before unbounded tail recursion', async () => {
 					const call = pending.shift();
 					instance.exports[call.name](...call.args);
 				}
-			} finally { serial.value = 0; }
+			} finally { serial.value = 0; queued.value = pending.length ? 1 : 0; }
 		};
-		const bindings = { serial, barrier: drain, poll: drain };
-		for (const region of plan.regions) bindings[region.importName] = (...args) =>
-			pending.push({ name: region.exportName, args });
+		const bindings = { serial, barrier: drain, poll: drain, [plan.pendingGlobal]: queued };
+		for (const region of plan.regions) bindings[region.importName] = (...args) => {
+			pending.push({ name: region.exportName, args }); queued.value = 1; };
 		instance = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(plan.coordinator)), {
 			[plan.namespace]: bindings
 		});
@@ -446,4 +511,179 @@ test('inline outlining preserves scalar live-outs and escaping branch targets', 
 		);
 		assert.equal(transformed.regions, Math.floor(count / 3));
 	}
+});
+
+const kernelSource = (bound: string) => `
+	(func $kernel (param $at i32) (param $rounds i32) (local $i i32) (local $v i32)
+		(local.set $v (i32.load (local.get $at)))
+		(loop $l
+			(local.set $v (i32.xor (local.get $v) (i32.shl (local.get $v) (i32.const 13))))
+			(local.set $v (i32.xor (local.get $v) (i32.shr_u (local.get $v) (i32.const 17))))
+			(local.set $v (i32.xor (local.get $v) (i32.shl (local.get $v) (i32.const 5))))
+			(local.set $i (i32.add (local.get $i) (i32.const 1)))
+			(br_if $l (i32.ne (local.get $i) ${bound})))
+		(i32.store (local.get $at) (local.get $v)))`;
+
+const scanSource = `
+	(func $scan (param $n i32) (result i32) (local $i i32) (local $sum i32)
+		(loop $s
+			(local.set $sum (i32.add (local.get $sum)
+				(i32.load (i32.shl (local.get $i) (i32.const 2)))))
+			(local.set $i (i32.add (local.get $i) (i32.const 1)))
+			(br_if $s (i32.lt_u (local.get $i) (local.get $n))))
+		(local.get $sum))`;
+
+const admission = (source: Uint8Array, options: AdmissionOptions) => {
+	const refusals: string[] = [];
+	const plan = extract(source, (bytes) => ({ transactional: bytes }), {
+		...options,
+		refused: (reason) => refusals.push(reason)
+	});
+	return { plan, refusals };
+};
+
+test('static admission keeps spans below the threshold inline and refuses a plan with no region', () => {
+	const source = compile(`(module (memory (export "memory") 2)
+		(func (export "chain") (param $n i32) (result i32) (local $i i32) (local $x i32)
+			(local.set $x (i32.const 1))
+			(loop $next
+				(local.set $x (i32.add (i32.mul (local.get $x) (i32.const 1664525)) (i32.const 1013904223)))
+				(i32.store (i32.and (i32.shl (local.get $i) (i32.const 2)) (i32.const 65532)) (local.get $x))
+				(local.set $i (i32.add (local.get $i) (i32.const 1)))
+				(br_if $next (i32.lt_u (local.get $i) (local.get $n))))
+			(local.get $x)))`);
+	const refused = admission(source, {});
+	assert.equal(refused.plan, undefined);
+	assert.ok(refused.refusals.some((reason) => reason.includes('no region reached 200000')));
+	const admitted = admission(source, { minimumRegionWork: 0 });
+	assert.ok(admitted.plan);
+	assert.ok(admitted.plan.regions.length >= 1);
+});
+
+test('a compute loop with no memory traffic clears the default threshold', () => {
+	const source =
+		compile(`(module (memory (export "memory") 1 4 shared) ${kernelSource('(local.get $rounds)')}
+		(func (export "run") (call $kernel (i32.const 256) (i32.const 64))
+			(call $kernel (i32.const 260) (i32.const 64))))`);
+	const { plan, refusals } = admission(source, {});
+	assert.deepEqual(refusals, []);
+	assert.ok(plan);
+	assert.equal(plan.regions.length, 1);
+	assert.deepEqual(plan.entries, ['run']);
+});
+
+test('memory traffic in a loop is charged to the work estimate', () => {
+	const source = compile(`(module (memory (export "memory") 1 4 shared)
+		(func $stream (param $at i32) (param $n i32) (local $i i32)
+			(loop $l
+				(i32.store (i32.add (local.get $at) (i32.shl (local.get $i) (i32.const 2)))
+					(i32.xor (i32.load (i32.add (local.get $at) (i32.shl (local.get $i) (i32.const 2))))
+						(i32.const 7)))
+				(local.set $i (i32.add (local.get $i) (i32.const 1)))
+				(br_if $l (i32.ne (local.get $i) (local.get $n)))))
+		(func (export "run") (call $stream (i32.const 0) (i32.const 64))
+			(call $stream (i32.const 4096) (i32.const 64))))`);
+	assert.equal(admission(source, {}).plan, undefined);
+	assert.ok(admission(source, { minimumRegionWork: 0 }).plan);
+});
+
+test('the assumed trip count and constant loop bounds feed the work estimate', () => {
+	const unseen =
+		compile(`(module (memory (export "memory") 1 4 shared) ${kernelSource('(i32.mul (local.get $rounds) (i32.const 3))')}
+		(func (export "run") (call $kernel (i32.const 256) (i32.const 0))))`);
+	assert.equal(admission(unseen, {}).plan, undefined);
+	assert.equal(admission(unseen, { assumedTripCount: 10_000 }).plan, undefined);
+	assert.ok(admission(unseen, { assumedTripCount: 100_000 }).plan);
+	const few =
+		compile(`(module (memory (export "memory") 1 4 shared) ${kernelSource('(i32.const 4)')}
+		(func (export "run") (call $kernel (i32.const 256) (i32.const 0))))`);
+	assert.equal(admission(few, { assumedTripCount: 1_000_000 }).plan, undefined);
+	const many =
+		compile(`(module (memory (export "memory") 1 4 shared) ${kernelSource('(i32.const 1000000)')}
+		(func (export "run") (call $kernel (i32.const 256) (i32.const 0))))`);
+	assert.ok(admission(many, { assumedTripCount: 1 }).plan);
+	// 13 units per trip: 10,000 trips sit under the 200,000 default and 20,000 clear it
+	for (const [trips, admitted] of [
+		[10_000, false],
+		[20_000, true]
+	] as const) {
+		const bounded =
+			compile(`(module (memory (export "memory") 1 4 shared) ${kernelSource(`(i32.const ${trips})`)}
+		(func (export "run") (call $kernel (i32.const 256) (i32.const 0))))`);
+		assert.equal(Boolean(admission(bounded, {}).plan), admitted, `trips ${trips}`);
+	}
+});
+
+test('a parameter-bounded loop is checked against its arguments at each call', () => {
+	const source =
+		compile(`(module (memory (export "memory") 1 4 shared) ${kernelSource('(local.get $rounds)')}
+		(func (export "run") (param $rounds i32)
+			(call $kernel (i32.const 256) (local.get $rounds))
+			(call $kernel (i32.const 260) (local.get $rounds))))`);
+	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
+	const reference = (native.exports.memory as WebAssembly.Memory).buffer;
+	for (const [rounds, regions] of [
+		[64, 0],
+		[2000, 0],
+		[100_000, 2],
+		[600_000, 2]
+	] as const) {
+		const transformed = harness(source, { admission: {} });
+		new Uint32Array(transformed.memory.buffer).set([7, 11], 64);
+		new Uint32Array(reference).set([7, 11], 64);
+		transformed.run('run', rounds);
+		(native.exports.run as CallableFunction)(rounds);
+		assert.equal(transformed.regions, regions, `rounds ${rounds}`);
+		assert.deepEqual(new Uint8Array(transformed.memory.buffer), new Uint8Array(reference));
+	}
+});
+
+test('functions that never reach an admitted region keep their original bodies', () => {
+	const source = compile(`(module (memory (export "memory") 1 4 shared)
+		${kernelSource('(local.get $rounds)')}${scanSource}
+		(func (export "run") (param $n i32) (result i32)
+			(call $kernel (i32.const 256) (i32.const 64))
+			(call $scan (local.get $n))))`);
+	const { plan } = admission(source, {});
+	assert.ok(plan);
+	assert.ok(
+		plan.diagnostics.some((reason) => /1 regions from 1 of 3 .*; 1 instrumented/.test(reason))
+	);
+	assert.deepEqual(plan.entries, ['run']);
+});
+
+test('generated barriers cross into the host only while a region is queued', () => {
+	const source =
+		compile(`(module (memory (export "memory") 1 4 shared) ${kernelSource('(local.get $rounds)')}
+		(func (export "scanFirst") (param $n i32) (result i32) (local $i i32) (local $sum i32)
+			(loop $s
+				(local.set $sum (i32.add (local.get $sum)
+					(i32.load (i32.shl (local.get $i) (i32.const 2)))))
+				(local.set $i (i32.add (local.get $i) (i32.const 1)))
+				(br_if $s (i32.lt_u (local.get $i) (local.get $n))))
+			(call $kernel (i32.const 4096) (i32.const 100000))
+			(local.get $sum))
+		(func (export "queueFirst") (param $n i32) (result i32) (local $i i32) (local $sum i32)
+			(call $kernel (i32.const 4096) (i32.const 100000))
+			(loop $s
+				(local.set $sum (i32.add (local.get $sum)
+					(i32.load (i32.shl (local.get $i) (i32.const 2)))))
+				(local.set $i (i32.add (local.get $i) (i32.const 1)))
+				(br_if $s (i32.lt_u (local.get $i) (local.get $n))))
+			(local.get $sum)))`);
+	const native = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)));
+	const idle = harness(source, { admission: {} });
+	assert.equal(idle.run('scanFirst', 500), (native.exports.scanFirst as CallableFunction)(500));
+	assert.equal(idle.crossings, 0);
+	assert.equal(idle.regions, 1);
+	const busy = harness(source, { admission: {} });
+	assert.equal(busy.run('queueFirst', 500), (native.exports.queueFirst as CallableFunction)(500));
+	assert.equal(busy.crossings, 1);
+});
+
+test('invalid admission options are rejected before any module is read', () => {
+	assert.throws(() => prepare(new Uint8Array(), { minimumRegionWork: -1 }), RangeError);
+	assert.throws(() => prepare(new Uint8Array(), { minimumRegionWork: Number.NaN }), RangeError);
+	assert.throws(() => prepare(new Uint8Array(), { assumedTripCount: 0 }), RangeError);
+	assert.throws(() => prepare(new Uint8Array(), { assumedTripCount: 1.5 }), RangeError);
 });

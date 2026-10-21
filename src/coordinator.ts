@@ -23,6 +23,8 @@ export class Coordinator {
 	readonly #dispatch: (worker: number, calls: RegionCall[]) => Promise<TransactionResult[]>;
 	readonly #native: (call: RegionCall) => void;
 	readonly #profile?: ExecutionProfile;
+	readonly #pending?: { value: unknown };
+	#armed = false;
 	#polls = 0;
 	#flushing?: Promise<void>;
 
@@ -31,9 +33,12 @@ export class Coordinator {
 		workerMemory: WebAssembly.Memory;
 		width: number;
 		profile: boolean;
+		/** Wasm global the generated barriers read; raised while regions are queued or running. */
+		pending?: { value: unknown };
 		dispatch: (worker: number, calls: RegionCall[]) => Promise<TransactionResult[]>;
 		native: (call: RegionCall) => void;
 	}) {
+		this.#pending = options.pending;
 		this.#memory = options.memory;
 		this.#workerMemory = options.workerMemory;
 		this.#width = options.width;
@@ -66,6 +71,10 @@ export class Coordinator {
 	}
 
 	enqueue(call: RegionCall): Promise<void> | undefined {
+		if (!this.#armed) {
+			this.#armed = true;
+			if (this.#pending) this.#pending.value = 1;
+		}
 		this.#queue.push(call);
 		this.report.regions++;
 		// Amortize transport/join cost without changing per-region validation order.
@@ -81,13 +90,23 @@ export class Coordinator {
 
 	flush(): Promise<void> | undefined {
 		if (this.#flushing) return this.#flushing;
-		if (!this.#queue.length) return undefined;
+		if (!this.#queue.length) {
+			this.#settle();
+			return undefined;
+		}
 		const batch = this.#queue.splice(0);
 		const pending = this.#execute(batch);
 		this.#flushing = pending;
 		return pending.finally(() => {
 			this.#flushing = undefined;
+			this.#settle();
 		});
+	}
+
+	#settle(): void {
+		if (!this.#armed || this.#queue.length) return;
+		this.#armed = false;
+		if (this.#pending) this.#pending.value = 0;
 	}
 
 	async #execute(batch: RegionCall[]): Promise<void> {

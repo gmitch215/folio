@@ -34,10 +34,10 @@ async function compare(bytes: Uint8Array, split: boolean) {
 	const control = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(bytes)), {
 		env: { memory: reference }
 	});
-	const program = prepare(bytes);
+	const program = prepare(bytes, { minimumRegionWork: 0 });
 	assert.deepEqual(program.reasons, []);
 	assert.equal(Boolean(program.loops.main), split);
-	const pool = await Folio.open(program, { memory: shared, workers: 4 });
+	const pool = await Folio.open(program, { minimumRegionWork: 0, memory: shared, workers: 4 });
 	try {
 		for (const count of [97, 1, 0, 67]) {
 			(control.exports.main as CallableFunction)(1024, count, 0x1234);
@@ -72,6 +72,25 @@ test('inline kernels split with iteration-local temporaries and conditional defi
 		countParameter: 1,
 		steps: [{ parameter: 0, step: 4 }]
 	});
+});
+
+test('export indexing retains every function alias including prototype names', () => {
+	const bytes = fixture('(i32.store (local.get $pointer) (local.get $seed))');
+	const module = binaryen.readBinary(bytes);
+	let aliased: Uint8Array;
+	try {
+		const entry = binaryen.getExportInfo(module.getExport('main')).value;
+		module.addFunctionExport(entry, 'alias');
+		module.addFunctionExport(entry, '__proto__');
+		aliased = module.emitBinary();
+	} finally {
+		module.dispose();
+	}
+	const program = prepare(aliased, { minimumRegionWork: 0 });
+	assert.deepEqual(program.reasons, []);
+	assert.deepEqual(Object.keys(program.loops).sort(), ['__proto__', 'alias', 'main']);
+	assert.deepEqual(program.loops.alias, program.loops.main);
+	assert.deepEqual(program.loops.__proto__, program.loops.main);
 });
 
 test('select evaluates both operands before its condition and keeps local.tee definitions', async () => {
@@ -156,12 +175,12 @@ test('non-void reductions retain the native result and memory semantics', async 
 			(local.get $sum)))`);
 	const bytes = module.emitBinary();
 	module.dispose();
-	const program = prepare(bytes);
+	const program = prepare(bytes, { minimumRegionWork: 0 });
 	assert.deepEqual(program.loops, {});
 	assert.equal(program.loopReasons?.sum, 'non-void entry requires a result merge');
 	const memory = new WebAssembly.Memory({ initial: 2, maximum: 8, shared: true });
 	new Uint32Array(memory.buffer, 1024, 97).fill(7);
-	const pool = await Folio.open(program, { memory, workers: 4 });
+	const pool = await Folio.open(program, { minimumRegionWork: 0, memory, workers: 4 });
 	try {
 		const report = await pool.run('sum', [1024, 97]);
 		assert.equal(report.mode, 'serial');

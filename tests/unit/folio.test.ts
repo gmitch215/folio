@@ -7,7 +7,7 @@ import { Folio } from '../../src/node.ts';
 import { SpeculationLimit, transaction } from '../../src/transaction.ts';
 
 const source = readFileSync(new URL('../../build/fixture.wasm', import.meta.url));
-const program = prepare(source);
+const program = prepare(source, { minimumRegionWork: 0 });
 const memory = () => new WebAssembly.Memory({ initial: 2, maximum: 8192, shared: true });
 
 test('compiler discovers an unannotated single-entry loop and retains diagnostics', () => {
@@ -31,7 +31,7 @@ test('one entry automatically splits across distinct isolates with exact shared 
 		env: { memory: reference }
 	});
 	(control.exports.program as CallableFunction)(1024, 37, 17);
-	const pool = await Folio.open(program, { memory: shared, workers: 4 });
+	const pool = await Folio.open(program, { minimumRegionWork: 0, memory: shared, workers: 4 });
 	try {
 		assert.equal(new Set(pool.threadIds).size, 4);
 		assert.equal(pool.capabilities.physicalSharing, 'same-process');
@@ -54,7 +54,7 @@ test('one entry automatically splits across distinct isolates with exact shared 
 test('loop-carried memory dependencies replay and match sequential prefix output', async () => {
 	const shared = memory();
 	new Uint32Array(shared.buffer)[255] = 100;
-	const pool = await Folio.open(program, { memory: shared, workers: 4 });
+	const pool = await Folio.open(program, { minimumRegionWork: 0, memory: shared, workers: 4 });
 	try {
 		const report = await pool.run('dependent_program', [1024, 37]);
 		assert.equal(report.replayed, 3);
@@ -70,7 +70,7 @@ test('loop-carried memory dependencies replay and match sequential prefix output
 test('dynamic conflicts, blind writes, overlapping bytes and ordered traps', async () => {
 	const shared = memory();
 	const words = new Uint32Array(shared.buffer);
-	const pool = await Folio.open(program, { memory: shared, workers: 4 });
+	const pool = await Folio.open(program, { minimumRegionWork: 0, memory: shared, workers: 4 });
 	try {
 		const report = await pool.runAll(
 			Array.from({ length: 8 }, () => ({ export: 'increment', args: [1024] }))
@@ -125,7 +125,12 @@ test('speculation budgets discard partial overlays and finish at the serial head
 			(native.exports.mix as CallableFunction)(1024, 4),
 			(native.exports.mix as CallableFunction)(1024, 4)
 		];
-		const pool = await Folio.open(program, { memory: shared, workers: 2, ...limits });
+		const pool = await Folio.open(program, {
+			minimumRegionWork: 0,
+			memory: shared,
+			workers: 2,
+			...limits
+		});
 		try {
 			const report = await pool.runAll([
 				{ export: 'mix', args: [1024, 4] },
@@ -144,11 +149,12 @@ test('unsupported host effects stay ordered on the native entry', async () => {
 	const m = binaryen.parseText(
 		'(module (import "host" "effect" (func $effect (param i32) (result i32))) (func (export "main") (param i32) (result i32) (call $effect (local.get 0))))'
 	);
-	const prepared = prepare(m.emitBinary());
+	const prepared = prepare(m.emitBinary(), { minimumRegionWork: 0 });
 	m.dispose();
 	assert.equal(prepared.transactional, undefined);
 	const effects: number[] = [];
 	const pool = await Folio.open(prepared, {
+		minimumRegionWork: 0,
 		memory: memory(),
 		imports: {
 			host: {
@@ -189,10 +195,16 @@ test('byte transactions preserve signs, overlays and full bounds before mutation
 });
 
 test('configuration rejects invalid counts and budgets', async () => {
-	await assert.rejects(Folio.open(program, { memory: memory(), workers: 0 }), /worker count/);
-	await assert.rejects(Folio.open(program, { memory: memory(), fuel: -1 }), /fuel/);
 	await assert.rejects(
-		Folio.open(program, { memory: memory(), maxTransactionBytes: 0 }),
+		Folio.open(program, { minimumRegionWork: 0, memory: memory(), workers: 0 }),
+		/worker count/
+	);
+	await assert.rejects(
+		Folio.open(program, { minimumRegionWork: 0, memory: memory(), fuel: -1 }),
+		/fuel/
+	);
+	await assert.rejects(
+		Folio.open(program, { minimumRegionWork: 0, memory: memory(), maxTransactionBytes: 0 }),
 		/budget/
 	);
 });
@@ -205,7 +217,7 @@ test('valid uncommon module shapes retain a usable serial path', () => {
 		const m = binaryen.parseText(
 			`(module (import "env" "memory" (memory 2 8192 shared)) (func (export "main") (param i32) ${body}))`
 		);
-		const prepared = prepare(m.emitBinary());
+		const prepared = prepare(m.emitBinary(), { minimumRegionWork: 0 });
 		m.dispose();
 		assert.deepEqual(prepared.loops, {});
 	}
@@ -219,7 +231,7 @@ test('valid uncommon module shapes retain a usable serial path', () => {
 		binaryen.setDebugInfo(true);
 		const bytes = m.emitBinary();
 		binaryen.setDebugInfo(false);
-		const prepared = prepare(bytes);
+		const prepared = prepare(bytes, { minimumRegionWork: 0 });
 		m.dispose();
 		assert.equal(prepared.transactional, undefined);
 		assert.deepEqual(prepared.reasons, ['reserved function name']);
@@ -232,8 +244,8 @@ test('native fallback exposes its own memory and reports no active sharing', asy
 	);
 	const bytes = m.emitBinary();
 	m.dispose();
-	const prepared = prepare(bytes);
-	const pool = await Folio.open(prepared, { memory: memory() });
+	const prepared = prepare(bytes, { minimumRegionWork: 0 });
+	const pool = await Folio.open(prepared, { minimumRegionWork: 0, memory: memory() });
 	try {
 		assert.equal(pool.capabilities.physicalSharing, 'none');
 		assert.equal(pool.memory, pool.exports.memory);
@@ -256,10 +268,10 @@ test('opaque state and generated hook collisions use the original module', async
 		const m = binaryen.parseText(
 			`(module (import "env" "memory" (memory 2 8192 shared)) ${body})`
 		);
-		const prepared = prepare(m.emitBinary());
+		const prepared = prepare(m.emitBinary(), { minimumRegionWork: 0 });
 		m.dispose();
 		assert.equal(prepared.transactional, undefined);
-		const pool = await Folio.open(prepared, { memory: memory() });
+		const pool = await Folio.open(prepared, { minimumRegionWork: 0, memory: memory() });
 		try {
 			assert.equal((await pool.run('main')).mode, 'serial');
 		} finally {
@@ -269,10 +281,10 @@ test('opaque state and generated hook collisions use the original module', async
 	const m = binaryen.parseText(
 		'(module (import "folio" "load" (memory 2 8192 shared)) (func (export "main") (i32.store (i32.const 0) (i32.const 7))))'
 	);
-	const prepared = prepare(m.emitBinary());
+	const prepared = prepare(m.emitBinary(), { minimumRegionWork: 0 });
 	m.dispose();
 	assert.deepEqual(prepared.reasons, ['reserved import namespace']);
-	const pool = await Folio.open(prepared, { memory: memory() });
+	const pool = await Folio.open(prepared, { minimumRegionWork: 0, memory: memory() });
 	try {
 		await pool.runAll([
 			{ export: 'main', args: [] },
@@ -292,7 +304,7 @@ test('guarded native regions write the shared allocation directly and match nati
 		env: { memory: reference }
 	});
 	(control.exports.program as CallableFunction)(1024, 37, 10000);
-	const pool = await Folio.open(program, { memory: shared, workers: 4 });
+	const pool = await Folio.open(program, { minimumRegionWork: 0, memory: shared, workers: 4 });
 	try {
 		assert.deepEqual(program.native?.program?.workParameters, [2]);
 		assert.equal((await pool.run('program', [1024, 37, 10000])).mode, 'native-shared');
@@ -313,7 +325,11 @@ test('native guard rejects aliases, bounds and pointer wrap before concurrent wr
 		const control = new WebAssembly.Instance(new WebAssembly.Module(source), {
 			env: { memory: reference }
 		});
-		const pool = await Folio.open(program, { memory: shared, workers: 4 });
+		const pool = await Folio.open(program, {
+			minimumRegionWork: 0,
+			memory: shared,
+			workers: 4
+		});
 		try {
 			if (entry === 'aliased_program') {
 				(control.exports[entry] as CallableFunction)(1024, 16, 10000);
@@ -346,7 +362,7 @@ test('native guard rejects aliases, bounds and pointer wrap before concurrent wr
 test('cancelling native execution joins all workers before the run settles', async () => {
 	const shared = memory();
 	new Uint32Array(shared.buffer, 1024, 37).fill(1);
-	const pool = await Folio.open(program, { memory: shared, workers: 4 });
+	const pool = await Folio.open(program, { minimumRegionWork: 0, memory: shared, workers: 4 });
 	const running = pool.run('program', [1024, 37, 1000000]);
 	const rejected = assert.rejects(running, /native region failed/);
 	const closing = pool.close();

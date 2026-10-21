@@ -1,6 +1,6 @@
 import binaryen from 'binaryen';
-import type { ControlPlan } from './extract.ts';
-import { extract } from './extract.ts';
+import type { AdmissionOptions, ControlPlan } from './extract.ts';
+import { admission, extract } from './extract.ts';
 import type { NativePlan } from './guards.ts';
 import { nativePlan } from './guards.ts';
 
@@ -30,6 +30,8 @@ export interface PreparedProgram {
 	native?: Record<string, NativePlan>;
 	/** The generalized control-flow plan, when the module admits one. */
 	control?: ControlPlan;
+	/** Why control-flow extraction produced no plan; the counted-loop plans above are unaffected. */
+	controlReasons?: string[];
 }
 
 type Info = ReturnType<typeof binaryen.getExpressionInfo> & Record<string, any>;
@@ -292,6 +294,14 @@ function prepareTracked(
 			binaryen.UnreachableId
 		]);
 		const calls = new Map<string, Set<string>>();
+		const exportedFunctions = new Map<string, string[]>();
+		for (let index = 0; index < module.getNumExports(); index++) {
+			const exported = binaryen.getExportInfo(module.getExportByIndex(index));
+			if (exported.kind !== binaryen.ExternalFunction) continue;
+			const names = exportedFunctions.get(exported.value) ?? [];
+			names.push(exported.name);
+			exportedFunctions.set(exported.value, names);
+		}
 		for (let index = 0; index < module.getNumFunctions(); index++) {
 			const fn = module.getFunctionByIndex(index);
 			const f = binaryen.getFunctionInfo(fn);
@@ -318,32 +328,30 @@ function prepareTracked(
 			});
 			const diagnostic = { reason: 'loop shape not recognized' };
 			const plan = loopPlan(module, fn, diagnostic);
-			for (let e = 0; e < module.getNumExports(); e++) {
-				const exported = binaryen.getExportInfo(module.getExportByIndex(e));
-				if (exported.kind === binaryen.ExternalFunction && exported.value === f.name) {
-					if (plan) {
-						Object.defineProperty(loops, exported.name, {
-							value: plan,
+			const names = exportedFunctions.get(f.name) ?? [];
+			const proved = names.length && plan ? nativePlan(module, fn) : undefined;
+			for (const name of names) {
+				if (plan) {
+					Object.defineProperty(loops, name, {
+						value: plan,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					if (proved)
+						Object.defineProperty(nativePlans, name, {
+							value: proved,
 							enumerable: true,
 							configurable: true,
 							writable: true
 						});
-						const proved = nativePlan(module, fn);
-						if (proved)
-							Object.defineProperty(nativePlans, exported.name, {
-								value: proved,
-								enumerable: true,
-								configurable: true,
-								writable: true
-							});
-					} else
-						Object.defineProperty(loopReasons, exported.name, {
-							value: diagnostic.reason,
-							enumerable: true,
-							configurable: true,
-							writable: true
-						});
-				}
+				} else
+					Object.defineProperty(loopReasons, name, {
+						value: diagnostic.reason,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
 			}
 		}
 		const visiting = new Set<string>(),
@@ -555,15 +563,26 @@ function prepareTracked(
 	}
 }
 
-/** Keeps the original native module and adds independently validated optimizations. */
-export function prepare(
-	bytes: Uint8Array,
-	options: { parallel?: 'auto' | 'off' } = {}
-): PreparedProgram {
+/** Plan options: whether to optimize, and when a region is worth dispatching. */
+export interface PrepareOptions extends AdmissionOptions {
+	/** `off` keeps the original module with no plan. */
+	parallel?: 'auto' | 'off';
+}
+
+/**
+ * Keeps the original native module and adds independently validated optimizations. A module
+ * with no region above `minimumRegionWork` gets no control plan and runs untouched.
+ */
+export function prepare(bytes: Uint8Array, options: PrepareOptions = {}): PreparedProgram {
+	admission(options);
 	const prepared = prepareTracked(bytes, options);
 	if (options.parallel !== 'off') {
 		try {
-			prepared.control = extract(prepared.original, prepareTracked);
+			prepared.control = extract(prepared.original, prepareTracked, {
+				minimumRegionWork: options.minimumRegionWork,
+				assumedTripCount: options.assumedTripCount,
+				refused: (reason) => (prepared.controlReasons ??= []).push(reason)
+			});
 		} catch (error) {
 			prepared.reasons.push(
 				`control-flow extraction unavailable: ${error instanceof Error ? error.message : String(error)}`
