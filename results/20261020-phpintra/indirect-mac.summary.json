@@ -1,0 +1,245 @@
+{
+  "environment": {
+    "kind": "environment",
+    "machine": "Apple M2 Pro (Mac, counts only; not a timing set)",
+    "node": "v26.8.2",
+    "cpu": "Apple M2 Pro",
+    "hardwareThreads": 12,
+    "sites": 6679,
+    "unreadableFunctions": 0,
+    "instrumentMs": 14312.043624999998,
+    "instrumentedBytes": 13435110,
+    "originalBytes": 13401751,
+    "labels": [
+      "call_indirect",
+      "calls an import or an impure function",
+      "other node or global",
+      "pure",
+      "pure if stack pointer allowed"
+    ],
+    "definedFunctions": 12378
+  },
+  "runs": {
+    "drupal-render": {
+      "outputDigests": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "dynamicIndirectCalls": 13133235,
+      "instrumentedSitesExecuted": 399,
+      "distinctTargets": 1030,
+      "shareAtSitesWithOneTarget": 0.20859293235824988,
+      "shareAtSitesWithAtMost4Targets": 0.22459036178062755,
+      "shareAtSitesWithAtMost16Targets": 0.2744230952998252,
+      "shareByTargetLabel": {
+        "other node or global": 0.7257841651352466,
+        "call_indirect": 0.1837115531702585,
+        "pure if stack pointer allowed": 0.09048098202765731,
+        "pure": 0.00002055852956259444,
+        "calls an import or an impure function": 0.000002741137275012592
+      },
+      "topTenSiteShare": 0.9332834598634685,
+      "topSites": [
+        {
+          "site": 3173,
+          "containingFunction": "2229",
+          "containingLabel": "call_indirect",
+          "calls": 9271512,
+          "share": 0.705957976081293,
+          "distinctTargets": 461,
+          "topTargetShare": 0.061949118978652025
+        },
+        {
+          "site": 2954,
+          "containingFunction": "1398",
+          "containingLabel": "call_indirect",
+          "calls": 732988,
+          "share": 0.05581168691491472,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 2953,
+          "containingFunction": "1395",
+          "containingLabel": "call_indirect",
+          "calls": 727651,
+          "share": 0.0554053133138941,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 3172,
+          "containingFunction": "2222",
+          "containingLabel": "call_indirect",
+          "calls": 465863,
+          "share": 0.035472067620810864,
+          "distinctTargets": 7,
+          "topTargetShare": 0.5607678652307653
+        },
+        {
+          "site": 6006,
+          "containingFunction": "9802",
+          "containingLabel": "call_indirect",
+          "calls": 240720,
+          "share": 0.018329071245584198,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 6391,
+          "containingFunction": "11163",
+          "containingLabel": "call_indirect",
+          "calls": 215776,
+          "share": 0.016429767684808808,
+          "distinctTargets": 151,
+          "topTargetShare": 0.20931428889218448
+        },
+        {
+          "site": 2996,
+          "containingFunction": "1681",
+          "containingLabel": "call_indirect",
+          "calls": 207964,
+          "share": 0.015834940896131074,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 2978,
+          "containingFunction": "1518",
+          "containingLabel": "call_indirect",
+          "calls": 161855,
+          "share": 0.01232407704575453,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 2995,
+          "containingFunction": "1664",
+          "containingLabel": "call_indirect",
+          "calls": 133409,
+          "share": 0.01015812174228208,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 6181,
+          "containingFunction": "10656",
+          "containingLabel": "call_indirect",
+          "calls": 99293,
+          "share": 0.007560437317995147,
+          "distinctTargets": 2,
+          "topTargetShare": 0.9814891281359209
+        }
+      ]
+    },
+    "hash-batch-request": {
+      "outputDigests": [
+        "18ced5354d40ff45687cadb51c5e448da7ca2067d29ebc365c4232d530003c8d"
+      ],
+      "dynamicIndirectCalls": 561389,
+      "instrumentedSitesExecuted": 35,
+      "distinctTargets": 72,
+      "shareAtSitesWithOneTarget": 0.5360026648188689,
+      "shareAtSitesWithAtMost4Targets": 0.6431369335701269,
+      "shareAtSitesWithAtMost16Targets": 0.6788038240863288,
+      "shareByTargetLabel": {
+        "other node or global": 0.5005156852022394,
+        "pure if stack pointer allowed": 0.3209913268696038,
+        "call_indirect": 0.17849298792815677
+      },
+      "topTenSiteShare": 0.9998094013242154,
+      "topSites": [
+        {
+          "site": 3173,
+          "containingFunction": "2229",
+          "containingLabel": "call_indirect",
+          "calls": 180316,
+          "share": 0.3211961759136713,
+          "distinctTargets": 43,
+          "topTargetShare": 0.11104394507420307
+        },
+        {
+          "site": 2953,
+          "containingFunction": "1395",
+          "containingLabel": "call_indirect",
+          "calls": 120227,
+          "share": 0.21415987844435855,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 2954,
+          "containingFunction": "1398",
+          "containingLabel": "call_indirect",
+          "calls": 120164,
+          "share": 0.21404765679413026,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 3172,
+          "containingFunction": "2222",
+          "containingLabel": "call_indirect",
+          "calls": 60144,
+          "share": 0.10713426875125805,
+          "distinctTargets": 3,
+          "topTargetShare": 0.9999667464751264
+        },
+        {
+          "site": 6388,
+          "containingFunction": "11157",
+          "containingLabel": "call_indirect",
+          "calls": 20023,
+          "share": 0.035666890516201775,
+          "distinctTargets": 9,
+          "topTargetShare": 0.998851320980872
+        },
+        {
+          "site": 3634,
+          "containingFunction": "3365",
+          "containingLabel": "call_indirect",
+          "calls": 20000,
+          "share": 0.03562592070738828,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 3636,
+          "containingFunction": "3365",
+          "containingLabel": "call_indirect",
+          "calls": 20000,
+          "share": 0.03562592070738828,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 3637,
+          "containingFunction": "3365",
+          "containingLabel": "call_indirect",
+          "calls": 20000,
+          "share": 0.03562592070738828,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 6006,
+          "containingFunction": "9802",
+          "containingLabel": "call_indirect",
+          "calls": 270,
+          "share": 0.0004809499295497418,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        },
+        {
+          "site": 2996,
+          "containingFunction": "1681",
+          "containingLabel": "call_indirect",
+          "calls": 138,
+          "share": 0.00024581885288097914,
+          "distinctTargets": 1,
+          "topTargetShare": 1
+        }
+      ]
+    }
+  },
+  "hash": "765e41a1789b9cb6ebfe23fafdba707430c86501b00331eaa19189f0c3bb016d"
+}

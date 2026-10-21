@@ -1,0 +1,56 @@
+{
+  "environment": {
+    "kind": "environment",
+    "machine": "paisley-park Ryzen 9 9900X, cpus 2-11, nice 19",
+    "node": "v26.10.0",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "hardwareThreads": 24,
+    "samples": 20,
+    "load": [
+      0.71,
+      0.47,
+      0.37
+    ]
+  },
+  "plain": {
+    "n": 20,
+    "correctClones": 20,
+    "bytes": 67108864,
+    "copyMs": {
+      "n": 20,
+      "median": 40.056092999999976,
+      "min": 38.617909000000054,
+      "max": 54.46521100000001,
+      "p95": 42.300514999999905
+    },
+    "adoptMs": {
+      "n": 20,
+      "median": 3.054443359375,
+      "min": 2.944580078125,
+      "max": 10.760009765625
+    },
+    "firstRunMs": {
+      "n": 20,
+      "median": 0.20947265625,
+      "min": 0.1396484375,
+      "max": 2.022705078125
+    },
+    "maxLoad1": 0.71
+  },
+  "drupal": {
+    "n": 5,
+    "rendered": 0,
+    "bytes": 86638592,
+    "copyMs": {
+      "n": 5,
+      "median": 53.65581400000019,
+      "min": 52.140550000000076,
+      "max": 65.84663899999987
+    },
+    "outcomes": {
+      "TypeError: Cannot perform %TypedArray%.prototype.copyWithin on a detached or out-of-bounds ArrayBuffer": 1,
+      "SyntaxError: Unexpected end of JSON input": 4
+    }
+  },
+  "hash": "ed306a76c490ee4652c767d6d03f04829f01c403e1a9d1513dab4383e8bffb7c"
+}

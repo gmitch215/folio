@@ -1,0 +1,335 @@
+{
+  "inputs": {
+    "drupal-render#0": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 920.07275390625,
+      "instrumentedMs": 137824.893208,
+      "slowdown": 149.8,
+      "counters": {
+        "n": 7713967938,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 32281183,
+        "spw": 56824085
+      },
+      "invocations": 291151,
+      "granularity": "php-userfunc",
+      "work": 7713967938,
+      "nodes": {
+        "total": 2321585,
+        "real": 862492,
+        "virtual": 1459093
+      },
+      "intervalRecords": 48083605,
+      "checks": {
+        "stackRawCross": 817243,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 20.435,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "stack",
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.882,
+          "binding": [
+            "heap"
+          ],
+          "replays": 291050
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.884,
+          "binding": [
+            "heap"
+          ],
+          "replays": 283246
+        }
+      ],
+      "sensitivity": {
+        "stack": {
+          "only_removed": 1,
+          "all_but": 1
+        },
+        "static": {
+          "only_removed": 1,
+          "all_but": 1
+        },
+        "allocator": {
+          "only_removed": 1,
+          "all_but": 1.0541123766023597
+        },
+        "refcount": {
+          "only_removed": 1,
+          "all_but": 20.434554766989386
+        },
+        "output": {
+          "only_removed": 1,
+          "all_but": 20.434554766989386
+        },
+        "heap": {
+          "only_removed": 1,
+          "all_but": 1.0000057341764959
+        },
+        "host": {
+          "only_removed": 1,
+          "all_but": 1.4010753406184102
+        }
+      }
+    },
+    "drupal-render#1": {
+      "mode": "trace",
+      "outputEqual": true,
+      "nativeMs": 920.07275390625,
+      "instrumentedMs": 155440.097666,
+      "slowdown": 168.94,
+      "counters": {
+        "n": 7714111474,
+        "ld": 0,
+        "st": 0,
+        "ldb": 0,
+        "stb": 0,
+        "call": 0,
+        "host": 0,
+        "calli": 0,
+        "spr": 32281194,
+        "spw": 56824093
+      },
+      "invocations": 291151,
+      "granularity": "php-userfunc",
+      "work": 7714111474,
+      "nodes": {
+        "total": 2322329,
+        "real": 862492,
+        "virtual": 1459837
+      },
+      "intervalRecords": 48111616,
+      "checks": {
+        "stackRawCross": 817251,
+        "outOtherWrites": 0,
+        "crossFrees": 0,
+        "allocs": 0,
+        "frees": 0
+      },
+      "ladder": [
+        {
+          "name": "M0_spawn_join",
+          "extension": false,
+          "valid": true,
+          "parallelism": 20.435,
+          "binding": [
+            "spawn"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M1_all_conflicts",
+          "extension": false,
+          "valid": true,
+          "parallelism": 1,
+          "binding": [
+            "stack",
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M2_rename_sp",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M3_rename_alloc",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M4_refcount_delta",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M5_output_ordered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M6_host_buffered",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 1,
+          "binding": [
+            "static"
+          ],
+          "replays": 0
+        },
+        {
+          "name": "M7_speculation",
+          "extension": false,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.882,
+          "binding": [
+            "heap"
+          ],
+          "replays": 291050
+        },
+        {
+          "name": "X1_privatize_static",
+          "extension": true,
+          "valid": false,
+          "parallelism": null,
+          "uncheckedParallelism": 0.884,
+          "binding": [
+            "heap"
+          ],
+          "replays": 283246
+        }
+      ],
+      "sensitivity": {
+        "stack": {
+          "only_removed": 1,
+          "all_but": 1
+        },
+        "static": {
+          "only_removed": 1,
+          "all_but": 1
+        },
+        "allocator": {
+          "only_removed": 1,
+          "all_but": 1.0541035092813495
+        },
+        "refcount": {
+          "only_removed": 1,
+          "all_but": 20.43493499857404
+        },
+        "output": {
+          "only_removed": 1,
+          "all_but": 20.43493499857404
+        },
+        "heap": {
+          "only_removed": 1,
+          "all_but": 1.0000057340697999
+        },
+        "host": {
+          "only_removed": 1,
+          "all_but": 1.40149675051995
+        }
+      }
+    }
+  },
+  "rawSha256": "2bddf5bd20cb5dc065330725c3b3dd57ae9796288ffeb3942b43b89026802363"
+}

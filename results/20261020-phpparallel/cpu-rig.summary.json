@@ -1,0 +1,3536 @@
+{
+  "environment": {
+    "kind": "environment",
+    "machine": "paisley-park Ryzen 9 9900X, cpus 2-11, nice 19",
+    "node": "v26.10.0",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "hardwareThreads": 24,
+    "affinity": "2-11",
+    "artifactSha256": "ac798f4707b539cc35ff38ffbdaa8df83c315615ad456955bf63d7ee6e6f73d1",
+    "plan": {
+      "control": false,
+      "reasons": [
+        "no region reached 200000 net work (552 pure functions, none admitted)"
+      ]
+    },
+    "experiment": "A-cpu",
+    "pairs": 20,
+    "widths": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "arms": [
+      "native-serial",
+      "native-concurrent",
+      "folio-serial",
+      "folio-concurrent"
+    ],
+    "boots": {
+      "native": [
+        {
+          "type": "ready",
+          "index": 0,
+          "threadId": 1,
+          "boot": {
+            "phpBootMs": 36.762451171875,
+            "openMs": 59.8671875,
+            "openCpuMs": 47.346000000000004
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 1,
+          "threadId": 2,
+          "boot": {
+            "phpBootMs": 36.489501953125,
+            "openMs": 59.070556640625,
+            "openCpuMs": 47.53
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 2,
+          "threadId": 3,
+          "boot": {
+            "phpBootMs": 28.823974609375,
+            "openMs": 59.731689453125,
+            "openCpuMs": 40.202
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 3,
+          "threadId": 4,
+          "boot": {
+            "phpBootMs": 24.553955078125,
+            "openMs": 51.917236328125,
+            "openCpuMs": 41.17399999999999
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 4,
+          "threadId": 5,
+          "boot": {
+            "phpBootMs": 25.984375,
+            "openMs": 54.9892578125,
+            "openCpuMs": 37.82
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 5,
+          "threadId": 6,
+          "boot": {
+            "phpBootMs": 30,
+            "openMs": 49.4501953125,
+            "openCpuMs": 38.126000000000005
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 6,
+          "threadId": 7,
+          "boot": {
+            "phpBootMs": 22.595703125,
+            "openMs": 54.999755859375,
+            "openCpuMs": 35.062
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 7,
+          "threadId": 8,
+          "boot": {
+            "phpBootMs": 22.024169921875,
+            "openMs": 46.42919921875,
+            "openCpuMs": 36.268
+          },
+          "memoryBytes": 67108864
+        }
+      ],
+      "folio": [
+        {
+          "type": "ready",
+          "index": 0,
+          "threadId": 9,
+          "boot": {
+            "phpBootMs": 30.25,
+            "openMs": 48.65283203125,
+            "openCpuMs": 42.472
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 1,
+          "threadId": 10,
+          "boot": {
+            "phpBootMs": 27.28466796875,
+            "openMs": 46.002685546875,
+            "openCpuMs": 44.047
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 2,
+          "threadId": 11,
+          "boot": {
+            "phpBootMs": 31.41259765625,
+            "openMs": 51.888427734375,
+            "openCpuMs": 43.84100000000001
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 3,
+          "threadId": 12,
+          "boot": {
+            "phpBootMs": 26.925048828125,
+            "openMs": 46.2783203125,
+            "openCpuMs": 43.549
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 4,
+          "threadId": 13,
+          "boot": {
+            "phpBootMs": 27.50830078125,
+            "openMs": 46.037109375,
+            "openCpuMs": 43.025999999999996
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 5,
+          "threadId": 14,
+          "boot": {
+            "phpBootMs": 28.267333984375,
+            "openMs": 47.5888671875,
+            "openCpuMs": 45.405
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 6,
+          "threadId": 15,
+          "boot": {
+            "phpBootMs": 27.757080078125,
+            "openMs": 48.650634765625,
+            "openCpuMs": 44.337999999999994
+          },
+          "memoryBytes": 67108864
+        },
+        {
+          "type": "ready",
+          "index": 7,
+          "threadId": 16,
+          "boot": {
+            "phpBootMs": 28.90478515625,
+            "openMs": 51.93310546875,
+            "openCpuMs": 44.29900000000001
+          },
+          "memoryBytes": 67108864
+        }
+      ]
+    }
+  },
+  "measuredSamples": 960,
+  "names": {
+    "sha256-batch": {
+      "w1": {
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 95.30755100000533,
+            "min": 91.43122100000028,
+            "max": 96.37344999999914
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.503322910010576,
+            "min": 10.376301771909265,
+            "max": 10.937183043853226
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 95.16845703125,
+            "p95": 95.890869140625,
+            "max": 96.327880859375
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 94.76000000000022,
+            "min": 91.11200000000008,
+            "max": 95.6150000000016
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 94.76000000000022,
+            "min": 91.11200000000008,
+            "max": 95.6150000000016
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 95.305,
+            "min": 91.425,
+            "max": 97.349
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063133184,
+            "min": 1059266560,
+            "max": 1072242688
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 95.45580300000074,
+            "min": 91.75106099999903,
+            "max": 96.36608399999386
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.4778994016252,
+            "min": 10.377094912355926,
+            "max": 10.899056524261999
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 95.354736328125,
+            "p95": 96.177734375,
+            "max": 96.29248046875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 94.69499999999971,
+            "min": 90.79599999999846,
+            "max": 96.17699999999968
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 94.69499999999971,
+            "min": 90.79599999999846,
+            "max": 96.17699999999968
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 95.559,
+            "min": 91.855,
+            "max": 96.345
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063133184,
+            "min": 1059532800,
+            "max": 1072156672
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 95.30108800000016,
+            "min": 91.68267099999866,
+            "max": 95.8561039999986
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.496121100718515,
+            "min": 10.43230382073545,
+            "max": 10.907186593636812
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 95.236083984375,
+            "p95": 95.79931640625,
+            "max": 95.8203125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 94.85199999999895,
+            "min": 90.76200000000063,
+            "max": 95.71500000000378
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 94.85199999999895,
+            "min": 90.76200000000063,
+            "max": 95.71500000000378
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 95.313,
+            "min": 91.679,
+            "max": 96.189
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063133184,
+            "min": 1059532800,
+            "max": 1072635904
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 95.34382399999959,
+            "min": 92.24736699999994,
+            "max": 96.47909199999413
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.490041006829095,
+            "min": 10.364940001716237,
+            "max": 10.840417808347858
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 95.24267578125,
+            "p95": 96.310546875,
+            "max": 96.41259765625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 95.1299999999992,
+            "min": 91.40699999999924,
+            "max": 96.09500000000116
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 95.1299999999992,
+            "min": 91.40699999999924,
+            "max": 96.09500000000116
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 95.721,
+            "min": 92.248,
+            "max": 96.484
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063133184,
+            "min": 1059069952,
+            "max": 1072156672
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.3,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.001197070078915,
+            "min": 0.9708409060103319,
+            "max": 1.0449124389584135
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.0008301746780022,
+            "min": 0.9664247052451429,
+            "max": 1.0138905403614824
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 0.9992813138557991,
+            "min": 0.9563006408922998,
+            "max": 1.0420214228572988
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 0.9970242846750068,
+            "min": 0.9578546401790634,
+            "max": 1.0327161910220275
+          }
+        }
+      },
+      "w2": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 188.64119700000447,
+            "min": 182.93698099999983,
+            "max": 191.81387799999357
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.771517363508268,
+            "min": 10.426774229548016,
+            "max": 10.932726609279738
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 92.793701171875,
+            "p95": 95.80615234375,
+            "max": 96.039306640625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 187.43599999999788,
+            "min": 181.97600000000057,
+            "max": 191.11399999999776
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 93.24099999999817,
+            "min": 90.63299999999981,
+            "max": 95.61199999999735
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 190.164,
+            "min": 182.926,
+            "max": 192.634
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 94.985595703125,
+            "min": 91.373779296875,
+            "max": 96.09619140625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063133184,
+            "min": 1059532800,
+            "max": 1070489600
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 95.55824099999882,
+            "min": 92.34365500000058,
+            "max": 97.48264100000233
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 20.93386626351386,
+            "min": 20.516473286766534,
+            "max": 21.658228711003346
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 93.052734375,
+            "p95": 96.140869140625,
+            "max": 97.4404296875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 186.92000000000053,
+            "min": 182.5769999999997,
+            "max": 190.86799999999494
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 93.58699999999999,
+            "min": 90.78899999999976,
+            "max": 97.09699999999975
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 187.953,
+            "min": 183.911,
+            "max": 191.747
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 92.2666015625,
+            "min": 91.404052734375,
+            "max": 95.4814453125
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.02880859375,
+            "min": 0.0048828125,
+            "max": 0.05615234375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063133184,
+            "min": 1059532800,
+            "max": 1070686208
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 190.47489700000006,
+            "min": 183.55677900000046,
+            "max": 191.68667399999686
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.502300675994988,
+            "min": 10.433693476261332,
+            "max": 10.89581115388822
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 95.10302734375,
+            "p95": 95.79345703125,
+            "max": 96.043701171875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 189.55899999999747,
+            "min": 182.35800000000017,
+            "max": 191.3179999999993
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 94.7039999999979,
+            "min": 90.72199999999975,
+            "max": 95.73999999999796
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 190.472,
+            "min": 183.546,
+            "max": 191.683
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 95.193115234375,
+            "min": 91.777587890625,
+            "max": 96.1083984375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063133184,
+            "min": 1059532800,
+            "max": 1070882816
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 95.68978000000061,
+            "min": 92.33837199999834,
+            "max": 96.65339099999983
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 20.930753563536317,
+            "min": 20.692496965781608,
+            "max": 21.659467853732963
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 92.98388671875,
+            "p95": 96.1748046875,
+            "max": 96.6123046875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 187.2780000000016,
+            "min": 183.36400000000026,
+            "max": 190.78300000000218
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 94.22600000000057,
+            "min": 90.69400000000041,
+            "max": 96.08100000000002
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 188.192,
+            "min": 184.435,
+            "max": 191.705
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 92.309326171875,
+            "min": 91.531982421875,
+            "max": 95.775146484375
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.03173828125,
+            "min": 0.002685546875,
+            "max": 0.057373046875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063591936,
+            "min": 1059532800,
+            "max": 1070882816
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.9875411048239293,
+            "min": 1.9046966731235297,
+            "max": 2.0669358406313973
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.9969568236559967,
+            "min": 1.900638199026054,
+            "max": 2.0599509865999193
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 1.000561843152689,
+            "min": 0.9626323287691846,
+            "max": 1.0466706239860142
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 1.0026339624569685,
+            "min": 0.9610020252232275,
+            "max": 1.037775063360428
+          }
+        }
+      },
+      "w4": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 377.38180400000056,
+            "min": 368.5182249999998,
+            "max": 383.02221200001077
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.634975093167506,
+            "min": 10.44325857530134,
+            "max": 10.854280002027043
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 94.651611328125,
+            "p95": 95.706787109375,
+            "max": 95.7431640625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 374.97299999999996,
+            "min": 366.22000000000025,
+            "max": 381.429999999993
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 94.02999999999975,
+            "min": 90.78900000000067,
+            "max": 95.7390000000014
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 377.372,
+            "min": 368.61,
+            "max": 383.517
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 282.2314453125,
+            "min": 276.377197265625,
+            "max": 287.311767578125
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063591936,
+            "min": 1059532800,
+            "max": 1070882816
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 95.97985599999083,
+            "min": 93.16048600000067,
+            "max": 96.48947200000111
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 41.69621494999342,
+            "min": 41.455299910854045,
+            "max": 42.93665878900601
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 93.072998046875,
+            "p95": 96.154541015625,
+            "max": 96.4619140625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 372.521000000002,
+            "min": 367.4749999999998,
+            "max": 375.95099999999957
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 92.72299999999996,
+            "min": 91.06399999999985,
+            "max": 96.24299999999494
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 375.496,
+            "min": 370.113,
+            "max": 378.849
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 93.280029296875,
+            "min": 92.390625,
+            "max": 96.080322265625
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.058837890625,
+            "min": 0.041015625,
+            "max": 0.110595703125
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1062543360,
+            "min": 1057693696,
+            "max": 1070473216
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 380.5658669999975,
+            "min": 366.4917740000001,
+            "max": 383.19782000000123
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.515159509620045,
+            "min": 10.438472744964956,
+            "max": 10.914296810383522
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 95.13330078125,
+            "p95": 95.76953125,
+            "max": 95.79345703125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 378.28399999999965,
+            "min": 364.59999999999945,
+            "max": 381.16400000000067
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 94.5630000000001,
+            "min": 90.69900000000052,
+            "max": 95.64799999999741
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 380.714,
+            "min": 367.043,
+            "max": 383.582
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 285.460205078125,
+            "min": 275.009521484375,
+            "max": 287.420166015625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1062543360,
+            "min": 1058086912,
+            "max": 1070866432
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.61,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 96.2916899999982,
+            "min": 93.11406200000056,
+            "max": 97.14075700000103
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 41.56586943329182,
+            "min": 41.17736080644253,
+            "max": 42.958065775285114
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 93.358642578125,
+            "p95": 96.775390625,
+            "max": 97.094482421875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 374.7269999999976,
+            "min": 370.0019999999995,
+            "max": 380.8370000000009
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 92.9989999999998,
+            "min": 91.625,
+            "max": 96.67399999999998
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 376.708,
+            "min": 372.587,
+            "max": 382.953
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 93.6484375,
+            "min": 93.025146484375,
+            "max": 96.716064453125
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.04638671875,
+            "min": 0.028564453125,
+            "max": 0.065185546875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063526400,
+            "min": 1058480128,
+            "max": 1070866432
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 3.9595300813588237,
+            "min": 3.828250118175437,
+            "max": 3.990034731871585
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 3.943876781650226,
+            "min": 3.8025635435599647,
+            "max": 3.9923320581610624
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 1.0034515377236186,
+            "min": 0.9707988196618955,
+            "max": 1.033761128141641
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 1.0005860005207166,
+            "min": 0.9606235792841561,
+            "max": 1.0388241617709355
+          }
+        }
+      },
+      "w8": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 759.5789540000005,
+            "min": 732.1564920000001,
+            "max": 766.2422210000004
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.53698931598802,
+            "min": 10.440562762985616,
+            "max": 10.926625779342265
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 95.205078125,
+            "p95": 95.755615234375,
+            "max": 96.678955078125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 755.7960000000021,
+            "min": 727.369999999999,
+            "max": 761.9379999999874
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 94.76999999999862,
+            "min": 90.30600000000004,
+            "max": 95.97299999999996
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 759.544,
+            "min": 732.406,
+            "max": 767.186
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 665.828125,
+            "min": 640.800537109375,
+            "max": 670.493896484375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1062821888,
+            "min": 1058676736,
+            "max": 1071173632
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 97.90117099999952,
+            "min": 95.21937700000126,
+            "max": 118.27486600000702
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 81.73805094166741,
+            "min": 67.63905359232895,
+            "max": 84.0165127314359
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 94.563720703125,
+            "p95": 99.90576171875,
+            "max": 118.23486328125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 753.537,
+            "min": 749.7220000000013,
+            "max": 763.9650000000016
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 93.84199999999987,
+            "min": 92.15499999999997,
+            "max": 98.26800000000003
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 759.857,
+            "min": 754.484,
+            "max": 771.146
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 97.685546875,
+            "min": 94.35595703125,
+            "max": 117.109375
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.09912109375,
+            "min": 0.074462890625,
+            "max": 3.4775390625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063018496,
+            "min": 1058676736,
+            "max": 1071259648
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.15,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 759.9562809999989,
+            "min": 734.6309000000001,
+            "max": 766.4894300000014
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 10.557613919286986,
+            "min": 10.437195461390752,
+            "max": 10.88982235841155
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 94.949462890625,
+            "p95": 95.8603515625,
+            "max": 97.5
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 754.8100000000013,
+            "min": 729.8810000000049,
+            "max": 762.7450000000026
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 94.37700000000041,
+            "min": 90.73199999999997,
+            "max": 96.7589999999982
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 760.49,
+            "min": 734.659,
+            "max": 766.917
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 665.0478515625,
+            "min": 642.906982421875,
+            "max": 670.7294921875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063215104,
+            "min": 1059532800,
+            "max": 1071763456
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.3,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 97.74900699999853,
+            "min": 94.36325500000385,
+            "max": 100.37699299999986
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 81.8740444787273,
+            "min": 79.69953831950328,
+            "max": 84.77876266561252
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 94.3095703125,
+            "p95": 97.948486328125,
+            "max": 100.332275390625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 754.8659999999998,
+            "min": 748.9179999999985,
+            "max": 769.8389999999987
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 93.8779999999997,
+            "min": 92.14699999999993,
+            "max": 98.96900000000005
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 759.775,
+            "min": 752.654,
+            "max": 774.311
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 97.03076171875,
+            "min": 93.96923828125,
+            "max": 97.87841796875
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.090087890625,
+            "min": 0.050537109375,
+            "max": 3.7265625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1063411712,
+            "min": 1059069952,
+            "max": 1071763456
+          },
+          "load1": {
+            "n": 20,
+            "median": 0.57,
+            "min": 0.3,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 7.724147100143425,
+            "min": 6.475638247604942,
+            "max": 7.97348371644979
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 7.692224967420503,
+            "min": 7.476907241559395,
+            "max": 7.910626661916
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 1.0003328985511193,
+            "min": 0.8261354868074592,
+            "max": 1.0261239853738329
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 1.0003226251350108,
+            "min": 0.9607394092432782,
+            "max": 1.034952202540875
+          }
+        }
+      }
+    },
+    "serialize-roundtrip": {
+      "w1": {
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 53.70387200001278,
+            "min": 53.43580400000792,
+            "max": 55.24085999999079
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.640906077773533,
+            "min": 18.102542212416076,
+            "max": 18.71404423894982
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 53.577392578125,
+            "p95": 54.354248046875,
+            "max": 55.1171875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 53.40700000000652,
+            "min": 52.57300000000396,
+            "max": 54.375
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 53.40700000000652,
+            "min": 52.57300000000396,
+            "max": 54.375
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 53.728,
+            "min": 53.444,
+            "max": 55.239
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1999798272,
+            "min": 1930985472,
+            "max": 2034171904
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 54.49613500000851,
+            "min": 53.73409000001266,
+            "max": 55.47114700000384
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.35157121656195,
+            "min": 18.027389987085193,
+            "max": 18.61015977007826
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 54.362548828125,
+            "p95": 55.060546875,
+            "max": 55.31103515625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 53.961999999999534,
+            "min": 53.338000000003376,
+            "max": 54.65400000000227
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 53.961999999999534,
+            "min": 53.338000000003376,
+            "max": 54.65400000000227
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 54.496,
+            "min": 53.743,
+            "max": 55.47
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1998782464,
+            "min": 1930985472,
+            "max": 2034565120
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 54.17738799999643,
+            "min": 53.390202999988105,
+            "max": 55.162478999991436
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.46983033558391,
+            "min": 18.12826432256888,
+            "max": 18.730028054027493
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 54.070556640625,
+            "p95": 55.005126953125,
+            "max": 55.0732421875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 53.775000000001455,
+            "min": 52.417999999997846,
+            "max": 54.98200000000361
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 53.775000000001455,
+            "min": 52.417999999997846,
+            "max": 54.98200000000361
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 54.24,
+            "min": 53.397,
+            "max": 55.172
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1999372288,
+            "min": 1931575296,
+            "max": 2034565120
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 54.125018999999156,
+            "min": 53.856190999998944,
+            "max": 56.0837840000022
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.47971795515431,
+            "min": 17.830465932897123,
+            "max": 18.567967422724337
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 53.97314453125,
+            "p95": 54.642822265625,
+            "max": 55.92919921875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 53.52700000000186,
+            "min": 52.83400000000256,
+            "max": 55.736999999993714
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 53.52700000000186,
+            "min": 52.83400000000256,
+            "max": 55.736999999993714
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 54.146,
+            "min": 53.868,
+            "max": 56.069
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1999405056,
+            "min": 1942388736,
+            "max": 2033778688
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.0087780990361097,
+            "min": 0.9925477807551675,
+            "max": 1.044315463882918
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.0084609738671508,
+            "min": 0.9741057866529349,
+            "max": 1.0138920406422465
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 1.0092829834238357,
+            "min": 0.9808529199274494,
+            "max": 1.0282785900559952
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 1.0070086159929952,
+            "min": 0.9777220809492685,
+            "max": 1.0199068386676549
+          }
+        }
+      },
+      "w2": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 107.53082100000756,
+            "min": 107.10380699999223,
+            "max": 109.26420800000778
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.5999719289245,
+            "min": 18.304255680870877,
+            "max": 18.673472549861323
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 53.65087890625,
+            "p95": 54.33251953125,
+            "max": 55.24072265625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 106.38299999999435,
+            "min": 105.54900000000634,
+            "max": 108.03699999999662
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 53.21800000000076,
+            "min": 52.40400000000227,
+            "max": 54.73199999999633
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 107.54,
+            "min": 107.117,
+            "max": 114.899
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 53.889892578125,
+            "min": 53.567138671875,
+            "max": 55.419189453125
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1998249984,
+            "min": 1931771904,
+            "max": 2034565120
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 54.68740500000422,
+            "min": 53.84480900000199,
+            "max": 56.02188400000159
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 36.653105933794585,
+            "min": 35.700334533553765,
+            "max": 37.143784835413314
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 54.033447265625,
+            "p95": 55.40478515625,
+            "max": 55.943359375
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 107.23899999999867,
+            "min": 106.23099999999613,
+            "max": 108.85700000000361
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 53.54000000000087,
+            "min": 52.5570000000007,
+            "max": 55.41700000000128
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 108.481,
+            "min": 107.598,
+            "max": 109.912
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 53.61669921875,
+            "min": 53.406494140625,
+            "max": 54.004638671875
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.03369140625,
+            "min": 0.01806640625,
+            "max": 0.064697265625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1998249984,
+            "min": 1931771904,
+            "max": 2034761728
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 108.82398400000238,
+            "min": 107.14422299999569,
+            "max": 109.35493600000336
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.403011505610397,
+            "min": 18.289069274385003,
+            "max": 18.66642870703426
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 54.188720703125,
+            "p95": 54.775390625,
+            "max": 54.8662109375
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 107.62300000000687,
+            "min": 105.92199999999866,
+            "max": 108.62900000000081
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 53.75500000000466,
+            "min": 52.716999999996915,
+            "max": 54.70699999999488
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 108.847,
+            "min": 107.153,
+            "max": 109.365
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 54.638671875,
+            "min": 53.6416015625,
+            "max": 54.97412109375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1998839808,
+            "min": 1931771904,
+            "max": 2027442176
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 54.80299300000479,
+            "min": 53.75581999999122,
+            "max": 56.00019499998598
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 36.57662136482025,
+            "min": 35.714161352482805,
+            "max": 37.205273773152875
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 54.50341796875,
+            "p95": 54.970458984375,
+            "max": 55.946044921875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 107.72700000000077,
+            "min": 106.38999999999396,
+            "max": 109.3339999999971
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 53.89000000000033,
+            "min": 52.92100000000028,
+            "max": 55.646999999999025
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 109.178,
+            "min": 107.665,
+            "max": 110.456
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 54.06884765625,
+            "min": 53.3701171875,
+            "max": 54.81201171875
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.041259765625,
+            "min": 0.005859375,
+            "max": 0.06005859375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1994260480,
+            "min": 1931771904,
+            "max": 2030436352
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.5,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.9688055033361496,
+            "min": 1.9289856264027014,
+            "max": 2.0048596513732426
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.9902406633247856,
+            "min": 1.9406694030265033,
+            "max": 2.004669312939402
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 0.9990767931231234,
+            "min": 0.9732398165915052,
+            "max": 1.016232252586575
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 1.0111293322227515,
+            "min": 0.9889051433223551,
+            "max": 1.0187610504679359
+          }
+        }
+      },
+      "w4": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 214.23357199999737,
+            "min": 213.93239699999685,
+            "max": 215.00261000001046
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.671251778413833,
+            "min": 18.604425313719705,
+            "max": 18.69749535877943
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 53.423095703125,
+            "p95": 53.851318359375,
+            "max": 54.101806640625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 212.00099999999657,
+            "min": 211.2260000000024,
+            "max": 213.84799999999086
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 53.03900000000431,
+            "min": 52.44499999999971,
+            "max": 54.04799999999523
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 214.507,
+            "min": 213.953,
+            "max": 304.45
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 160.7939453125,
+            "min": 160.445068359375,
+            "max": 161.436279296875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1991852032,
+            "min": 1931771904,
+            "max": 2030829568
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.5,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 56.77666899999895,
+            "min": 56.33967999999004,
+            "max": 57.24611500000174
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 70.49342826776741,
+            "min": 69.87373728330523,
+            "max": 70.9979183410468
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 56.392333984375,
+            "p95": 56.86083984375,
+            "max": 57.0986328125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 221.62300000000323,
+            "min": 220.11200000000372,
+            "max": 223.33599999999842
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 55.728000000000065,
+            "min": 52.79699999999866,
+            "max": 56.861000000000786
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 224.077,
+            "min": 223.037,
+            "max": 253.189
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 56.4150390625,
+            "min": 56.10302734375,
+            "max": 56.659423828125
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.054443359375,
+            "min": 0.02978515625,
+            "max": 0.126708984375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1987076096,
+            "min": 1940422656,
+            "max": 2031222784
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 217.37643099999696,
+            "min": 214.46388399999705,
+            "max": 219.08387200000288
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.420424470867466,
+            "min": 18.257847843769838,
+            "max": 18.65115899887393
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 54.107421875,
+            "p95": 54.8720703125,
+            "max": 55.5712890625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 215.13999999999942,
+            "min": 212.30499999999302,
+            "max": 216.12900000001537
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 53.754000000000815,
+            "min": 52.58299999999872,
+            "max": 55.02900000000227
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 217.387,
+            "min": 214.947,
+            "max": 320.507
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 163.134521484375,
+            "min": 160.966552734375,
+            "max": 164.709716796875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1970950144,
+            "min": 1940422656,
+            "max": 2031812608
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 56.02345299998706,
+            "min": 55.712805000002845,
+            "max": 57.04015600000275
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 71.4164752630708,
+            "min": 70.12603541967533,
+            "max": 71.79677993236557
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 55.67431640625,
+            "p95": 56.5966796875,
+            "max": 56.980712890625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 220.4390000000003,
+            "min": 218.0779999999977,
+            "max": 222.17399999999816
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 55.13499999999476,
+            "min": 53.336999999999534,
+            "max": 56.413000000000466
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 222.633,
+            "min": 220.799,
+            "max": 235.846
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 55.628662109375,
+            "min": 55.3671875,
+            "max": 56.491455078125
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.054931640625,
+            "min": 0.0439453125,
+            "max": 0.103515625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1970950144,
+            "min": 1941012480,
+            "max": 2032205824
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 3.7783359581479172,
+            "min": 3.7423166969494512,
+            "max": 3.8098249936818545
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 3.861350242439201,
+            "min": 3.8085101821005707,
+            "max": 3.910011526780408
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 0.9884788629253682,
+            "min": 0.9819042783596964,
+            "max": 1.0052390363421144
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 1.012616660272905,
+            "min": 0.9976564104892209,
+            "max": 1.023790512050328
+          }
+        }
+      },
+      "w8": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 428.56865000000107,
+            "min": 427.2588209999958,
+            "max": 430.67363200000545
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.67825168416936,
+            "min": 18.575550963844236,
+            "max": 18.724013658222585
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 53.43310546875,
+            "p95": 53.88525390625,
+            "max": 54.305419921875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 423.75300000000425,
+            "min": 422.5529999999999,
+            "max": 426.3630000000121
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 53.04000000000087,
+            "min": 52.3379999999961,
+            "max": 53.932999999997264
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 428.998,
+            "min": 427.62,
+            "max": 430.739
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 375.05126953125,
+            "min": 374.059326171875,
+            "max": 376.899658203125
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1997406208,
+            "min": 1941012480,
+            "max": 2032795648
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.5,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 64.04121299998951,
+            "min": 62.23998399999982,
+            "max": 70.00738899999124
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 125.04596807016377,
+            "min": 114.2736518855317,
+            "max": 128.53473741252927
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 63.045166015625,
+            "p95": 64.471923828125,
+            "max": 69.95263671875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 498.2349999999965,
+            "min": 477.75500000000056,
+            "max": 506.77799999999615
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 62.474999999999454,
+            "min": 55.98199999999997,
+            "max": 64.33199999999988
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 504.055,
+            "min": 481.552,
+            "max": 512.491
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 63.7099609375,
+            "min": 61.860107421875,
+            "max": 69.03857421875
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.09716796875,
+            "min": 0.0419921875,
+            "max": 3.047607421875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1997406208,
+            "min": 1941405696,
+            "max": 2032795648
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 433.604800000001,
+            "min": 428.56285200000275,
+            "max": 435.4841049999959
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 18.46519036484895,
+            "min": 18.370360498002736,
+            "max": 18.66704023147566
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 54.03173828125,
+            "p95": 54.44873046875,
+            "max": 55.3681640625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 428.3500000000058,
+            "min": 424.4400000000096,
+            "max": 431.01000000000204
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 53.49799999999959,
+            "min": 52.478000000002794,
+            "max": 54.80800000000454
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 433.824,
+            "min": 428.918,
+            "max": 435.67
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 379.43408203125,
+            "min": 375.102294921875,
+            "max": 381.038330078125
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1997996032,
+            "min": 1941405696,
+            "max": 2033188864
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 65.16715399999521,
+            "min": 62.72877100000915,
+            "max": 90.34985299999244
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 125.12877706297795,
+            "min": 88.54469303896565,
+            "max": 127.53318568920844
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 61.287353515625,
+            "p95": 86.73291015625,
+            "max": 90.298583984375
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 474.4449999999956,
+            "min": 454.42500000000473,
+            "max": 487.4010000000053
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 59.61700000000019,
+            "min": 53.565999999998894,
+            "max": 63.5029999999997
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 478.924,
+            "min": 459.181,
+            "max": 492.196
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 63.48193359375,
+            "min": 61.65478515625,
+            "max": 87.78857421875
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 2.92138671875,
+            "min": 0.065185546875,
+            "max": 3.68310546875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 1999011840,
+            "min": 1941798912,
+            "max": 2033778688
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.46,
+            "min": 1.36,
+            "max": 1.55
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 6.700825222786766,
+            "min": 6.113981939821285,
+            "max": 6.87981380265131
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 6.78576539411688,
+            "min": 4.7801778603893075,
+            "max": 6.882772533506396
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 1.0063214944894747,
+            "min": 0.899143274719279,
+            "max": 1.4495924516947971
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 1.011093920314186,
+            "min": 0.9976355152751287,
+            "max": 1.0173650847590527
+          }
+        }
+      }
+    },
+    "preg-text": {
+      "w1": {
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 33.21776999998838,
+            "min": 32.77453200001037,
+            "max": 34.41849999999977
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.10624584477989,
+            "min": 29.05414239435207,
+            "max": 30.51149593836103
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 33.169677734375,
+            "p95": 34.04931640625,
+            "max": 34.36767578125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 32.703999999997905,
+            "min": 31.864000000008673,
+            "max": 33.961999999999534
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 32.703999999997905,
+            "min": 31.864000000008673,
+            "max": 33.961999999999534
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 33.228,
+            "min": 32.776,
+            "max": 41.117
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2001170432,
+            "min": 1980628992,
+            "max": 2018852864
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 33.7833549999923,
+            "min": 33.04482999999891,
+            "max": 34.80051700002514
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 29.7881404893375,
+            "min": 28.735205284429473,
+            "max": 30.261919943302264
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 33.458251953125,
+            "p95": 34.55322265625,
+            "max": 34.670166015625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 33.09799999999814,
+            "min": 32.229999999995925,
+            "max": 34.56899999999587
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 33.09799999999814,
+            "min": 32.229999999995925,
+            "max": 34.56899999999587
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 33.77,
+            "min": 33.036,
+            "max": 34.787
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2002751488,
+            "min": 1981808640,
+            "max": 2020032512
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 33.15424999999232,
+            "min": 32.66178300001775,
+            "max": 34.86754600002314
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.199427962426014,
+            "min": 28.679965031073205,
+            "max": 30.61682211284842
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 33.06689453125,
+            "p95": 34.374267578125,
+            "max": 34.81591796875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 32.703000000008615,
+            "min": 32.021999999997206,
+            "max": 33.866000000001804
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 32.703000000008615,
+            "min": 32.021999999997206,
+            "max": 33.866000000001804
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 33.205,
+            "min": 32.66,
+            "max": 40.13
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2003931136,
+            "min": 1979502592,
+            "max": 2018156544
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 33.67320600000676,
+            "min": 33.10042999999132,
+            "max": 35.57445099999313
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 29.743663751916408,
+            "min": 28.110061347122212,
+            "max": 30.211087892219595
+          },
+          "latencyMs": {
+            "n": 20,
+            "p50": 33.51611328125,
+            "p95": 34.676025390625,
+            "max": 35.453857421875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 33.138000000006286,
+            "min": 32.663000000000466,
+            "max": 34.927999999999884
+          },
+          "perInstanceCpuMs": {
+            "n": 20,
+            "median": 33.138000000006286,
+            "min": 32.663000000000466,
+            "max": 34.927999999999884
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 33.659,
+            "min": 33.108,
+            "max": 41.643
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2001768448,
+            "min": 1980039168,
+            "max": 2017673216
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.0087279568342058,
+            "min": 0.981476357191583,
+            "max": 1.062268370785323
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.011813133409992,
+            "min": 0.9719689993091902,
+            "max": 1.037369475223281
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 0.9936066067749064,
+            "min": 0.9756525365077077,
+            "max": 1.0614575742359045
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 0.9986256743100456,
+            "min": 0.9382623501344288,
+            "max": 1.0513614777824416
+          }
+        }
+      },
+      "w2": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 66.157269000003,
+            "min": 65.69992199999979,
+            "max": 67.61185899999691
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.251597545270574,
+            "min": 29.580609519996948,
+            "max": 30.441436444932258
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 32.95166015625,
+            "p95": 34.22021484375,
+            "max": 34.431884765625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 65.0850000000064,
+            "min": 63.98300000000745,
+            "max": 67.09599999999773
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 32.29800000000978,
+            "min": 31.93300000000454,
+            "max": 34.30599999999686
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 66.162,
+            "min": 65.061,
+            "max": 67.597
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 33.23046875,
+            "min": 32.87646484375,
+            "max": 34.5029296875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2004512768,
+            "min": 1980092416,
+            "max": 2019336192
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 33.66345499998715,
+            "min": 32.96529000000737,
+            "max": 34.15053199999966
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 59.579725805766024,
+            "min": 58.5642414003981,
+            "max": 60.66987428290644
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 33.33447265625,
+            "p95": 34.0302734375,
+            "max": 34.10546875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 65.64899999999943,
+            "min": 64.58200000000215,
+            "max": 66.61000000000058
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 32.76499999999942,
+            "min": 31.830999999998312,
+            "max": 33.77400000000125
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 66.925,
+            "min": 65.795,
+            "max": 67.596
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 32.992431640625,
+            "min": 32.67333984375,
+            "max": 33.57861328125
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.044921875,
+            "min": 0.02099609375,
+            "max": 0.066650390625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2004512768,
+            "min": 1980092416,
+            "max": 2019467264
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 66.02964100000099,
+            "min": 65.5220960000006,
+            "max": 66.98254299999098
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.30820014723723,
+            "min": 29.858525974450824,
+            "max": 30.52405405345979
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 32.892822265625,
+            "p95": 33.58251953125,
+            "max": 33.675048828125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 65.16300000000047,
+            "min": 64.20300000000134,
+            "max": 66.27599999999802
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 32.55200000000332,
+            "min": 31.891999999999825,
+            "max": 33.370999999999185
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 66.036,
+            "min": 65.519,
+            "max": 66.971
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 33.130126953125,
+            "min": 32.83984375,
+            "max": 33.665283203125
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2004512768,
+            "min": 1981665280,
+            "max": 2018877440
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 33.818184999981895,
+            "min": 33.101270999992266,
+            "max": 35.02518599998439
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 59.198965770371146,
+            "min": 57.10176671155698,
+            "max": 60.42064064550474
+          },
+          "latencyMs": {
+            "n": 40,
+            "p50": 33.468505859375,
+            "p95": 34.396484375,
+            "max": 34.959228515625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 65.92099999999664,
+            "min": 64.90099999999802,
+            "max": 66.88299999999617
+          },
+          "perInstanceCpuMs": {
+            "n": 40,
+            "median": 32.85199999999895,
+            "min": 31.880999999993946,
+            "max": 34.35500000000138
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 67.197,
+            "min": 66.065,
+            "max": 68.116
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 32.852783203125,
+            "min": 32.490966796875,
+            "max": 33.82666015625
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.046630859375,
+            "min": 0.012939453125,
+            "max": 0.058349609375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2005299200,
+            "min": 1981665280,
+            "max": 2018942976
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.9762796044743671,
+            "min": 1.9325173153214878,
+            "max": 2.01056816239365
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 1.9577710689557963,
+            "min": 1.8966199922540639,
+            "max": 2.0072392084289397
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 1.008346011184748,
+            "min": 0.9698084156971467,
+            "max": 1.0458037398966584
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 0.9967933911931696,
+            "min": 0.9768661807527153,
+            "max": 1.0082444073758576
+          }
+        }
+      },
+      "w4": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 132.34719100000802,
+            "min": 131.15574800000468,
+            "max": 134.21516600000905
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.285174898101456,
+            "min": 29.802891276830298,
+            "max": 30.498091475181532
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 32.92138671875,
+            "p95": 33.60888671875,
+            "max": 34.32373046875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 130.54499999999098,
+            "min": 128.6489999999976,
+            "max": 131.49399999999878
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 32.58599999999569,
+            "min": 31.733000000000175,
+            "max": 33.98099999999977
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 132.365,
+            "min": 131.139,
+            "max": 133.418
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 99.13232421875,
+            "min": 98.398681640625,
+            "max": 100.039794921875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2005299200,
+            "min": 1981665280,
+            "max": 2019913728
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 34.65813799999887,
+            "min": 33.86529499999597,
+            "max": 45.764603999996325
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 115.51229312153089,
+            "min": 87.40379355189704,
+            "max": 118.1150201113109
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 33.82421875,
+            "p95": 34.995361328125,
+            "max": 45.705078125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 133.06199999999444,
+            "min": 131.27199999999812,
+            "max": 135.82900000000336
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 33.33300000000054,
+            "min": 31.728000000000975,
+            "max": 34.697000000000116
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 135.731,
+            "min": 133.796,
+            "max": 143.165
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 34.084716796875,
+            "min": 33.54150390625,
+            "max": 44.206298828125
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.067626953125,
+            "min": 0.038818359375,
+            "max": 3.781494140625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2005299200,
+            "min": 1981665280,
+            "max": 2019323904
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 131.50622499999008,
+            "min": 130.88438200001838,
+            "max": 132.48723899998004
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.4273824047092,
+            "min": 30.191586979940027,
+            "max": 30.561323963002998
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 32.79541015625,
+            "p95": 33.3759765625,
+            "max": 33.54931640625
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 129.57100000001083,
+            "min": 128.3700000000099,
+            "max": 131.43499999999767
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 32.404999999998836,
+            "min": 31.59900000000198,
+            "max": 33.375
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 131.659,
+            "min": 130.867,
+            "max": 139.056
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 98.757568359375,
+            "min": 98.229736328125,
+            "max": 99.56982421875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2006675456,
+            "min": 1981665280,
+            "max": 2017263616
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 34.33261999998649,
+            "min": 33.72825499999453,
+            "max": 35.415572999976575
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 116.69373620988361,
+            "min": 112.94466420189349,
+            "max": 118.59492879191788
+          },
+          "latencyMs": {
+            "n": 80,
+            "p50": 33.8095703125,
+            "p95": 34.502685546875,
+            "max": 35.3662109375
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 132.42300000000432,
+            "min": 130.46800000000076,
+            "max": 134.55800000001
+          },
+          "perInstanceCpuMs": {
+            "n": 80,
+            "median": 33.11899999999969,
+            "min": 31.854000000006636,
+            "max": 34.350000000000364
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 135.44,
+            "min": 133.132,
+            "max": 140.522
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 33.944580078125,
+            "min": 33.432861328125,
+            "max": 34.397705078125
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 0.064208984375,
+            "min": 0.033447265625,
+            "max": 0.08447265625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2006675456,
+            "min": 1981665280,
+            "max": 2017693696
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 3.8257450364619685,
+            "min": 2.884470364913872,
+            "max": 3.8947271650617012
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 3.8329843462611795,
+            "min": 3.7049410438756576,
+            "max": 3.8989928473919386
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 0.9931489087217134,
+            "min": 0.7475930961845764,
+            "max": 1.0355357426989853
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 0.9962723570915427,
+            "min": 0.9822317191859444,
+            "max": 1.0032278880660201
+          }
+        }
+      },
+      "w8": {
+        "native-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 263.9677029999875,
+            "min": 262.49332400001003,
+            "max": 266.6551249999902
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.329567295796938,
+            "min": 30.00129849370153,
+            "max": 30.476965577988164
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 32.83837890625,
+            "p95": 33.443603515625,
+            "max": 34.544189453125
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 259.5940000000046,
+            "min": 257.3099999999977,
+            "max": 263.0529999999999
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 32.40999999999622,
+            "min": 31.65400000000227,
+            "max": 33.970999999990454
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 263.929,
+            "min": 262.457,
+            "max": 272.132
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 230.885009765625,
+            "min": 229.739013671875,
+            "max": 233.635009765625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2007461888,
+            "min": 1983041536,
+            "max": 2017923072
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "native-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 51.77525899998727,
+            "min": 35.28682300000219,
+            "max": 65.0386070000095
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 154.60583339401288,
+            "min": 123.00386445851815,
+            "max": 226.71352419568927
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 34.846923828125,
+            "p95": 52.5341796875,
+            "max": 64.989990234375
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 269.88999999999623,
+            "min": 265.5550000000003,
+            "max": 275.0090000000041
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 33.766999999999825,
+            "min": 32.30399999999645,
+            "max": 35.81399999999985
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 274.843,
+            "min": 269.808,
+            "max": 279.794
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 49.964599609375,
+            "min": 34.966796875,
+            "max": 61.943359375
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 3.060546875,
+            "min": 0.05859375,
+            "max": 6.797119140625
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2006888448,
+            "min": 1978269696,
+            "max": 2018127872
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-serial": {
+          "wallMs": {
+            "n": 20,
+            "median": 262.47403199999826,
+            "min": 260.86226200000965,
+            "max": 266.43308199998864
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 30.482989634451766,
+            "min": 30.026301313439525,
+            "max": 30.667525224479206
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 32.67236328125,
+            "p95": 33.440673828125,
+            "max": 34.2685546875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 258.08499999999185,
+            "min": 255.6410000000178,
+            "max": 262.16799999999785
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 32.25299999999697,
+            "min": 31.438999999998487,
+            "max": 33.883999999998196
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 262.424,
+            "min": 260.828,
+            "max": 266.414
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 229.85791015625,
+            "min": 228.301025390625,
+            "max": 233.45263671875
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2008068096,
+            "min": 1979449344,
+            "max": 2019307520
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "folio-concurrent": {
+          "wallMs": {
+            "n": 20,
+            "median": 47.00501499998791,
+            "min": 35.37775200000033,
+            "max": 52.98423900001217
+          },
+          "throughputPerSecond": {
+            "n": 20,
+            "median": 172.92813878241526,
+            "min": 150.98829672722417,
+            "max": 226.1308180350161
+          },
+          "latencyMs": {
+            "n": 160,
+            "p50": 34.976318359375,
+            "p95": 51.629150390625,
+            "max": 52.93701171875
+          },
+          "aggregateThreadCpuMs": {
+            "n": 20,
+            "median": 269.796999999995,
+            "min": 265.63100000000304,
+            "max": 274.976000000006
+          },
+          "perInstanceCpuMs": {
+            "n": 160,
+            "median": 33.72400000000198,
+            "min": 32.029999999998836,
+            "max": 35.94499999999971
+          },
+          "processCpuMs": {
+            "n": 20,
+            "median": 273.498,
+            "min": 270.196,
+            "max": 280.23
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 46.112548828125,
+            "min": 34.9111328125,
+            "max": 52.294677734375
+          },
+          "startSkewMs": {
+            "n": 20,
+            "median": 3.283203125,
+            "min": 0.08642578125,
+            "max": 5.98974609375
+          },
+          "rssBytes": {
+            "n": 20,
+            "median": 2009436160,
+            "min": 1979449344,
+            "max": 2020487168
+          },
+          "load1": {
+            "n": 20,
+            "median": 1.3,
+            "min": 1.26,
+            "max": 1.8
+          }
+        },
+        "paired": {
+          "nativeConcurrentVsSerial": {
+            "n": 20,
+            "median": 5.121758065446662,
+            "min": 4.054857801612568,
+            "max": 7.449820347951991
+          },
+          "folioConcurrentVsSerial": {
+            "n": 20,
+            "median": 5.670885803422631,
+            "min": 4.959470211508401,
+            "max": 7.502500508904126
+          },
+          "folioOverNativeConcurrentWall": {
+            "n": 20,
+            "median": 1.005117112968853,
+            "min": 0.5439500264818887,
+            "max": 1.4552191763500117
+          },
+          "folioOverNativeSerialWall": {
+            "n": 20,
+            "median": 0.9961482603426276,
+            "min": 0.9854442325082319,
+            "max": 1.0101000112931549
+          }
+        }
+      }
+    }
+  },
+  "memory": [],
+  "hash": "ba321ee43bc90f57e8f0d3aff7ef0f8d123e8a44c37062c2c23a07071a912ca4"
+}

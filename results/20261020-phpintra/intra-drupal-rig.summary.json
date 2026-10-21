@@ -1,0 +1,577 @@
+{
+  "environment": {
+    "kind": "environment",
+    "contextKind": "drupal",
+    "experiment": "B-a explicit parallel API, not automatic extraction",
+    "machine": "paisley-park Ryzen 9 9900X, cpus 2-11, nice 19",
+    "node": "v26.10.0",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "hardwareThreads": 24,
+    "affinity": "2-11",
+    "pairs": 20,
+    "widths": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "contextsOpenMs": 1333.541391,
+    "boots": [
+      {
+        "seedMs": 56.971923828125,
+        "phpBootMs": 35.939453125,
+        "drupalBootMs": 338.73193359375,
+        "openMs": 454.6611328125,
+        "openCpuMs": 346.465
+      },
+      {
+        "seedMs": 44.669921875,
+        "phpBootMs": 56.77783203125,
+        "drupalBootMs": 358.2548828125,
+        "openMs": 480.192626953125,
+        "openCpuMs": 362.28499999999997
+      },
+      {
+        "seedMs": 50.464599609375,
+        "phpBootMs": 43.4306640625,
+        "drupalBootMs": 340.927490234375,
+        "openMs": 456.689453125,
+        "openCpuMs": 341.28
+      },
+      {
+        "seedMs": 44.339599609375,
+        "phpBootMs": 50.818603515625,
+        "drupalBootMs": 365.449951171875,
+        "openMs": 481.322265625,
+        "openCpuMs": 355.685
+      },
+      {
+        "seedMs": 60.500244140625,
+        "phpBootMs": 31.164306640625,
+        "drupalBootMs": 362.50634765625,
+        "openMs": 479.1142578125,
+        "openCpuMs": 345.26
+      },
+      {
+        "seedMs": 53.7626953125,
+        "phpBootMs": 42.33837890625,
+        "drupalBootMs": 349.077392578125,
+        "openMs": 467.752197265625,
+        "openCpuMs": 349.114
+      },
+      {
+        "seedMs": 68.0087890625,
+        "phpBootMs": 35.1728515625,
+        "drupalBootMs": 340.847900390625,
+        "openMs": 489.1025390625,
+        "openCpuMs": 332.892
+      },
+      {
+        "seedMs": 49.34912109375,
+        "phpBootMs": 47.305908203125,
+        "drupalBootMs": 366.31640625,
+        "openMs": 484.89404296875,
+        "openCpuMs": 337.469
+      },
+      {
+        "seedMs": 50.43994140625,
+        "phpBootMs": 41.910400390625,
+        "drupalBootMs": 364.88134765625,
+        "openMs": 479.618408203125,
+        "openCpuMs": 343.296
+      }
+    ],
+    "memoryBytes": [
+      67108864,
+      67108864,
+      67108864,
+      67108864,
+      67108864,
+      67108864,
+      67108864,
+      67108864,
+      67108864
+    ]
+  },
+  "measuredSamples": 120,
+  "contexts": [
+    {
+      "contextKind": "drupal",
+      "contextsOpenMs": 1333.541391,
+      "perContextOpenMs": {
+        "n": 9,
+        "median": 479.618408203125,
+        "min": 454.6611328125,
+        "max": 489.1025390625
+      },
+      "memoryBytes": 67108864
+    }
+  ],
+  "names": {
+    "drupal-render-arrays": {
+      "size": {
+        "n": 2000
+      },
+      "outputSha256": "50ab623a07e7b78a193ee175cc82f3606f3adca364614cda57cc13ecc9b2b003",
+      "arms": {
+        "plain": {
+          "n": 20,
+          "requestMs": {
+            "n": 20,
+            "median": 446.998291015625,
+            "min": 438.88525390625,
+            "max": 454.367431640625,
+            "p95": 451.20947265625
+          },
+          "speedupOverPlain": {
+            "n": 20,
+            "median": 1,
+            "min": 1,
+            "max": 1
+          },
+          "processCpuOverPlain": {
+            "n": 20,
+            "median": 1,
+            "min": 1,
+            "max": 1
+          },
+          "ownerCpuMs": {
+            "n": 20,
+            "median": 446.28399999999965,
+            "min": 438.77400000000034,
+            "max": 453.8719999999994
+          },
+          "tasksPerRequest": 0,
+          "serverCpuMsSum": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "maxConcurrentTasks": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "distinctWorkers": 0,
+          "waitMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "submitHostMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "encodeMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "decodeMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "argBytes": 0,
+          "resultBytes": 0,
+          "samplesWithOverlap": 0,
+          "maxLoad1": 0.71
+        },
+        "api-inline": {
+          "n": 20,
+          "requestMs": {
+            "n": 20,
+            "median": 452.940185546875,
+            "min": 448.2509765625,
+            "max": 456.268310546875,
+            "p95": 455.6201171875
+          },
+          "speedupOverPlain": {
+            "n": 20,
+            "median": 0.9876689786657695,
+            "min": 0.9687648702465733,
+            "max": 0.9969336113235252
+          },
+          "processCpuOverPlain": {
+            "n": 20,
+            "median": 1.012543424705919,
+            "min": 0.9854845232405498,
+            "max": 1.0325434680530312
+          },
+          "ownerCpuMs": {
+            "n": 20,
+            "median": 452.52100000000064,
+            "min": 447.7330000000002,
+            "max": 456.1840000000011
+          },
+          "tasksPerRequest": 0,
+          "serverCpuMsSum": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "maxConcurrentTasks": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "distinctWorkers": 0,
+          "waitMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "submitHostMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "encodeMs": {
+            "n": 20,
+            "median": 2.33858,
+            "min": 2.224343,
+            "max": 3.304952
+          },
+          "decodeMs": {
+            "n": 20,
+            "median": 0.01568,
+            "min": 0.013112,
+            "max": 0.017849
+          },
+          "argBytes": 0,
+          "resultBytes": 0,
+          "samplesWithOverlap": 0,
+          "maxLoad1": 0.68
+        },
+        "api-1": {
+          "n": 20,
+          "requestMs": {
+            "n": 20,
+            "median": 455.94189453125,
+            "min": 453.6650390625,
+            "max": 458.59619140625,
+            "p95": 457.848876953125
+          },
+          "speedupOverPlain": {
+            "n": 20,
+            "median": 0.9792839561639076,
+            "min": 0.9631978825092694,
+            "max": 0.9923960820092687
+          },
+          "processCpuOverPlain": {
+            "n": 20,
+            "median": 1.031881060926509,
+            "min": 0.9969636875193284,
+            "max": 1.0508026689568606
+          },
+          "ownerCpuMs": {
+            "n": 20,
+            "median": 14.036000000000058,
+            "min": 13.840000000000146,
+            "max": 15.015999999999622
+          },
+          "tasksPerRequest": 8,
+          "serverCpuMsSum": {
+            "n": 20,
+            "median": 445.121000000001,
+            "min": 442.1209999999992,
+            "max": 446.9419999999991
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "maxConcurrentTasks": {
+            "n": 20,
+            "median": 1,
+            "min": 1,
+            "max": 1
+          },
+          "distinctWorkers": 1,
+          "waitMs": {
+            "n": 20,
+            "median": 442.042236328125,
+            "min": 439.411376953125,
+            "max": 444.4814453125
+          },
+          "submitHostMs": {
+            "n": 20,
+            "median": 0.438720703125,
+            "min": 0.31884765625,
+            "max": 0.50244140625
+          },
+          "encodeMs": {
+            "n": 20,
+            "median": 2.28467,
+            "min": 2.202615,
+            "max": 2.367353
+          },
+          "decodeMs": {
+            "n": 20,
+            "median": 0.02699,
+            "min": 0.020783,
+            "max": 0.032169
+          },
+          "argBytes": 1190636,
+          "resultBytes": 672,
+          "samplesWithOverlap": 0,
+          "maxLoad1": 0.68
+        },
+        "api-2": {
+          "n": 20,
+          "requestMs": {
+            "n": 20,
+            "median": 238.75,
+            "min": 237.251220703125,
+            "max": 240.913330078125,
+            "p95": 240.520751953125
+          },
+          "speedupOverPlain": {
+            "n": 20,
+            "median": 1.8691355864616988,
+            "min": 1.8437644230473373,
+            "max": 1.899354910317427
+          },
+          "processCpuOverPlain": {
+            "n": 20,
+            "median": 1.046320240307169,
+            "min": 1.0146430710873415,
+            "max": 1.0676189131209608
+          },
+          "ownerCpuMs": {
+            "n": 20,
+            "median": 14.492999999999938,
+            "min": 13.57800000000043,
+            "max": 16.157000000001062
+          },
+          "tasksPerRequest": 8,
+          "serverCpuMsSum": {
+            "n": 20,
+            "median": 450.5909999999999,
+            "min": 448.73799999999846,
+            "max": 451.9529999999977
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 222.82958984375,
+            "min": 221.73388671875,
+            "max": 224.107666015625
+          },
+          "maxConcurrentTasks": {
+            "n": 20,
+            "median": 2,
+            "min": 2,
+            "max": 2
+          },
+          "distinctWorkers": 2,
+          "waitMs": {
+            "n": 20,
+            "median": 224.102294921875,
+            "min": 222.03271484375,
+            "max": 226.2841796875
+          },
+          "submitHostMs": {
+            "n": 20,
+            "median": 0.424560546875,
+            "min": 0.247802734375,
+            "max": 2.020263671875
+          },
+          "encodeMs": {
+            "n": 20,
+            "median": 2.329372,
+            "min": 2.194294,
+            "max": 2.738429
+          },
+          "decodeMs": {
+            "n": 20,
+            "median": 0.025968,
+            "min": 0.021141,
+            "max": 0.031741
+          },
+          "argBytes": 1190636,
+          "resultBytes": 672,
+          "samplesWithOverlap": 20,
+          "maxLoad1": 0.68
+        },
+        "api-4": {
+          "n": 20,
+          "requestMs": {
+            "n": 20,
+            "median": 126.309326171875,
+            "min": 124.788330078125,
+            "max": 129.78564453125,
+            "p95": 129.410888671875
+          },
+          "speedupOverPlain": {
+            "n": 20,
+            "median": 3.552159702182027,
+            "min": 3.400229245004653,
+            "max": 3.6012550576734412
+          },
+          "processCpuOverPlain": {
+            "n": 20,
+            "median": 1.0456823772751722,
+            "min": 1.0111374709939165,
+            "max": 1.086790820089629
+          },
+          "ownerCpuMs": {
+            "n": 20,
+            "median": 14.515999999999622,
+            "min": 13.645000000000437,
+            "max": 15.513999999999214
+          },
+          "tasksPerRequest": 8,
+          "serverCpuMsSum": {
+            "n": 20,
+            "median": 449.2799999999993,
+            "min": 446.93200000000024,
+            "max": 451.28300000000036
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 113.703369140625,
+            "min": 113.1318359375,
+            "max": 116.418212890625
+          },
+          "maxConcurrentTasks": {
+            "n": 20,
+            "median": 4,
+            "min": 4,
+            "max": 4
+          },
+          "distinctWorkers": 4,
+          "waitMs": {
+            "n": 20,
+            "median": 111.2392578125,
+            "min": 106.97021484375,
+            "max": 115.951904296875
+          },
+          "submitHostMs": {
+            "n": 20,
+            "median": 0.43408203125,
+            "min": 0.246337890625,
+            "max": 4.53369140625
+          },
+          "encodeMs": {
+            "n": 20,
+            "median": 2.348919,
+            "min": 2.215403,
+            "max": 5.408241
+          },
+          "decodeMs": {
+            "n": 20,
+            "median": 0.020421,
+            "min": 0.012068,
+            "max": 0.02241
+          },
+          "argBytes": 1190636,
+          "resultBytes": 672,
+          "samplesWithOverlap": 20,
+          "maxLoad1": 0.68
+        },
+        "api-8": {
+          "n": 20,
+          "requestMs": {
+            "n": 20,
+            "median": 99.15234375,
+            "min": 81.134521484375,
+            "max": 118.8115234375,
+            "p95": 117.93994140625
+          },
+          "speedupOverPlain": {
+            "n": 20,
+            "median": 4.509757480159708,
+            "min": 3.7640901506620748,
+            "max": 5.593979470686365
+          },
+          "processCpuOverPlain": {
+            "n": 20,
+            "median": 1.0551751732956005,
+            "min": 1.0225106671020734,
+            "max": 1.0781176939867703
+          },
+          "ownerCpuMs": {
+            "n": 20,
+            "median": 14.919000000001688,
+            "min": 13.832999999999629,
+            "max": 15.515000000001237
+          },
+          "tasksPerRequest": 8,
+          "serverCpuMsSum": {
+            "n": 20,
+            "median": 452.44399999999985,
+            "min": 449.057,
+            "max": 457.5880000000002
+          },
+          "overlapMs": {
+            "n": 20,
+            "median": 84.2939453125,
+            "min": 67.882080078125,
+            "max": 105.86328125
+          },
+          "maxConcurrentTasks": {
+            "n": 20,
+            "median": 8,
+            "min": 8,
+            "max": 8
+          },
+          "distinctWorkers": 8,
+          "waitMs": {
+            "n": 20,
+            "median": 83.6328125,
+            "min": 66.069091796875,
+            "max": 103.88330078125
+          },
+          "submitHostMs": {
+            "n": 20,
+            "median": 0.468994140625,
+            "min": 0.27294921875,
+            "max": 4.00732421875
+          },
+          "encodeMs": {
+            "n": 20,
+            "median": 2.45861,
+            "min": 2.272839,
+            "max": 5.715634
+          },
+          "decodeMs": {
+            "n": 20,
+            "median": 0.01896,
+            "min": 0.011421,
+            "max": 0.039594
+          },
+          "argBytes": 1190636,
+          "resultBytes": 672,
+          "samplesWithOverlap": 20,
+          "maxLoad1": 0.68
+        }
+      }
+    }
+  },
+  "hash": "77d2952cf5ee358b349607c5732cadf3d5dee6435a8a4a4ef77f35563c990ed0"
+}

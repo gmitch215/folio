@@ -1,0 +1,90 @@
+{
+ "module": "php8.5.tuned.wasm",
+ "patternSites": 270,
+ "patternStoreSitesInstrumented": {
+  "inc": 107,
+  "dec": 28
+ },
+ "verifiedSites": 0,
+ "sites": [],
+ "kinds": {
+  "string": {
+   "ok": false,
+   "reason": "no address with enough increments",
+   "top": [
+    {
+     "address": 37915488,
+     "total": 10,
+     "sites": "949997:1:5 949996:1:5"
+    },
+    {
+     "address": 37915328,
+     "total": 2,
+     "sites": "938604:1:1 938603:1:1"
+    },
+    {
+     "address": 37915472,
+     "total": 2,
+     "sites": "949997:1:1 949996:1:1"
+    },
+    {
+     "address": 37915648,
+     "total": 2,
+     "sites": "1154339:2:1 1154338:2:1"
+    }
+   ]
+  },
+  "array": {
+   "ok": false,
+   "reason": "no address with enough increments",
+   "top": [
+    {
+     "address": 37915488,
+     "total": 10,
+     "sites": "949997:1:5 949996:1:5"
+    },
+    {
+     "address": 37915328,
+     "total": 2,
+     "sites": "938604:1:1 938603:1:1"
+    },
+    {
+     "address": 37915472,
+     "total": 2,
+     "sites": "949997:1:1 949996:1:1"
+    },
+    {
+     "address": 37915648,
+     "total": 2,
+     "sites": "1154339:2:1 1154338:2:1"
+    }
+   ]
+  },
+  "object": {
+   "ok": false,
+   "reason": "no address with enough increments",
+   "top": [
+    {
+     "address": 37915488,
+     "total": 10,
+     "sites": "949997:1:5 949996:1:5"
+    },
+    {
+     "address": 37915328,
+     "total": 2,
+     "sites": "938604:1:1 938603:1:1"
+    },
+    {
+     "address": 37915472,
+     "total": 2,
+     "sites": "949997:1:1 949996:1:1"
+    },
+    {
+     "address": 37915648,
+     "total": 2,
+     "sites": "1154339:2:1 1154338:2:1"
+    }
+   ]
+  }
+ }
+}

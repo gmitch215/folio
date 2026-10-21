@@ -1,0 +1,166 @@
+{
+  "cpu-folio": {
+    "byCount": {
+      "1": {
+        "rssBeforeBytes": 93020160,
+        "rssAfterRunBytes": 191684608,
+        "maxRssBytes": 191684608,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 90406912,
+        "perContextAfterRunBytes": 98664448
+      },
+      "2": {
+        "rssBeforeBytes": 92618752,
+        "rssAfterRunBytes": 265166848,
+        "maxRssBytes": 265166848,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 78419968,
+        "perContextAfterRunBytes": 86274048
+      },
+      "4": {
+        "rssBeforeBytes": 92610560,
+        "rssAfterRunBytes": 380325888,
+        "maxRssBytes": 380325888,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 66050048,
+        "perContextAfterRunBytes": 71928832
+      },
+      "8": {
+        "rssBeforeBytes": 92712960,
+        "rssAfterRunBytes": 606208000,
+        "maxRssBytes": 606208000,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 61765632,
+        "perContextAfterRunBytes": 64186880
+      }
+    },
+    "marginalBytesPerExtraContext": {
+      "2": 73883648,
+      "4": 63016960,
+      "8": 59261513.14285714
+    }
+  },
+  "cpu-native": {
+    "byCount": {
+      "1": {
+        "rssBeforeBytes": 92790784,
+        "rssAfterRunBytes": 189968384,
+        "maxRssBytes": 189968384,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 90492928,
+        "perContextAfterRunBytes": 97177600
+      },
+      "2": {
+        "rssBeforeBytes": 92622848,
+        "rssAfterRunBytes": 262131712,
+        "maxRssBytes": 262131712,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 73568256,
+        "perContextAfterRunBytes": 84754432
+      },
+      "4": {
+        "rssBeforeBytes": 92536832,
+        "rssAfterRunBytes": 370421760,
+        "maxRssBytes": 370421760,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 64446464,
+        "perContextAfterRunBytes": 69471232
+      },
+      "8": {
+        "rssBeforeBytes": 92307456,
+        "rssAfterRunBytes": 589004800,
+        "maxRssBytes": 589004800,
+        "wasmMemoryBytes": 67108864,
+        "perContextOpenBytes": 59394560,
+        "perContextAfterRunBytes": 62087168
+      }
+    },
+    "marginalBytesPerExtraContext": {
+      "2": 72331264,
+      "4": 60235776,
+      "8": 57074249.14285714
+    }
+  },
+  "drupal-folio": {
+    "byCount": {
+      "1": {
+        "rssBeforeBytes": 92430336,
+        "rssAfterRunBytes": 433885184,
+        "maxRssBytes": 433885184,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 262774784,
+        "perContextAfterRunBytes": 341454848
+      },
+      "2": {
+        "rssBeforeBytes": 92430336,
+        "rssAfterRunBytes": 701734912,
+        "maxRssBytes": 701865984,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 218824704,
+        "perContextAfterRunBytes": 304652288
+      },
+      "4": {
+        "rssBeforeBytes": 92516352,
+        "rssAfterRunBytes": 1192419328,
+        "maxRssBytes": 1193304064,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 199339008,
+        "perContextAfterRunBytes": 274975744
+      },
+      "8": {
+        "rssBeforeBytes": 92823552,
+        "rssAfterRunBytes": 2170560512,
+        "maxRssBytes": 2170560512,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 186719232,
+        "perContextAfterRunBytes": 259717120
+      }
+    },
+    "marginalBytesPerExtraContext": {
+      "2": 267849728,
+      "4": 252816042.66666666,
+      "8": 248040301.7142857
+    }
+  },
+  "drupal-native": {
+    "byCount": {
+      "1": {
+        "rssBeforeBytes": 92229632,
+        "rssAfterRunBytes": 431665152,
+        "maxRssBytes": 431665152,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 255832064,
+        "perContextAfterRunBytes": 339435520
+      },
+      "2": {
+        "rssBeforeBytes": 93016064,
+        "rssAfterRunBytes": 686313472,
+        "maxRssBytes": 686628864,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 220092416,
+        "perContextAfterRunBytes": 296648704
+      },
+      "4": {
+        "rssBeforeBytes": 92577792,
+        "rssAfterRunBytes": 1175834624,
+        "maxRssBytes": 1176039424,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 195165184,
+        "perContextAfterRunBytes": 270814208
+      },
+      "8": {
+        "rssBeforeBytes": 92626944,
+        "rssAfterRunBytes": 2221166592,
+        "maxRssBytes": 2221166592,
+        "wasmMemoryBytes": 86638592,
+        "perContextOpenBytes": 189615104,
+        "perContextAfterRunBytes": 266067456
+      }
+    },
+    "marginalBytesPerExtraContext": {
+      "2": 253861888,
+      "4": 247940437.33333334,
+      "8": 255586304
+    }
+  }
+}
