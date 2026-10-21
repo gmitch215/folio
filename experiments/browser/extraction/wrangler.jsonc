@@ -1,0 +1,14 @@
+{
+	"name": "folio-browser-extraction",
+	"main": "worker.ts",
+	"compatibility_date": "2026-10-20",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": true,
+	"browser": { "binding": "BROWSER" },
+	"durable_objects": { "bindings": [{ "name": "GATE", "class_name": "BrowserGate" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["BrowserGate"] }],
+	"rules": [
+		{ "type": "Data", "globs": ["**/sharing.wasm", "**/fixture.wasm"], "fallthrough": false },
+		{ "type": "Text", "globs": ["**/probe.js"], "fallthrough": false }
+	]
+}

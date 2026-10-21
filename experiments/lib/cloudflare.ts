@@ -13,6 +13,9 @@ export interface Credentials {
 export interface Snapshot {
 	scripts: string[];
 	namespaces: string[];
+	kv: string[] | null;
+	r2: string[] | null;
+	d1: string[] | null;
 }
 
 export interface Child {
@@ -23,7 +26,10 @@ export interface Child {
 export const classesFor = {
 	cloud: ['Lane', 'Coordinator'],
 	managed: ['ManagedLane', 'ManagedOwner'],
-	browser: ['BrowserGate']
+	browser: ['BrowserGate'],
+	consumer: ['ConsumerGate'],
+	php: ['PhpProbe'],
+	prepared: ['PhpProbe']
 } as const;
 
 export type Kind = keyof typeof classesFor;
@@ -58,14 +64,35 @@ export function createApi({ account, token }: Credentials) {
 
 export type Api = ReturnType<typeof createApi>;
 
+// a list the token cannot read is recorded as null, so before and after still compare
+const optional = (
+	promise: Promise<any>,
+	key: (row: any) => string,
+	pick = (result: any) => result
+) =>
+	promise.then(
+		(result) => pick(result).map(key).sort() as string[],
+		() => null
+	);
+
 export async function snapshot(api: Api): Promise<Snapshot> {
-	const [scripts, namespaces] = await Promise.all([
+	const [scripts, namespaces, kv, r2, d1] = await Promise.all([
 		api('/workers/scripts'),
-		api('/workers/durable_objects/namespaces')
+		api('/workers/durable_objects/namespaces'),
+		optional(api('/storage/kv/namespaces'), (row) => row.id),
+		optional(
+			api('/r2/buckets'),
+			(row) => row.name,
+			(result) => result.buckets ?? result
+		),
+		optional(api('/d1/database'), (row) => row.uuid)
 	]);
 	return {
 		scripts: scripts.map((row: { id: string }) => row.id).sort(),
-		namespaces: namespaces.map((row: { id: string }) => row.id).sort()
+		namespaces: namespaces.map((row: { id: string }) => row.id).sort(),
+		kv,
+		r2,
+		d1
 	};
 }
 
@@ -111,8 +138,12 @@ export const wranglerPath = () =>
 		'bin/wrangler.js'
 	);
 
+// the consumer, php and prepared probes share one directory
+export const runDirectory = (kind: Kind) =>
+	kind === 'consumer' || kind === 'php' || kind === 'prepared' ? 'consumer' : kind;
+
 export async function openRun(kind: Kind, name: string) {
-	const directory = new URL(`../${kind}/runs/${name}/`, import.meta.url);
+	const directory = new URL(`../${runDirectory(kind)}/runs/${name}/`, import.meta.url);
 	await mkdir(directory, { recursive: true });
 	return {
 		directory,

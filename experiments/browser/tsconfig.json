@@ -1,5 +1,12 @@
 {
 	"extends": "../../tsconfig.json",
-	"include": ["worker.ts", "probe.ts", "assets.d.ts", "../lib/workerd.d.ts"],
+	"include": [
+		"worker.ts",
+		"probe.ts",
+		"extraction/worker.ts",
+		"extraction/probe.ts",
+		"assets.d.ts",
+		"../lib/workerd.d.ts"
+	],
 	"exclude": []
 }

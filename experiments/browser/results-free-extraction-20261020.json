@@ -1,0 +1,401 @@
+{
+  "run": "cfw-folio-browser-72ad9035",
+  "account": "FREE",
+  "variant": "automatic-extraction",
+  "passed": true,
+  "baselineRestored": true,
+  "baselineCounts": {
+    "workers": 0,
+    "namespaces": 0
+  },
+  "sourceArchiveSha256": "59c001f858dea246f99a927e055f76adcb48f4bb8e8f2d7410f97123548961d8",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+  "hardwareConcurrency": 4,
+  "jspi": false,
+  "jspiOriginallyAvailable": false,
+  "jspiDisabledForProbe": false,
+  "arenaBytes": 268435456,
+  "growth": {
+    "oldBytes": 268435456,
+    "newBytes": 268500992,
+    "mode": "native-shared"
+  },
+  "coverage": {
+    "mechanism": "counted-loop",
+    "loop": true,
+    "nativeGuard": true,
+    "workers": 8
+  },
+  "sessionWallMs": 22008,
+  "elapsedMs": 19278.57,
+  "count": 67,
+  "rounds": 524288,
+  "arms": [
+    {
+      "width": 0,
+      "samples": [
+        61.72999999999956,
+        62.91500000000087,
+        63.4900000000016
+      ],
+      "medianMs": 62.91500000000087,
+      "speedupVsOwner": 1
+    },
+    {
+      "width": 1,
+      "samples": [
+        61.649999999999636,
+        62.109999999996944,
+        61.465000000000146
+      ],
+      "medianMs": 61.649999999999636,
+      "speedupVsOwner": 1.0205190592052107
+    },
+    {
+      "width": 2,
+      "samples": [
+        32.41500000000087,
+        98.03499999999985,
+        32.61999999999898
+      ],
+      "medianMs": 32.61999999999898,
+      "speedupVsOwner": 1.9287247087677142
+    },
+    {
+      "width": 4,
+      "samples": [
+        20.540000000000873,
+        21.18000000000029,
+        16.409999999999854
+      ],
+      "medianMs": 20.540000000000873,
+      "speedupVsOwner": 3.063047711781801
+    },
+    {
+      "width": 8,
+      "samples": [
+        18.2400000000016,
+        18.229999999999563,
+        21.235000000000582
+      ],
+      "medianMs": 18.2400000000016,
+      "speedupVsOwner": 3.4492872807014994
+    }
+  ],
+  "aggregateCpuMeasured": false,
+  "energyMeasured": false,
+  "verification": {
+    "fullMemoryAndReturnExactCalls": 20,
+    "closedPools": 4
+  },
+  "raw": [
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 65536,
+      "count": 67,
+      "wallMs": 8.335000000000946
+    },
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 131072,
+      "count": 67,
+      "wallMs": 15.840000000000146
+    },
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 262144,
+      "count": 67,
+      "wallMs": 31.715000000000146
+    },
+    {
+      "phase": "calibration",
+      "width": 0,
+      "rounds": 524288,
+      "count": 67,
+      "wallMs": 61.67500000000109
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 0,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 62.42499999999927,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 1,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 64.06500000000051,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 2,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 37.274999999999636,
+      "regions": 2,
+      "workers": 2,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 4,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 20.51000000000022,
+      "regions": 4,
+      "workers": 4,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "warmup",
+      "iteration": -1,
+      "width": 8,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 21.170000000000073,
+      "regions": 8,
+      "workers": 8,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 1,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 61.649999999999636,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 2,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 32.41500000000087,
+      "regions": 2,
+      "workers": 2,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 4,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 20.540000000000873,
+      "regions": 4,
+      "workers": 4,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 8,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 18.2400000000016,
+      "regions": 8,
+      "workers": 8,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 0,
+      "width": 0,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 61.72999999999956,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 2,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 98.03499999999985,
+      "regions": 2,
+      "workers": 2,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 4,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 21.18000000000029,
+      "regions": 4,
+      "workers": 4,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 8,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 18.229999999999563,
+      "regions": 8,
+      "workers": 8,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 0,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 62.91500000000087,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 1,
+      "width": 1,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 62.109999999996944,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 4,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 16.409999999999854,
+      "regions": 4,
+      "workers": 4,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 8,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 21.235000000000582,
+      "regions": 8,
+      "workers": 8,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 0,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 63.4900000000016,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 1,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 61.465000000000146,
+      "regions": 1,
+      "workers": 0,
+      "mode": "serial",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    },
+    {
+      "phase": "measured",
+      "iteration": 2,
+      "width": 2,
+      "count": 67,
+      "rounds": 524288,
+      "wallMs": 32.61999999999898,
+      "regions": 2,
+      "workers": 2,
+      "mode": "native-shared",
+      "memoryBytes": 268435456,
+      "fullMemoryExact": true,
+      "returnExact": true
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { collect } from './cloud/run.ts';
+import { readMeter, runPhp, runSessions } from './consumer/drive.ts';
 import {
 	classesFor,
 	createApi,
@@ -15,7 +16,10 @@ import {
 } from './lib/cloudflare.ts';
 
 const kind = process.argv[2];
-assert.ok(isKind(kind), 'usage: node experiments/deploy.ts cloud|managed|browser');
+assert.ok(
+	isKind(kind),
+	'usage: node experiments/deploy.ts cloud|managed|browser|consumer|php|prepared'
+);
 
 // each run is bounded up front; run.json records the bound beside the evidence
 const budgets = {
@@ -35,6 +39,21 @@ const budgets = {
 		maximumGateReads: 1,
 		maximumGateWrites: 1,
 		expectedCharges: 0
+	},
+	consumer: {
+		maximumSessions: 5,
+		maximumSessionSeconds: 75,
+		externalDriverRequests: 7,
+		maximumGateReads: 5,
+		maximumGateWrites: 5,
+		expectedCharges: 0
+	},
+	php: { maximumRequests: 40, maximumDurableObjectRequests: 38, sqlCalls: 0, expectedCharges: 0 },
+	prepared: {
+		maximumRequests: 40,
+		maximumDurableObjectRequests: 38,
+		sqlCalls: 0,
+		expectedCharges: 0
 	}
 };
 
@@ -50,14 +69,32 @@ const sourceFiles = {
 		'experiments/browser/prepare.ts',
 		'build/fixture.wasm',
 		'build/sharing.wasm'
-	]
+	],
+	consumer: ['experiments/consumer'],
+	php: ['experiments/consumer'],
+	prepared: ['experiments/consumer']
 };
 
+const configs = {
+	consumer: 'experiments/consumer/wrangler.jsonc',
+	php: 'experiments/consumer/php/wrangler.jsonc',
+	prepared: 'experiments/consumer/php/wrangler.prepared.jsonc'
+} as const;
+
 const root = new URL('../', import.meta.url);
+const extraction = kind === 'browser' && process.env.FOLIO_BROWSER_EXTRACTION === '1';
 const creds = credentials();
 const api = createApi(creds);
 const name = `cfw-folio-${kind === 'cloud' ? '' : `${kind}-`}${crypto.randomUUID().slice(0, 8)}`;
-const config = `experiments/${kind}/wrangler.jsonc`;
+const config = extraction
+	? 'experiments/browser/extraction/wrangler.jsonc'
+	: kind in configs
+		? configs[kind as keyof typeof configs]
+		: `experiments/${kind}/wrangler.jsonc`;
+const consumerNames = (process.env.FOLIO_CONSUMER_RUNS ?? 'kernel-control,gmux-abi,tinyimg').split(
+	','
+);
+const consumerPairs = Number(process.env.FOLIO_CONSUMER_PAIRS ?? 30);
 const secret = crypto.randomUUID();
 const { directory, save } = await openRun(kind, name);
 
@@ -95,6 +132,7 @@ const url = `https://${name}.${subdomain}.workers.dev`;
 await save('run.json', {
 	name,
 	kind,
+	variant: extraction ? 'automatic-extraction' : 'original',
 	url,
 	startedAt: new Date().toISOString(),
 	account: creds.label,
@@ -104,21 +142,37 @@ if (sourceFiles[kind].length) {
 	execFileSync(
 		'tar',
 		[
+			'--exclude=experiments/consumer/build',
+			'--exclude=experiments/consumer/runs',
 			'-czf',
 			new URL('source.tar.gz', directory).pathname,
 			'src',
 			'package.json',
 			'experiments/lib',
 			'experiments/deploy.ts',
-			`experiments/${kind}/worker.ts`,
+			...(kind in configs ? [] : [`experiments/${kind}/worker.ts`]),
 			config,
-			...sourceFiles[kind]
+			...sourceFiles[kind],
+			...(extraction
+				? [
+						'experiments/browser/extraction/worker.ts',
+						'experiments/browser/extraction/prepare.ts',
+						'experiments/browser/extraction/probe.ts',
+						'experiments/browser/build/extraction-assets.json'
+					]
+				: [])
 		],
 		{ cwd: root }
 	);
 }
 const log = (stage: string, extra: object = {}) =>
 	console.log(JSON.stringify({ name, stage, ...extra }));
+const meter = () => readMeter(creds.account, creds.token);
+if (kind in configs) {
+	const before = await meter();
+	await save('meter-start.json', before);
+	log('meter-start', before);
+}
 const wrangler = (args: string[], file: string, input?: string): Child =>
 	spawnWrangler(creds, args, new URL(file, directory), { cwd: root, input });
 
@@ -154,6 +208,17 @@ try {
 		const result = await collect(url);
 		await save('result.json', result);
 		console.log(JSON.stringify(result.summary));
+	} else if (kind === 'consumer') {
+		const requests = consumerNames.map(
+			(consumer) => `consumer=${consumer}&pairs=${consumerPairs}`
+		);
+		const results = await runSessions(url, secret, requests, save, log, meter);
+		assert.ok(
+			results.length === requests.length && results.every((item) => item.passed),
+			'a consumer session failed; raw results retained'
+		);
+	} else if (kind === 'php' || kind === 'prepared') {
+		await runPhp(url, secret, kind, save, log, meter);
 	} else {
 		const began = performance.now();
 		const response = await fetch(`${url}/run`, {
@@ -188,6 +253,11 @@ try {
 		if ((await snapshot(api)).scripts.includes(name)) await retire(api, name, classesFor[kind]);
 		const after = await snapshot(api);
 		await save('after.json', after);
+		if (kind in configs) {
+			const end = await meter();
+			await save('meter-end.json', end);
+			log('meter-end', end);
+		}
 		assert.deepEqual(after, baseline, 'account resource baseline differs');
 		log('cleanup', { baselineRestored: true });
 	}
