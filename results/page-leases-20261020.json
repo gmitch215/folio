@@ -1,0 +1,29 @@
+{
+  "kind": "local-reference-owner-leased-native-wasm",
+  "node": "v26.8.2",
+  "logicalBytes": 8388608,
+  "materializedBytes": 6291456,
+  "owners": 4,
+  "ownerCreditBytes": 2097152,
+  "residentCreditBytes": 524288,
+  "peakChargedResidentBytes": 524288,
+  "peakOwnerBytes": 1638400,
+  "regionWasmBytes": 262144,
+  "regions": 24,
+  "exactReturn": true,
+  "exactComparedBytes": 8388608,
+  "elapsedMs": 5.904791999999986,
+  "final": {
+    "pages": 128,
+    "residentBytes": 0,
+    "leases": 0,
+    "retiredPages": 0
+  },
+  "limits": [
+    "local reference owners, no remote latency measurement",
+    "copied leases, not shared backing",
+    "explicit spans, not arbitrary native-memory paging",
+    "volatile manifest and owners, no crash recovery",
+    "charged page credits are not RSS"
+  ]
+}

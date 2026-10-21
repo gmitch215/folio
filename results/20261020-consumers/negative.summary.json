@@ -1,0 +1,249 @@
+{
+  "environment": {
+    "kind": "environment",
+    "consumer": "serial-chain",
+    "node": "v26.8.2",
+    "v8": "14.6.202.34-node.28",
+    "cpu": "Apple M2 Pro",
+    "hardwareThreads": 12,
+    "moduleBytes": 108,
+    "moduleSha256": "11570817a2cb4e0b3c28a6f8b0e509a74c9ed189aa3e40f4287af87b8ba85006",
+    "prepareMs": 14.718083999999976,
+    "openMs": {
+      "native": 0.044375000000002274,
+      "folio-1": 0.5159170000000017,
+      "folio-2": 32.04058300000003,
+      "folio-4": 29.979708000000016,
+      "folio-8": 39.60933299999999
+    },
+    "arms": [
+      "native",
+      "folio-1",
+      "folio-2",
+      "folio-4",
+      "folio-8"
+    ],
+    "pairs": 20,
+    "warmup": 2,
+    "functionExports": 1,
+    "diagnostics": 2
+  },
+  "measuredSamples": 100,
+  "workloads": {
+    "serial-chain/recurrence-500k": {
+      "folio-2": {
+        "wallMs": {
+          "n": 20,
+          "median": 2280.9437920000055,
+          "min": 2240.381542000003,
+          "max": 2356.025291999991
+        },
+        "wallTailMs": {
+          "p95": 2349.555708999993,
+          "max": 2356.025291999991
+        },
+        "cpuMs": {
+          "n": 20,
+          "median": 3665.404,
+          "min": 3587.975,
+          "max": 3790.824
+        },
+        "pairedSpeedup": {
+          "n": 20,
+          "median": 0.00022515798776235387,
+          "min": 0.00020787589675868735,
+          "max": 0.000240037040766648
+        },
+        "cpuRatio": {
+          "n": 20,
+          "median": 7140.915019762846,
+          "min": 5534.930197268588,
+          "max": 7704.926829268293
+        },
+        "workersDispatched": {
+          "n": 20,
+          "median": 2,
+          "min": 2,
+          "max": 2
+        },
+        "regionsEnqueued": {
+          "n": 20,
+          "median": 500000,
+          "min": 500000,
+          "max": 500000
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "speculative"
+        ]
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 20,
+          "median": 1536.5359579999931,
+          "min": 1497.8444170000002,
+          "max": 1615.0669999999955
+        },
+        "wallTailMs": {
+          "p95": 1600.181708,
+          "max": 1615.0669999999955
+        },
+        "cpuMs": {
+          "n": 20,
+          "median": 3745.743,
+          "min": 3605.142,
+          "max": 4014.553
+        },
+        "pairedSpeedup": {
+          "n": 20,
+          "median": 0.00033454271770298776,
+          "min": 0.0003076619707815563,
+          "max": 0.0003587174202090241
+        },
+        "cpuRatio": {
+          "n": 20,
+          "median": 7342.011834319526,
+          "min": 5649.6312594840665,
+          "max": 7861.446640316205
+        },
+        "workersDispatched": {
+          "n": 20,
+          "median": 4,
+          "min": 4,
+          "max": 4
+        },
+        "regionsEnqueued": {
+          "n": 20,
+          "median": 500000,
+          "min": 500000,
+          "max": 500000
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "speculative"
+        ]
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 20,
+          "median": 1675.4745420000036,
+          "min": 1655.3933749999997,
+          "max": 1716.349374999998
+        },
+        "wallTailMs": {
+          "p95": 1711.0202500000014,
+          "max": 1716.349374999998
+        },
+        "cpuMs": {
+          "n": 20,
+          "median": 7711.467,
+          "min": 7337.328,
+          "max": 7818.144
+        },
+        "pairedSpeedup": {
+          "n": 20,
+          "median": 0.00030510708671232644,
+          "min": 0.00028232142435085815,
+          "max": 0.00033191304551646563
+        },
+        "cpuRatio": {
+          "n": 20,
+          "median": 14891.72832369942,
+          "min": 11793.154779969651,
+          "max": 15890.536585365855
+        },
+        "workersDispatched": {
+          "n": 20,
+          "median": 8,
+          "min": 8,
+          "max": 8
+        },
+        "regionsEnqueued": {
+          "n": 20,
+          "median": 500000,
+          "min": 500000,
+          "max": 500000
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "speculative"
+        ]
+      },
+      "native": {
+        "wallMs": {
+          "n": 20,
+          "median": 0.51416700000118,
+          "min": 0.48087499999383,
+          "max": 0.5544589999917662
+        },
+        "wallTailMs": {
+          "p95": 0.5456250000024738,
+          "max": 0.5544589999917662
+        },
+        "cpuMs": {
+          "n": 20,
+          "median": 0.519,
+          "min": 0.485,
+          "max": 0.659
+        }
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 20,
+          "median": 0.5299579999991693,
+          "min": 0.49474999999802094,
+          "max": 0.8003330000065034
+        },
+        "wallTailMs": {
+          "p95": 0.5713329999998678,
+          "max": 0.8003330000065034
+        },
+        "cpuMs": {
+          "n": 20,
+          "median": 0.532,
+          "min": 0.495,
+          "max": 0.736
+        },
+        "pairedSpeedup": {
+          "n": 20,
+          "median": 0.9727724268207963,
+          "min": 0.6545200560208908,
+          "max": 1.0330470405199532
+        },
+        "cpuRatio": {
+          "n": 20,
+          "median": 1.0268336314847941,
+          "min": 0.8118361153262519,
+          "max": 1.391304347826087
+        },
+        "workersDispatched": {
+          "n": 20,
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "regionsEnqueued": {
+          "n": 20,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "serial"
+        ]
+      }
+    }
+  },
+  "load": {
+    "n": 100,
+    "median": 3.51806640625,
+    "min": 2.67919921875,
+    "max": 4.60498046875
+  },
+  "hash": "8c223c5726c938003eb2d2a8867ed6c33cf2a6ab48dbaae42a4d668bc9695ca6"
+}

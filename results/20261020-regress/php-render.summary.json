@@ -1,0 +1,249 @@
+{
+  "environment": {
+    "kind": "environment",
+    "node": "v26.8.2",
+    "cpu": "Apple M2 Pro",
+    "hardwareThreads": 12,
+    "arms": [
+      "native",
+      "old-2",
+      "folio-2",
+      "old-8",
+      "folio-8"
+    ],
+    "pairs": 10,
+    "warmup": 1,
+    "oldBuildSha256": "989b615ba1fccbe9a82d1016a368291f1ca8e318abcccc55fc8729c4c82fa07e",
+    "measured": "time and process CPU between the drupal-booted and drupal-rendered stages"
+  },
+  "measuredSamples": 50,
+  "workloads": {
+    "drupal-uncached-render": {
+      "old-2": {
+        "wallMs": {
+          "n": 10,
+          "median": 1287.012708,
+          "min": 1235.3200000000002,
+          "max": 1372.339875
+        },
+        "wallTailMs": {
+          "p95": 1372.339875,
+          "max": 1372.339875
+        },
+        "cpuMs": {
+          "n": 10,
+          "median": 2727.539,
+          "min": 2670.433,
+          "max": 2853.9649999999997
+        },
+        "pairedSpeedup": {
+          "n": 10,
+          "median": 0.9048099877176227,
+          "min": 0.8679875579481116,
+          "max": 0.9633826660298545
+        },
+        "cpuRatio": {
+          "n": 10,
+          "median": 1.6275223876433227,
+          "min": 1.5492374578524901,
+          "max": 1.6778524870911358
+        },
+        "workersDispatched": {
+          "n": 10,
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "regionsEnqueued": {
+          "n": 10,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "serial"
+        ]
+      },
+      "folio-2": {
+        "wallMs": {
+          "n": 10,
+          "median": 1182.9935000000003,
+          "min": 1128.708375,
+          "max": 1264.500584
+        },
+        "wallTailMs": {
+          "p95": 1264.500584,
+          "max": 1264.500584
+        },
+        "cpuMs": {
+          "n": 10,
+          "median": 1730.73,
+          "min": 1677.9550000000002,
+          "max": 1828.1100000000001
+        },
+        "pairedSpeedup": {
+          "n": 10,
+          "median": 1.0163617876699642,
+          "min": 0.9157157036156813,
+          "max": 1.0606297361796402
+        },
+        "cpuRatio": {
+          "n": 10,
+          "median": 1.024435200136376,
+          "min": 0.9752195755879373,
+          "max": 1.084184081956538
+        },
+        "versusOld": {
+          "n": 10,
+          "median": 1.1005547085911647,
+          "min": 1.0120530454416936,
+          "max": 1.2158498203754358
+        },
+        "workersDispatched": {
+          "n": 10,
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "regionsEnqueued": {
+          "n": 10,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "serial"
+        ]
+      },
+      "old-8": {
+        "wallMs": {
+          "n": 10,
+          "median": 1276.580708,
+          "min": 1236.174125,
+          "max": 1503.6386250000003
+        },
+        "wallTailMs": {
+          "p95": 1503.6386250000003,
+          "max": 1503.6386250000003
+        },
+        "cpuMs": {
+          "n": 10,
+          "median": 2739.064,
+          "min": 2690.444,
+          "max": 2977.7789999999995
+        },
+        "pairedSpeedup": {
+          "n": 10,
+          "median": 0.9108762452017252,
+          "min": 0.7961631512358895,
+          "max": 0.9667413358939216
+        },
+        "cpuRatio": {
+          "n": 10,
+          "median": 1.623955449530895,
+          "min": 1.5548589704024516,
+          "max": 1.7306711875912473
+        },
+        "workersDispatched": {
+          "n": 10,
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "regionsEnqueued": {
+          "n": 10,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "serial"
+        ]
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 10,
+          "median": 1162.349709,
+          "min": 1139.3199580000003,
+          "max": 1237.209042
+        },
+        "wallTailMs": {
+          "p95": 1237.209042,
+          "max": 1237.209042
+        },
+        "cpuMs": {
+          "n": 10,
+          "median": 1717.994,
+          "min": 1651.083,
+          "max": 1793.768
+        },
+        "pairedSpeedup": {
+          "n": 10,
+          "median": 0.9961916220516728,
+          "min": 0.9295219812982908,
+          "max": 1.050751070929629
+        },
+        "cpuRatio": {
+          "n": 10,
+          "median": 1.0185355855487197,
+          "min": 0.9596016952304788,
+          "max": 1.0713072893554783
+        },
+        "versusOld": {
+          "n": 10,
+          "median": 1.092528537378076,
+          "min": 1.051010414750219,
+          "max": 1.319768528973667
+        },
+        "workersDispatched": {
+          "n": 10,
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "regionsEnqueued": {
+          "n": 10,
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "replayed": 0,
+        "fallbacks": 0,
+        "modes": [
+          "serial"
+        ]
+      },
+      "native": {
+        "wallMs": {
+          "n": 10,
+          "median": 1173.546375,
+          "min": 1134.156959,
+          "max": 1197.1416660000002
+        },
+        "wallTailMs": {
+          "p95": 1197.1416660000002,
+          "max": 1197.1416660000002
+        },
+        "cpuMs": {
+          "n": 10,
+          "median": 1699.2409999999998,
+          "min": 1654.414,
+          "max": 1730.3459999999998
+        }
+      }
+    }
+  },
+  "load": {
+    "n": 50,
+    "median": 4.60205078125,
+    "min": 3.93603515625,
+    "max": 12.05615234375
+  },
+  "hash": "20812865a969b904c4586d2220319a0aabb866bf9c11be25c376edfe9f92f0d9"
+}

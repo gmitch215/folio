@@ -1,0 +1,30 @@
+{
+  "artifact": "php8.5.tuned.wasm",
+  "bytes": 13401751,
+  "sha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+  "importedFunctions": 103,
+  "node": "v26.8.2",
+  "v8": "14.6.202.34-node.28",
+  "stages": [
+    {
+      "phase": "native-validated"
+    },
+    {
+      "phase": "generated",
+      "originalFunctions": 12481,
+      "originalDefined": 12378,
+      "coordinatorFunctions": 1315723,
+      "generatedFunctions": 1303242,
+      "generatedHelpers": 1132678,
+      "outlinedFunctions": 56486,
+      "regions": 57038,
+      "workerFunctions": 114076
+    },
+    {
+      "phase": "complete",
+      "error": "CompileError: WebAssembly.Module(): functions count of 1258580 exceeds internal limit of 1000000 @+1761420"
+    }
+  ],
+  "error": "CompileError: WebAssembly.Module(): functions count of 1258580 exceeds internal limit of 1000000 @+1761420",
+  "elapsedMs": 117358.761125
+}

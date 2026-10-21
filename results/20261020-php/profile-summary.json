@@ -1,0 +1,119 @@
+{
+  "profileSha256": "b66c72158419882fc247ed819c77cd9d64f26cf67400a9f40873da347141ce7f",
+  "moduleSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+  "sampledMs": 1700.5,
+  "wasmMs": 802.8,
+  "wasmFunctionsSampled": 647,
+  "functionsCoveringHalfOfWasmTime": 28,
+  "unexportedWasmMs": 454,
+  "shareOfWasmByBlockingRule": {
+    "call_indirect": 0.442,
+    "other node or global": 0.4,
+    "pure if stack pointer allowed": 0.067,
+    "calls an import or an impure function": 0.049,
+    "pure": 0.039,
+    "unclassified": 0.002
+  },
+  "top": [
+    {
+      "name": "lex_scan",
+      "selfMs": 60.5,
+      "shareOfWasm": 0.075
+    },
+    {
+      "name": "zendparse",
+      "selfMs": 43.1,
+      "shareOfWasm": 0.054
+    },
+    {
+      "name": "index 1390",
+      "selfMs": 31.8,
+      "shareOfWasm": 0.04
+    },
+    {
+      "name": "execute_ex",
+      "selfMs": 27.6,
+      "shareOfWasm": 0.034
+    },
+    {
+      "name": "index 10428",
+      "selfMs": 17.8,
+      "shareOfWasm": 0.022
+    },
+    {
+      "name": "zend_execute",
+      "selfMs": 16.8,
+      "shareOfWasm": 0.021
+    },
+    {
+      "name": "malloc",
+      "selfMs": 16.2,
+      "shareOfWasm": 0.02
+    },
+    {
+      "name": "zend_gc_collect_cycles",
+      "selfMs": 12.8,
+      "shareOfWasm": 0.016
+    },
+    {
+      "name": "php_pcre2_match",
+      "selfMs": 12.5,
+      "shareOfWasm": 0.016
+    },
+    {
+      "name": "index 3515",
+      "selfMs": 12.5,
+      "shareOfWasm": 0.016
+    },
+    {
+      "name": "index 12053",
+      "selfMs": 12.2,
+      "shareOfWasm": 0.015
+    },
+    {
+      "name": "zend_call_function",
+      "selfMs": 11.5,
+      "shareOfWasm": 0.014
+    },
+    {
+      "name": "index 11266",
+      "selfMs": 10.3,
+      "shareOfWasm": 0.013
+    },
+    {
+      "name": "free",
+      "selfMs": 10.2,
+      "shareOfWasm": 0.013
+    },
+    {
+      "name": "index 1533",
+      "selfMs": 10.1,
+      "shareOfWasm": 0.013
+    },
+    {
+      "name": "index 10912",
+      "selfMs": 9.9,
+      "shareOfWasm": 0.012
+    },
+    {
+      "name": "index 10895",
+      "selfMs": 9.6,
+      "shareOfWasm": 0.012
+    },
+    {
+      "name": "zend_hash_find",
+      "selfMs": 9.4,
+      "shareOfWasm": 0.012
+    },
+    {
+      "name": "index 10891",
+      "selfMs": 8.6,
+      "shareOfWasm": 0.011
+    },
+    {
+      "name": "index 11009",
+      "selfMs": 7.9,
+      "shareOfWasm": 0.01
+    }
+  ]
+}

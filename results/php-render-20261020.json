@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-20",
+  "scope": "Local Node correctness differential using shipping drupflare PHP artifact, glue, ROM mount, SQL bridge, shim fragments, kernel boot and renderPage; not a deployed performance benchmark",
+  "node": "v26.8.2",
+  "artifact": {
+    "bytes": 13401751,
+    "sha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4"
+  },
+  "php": {
+    "version": "8.5.2",
+    "intSize": 8
+  },
+  "native": {
+    "ok": true,
+    "kernel": true,
+    "hasDb": true,
+    "exception": {
+      "caught": "folio-caught-unwind"
+    },
+    "status": 200,
+    "bytes": 17699,
+    "pageCache": "MISS",
+    "dynamicCache": "MISS",
+    "uid": 0,
+    "setCookie": [],
+    "contentType": "text/html; charset=utf-8",
+    "sql": {
+      "queries": 268,
+      "rowsRead": 218,
+      "rowsWritten": 91,
+      "statementShapeSha256": "3055da9e6fbe632a9efaedcd6c522aa83adaf4a1325db1ba1d5a2ef8d1ad7400",
+      "callsIncludingCounters": 804
+    },
+    "lazyInflation": {
+      "files": 11674,
+      "dirs": 2311,
+      "inflated": 1844,
+      "inflatedBytes": 10371131,
+      "residentBytes": 10371131,
+      "highWaterBytes": 10371131,
+      "evicted": 0,
+      "evictedBytes": 0,
+      "reinflated": 0
+    },
+    "memoryBytes": 86638592
+  },
+  "folio": {
+    "ok": true,
+    "kernel": true,
+    "hasDb": true,
+    "exception": {
+      "caught": "folio-caught-unwind"
+    },
+    "automatic": true,
+    "mechanism": "control-flow",
+    "threadIds": [
+      1,
+      2
+    ],
+    "capabilities": {
+      "physicalSharing": "same-process",
+      "automaticRegions": "control-flow",
+      "dependence": "ordered-validation"
+    },
+    "calls": [
+      {
+        "call": "caught-exception",
+        "values": [
+          0
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "extraction": "control-flow",
+        "memoryMode": "snapshot",
+        "snapshotBytes": 0,
+        "reason": "single-region"
+      },
+      {
+        "call": "kernel-boot",
+        "values": [
+          0
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "extraction": "control-flow",
+        "memoryMode": "snapshot",
+        "snapshotBytes": 0,
+        "reason": "single-region"
+      },
+      {
+        "call": "uncached-front-page",
+        "values": [
+          0
+        ],
+        "workers": 0,
+        "regions": 1,
+        "replayed": 0,
+        "fallbacks": 0,
+        "mode": "serial",
+        "extraction": "control-flow",
+        "memoryMode": "snapshot",
+        "snapshotBytes": 0,
+        "reason": "single-region"
+      }
+    ],
+    "status": 200,
+    "bytes": 17699,
+    "pageCache": "MISS",
+    "dynamicCache": "MISS",
+    "uid": 0,
+    "setCookie": [],
+    "contentType": "text/html; charset=utf-8",
+    "sql": {
+      "queries": 268,
+      "rowsRead": 218,
+      "rowsWritten": 91,
+      "statementShapeSha256": "3055da9e6fbe632a9efaedcd6c522aa83adaf4a1325db1ba1d5a2ef8d1ad7400",
+      "callsIncludingCounters": 804
+    },
+    "lazyInflation": {
+      "files": 11674,
+      "dirs": 2311,
+      "inflated": 1844,
+      "inflatedBytes": 10371131,
+      "residentBytes": 10371131,
+      "highWaterBytes": 10371131,
+      "evicted": 0,
+      "evictedBytes": 0,
+      "reinflated": 0
+    },
+    "memoryBytes": 86638592
+  },
+  "comparison": {
+    "normalizedHtmlEqual": true,
+    "normalizedHtmlSha256": "5b6c9190cc1769951cdd60070ca6ed7eab539e493a78b1df19a3a6f78d2da2bc",
+    "normalizations": [
+      "64 hexadecimal digits after js-view-dom-id-",
+      "64 hexadecimal digits in user.permissionsHash"
+    ],
+    "sqlStatementSequenceEqual": true,
+    "logicalSqlCountsEqual": true,
+    "exceptionsEqual": true
+  },
+  "interpretation": [
+    "Actual prepared coordinator boot and Drupal render succeeded; this is not the original-module fallback run",
+    "Each top-level PHP call remained one dependency-preserving owner region and dispatched zero workers",
+    "No PHP parallel CPU speedup or zero-copy sharing of its ordinary canonical heap is established",
+    "SQL row counters describe local SQLite, not Cloudflare-billed rows",
+    "HTML comparison normalizes only the two named nonce/hash fields; raw HTML hashes differ"
+  ],
+  "cleanup": {
+    "workersJoined": true,
+    "sqliteClosed": true,
+    "deployedResourcesCreated": 0
+  }
+}

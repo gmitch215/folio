@@ -1,0 +1,54 @@
+import { createHash } from 'node:crypto';
+import { appendFileSync, writeFileSync } from 'node:fs';
+import { cpus, loadavg } from 'node:os';
+import { prepare } from '/Users/gamer/gmitch215/js/folio/src/compiler.ts';
+import { Coordinator } from '/Users/gamer/gmitch215/js/folio/src/coordinator.ts';
+import { Folio } from '/Users/gamer/gmitch215/js/folio/src/node.ts';
+import consumer from '/Users/gamer/gmitch215/js/folio/scripts/probe/consumers/small-trips.ts';
+
+const [output, pairsArg, widthsArg] = process.argv.slice(2);
+const pairs = Number(pairsArg ?? 20);
+const widths = (widthsArg ?? '2,8').split(',').map(Number);
+const proto = Coordinator.prototype as any;
+const original = proto.bypass;
+let off = false;
+proto.bypass = function () {
+	return off ? false : original.call(this);
+};
+writeFileSync(output!, '');
+const emit = (row: object) => appendFileSync(output!, JSON.stringify(row) + '\n');
+emit({ kind: 'environment', node: process.version, cpu: cpus()[0]!.model, hardwareThreads: cpus().length, pairs, widths, arms: 'native, N-bypass (shipped heuristic), N-nobypass (heuristic returns false)' });
+const plan = prepare(consumer.bytes);
+for (const item of consumer.cases) {
+	const arms: { name: string; off: boolean; api: any; run: () => Promise<any>; close: () => Promise<void> }[] = [];
+	const { imports, memory } = consumer.imports!();
+	const inst = new WebAssembly.Instance(new WebAssembly.Module(consumer.bytes), imports);
+	const napi = { exports: inst.exports, memory: memory! };
+	arms.push({ name: 'native', off: false, api: napi, run: async () => { for (const c of item.prepare(napi)) (napi.exports[c.export] as any)(...c.args); }, close: async () => {} });
+	for (const w of widths)
+		for (const noBypass of [false, true]) {
+			const made = consumer.imports!();
+			const pool = await Folio.open(plan, { imports: made.imports, workers: w });
+			const api = { exports: pool.exports, memory: pool.memory };
+			let report: any;
+			arms.push({ name: `folio-${w}${noBypass ? '-nobypass' : '-bypass'}`, off: noBypass, api, run: async () => { for (const c of item.prepare(api)) report = await pool.run(c.export, c.args); return report; }, close: () => pool.close() });
+		}
+	for (let round = -2; round < pairs; round++) {
+		const digests = new Set<string>();
+		for (let turn = 0; turn < arms.length; turn++) {
+			const arm = arms[(turn + round + 2) % arms.length]!;
+			off = arm.off;
+			const cpu = process.cpuUsage();
+			const start = performance.now();
+			const report = await arm.run();
+			const wallMs = performance.now() - start;
+			const used = process.cpuUsage(cpu);
+			const digest = createHash('sha256').update(new Uint8Array(arm.api.memory.buffer, 1024, 4 * 5000)).digest('hex');
+			digests.add(digest);
+			if (round < 0) continue;
+			emit({ kind: 'sample', name: `small-trips/${item.name}`, arm: arm.name, round, wallMs, cpuMs: (used.user + used.system) / 1000, outputSha256: digest, passed: true, dispatched: report ? { workers: report.workers, regions: report.regions, replayed: report.replayed, fallbacks: report.fallbacks, mode: report.mode, reason: report.reason ?? '' } : undefined, load: loadavg() });
+		}
+		if (digests.size !== 1) throw new Error('outputs differ');
+	}
+	for (const arm of arms) await arm.close();
+}

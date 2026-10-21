@@ -1,0 +1,49 @@
+{
+  "artifact": "php8.5.tuned.wasm",
+  "sha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+  "node": "v26.8.2",
+  "v8": "14.6.202.34-node.28",
+  "original": {
+    "bytes": 13401751,
+    "imported": 103,
+    "defined": 12378,
+    "total": 12481,
+    "nativeValidated": true
+  },
+  "preparationMs": 116242.14079199999,
+  "generated": {
+    "helpers": 66023,
+    "memoryHelpers": 7815,
+    "outlines": 56486
+  },
+  "reasons": [
+    "host or non-memory imports"
+  ],
+  "control": {
+    "regions": 57038,
+    "entries": 2591,
+    "coordinator": {
+      "bytes": 31232047,
+      "imported": 57143,
+      "defined": 191925,
+      "total": 249068,
+      "nativeValidated": true
+    },
+    "worker": {
+      "bytes": 4837570,
+      "imported": 0,
+      "defined": 114076,
+      "total": 114076,
+      "nativeValidated": true
+    },
+    "tracked": {
+      "bytes": 8540770,
+      "imported": 7,
+      "defined": 114077,
+      "total": 114084,
+      "nativeValidated": true
+    },
+    "diagnosticCount": 789
+  },
+  "totalMs": 116411.993584
+}
