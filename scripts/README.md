@@ -71,6 +71,7 @@ rewriting it might, so change one only with a paired run against the old version
 | `worksp-recorder.ts`       | turns dispatch events and accesses into userland-call segments with merged intervals                         |
 | `worksp-hooks.ts`          | the hook imports a worker binds to an instrumented module, and the record it returns                         |
 | `worksp-refcount.ts`       | the counter experiment that checks refcount tags (0 verified sites so far)                                   |
+| `worksp-validate.ts`       | differential validation of private sites: serial digest against the explicit task API on private contexts    |
 
 `php-preparation.ts` and `php-render.ts` need a drupflare worker checkout with its dependencies and
 a restored `.interp`. `FOLIO_CONSUMER` names it, and `../drupflare/worker` beside this repository is
@@ -145,7 +146,11 @@ summarizes all four.
 `worksp.ts OUT.jsonl count|trace INPUTS [REPEATS] [RC_SITES.json]` takes inputs from `drupal-render`,
 `hash-chains`, `dependent-chain`, `serialize-json`, `twig-render` and `calls`; trace mode needs a heap
 of several GB (`FOLIO_WORKSP_HEAP_MB`) and about 150 s for the Drupal render. `scripts/analyze/worksp.ts`
-holds the ladder and summary.
+holds the ladder, the task rung and the summary. `shared-var` is a fifth input whose calls share a global.
+`FOLIO_WORKSP_FINE` (`all` or a label list) makes those invocations opcode-grained, `FOLIO_WORKSP_PRIV`
+is a JSON object of input name to task rungs (`labels`, `all` or `auto`), and `FOLIO_WORKSP_EXPOSURE=0`
+and `FOLIO_WORKSP_DEADSTACK=0` switch a recorder rule off for a comparison. `worksp-validate.ts OUT.jsonl
+[SAMPLES]` runs the differential validation of the private sites.
 
 ## Rig
 
