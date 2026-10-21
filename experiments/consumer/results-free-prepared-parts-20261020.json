@@ -1,0 +1,120 @@
+{
+  "run": "cfw-folio-prepared-1ada5a97",
+  "account": "FREE",
+  "baselineRestored": true,
+  "statuses": {
+    "worker-ping": 200,
+    "prepared-lane": 200,
+    "prepared-tracked": 200,
+    "prepared-coordinator": 200,
+    "worker-boot": 200,
+    "worker-work": 200,
+    "boot-cold": 200,
+    "work-0": 200,
+    "work-1": 200,
+    "work-2": 200,
+    "work-big-0": 200,
+    "work-big-1": 200,
+    "plateau-js": 200,
+    "boot-after-plateau": 200,
+    "plateau-php": 200
+  },
+  "cpuMs": {
+    "workerBoot": {
+      "n": 1,
+      "median": 87,
+      "min": 87,
+      "max": 87
+    },
+    "workerWork20000": {
+      "n": 1,
+      "median": 224,
+      "min": 224,
+      "max": 224
+    },
+    "doBoot": {
+      "n": 2,
+      "median": 172,
+      "min": 67,
+      "max": 172
+    },
+    "doWork20000": {
+      "n": 3,
+      "median": 78,
+      "min": 53,
+      "max": 132
+    },
+    "doWork200000": {
+      "n": 2,
+      "median": 527,
+      "min": 518,
+      "max": 527
+    },
+    "doPrepared": [
+      [
+        "/prepared?part=lane",
+        "PhpProbe",
+        129,
+        "ok"
+      ],
+      [
+        "/prepared?part=lane",
+        "worker",
+        0,
+        "ok"
+      ],
+      [
+        "/prepared?part=tracked",
+        "PhpProbe",
+        135,
+        "ok"
+      ],
+      [
+        "/prepared?part=tracked",
+        "worker",
+        0,
+        "ok"
+      ],
+      [
+        "/prepared?part=coordinator",
+        "PhpProbe",
+        319,
+        "ok"
+      ],
+      [
+        "/prepared?part=coordinator",
+        "worker",
+        0,
+        "ok"
+      ]
+    ]
+  },
+  "outputs": {
+    "work-0": "exact",
+    "work-big-0": "exact"
+  },
+  "plateauJs": {
+    "steps": 11,
+    "lastAddedMiB": 88,
+    "linearBytes": 67108864
+  },
+  "plateauPhp": {
+    "steps": 13,
+    "lastAddedMiB": 104,
+    "linearBytes": 149356544
+  },
+  "refusals": [
+    {
+      "entrypoint": "PhpProbe",
+      "outcome": "exceededMemory",
+      "path": "/plateau?kind=js&step=8&max=200",
+      "error": "Durable Object's isolate exceeded its memory limit and was reset."
+    },
+    {
+      "entrypoint": "PhpProbe",
+      "outcome": "exceededMemory",
+      "path": "/plateau?kind=php&step=8&max=200",
+      "error": "Durable Object's isolate exceeded its memory limit and was reset."
+    }
+  ]
+}

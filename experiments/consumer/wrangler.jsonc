@@ -1,0 +1,10 @@
+{
+	"name": "folio-consumer-harness",
+	"main": "worker.ts",
+	"compatibility_date": "2026-10-20",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": true,
+	"browser": { "binding": "BROWSER" },
+	"durable_objects": { "bindings": [{ "name": "GATE", "class_name": "ConsumerGate" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["ConsumerGate"] }]
+}

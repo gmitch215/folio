@@ -1,0 +1,111 @@
+{
+  "run": "cfw-folio-prepared-e80906a3",
+  "account": "FREE",
+  "baselineRestored": true,
+  "statuses": {
+    "worker-ping": 200,
+    "worker-boot": 200,
+    "worker-work": 200,
+    "boot-cold": 200,
+    "work-0": 200,
+    "work-1": 200,
+    "work-2": 200,
+    "work-big-0": 200,
+    "work-big-1": 200,
+    "prepared": 500,
+    "plateau-js": 200,
+    "boot-after-plateau": 200,
+    "plateau-php": 200
+  },
+  "cpuMs": {
+    "workerBoot": {
+      "n": 1,
+      "median": 105,
+      "min": 105,
+      "max": 105
+    },
+    "workerWork20000": {
+      "n": 1,
+      "median": 195,
+      "min": 195,
+      "max": 195
+    },
+    "doBoot": {
+      "n": 2,
+      "median": 161,
+      "min": 51,
+      "max": 161
+    },
+    "doWork20000": {
+      "n": 3,
+      "median": 76,
+      "min": 66,
+      "max": 189
+    },
+    "doWork200000": {
+      "n": 2,
+      "median": 586,
+      "min": 554,
+      "max": 586
+    },
+    "doPrepared": [
+      [
+        "/prepared",
+        "PhpProbe",
+        199,
+        "exceededMemory"
+      ],
+      [
+        "/prepared",
+        "worker",
+        0,
+        "exception"
+      ]
+    ]
+  },
+  "outputs": {
+    "work-0": "exact",
+    "work-big-0": "exact"
+  },
+  "plateauJs": {
+    "steps": 11,
+    "lastAddedMiB": 88,
+    "linearBytes": 67108864
+  },
+  "plateauPhp": {
+    "steps": 13,
+    "lastAddedMiB": 104,
+    "linearBytes": 149356544
+  },
+  "refusals": [
+    {
+      "entrypoint": "PhpProbe",
+      "outcome": "exceededMemory",
+      "path": "/prepared",
+      "error": "Durable Object's isolate exceeded its memory limit and was reset."
+    },
+    {
+      "entrypoint": "worker",
+      "outcome": "exception",
+      "path": "/prepared",
+      "error": "Durable Object's isolate exceeded its memory limit and was reset."
+    },
+    {
+      "entrypoint": "PhpProbe",
+      "outcome": "exceededMemory",
+      "path": "/plateau?kind=js&step=8&max=200",
+      "error": "Durable Object's isolate exceeded its memory limit and was reset."
+    },
+    {
+      "entrypoint": "worker",
+      "outcome": "exceededMemory",
+      "path": "/plateau?kind=js&step=8&max=200"
+    },
+    {
+      "entrypoint": "PhpProbe",
+      "outcome": "exceededMemory",
+      "path": "/plateau?kind=php&step=8&max=200",
+      "error": "Durable Object's isolate exceeded its memory limit and was reset."
+    }
+  ]
+}

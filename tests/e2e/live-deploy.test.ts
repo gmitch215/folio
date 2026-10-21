@@ -3,6 +3,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { beforeAll, describe, test } from 'vitest';
 import { summarizeBrowser } from '../../experiments/browser/analyze.ts';
+import { summarizeConsumer } from '../../experiments/consumer/analyze.ts';
 import { summarizeManaged } from '../../experiments/managed/analyze.ts';
 
 const live = Boolean(
@@ -11,8 +12,9 @@ const live = Boolean(
 // Browser Run is capped at 10 minutes a day on Free, so it stays out of the per-commit set
 const browser = live && process.env.FOLIO_E2E_BROWSER === '1';
 
-function deploy(kind: string) {
+function deploy(kind: string, env: Record<string, string> = {}) {
 	const run = spawnSync(process.execPath, ['experiments/deploy.ts', kind], {
+		env: { ...process.env, ...env },
 		encoding: 'utf8',
 		maxBuffer: 64 * 1024 * 1024
 	});
@@ -22,14 +24,14 @@ function deploy(kind: string) {
 		.filter((line) => line.startsWith('{"name"'))
 		.map((line) => JSON.parse(line));
 	const name: string = stages[0].name;
-	const directory = `experiments/${kind}/runs/${name}`;
+	const directory = `experiments/${['consumer', 'php', 'prepared'].includes(kind) ? 'consumer' : kind}/runs/${name}`;
 	const read = (file: string) => readFileSync(`${directory}/${file}`);
 	assert.deepEqual(
 		JSON.parse(read('after.json').toString()),
 		JSON.parse(read('baseline.json').toString())
 	);
 	assert.ok(stages.some((stage) => stage.stage === 'cleanup' && stage.baselineRestored));
-	return { read, path: `${directory}/result.json` };
+	return { read, directory, path: `${directory}/result.json` };
 }
 
 describe.skipIf(!live)('live deploy on the Free account', () => {
@@ -58,5 +60,19 @@ describe.skipIf(!live)('live deploy on the Free account', () => {
 		const summary = summarizeBrowser(path, JSON.parse(read('result.json').toString()));
 		assert.equal(summary.distinctAgents, 8);
 		assert.equal(summary.arenaBytes, 256 * 1024 * 1024);
+	});
+
+	test.skipIf(!browser)('consumer harness pairs native and Folio in Browser Run', () => {
+		execFileSync(process.execPath, ['experiments/consumer/prepare.ts', 'kernel-control'], {
+			stdio: 'pipe'
+		});
+		const { read, directory } = deploy('consumer', {
+			FOLIO_CONSUMER_RUNS: 'kernel-control',
+			FOLIO_CONSUMER_PAIRS: '20'
+		});
+		const first = readFileSync(`${directory}/result-0-kernel-control.json`);
+		const summary = summarizeConsumer(JSON.parse(first.toString()).result);
+		assert.equal(summary.exactOutputs, true);
+		assert.ok(read('meter-before.json').length > 0);
 	});
 });

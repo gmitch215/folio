@@ -1,0 +1,739 @@
+{
+  "run": "cfw-folio-consumer-a0d5b5a6",
+  "account": "FREE",
+  "baselineRestored": true,
+  "sessions": [
+    {
+      "consumer": "kernel-control",
+      "pairs": 30,
+      "truncated": false,
+      "exactOutputs": true,
+      "cpuMeasured": false,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 4,
+      "crossOriginIsolated": true,
+      "jspi": false,
+      "moduleBytes": 859,
+      "arenaBytes": {
+        "native": 16777216,
+        "folio-2": 16777216,
+        "folio-4": 16777216,
+        "folio-8": 16777216
+      },
+      "loops": [
+        "program",
+        "dependent_program",
+        "aliased_program",
+        "division_program"
+      ],
+      "reasons": [],
+      "openMs": {
+        "native": 0.8199999998323619,
+        "folio-2": 159.1950000000652,
+        "folio-4": 286.1450000000186,
+        "folio-8": 581.4150000000373
+      },
+      "elapsedMs": 8532.75,
+      "cases": {
+        "kernel-control/program-67x524k": {
+          "folio-4": {
+            "wallMs": {
+              "n": 30,
+              "median": 17.360000000102445,
+              "min": 16.045000000158325,
+              "max": 31.194999999832362,
+              "p95": 26.15500000002794
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 3.5947149643476766,
+              "min": 2.0142651065972244,
+              "max": 3.853848550910102,
+              "p95": 3.8272138229327104
+            },
+            "dispatch": {
+              "workers": 4,
+              "regions": 4,
+              "messages": 4,
+              "copiedBytes": 180,
+              "modes": "native-shared",
+              "reasons": ""
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 19.929999999934807,
+              "min": 16.130000000121072,
+              "max": 23.670000000158325,
+              "p95": 23.079999999841675
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 3.107323232311221,
+              "min": 2.6457541191204523,
+              "max": 3.8450092994143277,
+              "p95": 3.7670893907055607
+            },
+            "dispatch": {
+              "workers": 8,
+              "regions": 8,
+              "messages": 8,
+              "copiedBytes": 352,
+              "modes": "native-shared",
+              "reasons": ""
+            }
+          },
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 61.75,
+              "min": 60.300000000046566,
+              "max": 62.98999999999069,
+              "p95": 62.83499999996275
+            }
+          },
+          "folio-2": {
+            "wallMs": {
+              "n": 30,
+              "median": 31.929999999934807,
+              "min": 30.56499999994412,
+              "max": 35.31999999983236,
+              "p95": 32.80999999982305
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 1.9286372007310943,
+              "min": 1.7730747451952784,
+              "max": 1.9990479212939407,
+              "p95": 1.9893669229525919
+            },
+            "dispatch": {
+              "workers": 2,
+              "regions": 2,
+              "messages": 2,
+              "copiedBytes": 90,
+              "modes": "native-shared",
+              "reasons": ""
+            }
+          }
+        }
+      }
+    },
+    {
+      "consumer": "gmux-abi",
+      "pairs": 30,
+      "truncated": false,
+      "exactOutputs": true,
+      "cpuMeasured": false,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 4,
+      "crossOriginIsolated": true,
+      "jspi": false,
+      "moduleBytes": 60522,
+      "arenaBytes": {
+        "native": 67108864,
+        "folio-8": 67108864
+      },
+      "loops": [],
+      "reasons": [
+        "host or non-memory imports"
+      ],
+      "openMs": {
+        "native": 1.5650000000023283,
+        "folio-8": 0.9349999999976717
+      },
+      "elapsedMs": 19626.330000000016,
+      "cases": {
+        "gmux-abi/memset-16mib": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 0.7649999999557622,
+              "min": 0.6900000000023283,
+              "max": 1.0100000000093132,
+              "p95": 0.9050000000279397
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 0.7800000000279397,
+              "min": 0.6350000000093132,
+              "max": 1.2600000000093132,
+              "p95": 0.9649999999674037
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9933333333271245,
+              "min": 0.6071428571032601,
+              "max": 1.2362204724741466,
+              "p95": 1.2023809524386981
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "gmux-abi/memcpy-16mib": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.2949999999837019,
+              "min": 1.0900000000256114,
+              "max": 1.9949999999953434,
+              "p95": 1.7650000000139698
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.3500000000349246,
+              "min": 1.1300000000046566,
+              "max": 2.0599999999976717,
+              "p95": 1.5949999999720603
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9490196078422422,
+              "min": 0.758620689681599,
+              "max": 1.424999999972975,
+              "p95": 1.348547717824084
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "gmux-abi/memset-memcpy-chain": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.3800000000046566,
+              "min": 1.195000000006985,
+              "max": 1.7000000000116415,
+              "p95": 1.6900000000023283
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.3599999999860302,
+              "min": 1.1449999999604188,
+              "max": 1.7150000000256114,
+              "p95": 1.625
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 1.011029411775091,
+              "min": 0.8046647230227686,
+              "max": 1.2803030302980194,
+              "p95": 1.2781954887148943
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 3,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        }
+      }
+    },
+    {
+      "consumer": "tinyimg",
+      "pairs": 30,
+      "truncated": false,
+      "exactOutputs": true,
+      "cpuMeasured": false,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 4,
+      "crossOriginIsolated": true,
+      "jspi": false,
+      "moduleBytes": 778308,
+      "arenaBytes": {
+        "native": 1048576,
+        "folio-8": 1048576
+      },
+      "loops": [],
+      "reasons": [
+        "one imported memory required",
+        "additional defined memory"
+      ],
+      "openMs": {
+        "native": 1.0650000000023283,
+        "folio-8": 1.389999999999418
+      },
+      "elapsedMs": 37302.31499999999,
+      "cases": {
+        "tinyimg/fill-rectangle": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 4.654999999998836,
+              "min": 3.8099999999976717,
+              "max": 12.959999999991851,
+              "p95": 8.39999999999418
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 4.619999999995343,
+              "min": 3.959999999991851,
+              "max": 6.375,
+              "p95": 6.349999999991269
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9989669421508041,
+              "min": 0.6716535433079185,
+              "max": 2.993071593530398,
+              "p95": 1.4495254529724966
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/replace-color": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 6.789999999993597,
+              "min": 5.850000000005821,
+              "max": 9.904999999998836,
+              "p95": 8.955000000001746
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 7.059999999997672,
+              "min": 4.330000000001746,
+              "max": 8.115000000005239,
+              "p95": 8.075000000011642
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.998487140696708,
+              "min": 0.7652495378930861,
+              "max": 1.442263279447431,
+              "p95": 1.3577793008911867
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/fill-ellipse": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 3.2149999999965075,
+              "min": 2.445000000006985,
+              "max": 3.6350000000093132,
+              "p95": 3.595000000001164
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 3.085000000006403,
+              "min": 2.5099999999947613,
+              "max": 3.7850000000034925,
+              "p95": 3.664999999993597
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 1.0123076923101997,
+              "min": 0.7238372092991283,
+              "max": 1.2427007299308064,
+              "p95": 1.2084033613484757
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/opacity": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.360000000000582,
+              "min": 1.110000000000582,
+              "max": 1.735000000000582,
+              "p95": 1.584999999991851
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.4199999999982538,
+              "min": 1.1200000000098953,
+              "max": 1.959999999991851,
+              "p95": 1.9499999999970896
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9769736842082903,
+              "min": 0.7025316455692122,
+              "max": 1.2947761194067942,
+              "p95": 1.1886792452834334
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/convert-channels": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 12.110000000000582,
+              "min": 9.705000000001746,
+              "max": 16.529999999998836,
+              "p95": 16.19999999999709
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 12.305000000007567,
+              "min": 10.285000000003492,
+              "max": 16.755000000004657,
+              "p95": 15.494999999995343
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9923728813549968,
+              "min": 0.7998593035516354,
+              "max": 1.1635401635398195,
+              "p95": 1.1618862420994682
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/crop-circle": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.680000000007567,
+              "min": 1.180000000007567,
+              "max": 2.320000000006985,
+              "p95": 2.2850000000034925
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 1.7449999999953434,
+              "min": 1.2450000000098953,
+              "max": 2.2149999999965075,
+              "p95": 2.1199999999953434
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9911504424867652,
+              "min": 0.7205128205153846,
+              "max": 1.4618473895405362,
+              "p95": 1.2473118279603543
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/shear": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 58.794999999998254,
+              "min": 48.80500000000757,
+              "max": 90.61500000000524,
+              "p95": 88.41999999999825
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 60.42499999998836,
+              "min": 49.94499999999243,
+              "max": 127.86499999999069,
+              "p95": 86.36000000000058
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 1.012484971792996,
+              "min": 0.4823055566417921,
+              "max": 1.3862923582960016,
+              "p95": 1.2025023799809555
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/invert": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 34.41000000000349,
+              "min": 26.819999999992433,
+              "max": 49.0850000000064,
+              "p95": 48.35000000000582
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 34.845000000001164,
+              "min": 25.839999999996508,
+              "max": 47.645000000004075,
+              "p95": 45.28500000000349
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.989338712000868,
+              "min": 0.6477701353447506,
+              "max": 1.5070617132329098,
+              "p95": 1.3681380871536672
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/sepia": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 23.264999999999418,
+              "min": 18.56500000000233,
+              "max": 34.69000000000233,
+              "p95": 32.455000000001746
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 22.57499999999709,
+              "min": 18.875,
+              "max": 47.13000000000466,
+              "p95": 40.570000000006985
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9721674876846184,
+              "min": 0.594313600679112,
+              "max": 1.2874586092711684,
+              "p95": 1.246527777777071
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/saturation": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 20.489999999990687,
+              "min": 16.339999999996508,
+              "max": 28.935000000012224,
+              "p95": 24.860000000000582
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 20.944999999992433,
+              "min": 18.764999999999418,
+              "max": 26.40999999998894,
+              "p95": 23.660000000003492
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9826676714392774,
+              "min": 0.7623046419406709,
+              "max": 1.5419664268592124,
+              "p95": 1.17402597402584
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/gaussian-blur": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 123.59000000001106,
+              "min": 103.55500000000757,
+              "max": 217.47000000000116,
+              "p95": 207.52000000000407
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 124.20500000000175,
+              "min": 105.23499999998603,
+              "max": 280.8850000000093,
+              "p95": 216.72499999999127
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 1.0018218162496655,
+              "min": 0.6290474749452497,
+              "max": 1.2596733086191028,
+              "p95": 1.0782534327934263
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/sobel": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 56.56500000000233,
+              "min": 52.30000000000291,
+              "max": 64.20500000000175,
+              "p95": 63.044999999998254
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 58.07499999999709,
+              "min": 54.029999999998836,
+              "max": 64.02499999999418,
+              "p95": 63.51499999999942
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.975929600552083,
+              "min": 0.8447610800598178,
+              "max": 1.1376805174094868,
+              "p95": 1.1273920174960057
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        },
+        "tinyimg/resize-half": {
+          "native": {
+            "wallMs": {
+              "n": 30,
+              "median": 31.169999999983702,
+              "min": 30.44999999999709,
+              "max": 51.44000000000233,
+              "p95": 37.44999999999709
+            }
+          },
+          "folio-8": {
+            "wallMs": {
+              "n": 30,
+              "median": 32.36000000000058,
+              "min": 30.125,
+              "max": 38.29000000000815,
+              "p95": 35.85500000001048
+            },
+            "pairedSpeedup": {
+              "n": 30,
+              "median": 0.9884076638217718,
+              "min": 0.8592943801419235,
+              "max": 1.6658031088081144,
+              "p95": 1.0943892460548164
+            },
+            "dispatch": {
+              "workers": 0,
+              "regions": 1,
+              "messages": 0,
+              "copiedBytes": 0,
+              "modes": "serial",
+              "reasons": "no-parallel-plan"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

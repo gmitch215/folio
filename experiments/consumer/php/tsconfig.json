@@ -1,0 +1,6 @@
+{
+	"extends": "../../../tsconfig.json",
+	"compilerOptions": { "resolveJsonModule": true },
+	"include": ["worker.ts", "prepared.ts", "wasm.d.ts", "../../lib/workerd.d.ts"],
+	"exclude": []
+}
