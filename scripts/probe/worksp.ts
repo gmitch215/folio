@@ -12,6 +12,10 @@ import { instrumentWorksp, phpExtents, type Mode } from './worksp-instrument.ts'
 //   MODE count (counters only) or trace (full trace and ladder), INPUTS a comma list of
 //   drupal-render, hash-chains, dependent-chain, serialize-json, twig-render, calls
 // FOLIO_CONSUMER, FOLIO_WORKER_BUNDLE, FOLIO_MACHINE as in php-concurrent.ts;
+// FOLIO_WORKSP_EXPOSURE=0 and FOLIO_WORKSP_DEADSTACK=0 switch a recorder rule off for a comparison,
+// FOLIO_WORKSP_FINE=all|label,label makes those invocations opcode-grained, FOLIO_WORKSP_PRIV a JSON
+// object of input name (or default) to private-state rungs [{name, labels?, all?}],
+// FOLIO_WORKSP_SENS=0 skips the sensitivity table, FOLIO_WORKSP_STACKLOG=1 groups stack RAW edges;
 // FOLIO_WORKSP_SIZES overrides request sizes as JSON, FOLIO_WORKSP_HEAP_MB the worker heap
 const [output, modeArg, inputsArg, repeatsArg, rcFile] = process.argv.slice(2);
 if (!output || !modeArg || !inputsArg)
@@ -37,6 +41,7 @@ const sizes: Record<string, any> = {
 	'dependent-chain': { n: 2000 },
 	'serialize-json': { n: 1500 },
 	'twig-render': { n: 40 },
+	'shared-var': { n: 300 },
 	...JSON.parse(process.env.FOLIO_WORKSP_SIZES ?? '{}')
 };
 const STACK_BYTES = 32 * 1024 * 1024;
@@ -114,18 +119,35 @@ const inputs: Record<string, { kind: 'plain' | 'drupal'; code?: string; render?:
 			'plain'
 		)
 	},
+	'shared-var': {
+		kind: 'plain',
+		code: `<?php function g($i){global $cnt;$cnt=($cnt??0)+$i+1;$h=(string)$cnt;for($j=0;$j<${sizes['shared-var'].n};$j++){$h=hash('sha256',str_repeat($h,64));}return $h;}$out=[];for($i=0;$i<8;$i++){$out[]=g($i);}echo md5(serialize($out));`
+	},
 	calls: {
 		kind: 'plain',
 		code: '<?php function g($a){return $a+1;}class K{function m($a){return $a+2;}static function s($a){return $a+3;}}$k=new K;$t=0;for($i=0;$i<100;$i++){$t+=g($i);}for($i=0;$i<50;$i++){$t+=$k->m($i);}for($i=0;$i<25;$i++){$t+=K::s($i);}$t+=array_sum(array_map(fn($v)=>$v*2,range(1,10)));echo $t;'
 	}
 };
 
-const hookConfig = (verify: boolean): HookConfig => ({
+const off = (name: string) => process.env[name] === '0';
+const fineEnv = process.env.FOLIO_WORKSP_FINE;
+const privEnv = process.env.FOLIO_WORKSP_PRIV ? JSON.parse(process.env.FOLIO_WORKSP_PRIV) : {};
+const hookConfig = (verify: boolean, name: string): HookConfig => ({
 	mode,
 	sites: mode === 'trace' ? instrumented.sites : undefined,
 	layout,
 	rcSites,
 	verify,
+	exposure: !off('FOLIO_WORKSP_EXPOSURE'),
+	deadStack: !off('FOLIO_WORKSP_DEADSTACK'),
+	stackLog: process.env.FOLIO_WORKSP_STACKLOG === '1',
+	watch: process.env.FOLIO_WORKSP_WATCH?.split(',').map(Number),
+	fine: fineEnv === 'all' ? 'all' : fineEnv ? fineEnv.split(',') : undefined,
+	analysis: {
+		sensitivity: !off('FOLIO_WORKSP_SENS'),
+		priv: privEnv[name] ?? privEnv.default,
+		siblings: { minShare: Number(process.env.FOLIO_WORKSP_MINSHARE ?? 0.01) }
+	},
 	meta: {
 		module: { name: 'php8.5.tuned.wasm', sha256: moduleSha },
 		machine: { name: process.env.FOLIO_MACHINE ?? 'unlabeled', node: process.version }
@@ -172,7 +194,7 @@ for (const name of inputsArg.split(',')) {
 			kind: input.kind,
 			mode: 'native',
 			module: instrumentedModule,
-			worksp: hookConfig(false),
+			worksp: hookConfig(false, name),
 			heapMb: Number(process.env.FOLIO_WORKSP_HEAP_MB ?? 12000),
 			bundle,
 			consumer
@@ -204,6 +226,7 @@ for (const name of inputsArg.split(',')) {
 				counts: run.traced.counts,
 				stats: run.traced.stats,
 				graph: run.traced.graph,
+				watch: run.traced.watch,
 				analyzeMs: run.traced.analyzeMs,
 				finishMs: run.traced.finishMs,
 				instrumentedWallMs: run.traced.wallMs,

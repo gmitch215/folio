@@ -10,7 +10,8 @@ export const CLASS_NAMES = [
 	'refcount',
 	'output',
 	'host',
-	'heap'
+	'heap',
+	'interp'
 ] as const;
 export const K = {
 	spawn: 0,
@@ -20,16 +21,17 @@ export const K = {
 	refcount: 4,
 	output: 5,
 	host: 6,
-	heap: 7
+	heap: 7,
+	interp: 8
 };
-export const CAT = { plain: 0, alloc: 1, rc: 2, out: 3, outOther: 4 };
+export const CAT = { plain: 0, alloc: 1, rc: 2, out: 3, outOther: 4, interp: 5 };
 const RAW = 0;
 const WAR = 1;
 const WAW = 2;
 const bit = (cls: number, kind: number) => 1 << (cls * 3 + kind);
 const KIND_ALL = [RAW, WAR, WAW];
 const classBits = (cls: number) => KIND_ALL.reduce((m, k) => m | bit(cls, k), 0);
-const MEM_CLASSES = [K.stack, K.static, K.allocator, K.refcount, K.output, K.heap];
+const MEM_CLASSES = [K.stack, K.static, K.allocator, K.refcount, K.output, K.heap, K.interp];
 const NON_RAW_MEM = MEM_CLASSES.reduce((m, c) => m | bit(c, WAR) | bit(c, WAW), 0);
 const RAW_MEM = MEM_CLASSES.reduce((m, c) => m | bit(c, RAW), 0);
 const ALL_BITS = CLASS_NAMES.reduce((m, _, c) => m | classBits(c), 0);
@@ -75,6 +77,10 @@ export interface WNode {
 	weight: number;
 	/** structural predecessors, as ids returned by add */
 	preds: number[];
+	/** program-order predecessors inside a fine-grained invocation; only the private rung drops them */
+	order?: number[];
+	/** the opcode handler table index of a fine-grained node */
+	op?: number;
 	inv: number;
 	reads: number[];
 	writes: number[];
@@ -94,19 +100,24 @@ export interface Model {
 	only?: boolean;
 	spec?: boolean;
 	rollback?: number;
+	/** private-state rung: invocations whose label matches run on a copy of the spawn-time state */
+	priv?: { isPrivate: (label: string) => boolean };
 }
 
 const LADDER: Model[] = [
 	{ name: 'M0_spawn_join', removed: [], only: true },
 	{ name: 'M1_all_conflicts', removed: [] },
-	{ name: 'M2_rename_sp', removed: [K.stack] },
-	{ name: 'M3_rename_alloc', removed: [K.stack, K.allocator] },
-	{ name: 'M4_refcount_delta', removed: [K.stack, K.allocator, K.refcount] },
-	{ name: 'M5_output_ordered', removed: [K.stack, K.allocator, K.refcount, K.output] },
-	{ name: 'M6_host_buffered', removed: [K.stack, K.allocator, K.refcount, K.output, K.host] },
+	{ name: 'M2_rename_sp', removed: [K.stack, K.interp] },
+	{ name: 'M3_rename_alloc', removed: [K.stack, K.interp, K.allocator] },
+	{ name: 'M4_refcount_delta', removed: [K.stack, K.interp, K.allocator, K.refcount] },
+	{ name: 'M5_output_ordered', removed: [K.stack, K.interp, K.allocator, K.refcount, K.output] },
+	{
+		name: 'M6_host_buffered',
+		removed: [K.stack, K.interp, K.allocator, K.refcount, K.output, K.host]
+	},
 	{
 		name: 'M7_speculation',
-		removed: [K.stack, K.allocator, K.refcount, K.output, K.host],
+		removed: [K.stack, K.interp, K.allocator, K.refcount, K.output, K.host],
 		spec: true
 	}
 ];
@@ -114,7 +125,7 @@ const LADDER: Model[] = [
 const EXTENSIONS: Model[] = [
 	{
 		name: 'X1_privatize_static',
-		removed: [K.stack, K.allocator, K.refcount, K.output, K.host, K.static],
+		removed: [K.stack, K.interp, K.allocator, K.refcount, K.output, K.host, K.static],
 		spec: true
 	}
 ];
@@ -128,6 +139,16 @@ export interface AnalysisOptions {
 	merge?: { alloc?: number; refcount?: number; output?: number; host?: number };
 	/** the number of sensitivity rows to skip when the graph is large */
 	sensitivity?: boolean;
+	/** private-state rungs to evaluate: a name and either a label list or every invocation */
+	priv?: {
+		name: string;
+		labels?: string[];
+		all?: boolean;
+		/** task rungs for the heaviest sibling groups: the children of each parent that reach minShare */
+		auto?: { minShare: number; top: number };
+	}[];
+	/** sibling groups whose two heaviest children each reach minShare of the total work */
+	siblings?: { minShare: number };
 	/** related(a, b) for invocation ids a (earlier node) and b (current node) */
 	related?: (a: number, b: number) => boolean;
 }
@@ -138,9 +159,20 @@ export class WorkSpan {
 	related: (a: number, b: number) => boolean;
 	weight = new GrowF64();
 	invOf = new Grow32();
+	/** the invocation a node is charged to; a virtual node takes its consumer's */
+	cInv = new Grow32();
+	invParent: number[] = [0];
+	invLabel: string[] = ['request'];
+	private curInv = 0;
 	eStart = new Grow32();
 	ePred = new Grow32();
 	eMask = new Grow32();
+	/** the first granule behind each edge, -1 for structural edges */
+	eWord = new Grow32();
+	/** the handler table index of each node, -1 when unknown */
+	opOf = new Grow32();
+	private curWord = -1;
+	private edgeWord = new Map<number, number>();
 	labels = new Map<number, string>();
 	virtual = 0;
 	realNodes = 0;
@@ -158,7 +190,11 @@ export class WorkSpan {
 	private lastHost = -1;
 	private edges = new Map<number, number>();
 	private allocOwner = new Map<number, number>();
-	private stackRaw = new Set<number>();
+	private stackRaw = new Map<number, number>();
+	/** one entry per stack RAW edge between unrelated invocations when set: [granule, writer inv, reader inv] */
+	stackLog: number[] | undefined;
+	/** diagnostic: how often each stack granule is read with a writer present */
+	stackHist: Map<number, number> | undefined;
 
 	constructor(layout: Layout, related?: (a: number, b: number) => boolean) {
 		this.layout = layout;
@@ -191,7 +227,7 @@ export class WorkSpan {
 	}
 
 	private regionClass(w: number) {
-		if (w === SPWORD) return K.stack;
+		if (w === SPWORD) return K.interp;
 		const byte = w * 2 ** this.shift;
 		const { stack, static: data } = this.layout;
 		if (byte >= stack[0] && byte < stack[1]) return K.stack;
@@ -200,6 +236,7 @@ export class WorkSpan {
 	}
 
 	private classOf(w: number, a: number, b: number) {
+		if (a === CAT.interp || b === CAT.interp) return K.interp;
 		if (a === CAT.rc && b === CAT.rc) return K.refcount;
 		if (a === CAT.out && b === CAT.out) return K.output;
 		if (a === CAT.alloc || b === CAT.alloc) return K.allocator;
@@ -209,6 +246,13 @@ export class WorkSpan {
 	private edge(pred: number, cls: number, kind: number) {
 		if (pred < 0) return;
 		this.edges.set(pred, (this.edges.get(pred) ?? 0) | bit(cls, kind));
+		if (kind === RAW && this.curWord >= 0 && !this.edgeWord.has(pred))
+			this.edgeWord.set(pred, this.curWord);
+	}
+
+	registerInv(id: number, parent: number, label: string) {
+		this.invParent[id] = parent;
+		this.invLabel[id] = label;
 	}
 
 	private commit(preds: Map<number, number> | number[], weight: number, inv: number) {
@@ -218,15 +262,19 @@ export class WorkSpan {
 			for (const p of preds) {
 				this.ePred.push(p);
 				this.eMask.push(bit(K.spawn, RAW));
+				this.eWord.push(-1);
 			}
 		} else {
+			const words = preds === this.edges ? this.edgeWord : undefined;
 			for (const [p, m] of preds) {
 				this.ePred.push(p);
 				this.eMask.push(m);
+				this.eWord.push(words?.get(p) ?? -1);
 			}
 		}
 		this.weight.push(weight);
 		this.invOf.push(inv);
+		this.cInv.push(inv >= 0 ? inv : this.curInv);
 		return id;
 	}
 
@@ -294,13 +342,17 @@ export class WorkSpan {
 	}
 
 	private readEdges(w: number, cat: number) {
+		this.curWord = w;
 		const p = this.page(w);
 		const o = w % PAGE;
 		const pw = p.w[o]!;
 		if (pw >= 0) {
 			const cls = this.classOf(w, p.wc[o]!, cat);
 			this.edge(pw, cls, RAW);
-			if (cls === K.stack && w !== SPWORD) this.stackRaw.add(pw);
+			if (cls === K.stack && w !== SPWORD) {
+				this.stackRaw.set(pw, w);
+				if (this.stackHist) this.stackHist.set(w, (this.stackHist.get(w) ?? 0) + 1);
+			}
 		}
 		const head = p.run[o]!;
 		if (head > 0) {
@@ -314,6 +366,7 @@ export class WorkSpan {
 	}
 
 	private writeEdges(w: number, cat: number) {
+		this.curWord = w;
 		const p = this.page(w);
 		const o = w % PAGE;
 		const pw = p.w[o]!;
@@ -364,7 +417,11 @@ export class WorkSpan {
 
 	add(node: WNode): number {
 		this.edges = new Map<number, number>();
+		this.edgeWord = new Map<number, number>();
+		this.curWord = -1;
+		this.curInv = node.inv;
 		for (const p of node.preds) this.edge(p, K.spawn, RAW);
+		for (const p of node.order ?? []) this.edge(p, K.spawn, WAR);
 		const sp = node.sp ?? 0;
 		const stackWrites = node.writes;
 		this.stackRaw.clear();
@@ -379,6 +436,7 @@ export class WorkSpan {
 		if (node.join) this.events.joins++;
 		if (node.writes.some((c, i) => i % 3 === 2 && (c === CAT.out || c === CAT.outOther)))
 			this.events.outputNodes++;
+		this.curWord = -1;
 		if (node.host) {
 			this.events.host += node.host;
 			if (this.lastHost >= 0) this.edge(this.lastHost, K.host, RAW);
@@ -387,6 +445,7 @@ export class WorkSpan {
 		const id = this.weight.n;
 		const nodeId = this.commit(pre, node.weight, node.inv);
 		assert.equal(nodeId, id);
+		this.opOf.push(node.op ?? -1);
 		if (node.label) this.labels.set(id, node.label);
 		if (node.host) this.lastHost = id;
 		this.realNodes++;
@@ -410,10 +469,69 @@ export class WorkSpan {
 	}
 
 	private checkStack(inv: number) {
-		for (const p of this.stackRaw) {
+		for (const [p, w] of this.stackRaw) {
 			const pinv = this.invOf.a[p]!;
-			if (pinv >= 0 && !this.related(pinv, inv)) this.checks.stackRawCross++;
+			if (pinv >= 0 && !this.related(pinv, inv)) {
+				this.checks.stackRawCross++;
+				this.stackLog?.push(w, pinv, inv);
+			}
 		}
+	}
+
+	/** the logged stack RAW edges between unrelated invocations, grouped; needs stackLog set before the trace */
+	stackEdgeSummary(top = 12) {
+		const log = this.stackLog;
+		if (!log) return undefined;
+		const depth = (v: number) => {
+			let d = 0;
+			for (let x = v; x > 0; x = this.invParent[x] ?? 0) d++;
+			return d;
+		};
+		const distance = (a: number, b: number) => {
+			const seen = new Map<number, number>();
+			for (let x = a, s = 0; ; x = this.invParent[x] ?? 0, s++) {
+				seen.set(x, s);
+				if (x === 0) break;
+			}
+			for (let x = b, s = 0; ; x = this.invParent[x] ?? 0, s++) {
+				const hit = seen.get(x);
+				if (hit !== undefined) return hit + s;
+				if (x === 0) return -1;
+			}
+		};
+		const groups: Record<string, Map<string, number>> = {
+			address_kib_below_stack_top: new Map(),
+			writer: new Map(),
+			reader: new Map(),
+			pair: new Map(),
+			tree_distance: new Map(),
+			reader_depth: new Map()
+		};
+		const bump = (g: string, key: string) =>
+			groups[g]!.set(key, (groups[g]!.get(key) ?? 0) + 1);
+		const high = this.layout.stack[1];
+		for (let i = 0; i < log.length; i += 3) {
+			const w = log[i]!;
+			const a = log[i + 1]!;
+			const b = log[i + 2]!;
+			const wl = this.invLabel[a] ?? '?';
+			const rl = this.invLabel[b] ?? '?';
+			bump('address_kib_below_stack_top', String(Math.floor((high - w * 8) / 1024)));
+			bump('writer', wl);
+			bump('reader', rl);
+			bump('pair', `${wl} -> ${rl}`);
+			bump('tree_distance', String(distance(a, b)));
+			bump('reader_depth', String(depth(b)));
+		}
+		return {
+			edges: log.length / 3,
+			...Object.fromEntries(
+				Object.entries(groups).map(([name, m]) => [
+					name,
+					[...m].sort((x, y) => y[1] - x[1]).slice(0, top)
+				])
+			)
+		};
 	}
 
 	conflictCounts() {
@@ -421,7 +539,7 @@ export class WorkSpan {
 		const kinds = [0, 0, 0];
 		for (let i = 0; i < this.eMask.n; i++) {
 			const m = this.eMask.a[i]!;
-			for (let c = 1; c < 8; c++)
+			for (let c = 1; c < CLASS_NAMES.length; c++)
 				for (let k = 0; k < 3; k++)
 					if (m & bit(c, k)) {
 						kinds[k]!++;
@@ -436,17 +554,67 @@ export class WorkSpan {
 		let keep = ALL_BITS;
 		for (const c of model.removed) keep &= ~classBits(c);
 		if (model.spec) keep &= ~NON_RAW_MEM;
+		if (model.priv)
+			keep &= ~(
+				bit(K.spawn, WAR) |
+				classBits(K.interp) |
+				classBits(K.allocator) |
+				NON_RAW_MEM
+			);
 		return keep;
+	}
+
+	/** the edge filter of the private-state rung; the table is built once per evaluation */
+	private privateFilter(isPrivate: (label: string) => boolean) {
+		const count = this.invParent.length;
+		const sub = new Int32Array(count);
+		const up = new Int32Array(count);
+		for (let v = 1; v < count; v++) {
+			const parent = this.invParent[v] ?? 0;
+			if (isPrivate(this.invLabel[v] ?? '')) {
+				sub[v] = v;
+				up[v] = sub[parent]!;
+			} else sub[v] = sub[parent]!;
+		}
+		const nodeSub = (i: number) => {
+			const v = this.cInv.a[i]!;
+			return v > 0 && v < count ? sub[v]! : 0;
+		};
+		const isAnc = (a: number, b: number) => {
+			if (a === 0) return true;
+			for (let s = b; s !== 0; s = up[s]!) if (s === a) return true;
+			return false;
+		};
+		const valueOut = bit(K.heap, RAW) | bit(K.output, RAW) | bit(K.host, RAW);
+		const structural = bit(K.spawn, RAW) | bit(K.stack, RAW);
+		let lastA = -1;
+		let lastB = -1;
+		let lastRel = 0;
+		const filter = (p: number, i: number, m: number) => {
+			const a = nodeSub(p);
+			const b = nodeSub(i);
+			if (a === b) return m;
+			if (a !== lastA || b !== lastB) {
+				lastA = a;
+				lastB = b;
+				lastRel = isAnc(a, b) || isAnc(b, a) ? 1 : 3;
+			}
+			return lastRel === 3 ? m & structural : m & (valueOut | structural);
+		};
+		return { filter, nodeSub };
 	}
 
 	evaluate(model: Model, rollbackDefault = 0, merge: AnalysisOptions['merge'] = {}) {
 		const n = this.weight.n;
 		const keep = this.keepBits(model);
+		const pf = model.priv ? this.privateFilter(model.priv.isPrivate) : undefined;
+		const priv = pf?.filter;
 		const spec = model.spec === true;
 		const rollback = model.rollback ?? rollbackDefault;
 		const F = new Float64Array(n);
 		const argp = new Int32Array(n).fill(-1);
 		const argm = new Int32Array(n);
+		const argw = new Int32Array(n).fill(-1);
 		const replayed = new Uint8Array(spec ? n : 0);
 		let work = 0;
 		let replays = 0;
@@ -456,6 +624,7 @@ export class WorkSpan {
 		const es = this.eStart.a;
 		const ep = this.ePred.a;
 		const em = this.eMask.a;
+		const ew = this.eWord.a;
 		const total = this.ePred.n;
 		for (let i = 0; i < n; i++) {
 			let S = 0;
@@ -464,11 +633,13 @@ export class WorkSpan {
 			let rp = -1;
 			let sm = 0;
 			let rm = 0;
+			let sw = -1;
 			const end = i + 1 < n ? es[i + 1]! : total;
 			for (let e = es[i]!; e < end; e++) {
-				const m = em[e]! & keep;
-				if (!m) continue;
 				const p = ep[e]!;
+				let m = em[e]! & keep;
+				if (m && priv) m = priv(p, i, m);
+				if (!m) continue;
 				const fp = F[p]!;
 				if (spec && (m & RAW_MEM) !== 0 && (m & ~RAW_MEM) === 0) {
 					if (fp > R) {
@@ -480,6 +651,7 @@ export class WorkSpan {
 					S = fp;
 					sp = p;
 					sm = m;
+					sw = ew[e]!;
 				}
 			}
 			const wi = w[i]!;
@@ -503,6 +675,7 @@ export class WorkSpan {
 				F[i] = S + wi;
 				argp[i] = sp;
 				argm[i] = sm;
+				argw[i] = sw;
 			}
 			if (F[i]! > best) {
 				best = F[i]!;
@@ -516,15 +689,32 @@ export class WorkSpan {
 			(has(K.output) ? (merge.output ?? 0) * this.events.outputNodes : 0) +
 			(has(K.host) ? (merge.host ?? 0) * this.events.host : 0);
 		const span = best < 0 ? 0 : best + extra;
-		const totals = new Float64Array(8);
-		const path: { id: number; weight: number }[] = [];
+		const totals = new Float64Array(CLASS_NAMES.length);
+		const pathEdges = new Float64Array(CLASS_NAMES.length);
+		const path: { id: number; weight: number; mask: number; word: number }[] = [];
 		for (let i = bestId; i >= 0; i = argp[i]!) {
 			const credit = w[i]! * (replayed[i] ? 2 : 1);
-			path.push({ id: i, weight: w[i]! });
+			path.push({ id: i, weight: w[i]!, mask: argm[i]!, word: argw[i]! });
 			if (argp[i]! < 0) break;
-			for (let c = 0; c < 8; c++) if (argm[i]! & classBits(c)) totals[c]! += credit;
+			for (let c = 0; c < CLASS_NAMES.length; c++)
+				if (argm[i]! & classBits(c)) {
+					totals[c]! += credit;
+					pathEdges[c]!++;
+				}
 		}
 		path.reverse();
+		const transitions = new Map<string, { n: number; weight: number }>();
+		const cls = (m: number) => CLASS_NAMES.filter((_, c) => m & classBits(c)).join('+');
+		for (let k = 1; k < path.length; k++) {
+			const a = this.cInv.a[path[k - 1]!.id]!;
+			const b = this.cInv.a[path[k]!.id]!;
+			if (a === b) continue;
+			const key = `${this.invLabel[a] ?? '?'} -> ${this.invLabel[b] ?? '?'} [${cls(path[k]!.mask)}]`;
+			const t = transitions.get(key) ?? { n: 0, weight: 0 };
+			t.n++;
+			t.weight += path[k]!.weight;
+			transitions.set(key, t);
+		}
 		const peak = Math.max(0, ...totals);
 		const binding = peak > 0 ? CLASS_NAMES.filter((_, c) => totals[c] === peak) : [];
 		return {
@@ -538,11 +728,282 @@ export class WorkSpan {
 			})).filter((r) => r.span_weight > 0),
 			replays,
 			path_nodes: path.length,
+			path_subtrees: pf
+				? path.reduce<[number, number][]>((runs, node) => {
+						const s = pf.nodeSub(node.id);
+						const last = runs[runs.length - 1];
+						if (last && last[0] === s) last[1]++;
+						else runs.push([s, 1]);
+						return runs;
+					}, [])
+				: undefined,
+			path_crossings: pf
+				? path
+						.map((node, k) => ({ node, prev: path[k - 1] }))
+						.filter(
+							({ node, prev }) => prev && pf.nodeSub(prev.id) !== pf.nodeSub(node.id)
+						)
+						.slice(0, 16)
+						.map(({ node, prev }) => ({
+							from: this.invLabel[this.cInv.a[prev!.id]!],
+							to: this.invLabel[this.cInv.a[node.id]!],
+							fromOp: this.opOf.a[prev!.id],
+							toOp: this.opOf.a[node.id],
+							edge: CLASS_NAMES.filter((_, c) => node.mask & classBits(c)).join('+'),
+							byte: node.word >= 0 ? node.word * 8 : -1
+						}))
+				: undefined,
+			path_transitions: [...transitions]
+				.sort((x, y) => y[1].n - x[1].n)
+				.slice(0, 12)
+				.map(([key, t]) => ({ key, ...t })),
+			path_edge_classes: Object.fromEntries(
+				CLASS_NAMES.map((name, c) => [name, pathEdges[c]!]).filter(
+					([, n]) => (n as number) > 0
+				)
+			),
 			top_span_path: [...path]
 				.sort((a, b) => b.weight - a.weight || a.id - b.id)
 				.slice(0, 10)
 				.map((r) => ({ name: this.labels.get(r.id) ?? `node ${r.id}`, weight: r.weight }))
 		};
+	}
+
+	/** inclusive work per invocation; a child always has a larger id than its parent */
+	callTree() {
+		const count = this.invParent.length;
+		const own = new Float64Array(count);
+		for (let i = 0; i < this.weight.n; i++) {
+			const v = this.cInv.a[i]!;
+			if (v >= 0 && v < count) own[v]! += this.weight.a[i]!;
+		}
+		const incl = Float64Array.from(own);
+		for (let v = count - 1; v >= 1; v--) incl[this.invParent[v] ?? 0]! += incl[v]!;
+		return { own, incl, total: incl[0]! };
+	}
+
+	/**
+	 * parents whose two heaviest children both carry at least minShare of the total work, with the
+	 * heaviest children by inclusive share, and the same view grouped by child label
+	 */
+	siblingGroups(minShare = 0.01, top = 6) {
+		const { incl, total } = this.callTree();
+		const count = this.invParent.length;
+		const kids = new Map<number, number[]>();
+		for (let v = 1; v < count; v++) {
+			const p = this.invParent[v] ?? 0;
+			const list = kids.get(p);
+			if (list) list.push(v);
+			else kids.set(p, [v]);
+		}
+		const depth = new Int32Array(count);
+		for (let v = 1; v < count; v++) depth[v] = depth[this.invParent[v] ?? 0]! + 1;
+		const rows: any[] = [];
+		for (const [p, list] of kids) {
+			if (list.length < 2) continue;
+			const sorted = [...list].sort((a, b) => incl[b]! - incl[a]!);
+			const first = incl[sorted[0]!]! / total;
+			const second = incl[sorted[1]!]! / total;
+			if (second < minShare) continue;
+			const byLabel = new Map<string, { n: number; share: number }>();
+			for (const c of list) {
+				const key = this.invLabel[c] ?? '';
+				const g = byLabel.get(key) ?? { n: 0, share: 0 };
+				g.n++;
+				g.share += incl[c]! / total;
+				byLabel.set(key, g);
+			}
+			rows.push({
+				parent: p,
+				label: this.invLabel[p],
+				depth: depth[p],
+				share: incl[p]! / total,
+				children: list.length,
+				first,
+				second,
+				heaviest: sorted.slice(0, top).map((c) => ({
+					id: c,
+					label: this.invLabel[c],
+					share: incl[c]! / total
+				})),
+				groups: [...byLabel]
+					.sort((a, b) => b[1].share - a[1].share)
+					.slice(0, top)
+					.map(([label, g]) => ({ label, n: g.n, share: g.share }))
+			});
+		}
+		return rows.sort((a, b) => b.second - a.second);
+	}
+
+	/**
+	 * The task-level model of the private-state rung. Each outermost private invocation is one task that
+	 * runs serially on private state; everything else runs on the owner thread. A task starts when the
+	 * value flow into it (RAW on heap, output and host words, spawn, stack) has finished and ends after
+	 * its own work. Dependences through any other class (allocator and bookkeeping, static, interpreter
+	 * state, write-after-read, write-after-write) are private to a task, so no edge of those kinds
+	 * crosses a task boundary. The owner thread is serial, so time is at least the owner's own work.
+	 */
+	taskModel(name: string, isPrivate: (inv: number, label: string) => boolean) {
+		const n = this.weight.n;
+		const count = this.invParent.length;
+		const top = new Int32Array(count);
+		let tasks = 0;
+		for (let v = 1; v < count; v++) {
+			const parent = this.invParent[v] ?? 0;
+			if (top[parent]! !== 0) top[v] = top[parent]!;
+			else if (isPrivate(v, this.invLabel[v] ?? '')) {
+				top[v] = v;
+				tasks++;
+			}
+		}
+		const topOf = (i: number) => {
+			const v = this.cInv.a[i]!;
+			return v > 0 && v < count ? top[v]! : 0;
+		};
+		const members = new Map<number, number[]>();
+		const taskWork = new Map<number, number>();
+		let work = 0;
+		let owner = 0;
+		for (let i = 0; i < n; i++) {
+			const t = topOf(i);
+			const wi = this.weight.a[i]!;
+			work += wi;
+			if (t === 0) owner += wi;
+			else {
+				const list = members.get(t);
+				if (list) list.push(i);
+				else members.set(t, [i]);
+				taskWork.set(t, (taskWork.get(t) ?? 0) + wi);
+			}
+		}
+		const keep =
+			ALL_BITS &
+			~(bit(K.spawn, WAR) | classBits(K.interp) | classBits(K.allocator) | NON_RAW_MEM);
+		const valueFlow = bit(K.heap, RAW) | bit(K.output, RAW) | bit(K.host, RAW);
+		const structural = bit(K.spawn, RAW) | bit(K.stack, RAW);
+		const F = new Float64Array(n);
+		const arg = new Int32Array(n).fill(-1);
+		const argm = new Int32Array(n);
+		const argw = new Int32Array(n).fill(-1);
+		const es = this.eStart.a;
+		const ep = this.ePred.a;
+		const em = this.eMask.a;
+		const ew = this.eWord.a;
+		const total = this.ePred.n;
+		const done = new Set<number>();
+		let best = 0;
+		let bestId = -1;
+		for (let i = 0; i < n; i++) {
+			const t = topOf(i);
+			if (t !== 0) {
+				if (done.has(t)) continue;
+				done.add(t);
+				let S = 0;
+				let sp = -1;
+				let sm = 0;
+				let sw = -1;
+				for (const j of members.get(t)!) {
+					const end = j + 1 < n ? es[j + 1]! : total;
+					for (let e = es[j]!; e < end; e++) {
+						const p = ep[e]!;
+						if (topOf(p) === t) continue;
+						const m =
+							em[e]! & keep & (topOf(p) === 0 ? valueFlow | structural : structural);
+						if (!m) continue;
+						if (F[p]! > S) {
+							S = F[p]!;
+							sp = p;
+							sm = m;
+							sw = ew[e]!;
+						}
+					}
+				}
+				const finish = S + taskWork.get(t)!;
+				for (const j of members.get(t)!) {
+					F[j] = finish;
+					arg[j] = sp;
+					argm[j] = sm;
+					argw[j] = sw;
+				}
+				if (finish > best) {
+					best = finish;
+					bestId = i;
+				}
+				continue;
+			}
+			let S = 0;
+			let sp = -1;
+			let sm = 0;
+			let sw = -1;
+			const end = i + 1 < n ? es[i + 1]! : total;
+			for (let e = es[i]!; e < end; e++) {
+				const p = ep[e]!;
+				const tp = topOf(p);
+				const m = em[e]! & keep & (tp === 0 ? ALL_BITS : valueFlow | structural);
+				if (!m) continue;
+				if (F[p]! > S) {
+					S = F[p]!;
+					sp = p;
+					sm = m;
+					sw = ew[e]!;
+				}
+			}
+			F[i] = S + this.weight.a[i]!;
+			arg[i] = sp;
+			argm[i] = sm;
+			argw[i] = sw;
+			if (F[i]! > best) {
+				best = F[i]!;
+				bestId = i;
+			}
+		}
+		const time = Math.max(best, owner);
+		const crossings: any[] = [];
+		const counts: Record<string, number> = {};
+		for (let i = bestId, k = 0; i >= 0 && k < 5_000_000; k++) {
+			const p = arg[i]!;
+			if (p < 0) break;
+			const mask = argm[i]!;
+			for (let c = 0; c < CLASS_NAMES.length; c++)
+				if (mask & classBits(c))
+					counts[CLASS_NAMES[c]!] = (counts[CLASS_NAMES[c]!] ?? 0) + 1;
+			if (topOf(p) !== topOf(i) && crossings.length < 12)
+				crossings.push({
+					from: this.invLabel[this.cInv.a[p]!],
+					to: this.invLabel[this.cInv.a[i]!],
+					fromOp: this.opOf.a[p],
+					toOp: this.opOf.a[i],
+					edge: CLASS_NAMES.filter((_, c) => mask & classBits(c)).join('+'),
+					byte: argw[i]! >= 0 ? argw[i]! * 8 : -1,
+					fromTask: topOf(p) !== 0,
+					toTask: topOf(i) !== 0
+				});
+			i = p;
+		}
+		return {
+			name,
+			tasks,
+			work,
+			owner_work: owner,
+			task_work: [...taskWork.values()].reduce((a, b) => a + b, 0),
+			longest_task: Math.max(0, ...taskWork.values()),
+			dependence_span: best,
+			time,
+			parallelism: time > 0 ? work / time : null,
+			binding: owner >= best ? 'owner thread' : 'dependence',
+			path_edge_classes: counts,
+			path_crossings: crossings
+		};
+	}
+
+	/** the dataflow-limit variant of the private rung (no program order, tasks not serial) */
+	privateRung(name: string, isPrivate: (label: string) => boolean) {
+		const model: Model = { name, removed: [], priv: { isPrivate } };
+		const row = this.evaluate(model);
+		let invocations = 0;
+		for (let v = 1; v < this.invLabel.length; v++)
+			if (isPrivate(this.invLabel[v] ?? '')) invocations++;
+		return { name, privateInvocations: invocations, ...row };
 	}
 
 	/** the ladder, with validity decided by the recorded checks */
@@ -697,6 +1158,37 @@ export function record(
 		checks: ws.checks,
 		models: [...ws.ladder(options), ...ws.extensions(options)],
 		sensitivity: options.sensitivity === false ? undefined : ws.sensitivity(),
+		private_rungs: (options.priv ?? [])
+			.filter((p) => !p.auto)
+			.map((p) => {
+				const labels = new Set(p.labels ?? []);
+				return ws.privateRung(p.name, (label) => p.all === true || labels.has(label));
+			}),
+		task_rungs: (options.priv ?? []).flatMap((p) => {
+			if (!p.auto) {
+				const labels = new Set(p.labels ?? []);
+				return [ws.taskModel(p.name, (_v, label) => p.all === true || labels.has(label))];
+			}
+			const { incl, total } = ws.callTree();
+			return ws
+				.siblingGroups(p.auto.minShare, 1)
+				.slice(0, p.auto.top)
+				.map((row) =>
+					ws.taskModel(
+						`${p.name}:${row.label}#${row.parent}`,
+						(v) =>
+							ws.invParent[v] === row.parent && incl[v]! / total >= p.auto!.minShare
+					)
+				);
+		}),
+		siblings: options.siblings ? ws.siblingGroups(options.siblings.minShare) : undefined,
+		stack_edges: ws.stackEdgeSummary(),
+		stack_hist: ws.stackHist
+			? [...ws.stackHist]
+					.sort((a, b) => b[1] - a[1])
+					.slice(0, 25)
+					.map(([w, n]) => [ws.layout.stack[1] - w * 8, n])
+			: undefined,
 		measured: true,
 		assumptions: meta.assumptions,
 		unmeasured: meta.unmeasured
@@ -743,10 +1235,102 @@ export function summarizeWorksp(rows: any[], hash: string) {
 				binding: m.valid ? m.binding_class : m.unchecked?.binding_class,
 				replays: m.replays ?? m.unchecked?.replays
 			})),
-			sensitivity: rec.sensitivity
+			sensitivity: rec.sensitivity,
+			recorder: {
+				ownWriteReads: r.stats?.ownWriteReads,
+				deadStackReads: r.stats?.deadStackReads,
+				opcodeChunks: r.stats?.opcodeChunks
+			},
+			taskRungs: (rec.task_rungs ?? []).map((t: any) => ({
+				name: t.name,
+				tasks: t.tasks,
+				parallelism: t.parallelism === null ? null : Number(t.parallelism.toFixed(3)),
+				work: t.work,
+				ownerWork: t.owner_work,
+				longestTask: t.longest_task,
+				dependenceSpan: t.dependence_span,
+				binding: t.binding,
+				pathEdgeClasses: t.path_edge_classes,
+				crossings: t.path_crossings
+			})),
+			siblings: (rec.siblings ?? []).slice(0, 15).map((g: any) => ({
+				id: g.parent,
+				label: g.label,
+				depth: g.depth,
+				share: Number(g.share.toFixed(4)),
+				children: g.children,
+				first: Number(g.first.toFixed(4)),
+				second: Number(g.second.toFixed(4)),
+				groups: g.groups.slice(0, 3).map((x: any) => ({
+					label: x.label,
+					n: x.n,
+					share: Number(x.share.toFixed(4))
+				}))
+			})),
+			stackEdges: rec.stack_edges
 		};
 	}
-	return { inputs, rawSha256: hash };
+	const spread: Record<string, Record<string, number[]>> = {};
+	for (const [key, value] of Object.entries(inputs) as [string, any][]) {
+		const name = key.replace(/#\d+$/, '');
+		const into = (spread[name] ??= {});
+		const add = (label: string, v: number | null | undefined) => {
+			if (v == null) return;
+			(into[label] ??= []).push(v);
+		};
+		for (const m of value.ladder ?? []) add(m.name, m.parallelism ?? m.uncheckedParallelism);
+		for (const t of value.taskRungs ?? []) add(t.name, t.parallelism);
+	}
+	const spreadSummary = Object.fromEntries(
+		Object.entries(spread).map(([name, rungs]) => [
+			name,
+			Object.fromEntries(
+				Object.entries(rungs).map(([rung, values]) => {
+					const sorted = [...values].sort((a, b) => a - b);
+					return [
+						rung,
+						{
+							n: sorted.length,
+							min: sorted[0],
+							median: sorted[Math.floor(sorted.length / 2)],
+							max: sorted[sorted.length - 1]
+						}
+					];
+				})
+			)
+		])
+	);
+	return { inputs, spread: spreadSummary, rawSha256: hash };
+}
+
+/** one row per site and sample from the differential validation of private sites */
+export function summarizeValidation(rows: any[], hash: string) {
+	const samples = rows.filter((r) => r.kind === 'sample');
+	assert.ok(samples.length > 0, 'no validation samples');
+	const sites: Record<string, { samples: number; equal: number }> = {};
+	for (const r of samples) {
+		const site = (sites[r.site] ??= { samples: 0, equal: 0 });
+		site.samples++;
+		if (r.equal) site.equal++;
+	}
+	return {
+		sites: Object.fromEntries(
+			Object.entries(sites).map(([name, v]) => [
+				name,
+				{ ...v, validated: v.equal === v.samples }
+			])
+		),
+		rawSha256: hash
+	};
+}
+
+export function analyzeValidation(set: string, file: string) {
+	const root = resultsRoot(set);
+	const raw = readRaw(root, file);
+	writeFileSync(
+		new URL(file.replace(/\.jsonl$/, '.summary.json'), root),
+		JSON.stringify(summarizeValidation(parseRows(raw), sha256(raw)), null, 2) + '\n'
+	);
 }
 
 export function analyzeWorksp(set: string, file: string) {

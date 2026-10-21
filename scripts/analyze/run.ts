@@ -7,7 +7,7 @@ import { analyzeIntra } from './intra.ts';
 import { analyzePaired } from './paired.ts';
 import { analyzeScaling } from './scaling.ts';
 import { analyzeSharing } from './sharing.ts';
-import { analyzeWorksp } from './worksp.ts';
+import { analyzeValidation, analyzeWorksp } from './worksp.ts';
 
 for (const set of ['20261019', '20261019-b', '20261019-c']) analyzeSharing(set);
 analyzeScaling();
@@ -57,4 +57,7 @@ analyzeIntra(
 );
 for (const file of ['count.jsonl', 'trace-small.jsonl', 'trace-drupal.jsonl'])
 	analyzeWorksp('20261020-worksp', file);
+for (const file of ['controls.jsonl', 'drupal-coarse.jsonl', 'drupal-fine.jsonl'])
+	analyzeWorksp('20261020-worksp2', file);
+analyzeValidation('20261020-worksp2', 'validation.jsonl');
 console.log('regenerated every summary.json under results/');

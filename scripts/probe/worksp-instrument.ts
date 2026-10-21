@@ -2,7 +2,7 @@ import binaryen from 'binaryen';
 import { children } from './purity-census.ts';
 
 const ALLOC =
-	/^(malloc|free|calloc|realloc|__zend_(m|c|re)alloc|_emalloc(_\w+)?|_efree(_\w+)?|_erealloc2?|_ecalloc|_safe_\w*alloc|_zend_mm_(alloc|free|realloc2?))$/;
+	/^(malloc|free|calloc|realloc|__zend_(m|c|re)alloc|_emalloc(_\w+)?|_efree(_\w+)?|_erealloc2?|_ecalloc|_safe_\w*alloc|_zend_mm_(alloc|free|realloc2?)|gc_possible_root|gc_remove_from_buffer|zend_objects_store_put)$/;
 
 /** the dispatch function, allocator entry points and output write path of a PHP module, by export name */
 export function phpExtents(bytes: Uint8Array) {
@@ -107,6 +107,7 @@ export function instrumentWorksp(bytes: Uint8Array, options: InstrumentOptions) 
 		m.addGlobal(`__wk_${c}`, binaryen.f64, true, m.f64.const(0));
 		m.addGlobalExport(`__wk_${c}`, `__wk_${c}`);
 	}
+	if (trace && m.getGlobal(sp)) m.addGlobalExport(sp, '__wk_sp');
 	const imp = (name: string, params: number[], result: number) =>
 		m.addFunctionImport(`folio_${name}`, 'folio', name, binaryen.createType(params), result);
 	imp('ed', [i32], i32);
@@ -159,7 +160,25 @@ export function instrumentWorksp(bytes: Uint8Array, options: InstrumentOptions) 
 	};
 	const rcLoads = new Map<number, number>();
 	let lastSite = -1;
-	let current = { index: 0, extent: 0, tmp: -1, resultType: binaryen.none as number };
+	let current = {
+		index: 0,
+		extent: 0,
+		tmp: -1,
+		resultType: binaryen.none as number,
+		fn: 0,
+		depth: 0,
+		temps: new Map<string, number>()
+	};
+	// a store is recorded after its value is evaluated, so a read inside the value stays upward exposed
+	const temp = (depth: number, type: number, role: string) => {
+		const key = `${role}${depth}:${type}`;
+		let idx = current.temps.get(key);
+		if (idx === undefined) {
+			idx = F('_BinaryenFunctionAddVar')(current.fn, type) as number;
+			current.temps.set(key, idx);
+		}
+		return idx;
+	};
 
 	const rcPattern = (v: any): number => {
 		if (v.bytes !== 4 || v.offset !== 0) return 0;
@@ -223,11 +242,13 @@ export function instrumentWorksp(bytes: Uint8Array, options: InstrumentOptions) 
 			if (v.ifFalse) esc = body(v.ifFalse, (b) => F('_BinaryenIfSetIfFalse')(e, b)) || esc;
 			return { t, esc };
 		}
+		if (id === binaryen.StoreId) current.depth++;
 		for (const child of children(v)) {
 			const r = visit(child);
 			add(t, r.t);
 			esc ||= r.esc;
 		}
+		if (id === binaryen.StoreId) current.depth--;
 		switch (id) {
 			case binaryen.ReturnId:
 				if (current.extent) stats.unsupportedReturns++;
@@ -255,7 +276,22 @@ export function instrumentWorksp(bytes: Uint8Array, options: InstrumentOptions) 
 				if (trace) {
 					const s = site(v.offset, v.bytes, true, tag);
 					(t as any).s.push(s);
-					F('_BinaryenStoreSetPtr')(e, call('st', [v.ptr, m.i32.const(s)]));
+					const vt = binaryen.getExpressionType(v.value);
+					const pt = temp(current.depth, i32, 'p');
+					const vv = temp(current.depth, vt, 'v');
+					F('_BinaryenStoreSetPtr')(e, m.local.tee(pt, v.ptr, i32));
+					F('_BinaryenStoreSetValue')(
+						e,
+						m.block(
+							null,
+							[
+								m.local.set(vv, v.value),
+								m.drop(call('st', [m.local.get(pt, i32), m.i32.const(s)])),
+								m.local.get(vv, vt)
+							],
+							vt
+						)
+					);
 				}
 				break;
 			}
@@ -393,7 +429,10 @@ export function instrumentWorksp(bytes: Uint8Array, options: InstrumentOptions) 
 			index: i,
 			extent,
 			tmp: extent && results.length === 1 ? F('_BinaryenFunctionAddVar')(fn, results[0]) : -1,
-			resultType: (results[0] as number) ?? binaryen.none
+			resultType: (results[0] as number) ?? binaryen.none,
+			fn,
+			depth: 0,
+			temps: new Map<string, number>()
 		};
 		siteIsDispatch = info.name === options.dispatch;
 		const set = (b: number) => F('_BinaryenFunctionSetBody')(fn, b);

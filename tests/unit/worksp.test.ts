@@ -138,7 +138,7 @@ test('C: the stack pointer chain needs rename_sp, and stack data flow between ta
 	}));
 	const ok = eight(slices);
 	expect(par(ok)).toEqual([8, 1, 8, 8, 8, 8, 8, 8]);
-	expect(ok.ladder()[1]!.binding_class).toEqual(['stack']);
+	expect(ok.ladder()[1]!.binding_class).toEqual(['interp']);
 	expect(ok.checks.stackRawCross).toBe(0);
 	const flow = eight(
 		slices.map((s, k) =>
@@ -250,14 +250,14 @@ test('the sensitivity table separates one class removed from all but one', () =>
 		}))
 	);
 	const s = ws.sensitivity();
-	expect(s.stack!.only_removed).toBe(1);
+	expect(s.interp!.only_removed).toBe(1);
 	expect(s.heap!.only_removed).toBe(1);
 	expect(s.heap!.all_but).toBe(1);
-	expect(s.stack!.all_but).toBe(1);
+	expect(s.interp!.all_but).toBe(1);
 	const sp = eight(Array.from({ length: 8 }, (_, k) => ({ sp: 3, ...own(k) })));
 	const t = sp.sensitivity();
-	expect(t.stack!.only_removed).toBe(8);
-	expect(t.stack!.all_but).toBe(1);
+	expect(t.interp!.only_removed).toBe(8);
+	expect(t.interp!.all_but).toBe(1);
 	expect(t.heap!.all_but).toBe(8);
 });
 
@@ -334,7 +334,7 @@ test('the record carries the schema, the ladder and the sensitivity table', () =
 	expect(r.schema).toBe('folio.worksp.v2');
 	expect(r.models).toHaveLength(9);
 	expect(r.models[8]!.extension).toBe(true);
-	expect(CLASS_NAMES).toHaveLength(8);
+	expect(CLASS_NAMES).toHaveLength(9);
 	const summary = summarizeWorksp(
 		[
 			{
@@ -448,19 +448,17 @@ const DISPATCH = (shared: boolean) => `(module
   (local $i i32)
   (loop $l
    (i32.store (i32.add (local.get $f) (i32.shl (local.get $i) (i32.const 2))) (local.get $i))
-   ${shared ? '(i32.store (i32.const 1000) (i32.add (i32.load (i32.const 1000)) (i32.const 1)))' : ''}
+   ${shared ? '(i32.store (i32.const 1200) (i32.add (i32.load (i32.const 1200)) (i32.const 1)))' : ''}
    (local.set $i (i32.add (local.get $i) (i32.const 1)))
    (br_if $l (i32.lt_u (local.get $i) (i32.const 200)))))
- (func $disp (param $frame i32) (param $op i32)
-  (call_indirect (type $h) (local.get $frame) (local.get $op)))
  (func $run (export "run")
   (local $k i32)
   (loop $t
-   (call $disp (i32.const 1000) (i32.const 1))
-   (call $disp (i32.add (i32.const 100000) (i32.shl (local.get $k) (i32.const 12))) (i32.const 0))
+   (call_indirect (type $h) (i32.const 1000) (i32.const 1))
+   (call_indirect (type $h) (i32.add (i32.const 100000) (i32.shl (local.get $k) (i32.const 12))) (i32.const 0))
    (local.set $k (i32.add (local.get $k) (i32.const 1)))
    (br_if $t (i32.lt_u (local.get $k) (i32.const 8))))
-  (call $disp (i32.const 1000) (i32.const 1)))
+  (call_indirect (type $h) (i32.const 1000) (i32.const 1)))
 )`;
 
 test('H: tasks dispatched through call_indirect are recovered from frame changes in Wasm', async () => {
@@ -481,3 +479,216 @@ test('H: tasks dispatched through call_indirect are recovered from frame changes
 		}
 	}
 });
+
+// #region exposure, dead stack and the private-state rung
+const TOP = 800;
+const word = (g: number) => g * 8;
+
+/** two sibling invocations under one root frame; each body runs between its dispatch and the next */
+function siblings(bodies: ((rec: Recorder) => void)[], sp = 700) {
+	const rec = new Recorder({ layout });
+	rec.start(0, 0, 0, TOP);
+	rec.dispatch(1000, 1, 0, 0, TOP);
+	bodies.forEach((body, k) => {
+		rec.dispatch(2000 + 16 * k, 10 + 100 * k, 0, 0, sp);
+		body(rec);
+		rec.dispatch(1000, 100 + 100 * k, 0, 0, TOP);
+	});
+	return { rec, ws: rec.finish(1000) };
+}
+
+test('a read after the same chunk wrote the bytes is not a dependence; a partial overlap still is', () => {
+	const a = (rec: Recorder) => rec.access(word(HEAP), 8, true);
+	const own = (rec: Recorder) => {
+		rec.access(word(HEAP), 8, true);
+		rec.access(word(HEAP), 8, false);
+	};
+	const exposed = (rec: Recorder) => rec.access(word(HEAP), 8, false);
+	const half = (rec: Recorder) => {
+		rec.access(word(HEAP), 4, true);
+		rec.access(word(HEAP), 8, false);
+	};
+	expect(siblings([a, own]).ws.conflictCounts().raw).toBe(0);
+	expect(siblings([a, exposed]).ws.conflictCounts().raw).toBe(1);
+	expect(siblings([a, half]).ws.conflictCounts().raw).toBe(1);
+	const { rec } = siblings([a, own]);
+	expect(rec.stats.ownWriteReads).toBe(1);
+});
+
+test('an exposed read of stack below the chunk start is uninitialized; above it is data flow', () => {
+	const below = word(75);
+	const above = word(92);
+	const write = (addr: number) => (rec: Recorder) => rec.access(addr, 8, true);
+	const read = (addr: number) => (rec: Recorder) => rec.access(addr, 8, false);
+	const dead = siblings([write(below), read(below)]);
+	expect(dead.ws.checks.stackRawCross).toBe(0);
+	expect(dead.rec.stats.deadStackReads).toBe(1);
+	expect(dead.ws.ladder()[2]!.valid).toBe(true);
+	const real = siblings([write(above), read(above)]);
+	expect(real.ws.checks.stackRawCross).toBe(1);
+	expect(real.rec.stats.deadStackReads).toBe(0);
+	expect(real.ws.ladder()[2]!.valid).toBe(false);
+	const off = new Recorder({ layout, deadStack: false });
+	off.start(0, 0, 0, TOP);
+	off.dispatch(1000, 1, 0, 0, TOP);
+	off.dispatch(2000, 10, 0, 0, 700);
+	off.access(below, 8, true);
+	off.dispatch(1000, 50, 0, 0, TOP);
+	off.dispatch(2016, 60, 0, 0, 700);
+	off.access(below, 8, false);
+	off.dispatch(1000, 90, 0, 0, TOP);
+	expect(off.finish(100).checks.stackRawCross).toBe(1);
+});
+
+test('caller code that runs after an activation returns is charged to the caller, not the last callback', () => {
+	const rec = new Recorder({ layout });
+	rec.start(0, 0, 0, TOP);
+	rec.dispatch(1000, 1, 0, 0, TOP);
+	for (let k = 0; k < 2; k++) {
+		rec.markEntry();
+		rec.enterExec();
+		rec.dispatch(2000, 10 + 100 * k, 0, 0, 700);
+		if (k === 1) rec.access(word(95), 8, false);
+		rec.exitExec(50 + 100 * k, 0, 0, 760);
+		rec.access(word(95), 8, true);
+	}
+	const ws = rec.finish(500);
+	expect(ws.checks.stackRawCross).toBe(0);
+	expect(rec.stats.invocations).toBe(3);
+	expect(ws.invParent[2]).toBe(1);
+	expect(ws.invParent[3]).toBe(1);
+});
+
+type Kind = 'independent' | 'dependent' | 'shared';
+
+/** a main frame whose opcodes are separate nodes calls f eight times; every node is built from accesses */
+function loop(kind: Kind) {
+	const rec = new Recorder({
+		layout,
+		nameOf: (frame) => (frame === 1000 ? 'main' : 'f'),
+		fine: (label) => label === 'main'
+	});
+	let ic = 0;
+	const tick = (n: number) => (ic += n);
+	const STATIC_WORD = word(120);
+	const X = word(HEAP + 400);
+	rec.start(0, 0, 0, TOP);
+	rec.dispatch(1000, tick(1), 0, 0, TOP);
+	for (let k = 0; k < 8; k++) {
+		if (kind === 'dependent' && k > 0) rec.access(X, 8, false);
+		rec.access(word(HEAP + k), 8, true);
+		rec.dispatch(1000, tick(5), 0, 0, TOP);
+		rec.access(word(HEAP + k), 8, false);
+		rec.dispatch(2000 + 16 * k, tick(5), 0, 0, 700);
+		rec.access(word(HEAP + k), 8, false);
+		rec.access(STATIC_WORD, 8, false);
+		rec.access(STATIC_WORD, 8, true);
+		if (kind === 'shared') {
+			rec.access(word(HEAP + 500), 8, false);
+			rec.access(word(HEAP + 500), 8, true);
+		}
+		rec.access(word(HEAP + 100 + 10 * k), 8, true);
+		rec.access(word(HEAP + 200 + k), 8, true);
+		rec.dispatch(1000, tick(W), 0, 0, TOP);
+		rec.access(word(HEAP + 200 + k), 8, false);
+		rec.access(kind === 'dependent' ? X : word(HEAP + 300 + k), 8, true);
+		rec.dispatch(1000, tick(5), 0, 0, TOP);
+	}
+	return rec.finish(tick(10));
+}
+
+const privatize = (ws: WorkSpan, labels: string[]) =>
+	+ws.privateRung('P', (label) => labels.includes(label)).parallelism!.toFixed(2);
+
+test('private rung: independent calls from an opcode-grained caller reach 8, shared interpreter state is dropped', () => {
+	const ws = loop('independent');
+	expect(ws.ladder()[1]!.parallelism).toBeLessThan(1.1);
+	const p = privatize(ws, ['f']);
+	expect(p).toBeGreaterThan(7.2);
+	expect(p).toBeLessThan(8.01);
+	expect(privatize(ws, [])).toBeLessThan(1.1);
+	const row = ws.privateRung('P', (label) => label === 'f');
+	expect(row.privateInvocations).toBe(8);
+	expect(row.binding_class).toContain('spawn');
+});
+
+test('private rung: a value carried from one call into the next stays a dependence', () => {
+	const ws = loop('dependent');
+	expect(privatize(ws, ['f'])).toBeLessThan(1.02);
+	const row = ws.privateRung('P', (label) => label === 'f');
+	expect(row.path_edge_classes.heap).toBeGreaterThanOrEqual(14);
+	expect(row.path_edge_classes.static).toBeUndefined();
+});
+
+test('private rung: a site that shares a variable stays at 1.0 until it is left out of the private set', () => {
+	const ws = loop('shared');
+	expect(privatize(ws, [])).toBeLessThan(1.1);
+	expect(privatize(ws, ['f'])).toBeGreaterThan(7.2);
+});
+
+test('the call tree reports inclusive work and the sibling pairs that both reach the threshold', () => {
+	const ws = loop('independent');
+	const tree = ws.callTree();
+	expect(tree.total).toBeGreaterThan(8 * W);
+	expect(tree.incl[1]).toBeGreaterThan(8 * W);
+	const groups = ws.siblingGroups(0.05);
+	expect(groups).toHaveLength(1);
+	expect(groups[0]!.label).toBe('main');
+	expect(groups[0]!.children).toBe(8);
+	expect(groups[0]!.second).toBeGreaterThan(0.1);
+	expect(groups[0]!.groups[0]).toMatchObject({ label: 'f', n: 8 });
+	expect(ws.siblingGroups(0.5)).toHaveLength(0);
+});
+
+const tasks = (ws: WorkSpan, labels: string[]) =>
+	ws.taskModel('T', (_v, label) => labels.includes(label));
+
+test('task model: independent calls reach 8, no private set is serial by the owner bound', () => {
+	const ws = loop('independent');
+	const t = tasks(ws, ['f']);
+	expect(t.tasks).toBe(8);
+	expect(t.parallelism!).toBeGreaterThan(7.2);
+	expect(t.parallelism!).toBeLessThan(8.01);
+	expect(t.longest_task).toBeGreaterThanOrEqual(W);
+	const none = tasks(ws, []);
+	expect(none.parallelism).toBe(1);
+	expect(none.binding).toBe('owner thread');
+});
+
+test('task model: a carried value and a shared variable follow the validated set', () => {
+	expect(tasks(loop('dependent'), ['f']).parallelism!).toBeLessThan(1.02);
+	expect(tasks(loop('shared'), []).parallelism).toBe(1);
+	expect(tasks(loop('shared'), ['f']).parallelism!).toBeGreaterThan(7.2);
+});
+
+test('task model: owner work above the longest task bounds the time', () => {
+	const ws = new WorkSpan(layout, rel);
+	ws.registerInv(1, 0, 'owner work');
+	ws.registerInv(2, 0, 'task');
+	ws.registerInv(3, 0, 'task');
+	const root = ws.add({ weight: 0, preds: [], inv: 0, reads: [], writes: [] });
+	ws.add({ weight: 700, preds: [root], inv: 1, reads: [], writes: [] });
+	ws.add({ weight: 100, preds: [root], inv: 2, reads: [], writes: [] });
+	ws.add({ weight: 100, preds: [root], inv: 3, reads: [], writes: [] });
+	const t = ws.taskModel('T', (_v, label) => label === 'task');
+	expect(t.owner_work).toBe(700);
+	expect(t.time).toBe(700);
+	expect(t.parallelism).toBe(900 / 700);
+	expect(t.binding).toBe('owner thread');
+});
+
+test('task model: edges through allocator, static and write-after-write state do not cross a task', () => {
+	const ws = new WorkSpan(layout, rel);
+	for (let k = 1; k <= 2; k++) ws.registerInv(k, 0, 'task');
+	const root = ws.add({ weight: 0, preds: [], inv: 0, reads: [], writes: [] });
+	const body = {
+		weight: W,
+		reads: [STATIC, STATIC, CAT.plain, HEAP, HEAP, CAT.alloc],
+		writes: [STATIC, STATIC, CAT.plain, HEAP, HEAP, CAT.alloc]
+	};
+	ws.add({ ...body, preds: [root], inv: 1 });
+	ws.add({ ...body, preds: [root], inv: 2 });
+	expect(tasks(ws, ['task']).parallelism).toBeGreaterThan(1.99);
+	expect(tasks(ws, []).parallelism).toBe(1);
+});
+// #endregion

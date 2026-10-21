@@ -1,4 +1,4 @@
-import { CAT, record, type Layout } from '../analyze/worksp.ts';
+import { CAT, record, type AnalysisOptions, type Layout } from '../analyze/worksp.ts';
 import { COUNTERS, type Sites } from './worksp-instrument.ts';
 import { Recorder } from './worksp-recorder.ts';
 
@@ -12,6 +12,16 @@ export interface HookConfig {
 	verify?: boolean;
 	debug?: boolean;
 	hostReplay?: 'assumed' | 'violated';
+	/** recorder rules; both default to on */
+	exposure?: boolean;
+	deadStack?: boolean;
+	stackLog?: boolean;
+	/** byte addresses whose accessing functions are counted, for naming a binding word */
+	watch?: number[];
+	/** invocations whose opcodes are separate nodes: all, none or a list of labels */
+	fine?: 'all' | 'none' | string[];
+	/** private-state rungs and the sibling view evaluated at the end of the trace */
+	analysis?: AnalysisOptions;
 	meta: {
 		module: { name: string; sha256: string };
 		machine: { name: string; node: string };
@@ -29,6 +39,15 @@ const STRING_VAL = 20;
 export function createHooks(config: HookConfig) {
 	const trace = config.mode === 'trace';
 	const sites = config.sites;
+	let watchOut: Map<string, number> | undefined;
+	const allocDepthProbe = () => (rec ? rec.inAlloc() : 0);
+	const fineLabels = Array.isArray(config.fine) ? new Set(config.fine) : undefined;
+	const fineSet =
+		config.fine === 'all'
+			? () => true
+			: fineLabels
+				? (label: string) => fineLabels.has(label)
+				: undefined;
 	const rcOk = new Uint8Array(sites?.meta.length ?? 0);
 	for (const s of config.rcSites ?? []) rcOk[s] = 1;
 	let exportsRef: Record<string, WebAssembly.Global> = {};
@@ -78,6 +97,13 @@ export function createHooks(config: HookConfig) {
 			'latin1'
 		);
 	};
+	/** the ZEND opcode of the frame's current opline: zend_op.opcode sits at byte 24 on wasm32 */
+	const opcodeOf = (frame: number) => {
+		const b = bytes();
+		if (frame + 4 > b.length) return -1;
+		const opline = u32(frame);
+		return opline && opline + 25 <= b.length ? b[opline + 24]! : -1;
+	};
 	const nameOf = (frame: number) => {
 		try {
 			const fn = u32(frame + FUNC);
@@ -94,6 +120,8 @@ export function createHooks(config: HookConfig) {
 	let gn: WebAssembly.Global;
 	let gspr: WebAssembly.Global;
 	let gspw: WebAssembly.Global;
+	let gsp: WebAssembly.Global | undefined;
+	const spValue = () => (gsp ? (gsp.value as number) >>> 0 : 0);
 
 	const chunkHits = new Map<number, number>();
 	const folio: Record<string, (...args: number[]) => any> = {
@@ -105,7 +133,15 @@ export function createHooks(config: HookConfig) {
 			return frame;
 		},
 		ci(_site: number, target: number) {
-			if (rec) rec.dispatch(lastFrame, gn.value, gspr.value, gspw.value);
+			if (rec)
+				rec.dispatch(
+					lastFrame,
+					gn.value,
+					gspr.value,
+					gspw.value,
+					spValue(),
+					opcodeOf(lastFrame)
+				);
 			else if (active) {
 				counts.dispatches++;
 				const top = frames[frames.length - 1];
@@ -156,17 +192,29 @@ export function createHooks(config: HookConfig) {
 			if (kind === 3) {
 				fresh = true;
 				rec?.markEntry();
+				rec?.enterExec(spValue());
 			} else rec?.enter(kind === 1 ? 'alloc' : 'out');
 		},
 		ex(kind: number) {
-			if (rec && kind !== 3) rec.exit(kind === 1 ? 'alloc' : 'out');
+			if (!rec) return;
+			if (kind === 3) rec.exitExec(gn.value, gspr.value, gspw.value, spValue());
+			else rec.exit(kind === 1 ? 'alloc' : 'out');
 		}
 	};
 	if (trace) {
 		const meta = sites!.meta;
 		const offset = sites!.offset;
+		const watch = new Set((config.watch ?? []).map((a) => a >>> 3));
+		const watchHits = new Map<string, number>();
+		const seen = (addr: number, site: number, store: boolean) => {
+			if (!watch.size || !watch.has(addr >>> 3)) return;
+			const key = `${(addr >>> 3) * 8} ${store ? 'w' : 'r'} fn${sites!.fn[site]} alloc=${allocDepthProbe()}`;
+			watchHits.set(key, (watchHits.get(key) ?? 0) + 1);
+		};
+		watchOut = watchHits;
 		folio.ld = (ptr: number, site: number) => {
 			if (rec) {
+				seen((ptr >>> 0) + offset[site]!, site, false);
 				const m = meta[site]!;
 				counts.ldHook++;
 				if (config.debug) siteHits.set(site, (siteHits.get(site) ?? 0) + 1);
@@ -183,6 +231,7 @@ export function createHooks(config: HookConfig) {
 		};
 		folio.st = (ptr: number, site: number) => {
 			if (rec) {
+				seen((ptr >>> 0) + offset[site]!, site, true);
 				const m = meta[site]!;
 				counts.stHook++;
 				if (config.debug) siteHits.set(site, (siteHits.get(site) ?? 0) + 1);
@@ -247,6 +296,7 @@ export function createHooks(config: HookConfig) {
 			gn = g('n');
 			gspr = g('spr');
 			gspw = g('spw');
+			gsp = exportsRef.__wk_sp;
 		},
 		snapshot() {
 			return Object.fromEntries(COUNTERS.map((c) => [c, g(c).value as number]));
@@ -262,8 +312,15 @@ export function createHooks(config: HookConfig) {
 				else (counts as any)[k] = 0;
 			}
 			if (trace) {
-				rec = new Recorder({ layout: config.layout, nameOf });
-				rec.start(gn.value, gspr.value, gspw.value);
+				rec = new Recorder({
+					layout: config.layout,
+					nameOf,
+					exposure: config.exposure,
+					deadStack: config.deadStack,
+					fine: fineSet,
+					stackLog: config.stackLog
+				});
+				rec.start(gn.value, gspr.value, gspw.value, spValue());
 			}
 			times.begin = performance.now();
 			return times.begin;
@@ -276,7 +333,13 @@ export function createHooks(config: HookConfig) {
 			}
 			const t0 = performance.now();
 			const ws = rec.finish(gn.value, gspr.value, gspw.value);
-			const recorded = rec.stats;
+			const recorded = {
+				...rec.stats,
+				acts: rec.actLog.map((a) => [
+					config.layout.stack[1] - a.top,
+					config.layout.stack[1] - a.bottom
+				])
+			};
 			rec = undefined;
 			active = false;
 			const t1 = performance.now();
@@ -304,7 +367,7 @@ export function createHooks(config: HookConfig) {
 						'one input on one machine'
 					]
 				},
-				{ hostReplay: config.hostReplay, ...(extra as any) }
+				{ hostReplay: config.hostReplay, ...config.analysis, ...(extra as any) }
 			);
 			return {
 				record: result,
@@ -313,6 +376,7 @@ export function createHooks(config: HookConfig) {
 				graph: { nodes: ws.nodeCount, edges: ws.ePred.n, pages: undefined },
 				rcHits: config.verify ? [...rcHits] : undefined,
 				chunkHits: config.debug ? [...chunkHits] : undefined,
+				watch: watchOut && watchOut.size ? [...watchOut] : undefined,
 				siteHits: config.debug ? [...siteHits] : undefined,
 				wallMs: wall,
 				analyzeMs: performance.now() - t1,
