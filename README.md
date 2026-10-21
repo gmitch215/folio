@@ -17,8 +17,11 @@ the same engine.
 - [Asynchronous Host Effects](#-asynchronous-host-effects)
 - [Execution Host](#-execution-host)
 - [Managed Workers](#-managed-workers)
+- [Browser Execution and Page Leases](#-browser-execution-and-page-leases)
+- [Task Pool](#-task-pool)
 - [Execution and Memory](#-execution-and-memory)
 - [API Reference](#-api-reference)
+- [Consumer Harness](#-consumer-harness)
 - [Measured Results](#-measured-results)
 - [Development](#-development)
 - [Contributing](#-contributing)
@@ -55,6 +58,8 @@ and a small job loses to dispatch overhead.
 - 🌐 **Execution host and portable client** for workerd, with sessions, quotas and joined cleanup.
 - ☁️ **Managed backend** that runs entirely in Workers and Durable Objects, with binary frames and
   copied snapshots between lanes.
+- 🧰 **Task pool** that runs named functions in private contexts on other threads, with ordered
+  joins and an optional differential audit.
 - 📊 **Opt-in profiling** of worker time, validation, commit and replay cost.
 
 ## 📦 Install
@@ -65,7 +70,8 @@ bun add @gmitch215/folio
 npm install @gmitch215/folio
 ```
 
-Folio needs Node 26 or later. Async host imports and the managed backend need WebAssembly JSPI.
+The Node backend needs Node 26 or later. Async host imports and the managed backend need WebAssembly
+JSPI. The browser counted-loop backend works without JSPI; page-owner transports are portable.
 Builds from the main branch publish to the `snapshot` tag.
 
 ## 🚀 Getting Started
@@ -92,6 +98,16 @@ existing single imported memory, or bind several by their exact names in `import
 functions, tables, globals, tags and memory64 bindings are supplied as with native instantiation.
 `prepare(bytes, { parallel: 'off' })` disables optimization and leaves the program unchanged.
 Prepared plans are trusted build artifacts.
+
+A region runs on a worker only when its estimated work pays for dispatch, joining and validation.
+`prepare` estimates each candidate in instruction units, charges 3,600 units for every tracked load
+or store, and keeps the region at its owner below `minimumRegionWork` (200,000 by default, about
+39 microseconds of native work on an Apple M2 Pro). A loop bounded by a constant uses that count, a
+loop bounded by an untouched parameter or a countdown from one is checked against the arguments at
+each call, and any other loop is assumed to run `assumedTripCount` times (1,000). A module with no
+region above the threshold gets no control plan and runs as the original Wasm, so a small kernel, a
+memory-bound loop or a serial recurrence stays at native speed. `minimumRegionWork: 0` admits every
+pure region. `folio.diagnostics` says why a plan was refused.
 
 ## ⏳ Asynchronous Host Effects
 
@@ -154,6 +170,78 @@ ordered byte validation connect independent lanes. A transport failure falls bac
 execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
 must fit the owner runtime. See [the managed procedure](experiments/managed/METHOD.md).
 
+## 🔗 Browser Execution and Page Leases
+
+`@gmitch215/folio/browser` exports `BrowserFolio` for Chromium and other hosts without JSPI. It
+takes a precompiled original module and the `loops`, `native`, `reasons` and `memories` metadata
+that `prepare` produced offline. `open()` attaches dedicated module workers to the supplied shared
+memory. `run(name, args)` derives guarded partitions from one ordinary counted-loop call and joins
+before it returns, with no snapshot and no runtime compiler. Other entries use the original owner.
+The caller keeps exclusive ownership of the arena. A failure after native writes closes the pool,
+and the application restores a checkpoint before retrying.
+
+`@gmitch215/folio/pages` exports `PageDirectory`, `MemoryPageOwner`, `ResidentPageLease` and the
+`PageOwner` transport contract. `acquire({ read, write })` obtains bounded resident pages and
+`lease.view(page)` returns a private view of one. `commit()` stages immutable versions and
+atomically publishes their manifest, `abort()` discards local changes, and `collect()` reclaims
+retired versions with delayed-message fencing. The directory holds page metadata, not a whole heap.
+
+Leases work on copied bytes, and the bundled owners and directory keep their state in memory. The
+[technical report](TECHNICAL_REPORT.md) covers failure semantics, the native Wasm measurements and
+the limits of both modules.
+
+## 🧰 Task Pool
+
+`@gmitch215/folio/tasks` runs independent work that a program names itself. A `TaskPool` owns one
+channel per worker. The caller starts each worker with `pool.link(index)` and calls `serveTasks`
+there with a function that runs a named task. The owner calls `submit(name, input)` and keeps going,
+then `join(handle)` blocks until the output arrives, or `joinAsync(handle)` waits without blocking
+the event loop. `run(jobs)` submits a list and returns the results in submission order, and
+`runSync(jobs)` does the same where the caller cannot yield, such as inside a synchronous Wasm
+import. Input and output are strings or bytes, `submitJson` and `result.json()` cover structured
+values, and `pool.width` limits how many workers take tasks.
+
+```ts
+import { Worker } from 'node:worker_threads';
+import { TaskPool } from '@gmitch215/folio/tasks';
+
+const pool = new TaskPool(4);
+for (let index = 0; index < pool.size; index++) {
+  const link = pool.link(index);
+  new Worker(new URL('./task-worker.js', import.meta.url), {
+    workerData: { link },
+    transferList: [link.port]
+  });
+}
+
+const results = await pool.run([
+  ['render', 'page-1'],
+  ['render', 'page-2']
+]);
+console.log(results.map((result) => result.text()));
+```
+
+```ts
+import { workerData } from 'node:worker_threads';
+import { serveTasks } from '@gmitch215/folio/tasks';
+
+serveTasks(workerData.link, (name, input) => {
+  // run the task called `name` on `input` and return its output
+  return String(input);
+});
+```
+
+A worker shares nothing with the owner. Each task runs against that worker's own state, so a task
+that reads or writes state the serial program would have shared returns a different result than the
+serial run. `audit: { run, every }` runs every nth task again in the joining thread and throws
+`TaskConflictError` with the first differing byte. The audit costs one serial execution per checked
+task and is meant for tests and canaries. `drain()` returns a record per joined task with its worker,
+start and end time, thread CPU time and byte counts, and `peakConcurrency(records)` reports how many
+tasks ran at the same time.
+
+The pool does not discover independent work. Region discovery and ordered validation stay in the
+core engine, and the task pool covers programs that can say which calls are independent.
+
 ## 🧱 Execution and Memory
 
 Proved finite, nontrapping i32 kernels use runtime bounds and cross-region overlap checks, then
@@ -213,8 +301,9 @@ Run options:
   contention or leaves CPU for other jobs.
 
 Pool options are `workers` (up to four by default), `memory`, `imports`, `minimumParallelWork`
-(100,000 estimated iterations for proved kernels), `fuel` (100,000,000), `maxTransactionBytes`
-(262,144), `promising` and `profile`. A one-worker pool uses its native entry and creates no idle
+(100,000 estimated iterations for proved kernels), `minimumRegionWork` and `assumedTripCount` (both
+apply when `open` prepares raw bytes), `fuel` (100,000,000), `maxTransactionBytes` (262,144),
+`promising` and `profile`. A one-worker pool uses its native entry and creates no idle
 worker.
 
 Profiling is opt-in. `report.profile` holds elapsed time, worker observations, validation, commit
@@ -224,14 +313,50 @@ summing overlapping process-wide counters double counts.
 
 The generated API reference is published to GitHub Pages from `bun run docs:build`.
 
+## 🧪 Consumer Harness
+
+`scripts/probe/consumer.ts` measures any Wasm module against a native instance of itself. A consumer
+file exports the module bytes, a factory for fresh imports and a list of cases. Each case prepares
+state on the raw exports and returns the calls to time. The harness opens a native arm and one pool
+per worker count, alternates the arms inside every round, and compares the whole memory and every
+return value before it records a sample. A mismatch stops the run.
+
+```sh
+node scripts/probe/consumer.ts scripts/probe/consumers/tinyimg.ts results/mine/tinyimg.jsonl 20 1,2,4,8
+bun scripts/analyze/paired.ts mine tinyimg.jsonl
+```
+
+`FOLIO_OLD_BUILD=1` adds an `old-N` arm per worker count that runs the archived source from before
+static admission (`results/20261020-regress/old-build-src.tar.gz`), alternating with the current
+build in the same rounds. The summary then reports `versusOld`, the old build's wall time divided by
+the current one.
+
+Every row carries wall time, process CPU and what Folio dispatched: workers, regions, replays,
+fallbacks, mode and the reason it stayed serial. The closing row holds `inspect` coverage for each
+entry that ran. The summary reports the paired speedup (native over Folio, within each round) and
+the CPU ratio, so a run that finds nothing to split says so with its numbers. The consumers in
+`scripts/probe/consumers/` cover tinyimg, the gmux core and process artifacts, a serial recurrence
+the compute kernel and a kernel whose trip count is too small to pay for dispatch.
+`scripts/probe/php-workloads.ts` runs the same comparison on the drupflare
+PHP artifact.
+
+`scripts/probe/php-contexts.ts` opens N private PHP instances, one per worker thread, and runs a
+snippet or the uncached Drupal render in each. Every result carries timestamps from inside the
+thread and thread CPU, so a run can show that two instances executed at the same time.
+`scripts/probe/php-concurrent.ts` uses it for the four-arm comparison of independent requests
+(native serial, native concurrent, Folio serial, Folio concurrent). Independent requests scale
+with the number of instances whether or not Folio is involved; the library adds nothing to that
+result and the numbers are in the technical report.
+
 ## 📈 Measured Results
 
-| Backend                 | Environment                                                | Result                                                                                             |
-| ----------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Node, shared allocation | Ryzen 9 9900X, eight pinned workers, 256 MiB arena         | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact |
-| Node, compute kernel    | eight workers, 207 byte-exact samples                      | 7.62x, with total CPU 1.037x of serial                                                             |
-| Managed Workers         | deployed Durable Object lanes                              | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes        |
-| Browser Run             | deployed Chromium, eight workers on one 256 MiB allocation | 3.87x with four workers on explicit partitions                                                     |
+| Backend                      | Environment                                                        | Result                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Node, shared allocation      | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                 | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact |
+| Node, compute kernel         | eight workers, 207 byte-exact samples                              | 7.62x, with total CPU 1.037x of serial                                                             |
+| Managed Workers              | deployed Durable Object lanes                                      | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes        |
+| Browser Run                  | deployed Chromium, eight workers on one 256 MiB allocation         | 3.87x with four workers on explicit partitions                                                     |
+| Browser automatic extraction | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                    |
 
 A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The

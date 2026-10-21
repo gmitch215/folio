@@ -13,7 +13,8 @@ claiming anything about speed, isolates, accounts or consumers.
 - `src/` the library. `compiler.ts` and `extract.ts` find regions, `guards.ts` proves native
   kernels, `transaction.ts` and `coordinator.ts` run and validate them, `node.ts` is the Node pool,
   `remote.ts` and `host.ts` are the portable client and the execution host, `managed.ts` and
-  `frames.ts` are the Workers and Durable Object backend.
+  `frames.ts` are the Workers and Durable Object backend, and `tasks.ts` is the Node task pool for
+  work a program names itself (private contexts, copied values, optional differential audit).
 - `tests/c/` freestanding C fixtures, `tests/unit/` the gate, `tests/integration/` local workerd,
   `tests/e2e/` live deploys. See `tests/README.md`.
 - `scripts/` build, analysis, probes and the timing rig. The folder decides the runtime. See
