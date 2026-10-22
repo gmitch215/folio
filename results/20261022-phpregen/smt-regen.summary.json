@@ -1,0 +1,616 @@
+{
+  "environment": {
+    "kind": "environment",
+    "experiment": "regeneration of a page set by private Drupal contexts",
+    "machine": "paisley-park Ryzen 9 9900X, cpus 2-11,14-23, nice 19",
+    "node": "v26.10.0",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "hardwareThreads": 24,
+    "affinity": "2-11,14-23",
+    "pairs": 20,
+    "widths": [
+      2,
+      4,
+      8,
+      12,
+      16
+    ],
+    "pages": 31,
+    "contextsOpenMs": 1230.88005,
+    "boots": [
+      {
+        "seedMs": 89.822509765625,
+        "phpBootMs": 36.572998046875,
+        "drupalBootMs": 480.29443359375,
+        "openMs": 635.65771484375,
+        "openCpuMs": 630.7549999999999
+      },
+      {
+        "seedMs": 93.102294921875,
+        "phpBootMs": 33.8935546875,
+        "drupalBootMs": 449.52392578125,
+        "openMs": 622.455322265625,
+        "openCpuMs": 616.137
+      },
+      {
+        "seedMs": 78.589111328125,
+        "phpBootMs": 30.396484375,
+        "drupalBootMs": 529.597900390625,
+        "openMs": 665.048828125,
+        "openCpuMs": 662.496
+      },
+      {
+        "seedMs": 92.61865234375,
+        "phpBootMs": 35.304443359375,
+        "drupalBootMs": 452.40625,
+        "openMs": 627.991455078125,
+        "openCpuMs": 622.377
+      },
+      {
+        "seedMs": 71.924560546875,
+        "phpBootMs": 51.173095703125,
+        "drupalBootMs": 503.61279296875,
+        "openMs": 661.801025390625,
+        "openCpuMs": 660.491
+      },
+      {
+        "seedMs": 82.662841796875,
+        "phpBootMs": 38.146484375,
+        "drupalBootMs": 531.7490234375,
+        "openMs": 690.267822265625,
+        "openCpuMs": 680.134
+      },
+      {
+        "seedMs": 82.35595703125,
+        "phpBootMs": 37.087646484375,
+        "drupalBootMs": 453.354736328125,
+        "openMs": 624.878662109375,
+        "openCpuMs": 622.692
+      },
+      {
+        "seedMs": 90.71435546875,
+        "phpBootMs": 31.969482421875,
+        "drupalBootMs": 519.8759765625,
+        "openMs": 673.19873046875,
+        "openCpuMs": 669.1010000000001
+      },
+      {
+        "seedMs": 76.16796875,
+        "phpBootMs": 46.884521484375,
+        "drupalBootMs": 455.818115234375,
+        "openMs": 608.782958984375,
+        "openCpuMs": 602.8240000000001
+      },
+      {
+        "seedMs": 71.121826171875,
+        "phpBootMs": 40.688232421875,
+        "drupalBootMs": 537.7275390625,
+        "openMs": 667.4912109375,
+        "openCpuMs": 648.0419999999999
+      },
+      {
+        "seedMs": 86.67724609375,
+        "phpBootMs": 37.59033203125,
+        "drupalBootMs": 407.85498046875,
+        "openMs": 554.236083984375,
+        "openCpuMs": 550.908
+      },
+      {
+        "seedMs": 74.225341796875,
+        "phpBootMs": 41.84375,
+        "drupalBootMs": 476.804443359375,
+        "openMs": 614.451416015625,
+        "openCpuMs": 607.3720000000001
+      },
+      {
+        "seedMs": 94.140380859375,
+        "phpBootMs": 42.995361328125,
+        "drupalBootMs": 433.474365234375,
+        "openMs": 615.381591796875,
+        "openCpuMs": 594.114
+      },
+      {
+        "seedMs": 82.026123046875,
+        "phpBootMs": 32.2001953125,
+        "drupalBootMs": 464.900634765625,
+        "openMs": 613.170166015625,
+        "openCpuMs": 602.8910000000001
+      },
+      {
+        "seedMs": 80.846923828125,
+        "phpBootMs": 24.438232421875,
+        "drupalBootMs": 546.90478515625,
+        "openMs": 671.267578125,
+        "openCpuMs": 633.733
+      },
+      {
+        "seedMs": 87.518798828125,
+        "phpBootMs": 36.57275390625,
+        "drupalBootMs": 489.14794921875,
+        "openMs": 644.51025390625,
+        "openCpuMs": 639.5060000000001
+      }
+    ]
+  },
+  "measuredSamples": 120,
+  "warmup": {
+    "contexts": 16,
+    "firstRenderMs": {
+      "n": 16,
+      "median": 800.693603515625,
+      "min": 732.746826171875,
+      "max": 821.314453125
+    },
+    "firstOverSteadyNode": 22.70904999307575
+  },
+  "oracle": {
+    "pages": 31,
+    "totalMs": 1210.481689453125,
+    "frontMs": 155.017333984375,
+    "longest": {
+      "url": "/",
+      "ms": 155.017333984375,
+      "bytes": 29291
+    },
+    "nodeMs": {
+      "n": 30,
+      "median": 35.2587890625,
+      "min": 33.812744140625,
+      "max": 40.37939453125
+    },
+    "perUrl": [
+      {
+        "url": "/",
+        "ms": 155.017333984375,
+        "bytes": 29291
+      },
+      {
+        "url": "/node/2",
+        "ms": 35.51025390625,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/4",
+        "ms": 35.64111328125,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/6",
+        "ms": 36.330322265625,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/8",
+        "ms": 35.434326171875,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/10",
+        "ms": 35.6689453125,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/12",
+        "ms": 35.357177734375,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/14",
+        "ms": 35.85400390625,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/16",
+        "ms": 35.46435546875,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/18",
+        "ms": 35.3330078125,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/20",
+        "ms": 35.28466796875,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/22",
+        "ms": 35.212890625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/24",
+        "ms": 35.21337890625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/26",
+        "ms": 35.107421875,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/28",
+        "ms": 35.08837890625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/30",
+        "ms": 35.21923828125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/32",
+        "ms": 35.310302734375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/34",
+        "ms": 35.5146484375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/36",
+        "ms": 35.2587890625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/38",
+        "ms": 35.17333984375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/40",
+        "ms": 35.809814453125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/42",
+        "ms": 34.22119140625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/44",
+        "ms": 33.946044921875,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/46",
+        "ms": 33.910400390625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/48",
+        "ms": 33.812744140625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/50",
+        "ms": 33.8486328125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/52",
+        "ms": 33.829345703125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/54",
+        "ms": 33.859619140625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/56",
+        "ms": 33.89306640625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/58",
+        "ms": 40.37939453125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/60",
+        "ms": 34.9775390625,
+        "bytes": 16940
+      }
+    ]
+  },
+  "arms": {
+    "serial": {
+      "width": 1,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 1122.0763850000003,
+        "min": 1082.4975549999995,
+        "max": 1157.5645569999979,
+        "p95": 1156.006362
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 1107.59375,
+        "min": 1069.148681640625,
+        "max": 1146.625244140625
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "oracleBoundSpeedup": 1,
+      "maxLoad1": 1.67
+    },
+    "regen-2": {
+      "width": 2,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 578.2881959999941,
+        "min": 553.6285050000006,
+        "max": 622.7155229999989,
+        "p95": 591.5542799999967
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 1.9762620763499994,
+        "min": 1.7511564875507453,
+        "max": 2.0484117309960266
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.0073979120084728,
+        "min": 0.95658511058113,
+        "max": 1.1183633751401911
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.030924474881326,
+        "min": 1.0102905178182409,
+        "max": 1.051191106007934
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 569.763671875,
+        "min": 546.75146484375,
+        "max": 615.101806640625
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 15,
+        "min": 14,
+        "max": 15
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 16,
+        "min": 16,
+        "max": 17
+      },
+      "oracleBoundSpeedup": 2,
+      "maxLoad1": 1.67
+    },
+    "regen-4": {
+      "width": 4,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 295.91598200000044,
+        "min": 282.3991410000017,
+        "max": 319.9801249999946,
+        "p95": 314.3098850000024
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 3.752747147727996,
+        "min": 3.503585862249428,
+        "max": 4.099037103657447
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.0279527968297795,
+        "min": 0.9641675179817714,
+        "max": 1.084398467190716
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.0818930078745912,
+        "min": 1.019169416966101,
+        "max": 1.1263282973131048
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 294.334228515625,
+        "min": 280.3828125,
+        "max": 318.352294921875
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 7,
+        "min": 5,
+        "max": 7
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 8,
+        "min": 8,
+        "max": 9
+      },
+      "oracleBoundSpeedup": 4,
+      "maxLoad1": 1.67
+    },
+    "regen-8": {
+      "width": 8,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 164.03313900000103,
+        "min": 154.6773269999976,
+        "max": 182.761136000001,
+        "p95": 181.78980700000102
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 6.830726920351339,
+        "min": 6.092798093572765,
+        "max": 7.483737787891925
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.0899508868085814,
+        "min": 1.0241246277995943,
+        "max": 1.1710788313727527
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.1491764294457072,
+        "min": 1.0860333548706647,
+        "max": 1.272483403939005
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 160.96484375,
+        "min": 154.220458984375,
+        "max": 180.546630859375
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 3,
+        "min": 1,
+        "max": 3
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 4,
+        "min": 4,
+        "max": 5
+      },
+      "oracleBoundSpeedup": 7.808686024590874,
+      "maxLoad1": 1.67
+    },
+    "regen-12": {
+      "width": 12,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 129.79315700000006,
+        "min": 114.9898039999971,
+        "max": 173.08129799999733,
+        "p95": 144.15016200000173
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 8.504891572897279,
+        "min": 6.283578096346479,
+        "max": 10.066671276350963
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.2411783882092546,
+        "min": 1.090574617958072,
+        "max": 1.3097918761650853
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.3576839289126696,
+        "min": 1.1713697527081572,
+        "max": 1.8150351930096569
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 129.328125,
+        "min": 112.938232421875,
+        "max": 172.6259765625
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 2,
+        "min": 1,
+        "max": 2
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 3,
+        "min": 3,
+        "max": 3
+      },
+      "oracleBoundSpeedup": 7.808686024590874,
+      "maxLoad1": 1.67
+    },
+    "regen-16": {
+      "width": 16,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 117.65013199999885,
+        "min": 102.57106099999874,
+        "max": 123.96804300000076,
+        "p95": 122.62865999999849
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 9.626058872593465,
+        "min": 9.051335794661156,
+        "max": 11.043921697430536
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.3912911081324606,
+        "min": 1.2697451372661097,
+        "max": 1.5408979892507342
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.5343020287204612,
+        "min": 1.399376269123668,
+        "max": 1.695593254366593
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 114.506591796875,
+        "min": 102.02392578125,
+        "max": 123.717041015625
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 2,
+        "min": 2,
+        "max": 3
+      },
+      "oracleBoundSpeedup": 7.808686024590874,
+      "maxLoad1": 1.67
+    }
+  },
+  "hash": "71e8af3ce1c3f74414c6ca41eba84c50b683e27d1592c8b761d87a984ed6b9dd"
+}

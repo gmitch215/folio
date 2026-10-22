@@ -1,0 +1,524 @@
+{
+  "environment": {
+    "kind": "environment",
+    "experiment": "regeneration of a page set by private Drupal contexts",
+    "machine": "paisley-park Ryzen 9 9900X, cpus 2-11, nice 19",
+    "node": "v26.10.0",
+    "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+    "hardwareThreads": 24,
+    "affinity": "2-11",
+    "pairs": 20,
+    "widths": [
+      2,
+      4,
+      8,
+      10
+    ],
+    "pages": 31,
+    "contextsOpenMs": 980.953729,
+    "boots": [
+      {
+        "seedMs": 97.477294921875,
+        "phpBootMs": 39.34130859375,
+        "drupalBootMs": 418.596923828125,
+        "openMs": 600.843017578125,
+        "openCpuMs": 401.00600000000003
+      },
+      {
+        "seedMs": 51.1416015625,
+        "phpBootMs": 44.5068359375,
+        "drupalBootMs": 434.3173828125,
+        "openMs": 562.149169921875,
+        "openCpuMs": 385.98999999999995
+      },
+      {
+        "seedMs": 94.54052734375,
+        "phpBootMs": 43.307861328125,
+        "drupalBootMs": 439.377685546875,
+        "openMs": 620.666259765625,
+        "openCpuMs": 377.247
+      },
+      {
+        "seedMs": 98.77001953125,
+        "phpBootMs": 51.5107421875,
+        "drupalBootMs": 437.985595703125,
+        "openMs": 623.741943359375,
+        "openCpuMs": 391.661
+      },
+      {
+        "seedMs": 45.78369140625,
+        "phpBootMs": 38.583740234375,
+        "drupalBootMs": 421.08349609375,
+        "openMs": 548.238037109375,
+        "openCpuMs": 359.75
+      },
+      {
+        "seedMs": 48.591552734375,
+        "phpBootMs": 43.091796875,
+        "drupalBootMs": 442.970458984375,
+        "openMs": 564.64892578125,
+        "openCpuMs": 393.03099999999995
+      },
+      {
+        "seedMs": 43.452880859375,
+        "phpBootMs": 44.61376953125,
+        "drupalBootMs": 445.442626953125,
+        "openMs": 566.2392578125,
+        "openCpuMs": 387.35999999999996
+      },
+      {
+        "seedMs": 101.08544921875,
+        "phpBootMs": 32.470458984375,
+        "drupalBootMs": 448.80712890625,
+        "openMs": 631.616455078125,
+        "openCpuMs": 377.56600000000003
+      },
+      {
+        "seedMs": 44.829833984375,
+        "phpBootMs": 38.73193359375,
+        "drupalBootMs": 440.1484375,
+        "openMs": 560.796142578125,
+        "openCpuMs": 391.68000000000006
+      },
+      {
+        "seedMs": 38.312744140625,
+        "phpBootMs": 36.727783203125,
+        "drupalBootMs": 419.095947265625,
+        "openMs": 539.60986328125,
+        "openCpuMs": 393.54499999999996
+      }
+    ]
+  },
+  "measuredSamples": 100,
+  "warmup": {
+    "contexts": 10,
+    "firstRenderMs": {
+      "n": 10,
+      "median": 665.65234375,
+      "min": 611.25390625,
+      "max": 725.714111328125
+    },
+    "firstOverSteadyNode": 18.815209440342283
+  },
+  "oracle": {
+    "pages": 31,
+    "totalMs": 1219.142578125,
+    "frontMs": 155.821044921875,
+    "longest": {
+      "url": "/",
+      "ms": 155.821044921875,
+      "bytes": 29291
+    },
+    "nodeMs": {
+      "n": 30,
+      "median": 35.37841796875,
+      "min": 33.938232421875,
+      "max": 39.957275390625
+    },
+    "perUrl": [
+      {
+        "url": "/",
+        "ms": 155.821044921875,
+        "bytes": 29291
+      },
+      {
+        "url": "/node/2",
+        "ms": 35.770751953125,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/4",
+        "ms": 35.68115234375,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/6",
+        "ms": 36.227783203125,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/8",
+        "ms": 35.51806640625,
+        "bytes": 16935
+      },
+      {
+        "url": "/node/10",
+        "ms": 35.38623046875,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/12",
+        "ms": 35.45068359375,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/14",
+        "ms": 36.015380859375,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/16",
+        "ms": 35.572021484375,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/18",
+        "ms": 35.53564453125,
+        "bytes": 16938
+      },
+      {
+        "url": "/node/20",
+        "ms": 35.175048828125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/22",
+        "ms": 35.407470703125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/24",
+        "ms": 35.37841796875,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/26",
+        "ms": 35.224609375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/28",
+        "ms": 39.9130859375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/30",
+        "ms": 36.352783203125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/32",
+        "ms": 35.3369140625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/34",
+        "ms": 35.27197265625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/36",
+        "ms": 35.260986328125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/38",
+        "ms": 35.158935546875,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/40",
+        "ms": 36.072021484375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/42",
+        "ms": 34.1240234375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/44",
+        "ms": 34.125,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/46",
+        "ms": 34.2890625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/48",
+        "ms": 34.212890625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/50",
+        "ms": 34.220458984375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/52",
+        "ms": 34.140625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/54",
+        "ms": 34.04443359375,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/56",
+        "ms": 33.938232421875,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/58",
+        "ms": 39.957275390625,
+        "bytes": 16940
+      },
+      {
+        "url": "/node/60",
+        "ms": 34.5595703125,
+        "bytes": 16940
+      }
+    ]
+  },
+  "arms": {
+    "serial": {
+      "width": 1,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 1110.7782359999983,
+        "min": 1078.3561379999956,
+        "max": 1146.6857390000005,
+        "p95": 1144.8467109999983
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 1096.8935546875,
+        "min": 1064.4140625,
+        "max": 1132.524658203125
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "oracleBoundSpeedup": 1,
+      "maxLoad1": 0.84
+    },
+    "regen-2": {
+      "width": 2,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 571.9999410000019,
+        "min": 549.0027220000011,
+        "max": 614.0467300000018,
+        "p95": 596.6235269999997
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 1.9385956055527471,
+        "min": 1.8343774422510146,
+        "max": 2.0614724178237838
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.011581791704967,
+        "min": 0.963700510351836,
+        "max": 1.1035188204660924
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.0331767813931394,
+        "min": 1.009866899379262,
+        "max": 1.0679825501889866
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 564.63720703125,
+        "min": 542.1044921875,
+        "max": 606.161376953125
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 15,
+        "min": 14,
+        "max": 15
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 16,
+        "min": 16,
+        "max": 17
+      },
+      "oracleBoundSpeedup": 2,
+      "maxLoad1": 0.93
+    },
+    "regen-4": {
+      "width": 4,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 300.189620000001,
+        "min": 282.78081999999995,
+        "max": 329.3530549999996,
+        "p95": 322.4390710000007
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 3.7192470901080714,
+        "min": 3.4760470371225183,
+        "max": 3.9267683615056375
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.0270230007036831,
+        "min": 0.9644617895089144,
+        "max": 1.0887701309790514
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.0931218104145017,
+        "min": 1.0420668281561698,
+        "max": 1.1654171922227776
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 293.3193359375,
+        "min": 281.78662109375,
+        "max": 319.865478515625
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 7,
+        "min": 5,
+        "max": 7
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 8,
+        "min": 8,
+        "max": 9
+      },
+      "oracleBoundSpeedup": 4,
+      "maxLoad1": 0.93
+    },
+    "regen-8": {
+      "width": 8,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 160.42930999999953,
+        "min": 154.4178009999996,
+        "max": 177.11332699999912,
+        "p95": 175.48798800000077
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 6.961630326586632,
+        "min": 6.1403550168757475,
+        "max": 7.408085454410603
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.0679850081605158,
+        "min": 1.0148891101180164,
+        "max": 1.161682046459862
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.1419926356237753,
+        "min": 1.0654481286076214,
+        "max": 1.247752655480961
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 159.346923828125,
+        "min": 153.899658203125,
+        "max": 176.14697265625
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 3,
+        "min": 1,
+        "max": 3
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 4,
+        "min": 4,
+        "max": 5
+      },
+      "oracleBoundSpeedup": 7.8239918024952875,
+      "maxLoad1": 0.93
+    },
+    "regen-10": {
+      "width": 10,
+      "n": 20,
+      "wallMs": {
+        "n": 20,
+        "median": 146.94772999999986,
+        "min": 141.12020100000154,
+        "max": 187.22524500000145,
+        "p95": 159.41485000000102
+      },
+      "speedupOverSerial": {
+        "n": 20,
+        "median": 7.654493431099617,
+        "min": 5.759672730031611,
+        "max": 7.9868280789535415
+      },
+      "processCpuOverSerial": {
+        "n": 20,
+        "median": 1.0866138406201016,
+        "min": 1.0208896359090418,
+        "max": 1.2009331470656053
+      },
+      "busyMaxOverMin": {
+        "n": 20,
+        "median": 1.3294113626265964,
+        "min": 1.27966624431326,
+        "max": 1.7297495318987273
+      },
+      "busyMaxMs": {
+        "n": 20,
+        "median": 145.73388671875,
+        "min": 140.298095703125,
+        "max": 186.7470703125
+      },
+      "pagesPerWorkerMin": {
+        "n": 20,
+        "median": 2,
+        "min": 1,
+        "max": 2
+      },
+      "pagesPerWorkerMax": {
+        "n": 20,
+        "median": 4,
+        "min": 4,
+        "max": 4
+      },
+      "oracleBoundSpeedup": 7.8239918024952875,
+      "maxLoad1": 0.84
+    }
+  },
+  "hash": "02b7f20bdbb5af6daab27347ab93d236e6e4a2d19c035655d76ccf3f077226ea"
+}
