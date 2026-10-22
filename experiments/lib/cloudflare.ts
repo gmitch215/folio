@@ -98,7 +98,12 @@ export async function snapshot(api: Api): Promise<Snapshot> {
 }
 
 // a Durable Object script cannot be deleted while it owns classes, so retire the classes first
-export async function retire(api: Api, name: string, classes: readonly string[]) {
+export async function retire(
+	api: Api,
+	name: string,
+	classes: readonly string[],
+	tags: { old: string; next: string } = { old: 'v1', next: 'v2' }
+) {
 	const body = new FormData();
 	body.set(
 		'metadata',
@@ -109,8 +114,8 @@ export async function retire(api: Api, name: string, classes: readonly string[])
 					compatibility_date: '2026-10-20',
 					bindings: [],
 					migrations: {
-						old_tag: 'v1',
-						new_tag: 'v2',
+						old_tag: tags.old,
+						new_tag: tags.next,
 						steps: [{ deleted_classes: classes }]
 					}
 				})

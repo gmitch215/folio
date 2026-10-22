@@ -1,0 +1,156 @@
+{
+  "run": "cfw-folio-s34-b27e5436",
+  "budget": {
+    "maxRowsWritten": 60000,
+    "maxRequests": 500,
+    "maxRequestsPerArm": 40
+  },
+  "spent": {
+    "rowsWritten": 36090,
+    "requests": 52,
+    "perArm": {
+      "control": 26,
+      "baked": 26
+    }
+  },
+  "variants": {
+    "control": "v-control",
+    "baked": "v-boot"
+  },
+  "arms": {
+    "control": {
+      "arm": "control",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 3556,
+        "min": 2786,
+        "max": 4243
+      },
+      "wall": {
+        "n": 5,
+        "median": 4260.163625000016,
+        "min": 3844.169167,
+        "max": 5734.502458000003
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "bb5353855701acc3"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": [
+        "D0lZn3RTL_IvUHDl07N8IiBuwBIQNd9a807jPc-h5Vc"
+      ]
+    },
+    "baked": {
+      "arm": "baked",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 2819,
+        "min": 2349,
+        "max": 3611
+      },
+      "wall": {
+        "n": 5,
+        "median": 3246.6651249999995,
+        "min": 2706.1116250000196,
+        "max": 5052.305999999982
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "bb5353855701acc3"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "D0lZn3RTL_IvUHDl07N8IiBuwBIQNd9a807jPc-h5Vc"
+      ]
+    }
+  },
+  "outcomes": {
+    "control": {
+      "ok": 50
+    },
+    "baked": {
+      "ok": 50
+    }
+  },
+  "failure": null,
+  "saving": {
+    "-first": {
+      "cpuRatio": 0.7927446569178853,
+      "cpuSavingPercent": 20.72553430821147,
+      "wallRatio": 0.762098691690507,
+      "wallSavingPercent": 23.790130830949295
+    }
+  },
+  "pairs": {
+    "-first": [
+      {
+        "round": 0,
+        "control": 2786,
+        "other": 2552
+      },
+      {
+        "round": 1,
+        "control": 4243,
+        "other": 2835
+      },
+      {
+        "round": 2,
+        "control": 3556,
+        "other": 3611
+      },
+      {
+        "round": 3,
+        "control": 3330,
+        "other": 2819
+      },
+      {
+        "round": 4,
+        "control": 3862,
+        "other": 2349
+      }
+    ]
+  }
+}

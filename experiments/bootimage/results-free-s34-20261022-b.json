@@ -1,0 +1,210 @@
+{
+  "arms": {
+    "control": {
+      "arm": "control",
+      "objects": 3,
+      "cpu": {
+        "n": 3,
+        "median": 3739,
+        "min": 3446,
+        "max": 3754
+      },
+      "wall": {
+        "n": 3,
+        "median": 4407.611291000008,
+        "min": 4087.8185419999936,
+        "max": 5157.242083999998
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b04f5044741665c6"
+      ],
+      "statuses": [
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0
+      ],
+      "tokens": [
+        "FokeZqu0zYc5yxWe4l_QinxUNX2CS1M7FBkO98jbWUI"
+      ]
+    },
+    "baked": {
+      "arm": "baked",
+      "objects": 3,
+      "cpu": {
+        "n": 3,
+        "median": 3469,
+        "min": 2598,
+        "max": 3592
+      },
+      "wall": {
+        "n": 3,
+        "median": 4177.463374999992,
+        "min": 3431.686167000007,
+        "max": 4261.758040999994
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b04f5044741665c6"
+      ],
+      "statuses": [
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "FokeZqu0zYc5yxWe4l_QinxUNX2CS1M7FBkO98jbWUI"
+      ]
+    },
+    "control-reboot": {
+      "arm": "control-reboot",
+      "objects": 3,
+      "cpu": {
+        "n": 3,
+        "median": 61,
+        "min": 54,
+        "max": 63
+      },
+      "wall": {
+        "n": 3,
+        "median": 249.04250000001048,
+        "min": 152.00350000002072,
+        "max": 734.0149580000143
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b04f5044741665c6"
+      ],
+      "statuses": [
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    },
+    "baked-reboot": {
+      "arm": "baked-reboot",
+      "objects": 3,
+      "cpu": {
+        "n": 3,
+        "median": 110,
+        "min": 60,
+        "max": 1544
+      },
+      "wall": {
+        "n": 3,
+        "median": 732.1036670000176,
+        "min": 139.17508300000918,
+        "max": 2235.338916000008
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b04f5044741665c6"
+      ],
+      "statuses": [
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    }
+  },
+  "outcomes": {
+    "control": {
+      "ok": 36
+    },
+    "baked": {
+      "ok": 36
+    }
+  },
+  "saving": {
+    "-first": {
+      "cpuRatio": 0.927788178657395,
+      "cpuSavingPercent": 7.221182134260495,
+      "wallRatio": 0.9477839807539381,
+      "wallSavingPercent": 5.2216019246061895
+    },
+    "-reboot": {
+      "cpuRatio": 1.8032786885245902,
+      "cpuSavingPercent": -80.32786885245902,
+      "wallRatio": 2.9396736179567213,
+      "wallSavingPercent": -193.96736179567213
+    }
+  },
+  "pairs": {
+    "-first": [
+      {
+        "round": 0,
+        "control": 3739,
+        "other": 3469
+      },
+      {
+        "round": 1,
+        "control": 3754,
+        "other": 2598
+      },
+      {
+        "round": 2,
+        "control": 3446,
+        "other": 3592
+      }
+    ],
+    "-reboot": [
+      {
+        "round": 0,
+        "control": 61,
+        "other": 110
+      },
+      {
+        "round": 1,
+        "control": 63,
+        "other": 1544
+      },
+      {
+        "round": 2,
+        "control": 54,
+        "other": 60
+      }
+    ]
+  }
+}
