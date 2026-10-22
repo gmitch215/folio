@@ -219,6 +219,12 @@ port.on('message', async (message: any) => {
 		port.postMessage({ type: 'result', id: message.id, index: data.index, files });
 		return;
 	}
+	if (message.type === 'sqlLog') {
+		if (message.action === 'start') drupal.startSqlLog();
+		const log = message.action === 'take' ? drupal.takeSqlLog() : [];
+		port.postMessage({ type: 'result', id: message.id, index: data.index, log });
+		return;
+	}
 	if (message.type === 'importFiles') {
 		for (const [path, bytes] of Object.entries(message.files as Record<string, Uint8Array>)) {
 			let dir = '';
@@ -269,7 +275,10 @@ port.on('message', async (message: any) => {
 	const cpu0 = cpu();
 	const start = now();
 	try {
-		const code = message.type === 'render' ? drupal.renderCode() : message.code;
+		const code =
+			message.type === 'render'
+				? drupal.renderCode(message.path, message.bins)
+				: message.code;
 		if (message.type === 'render') drupal.resetSql();
 		const raw = await run(code);
 		const end = now();

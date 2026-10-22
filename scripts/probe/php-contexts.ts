@@ -95,6 +95,21 @@ export async function buildWorker(consumer: string, outfile: string) {
 	return outfile;
 }
 
+/** one statement the Drupal SQL bridge ran; blobs are described by length */
+export interface SqlStatement {
+	text: string;
+	params: unknown[];
+	rows: number;
+	rowsWritten: number;
+	ms: number;
+}
+
+/** the page a render request produces and the caches emptied before it */
+export interface RenderOptions {
+	path?: string;
+	bins?: string[];
+}
+
 export interface Contexts {
 	readonly count: number;
 	readonly boots: ContextBoot[];
@@ -102,8 +117,10 @@ export interface Contexts {
 	run(index: number, code: string, keep?: boolean): Promise<ContextRun>;
 	/** runs the same snippet (or one per context) in the listed contexts at once */
 	runAll(code: string | string[], indices?: number[], keep?: boolean): Promise<ContextRun[]>;
-	/** the uncached Drupal render in the listed contexts at once (kind drupal) */
-	render(indices?: number[]): Promise<ContextRun[]>;
+	/** the uncached Drupal render of a path (default `/`) in the listed contexts at once (kind drupal) */
+	render(indices?: number[], options?: RenderOptions): Promise<ContextRun[]>;
+	/** starts recording the SQL statements of one Drupal context, or returns them and stops */
+	sqlLog(index: number, action: 'start' | 'take'): Promise<SqlStatement[]>;
 	/** reads every file under a directory of one context's Emscripten FS */
 	exportFiles(index: number, dir: string): Promise<Record<string, Uint8Array>>;
 	/** call_indirect counts of one instrumented context: [site, target, count] triples, then resets */
@@ -201,8 +218,10 @@ export async function openContexts(options: ContextOptions): Promise<Contexts> {
 					send(index, { type: 'run', code: Array.isArray(code) ? code[k] : code }, keep)
 				)
 			),
-		render: (indices = all) =>
-			Promise.all(indices.map((index) => send(index, { type: 'render' }))),
+		render: (indices = all, options = {}) =>
+			Promise.all(indices.map((index) => send(index, { type: 'render', ...options }))),
+		sqlLog: async (index, action) =>
+			((await send(index, { type: 'sqlLog', action })) as any).log as SqlStatement[],
 		exportFiles: async (index, dir) =>
 			((await send(index, { type: 'exportFiles', dir })) as any).files,
 		worksp: async (index, request) => send(index, { type: 'worksp', ...request }),

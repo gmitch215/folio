@@ -38,6 +38,35 @@ const normalize = (html: string) =>
 let mountResult: any;
 let queryBase = 0;
 
+export interface SqlRecord {
+	text: string;
+	params: unknown[];
+	rows: number;
+	rowsWritten: number;
+	ms: number;
+}
+
+const sqlLog: SqlRecord[] = [];
+let sqlLogging = false;
+
+/** blobs become their length and long strings are cut, so a log stays small */
+function describeParam(value: unknown): unknown {
+	if (value instanceof ArrayBuffer || ArrayBuffer.isView(value))
+		return { bytes: (value as ArrayBuffer).byteLength };
+	if (typeof value === 'string' && value.length > 80) return value.slice(0, 80);
+	return value;
+}
+
+export const startSqlLog = () => {
+	sqlLog.length = 0;
+	sqlLogging = true;
+};
+
+export const takeSqlLog = () => {
+	sqlLogging = false;
+	return sqlLog.splice(0);
+};
+
 export const memory = () => INTERPRETER_MEMORY;
 export const disabled = () => `disable_functions=${DISABLED.join(',')}`;
 
@@ -53,9 +82,19 @@ export async function prepare(consumer: string) {
 			const rows = statement.all(
 				...params.map((p) => (p instanceof ArrayBuffer ? new Uint8Array(p) : p))
 			);
-			sqlStats.ms += performance.now() - start;
+			const ms = performance.now() - start;
+			sqlStats.ms += ms;
 			sqlStats.calls++;
-			return { toArray: () => rows, rowsRead: rows.length, rowsWritten: changes() - before };
+			const rowsWritten = changes() - before;
+			if (sqlLogging)
+				sqlLog.push({
+					text,
+					params: params.map(describeParam),
+					rows: rows.length,
+					rowsWritten,
+					ms
+				});
+			return { toArray: () => rows, rowsRead: rows.length, rowsWritten };
 		}
 	};
 	bridge = new SiteDurableObject(
@@ -154,10 +193,8 @@ export async function boot(binary: any, run: (code: string) => Promise<string>) 
 	if (!kernel.ok || !kernel.hasDb) throw new Error('Drupal kernel failed: ' + kernelRaw);
 }
 
-export const renderCode = () =>
-	renderPage('/', ['page', 'dynamic_page_cache', 'render'], false, {
-		origin: 'https://folio.invalid'
-	});
+export const renderCode = (path = '/', bins = ['page', 'dynamic_page_cache', 'render']) =>
+	renderPage(path, bins, false, { origin: 'https://folio.invalid' });
 
 export function resetSql() {
 	sqlStats.ms = 0;
