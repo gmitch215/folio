@@ -1,0 +1,56 @@
+{
+	"runtime": "node",
+	"version": "v26.8.2",
+	"checks": [
+		{
+			"name": "start two task workers from .ts entries",
+			"ok": true,
+			"detail": "two workers posted ready"
+		},
+		{
+			"name": "join returns text and bytes",
+			"ok": true,
+			"detail": "text FOLIO, bytes 3,2,1"
+		},
+		{
+			"name": "joinAsync resolves with the output",
+			"ok": true,
+			"detail": "text ASYNC"
+		},
+		{
+			"name": "runSync joins in submission order",
+			"ok": true,
+			"detail": "sleep on worker 1, then upper B"
+		},
+		{
+			"name": "two sleeping tasks overlap; width 1 does not",
+			"ok": true,
+			"detail": "peak 2 on two workers, 1 on width 1"
+		},
+		{
+			"name": "a throwing task rejects with TaskError",
+			"ok": true,
+			"detail": "join and joinAsync both reject with TaskError"
+		},
+		{
+			"name": "audit detects a stateful task with TaskConflictError",
+			"ok": true,
+			"detail": "conflict on counter at byte 0"
+		},
+		{
+			"name": "an owner in a worker joins tasks served by other workers",
+			"ok": true,
+			"detail": "texts 0, 1, OWNER, peak 2"
+		},
+		{
+			"name": "thread CPU time is reported per task",
+			"ok": true,
+			"detail": "process.threadCpuUsage function, spin cpuMs 30.1"
+		},
+		{
+			"name": "SharedArrayBuffer counter wakes a waiting worker",
+			"ok": true,
+			"detail": "worker wait returned \"ok 7\", notify woke 1"
+		}
+	]
+}
