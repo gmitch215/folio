@@ -6,6 +6,7 @@ import { cpus, loadavg } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { gzipSync } from 'node:zlib';
+import { bakeModule, captureImage, checkBaked, type MemoryImage } from '../../src/bake.ts';
 
 // can a booted Drupal heap reach a new instance faster than the interpreter boots? One script, two
 // roles: the plain node process drives and builds modules (binaryen); the same file bundled with
@@ -39,7 +40,6 @@ const bundle = join(root, 'build/boot-image-child.mjs');
 const pinned = join(work, 'interp');
 const original = join(pinned, 'php8.5.tuned.wasm');
 const glue = join(pinned, 'php8.5-worker.tuned.mjs');
-const memoryName = 'mimport$0';
 const child = process.env.FOLIO_BOOTIMAGE_CHILD === '1';
 
 type Row = Record<string, any>;
@@ -130,42 +130,18 @@ function runChild(args: string[], execArgv: string[] = ['--expose-gc']) {
 
 type Binaryen = typeof import('binaryen').default;
 
-const latin1 = (bytes: Uint8Array) =>
-	Buffer.from(bytes.buffer, bytes.byteOffset, bytes.length).toString('latin1');
-
-async function loadModule() {
+/** the module's mutable defined globals with their initial values and wasm global indexes */
+async function loadModule(bytes: Uint8Array = readFileSync(original)) {
 	const binaryen: Binaryen = (await import('binaryen')).default;
-	const mod = binaryen.readBinary(readFileSync(original));
-	const globals: { name: string; value: number; init: number }[] = [];
-	for (let i = 0; i < mod.getNumGlobals(); i++) {
-		const info = binaryen.getGlobalInfo(mod.getGlobalByIndex(i));
+	const mod = binaryen.readBinary(bytes);
+	const globals: { name: string; index: number; value: number }[] = [];
+	for (let index = 0; index < mod.getNumGlobals(); index++) {
+		const info = binaryen.getGlobalInfo(mod.getGlobalByIndex(index));
 		if (!info.mutable || !info.init) continue;
 		const init = binaryen.getExpressionInfo(info.init) as any;
-		globals.push({ name: info.name, value: Number(init.value), init: info.init });
+		globals.push({ name: info.name, index, value: Number(init.value) });
 	}
 	return { binaryen, mod, globals };
-}
-
-/** appends one active data segment through the C entry point; setMemory would replace the import */
-function addSegment(binaryen: Binaryen, mod: any, name: string, offset: number, data: Uint8Array) {
-	const api = binaryen as any;
-	const cstr = (text: string) => {
-		const pointer = api._malloc(text.length + 1);
-		api.stringToAscii(text, pointer);
-		return pointer;
-	};
-	const bytes = api._malloc(data.length + 1);
-	api.stringToAscii(latin1(data), bytes);
-	api._BinaryenAddDataSegment(
-		mod.ptr,
-		cstr(name),
-		cstr(memoryName),
-		0,
-		mod.i32.const(offset),
-		bytes,
-		data.length
-	);
-	api._free(bytes);
 }
 
 /**
@@ -210,64 +186,59 @@ async function buildProbe() {
 /** the delta image as data segments over the original module; globals set to the booted values */
 async function bake(name: string) {
 	const meta = readMeta();
-	const image = meta.images[name];
-	const delta = readFileSync(join(work, `${name}.delta.bin`));
+	const entry = meta.images[name];
 	const pages: number[] = JSON.parse(
 		readFileSync(join(work, `${name}.delta.pages.json`), 'utf8')
 	);
+	const data = new Uint8Array(readFileSync(join(work, `${name}.delta.bin`)));
+	const bytes = new Uint8Array(readFileSync(original));
 	const t0 = performance.now();
-	const { binaryen, mod, globals } = await loadModule();
+	const before = await loadModule(bytes);
 	const readMs = performance.now() - t0;
-	const t1 = performance.now();
-	const values: number[] = image.globals;
-	globals.forEach((g, i) => {
-		if (values[i] !== g.value) (binaryen as any)._BinaryenConstSetValueI32(g.init, values[i]!);
+	const segmentsBefore = (before.mod as any).getNumDataSegments();
+	before.mod.dispose();
+	const values: number[] = entry.globals;
+	const changed: Record<number, number> = {};
+	before.globals.forEach((g, i) => {
+		if (values[i] !== g.value) changed[g.index] = values[i]!;
 	});
-	let at = 0;
-	let segments = 0;
-	for (let i = 0; i < pages.length;) {
-		let j = i;
-		while (j + 1 < pages.length && pages[j + 1] === pages[j]! + 1) j++;
-		const length = (j - i + 1) * PAGE;
-		addSegment(
-			binaryen,
-			mod,
-			`bi${segments++}`,
-			pages[i]! * PAGE,
-			delta.subarray(at, at + length)
-		);
-		at += length;
-		i = j + 1;
-	}
-	const rewriteMs = performance.now() - t1;
+	const image: MemoryImage = {
+		byteLength: entry.memoryBytes,
+		pages,
+		data,
+		module: interp.wasmSha256,
+		...(Object.keys(changed).length ? { globals: changed } : {})
+	};
+	const t1 = performance.now();
+	const out = await bakeModule(bytes, image);
+	const bakeMs = performance.now() - t1;
 	const t2 = performance.now();
-	const out = mod.emitBinary();
-	const emitMs = performance.now() - t2;
+	const check = checkBaked(out, image);
+	const checkMs = performance.now() - t2;
 	writeFileSync(join(work, `baked-${name}.wasm`), out);
+	const after = await loadModule(out);
+	const segmentsTotal = (after.mod as any).getNumDataSegments();
+	after.mod.dispose();
 	emit({
 		kind: 'bake',
 		name,
 		readMs,
-		rewriteMs,
-		emitMs,
-		segmentsAdded: segments,
-		segmentsTotal: (mod as any).getNumDataSegments(),
+		bakeMs,
+		checkMs,
+		segmentsAdded: segmentsTotal - segmentsBefore,
+		segmentsTotal,
 		originalSha256: interp.wasmSha256,
-		deltaBytes: delta.length,
+		bakedSha256: createHash('sha256').update(out).digest('hex'),
+		deltaBytes: data.length,
 		moduleBytes: out.length,
-		originalBytes: readFileSync(original).length,
-		globalsSet: globals.map((g, i) => ({ name: g.name, initial: g.value, booted: values[i] })),
-		globalsReadBack: (() => {
-			const check = binaryen.readBinary(out);
-			const found: number[] = [];
-			for (let k = 0; k < check.getNumGlobals(); k++) {
-				const info = binaryen.getGlobalInfo(check.getGlobalByIndex(k));
-				if (info.mutable && info.init)
-					found.push(Number((binaryen.getExpressionInfo(info.init) as any).value));
-			}
-			check.dispose();
-			return found;
-		})(),
+		originalBytes: bytes.length,
+		globalsSet: before.globals.map((g, i) => ({
+			name: g.name,
+			initial: g.value,
+			booted: values[i]
+		})),
+		globalsReadBack: after.globals.map((g) => g.value),
+		checkEqual: check.equal,
 		valid: WebAssembly.validate(out as BufferSource)
 	});
 }
@@ -572,7 +543,6 @@ const consumerUrl = (path: string) => pathToFileURL(join(consumer, path)).href;
 const now = () => performance.now();
 const gc = () => (globalThis as any).gc?.();
 const sha = (data: string | Uint8Array) => createHash('sha256').update(data).digest('hex');
-const zero = Buffer.alloc(PAGE);
 const view = (memory: WebAssembly.Memory) => new Uint8Array(memory.buffer);
 
 /** the module's function imports as stubs; instantiation calls none of them (no start function) */
@@ -590,36 +560,8 @@ function stubImports(module: WebAssembly.Module, memory: WebAssembly.Memory) {
 	return imports as WebAssembly.Imports;
 }
 
-const pagesOf = (memory: Uint8Array) => memory.length / PAGE;
-
-/** page classification against a zeroed memory and against the module's own initial data */
-function classify(memory: Uint8Array, fresh: Uint8Array) {
-	const a = Buffer.from(memory.buffer, memory.byteOffset, memory.length);
-	const b = Buffer.from(fresh.buffer, fresh.byteOffset, fresh.length);
-	const nonzero: number[] = [];
-	const delta: number[] = [];
-	const freshNonzero: number[] = [];
-	const zeroedByBoot: number[] = [];
-	for (let p = 0; p < pagesOf(memory); p++) {
-		const page = a.subarray(p * PAGE, (p + 1) * PAGE);
-		const base = p * PAGE < b.length ? b.subarray(p * PAGE, (p + 1) * PAGE) : zero;
-		const bootZero = page.equals(zero);
-		const freshZero = base.equals(zero);
-		if (!bootZero) nonzero.push(p);
-		if (!freshZero) freshNonzero.push(p);
-		if (!page.equals(base)) {
-			delta.push(p);
-			if (bootZero) zeroedByBoot.push(p);
-		}
-	}
-	return { nonzero, delta, freshNonzero, zeroedByBoot };
-}
-
-function gather(memory: Uint8Array, pages: number[]) {
-	const out = new Uint8Array(pages.length * PAGE);
-	pages.forEach((p, i) => out.set(memory.subarray(p * PAGE, (p + 1) * PAGE), i * PAGE));
-	return out;
-}
+/** pages of `after` that differ from `before`; a shorter `before` counts as zero past its end */
+const dirtied = (before: Uint8Array, after: Uint8Array) => captureImage(after, before).pages;
 
 interface Context {
 	php: any;
@@ -933,18 +875,6 @@ function tableNames(instance: WebAssembly.Instance) {
 	return Array.from({ length: table.length }, (_, i) => table.get(i)?.name ?? null);
 }
 
-/** 64-bit-safe copy of the pages that changed between two memories of the same module */
-function dirtied(before: Uint8Array, after: Uint8Array) {
-	const a = Buffer.from(before.buffer, before.byteOffset, before.length);
-	const b = Buffer.from(after.buffer, after.byteOffset, after.length);
-	const pages: number[] = [];
-	for (let p = 0; p < after.length / PAGE; p++) {
-		const x = p * PAGE < a.length ? a.subarray(p * PAGE, (p + 1) * PAGE) : zero;
-		if (!b.subarray(p * PAGE, (p + 1) * PAGE).equals(x)) pages.push(p);
-	}
-	return pages;
-}
-
 /** open descriptors in the Emscripten FS; the image holds their numbers, not their streams */
 const openFds = (binary: any) =>
 	(binary.FS.streams as any[])
@@ -1058,9 +988,17 @@ async function anatomy(round: number) {
 		['boot', bootMemory, bootGlobals, bootTable],
 		['render', renderMemory, renderGlobals, renderTable]
 	] as const) {
-		const c = classify(memory, fresh);
-		const nz = gather(memory, c.nonzero);
-		const delta = gather(memory, c.delta);
+		const none = new Uint8Array(0);
+		const nonzero = captureImage(memory, none);
+		const deltaImage = captureImage(memory, fresh);
+		const c = {
+			nonzero: nonzero.pages,
+			delta: deltaImage.pages,
+			freshNonzero: captureImage(fresh, none).pages,
+			zeroedByBoot: deltaImage.pages.filter((page) => !nonzero.pages.includes(page))
+		};
+		const nz = nonzero.data;
+		const delta = deltaImage.data;
 		for (const [kind, bytes, pages] of [
 			['nz', nz, c.nonzero],
 			['delta', delta, c.delta]
