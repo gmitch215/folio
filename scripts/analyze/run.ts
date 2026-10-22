@@ -1,5 +1,7 @@
 import { analyzeAdmission } from './admission.ts';
 import { analyzeAffinity } from './affinity.ts';
+import { analyzeBlocks } from './blocks.ts';
+import { analyzeBootImage } from './bootimage.ts';
 import { analyzeBreakdown, analyzeMemory } from './breakdown.ts';
 import { analyzeConcurrent } from './concurrent.ts';
 import { analyzeControl } from './control.ts';
@@ -8,6 +10,7 @@ import { analyzePaired } from './paired.ts';
 import { analyzeRegen } from './regen.ts';
 import { analyzeScaling } from './scaling.ts';
 import { analyzeSharing } from './sharing.ts';
+import { analyzeSiteConc } from './siteconc.ts';
 import { analyzeCensus } from './sqlcensus.ts';
 import { analyzeValidation, analyzeWorksp } from './worksp.ts';
 
@@ -65,4 +68,7 @@ analyzeValidation('20261020-worksp2', 'validation.jsonl');
 analyzeRegen('20261022-phpregen', 'nosmt-regen.jsonl', 'nosmt-regen.summary.json');
 analyzeRegen('20261022-phpregen', 'smt-regen.jsonl', 'smt-regen.summary.json');
 analyzeCensus('20261022-sqlcensus', 'census.jsonl', 'summary.json');
+analyzeSiteConc('20261022-site-concurrency');
+analyzeBlocks('20261022-blocks', 'mac-blocks.jsonl');
+analyzeBootImage('20261022-bootimage');
 console.log('regenerated every summary.json under results/');

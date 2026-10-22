@@ -3,12 +3,13 @@
 Probes that run Folio, or test its limits, on Cloudflare. Each directory holds a Worker, its
 Wrangler config, a method document, the analysis code and the sanitized results.
 
-| directory   | question                                                                                                        | runs on                                                   |
-| ----------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `cloud/`    | What can a managed Worker share across isolates? Does the portable client reach a Node host from stock workerd? | deployed Workers and Durable Objects, local workerd       |
-| `managed/`  | Does `ManagedFolio` extract and run regions across Durable Object lanes with exact results?                     | deployed Durable Objects, local workerd                   |
-| `browser/`  | Physical sharing and automatic counted-loop extraction without JSPI over 256 MiB                                | deployed Chromium through Browser Run and a local control |
-| `consumer/` | Does the paired native and Folio harness run on a FREE deployment, and what do the limits do to PHP?            | Browser Run for the harness, a Durable Object for PHP     |
+| directory    | question                                                                                                        | runs on                                                   |
+| ------------ | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `cloud/`     | What can a managed Worker share across isolates? Does the portable client reach a Node host from stock workerd? | deployed Workers and Durable Objects, local workerd       |
+| `managed/`   | Does `ManagedFolio` extract and run regions across Durable Object lanes with exact results?                     | deployed Durable Objects, local workerd                   |
+| `browser/`   | Physical sharing and automatic counted-loop extraction without JSPI over 256 MiB                                | deployed Chromium through Browser Run and a local control |
+| `consumer/`  | Does the paired native and Folio harness run on a FREE deployment, and what do the limits do to PHP?            | Browser Run for the harness, a Durable Object for PHP     |
+| `bootimage/` | What does the deployed plane do with a PHP module that carries its booted memory as initial data?               | a Durable Object on the FREE account, local workerd       |
 
 ## Language Boundaries
 
@@ -33,16 +34,18 @@ node experiments/managed/local.ts        # managed lanes in local workerd, 39 ro
 node experiments/deploy.ts managed       # live deploy, needs FREE_* credentials
 node experiments/cleanup.ts NAME managed # recover a run whose driver died
 node experiments/browser/extraction/prepare.ts
-FOLIO_BROWSER_EXTRACTION=1 node experiments/deploy.ts browser # bounded automatic extraction proof
-node experiments/consumer/prepare.ts                          # page, lane, kernel, gmux ABI and tinyimg assets
-node experiments/consumer/local.ts tinyimg 5 OUT.json         # the same page in a local Chromium
-node experiments/deploy.ts consumer                           # paired harness on Browser Run, 3 sessions
-node experiments/consumer/php/prepare.ts                      # stage the PHP artifacts from FOLIO_CONSUMER
-node experiments/deploy.ts php                                # original PHP module in a Durable Object
-node experiments/deploy.ts prepared                           # the four-module prepared set
+FOLIO_BROWSER_EXTRACTION=1 node experiments/deploy.ts browser  # bounded automatic extraction proof
+node experiments/consumer/prepare.ts                           # page, lane, kernel, process ABI and tinyimg assets
+node experiments/consumer/local.ts tinyimg 5 OUT.json          # the same page in a local Chromium
+node experiments/deploy.ts consumer                            # paired harness on Browser Run, 3 sessions
+node experiments/consumer/php/prepare.ts                       # stage the PHP artifacts from FOLIO_CONSUMER
+node experiments/deploy.ts php                                 # original PHP module in a Durable Object
+node experiments/deploy.ts prepared                            # the four-module prepared set
+node experiments/bootimage/prepare.ts                          # stage the baked modules after a hash check
+FOLIO_BOOTIMAGE_VARIANT=b node experiments/deploy.ts bootimage # a, b or c: one module set per deploy
 ```
 
-`deploy.ts cloud|managed|browser|consumer|php|prepared` reads `FREE_CLOUDFLARE_ACCOUNT_ID` and
+`deploy.ts cloud|managed|browser|consumer|php|prepared|bootimage` reads `FREE_CLOUDFLARE_ACCOUNT_ID` and
 `FREE_CLOUDFLARE_API_TOKEN`, with `STUDENT_*` as a fallback. It snapshots the account's Workers and
 Durable Object namespaces, KV, R2 and D1, deploys under a temporary `cfw-folio-*` name, runs a bounded measurement,
 retires the Durable Object classes, deletes the Worker and fails unless the account matches its
@@ -55,8 +58,8 @@ prints the GraphQL usage meter (Worker and Durable Object requests, duration, ro
 every step and at the end; the meter lags by minutes, so a bound is computed from the plan first.
 `FOLIO_CONSUMER_RUNS` and `FOLIO_CONSUMER_PAIRS` choose the consumers and the pairs, and
 `FOLIO_PLAYWRIGHT_PACKAGE` names a `package.json` beside a `node_modules/playwright-core` for the local
-run. The `consumer/php/` Worker reads its artifacts from `build/php/`, staged from the drupflare
-checkout, so `typecheck:php` needs those checkouts and is not part of the CI gate.
+run. The `consumer/php/` Worker reads its artifacts from `build/php/`, staged from the
+Drupal consumer checkout, so `typecheck:php` needs those checkouts and is not part of the CI gate.
 
 ## Results
 
@@ -79,3 +82,4 @@ overwrites one.
 | `consumer/results-free-consumer-20261020.json`    | paired native and Folio harness, three sessions                             | FREE account, Browser Run |
 | `consumer/results-free-php-20261020.json`         | original PHP module in a Worker and a Durable Object                        | FREE account              |
 | `consumer/results-free-prepared-*-20261020.json`  | the four-module prepared set, combined and as parts                         | FREE account              |
+| `bootimage/results-free-bootimage-20261022.json`  | unmodified, baked boot and baked render modules, empty memories, 3 deploys  | FREE account              |

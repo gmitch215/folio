@@ -47,8 +47,8 @@ rewriting it might, so change one only with a paired run against the old version
 | `scaling-probe.ts`         | the 207-sample 1/2/4/8 worker sweep with profiling                                                           |
 | `control-probe.mjs`        | the generalized C entry, untouched against 1/2/4/8 workers                                                   |
 | `control-affinity.mjs`     | the same entry with pinned and unpinned workers                                                              |
-| `integration-probe.ts`     | real tinyimg and gmux core artifacts against native instances                                                |
-| `artifact-coverage.ts`     | per-export inspect coverage and real gmux process-memory differential calls                                  |
+| `integration-probe.ts`     | real tinyimg and machine core artifacts against native instances                                             |
+| `artifact-coverage.ts`     | per-export inspect coverage and real Linux process-memory differential calls                                 |
 | `php-preparation.ts`       | shipping PHP original/emitted function counts and generated helper census                                    |
 | `php-render.ts`            | shipping PHP boot and uncached Drupal render, native against prepared Folio                                  |
 | `pages-probe.ts`           | actual native Wasm over bounded page leases against a complete native oracle                                 |
@@ -70,12 +70,18 @@ rewriting it might, so change one only with a paired run against the old version
 | `worksp-instrument.ts`     | rewrites the PHP module with counters, load and store hooks, and allocator, output and `execute_ex` extents  |
 | `worksp-recorder.ts`       | turns dispatch events and accesses into userland-call segments with merged intervals                         |
 | `worksp-hooks.ts`          | the hook imports a worker binds to an instrumented module, and the record it returns                         |
-| `worksp-refcount.ts`       | the counter experiment that checks refcount tags (0 verified sites so far)                                   |
+| `worksp-refcount.ts`       | the counter experiment that checks refcount tags (0 verified sites)                                          |
+| `php-regen.ts`             | regeneration of a Drupal page set by 1 to 16 private contexts pulling from one queue, against serial         |
+| `php-blocks.ts`            | warm Drupal render with N placed blocks: variant and response marks, isolated block builds, write tables     |
+| `site-concurrency.ts`      | one workerd process against several for a real Drupal payload: forced full renders, throughput, footprint    |
+| `boot-image.ts`            | captures a booted context's memory, bakes it into the module with binaryen, renders from it, times delivery  |
+| `php-sql-census.ts`        | statement log of node, user, term, render and cron units: tables touched, pair conflicts, SQL share of wall  |
+| `tasks-runtime.ts`         | the task pool's behavior checks under the runtime that runs the script (Node or Bun)                         |
+| `workerd-concurrency.ts`   | CPU-bound requests at 1 to 16 concurrent against one workerd process and against four                        |
 | `worksp-validate.ts`       | differential validation of private sites: serial digest against the explicit task API on private contexts    |
 
-`php-preparation.ts` and `php-render.ts` need a drupflare worker checkout with its dependencies and
-a restored `.interp`. `FOLIO_CONSUMER` names it, and `../drupflare/worker` beside this repository is
-the default. `php-render.ts` bundles the consumer's TypeScript with esbuild first, because Node does
+`php-preparation.ts` and `php-render.ts` need a checkout of the Drupal-on-Wasm consumer with its dependencies and
+a restored interpreter. `FOLIO_CONSUMER` names it. `php-render.ts` bundles the consumer's TypeScript with esbuild first, because Node does
 not strip types under `node_modules`, then runs `native` or `folio` mode.
 
 ## Consumers

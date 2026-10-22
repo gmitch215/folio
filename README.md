@@ -335,10 +335,9 @@ Every row carries wall time, process CPU and what Folio dispatched: workers, reg
 fallbacks, mode and the reason it stayed serial. The closing row holds `inspect` coverage for each
 entry that ran. The summary reports the paired speedup (native over Folio, within each round) and
 the CPU ratio, so a run that finds nothing to split says so with its numbers. The consumers in
-`scripts/probe/consumers/` cover tinyimg, the gmux core and process artifacts, a serial recurrence
-the compute kernel and a kernel whose trip count is too small to pay for dispatch.
-`scripts/probe/php-workloads.ts` runs the same comparison on the drupflare
-PHP artifact.
+`scripts/probe/consumers/` cover tinyimg, a Linux machine core and a process ABI probe, a serial
+recurrence, the compute kernel and a kernel whose trip count is too small to pay for dispatch.
+`scripts/probe/php-workloads.ts` runs the same comparison on a PHP 8.5 build that serves Drupal.
 
 `scripts/probe/php-contexts.ts` opens N private PHP instances, one per worker thread, and runs a
 snippet or the uncached Drupal render in each. Every result carries timestamps from inside the
@@ -348,12 +347,17 @@ thread and thread CPU, so a run can show that two instances executed at the same
 with the number of instances whether or not Folio is involved; the library adds nothing to that
 result and the numbers are in the technical report.
 
+`scripts/probe/php-regen.ts` regenerates a set of Drupal pages with private contexts pulling from
+one queue and aborts if any page differs from the serial render. On ten cores it reproduced 31 pages
+7.65x faster than one context. It also runs under Bun, which the task pool supports.
+
 ## 📈 Measured Results
 
 | Backend                      | Environment                                                        | Result                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
 | Node, shared allocation      | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                 | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact |
 | Node, compute kernel         | eight workers, 207 byte-exact samples                              | 7.62x, with total CPU 1.037x of serial                                                             |
+| Node, Drupal regeneration    | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render           |
 | Managed Workers              | deployed Durable Object lanes                                      | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes        |
 | Browser Run                  | deployed Chromium, eight workers on one 256 MiB allocation         | 3.87x with four workers on explicit partitions                                                     |
 | Browser automatic extraction | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                    |
