@@ -1,8 +1,19 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { runBootImage } from './bootimage/drive.ts';
-import { isVariant, readinessAttempts, requestBound } from './bootimage/plan.ts';
+import { runBootImage, runMemory } from './bootimage/drive.ts';
+import { periodicRows, settlePeriodic } from './bootimage/periodic.ts';
+import {
+	boundaryName,
+	boundaryObjects,
+	isVariant,
+	memoryBound,
+	memoryConfigs,
+	meterName,
+	meterObjects,
+	readinessAttempts,
+	requestBound
+} from './bootimage/plan.ts';
 import { collect } from './cloud/run.ts';
 import { readMeter, runPhp, runSessions } from './consumer/drive.ts';
 import {
@@ -23,6 +34,9 @@ assert.ok(
 	isKind(kind),
 	'usage: node experiments/deploy.ts cloud|managed|browser|consumer|php|prepared|bootimage'
 );
+
+// FOLIO_BOOTIMAGE_MODE=memory runs the ballast boundary and the instantiate meter instead of the startup sequence
+const memoryMode = process.env.FOLIO_BOOTIMAGE_MODE === 'memory';
 
 // each run is bounded up front; run.json records the bound beside the evidence
 const budgets = {
@@ -58,7 +72,7 @@ const budgets = {
 		sqlCalls: 0,
 		expectedCharges: 0
 	},
-	bootimage: requestBound(
+	bootimage: (memoryMode ? memoryBound : requestBound)(
 		isVariant(process.env.FOLIO_BOOTIMAGE_VARIANT) ? process.env.FOLIO_BOOTIMAGE_VARIANT : 'a'
 	)
 };
@@ -86,6 +100,8 @@ const sourceFiles = {
 const bootVariant = process.env.FOLIO_BOOTIMAGE_VARIANT;
 if (kind === 'bootimage')
 	assert.ok(isVariant(bootVariant), 'set FOLIO_BOOTIMAGE_VARIANT to a, b or c');
+if (kind === 'bootimage' && memoryMode)
+	assert.ok(bootVariant === 'a' || bootVariant === 'c', 'memory mode runs variant a or c');
 
 const configs = {
 	consumer: 'experiments/consumer/wrangler.jsonc',
@@ -109,6 +125,7 @@ const consumerNames = (process.env.FOLIO_CONSUMER_RUNS ?? 'kernel-control,gmux-a
 );
 const consumerPairs = Number(process.env.FOLIO_CONSUMER_PAIRS ?? 30);
 const secret = crypto.randomUUID();
+const startedAt = Date.now();
 const { directory, save } = await openRun(kind, name);
 
 const baseline = await snapshot(api);
@@ -146,6 +163,7 @@ await save('run.json', {
 	name,
 	kind,
 	variant: extraction ? 'automatic-extraction' : kind === 'bootimage' ? bootVariant : 'original',
+	...(kind === 'bootimage' && memoryMode ? { mode: 'memory' } : {}),
 	url,
 	startedAt: new Date().toISOString(),
 	account: creds.label,
@@ -240,6 +258,9 @@ try {
 		);
 	} else if (kind === 'php' || kind === 'prepared') {
 		await runPhp(url, secret, kind, save, log, meter);
+	} else if (kind === 'bootimage' && memoryMode) {
+		log('meter-deployed', await meter());
+		await runMemory(url, secret, bootVariant as 'a' | 'c', save, log, meter);
 	} else if (kind === 'bootimage') {
 		await runBootImage(url, secret, bootVariant as 'a' | 'b' | 'c', save, log, meter);
 	} else {
@@ -270,6 +291,22 @@ try {
 		assert.ok(response.ok && result.passed, 'deployed probe failed; raw result retained');
 	}
 	await new Promise((resolve) => setTimeout(resolve, 5000));
+	if (kind === 'bootimage' && memoryMode) {
+		await stopTail(tail);
+		const names = memoryConfigs[bootVariant as 'a' | 'c'].flatMap((config) => [
+			...Array.from({ length: meterObjects }, (_, index) => meterName(config, index)),
+			...Array.from({ length: boundaryObjects }, (_, index) => boundaryName(config, index))
+		]);
+		// the dataset lags about 8 minutes; the Worker stays up until the rows are in, then is deleted
+		const settled = await settlePeriodic(
+			(start, end) => periodicRows(creds.account, creds.token, start, end),
+			names,
+			startedAt - 120000,
+			log
+		);
+		await save('periodic.json', settled.body);
+		await save('periodic-meta.json', { complete: settled.complete, polls: settled.polls });
+	}
 } finally {
 	await stopTail(tail);
 	if (attempted) {

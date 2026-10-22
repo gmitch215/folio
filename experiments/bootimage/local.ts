@@ -2,7 +2,7 @@ import { Miniflare, convertV4MiniflareOptions } from 'miniflare';
 import assert from 'node:assert/strict';
 import { readFileSync, rmSync } from 'node:fs';
 import { bundle, bundleModules } from '../lib/bundle.ts';
-import { isVariant, sequence, type Variant } from './plan.ts';
+import { driveMemory, isVariant, sequence, type Variant } from './plan.ts';
 
 // run `node experiments/bootimage/prepare.ts` first; the bundle needs the staged modules
 export async function runLocal(variant: Variant) {
@@ -30,7 +30,60 @@ export async function runLocal(variant: Variant) {
 	}
 }
 
-if (import.meta.main) {
+/** The memory-mode sequence in local workerd, with the ballast capped so the dry run stays small. */
+export async function runLocalMemory(variant: Variant, maxSteps: number) {
+	const root = bundle('bootimage', `experiments/bootimage/wrangler.${variant}.jsonc`);
+	const mf = new Miniflare(
+		convertV4MiniflareOptions({
+			...bundleModules(root),
+			compatibilityDate: '2026-10-20',
+			bindings: { PROBE_TOKEN: 'local-only' },
+			durableObjects: { IMAGE: { className: 'BootImage', useSQLite: true } }
+		})
+	);
+	try {
+		return await driveMemory(
+			variant,
+			async (path) => {
+				const response = await mf.dispatchFetch(`https://bootimage.local${path}`, {
+					headers: { authorization: 'Bearer local-only' }
+				});
+				return { status: response.status, body: await response.text() };
+			},
+			() => {},
+			maxSteps
+		);
+	} finally {
+		await mf.dispose();
+		rmSync(root, { recursive: true, force: true });
+	}
+}
+
+if (import.meta.main && process.argv[3] === 'memory') {
+	const variant = process.argv[2];
+	assert.ok(variant === 'a' || variant === 'c', 'usage: local.ts a|c memory [steps]');
+	const rows = await runLocalMemory(variant, Number(process.argv[4] ?? 3));
+	const bodies = rows.map((row: any) => ({ ...row, body: JSON.parse(row.body) }));
+	const last = (group: string) => bodies.filter((row: any) => row.group === group);
+	console.log(
+		JSON.stringify({
+			variant,
+			mode: 'memory',
+			requests: rows.length,
+			allOk: rows.every((row: any) => row.status === 200),
+			keeps: bodies.filter((row: any) => row.group.endsWith('-keep')).length,
+			ballast: bodies.filter((row: any) => row.group.endsWith('-ballast')).length,
+			largestLiveBytes: Math.max(...bodies.map((row: any) => row.body.liveBytes ?? 0)),
+			memoryBytes: [...new Set(bodies.map((row: any) => row.body.memoryBytes))],
+			meterObjectsTags: new Set(
+				last(`${variant === 'a' ? 'a64' : 'c86'}-meter`).map(
+					(row: any) => row.body.moduleTag
+				)
+			).size,
+			localOnly: true
+		})
+	);
+} else if (import.meta.main) {
 	const variant = process.argv[2];
 	assert.ok(isVariant(variant), 'usage: local.ts a|b|c');
 	const expected = JSON.parse(

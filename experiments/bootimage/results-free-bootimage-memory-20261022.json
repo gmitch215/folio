@@ -1,0 +1,517 @@
+{
+  "runs": [
+    {
+      "run": "cfw-folio-bootimage-742ab6fc",
+      "account": "FREE",
+      "variant": "a",
+      "baselineRestored": true,
+      "mode": "memory",
+      "periodic": {
+        "complete": true,
+        "polls": 2,
+        "recovered": "driver died on ENETUNREACH during polling; read after the network returned, Worker still deployed"
+      },
+      "deploy": {
+        "uploadKiB": 13093.32,
+        "gzipKiB": 4107.37,
+        "startupMs": 2,
+        "uploaded": true
+      },
+      "meter": {
+        "start": {
+          "workerRequests": 256,
+          "durableObjectRequests": 0,
+          "durableObjectDurationGbS": 0,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        },
+        "end": null
+      },
+      "measured": {
+        "configs": [
+          {
+            "config": {
+              "id": "a64",
+              "module": "original",
+              "pages": 1024
+            },
+            "objects": [
+              {
+                "object": "bal-a64-0",
+                "keepStatus": 200,
+                "memoryBytes": 67108864,
+                "isolateShared": false,
+                "moduleTag": "g3ta4i",
+                "answeredSteps": 19,
+                "largestLiveBytes": 226492416,
+                "largestBallastBytes": 159383552,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              },
+              {
+                "object": "bal-a64-1",
+                "keepStatus": 200,
+                "memoryBytes": 67108864,
+                "isolateShared": false,
+                "moduleTag": "31qhlw",
+                "answeredSteps": 19,
+                "largestLiveBytes": 226492416,
+                "largestBallastBytes": 159383552,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              },
+              {
+                "object": "bal-a64-2",
+                "keepStatus": 200,
+                "memoryBytes": 67108864,
+                "isolateShared": false,
+                "moduleTag": "dektzl",
+                "answeredSteps": 19,
+                "largestLiveBytes": 226492416,
+                "largestBallastBytes": 159383552,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              }
+            ],
+            "discarded": 0,
+            "capped": 0,
+            "liveAllMiB": {
+              "n": 3,
+              "median": 216,
+              "min": 216,
+              "max": 216
+            },
+            "ballastAllMiB": {
+              "n": 3,
+              "median": 152,
+              "min": 152,
+              "max": 152
+            },
+            "liveMiB": {
+              "n": 3,
+              "median": 216,
+              "min": 216,
+              "max": 216
+            },
+            "ballastMiB": {
+              "n": 3,
+              "median": 152,
+              "min": 152,
+              "max": 152
+            },
+            "meter": {
+              "config": {
+                "id": "a64",
+                "module": "original",
+                "pages": 1024
+              },
+              "objectsFound": 3,
+              "requests": 12,
+              "perObject": [
+                {
+                  "name": "gbs-a64-0",
+                  "durationGbS": 0.00607424,
+                  "activeSeconds": 0.047455,
+                  "cpuMs": 44.355,
+                  "gbPerActiveSecond": 0.128
+                },
+                {
+                  "name": "gbs-a64-1",
+                  "durationGbS": 0.006676224,
+                  "activeSeconds": 0.052158,
+                  "cpuMs": 48.852,
+                  "gbPerActiveSecond": 0.12799999999999997
+                },
+                {
+                  "name": "gbs-a64-2",
+                  "durationGbS": 0.00641984,
+                  "activeSeconds": 0.050155,
+                  "cpuMs": 48.013,
+                  "gbPerActiveSecond": 0.128
+                }
+              ],
+              "total": {
+                "duration": 0.019170304,
+                "activeTime": 149768,
+                "cpuTime": 141220,
+                "exceededMemoryErrors": 0
+              },
+              "gbPerActiveSecond": 0.12799999999999997,
+              "durationPerRequestGbS": 0.0015975253333333332,
+              "activeSecondsPerRequest": 0.012480666666666668,
+              "cpuMsPerRequest": 11.768333333333333
+            },
+            "meterErrors": [
+              {
+                "name": "bal-a64-0",
+                "exceededMemoryErrors": 1
+              },
+              {
+                "name": "bal-a64-1",
+                "exceededMemoryErrors": 1
+              },
+              {
+                "name": "bal-a64-2",
+                "exceededMemoryErrors": 2
+              }
+            ]
+          },
+          {
+            "config": {
+              "id": "a86",
+              "module": "original",
+              "pages": 1322
+            },
+            "objects": [
+              {
+                "object": "bal-a86-0",
+                "keepStatus": 200,
+                "memoryBytes": 86638592,
+                "isolateShared": false,
+                "moduleTag": "u6j9sz",
+                "answeredSteps": 14,
+                "largestLiveBytes": 204079104,
+                "largestBallastBytes": 117440512,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              },
+              {
+                "object": "bal-a86-1",
+                "keepStatus": 200,
+                "memoryBytes": 86638592,
+                "isolateShared": false,
+                "moduleTag": "p2vjmx",
+                "answeredSteps": 14,
+                "largestLiveBytes": 204079104,
+                "largestBallastBytes": 117440512,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              },
+              {
+                "object": "bal-a86-2",
+                "keepStatus": 200,
+                "memoryBytes": 86638592,
+                "isolateShared": true,
+                "moduleTag": "7ngjpg",
+                "answeredSteps": 14,
+                "largestLiveBytes": 204079104,
+                "largestBallastBytes": 117440512,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              }
+            ],
+            "discarded": 1,
+            "capped": 0,
+            "liveAllMiB": {
+              "n": 3,
+              "median": 194.625,
+              "min": 194.625,
+              "max": 194.625
+            },
+            "ballastAllMiB": {
+              "n": 3,
+              "median": 112,
+              "min": 112,
+              "max": 112
+            },
+            "liveMiB": {
+              "n": 2,
+              "median": 194.625,
+              "min": 194.625,
+              "max": 194.625
+            },
+            "ballastMiB": {
+              "n": 2,
+              "median": 112,
+              "min": 112,
+              "max": 112
+            },
+            "meter": {
+              "config": {
+                "id": "a86",
+                "module": "original",
+                "pages": 1322
+              },
+              "objectsFound": 3,
+              "requests": 12,
+              "perObject": [
+                {
+                  "name": "gbs-a86-0",
+                  "durationGbS": 0.006638464,
+                  "activeSeconds": 0.051863,
+                  "cpuMs": 45.834,
+                  "gbPerActiveSecond": 0.128
+                },
+                {
+                  "name": "gbs-a86-1",
+                  "durationGbS": 0.007212032,
+                  "activeSeconds": 0.056344,
+                  "cpuMs": 53.14,
+                  "gbPerActiveSecond": 0.128
+                },
+                {
+                  "name": "gbs-a86-2",
+                  "durationGbS": 0.006772736,
+                  "activeSeconds": 0.052912,
+                  "cpuMs": 48.369,
+                  "gbPerActiveSecond": 0.128
+                }
+              ],
+              "total": {
+                "duration": 0.020623232,
+                "activeTime": 161119,
+                "cpuTime": 147343,
+                "exceededMemoryErrors": 0
+              },
+              "gbPerActiveSecond": 0.12799999999999997,
+              "durationPerRequestGbS": 0.0017186026666666666,
+              "activeSecondsPerRequest": 0.013426583333333334,
+              "cpuMsPerRequest": 12.278583333333332
+            },
+            "meterErrors": [
+              {
+                "name": "bal-a86-0",
+                "exceededMemoryErrors": 1
+              },
+              {
+                "name": "bal-a86-1",
+                "exceededMemoryErrors": 1
+              },
+              {
+                "name": "bal-a86-2",
+                "exceededMemoryErrors": 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "run": "cfw-folio-bootimage-585591e0",
+      "account": "FREE",
+      "variant": "c",
+      "baselineRestored": true,
+      "mode": "memory",
+      "periodic": {
+        "complete": false,
+        "polls": 8
+      },
+      "deploy": {
+        "uploadKiB": 59620.82,
+        "gzipKiB": 17806.99,
+        "startupMs": 1,
+        "uploaded": true
+      },
+      "meter": {
+        "start": {
+          "workerRequests": 415,
+          "durableObjectRequests": 141,
+          "durableObjectDurationGbS": 0.157580928,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        },
+        "end": {
+          "workerRequests": 478,
+          "durableObjectRequests": 23,
+          "durableObjectDurationGbS": 0.10722944,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        }
+      },
+      "measured": {
+        "configs": [
+          {
+            "config": {
+              "id": "c86",
+              "module": "render",
+              "pages": 1322
+            },
+            "objects": [
+              {
+                "object": "bal-c86-0",
+                "keepStatus": 200,
+                "memoryBytes": 86638592,
+                "isolateShared": false,
+                "moduleTag": "1y2a0c",
+                "answeredSteps": 14,
+                "largestLiveBytes": 204079104,
+                "largestBallastBytes": 117440512,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              },
+              {
+                "object": "bal-c86-1",
+                "keepStatus": 200,
+                "memoryBytes": 86638592,
+                "isolateShared": false,
+                "moduleTag": "byztd5",
+                "answeredSteps": 14,
+                "largestLiveBytes": 204079104,
+                "largestBallastBytes": 117440512,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              },
+              {
+                "object": "bal-c86-2",
+                "keepStatus": 200,
+                "memoryBytes": 86638592,
+                "isolateShared": false,
+                "moduleTag": "660248",
+                "answeredSteps": 14,
+                "largestLiveBytes": 204079104,
+                "largestBallastBytes": 117440512,
+                "reset": {
+                  "status": 409,
+                  "heldFalse": true,
+                  "tagChanged": true,
+                  "tailNotOk": [],
+                  "afterStatus": 409,
+                  "afterHeld": false,
+                  "afterTagChanged": true
+                }
+              }
+            ],
+            "discarded": 0,
+            "capped": 0,
+            "liveAllMiB": {
+              "n": 3,
+              "median": 194.625,
+              "min": 194.625,
+              "max": 194.625
+            },
+            "ballastAllMiB": {
+              "n": 3,
+              "median": 112,
+              "min": 112,
+              "max": 112
+            },
+            "liveMiB": {
+              "n": 3,
+              "median": 194.625,
+              "min": 194.625,
+              "max": 194.625
+            },
+            "ballastMiB": {
+              "n": 3,
+              "median": 112,
+              "min": 112,
+              "max": 112
+            },
+            "meter": {
+              "config": {
+                "id": "c86",
+                "module": "render",
+                "pages": 1322
+              },
+              "objectsFound": 3,
+              "requests": 12,
+              "perObject": [
+                {
+                  "name": "gbs-c86-0",
+                  "durationGbS": 0.020717056,
+                  "activeSeconds": 0.161852,
+                  "cpuMs": 159.895,
+                  "gbPerActiveSecond": 0.128
+                },
+                {
+                  "name": "gbs-c86-1",
+                  "durationGbS": 0.02384832,
+                  "activeSeconds": 0.186315,
+                  "cpuMs": 178.081,
+                  "gbPerActiveSecond": 0.128
+                },
+                {
+                  "name": "gbs-c86-2",
+                  "durationGbS": 0.025806464,
+                  "activeSeconds": 0.201613,
+                  "cpuMs": 197.991,
+                  "gbPerActiveSecond": 0.128
+                }
+              ],
+              "total": {
+                "duration": 0.07037184,
+                "activeTime": 549780,
+                "cpuTime": 535967,
+                "exceededMemoryErrors": 0
+              },
+              "gbPerActiveSecond": 0.128,
+              "durationPerRequestGbS": 0.00586432,
+              "activeSecondsPerRequest": 0.045815,
+              "cpuMsPerRequest": 44.663916666666665
+            },
+            "meterErrors": [
+              {
+                "name": "bal-c86-0",
+                "exceededMemoryErrors": 1
+              },
+              {
+                "name": "bal-c86-1",
+                "exceededMemoryErrors": 1
+              },
+              {
+                "name": "bal-c86-2",
+                "exceededMemoryErrors": 1
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

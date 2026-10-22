@@ -36,8 +36,12 @@ const entry = (name: string) => {
 	return found;
 };
 
+const mebibyte = 1048576;
+
 export class BootImage {
 	calls = 0;
+	held?: { memory: WebAssembly.Memory; instance: WebAssembly.Instance };
+	ballast: Uint8Array[] = [];
 
 	async fetch(request: Request) {
 		const url = new URL(request.url);
@@ -47,6 +51,10 @@ export class BootImage {
 		try {
 			if (url.pathname === '/inst') return Response.json({ ...tags, ...this.inst(url) });
 			if (url.pathname === '/memory') return Response.json({ ...tags, ...this.memory(url) });
+			if (url.pathname === '/ballast') {
+				const step = this.step(url);
+				return Response.json({ ...tags, ...step }, { status: step.held ? 200 : 409 });
+			}
 			return new Response('Not found', { status: 404 });
 		} catch (error: any) {
 			return Response.json(
@@ -58,14 +66,36 @@ export class BootImage {
 
 	private inst(url: URL) {
 		const name = url.searchParams.get('m') ?? '';
-		const { module, pages } = entry(name);
+		const { module, pages: registered } = entry(name);
+		const pages = Number(url.searchParams.get('pages')) || registered;
 		const memory = new WebAssembly.Memory({ initial: pages, maximum: maximumPages });
-		new WebAssembly.Instance(module, imports(module, memory));
+		const instance = new WebAssembly.Instance(module, imports(module, memory));
+		if (url.searchParams.get('keep') === '1') {
+			this.held = { memory, instance };
+			this.ballast = [];
+		}
 		const checked = url.searchParams.get('check') === '1';
 		return {
 			m: name,
 			memoryBytes: memory.buffer.byteLength,
 			checksum: checked ? pagesChecksum(memory.buffer) : undefined
+		};
+	}
+
+	// one filled block per request, so a reset ends one request; a missing hold means the isolate was reset
+	private step(url: URL) {
+		if (!this.held) return { held: false as const };
+		const block = new Uint8Array(Number(url.searchParams.get('mib') ?? 8) * mebibyte);
+		block.fill(1);
+		this.ballast.push(block);
+		const ballastBytes = this.ballast.reduce((total, item) => total + item.byteLength, 0);
+		const memoryBytes = this.held.memory.buffer.byteLength;
+		return {
+			held: true as const,
+			step: this.ballast.length,
+			ballastBytes,
+			memoryBytes,
+			liveBytes: ballastBytes + memoryBytes
 		};
 	}
 

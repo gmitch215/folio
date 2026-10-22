@@ -2,7 +2,17 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { invocations, parseTail } from '../consumer/php/analyze.ts';
-import { moduleOf, type Variant } from './plan.ts';
+import {
+	boundaryName,
+	boundaryObjects,
+	memoryConfigs,
+	meterName,
+	meterObjects,
+	meterRequests,
+	moduleOf,
+	type MemoryConfig,
+	type Variant
+} from './plan.ts';
 
 type Row = Record<string, any>;
 
@@ -134,6 +144,210 @@ export function summarizeSteps({ variant, steps, tail, expected }: Input) {
 	};
 }
 
+/** Invocations in a tail file; a tail that never connected holds an error text and gives none. */
+export function tailCalls(tail: string) {
+	try {
+		return invocations(parseTail(tail));
+	} catch {
+		return [];
+	}
+}
+
+const mebibyte = 1048576;
+const toMiB = (bytes: number) => bytes / mebibyte;
+
+const objectOf = (path: string) => new URL(`https://x${path}`).searchParams.get('obj') ?? '';
+
+/**
+ * One row per boundary object: what the keep request reported, the largest live total any answered
+ * step reported, and how the first unanswered step and the request after it looked.
+ */
+export function summarizeBoundary(config: MemoryConfig, index: number, steps: Row[], tail: string) {
+	const calls = tailCalls(tail);
+	const obj = boundaryName(config, index);
+	const mine = steps.filter((step) => objectOf(step.path) === obj);
+	const keep = mine.find((step) => step.group === `${config.id}-keep`);
+	const keepBody = parse(keep?.body);
+	const answered = mine.filter((step) => {
+		const body = parse(step.body);
+		return step.group === `${config.id}-ballast` && step.status === 200 && body.held === true;
+	});
+	const failed = mine.find(
+		(step) => step.group === `${config.id}-ballast` && !answered.includes(step)
+	);
+	const after = mine.find((step) => step.group === `${config.id}-after`);
+	const afterBody = parse(after?.body);
+	const last = parse(answered.at(-1)?.body);
+	const tailed = (step?: Row) =>
+		step
+			? calls.find((call) => call.entrypoint !== 'worker' && call.path === step.path)
+			: undefined;
+	const failure = tailed(failed);
+	const failedBody = parse(failed?.body);
+	const nonOk = mine.flatMap((step) => {
+		const call = tailed(step);
+		return call && call.outcome !== 'ok'
+			? [{ label: step.label as string, outcome: call.outcome, error: call.error }]
+			: [];
+	});
+	return {
+		object: obj,
+		keepStatus: keep?.status as number | undefined,
+		memoryBytes: keepBody.memoryBytes as number | undefined,
+		isolateShared:
+			keepBody.moduleCalls === undefined
+				? undefined
+				: keepBody.moduleCalls > keepBody.objectCalls,
+		moduleTag: keepBody.moduleTag as string | undefined,
+		answeredSteps: answered.length,
+		largestLiveBytes: (last.liveBytes ?? 0) as number,
+		largestBallastBytes: (last.ballastBytes ?? 0) as number,
+		reset: failed
+			? {
+					status: failed.status as number | undefined,
+					heldFalse: failedBody.held === false,
+					tagChanged:
+						failedBody.moduleTag === undefined
+							? undefined
+							: failedBody.moduleTag !== keepBody.moduleTag,
+					error: (failedBody.error ?? failed.error)?.toString().slice(0, 200) as
+						string | undefined,
+					tailNotOk: nonOk,
+					outcome: failure?.outcome,
+					tailError: failure?.error,
+					afterStatus: after?.status as number | undefined,
+					afterHeld: afterBody.held as boolean | undefined,
+					afterTagChanged:
+						afterBody.moduleTag === undefined
+							? undefined
+							: afterBody.moduleTag !== keepBody.moduleTag
+				}
+			: undefined
+	};
+}
+
+/** Boundaries per configuration: range of the largest live total and of the ballast alone, in MiB. */
+export function summarizeConfig(config: MemoryConfig, steps: Row[], tail: string, objects: number) {
+	const rows = Array.from({ length: objects }, (_, index) =>
+		summarizeBoundary(config, index, steps, tail)
+	);
+	const usable = rows.filter((row) => row.keepStatus === 200 && row.isolateShared !== true);
+	return {
+		config,
+		objects: rows,
+		discarded: rows.length - usable.length,
+		capped: rows.filter((row) => !row.reset).length,
+		liveAllMiB: range(rows.map((row) => toMiB(row.largestLiveBytes))),
+		ballastAllMiB: range(rows.map((row) => toMiB(row.largestBallastBytes))),
+		liveMiB: range(usable.map((row) => toMiB(row.largestLiveBytes))),
+		ballastMiB: range(usable.map((row) => toMiB(row.largestBallastBytes)))
+	};
+}
+
+/** Median ballast boundary of one configuration minus another's, against the memory size between them. */
+export function boundaryShift(
+	from: { ballastMiB: { median?: number } },
+	to: { ballastMiB: { median?: number } },
+	memoryDeltaMiB: number
+) {
+	if (from.ballastMiB.median === undefined || to.ballastMiB.median === undefined)
+		return undefined;
+	return { shiftMiB: from.ballastMiB.median - to.ballastMiB.median, memoryDeltaMiB };
+}
+
+export interface PeriodicRow {
+	objectId: string;
+	name: string;
+	duration: number;
+	activeTime: number;
+	cpuTime: number;
+	exceededMemoryErrors: number;
+	rowsRead: number;
+	rowsWritten: number;
+}
+
+/** Flattens the durableObjectsPeriodicGroups reply; a field the reply lacks reads as zero. */
+export function flattenPeriodic(body: any): PeriodicRow[] {
+	const groups = body?.data?.viewer?.accounts?.[0]?.durableObjectsPeriodicGroups ?? [];
+	return groups.map((group: any) => ({
+		objectId: String(group?.dimensions?.objectId ?? ''),
+		name: String(group?.dimensions?.name ?? ''),
+		duration: Number(group?.sum?.duration ?? 0),
+		activeTime: Number(group?.sum?.activeTime ?? 0),
+		cpuTime: Number(group?.sum?.cpuTime ?? 0),
+		exceededMemoryErrors: Number(group?.sum?.exceededMemoryErrors ?? 0),
+		rowsRead: Number(group?.sum?.rowsRead ?? 0),
+		rowsWritten: Number(group?.sum?.rowsWritten ?? 0)
+	}));
+}
+
+/** GB-s of one Durable Object: the product's allocation check is duration over activeTime. */
+export const gbPerActiveSecond = (row: Pick<PeriodicRow, 'duration' | 'activeTime'>) =>
+	row.activeTime === 0 ? undefined : row.duration / (row.activeTime / 1e6);
+
+/** Instantiate-only objects of one configuration: per object and summed, per request and per active second. */
+export function summarizeMeter(config: MemoryConfig, rows: PeriodicRow[]) {
+	const names = Array.from({ length: meterObjects }, (_, index) => meterName(config, index));
+	const mine = names.map((name) => ({
+		name,
+		row: rows.find((row) => row.name === name)
+	}));
+	const found = mine.flatMap(({ name, row }) => (row ? [{ ...row, name }] : []));
+	const total = found.reduce(
+		(sum, row) => ({
+			duration: sum.duration + row.duration,
+			activeTime: sum.activeTime + row.activeTime,
+			cpuTime: sum.cpuTime + row.cpuTime,
+			exceededMemoryErrors: sum.exceededMemoryErrors + row.exceededMemoryErrors
+		}),
+		{ duration: 0, activeTime: 0, cpuTime: 0, exceededMemoryErrors: 0 }
+	);
+	const requests = found.length * meterRequests;
+	return {
+		config,
+		objectsFound: found.length,
+		requests,
+		perObject: found.map((row) => ({
+			name: row.name,
+			durationGbS: row.duration,
+			activeSeconds: row.activeTime / 1e6,
+			cpuMs: row.cpuTime / 1000,
+			gbPerActiveSecond: gbPerActiveSecond(row)
+		})),
+		total,
+		gbPerActiveSecond: gbPerActiveSecond(total),
+		durationPerRequestGbS: requests ? total.duration / requests : undefined,
+		activeSecondsPerRequest: requests ? total.activeTime / 1e6 / requests : undefined,
+		cpuMsPerRequest: requests ? total.cpuTime / 1000 / requests : undefined
+	};
+}
+
+/** exceededMemoryErrors the meter recorded for each boundary object. */
+export function boundaryErrors(config: MemoryConfig, rows: PeriodicRow[], objects: number) {
+	return Array.from({ length: objects }, (_, index) => {
+		const name = boundaryName(config, index);
+		return {
+			name,
+			exceededMemoryErrors: rows.find((row) => row.name === name)?.exceededMemoryErrors
+		};
+	});
+}
+
+export function summarizeMemoryRun(
+	variant: Variant,
+	steps: Row[],
+	tail: string,
+	periodic: PeriodicRow[] | undefined,
+	objects: number
+) {
+	const configs = memoryConfigs[variant].map((config) => ({
+		...summarizeConfig(config, steps, tail, objects),
+		meter: periodic ? summarizeMeter(config, periodic) : undefined,
+		meterErrors: periodic ? boundaryErrors(config, periodic, objects) : undefined
+	}));
+	return { configs };
+}
+
 export function summarizeRun(directory: string) {
 	const read = (file: string) => JSON.parse(readFileSync(join(directory, file), 'utf8'));
 	const has = (file: string) => existsSync(join(directory, file));
@@ -147,19 +361,34 @@ export function summarizeRun(directory: string) {
 		account: run.account,
 		variant: run.variant as Variant,
 		baselineRestored: restored,
+		mode: (run.mode ?? 'startup') as string,
+		periodic: has('periodic-meta.json') ? read('periodic-meta.json') : undefined,
 		deploy: log,
 		meter: {
 			start: has('meter-start.json') ? read('meter-start.json') : null,
 			end: has('meter-end.json') ? read('meter-end.json') : null
 		},
-		measured: has('steps.json')
-			? summarizeSteps({
-					variant: run.variant,
-					steps: read('steps.json'),
-					tail: readFileSync(join(directory, 'tail.jsonl'), 'utf8'),
-					expected: read('expected.json')
-				})
-			: undefined
+		measured:
+			has('steps.json') && run.mode === 'memory'
+				? summarizeMemoryRun(
+						run.variant,
+						read('steps.json'),
+						readFileSync(join(directory, 'tail.jsonl'), 'utf8'),
+						has('periodic-late.json')
+							? flattenPeriodic(read('periodic-late.json'))
+							: has('periodic.json')
+								? flattenPeriodic(read('periodic.json'))
+								: undefined,
+						boundaryObjects
+					)
+				: has('steps.json')
+					? summarizeSteps({
+							variant: run.variant,
+							steps: read('steps.json'),
+							tail: readFileSync(join(directory, 'tail.jsonl'), 'utf8'),
+							expected: read('expected.json')
+						})
+					: undefined
 	};
 }
 
