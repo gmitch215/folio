@@ -1,0 +1,2037 @@
+{
+  "environment": {
+    "kind": "environment",
+    "machine": "mac-m2pro",
+    "node": "v26.8.2",
+    "cpu": "Apple M2 Pro",
+    "hardwareThreads": 12,
+    "mode": "pin",
+    "interp": {
+      "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+    },
+    "load": [
+      2.5361328125,
+      4.3212890625,
+      4.86181640625
+    ]
+  },
+  "interpreter": {
+    "rows": 115,
+    "wasmSha256": [
+      "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4"
+    ],
+    "glueSha256": [
+      "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+    ],
+    "unchanged": true
+  },
+  "pin": {
+    "kind": "pin",
+    "source": "/Users/gamer/gmitch215/js/folio/experiments/consumer/build/php",
+    "files": [
+      {
+        "name": "php8.5.tuned.wasm",
+        "bytes": 13401751,
+        "sha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4"
+      },
+      {
+        "name": "php8.5-worker.tuned.mjs",
+        "bytes": 400452,
+        "sha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      }
+    ],
+    "interp": {
+      "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+    },
+    "load": [
+      2.5361328125,
+      4.3212890625,
+      4.86181640625
+    ]
+  },
+  "captures": [
+    {
+      "kind": "capture",
+      "tag": "sentinel-a",
+      "role": "sentinel",
+      "firstSha256": "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924",
+      "firstRawSha256": "7c11dcf272d31ffe99566ce54a052c3ac36ab45582195237b9ed1e4053a13991",
+      "status": 200,
+      "bytes": 17699,
+      "renderMs": 1146.908125,
+      "deltaPages": 728,
+      "deltaBytes": 47710208,
+      "memoryBytes": 86573056,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "globalsChanged": 0,
+      "tableSlotsChanged": 0,
+      "replayHandles": 4,
+      "replayStreams": 1,
+      "keySha16": "9d373e9f335b9fe6",
+      "saltSha16": "36c5f9708a01c69b",
+      "session": {
+        "status": 1,
+        "idLength": 32,
+        "apiStarted": false,
+        "apiIdEqualsPhpId": true,
+        "sessionRows": 1,
+        "csrfSeedLength": 0
+      },
+      "bakeNextMtRand": 1008172743,
+      "needleNames": [
+        "userName",
+        "userMail",
+        "userPass",
+        "sessionSid",
+        "cronKey",
+        "packSalt",
+        "bakeSessionId"
+      ],
+      "openMs": 481.451917,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        2.4130859375,
+        4.26611328125,
+        4.8388671875
+      ]
+    },
+    {
+      "kind": "capture",
+      "tag": "sentinel-b",
+      "role": "sentinel",
+      "firstSha256": "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924",
+      "firstRawSha256": "5651096ab59ac780d6543e3c1ff657c9d4afc3d87c9269b41161d96011a8cc74",
+      "status": 200,
+      "bytes": 17699,
+      "renderMs": 1146.585541,
+      "deltaPages": 728,
+      "deltaBytes": 47710208,
+      "memoryBytes": 86573056,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "globalsChanged": 0,
+      "tableSlotsChanged": 0,
+      "replayHandles": 4,
+      "replayStreams": 1,
+      "keySha16": "6df8453c2cb742ae",
+      "saltSha16": "a959ff30fcd4e71a",
+      "session": {
+        "status": 1,
+        "idLength": 32,
+        "apiStarted": false,
+        "apiIdEqualsPhpId": true,
+        "sessionRows": 1,
+        "csrfSeedLength": 0
+      },
+      "bakeNextMtRand": 34434118,
+      "needleNames": [
+        "userName",
+        "userMail",
+        "userPass",
+        "sessionSid",
+        "cronKey",
+        "packSalt",
+        "bakeSessionId"
+      ],
+      "openMs": 520.1890420000001,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.064453125,
+        4.31787109375,
+        4.8466796875
+      ]
+    },
+    {
+      "kind": "capture",
+      "tag": "control",
+      "role": "control",
+      "firstSha256": "06a605838a5d2515e1fde6821a248a1f3fbdec815001578fa57e6a670908b37d",
+      "firstRawSha256": "6feec5e4ee597118fdd85c5130dea2cd2fed52e36ed933c4b08c1d572f03e05d",
+      "status": 200,
+      "bytes": 26622,
+      "renderMs": 1211.048625,
+      "deltaPages": 767,
+      "deltaBytes": 50266112,
+      "memoryBytes": 89391104,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "globalsChanged": 0,
+      "tableSlotsChanged": 0,
+      "replayHandles": 4,
+      "replayStreams": 1,
+      "keySha16": "8b8ec418703bd223",
+      "saltSha16": "3423727485f1a09c",
+      "cookieName": "present",
+      "loadedUser": {
+        "nameLength": 18
+      },
+      "session": {
+        "status": 1,
+        "idLength": 0,
+        "apiStarted": true,
+        "apiIdEqualsPhpId": true,
+        "sessionRows": 1,
+        "csrfSeedLength": 0
+      },
+      "bakeNextMtRand": 1572076185,
+      "needleNames": [
+        "userName",
+        "userMail",
+        "userPass",
+        "sessionSid",
+        "cronKey",
+        "packSalt"
+      ],
+      "openMs": 508.54579100000007,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        2.98046875,
+        4.2578125,
+        4.81884765625
+      ]
+    },
+    {
+      "kind": "capture",
+      "tag": "legacy",
+      "role": "legacy",
+      "firstSha256": "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924",
+      "firstRawSha256": "02aa66075d86362797b6cbe0e4bf433a0378a47294f0b054924da9ca45898874",
+      "status": 200,
+      "bytes": 17699,
+      "renderMs": 1134.271333,
+      "deltaPages": 727,
+      "deltaBytes": 47644672,
+      "memoryBytes": 86638592,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "globalsChanged": 0,
+      "tableSlotsChanged": 0,
+      "replayHandles": 4,
+      "replayStreams": 1,
+      "saltSha16": "5c04406e5d22a0f2",
+      "session": {
+        "status": 1,
+        "idLength": 32,
+        "apiStarted": false,
+        "apiIdEqualsPhpId": true,
+        "sessionRows": 0,
+        "csrfSeedLength": 0
+      },
+      "bakeNextMtRand": 2104592553,
+      "needleNames": [
+        "userName",
+        "userMail",
+        "userPass",
+        "sessionSid",
+        "cronKey",
+        "packSalt",
+        "bakeSessionId"
+      ],
+      "openMs": 511.85,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    }
+  ],
+  "bakes": [
+    {
+      "kind": "bake",
+      "tag": "sentinel-a",
+      "role": "sentinel",
+      "bakeMs": 5740.549167,
+      "bakedSha256": "ecfc4de9087d3e61751837f3ce830fc63ee962086e5ebc6fabee78daf69a4459",
+      "moduleBytes": 61112021,
+      "deltaPages": 728,
+      "valid": true,
+      "checkEqual": true,
+      "globalsInImage": 0,
+      "tableSlotsInImage": 0,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        2.4599609375,
+        4.24462890625,
+        4.82763671875
+      ]
+    },
+    {
+      "kind": "bake",
+      "tag": "sentinel-b",
+      "role": "sentinel",
+      "bakeMs": 5183.907208999999,
+      "bakedSha256": "f7490836c95da200727e3d74c504eb4c4a93b4ec7cd1cde930427daa086b0e56",
+      "moduleBytes": 61112021,
+      "deltaPages": 728,
+      "valid": true,
+      "checkEqual": true,
+      "globalsInImage": 0,
+      "tableSlotsInImage": 0,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        2.97900390625,
+        4.279296875,
+        4.82958984375
+      ]
+    },
+    {
+      "kind": "bake",
+      "tag": "control",
+      "role": "control",
+      "bakeMs": 5304.675082999998,
+      "bakedSha256": "15bcb5043aa0b323d74d7769bfd72158e4189d10dee0e097a4ad49e5c7320099",
+      "moduleBytes": 63667925,
+      "deltaPages": 767,
+      "valid": true,
+      "checkEqual": true,
+      "globalsInImage": 0,
+      "tableSlotsInImage": 0,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.22216796875,
+        4.28662109375,
+        4.82568359375
+      ]
+    }
+  ],
+  "scans": [
+    {
+      "tag": "sentinel-a",
+      "role": "sentinel",
+      "target": "image",
+      "bytes": 47710208,
+      "pass": false,
+      "failed": [
+        "bakeSessionId"
+      ],
+      "results": [
+        {
+          "secret": "bakeKey",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 46923428
+          }
+        },
+        {
+          "secret": "bakeSalt",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 40693148
+          }
+        },
+        {
+          "secret": "siteKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "siteSalt",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userName",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userMail",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userPass",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sessionSid",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "bakeSessionId",
+          "expect": "absent",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": false,
+          "first": {
+            "form": "raw",
+            "offset": 44744508
+          }
+        },
+        {
+          "secret": "cronKey",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "packSalt",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-bKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "sentinel-a",
+      "role": "sentinel",
+      "target": "module",
+      "bytes": 61112021,
+      "pass": false,
+      "failed": [
+        "bakeSessionId"
+      ],
+      "results": [
+        {
+          "secret": "bakeKey",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 22642030
+          }
+        },
+        {
+          "secret": "bakeSalt",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 16411750
+          }
+        },
+        {
+          "secret": "siteKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "siteSalt",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userName",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userMail",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userPass",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sessionSid",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "bakeSessionId",
+          "expect": "absent",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": false,
+          "first": {
+            "form": "raw",
+            "offset": 20463110
+          }
+        },
+        {
+          "secret": "cronKey",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "packSalt",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-bKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "sentinel-b",
+      "role": "sentinel",
+      "target": "image",
+      "bytes": 47710208,
+      "pass": false,
+      "failed": [
+        "bakeSessionId"
+      ],
+      "results": [
+        {
+          "secret": "bakeKey",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 46923428
+          }
+        },
+        {
+          "secret": "bakeSalt",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 40693148
+          }
+        },
+        {
+          "secret": "siteKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "siteSalt",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userName",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userMail",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userPass",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sessionSid",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "bakeSessionId",
+          "expect": "absent",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": false,
+          "first": {
+            "form": "raw",
+            "offset": 44744508
+          }
+        },
+        {
+          "secret": "cronKey",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "packSalt",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-aKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "sentinel-b",
+      "role": "sentinel",
+      "target": "module",
+      "bytes": 61112021,
+      "pass": false,
+      "failed": [
+        "bakeSessionId"
+      ],
+      "results": [
+        {
+          "secret": "bakeKey",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 22642030
+          }
+        },
+        {
+          "secret": "bakeSalt",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 16411750
+          }
+        },
+        {
+          "secret": "siteKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "siteSalt",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userName",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userMail",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "userPass",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sessionSid",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "bakeSessionId",
+          "expect": "absent",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": false,
+          "first": {
+            "form": "raw",
+            "offset": 20463110
+          }
+        },
+        {
+          "secret": "cronKey",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "packSalt",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-aKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "control",
+      "role": "control",
+      "target": "image",
+      "bytes": 50266112,
+      "pass": true,
+      "failed": [],
+      "results": [
+        {
+          "secret": "siteKey",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 46913028
+          }
+        },
+        {
+          "secret": "siteSalt",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 40693148
+          }
+        },
+        {
+          "secret": "userName",
+          "expect": "present",
+          "forms": {
+            "raw": 3,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 3,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 44023132
+          }
+        },
+        {
+          "secret": "userMail",
+          "expect": "present",
+          "forms": {
+            "raw": 4,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 4,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 85991148
+          }
+        },
+        {
+          "secret": "userPass",
+          "expect": "info",
+          "forms": {
+            "raw": 2,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 2,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 85767268
+          }
+        },
+        {
+          "secret": "sessionSid",
+          "expect": "present",
+          "forms": {
+            "raw": 3,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 3,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 43826195
+          }
+        },
+        {
+          "secret": "cronKey",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "packSalt",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-aKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-bKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "tag": "control",
+      "role": "control",
+      "target": "module",
+      "bytes": 63667925,
+      "pass": true,
+      "failed": [],
+      "results": [
+        {
+          "secret": "siteKey",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 22631630
+          }
+        },
+        {
+          "secret": "siteSalt",
+          "expect": "present",
+          "forms": {
+            "raw": 1,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 1,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 16411750
+          }
+        },
+        {
+          "secret": "userName",
+          "expect": "present",
+          "forms": {
+            "raw": 3,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 3,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 19741734
+          }
+        },
+        {
+          "secret": "userMail",
+          "expect": "present",
+          "forms": {
+            "raw": 4,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 4,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 60923329
+          }
+        },
+        {
+          "secret": "userPass",
+          "expect": "info",
+          "forms": {
+            "raw": 2,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 2,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 60699449
+          }
+        },
+        {
+          "secret": "sessionSid",
+          "expect": "present",
+          "forms": {
+            "raw": 3,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 3,
+          "found": true,
+          "pass": true,
+          "first": {
+            "form": "raw",
+            "offset": 19544797
+          }
+        },
+        {
+          "secret": "cronKey",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "packSalt",
+          "expect": "info",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-aKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        },
+        {
+          "secret": "sentinel-bKey",
+          "expect": "absent",
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          },
+          "total": 0,
+          "found": false,
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "keying": [
+    {
+      "kind": "keying",
+      "case": "match",
+      "refused": null,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "expectedContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "keying",
+      "case": "module only",
+      "refused": null,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "keying",
+      "case": "no expectation",
+      "refused": null,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "keying",
+      "case": "wrong module",
+      "refused": "digest",
+      "memoryUntouched": true,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "expectedContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "keying",
+      "case": "wrong context",
+      "refused": "context",
+      "memoryUntouched": true,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "expectedContext": "0420095b03008fea414dd1d90bfcb83324cfaccaaefbe0f0e5f596646932d25b",
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "keying",
+      "case": "encoded round trip",
+      "refused": null,
+      "imageModule": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "imageContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "expectedContext": "0240ce1900840202aff852f67abb504c7afd908251f8f8669251b3303ed534db",
+      "contextEqual": true,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    }
+  ],
+  "rekey": [
+    {
+      "variant": "none",
+      "via": "apply",
+      "n": 3,
+      "pre": {
+        "keyIs": [
+          "bake"
+        ],
+        "saltIs": [
+          "bake"
+        ],
+        "sessionIdIsBaked": [
+          true
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 0,
+        "testedInReal": 9,
+        "validInBake": 9,
+        "testedInBake": 9
+      },
+      "post": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "bake"
+        ],
+        "sessionIdIsBaked": [
+          false
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 0,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "rendered": true,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "permissionsHashIs": [
+        "bake"
+      ]
+    },
+    {
+      "variant": "salt",
+      "via": "apply",
+      "n": 3,
+      "pre": {
+        "keyIs": [
+          "bake"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          true
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 0,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "post": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          false
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 9,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "rekeyMs": {
+        "n": 3,
+        "median": 10.79095799999999,
+        "min": 10.581500000000005,
+        "max": 10.99145900000002
+      },
+      "rendered": true,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "permissionsHashIs": [
+        "bake"
+      ]
+    },
+    {
+      "variant": "key",
+      "via": "apply",
+      "n": 3,
+      "pre": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "bake"
+        ],
+        "sessionIdIsBaked": [
+          true
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 0,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "post": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "bake"
+        ],
+        "sessionIdIsBaked": [
+          false
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 0,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "rekeyMs": {
+        "n": 3,
+        "median": 10.889250000000004,
+        "min": 10.854167000000018,
+        "max": 10.967959000000008
+      },
+      "rendered": true,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "permissionsHashIs": [
+        "bake"
+      ]
+    },
+    {
+      "variant": "salt+key",
+      "via": "apply",
+      "n": 3,
+      "pre": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          true
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 9,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "post": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          false
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 9,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "rekeyMs": {
+        "n": 3,
+        "median": 11.814583000000027,
+        "min": 11.784209000000033,
+        "max": 12.301750000000027
+      },
+      "rendered": true,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "permissionsHashIs": [
+        "bake"
+      ]
+    },
+    {
+      "variant": "full",
+      "via": "apply",
+      "n": 3,
+      "pre": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          true
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 9,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "post": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          false
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 9,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "rekeyMs": {
+        "n": 3,
+        "median": 13.887209000000041,
+        "min": 13.792209000000014,
+        "max": 14.165625000000034
+      },
+      "rendered": true,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "permissionsHashIs": [
+        "real"
+      ]
+    },
+    {
+      "variant": "full",
+      "via": "baked",
+      "n": 3,
+      "pre": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          true
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 9,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "post": {
+        "keyIs": [
+          "real"
+        ],
+        "saltIs": [
+          "real"
+        ],
+        "sessionIdIsBaked": [
+          false
+        ],
+        "tokensDistinct": 1,
+        "validInReal": 9,
+        "testedInReal": 9,
+        "validInBake": 0,
+        "testedInBake": 9
+      },
+      "rekeyMs": {
+        "n": 3,
+        "median": 14.086749999999995,
+        "min": 13.859500000000025,
+        "max": 14.382082999999966
+      },
+      "rendered": true,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "permissionsHashIs": [
+        "real"
+      ]
+    }
+  ],
+  "rng": [
+    {
+      "variant": "none",
+      "n": 10,
+      "mtRand": [
+        1008172743,
+        1008172743,
+        1008172743,
+        1008172743,
+        1008172743,
+        1008172743,
+        1008172743,
+        1008172743,
+        1008172743,
+        1008172743
+      ],
+      "mtRandDistinct": false,
+      "uniqidDistinct": true,
+      "lcgDistinct": true,
+      "randomIntDistinct": true,
+      "firstEqualsBakeContinuation": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "variant": "full",
+      "n": 10,
+      "mtRand": [
+        950705547,
+        56976104,
+        1968187997,
+        1943054963,
+        2105167960,
+        314900825,
+        990916321,
+        84027180,
+        1536864540,
+        1514974153
+      ],
+      "mtRandDistinct": true,
+      "uniqidDistinct": true,
+      "lcgDistinct": true,
+      "randomIntDistinct": true,
+      "firstEqualsBakeContinuation": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "diffs": [
+    {
+      "kind": "diff",
+      "left": "wave11",
+      "right": "sentinel-a",
+      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "memoryBytesEqual": false,
+      "pagesA": 727,
+      "pagesB": 728,
+      "pagesOnlyA": 0,
+      "pagesOnlyB": 1,
+      "pagesBoth": 727,
+      "pagesDifferInBoth": 706,
+      "bytesDifferInBoth": 33297787,
+      "bytesInOnlyPages": 65536,
+      "bytesDifferTotal": 33363323,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "diff",
+      "left": "wave11",
+      "right": "sentinel-b",
+      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "memoryBytesEqual": false,
+      "pagesA": 727,
+      "pagesB": 728,
+      "pagesOnlyA": 0,
+      "pagesOnlyB": 1,
+      "pagesBoth": 727,
+      "pagesDifferInBoth": 706,
+      "bytesDifferInBoth": 33298196,
+      "bytesInOnlyPages": 65536,
+      "bytesDifferTotal": 33363732,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "diff",
+      "left": "wave11",
+      "right": "legacy",
+      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "memoryBytesEqual": true,
+      "pagesA": 727,
+      "pagesB": 727,
+      "pagesOnlyA": 0,
+      "pagesOnlyB": 0,
+      "pagesBoth": 727,
+      "pagesDifferInBoth": 590,
+      "bytesDifferInBoth": 4248667,
+      "bytesInOnlyPages": 0,
+      "bytesDifferTotal": 4248667,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "diff",
+      "left": "legacy",
+      "right": "sentinel-a",
+      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "memoryBytesEqual": false,
+      "pagesA": 727,
+      "pagesB": 728,
+      "pagesOnlyA": 0,
+      "pagesOnlyB": 1,
+      "pagesBoth": 727,
+      "pagesDifferInBoth": 706,
+      "bytesDifferInBoth": 33287737,
+      "bytesInOnlyPages": 65536,
+      "bytesDifferTotal": 33353273,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "diff",
+      "left": "sentinel-a",
+      "right": "sentinel-b",
+      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "memoryBytesEqual": true,
+      "pagesA": 728,
+      "pagesB": 728,
+      "pagesOnlyA": 0,
+      "pagesOnlyB": 0,
+      "pagesBoth": 728,
+      "pagesDifferInBoth": 571,
+      "bytesDifferInBoth": 1176253,
+      "bytesInOnlyPages": 0,
+      "bytesDifferTotal": 1176253,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    },
+    {
+      "kind": "diff",
+      "left": "sentinel-a",
+      "right": "control",
+      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "memoryBytesEqual": false,
+      "pagesA": 728,
+      "pagesB": 767,
+      "pagesOnlyA": 1,
+      "pagesOnlyB": 40,
+      "pagesBoth": 727,
+      "pagesDifferInBoth": 697,
+      "bytesDifferInBoth": 32325939,
+      "bytesInOnlyPages": 2686976,
+      "bytesDifferTotal": 35012915,
+      "interp": {
+        "wasmSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+        "glueSha256": "c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+      },
+      "load": [
+        3.2841796875,
+        4.28173828125,
+        4.82080078125
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "arm": "plain",
+      "n": 10,
+      "totalMs": {
+        "n": 10,
+        "median": 1632.985459,
+        "min": 1610.7133749999998,
+        "max": 1663.7485420000003
+      },
+      "openMs": {
+        "n": 10,
+        "median": 473.567791,
+        "min": 467.0698330000001,
+        "max": 482.825209
+      },
+      "firstRenderMs": {
+        "n": 10,
+        "median": 1161.555958,
+        "min": 1142.9645,
+        "max": 1192.8112919999999
+      },
+      "compileMs": {
+        "n": 10,
+        "median": 17.663708999999997,
+        "min": 16.938083,
+        "max": 19.528417000000005
+      },
+      "savedVsPlainMs": 0,
+      "savedVsPlainPercent": 0,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "errors": 0
+    },
+    {
+      "arm": "baked",
+      "n": 10,
+      "totalMs": {
+        "n": 10,
+        "median": 489.535042,
+        "min": 470.12645800000007,
+        "max": 497.1818329999999
+      },
+      "openMs": {
+        "n": 10,
+        "median": 322.822083,
+        "min": 309.550833,
+        "max": 330.207875
+      },
+      "firstRenderMs": {
+        "n": 10,
+        "median": 165.302666,
+        "min": 160.57562500000006,
+        "max": 178.81904099999997
+      },
+      "compileMs": {
+        "n": 10,
+        "median": 37.130416,
+        "min": 35.740874999999996,
+        "max": 42.42770900000001
+      },
+      "savedVsPlainMs": 1143.450417,
+      "savedVsPlainPercent": 70.02208199087215,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "errors": 0
+    },
+    {
+      "arm": "rekeyed",
+      "n": 10,
+      "totalMs": {
+        "n": 10,
+        "median": 486.659583,
+        "min": 479.1871249999999,
+        "max": 505.20895800000005
+      },
+      "openMs": {
+        "n": 10,
+        "median": 317.475416,
+        "min": 311.356875,
+        "max": 326.850416
+      },
+      "rekeyMs": {
+        "n": 10,
+        "median": 14.25958300000002,
+        "min": 13.677915999999982,
+        "max": 14.992542000000014
+      },
+      "firstRenderMs": {
+        "n": 10,
+        "median": 156.22670899999997,
+        "min": 153.26516700000002,
+        "max": 163.61983400000003
+      },
+      "compileMs": {
+        "n": 10,
+        "median": 38.400709,
+        "min": 36.740709,
+        "max": 39.799749999999996
+      },
+      "savedVsPlainMs": 1146.3258759999999,
+      "savedVsPlainPercent": 70.19816800463009,
+      "renderShas": [
+        "ed8d6febe91ac32b5eb0140b38020911805cffa59ebfe56e819fdfee401ed924"
+      ],
+      "errors": 0
+    }
+  ],
+  "loadAverage1m": {
+    "min": 2.4130859375,
+    "max": 6.3212890625
+  }
+}

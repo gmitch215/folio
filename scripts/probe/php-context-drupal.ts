@@ -135,7 +135,7 @@ export async function prepare(consumer: string) {
 export async function boot(
 	binary: any,
 	run: (code: string) => Promise<string>,
-	options: { jsOnly?: boolean } = {}
+	options: { jsOnly?: boolean; salt?: string } = {}
 ) {
 	const env = {
 		ASSETS: {
@@ -176,7 +176,7 @@ export async function boot(
 				packageAutoload: '',
 				deploymentEnv: ''
 			}) +
-			"\n$settings['hash_salt']='folio-render-proof-fixed-salt';\n"
+			`\n$settings['hash_salt']='${options.salt ?? 'folio-render-proof-fixed-salt'}';\n`
 	);
 	binary.FS.writeFile('/drupal/sites/default/services.yml', SERVICES_YAML);
 	if (options.jsOnly) return;
@@ -199,8 +199,11 @@ export async function boot(
 	if (!kernel.ok || !kernel.hasDb) throw new Error('Drupal kernel failed: ' + kernelRaw);
 }
 
-export const renderCode = (path = '/', bins = ['page', 'dynamic_page_cache', 'render']) =>
-	renderPage(path, bins, false, { origin: 'https://folio.invalid' });
+export const renderCode = (
+	path = '/',
+	bins = ['page', 'dynamic_page_cache', 'render'],
+	request: Record<string, unknown> = {}
+) => renderPage(path, bins, false, { origin: 'https://folio.invalid', ...request });
 
 export function resetSql() {
 	sqlStats.ms = 0;

@@ -1,5 +1,6 @@
 import { analyzeAdmission } from './admission.ts';
 import { analyzeAffinity } from './affinity.ts';
+import { analyzeBakeSecrets } from './bakesecrets.ts';
 import { analyzeBlocks } from './blocks.ts';
 import { analyzeBootImage } from './bootimage.ts';
 import { analyzeBreakdown, analyzeMemory } from './breakdown.ts';
@@ -71,4 +72,5 @@ analyzeCensus('20261022-sqlcensus', 'census.jsonl', 'summary.json');
 analyzeSiteConc('20261022-site-concurrency');
 analyzeBlocks('20261022-blocks', 'mac-blocks.jsonl');
 analyzeBootImage('20261022-bootimage');
+analyzeBakeSecrets('20261022-bakesecrets');
 console.log('regenerated every summary.json under results/');
