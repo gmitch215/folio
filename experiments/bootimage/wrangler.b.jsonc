@@ -1,0 +1,9 @@
+{
+	"name": "folio-bootimage-b",
+	"main": "variants/b/worker.ts",
+	"compatibility_date": "2026-10-20",
+	"workers_dev": true,
+	"durable_objects": { "bindings": [{ "name": "IMAGE", "class_name": "BootImage" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["BootImage"] }],
+	"rules": [{ "type": "CompiledWasm", "globs": ["**/*.wasm"], "fallthrough": false }]
+}

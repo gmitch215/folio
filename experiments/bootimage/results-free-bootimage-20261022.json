@@ -1,0 +1,1586 @@
+{
+  "runs": [
+    {
+      "run": "cfw-folio-bootimage-0ac90da5",
+      "account": "FREE",
+      "variant": "a",
+      "baselineRestored": true,
+      "deploy": {
+        "uploadKiB": 13092.3,
+        "gzipKiB": 4107.01,
+        "startupMs": 3,
+        "uploaded": true
+      },
+      "meter": {
+        "start": {
+          "workerRequests": 185,
+          "durableObjectRequests": 0,
+          "durableObjectDurationGbS": 0,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        },
+        "end": {
+          "workerRequests": 185,
+          "durableObjectRequests": 0,
+          "durableObjectDurationGbS": 0,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        }
+      },
+      "measured": {
+        "rows": [
+          {
+            "label": "original-warm-0",
+            "group": "original-warm",
+            "path": "/inst?m=original&check=1&obj=warm&i=0",
+            "status": 200,
+            "wallMs": 653.8367919999982,
+            "cpuMs": 22,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "checksum": 3596068343,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "original-fresh-1",
+            "group": "original-fresh",
+            "path": "/inst?m=original&check=0&obj=f0&i=1",
+            "status": 200,
+            "wallMs": 395.51400000000285,
+            "cpuMs": 11,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "zym1sx",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "original-fresh-2",
+            "group": "original-fresh",
+            "path": "/inst?m=original&check=0&obj=f1&i=2",
+            "status": 200,
+            "wallMs": 399.01470800000243,
+            "cpuMs": 13,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "0x3qro",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "original-fresh-3",
+            "group": "original-fresh",
+            "path": "/inst?m=original&check=0&obj=f2&i=3",
+            "status": 200,
+            "wallMs": 382.4761660000004,
+            "cpuMs": 10,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "0g71xk",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "original-check-4",
+            "group": "original-check",
+            "path": "/inst?m=original&check=1&obj=f3&i=4",
+            "status": 200,
+            "wallMs": 384.0434580000001,
+            "cpuMs": 21,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "checksum": 3596068343,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "bqr2nc",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "original-reused-5",
+            "group": "original-reused",
+            "path": "/inst?m=original&check=0&obj=warm&i=5",
+            "status": 200,
+            "wallMs": 139.8856659999983,
+            "cpuMs": 12,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 2,
+            "objectCalls": 2
+          },
+          {
+            "label": "original-reused-6",
+            "group": "original-reused",
+            "path": "/inst?m=original&check=0&obj=warm&i=6",
+            "status": 200,
+            "wallMs": 140.81537500000195,
+            "cpuMs": 31,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 3,
+            "objectCalls": 3
+          },
+          {
+            "label": "original-reused-7",
+            "group": "original-reused",
+            "path": "/inst?m=original&check=0&obj=warm&i=7",
+            "status": 200,
+            "wallMs": 232.51508300000205,
+            "cpuMs": 11,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 4,
+            "objectCalls": 4
+          },
+          {
+            "label": "original-check-8",
+            "group": "original-check",
+            "path": "/inst?m=original&check=1&obj=warm&i=8",
+            "status": 200,
+            "wallMs": 181.4797499999986,
+            "cpuMs": 22,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "checksum": 3596068343,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 5,
+            "objectCalls": 5
+          },
+          {
+            "label": "create-16-9",
+            "group": "create-16",
+            "path": "/memory?mode=create&mib=16&obj=c16&i=9",
+            "status": 200,
+            "wallMs": 356.32287500000166,
+            "cpuMs": 1,
+            "outcome": "ok",
+            "memoryBytes": 16777216,
+            "memoryMatches": false,
+            "moduleTag": "vt5o3d",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "import-16-10",
+            "group": "import-16",
+            "path": "/memory?mode=import&mib=16&obj=i16&i=10",
+            "status": 200,
+            "wallMs": 304.13687500000015,
+            "cpuMs": 1,
+            "outcome": "ok",
+            "memoryBytes": 16777216,
+            "memoryMatches": false,
+            "moduleTag": "34s5bb",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "own-16-fresh-11",
+            "group": "own-16-fresh",
+            "path": "/memory?mode=own&mib=16&obj=o16&i=11",
+            "status": 200,
+            "wallMs": 313.432041,
+            "cpuMs": 0,
+            "outcome": "ok",
+            "memoryBytes": 16777216,
+            "memoryMatches": false,
+            "moduleTag": "hkmeyc",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "own-16-reused-12",
+            "group": "own-16-reused",
+            "path": "/memory?mode=own&mib=16&obj=warm&i=12",
+            "status": 200,
+            "wallMs": 159.41200000000026,
+            "cpuMs": 0,
+            "outcome": "ok",
+            "memoryBytes": 16777216,
+            "memoryMatches": false,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 6,
+            "objectCalls": 6
+          },
+          {
+            "label": "create-64-13",
+            "group": "create-64",
+            "path": "/memory?mode=create&mib=64&obj=c64&i=13",
+            "status": 200,
+            "wallMs": 534.7900420000005,
+            "cpuMs": 3,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "1zoa6u",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "import-64-14",
+            "group": "import-64",
+            "path": "/memory?mode=import&mib=64&obj=i64&i=14",
+            "status": 200,
+            "wallMs": 356.3224160000027,
+            "cpuMs": 4,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "x6f24c",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "own-64-fresh-15",
+            "group": "own-64-fresh",
+            "path": "/memory?mode=own&mib=64&obj=o64&i=15",
+            "status": 200,
+            "wallMs": 363.6284999999989,
+            "cpuMs": 4,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "fbbdk8",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "own-64-reused-16",
+            "group": "own-64-reused",
+            "path": "/memory?mode=own&mib=64&obj=warm&i=16",
+            "status": 200,
+            "wallMs": 113.14441599999918,
+            "cpuMs": 4,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 7,
+            "objectCalls": 7
+          },
+          {
+            "label": "create-128-17",
+            "group": "create-128",
+            "path": "/memory?mode=create&mib=128&obj=c128&i=17",
+            "status": 200,
+            "wallMs": 462.580750000001,
+            "cpuMs": 3,
+            "outcome": "ok",
+            "memoryBytes": 134217728,
+            "memoryMatches": false,
+            "moduleTag": "mw0n8x",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "import-128-18",
+            "group": "import-128",
+            "path": "/memory?mode=import&mib=128&obj=i128&i=18",
+            "status": 200,
+            "wallMs": 220.3758749999979,
+            "cpuMs": 2,
+            "outcome": "ok",
+            "memoryBytes": 134217728,
+            "memoryMatches": false,
+            "moduleTag": "5hom84",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "own-128-fresh-19",
+            "group": "own-128-fresh",
+            "path": "/memory?mode=own&mib=128&obj=o128&i=19",
+            "status": 200,
+            "wallMs": 330.3530419999988,
+            "cpuMs": 6,
+            "outcome": "ok",
+            "memoryBytes": 134217728,
+            "memoryMatches": false,
+            "moduleTag": "6pu9wb",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "own-128-reused-20",
+            "group": "own-128-reused",
+            "path": "/memory?mode=own&mib=128&obj=warm&i=20",
+            "status": 200,
+            "wallMs": 64.00837499999761,
+            "cpuMs": 6,
+            "outcome": "ok",
+            "memoryBytes": 134217728,
+            "memoryMatches": false,
+            "moduleTag": "k55wo6",
+            "moduleCalls": 8,
+            "objectCalls": 8
+          }
+        ],
+        "groups": {
+          "original-warm": {
+            "cpuMs": {
+              "n": 1,
+              "median": 22,
+              "min": 22,
+              "max": 22
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "original-fresh": {
+            "cpuMs": {
+              "n": 3,
+              "median": 11,
+              "min": 10,
+              "max": 13
+            },
+            "outcomes": {
+              "ok": 3
+            },
+            "statuses": {
+              "200": 3
+            }
+          },
+          "original-check": {
+            "cpuMs": {
+              "n": 2,
+              "median": 22,
+              "min": 21,
+              "max": 22
+            },
+            "outcomes": {
+              "ok": 2
+            },
+            "statuses": {
+              "200": 2
+            }
+          },
+          "original-reused": {
+            "cpuMs": {
+              "n": 3,
+              "median": 12,
+              "min": 11,
+              "max": 31
+            },
+            "outcomes": {
+              "ok": 3
+            },
+            "statuses": {
+              "200": 3
+            }
+          },
+          "create-16": {
+            "cpuMs": {
+              "n": 1,
+              "median": 1,
+              "min": 1,
+              "max": 1
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "import-16": {
+            "cpuMs": {
+              "n": 1,
+              "median": 1,
+              "min": 1,
+              "max": 1
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "own-16-fresh": {
+            "cpuMs": {
+              "n": 1,
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "own-16-reused": {
+            "cpuMs": {
+              "n": 1,
+              "median": 0,
+              "min": 0,
+              "max": 0
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "create-64": {
+            "cpuMs": {
+              "n": 1,
+              "median": 3,
+              "min": 3,
+              "max": 3
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "import-64": {
+            "cpuMs": {
+              "n": 1,
+              "median": 4,
+              "min": 4,
+              "max": 4
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "own-64-fresh": {
+            "cpuMs": {
+              "n": 1,
+              "median": 4,
+              "min": 4,
+              "max": 4
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "own-64-reused": {
+            "cpuMs": {
+              "n": 1,
+              "median": 4,
+              "min": 4,
+              "max": 4
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "create-128": {
+            "cpuMs": {
+              "n": 1,
+              "median": 3,
+              "min": 3,
+              "max": 3
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "import-128": {
+            "cpuMs": {
+              "n": 1,
+              "median": 2,
+              "min": 2,
+              "max": 2
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "own-128-fresh": {
+            "cpuMs": {
+              "n": 1,
+              "median": 6,
+              "min": 6,
+              "max": 6
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "own-128-reused": {
+            "cpuMs": {
+              "n": 1,
+              "median": 6,
+              "min": 6,
+              "max": 6
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          }
+        },
+        "checksums": {
+          "expected": 3596068343,
+          "checked": 3,
+          "matching": 3
+        },
+        "memory": {
+          "expectedBytes": 67108864,
+          "reported": 21
+        },
+        "moduleTags": 14,
+        "warmObject": [
+          [
+            "original-warm-0",
+            "k55wo6",
+            1,
+            1,
+            "ok"
+          ],
+          [
+            "original-reused-5",
+            "k55wo6",
+            2,
+            2,
+            "ok"
+          ],
+          [
+            "original-reused-6",
+            "k55wo6",
+            3,
+            3,
+            "ok"
+          ],
+          [
+            "original-reused-7",
+            "k55wo6",
+            4,
+            4,
+            "ok"
+          ],
+          [
+            "original-check-8",
+            "k55wo6",
+            5,
+            5,
+            "ok"
+          ],
+          [
+            "own-16-reused-12",
+            "k55wo6",
+            6,
+            6,
+            "ok"
+          ],
+          [
+            "own-64-reused-16",
+            "k55wo6",
+            7,
+            7,
+            "ok"
+          ],
+          [
+            "own-128-reused-20",
+            "k55wo6",
+            8,
+            8,
+            "ok"
+          ]
+        ],
+        "refused": []
+      }
+    },
+    {
+      "run": "cfw-folio-bootimage-758e99c1",
+      "account": "FREE",
+      "variant": "b",
+      "baselineRestored": true,
+      "deploy": {
+        "uploadKiB": 20195.79,
+        "gzipKiB": 5760.44,
+        "startupMs": 3,
+        "uploaded": true
+      },
+      "meter": {
+        "start": {
+          "workerRequests": 185,
+          "durableObjectRequests": 0,
+          "durableObjectDurationGbS": 0,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        },
+        "end": {
+          "workerRequests": 185,
+          "durableObjectRequests": 0,
+          "durableObjectDurationGbS": 0,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        }
+      },
+      "measured": {
+        "rows": [
+          {
+            "label": "boot-warm-0",
+            "group": "boot-warm",
+            "path": "/inst?m=boot&check=1&obj=warm&i=0",
+            "status": 200,
+            "wallMs": 750.6147919999985,
+            "cpuMs": 23,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "checksum": 1165096916,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-1",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f0&i=1",
+            "status": 200,
+            "wallMs": 640.6097499999996,
+            "cpuMs": 19,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "3ha0fr",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-2",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f1&i=2",
+            "status": 200,
+            "wallMs": 331.20729199999914,
+            "cpuMs": 12,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "gleb0j",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-3",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f2&i=3",
+            "status": 200,
+            "wallMs": 408.27137500000026,
+            "cpuMs": 21,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "3z7dya",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-4",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f3&i=4",
+            "status": 200,
+            "wallMs": 308.5090830000008,
+            "cpuMs": 14,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "2kerw0",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-5",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f4&i=5",
+            "status": 200,
+            "wallMs": 479.07745799999975,
+            "cpuMs": 14,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "z9kvid",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-6",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f5&i=6",
+            "status": 200,
+            "wallMs": 517.197583000001,
+            "cpuMs": 15,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "0hobhc",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-7",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f6&i=7",
+            "status": 200,
+            "wallMs": 435.69487500000105,
+            "cpuMs": 19,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "v6mczo",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-8",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f7&i=8",
+            "status": 200,
+            "wallMs": 453.06054199999926,
+            "cpuMs": 17,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "ob5t1o",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-fresh-9",
+            "group": "boot-fresh",
+            "path": "/inst?m=boot&check=0&obj=f8&i=9",
+            "status": 200,
+            "wallMs": 544.4432500000003,
+            "cpuMs": 16,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "4diw17",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-check-10",
+            "group": "boot-check",
+            "path": "/inst?m=boot&check=1&obj=f9&i=10",
+            "status": 200,
+            "wallMs": 344.955750000001,
+            "cpuMs": 19,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "checksum": 1165096916,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "7jjpj4",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "boot-reused-11",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=11",
+            "status": 200,
+            "wallMs": 139.2316249999967,
+            "cpuMs": 15,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 2,
+            "objectCalls": 2
+          },
+          {
+            "label": "boot-reused-12",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=12",
+            "status": 200,
+            "wallMs": 279.7799580000028,
+            "cpuMs": 16,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 3,
+            "objectCalls": 3
+          },
+          {
+            "label": "boot-reused-13",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=13",
+            "status": 200,
+            "wallMs": 178.07654199999888,
+            "cpuMs": 17,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 4,
+            "objectCalls": 4
+          },
+          {
+            "label": "boot-reused-14",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=14",
+            "status": 200,
+            "wallMs": 181.84533400000146,
+            "cpuMs": 15,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 5,
+            "objectCalls": 5
+          },
+          {
+            "label": "boot-reused-15",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=15",
+            "status": 200,
+            "wallMs": 175.50104100000317,
+            "cpuMs": 17,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 6,
+            "objectCalls": 6
+          },
+          {
+            "label": "boot-reused-16",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=16",
+            "status": 200,
+            "wallMs": 120.1752090000009,
+            "cpuMs": 14,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 7,
+            "objectCalls": 7
+          },
+          {
+            "label": "boot-reused-17",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=17",
+            "status": 200,
+            "wallMs": 152.04845899999782,
+            "cpuMs": 15,
+            "outcome": "ok",
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 8,
+            "objectCalls": 8
+          },
+          {
+            "label": "boot-reused-18",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=18",
+            "status": 200,
+            "wallMs": 178.5784590000003,
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 9,
+            "objectCalls": 9
+          },
+          {
+            "label": "boot-reused-19",
+            "group": "boot-reused",
+            "path": "/inst?m=boot&check=0&obj=warm&i=19",
+            "status": 200,
+            "wallMs": 147.02833300000202,
+            "memoryBytes": 67108864,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 10,
+            "objectCalls": 10
+          },
+          {
+            "label": "boot-check-20",
+            "group": "boot-check",
+            "path": "/inst?m=boot&check=1&obj=warm&i=20",
+            "status": 200,
+            "wallMs": 178.13175000000047,
+            "memoryBytes": 67108864,
+            "checksum": 1165096916,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "tgv44g",
+            "moduleCalls": 11,
+            "objectCalls": 11
+          }
+        ],
+        "groups": {
+          "boot-warm": {
+            "cpuMs": {
+              "n": 1,
+              "median": 23,
+              "min": 23,
+              "max": 23
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "boot-fresh": {
+            "cpuMs": {
+              "n": 9,
+              "median": 16,
+              "min": 12,
+              "max": 21
+            },
+            "outcomes": {
+              "ok": 9
+            },
+            "statuses": {
+              "200": 9
+            }
+          },
+          "boot-check": {
+            "cpuMs": {
+              "n": 1,
+              "median": 19,
+              "min": 19,
+              "max": 19
+            },
+            "outcomes": {
+              "ok": 1,
+              "undefined": 1
+            },
+            "statuses": {
+              "200": 2
+            }
+          },
+          "boot-reused": {
+            "cpuMs": {
+              "n": 7,
+              "median": 15,
+              "min": 14,
+              "max": 17
+            },
+            "outcomes": {
+              "ok": 7,
+              "undefined": 2
+            },
+            "statuses": {
+              "200": 9
+            }
+          }
+        },
+        "checksums": {
+          "expected": 1165096916,
+          "checked": 3,
+          "matching": 3
+        },
+        "memory": {
+          "expectedBytes": 67108864,
+          "reported": 21
+        },
+        "moduleTags": 11,
+        "warmObject": [
+          [
+            "boot-warm-0",
+            "tgv44g",
+            1,
+            1,
+            "ok"
+          ],
+          [
+            "boot-reused-11",
+            "tgv44g",
+            2,
+            2,
+            "ok"
+          ],
+          [
+            "boot-reused-12",
+            "tgv44g",
+            3,
+            3,
+            "ok"
+          ],
+          [
+            "boot-reused-13",
+            "tgv44g",
+            4,
+            4,
+            "ok"
+          ],
+          [
+            "boot-reused-14",
+            "tgv44g",
+            5,
+            5,
+            "ok"
+          ],
+          [
+            "boot-reused-15",
+            "tgv44g",
+            6,
+            6,
+            "ok"
+          ],
+          [
+            "boot-reused-16",
+            "tgv44g",
+            7,
+            7,
+            "ok"
+          ],
+          [
+            "boot-reused-17",
+            "tgv44g",
+            8,
+            8,
+            "ok"
+          ],
+          [
+            "boot-reused-18",
+            "tgv44g",
+            9,
+            9,
+            null
+          ],
+          [
+            "boot-reused-19",
+            "tgv44g",
+            10,
+            10,
+            null
+          ],
+          [
+            "boot-check-20",
+            "tgv44g",
+            11,
+            11,
+            null
+          ]
+        ],
+        "refused": []
+      }
+    },
+    {
+      "run": "cfw-folio-bootimage-db15e5eb",
+      "account": "FREE",
+      "variant": "c",
+      "baselineRestored": true,
+      "deploy": {
+        "uploadKiB": 59619.79,
+        "gzipKiB": 17806.67,
+        "startupMs": 3,
+        "uploaded": true
+      },
+      "meter": {
+        "start": {
+          "workerRequests": 185,
+          "durableObjectRequests": 0,
+          "durableObjectDurationGbS": 0,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        },
+        "end": {
+          "workerRequests": 185,
+          "durableObjectRequests": 0,
+          "durableObjectDurationGbS": 0,
+          "rowsRead": 0,
+          "rowsWritten": 0
+        }
+      },
+      "measured": {
+        "rows": [
+          {
+            "label": "render-warm-0",
+            "group": "render-warm",
+            "path": "/inst?m=render&check=1&obj=warm&i=0",
+            "status": 200,
+            "wallMs": 1272.096125,
+            "cpuMs": 59,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "checksum": 428718509,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-1",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f0&i=1",
+            "status": 200,
+            "wallMs": 671.7852920000005,
+            "cpuMs": 38,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "2xh2bp",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-2",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f1&i=2",
+            "status": 200,
+            "wallMs": 890.6061250000021,
+            "cpuMs": 61,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "g32es2",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-3",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f2&i=3",
+            "status": 200,
+            "wallMs": 676.2834159999984,
+            "cpuMs": 69,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "vfnokt",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-4",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f3&i=4",
+            "status": 200,
+            "wallMs": 680.4786669999994,
+            "cpuMs": 40,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "uasz4s",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-5",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f4&i=5",
+            "status": 200,
+            "wallMs": 715.6034169999984,
+            "cpuMs": 46,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "69kve9",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-6",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f5&i=6",
+            "status": 200,
+            "wallMs": 662.718667000001,
+            "cpuMs": 77,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "5ynty3",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-7",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f6&i=7",
+            "status": 200,
+            "wallMs": 762.5281250000007,
+            "cpuMs": 74,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "lweqb8",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-8",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f7&i=8",
+            "status": 200,
+            "wallMs": 1001.2772499999992,
+            "cpuMs": 36,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "qpx8av",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-fresh-9",
+            "group": "render-fresh",
+            "path": "/inst?m=render&check=0&obj=f8&i=9",
+            "status": 200,
+            "wallMs": 778.6032909999994,
+            "cpuMs": 44,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "nkcsvv",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-check-10",
+            "group": "render-check",
+            "path": "/inst?m=render&check=1&obj=f9&i=10",
+            "status": 200,
+            "wallMs": 572.9181669999962,
+            "cpuMs": 45,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "checksum": 428718509,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "cjfg3u",
+            "moduleCalls": 1,
+            "objectCalls": 1
+          },
+          {
+            "label": "render-reused-11",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=11",
+            "status": 200,
+            "wallMs": 318.4516250000015,
+            "cpuMs": 39,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 2,
+            "objectCalls": 2
+          },
+          {
+            "label": "render-reused-12",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=12",
+            "status": 200,
+            "wallMs": 186.68424999999843,
+            "cpuMs": 40,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 3,
+            "objectCalls": 3
+          },
+          {
+            "label": "render-reused-13",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=13",
+            "status": 200,
+            "wallMs": 112.46141599999828,
+            "cpuMs": 39,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 4,
+            "objectCalls": 4
+          },
+          {
+            "label": "render-reused-14",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=14",
+            "status": 200,
+            "wallMs": 112.2123750000028,
+            "cpuMs": 38,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 5,
+            "objectCalls": 5
+          },
+          {
+            "label": "render-reused-15",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=15",
+            "status": 200,
+            "wallMs": 112.41975000000093,
+            "cpuMs": 44,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 6,
+            "objectCalls": 6
+          },
+          {
+            "label": "render-reused-16",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=16",
+            "status": 200,
+            "wallMs": 117.73004200000287,
+            "cpuMs": 40,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 7,
+            "objectCalls": 7
+          },
+          {
+            "label": "render-reused-17",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=17",
+            "status": 200,
+            "wallMs": 109.32795900000201,
+            "cpuMs": 41,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 8,
+            "objectCalls": 8
+          },
+          {
+            "label": "render-reused-18",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=18",
+            "status": 200,
+            "wallMs": 143.25058400000125,
+            "cpuMs": 37,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 9,
+            "objectCalls": 9
+          },
+          {
+            "label": "render-reused-19",
+            "group": "render-reused",
+            "path": "/inst?m=render&check=0&obj=warm&i=19",
+            "status": 200,
+            "wallMs": 112.4542919999949,
+            "cpuMs": 41,
+            "outcome": "ok",
+            "memoryBytes": 86638592,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 10,
+            "objectCalls": 10
+          },
+          {
+            "label": "render-check-20",
+            "group": "render-check",
+            "path": "/inst?m=render&check=1&obj=warm&i=20",
+            "status": 200,
+            "wallMs": 143.27208300000348,
+            "memoryBytes": 86638592,
+            "checksum": 428718509,
+            "checksumMatches": true,
+            "memoryMatches": true,
+            "moduleTag": "s9s6n9",
+            "moduleCalls": 11,
+            "objectCalls": 11
+          }
+        ],
+        "groups": {
+          "render-warm": {
+            "cpuMs": {
+              "n": 1,
+              "median": 59,
+              "min": 59,
+              "max": 59
+            },
+            "outcomes": {
+              "ok": 1
+            },
+            "statuses": {
+              "200": 1
+            }
+          },
+          "render-fresh": {
+            "cpuMs": {
+              "n": 9,
+              "median": 46,
+              "min": 36,
+              "max": 77
+            },
+            "outcomes": {
+              "ok": 9
+            },
+            "statuses": {
+              "200": 9
+            }
+          },
+          "render-check": {
+            "cpuMs": {
+              "n": 1,
+              "median": 45,
+              "min": 45,
+              "max": 45
+            },
+            "outcomes": {
+              "ok": 1,
+              "undefined": 1
+            },
+            "statuses": {
+              "200": 2
+            }
+          },
+          "render-reused": {
+            "cpuMs": {
+              "n": 9,
+              "median": 40,
+              "min": 37,
+              "max": 44
+            },
+            "outcomes": {
+              "ok": 9
+            },
+            "statuses": {
+              "200": 9
+            }
+          }
+        },
+        "checksums": {
+          "expected": 428718509,
+          "checked": 3,
+          "matching": 3
+        },
+        "memory": {
+          "expectedBytes": 86638592,
+          "reported": 21
+        },
+        "moduleTags": 11,
+        "warmObject": [
+          [
+            "render-warm-0",
+            "s9s6n9",
+            1,
+            1,
+            "ok"
+          ],
+          [
+            "render-reused-11",
+            "s9s6n9",
+            2,
+            2,
+            "ok"
+          ],
+          [
+            "render-reused-12",
+            "s9s6n9",
+            3,
+            3,
+            "ok"
+          ],
+          [
+            "render-reused-13",
+            "s9s6n9",
+            4,
+            4,
+            "ok"
+          ],
+          [
+            "render-reused-14",
+            "s9s6n9",
+            5,
+            5,
+            "ok"
+          ],
+          [
+            "render-reused-15",
+            "s9s6n9",
+            6,
+            6,
+            "ok"
+          ],
+          [
+            "render-reused-16",
+            "s9s6n9",
+            7,
+            7,
+            "ok"
+          ],
+          [
+            "render-reused-17",
+            "s9s6n9",
+            8,
+            8,
+            "ok"
+          ],
+          [
+            "render-reused-18",
+            "s9s6n9",
+            9,
+            9,
+            "ok"
+          ],
+          [
+            "render-reused-19",
+            "s9s6n9",
+            10,
+            10,
+            "ok"
+          ],
+          [
+            "render-check-20",
+            "s9s6n9",
+            11,
+            11,
+            null
+          ]
+        ],
+        "refused": []
+      }
+    }
+  ]
+}

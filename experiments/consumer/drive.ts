@@ -52,7 +52,7 @@ export async function readMeter(account: string, token: string): Promise<Meter> 
 
 const pause = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-async function call(url: string, secret: string, method: string, timeout: number) {
+export async function call(url: string, secret: string, method: string, timeout: number) {
 	const began = performance.now();
 	const response = await fetch(url, {
 		method,

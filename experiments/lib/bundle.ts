@@ -10,19 +10,11 @@ import { wranglerPath } from './cloudflare.ts';
 const repository = fileURLToPath(new URL('../../', import.meta.url));
 
 // wrangler's dry run bundles the worker exactly as a deploy would, with no account or network
-export function bundle(kind: Kind) {
+export function bundle(kind: Kind, config = `experiments/${kind}/wrangler.jsonc`) {
 	const outdir = mkdtempSync(join(tmpdir(), `folio-${kind}-bundle-`));
 	execFileSync(
 		process.execPath,
-		[
-			wranglerPath(),
-			'deploy',
-			'--dry-run',
-			'--outdir',
-			outdir,
-			'--config',
-			`experiments/${kind}/wrangler.jsonc`
-		],
+		[wranglerPath(), 'deploy', '--dry-run', '--outdir', outdir, '--config', config],
 		{ cwd: repository, env: { ...process.env, WRANGLER_SEND_METRICS: 'false' }, stdio: 'pipe' }
 	);
 	return outdir;

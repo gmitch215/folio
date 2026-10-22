@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { runBootImage } from './bootimage/drive.ts';
+import { isVariant, readinessAttempts, requestBound } from './bootimage/plan.ts';
 import { collect } from './cloud/run.ts';
 import { readMeter, runPhp, runSessions } from './consumer/drive.ts';
 import {
@@ -18,7 +21,7 @@ import {
 const kind = process.argv[2];
 assert.ok(
 	isKind(kind),
-	'usage: node experiments/deploy.ts cloud|managed|browser|consumer|php|prepared'
+	'usage: node experiments/deploy.ts cloud|managed|browser|consumer|php|prepared|bootimage'
 );
 
 // each run is bounded up front; run.json records the bound beside the evidence
@@ -54,7 +57,10 @@ const budgets = {
 		maximumDurableObjectRequests: 38,
 		sqlCalls: 0,
 		expectedCharges: 0
-	}
+	},
+	bootimage: requestBound(
+		isVariant(process.env.FOLIO_BOOTIMAGE_VARIANT) ? process.env.FOLIO_BOOTIMAGE_VARIANT : 'a'
+	)
 };
 
 const sourceFiles = {
@@ -72,13 +78,20 @@ const sourceFiles = {
 	],
 	consumer: ['experiments/consumer'],
 	php: ['experiments/consumer'],
-	prepared: ['experiments/consumer']
+	prepared: ['experiments/consumer'],
+	bootimage: ['experiments/bootimage']
 };
+
+// one deploy per variant: three modules together pass the 64 MiB bundle
+const bootVariant = process.env.FOLIO_BOOTIMAGE_VARIANT;
+if (kind === 'bootimage')
+	assert.ok(isVariant(bootVariant), 'set FOLIO_BOOTIMAGE_VARIANT to a, b or c');
 
 const configs = {
 	consumer: 'experiments/consumer/wrangler.jsonc',
 	php: 'experiments/consumer/php/wrangler.jsonc',
-	prepared: 'experiments/consumer/php/wrangler.prepared.jsonc'
+	prepared: 'experiments/consumer/php/wrangler.prepared.jsonc',
+	bootimage: `experiments/bootimage/wrangler.${bootVariant}.jsonc`
 } as const;
 
 const root = new URL('../', import.meta.url);
@@ -132,7 +145,7 @@ const url = `https://${name}.${subdomain}.workers.dev`;
 await save('run.json', {
 	name,
 	kind,
-	variant: extraction ? 'automatic-extraction' : 'original',
+	variant: extraction ? 'automatic-extraction' : kind === 'bootimage' ? bootVariant : 'original',
 	url,
 	startedAt: new Date().toISOString(),
 	account: creds.label,
@@ -144,6 +157,8 @@ if (sourceFiles[kind].length) {
 		[
 			'--exclude=experiments/consumer/build',
 			'--exclude=experiments/consumer/runs',
+			'--exclude=experiments/bootimage/build',
+			'--exclude=experiments/bootimage/runs',
 			'-czf',
 			new URL('source.tar.gz', directory).pathname,
 			'src',
@@ -173,6 +188,11 @@ if (kind in configs) {
 	await save('meter-start.json', before);
 	log('meter-start', before);
 }
+if (kind === 'bootimage')
+	await save(
+		'expected.json',
+		JSON.parse(readFileSync(new URL('bootimage/build/expected.json', import.meta.url), 'utf8'))
+	);
 const wrangler = (args: string[], file: string, input?: string): Child =>
 	spawnWrangler(creds, args, new URL(file, directory), { cwd: root, input });
 
@@ -190,7 +210,8 @@ try {
 		).done;
 		// a fresh workers.dev route can answer 404 for a while; 401 means the worker itself replied
 		const readiness: { attempt: number; status: number }[] = [];
-		for (let attempt = 0; attempt < 20; attempt++) {
+		const attempts = kind === 'bootimage' ? readinessAttempts : 20;
+		for (let attempt = 0; attempt < attempts; attempt++) {
 			const check = await fetch(`${url}/run`, { signal: AbortSignal.timeout(10000) });
 			readiness.push({ attempt, status: check.status });
 			await check.body?.cancel();
@@ -219,6 +240,8 @@ try {
 		);
 	} else if (kind === 'php' || kind === 'prepared') {
 		await runPhp(url, secret, kind, save, log, meter);
+	} else if (kind === 'bootimage') {
+		await runBootImage(url, secret, bootVariant as 'a' | 'b' | 'c', save, log, meter);
 	} else {
 		const began = performance.now();
 		const response = await fetch(`${url}/run`, {

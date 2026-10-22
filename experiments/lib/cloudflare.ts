@@ -29,7 +29,8 @@ export const classesFor = {
 	browser: ['BrowserGate'],
 	consumer: ['ConsumerGate'],
 	php: ['PhpProbe'],
-	prepared: ['PhpProbe']
+	prepared: ['PhpProbe'],
+	bootimage: ['BootImage']
 } as const;
 
 export type Kind = keyof typeof classesFor;
