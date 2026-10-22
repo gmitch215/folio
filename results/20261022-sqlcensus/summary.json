@@ -1,0 +1,1046 @@
+{
+  "workloads": {
+    "node-save": {
+      "units": 16,
+      "passes": 2,
+      "wallMs": {
+        "n": 16,
+        "median": 8.0361328125,
+        "min": 6.980224609375,
+        "max": 9.4375
+      },
+      "sqlMs": {
+        "n": 16,
+        "median": 0.6147910000006505,
+        "min": 0.535994000005303,
+        "max": 0.8559599999971397
+      },
+      "sqlShare": 0.07925053667509582,
+      "statements": {
+        "n": 16,
+        "median": 75,
+        "min": 75,
+        "max": 75
+      },
+      "verbsMedian": {
+        "DELETE": 5,
+        "INSERT": 9,
+        "SELECT": 59,
+        "UPDATE": 2
+      },
+      "written": {
+        "cache_entity": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 16,
+          "class": "counter"
+        },
+        "node": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node__body": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_field_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_field_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision__body": {
+          "units": 16,
+          "class": "entity"
+        }
+      },
+      "read": {
+        "cache_config": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 16,
+          "class": "counter"
+        },
+        "node": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node__body": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_field_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision__body": {
+          "units": 16,
+          "class": "entity"
+        }
+      },
+      "alwaysWritten": [
+        "cache_entity",
+        "cachetags",
+        "node",
+        "node__body",
+        "node_field_data",
+        "node_field_revision",
+        "node_revision",
+        "node_revision__body"
+      ],
+      "idAllocations": {
+        "n": 16,
+        "median": 25,
+        "min": 25,
+        "max": 25
+      },
+      "pairs": {
+        "count": 56,
+        "noConflict": 0,
+        "noEntityConflict": 0,
+        "noConflictOutsideCacheCounter": 0,
+        "pairsWith": {
+          "ww.cache": 56,
+          "ww.counter": 56,
+          "ww.queue": 0,
+          "ww.sessions": 0,
+          "ww.entity": 56,
+          "raw.cache": 0,
+          "raw.counter": 0,
+          "raw.queue": 0,
+          "raw.sessions": 0,
+          "raw.entity": 0
+        }
+      },
+      "rowLevel": {
+        "heuristic": "first non-null bound parameter as the row key",
+        "entityTableConflicts": 336,
+        "entityRowConflicts": 280,
+        "disappeared": 56,
+        "remainingByTable": {
+          "node": 56,
+          "node_revision": 56,
+          "node_field_revision": 56,
+          "node__body": 56,
+          "node_revision__body": 56
+        }
+      }
+    },
+    "node-update": {
+      "units": 16,
+      "passes": 2,
+      "wallMs": {
+        "n": 16,
+        "median": 12.88720703125,
+        "min": 12.305908203125,
+        "max": 17.7568359375
+      },
+      "sqlMs": {
+        "n": 16,
+        "median": 1.1446689999993396,
+        "min": 1.0202140000128566,
+        "max": 1.429209000001947
+      },
+      "sqlShare": 0.08855592733597328,
+      "statements": {
+        "n": 16,
+        "median": 126,
+        "min": 126,
+        "max": 132
+      },
+      "verbsMedian": {
+        "DELETE": 18,
+        "INSERT": 10,
+        "SELECT": 94,
+        "UPDATE": 4
+      },
+      "written": {
+        "cache_entity": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 16,
+          "class": "counter"
+        },
+        "node": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node__body": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_access": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_field_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_field_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision__body": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_index": {
+          "units": 16,
+          "class": "entity"
+        }
+      },
+      "read": {
+        "cache_config": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_entity": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 16,
+          "class": "counter"
+        },
+        "node": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node__body": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_field_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision": {
+          "units": 16,
+          "class": "entity"
+        }
+      },
+      "alwaysWritten": [
+        "cache_entity",
+        "cachetags",
+        "node",
+        "node__body",
+        "node_access",
+        "node_field_data",
+        "node_field_revision",
+        "node_revision",
+        "node_revision__body",
+        "taxonomy_index"
+      ],
+      "idAllocations": {
+        "n": 16,
+        "median": 42,
+        "min": 42,
+        "max": 44
+      },
+      "pairs": {
+        "count": 56,
+        "noConflict": 0,
+        "noEntityConflict": 0,
+        "noConflictOutsideCacheCounter": 0,
+        "pairsWith": {
+          "ww.cache": 56,
+          "ww.counter": 56,
+          "ww.queue": 0,
+          "ww.sessions": 0,
+          "ww.entity": 56,
+          "raw.cache": 0,
+          "raw.counter": 0,
+          "raw.queue": 0,
+          "raw.sessions": 0,
+          "raw.entity": 0
+        }
+      },
+      "rowLevel": {
+        "heuristic": "first non-null bound parameter as the row key",
+        "entityTableConflicts": 448,
+        "entityRowConflicts": 224,
+        "disappeared": 224,
+        "remainingByTable": {
+          "node": 56,
+          "node_revision": 56,
+          "node_field_data": 56,
+          "node__body": 56
+        }
+      }
+    },
+    "user-create": {
+      "units": 16,
+      "passes": 2,
+      "wallMs": {
+        "n": 16,
+        "median": 1036.745361328125,
+        "min": 997.56396484375,
+        "max": 1415.5244140625
+      },
+      "sqlMs": {
+        "n": 16,
+        "median": 0.46570700001029763,
+        "min": 0.3997519999938959,
+        "max": 1.2510429999983899
+      },
+      "sqlShare": 0.0005391700418676855,
+      "statements": {
+        "n": 16,
+        "median": 33,
+        "min": 33,
+        "max": 72
+      },
+      "verbsMedian": {
+        "DELETE": 5,
+        "INSERT": 3,
+        "SELECT": 25
+      },
+      "written": {
+        "cache_entity": {
+          "units": 16,
+          "class": "cache"
+        },
+        "users": {
+          "units": 16,
+          "class": "entity"
+        },
+        "users_field_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "cache_config": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_discovery": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 2,
+          "class": "counter"
+        }
+      },
+      "read": {
+        "cache_config": {
+          "units": 16,
+          "class": "cache"
+        },
+        "users": {
+          "units": 16,
+          "class": "entity"
+        },
+        "cache_discovery": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 2,
+          "class": "counter"
+        },
+        "config": {
+          "units": 2,
+          "class": "entity"
+        }
+      },
+      "alwaysWritten": [
+        "cache_entity",
+        "users",
+        "users_field_data"
+      ],
+      "idAllocations": {
+        "n": 16,
+        "median": 11,
+        "min": 11,
+        "max": 24
+      },
+      "pairs": {
+        "count": 56,
+        "noConflict": 0,
+        "noEntityConflict": 0,
+        "noConflictOutsideCacheCounter": 0,
+        "pairsWith": {
+          "ww.cache": 56,
+          "ww.counter": 0,
+          "ww.queue": 0,
+          "ww.sessions": 0,
+          "ww.entity": 56,
+          "raw.cache": 14,
+          "raw.counter": 0,
+          "raw.queue": 0,
+          "raw.sessions": 0,
+          "raw.entity": 0
+        }
+      },
+      "rowLevel": {
+        "heuristic": "first non-null bound parameter as the row key",
+        "entityTableConflicts": 112,
+        "entityRowConflicts": 56,
+        "disappeared": 56,
+        "remainingByTable": {
+          "users": 56
+        }
+      }
+    },
+    "term-create": {
+      "units": 16,
+      "passes": 2,
+      "wallMs": {
+        "n": 16,
+        "median": 7.415771484375,
+        "min": 6.462158203125,
+        "max": 50.50830078125
+      },
+      "sqlMs": {
+        "n": 16,
+        "median": 0.7672529999963444,
+        "min": 0.5880840000190801,
+        "max": 4.49053800000911
+      },
+      "sqlShare": 0.10041623793858195,
+      "statements": {
+        "n": 16,
+        "median": 75,
+        "min": 75,
+        "max": 129
+      },
+      "verbsMedian": {
+        "DELETE": 5,
+        "INSERT": 9,
+        "SELECT": 59,
+        "UPDATE": 2
+      },
+      "written": {
+        "cache_entity": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 16,
+          "class": "counter"
+        },
+        "taxonomy_term__parent": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_field_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_field_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_revision__parent": {
+          "units": 16,
+          "class": "entity"
+        },
+        "cache_config": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_discovery": {
+          "units": 2,
+          "class": "cache"
+        }
+      },
+      "read": {
+        "cache_config": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 16,
+          "class": "counter"
+        },
+        "taxonomy_term__parent": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_field_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "taxonomy_term_revision__parent": {
+          "units": 16,
+          "class": "entity"
+        },
+        "cache_discovery": {
+          "units": 2,
+          "class": "cache"
+        },
+        "config": {
+          "units": 2,
+          "class": "entity"
+        }
+      },
+      "alwaysWritten": [
+        "cache_entity",
+        "cachetags",
+        "taxonomy_term__parent",
+        "taxonomy_term_data",
+        "taxonomy_term_field_data",
+        "taxonomy_term_field_revision",
+        "taxonomy_term_revision",
+        "taxonomy_term_revision__parent"
+      ],
+      "idAllocations": {
+        "n": 16,
+        "median": 25,
+        "min": 25,
+        "max": 43
+      },
+      "pairs": {
+        "count": 56,
+        "noConflict": 0,
+        "noEntityConflict": 0,
+        "noConflictOutsideCacheCounter": 0,
+        "pairsWith": {
+          "ww.cache": 56,
+          "ww.counter": 56,
+          "ww.queue": 0,
+          "ww.sessions": 0,
+          "ww.entity": 56,
+          "raw.cache": 14,
+          "raw.counter": 0,
+          "raw.queue": 0,
+          "raw.sessions": 0,
+          "raw.entity": 0
+        }
+      },
+      "rowLevel": {
+        "heuristic": "first non-null bound parameter as the row key",
+        "entityTableConflicts": 336,
+        "entityRowConflicts": 280,
+        "disappeared": 56,
+        "remainingByTable": {
+          "taxonomy_term_data": 56,
+          "taxonomy_term_revision": 56,
+          "taxonomy_term_field_revision": 56,
+          "taxonomy_term__parent": 56,
+          "taxonomy_term_revision__parent": 56
+        }
+      }
+    },
+    "render": {
+      "units": 16,
+      "passes": 2,
+      "wallMs": {
+        "n": 16,
+        "median": 55.322998046875,
+        "min": 54.1259765625,
+        "max": 817.312255859375
+      },
+      "sqlMs": {
+        "n": 16,
+        "median": 2.0173329999979615,
+        "min": 1.8102949999884004,
+        "max": 20.12253200000123
+      },
+      "sqlShare": 0.027688118683188764,
+      "statements": {
+        "n": 16,
+        "median": 147,
+        "min": 147,
+        "max": 711
+      },
+      "verbsMedian": {
+        "DELETE": 1,
+        "INSERT": 19,
+        "SELECT": 127,
+        "UPDATE": 0
+      },
+      "written": {
+        "cache_data": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_entity": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_render": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_discovery": {
+          "units": 4,
+          "class": "cache"
+        },
+        "cache_bootstrap": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_default": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_routes": {
+          "units": 2,
+          "class": "cache"
+        },
+        "key_value": {
+          "units": 2,
+          "class": "entity"
+        },
+        "watchdog": {
+          "units": 2,
+          "class": "entity"
+        }
+      },
+      "read": {
+        "cache_bootstrap": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_config": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_data": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_discovery": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_entity": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cache_render": {
+          "units": 16,
+          "class": "cache"
+        },
+        "cachetags": {
+          "units": 16,
+          "class": "counter"
+        },
+        "key_value": {
+          "units": 16,
+          "class": "entity"
+        },
+        "menu_tree": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node__body": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_field_data": {
+          "units": 16,
+          "class": "entity"
+        },
+        "node_revision": {
+          "units": 16,
+          "class": "entity"
+        },
+        "path_alias": {
+          "units": 16,
+          "class": "entity"
+        },
+        "router": {
+          "units": 16,
+          "class": "entity"
+        },
+        "block_content": {
+          "units": 2,
+          "class": "entity"
+        },
+        "block_content_field_data": {
+          "units": 2,
+          "class": "entity"
+        },
+        "cache_default": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_file_parsing": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_routes": {
+          "units": 2,
+          "class": "cache"
+        },
+        "config": {
+          "units": 2,
+          "class": "entity"
+        },
+        "watchdog": {
+          "units": 2,
+          "class": "entity"
+        }
+      },
+      "alwaysWritten": [
+        "cache_data",
+        "cache_entity",
+        "cache_render"
+      ],
+      "idAllocations": {
+        "n": 16,
+        "median": 49,
+        "min": 49,
+        "max": 237
+      },
+      "pairs": {
+        "count": 56,
+        "noConflict": 0,
+        "noEntityConflict": 0.75,
+        "noConflictOutsideCacheCounter": 0.75,
+        "pairsWith": {
+          "ww.cache": 56,
+          "ww.counter": 0,
+          "ww.queue": 0,
+          "ww.sessions": 0,
+          "ww.entity": 0,
+          "raw.cache": 26,
+          "raw.counter": 0,
+          "raw.queue": 0,
+          "raw.sessions": 0,
+          "raw.entity": 14
+        }
+      },
+      "rowLevel": {
+        "heuristic": "first non-null bound parameter as the row key",
+        "entityTableConflicts": 14,
+        "entityRowConflicts": 0,
+        "disappeared": 14,
+        "remainingByTable": {}
+      }
+    },
+    "cron": {
+      "units": 2,
+      "passes": 2,
+      "wallMs": {
+        "n": 2,
+        "median": 179.7265625,
+        "min": 175.699951171875,
+        "max": 179.7265625
+      },
+      "sqlMs": {
+        "n": 2,
+        "median": 7.923826000031113,
+        "min": 7.59540400001606,
+        "max": 7.923826000031113
+      },
+      "sqlShare": 0.0436636812479733,
+      "statements": {
+        "n": 2,
+        "median": 657,
+        "min": 657,
+        "max": 657
+      },
+      "verbsMedian": {
+        "CREATE": 5,
+        "DELETE": 34,
+        "INSERT": 47,
+        "SELECT": 557,
+        "UPDATE": 14
+      },
+      "written": {
+        "cache_access_policy": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_bootstrap": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_config": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_data": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_default": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_discovery": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_entity": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_render": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_routes": {
+          "units": 2,
+          "class": "cache"
+        },
+        "key_value": {
+          "units": 2,
+          "class": "entity"
+        },
+        "key_value_expire": {
+          "units": 2,
+          "class": "counter"
+        },
+        "queue": {
+          "units": 2,
+          "class": "queue"
+        },
+        "watchdog": {
+          "units": 2,
+          "class": "entity"
+        }
+      },
+      "read": {
+        "cache_access_policy": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_bootstrap": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_config": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_data": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_default": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_discovery": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_entity": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_render": {
+          "units": 2,
+          "class": "cache"
+        },
+        "cache_routes": {
+          "units": 2,
+          "class": "cache"
+        },
+        "file_managed": {
+          "units": 2,
+          "class": "entity"
+        },
+        "inline_block_usage": {
+          "units": 2,
+          "class": "entity"
+        },
+        "key_value": {
+          "units": 2,
+          "class": "entity"
+        },
+        "key_value_expire": {
+          "units": 2,
+          "class": "counter"
+        },
+        "queue": {
+          "units": 2,
+          "class": "queue"
+        },
+        "watchdog": {
+          "units": 2,
+          "class": "entity"
+        }
+      },
+      "alwaysWritten": [
+        "cache_access_policy",
+        "cache_bootstrap",
+        "cache_config",
+        "cache_data",
+        "cache_default",
+        "cache_discovery",
+        "cache_entity",
+        "cache_render",
+        "cache_routes",
+        "key_value",
+        "key_value_expire",
+        "queue",
+        "watchdog"
+      ],
+      "idAllocations": {
+        "n": 2,
+        "median": 219,
+        "min": 219,
+        "max": 219
+      },
+      "pairs": {
+        "count": 0,
+        "noConflict": null,
+        "noEntityConflict": null,
+        "noConflictOutsideCacheCounter": null,
+        "pairsWith": {
+          "ww.cache": 0,
+          "ww.counter": 0,
+          "ww.queue": 0,
+          "ww.sessions": 0,
+          "ww.entity": 0,
+          "raw.cache": 0,
+          "raw.counter": 0,
+          "raw.queue": 0,
+          "raw.sessions": 0,
+          "raw.entity": 0
+        }
+      },
+      "rowLevel": {
+        "heuristic": "first non-null bound parameter as the row key",
+        "entityTableConflicts": 0,
+        "entityRowConflicts": 0,
+        "disappeared": 0,
+        "remainingByTable": {}
+      }
+    }
+  },
+  "shapeAcrossPasses": {
+    "node-save": {
+      "unitsCompared": 8,
+      "verbsEqual": 8,
+      "statementsEqual": 8,
+      "tableSetsEqual": 8
+    },
+    "node-update": {
+      "unitsCompared": 8,
+      "verbsEqual": 8,
+      "statementsEqual": 8,
+      "tableSetsEqual": 8
+    },
+    "user-create": {
+      "unitsCompared": 8,
+      "verbsEqual": 8,
+      "statementsEqual": 8,
+      "tableSetsEqual": 8
+    },
+    "term-create": {
+      "unitsCompared": 8,
+      "verbsEqual": 8,
+      "statementsEqual": 8,
+      "tableSetsEqual": 8
+    },
+    "render": {
+      "unitsCompared": 8,
+      "verbsEqual": 8,
+      "statementsEqual": 8,
+      "tableSetsEqual": 8
+    },
+    "cron": {
+      "unitsCompared": 1,
+      "verbsEqual": 1,
+      "statementsEqual": 1,
+      "tableSetsEqual": 1
+    }
+  },
+  "alwaysWrittenAcrossWorkloads": [
+    "cache_entity"
+  ],
+  "dropped": [],
+  "preflight": [
+    {
+      "kind": "preflight",
+      "pass": 1,
+      "seededNodes": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16
+      ],
+      "drupal": {
+        "taxonomy": true,
+        "tags": true
+      }
+    },
+    {
+      "kind": "preflight",
+      "pass": 2,
+      "seededNodes": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16
+      ],
+      "drupal": {
+        "taxonomy": true,
+        "tags": true
+      }
+    }
+  ],
+  "environment": {
+    "kind": "environment",
+    "experiment": "SQL census of Drupal write workloads, one context at a time",
+    "machine": "mac-m2-pro",
+    "node": "v26.8.2",
+    "cpu": "Apple M2 Pro",
+    "units": 8,
+    "workloads": [
+      "node-save",
+      "node-update",
+      "user-create",
+      "term-create",
+      "render",
+      "cron"
+    ],
+    "passes": 2
+  },
+  "hash": "33d923a6f15eae09264bbe5b3a5a605c0d207ced8219ce94d060d5840030b46e"
+}
