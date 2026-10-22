@@ -1,0 +1,1118 @@
+{
+  "environment": {
+    "kind": "environment",
+    "experiment": "real Drupal payload on workerd: one process against several processes",
+    "machine": "Mac M2 Pro 12 threads 16 GB, shared with other agent lanes",
+    "platform": "darwin arm64",
+    "cpu": "Apple M2 Pro",
+    "hardwareThreads": 12,
+    "node": "v26.8.2",
+    "workerd": "workerd 2026-10-19",
+    "payloadSiteJsSha256": "a42e7a1f9d28032e316273be9d00c476b186c7f681e094f46875593c068860f1",
+    "batchSize": 31,
+    "rounds": 24,
+    "hostCount": 8,
+    "arms": [
+      "queue-c1",
+      "queue-c2",
+      "queue-c4",
+      "queue-c8",
+      "static-2",
+      "static-4",
+      "static-8",
+      "spin-c1",
+      "spin-c2",
+      "spin-c4",
+      "spin-c8"
+    ],
+    "spinIterations": 41564396,
+    "totalMemMb": 16384,
+    "freeMemMb": 115,
+    "load": [
+      8.33349609375,
+      8.64697265625,
+      7.44091796875
+    ]
+  },
+  "runs": 2,
+  "measuredSamples": 528,
+  "serialBatchWallMs": {
+    "n": 48,
+    "median": 1315.3380409999954,
+    "min": 1173.0174999999872,
+    "max": 2245.3170420000097,
+    "p95": 1481.278999999995
+  },
+  "boots": [
+    {
+      "run": 0,
+      "host": 0,
+      "readyMs": 606.910541,
+      "firstWarmMs": 1523.4333339999998,
+      "steadyWarmMs": 280.91904099999965,
+      "workerdRssMb": 418.640625,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 84.640625,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 0,
+      "host": 1,
+      "readyMs": 554.6665419999999,
+      "firstWarmMs": 1607.5212090000005,
+      "steadyWarmMs": 286.6950000000006,
+      "workerdRssMb": 422.421875,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 79.828125,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 0,
+      "host": 2,
+      "readyMs": 556.8028340000001,
+      "firstWarmMs": 2023.0675420000007,
+      "steadyWarmMs": 302.2212499999987,
+      "workerdRssMb": 410.96875,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 87.765625,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 0,
+      "host": 3,
+      "readyMs": 550.5679580000015,
+      "firstWarmMs": 2062.656167000001,
+      "steadyWarmMs": 287.0019579999989,
+      "workerdRssMb": 370.140625,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 36.078125,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 0,
+      "host": 4,
+      "readyMs": 562.1814580000009,
+      "firstWarmMs": 1719.837958,
+      "steadyWarmMs": 90.69166700000096,
+      "workerdRssMb": 337.46875,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 40.828125,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 0,
+      "host": 5,
+      "readyMs": 577.6675419999992,
+      "firstWarmMs": 1585.1828330000008,
+      "steadyWarmMs": 285.4437919999982,
+      "workerdRssMb": 343.953125,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 45.75,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 0,
+      "host": 6,
+      "readyMs": 632.5429169999989,
+      "firstWarmMs": 2574.7678750000014,
+      "steadyWarmMs": 289.15279100000043,
+      "workerdRssMb": 301.015625,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 51.9375,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 0,
+      "host": 7,
+      "readyMs": 555.6151659999996,
+      "firstWarmMs": 1542.394042,
+      "steadyWarmMs": 284.21412500000224,
+      "workerdRssMb": 330.546875,
+      "workerdFootprintMb": null,
+      "bunFootprintMb": null,
+      "bunRssMb": 46.1875,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 0,
+      "readyMs": 563.184916,
+      "firstWarmMs": 1465.815583,
+      "steadyWarmMs": 270.6765839999998,
+      "workerdRssMb": 421.328125,
+      "workerdFootprintMb": 388,
+      "bunFootprintMb": 30,
+      "bunRssMb": 85.5,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 1,
+      "readyMs": 554.0850419999997,
+      "firstWarmMs": 1515.2075829999999,
+      "steadyWarmMs": 284.64458399999967,
+      "workerdRssMb": 365.21875,
+      "workerdFootprintMb": 390,
+      "bunFootprintMb": 32,
+      "bunRssMb": 44.375,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 2,
+      "readyMs": 561.4807089999995,
+      "firstWarmMs": 1485.3727499999995,
+      "steadyWarmMs": 279.1501249999983,
+      "workerdRssMb": 424.265625,
+      "workerdFootprintMb": 389,
+      "bunFootprintMb": 19,
+      "bunRssMb": 88.078125,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 3,
+      "readyMs": 552.6506659999995,
+      "firstWarmMs": 2016.723,
+      "steadyWarmMs": 275.34195799999907,
+      "workerdRssMb": 388.0625,
+      "workerdFootprintMb": 387,
+      "bunFootprintMb": 31,
+      "bunRssMb": 37.828125,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 4,
+      "readyMs": 555.0877920000003,
+      "firstWarmMs": 1496.5329160000001,
+      "steadyWarmMs": 293.43012499999895,
+      "workerdRssMb": 377.625,
+      "workerdFootprintMb": 346,
+      "bunFootprintMb": 31,
+      "bunRssMb": 72.984375,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 5,
+      "readyMs": 552.9021660000017,
+      "firstWarmMs": 1999.994458000001,
+      "steadyWarmMs": 273.408875000001,
+      "workerdRssMb": 378.15625,
+      "workerdFootprintMb": 340,
+      "bunFootprintMb": 19,
+      "bunRssMb": 87.03125,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 6,
+      "readyMs": 560.4497499999998,
+      "firstWarmMs": 1508.203749999997,
+      "steadyWarmMs": 283.7417090000017,
+      "workerdRssMb": 340.875,
+      "workerdFootprintMb": 354,
+      "bunFootprintMb": 19,
+      "bunRssMb": 33.21875,
+      "warmAllRender": true,
+      "warmAll200": true
+    },
+    {
+      "run": 1,
+      "host": 7,
+      "readyMs": 557.1071660000016,
+      "firstWarmMs": 2027.393333,
+      "steadyWarmMs": 281.85858299999745,
+      "workerdRssMb": 336.015625,
+      "workerdFootprintMb": 319,
+      "bunFootprintMb": 20,
+      "bunRssMb": 33.96875,
+      "warmAllRender": true,
+      "warmAll200": true
+    }
+  ],
+  "endMemory": [
+    {
+      "run": 1,
+      "freeMemMb": 300,
+      "workerdRssMb": {
+        "n": 8,
+        "median": 113.28125,
+        "min": 54.53125,
+        "max": 194.921875
+      },
+      "workerdFootprintMb": {
+        "n": 8,
+        "median": 288,
+        "min": 216,
+        "max": 295
+      },
+      "bunFootprintMb": {
+        "n": 8,
+        "median": 33,
+        "min": 23,
+        "max": 117
+      }
+    }
+  ],
+  "hostErrors": [
+    {
+      "workerd/jsg/util.c++:394: error: e = rust/worker/ffi.rs:110: failed: connecting to updates.drupal.org:443 is not allowed": 120,
+      "workerd/jsg/util.c++:394: error: e = rust/worker/ffi.rs:110: failed: connecting to www.drupal.org:443 is not allowed": 24
+    },
+    {
+      "workerd/jsg/util.c++:394: error: e = rust/worker/ffi.rs:110: failed: connecting to updates.drupal.org:443 is not allowed": 120,
+      "workerd/jsg/util.c++:394: error: e = rust/worker/ffi.rs:110: failed: connecting to www.drupal.org:443 is not allowed": 24
+    }
+  ],
+  "arms": {
+    "queue-c1": {
+      "kind": "queue",
+      "c": 1,
+      "processes": 1,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 1315.3380409999954,
+        "min": 1173.0174999999872,
+        "max": 2245.3170420000097,
+        "p95": 1481.278999999995
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 23.57446644398679,
+        "min": 13.806513476772455,
+        "max": 26.427568216160747
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 40.561499999981606,
+        "p95": 55.23787500000617
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1280,
+        "min": 1140,
+        "max": 2190
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "notRender": 0,
+      "notOk": 0,
+      "gateAheadMax": 0,
+      "gateAheadMedianOfMax": 0,
+      "workerdRssMb": {
+        "n": 48,
+        "median": 194.421875,
+        "min": 161.375,
+        "max": 365.1875
+      },
+      "bunRssMb": {
+        "n": 48,
+        "median": 43.8125,
+        "min": 36.046875,
+        "max": 89.296875
+      },
+      "requestsPerProcess": {
+        "n": 48,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.71875,
+        "min": 3.642578125,
+        "max": 7.57470703125
+      }
+    },
+    "queue-c2": {
+      "kind": "queue",
+      "c": 2,
+      "processes": 1,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 1285.543083000026,
+        "min": 1131.8810830000002,
+        "max": 1866.5599999999977,
+        "p95": 1492.0308330000262
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 24.181913502240853,
+        "min": 16.60809189096522,
+        "max": 27.388036133474273
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 80.17399999999907,
+        "p95": 101.80629100000078
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 1.0236492548137892,
+        "min": 0.6852100923624176,
+        "max": 1.6494035016408497
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1260,
+        "min": 1120,
+        "max": 1940
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 0.9777777777777777,
+        "min": 0.6164383561643836,
+        "max": 1.552
+      },
+      "notRender": 0,
+      "notOk": 0,
+      "gateAheadMax": 2,
+      "gateAheadMedianOfMax": 0,
+      "workerdRssMb": {
+        "n": 48,
+        "median": 193.609375,
+        "min": 153.328125,
+        "max": 372.625
+      },
+      "bunRssMb": {
+        "n": 48,
+        "median": 45.46875,
+        "min": 36.671875,
+        "max": 100.875
+      },
+      "requestsPerProcess": {
+        "n": 48,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.54443359375,
+        "min": 3.642578125,
+        "max": 7.57470703125
+      }
+    },
+    "queue-c4": {
+      "kind": "queue",
+      "c": 4,
+      "processes": 1,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 1240.1657089999935,
+        "min": 1090.2639170000039,
+        "max": 1973.0131249999977,
+        "p95": 1449.434709000001
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 25.03849921658783,
+        "min": 15.712009011597445,
+        "max": 28.433482495963304
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 156.2624590000196,
+        "p95": 198.11658300002455
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 1.0629513006120808,
+        "min": 0.6482804218017797,
+        "max": 1.7719348316593404
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1220,
+        "min": 1070,
+        "max": 2050
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 0.9534883720930233,
+        "min": 0.5753424657534246,
+        "max": 1.619047619047619
+      },
+      "notRender": 0,
+      "notOk": 0,
+      "gateAheadMax": 4,
+      "gateAheadMedianOfMax": 2,
+      "workerdRssMb": {
+        "n": 48,
+        "median": 198.890625,
+        "min": 161.1875,
+        "max": 307.859375
+      },
+      "bunRssMb": {
+        "n": 48,
+        "median": 46.234375,
+        "min": 38.21875,
+        "max": 79.421875
+      },
+      "requestsPerProcess": {
+        "n": 48,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.55615234375,
+        "min": 3.642578125,
+        "max": 7.57470703125
+      }
+    },
+    "queue-c8": {
+      "kind": "queue",
+      "c": 8,
+      "processes": 1,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 1232.109875000002,
+        "min": 1109.423375000013,
+        "max": 2083.299457999994,
+        "p95": 1861.1472089999988
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 25.19903512764437,
+        "min": 14.880241955115071,
+        "max": 27.9424435238708
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 301.8242500000051,
+        "p95": 411.55033299999195
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 1.0545898184223415,
+        "min": 0.6649187915259351,
+        "max": 1.860686926522064
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1220,
+        "min": 1100,
+        "max": 2080
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 0.9541984732824428,
+        "min": 0.54337899543379,
+        "max": 1.6
+      },
+      "notRender": 0,
+      "notOk": 0,
+      "gateAheadMax": 8,
+      "gateAheadMedianOfMax": 5,
+      "workerdRssMb": {
+        "n": 48,
+        "median": 206.484375,
+        "min": 160.984375,
+        "max": 409.71875
+      },
+      "bunRssMb": {
+        "n": 48,
+        "median": 48.484375,
+        "min": 32.015625,
+        "max": 86.265625
+      },
+      "requestsPerProcess": {
+        "n": 48,
+        "median": 31,
+        "min": 31,
+        "max": 31
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.54443359375,
+        "min": 3.642578125,
+        "max": 7.2080078125
+      }
+    },
+    "static-2": {
+      "kind": "static",
+      "c": 2,
+      "processes": 2,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 683.5877080000064,
+        "min": 616.958666999999,
+        "max": 1435.4588339999973,
+        "p95": 1318.301542000001
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 45.53086419564521,
+        "min": 21.595882282194417,
+        "max": 50.246477856838425
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 41.40208299999358,
+        "p95": 60.51387500000055
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 1.9293988395535875,
+        "min": 0.8930864491792164,
+        "max": 3.248679973522347
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1360,
+        "min": 1180,
+        "max": 2280
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1.0518518518518518,
+        "min": 0.6073059360730594,
+        "max": 1.7377049180327868
+      },
+      "speedupOverQueueSameC": {
+        "n": 48,
+        "median": 1.842312830233169,
+        "min": 0.8797925291112914,
+        "max": 2.857065047235365
+      },
+      "notRender": 0,
+      "notOk": 0,
+      "gateAheadMax": 0,
+      "gateAheadMedianOfMax": 0,
+      "workerdRssMb": {
+        "n": 96,
+        "median": 190.828125,
+        "min": 141.3125,
+        "max": 370.3125
+      },
+      "bunRssMb": {
+        "n": 96,
+        "median": 43.546875,
+        "min": 33.34375,
+        "max": 99.5625
+      },
+      "requestsPerProcess": {
+        "n": 96,
+        "median": 16,
+        "min": 15,
+        "max": 16
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.54443359375,
+        "min": 3.66796875,
+        "max": 7.2080078125
+      }
+    },
+    "static-4": {
+      "kind": "static",
+      "c": 4,
+      "processes": 4,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 415.9879170000204,
+        "min": 358.22200000000885,
+        "max": 1101.429999999993,
+        "p95": 924.8033339999965
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 74.52964431629006,
+        "min": 28.145229383619654,
+        "max": 86.53851522240184
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 45.125250000011874,
+        "p95": 80.26983400000609
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 3.1269020356555837,
+        "min": 1.2427802947077846,
+        "max": 5.424272589681134
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1490,
+        "min": 1320,
+        "max": 2340
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1.1732283464566928,
+        "min": 0.6831683168316832,
+        "max": 1.7462686567164178
+      },
+      "speedupOverQueueSameC": {
+        "n": 48,
+        "median": 2.958900180743467,
+        "min": 1.2787922475201734,
+        "max": 4.823378788711399
+      },
+      "notRender": 0,
+      "notOk": 0,
+      "gateAheadMax": 0,
+      "gateAheadMedianOfMax": 0,
+      "workerdRssMb": {
+        "n": 192,
+        "median": 178.140625,
+        "min": 115.265625,
+        "max": 368.578125
+      },
+      "bunRssMb": {
+        "n": 192,
+        "median": 37.90625,
+        "min": 30.359375,
+        "max": 99.5625
+      },
+      "requestsPerProcess": {
+        "n": 192,
+        "median": 8,
+        "min": 7,
+        "max": 8
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.58740234375,
+        "min": 3.71875,
+        "max": 7.2080078125
+      }
+    },
+    "static-8": {
+      "kind": "static",
+      "c": 8,
+      "processes": 8,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 299.6075839999976,
+        "min": 201.85383400000865,
+        "max": 986.0412499999802,
+        "p95": 540.7725420000206
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 103.66415155698893,
+        "min": 31.438847005640607,
+        "max": 153.57647355857839
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 58.42708400000265,
+        "p95": 129.07912499999657
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 4.413532497213476,
+        "min": 1.3882132213028755,
+        "max": 6.852687335396152
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1940,
+        "min": 1500,
+        "max": 2880
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1.5039370078740157,
+        "min": 0.9801980198019802,
+        "max": 2.2719298245614037
+      },
+      "speedupOverQueueSameC": {
+        "n": 48,
+        "median": 4.151641167154646,
+        "min": 1.1730949805599071,
+        "max": 8.16114854927648
+      },
+      "notRender": 0,
+      "notOk": 0,
+      "gateAheadMax": 0,
+      "gateAheadMedianOfMax": 0,
+      "workerdRssMb": {
+        "n": 384,
+        "median": 145.328125,
+        "min": 112.359375,
+        "max": 349.921875
+      },
+      "bunRssMb": {
+        "n": 384,
+        "median": 34.078125,
+        "min": 26.6875,
+        "max": 93.546875
+      },
+      "requestsPerProcess": {
+        "n": 384,
+        "median": 4,
+        "min": 3,
+        "max": 4
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.609375,
+        "min": 3.66796875,
+        "max": 7.2080078125
+      }
+    },
+    "spin-c1": {
+      "kind": "spin",
+      "c": 1,
+      "processes": 0,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 1364.7485419999866,
+        "min": 1235.400999999998,
+        "max": 2234.488290999998,
+        "p95": 1423.808458000014
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 22.838228880085495,
+        "min": 13.873422440771265,
+        "max": 25.093066947493202
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 43.40641699999833,
+        "p95": 45.579375000001164
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1351.657,
+        "min": 1232.301,
+        "max": 2213.54
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1,
+        "min": 1,
+        "max": 1
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.58740234375,
+        "min": 3.66796875,
+        "max": 7.2080078125
+      }
+    },
+    "spin-c2": {
+      "kind": "spin",
+      "c": 2,
+      "processes": 0,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 707.0535000000091,
+        "min": 640.921875,
+        "max": 1132.1584169999987,
+        "p95": 794.8293750000012
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 43.99437199016032,
+        "min": 27.38132714867237,
+        "max": 48.36782954240718
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 43.76708399999188,
+        "p95": 46.49308300000848
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 1.9321109407466763,
+        "min": 1.5926017668886159,
+        "max": 2.093902427494257
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1363.657,
+        "min": 1242.266,
+        "max": 2215.187
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1.0065922043334028,
+        "min": 0.9822241101590468,
+        "max": 1.055310997953648
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.58740234375,
+        "min": 3.66796875,
+        "max": 7.2080078125
+      }
+    },
+    "spin-c4": {
+      "kind": "spin",
+      "c": 4,
+      "processes": 0,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 357.9413329999952,
+        "min": 324.3252499999944,
+        "max": 604.6093330000003,
+        "p95": 469.9518340000068
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 86.82507661024721,
+        "min": 51.2727778219725,
+        "max": 95.58306052334973
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 44.27908400000888,
+        "p95": 47.25354099999822
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 3.791712867853005,
+        "min": 2.911606894590782,
+        "max": 4.276762778223779
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1379.903,
+        "min": 1254.653,
+        "max": 2232.46
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1.017073782033436,
+        "min": 0.9903578277633169,
+        "max": 1.069603118501289
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.609375,
+        "min": 3.6611328125,
+        "max": 6.95068359375
+      }
+    },
+    "spin-c8": {
+      "kind": "spin",
+      "c": 8,
+      "processes": 0,
+      "n": 48,
+      "runs": 2,
+      "wallMs": {
+        "n": 48,
+        "median": 184.04529100001673,
+        "min": 165.61166699999012,
+        "max": 556.4437500000058,
+        "p95": 471.6577499999985
+      },
+      "reqPerS": {
+        "n": 48,
+        "median": 168.75064642384595,
+        "min": 55.71093214722903,
+        "max": 187.18487991550649
+      },
+      "requestMs": {
+        "n": 1488,
+        "p50": 45.121833000011975,
+        "p95": 55.97966599999927
+      },
+      "speedupOverC1": {
+        "n": 48,
+        "median": 7.287324072694172,
+        "min": 2.619274251297688,
+        "max": 8.016883435582372
+      },
+      "cpuMsPerBatch": {
+        "n": 48,
+        "median": 1408.368,
+        "min": 1271.118,
+        "max": 3911.935
+      },
+      "cpuOverC1": {
+        "n": 48,
+        "median": 1.0431604242272694,
+        "min": 1.0036763503187989,
+        "max": 2.3843306140301763
+      },
+      "load1": {
+        "n": 48,
+        "median": 4.66064453125,
+        "min": 3.6611328125,
+        "max": 6.95068359375
+      }
+    }
+  },
+  "batch": [
+    {
+      "arm": "one process, serial",
+      "wallMs": 1315.3380409999954,
+      "speedup": 1,
+      "speedupMin": 1,
+      "speedupMax": 1,
+      "cpuOverSerial": 1,
+      "workerdRssMbPerProcess": 194.421875
+    },
+    {
+      "arm": "2 processes",
+      "wallMs": 683.5877080000064,
+      "speedup": 1.9293988395535875,
+      "speedupMin": 0.8930864491792164,
+      "speedupMax": 3.248679973522347,
+      "cpuOverSerial": 1.0518518518518518,
+      "workerdRssMbPerProcess": 190.828125
+    },
+    {
+      "arm": "4 processes",
+      "wallMs": 415.9879170000204,
+      "speedup": 3.1269020356555837,
+      "speedupMin": 1.2427802947077846,
+      "speedupMax": 5.424272589681134,
+      "cpuOverSerial": 1.1732283464566928,
+      "workerdRssMbPerProcess": 178.140625
+    },
+    {
+      "arm": "8 processes",
+      "wallMs": 299.6075839999976,
+      "speedup": 4.413532497213476,
+      "speedupMin": 1.3882132213028755,
+      "speedupMax": 6.852687335396152,
+      "cpuOverSerial": 1.5039370078740157,
+      "workerdRssMbPerProcess": 145.328125
+    }
+  ],
+  "folioRegen": {
+    "machine": "Mac M2 Pro 12 threads 16 GB, shared with other agent lanes",
+    "pairs": 80,
+    "serialWallMs": {
+      "n": 20,
+      "median": 1784.921374999998,
+      "min": 1623.5418750000026,
+      "max": 2126.347458,
+      "p95": 2046.6837499999965
+    },
+    "arms": {
+      "regen-2": {
+        "wallMs": {
+          "n": 20,
+          "median": 884.1467080000002,
+          "min": 842.1705839999995,
+          "max": 966.6439160000009,
+          "p95": 965.2355000000025
+        },
+        "speedupOverSerial": {
+          "n": 20,
+          "median": 1.973062127281832,
+          "min": 1.8492081725133331,
+          "max": 2.481314122707688
+        },
+        "processCpuOverSerial": {
+          "n": 20,
+          "median": 1.001800812609848,
+          "min": 0.8562375423133937,
+          "max": 1.0454397674934115
+        }
+      },
+      "regen-4": {
+        "wallMs": {
+          "n": 20,
+          "median": 495.0800420000014,
+          "min": 447.25616699999955,
+          "max": 819.1912500000035,
+          "p95": 555.6220409999987
+        },
+        "speedupOverSerial": {
+          "n": 20,
+          "median": 3.688151192757575,
+          "min": 2.1147080013366693,
+          "max": 4.134046167023616
+        },
+        "processCpuOverSerial": {
+          "n": 20,
+          "median": 1.0280294779561776,
+          "min": 0.9449091446113799,
+          "max": 1.3647332739451854
+        }
+      },
+      "regen-8": {
+        "wallMs": {
+          "n": 20,
+          "median": 348.8007080000025,
+          "min": 272.5265419999996,
+          "max": 644.6043750000026,
+          "p95": 520.1169169999994
+        },
+        "speedupOverSerial": {
+          "n": 20,
+          "median": 5.110194737967219,
+          "min": 3.2986860475465924,
+          "max": 6.527830423121404
+        },
+        "processCpuOverSerial": {
+          "n": 20,
+          "median": 1.3173279153187725,
+          "min": 1.100216586222405,
+          "max": 1.5241478482162285
+        }
+      }
+    }
+  },
+  "hash": "f17e0674caf7b4c7f9b52f3e375dc4dbbf4adff48a6e8e0264b71a850ee853c1"
+}
