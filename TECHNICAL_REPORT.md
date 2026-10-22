@@ -1460,6 +1460,81 @@ route is the untouched original module, which already runs on FREE (the drupflar
 195 MiB plateau and 3 to 6 ms startup on the same plan). A deployed parallel PHP result waits for an
 admitted region.
 
+### Pathways for Drupal Work on Bastion and the Deployed Plane
+
+Wave 6 asked where Folio's private PHP contexts and task pool can speed up Drupal work, on the
+self-hosted Bastion runtime or on the Cloudflare plane. The raw sets are `results/20261022-*`. Every
+timing below is one machine and a stock Drupal site unless it says rig.
+
+**Independent whole tasks scale.** Regenerating 31 pages (the front page and 30 nodes, page, dynamic
+page and render caches emptied before each render) with W private Drupal contexts pulling from one
+queue, on paisley-park, n=20 pairs: 1,111 ms serial, 147 ms at 10 contexts on 10 cores (7.65x
+median, 5.76x to 7.99x). With the SMT siblings of those cores, 16 contexts reach 9.63x at 1.39x the
+serial process CPU. Every arm reproduced the serial oracle's normalized sha256 for every url. A fresh
+context pays 666 to 801 ms for its first render against 35 ms for a steady node page (19x to 23x), so
+the contexts need to be warm and long-lived. Memory per context is the other cost and was not
+re-measured here. The earlier explicit task API and independent-request results point the same
+way, and they remain Folio's measured Drupal gain: whole tasks that share nothing.
+
+**One workerd process runs CPU-bound requests one at a time.** On the Mac, with a JS spin loop and
+workerd 2026-10-19, one Worker, four Workers behind a front Worker and four Workers on four sockets
+in one process all gave a self speedup of 0.99 to 1.01 at 1 to 16 concurrent requests. Four
+workerd processes gave 3.84x to 3.90x at 16. The first run had a threefold base drift between arms
+of unknown cause, so the second run is the reported one, and the machine load was near its core
+count. This is a result about request concurrency. It does not involve Folio, and it was not repeated
+with PHP Wasm, on Linux or under a cgroup quota.
+
+**What Bastion does today.** One workerd per tenant behind one unix socket, with no per-site
+concurrency cap or queue in the front door. The config generator plans only `tenant.sites[0]`
+(`core/src/serve/runtime.ts:289`). A new binding is a `WRAPPED_SLOTS` entry plus a shim
+(`core/src/capnp/plan.ts:242`), mechanical for the solo and hardened modes and a design item for
+isolated, which needs a vsock port in the guest image. Several processes per site would need their
+own state directory, socket, cgroup and AppArmor profile, and what two processes do to one Durable
+Object SQLite file is not determined. Bastion's own docs hold no concurrency measurement.
+
+**The task pool and Drupal contexts run under Bun.** `src/tasks.ts` passes its 10 behavior checks
+under Bun 1.4.4, Node 26 and Node 24. Private Drupal contexts opened under Bun 1.4.4 rendered
+byte-identical normalized HTML to Node 26.8.2 on 7 urls. Bun's timings were lower (0.74x serial
+render, 0.59x boot), but both runs shared a loaded machine and each ran once, so they are not a
+comparison. Bastion's own pinned Bun and its Linux build were not tested. Together these two results
+make a Bun-hosted task executor behind a `WRAPPED_SLOTS` binding possible. They do not show what such
+an executor does about the site's database, which the contexts need.
+
+**Inside one render, early launch is bounded and unproven.** `HtmlRenderer::prepare` dispatches
+`SELECT_PAGE_DISPLAY_VARIANT`, pre-renders main content, then builds the variant. Starting block
+work right after the event is structurally valid. Blocks are `#lazy_builder` callbacks with scalar
+arguments, but `renderInIsolation` and `fragments.php` return markup and tags only, without
+contexts, max-age, attachments, `seenIds` or messages, so a parallel path needs that return
+contract widened. The earlier sibling profile (1.004) and the 5.7% block build plus 7.3%
+placeholder share on the cold stock fixture bound a gain near 1.15x there. A warm profile of a
+block-heavy site has not been taken.
+
+**SQL boundary census.** A statement log over 8 units each of node save, node update, user create,
+term create, render and cron, in two fresh contexts, shows SQL at 0.1% to 10% of unit wall time (the
+rest is PHP). Every node, user and term unit pair conflicts on an entity table, which is expected
+when each unit inserts into the same tables, and `cachetags` and `cache_entity` are written by
+nearly every unit. Render units conflict only on cache and counter tables. The row-level
+count keys on the first non-null bound parameter, which for inserts is often a column such as
+`type` and not the new row's identity, and it was not checked by hand. It neither supports nor
+rules out row-level speculative commit. The census also gave 75 statements and about 8 ms per node
+save, against 378 statements and 212 ms for two saves in an earlier check; the difference is
+unexplained. Logging overhead was not measured.
+
+**gmux.** The planning files record no per-row `r`, and `r` is not a speed number: with a native
+baseline on Sn cores and gmux on Sg workers, `r_new = r_old x Sn / Sg`. Folio's gains are
+parallel gains, so they move `r` only on rows that run several processes (make -j, forking
+servers, PHP-FPM; F6, F15, F23, F27, F28 in the roadmap) and only if the native baseline is serial.
+A single-threaded CPU-bound guest (the bash and SQLite arms) cannot be moved by any pathway found
+here. The native baseline's core use is not recorded in the planning files and decides the outcome.
+
+**Ranked pathways.** (1) Warm context pool for independent Drupal tasks (regeneration, import,
+queue items) on a host that has the cores: measured 7.65x on the rig. (2) A multi-process site on
+Bastion, which is a runtime design change that gives request concurrency with or without Folio.
+(3) A Bun-hosted task executor on Bastion through `WRAPPED_SLOTS`, which is where Folio's private
+contexts attach and which needs the shared-state question answered first. (4) Block early launch,
+once a warm profile of a block-heavy site exceeds the go/no-go bound. (5) SQL-level ordered commit
+for writes, which needs a hand-checked row-identity census first.
+
 ### Distributed Page Ownership and Writeback
 
 `src/pages.ts` (`@gmitch215/folio/pages`) implements a bounded volatile directory, resident leases,

@@ -5,8 +5,10 @@ import { analyzeConcurrent } from './concurrent.ts';
 import { analyzeControl } from './control.ts';
 import { analyzeIntra } from './intra.ts';
 import { analyzePaired } from './paired.ts';
+import { analyzeRegen } from './regen.ts';
 import { analyzeScaling } from './scaling.ts';
 import { analyzeSharing } from './sharing.ts';
+import { analyzeCensus } from './sqlcensus.ts';
 import { analyzeValidation, analyzeWorksp } from './worksp.ts';
 
 for (const set of ['20261019', '20261019-b', '20261019-c']) analyzeSharing(set);
@@ -60,4 +62,7 @@ for (const file of ['count.jsonl', 'trace-small.jsonl', 'trace-drupal.jsonl'])
 for (const file of ['controls.jsonl', 'drupal-coarse.jsonl', 'drupal-fine.jsonl'])
 	analyzeWorksp('20261020-worksp2', file);
 analyzeValidation('20261020-worksp2', 'validation.jsonl');
+analyzeRegen('20261022-phpregen', 'nosmt-regen.jsonl', 'nosmt-regen.summary.json');
+analyzeRegen('20261022-phpregen', 'smt-regen.jsonl', 'smt-regen.summary.json');
+analyzeCensus('20261022-sqlcensus', 'census.jsonl', 'summary.json');
 console.log('regenerated every summary.json under results/');
