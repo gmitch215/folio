@@ -39,46 +39,49 @@ Bun lane because they measure Node's `worker_threads`, shared backing stores and
 which Bun does not implement the same way. Moving a file does not change what it measures;
 rewriting it might, so change one only with a paired run against the old version.
 
-| file                       | measures                                                                                                     |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `sharing-probe.mjs`        | backing-store identity, aliasing, atomics, RSS controls, growth, creator exit                                |
-| `cpu-probe.ts`             | tiny, stream and compute kernels at 1, 2 and 4 workers                                                       |
-| `large-probe.ts`           | the 256 MiB combined capacity and CPU proof                                                                  |
-| `scaling-probe.ts`         | the 207-sample 1/2/4/8 worker sweep with profiling                                                           |
-| `control-probe.mjs`        | the generalized C entry, untouched against 1/2/4/8 workers                                                   |
-| `control-affinity.mjs`     | the same entry with pinned and unpinned workers                                                              |
-| `integration-probe.ts`     | real tinyimg and machine core artifacts against native instances                                             |
-| `artifact-coverage.ts`     | per-export inspect coverage and real Linux process-memory differential calls                                 |
-| `php-preparation.ts`       | shipping PHP original/emitted function counts and generated helper census                                    |
-| `php-render.ts`            | shipping PHP boot and uncached Drupal render, native against prepared Folio                                  |
-| `pages-probe.ts`           | actual native Wasm over bounded page leases against a complete native oracle                                 |
-| `consumer.ts`              | any Wasm consumer, native against 1/2/4/8 workers, whole memory compared                                     |
-| `php-workloads.ts`         | ten PHP userland workloads on the shipping artifact, native against Folio                                    |
-| `php-render-pairs.ts`      | the uncached Drupal render in alternating native and Folio processes                                         |
-| `purity-census.ts`         | why each function of a module is not a worker region, by first blocking rule                                 |
-| `admission-calibration.ts` | synthetic regions that fit the admission cost model: instruction speed, region overhead, tracked access cost |
-| `admission-sites.ts`       | every region candidate of each consumer with its estimate, verdict and the default threshold                 |
-| `old-build.ts`             | unpacks the archived pre-admission `src/` so a harness can run it beside the current build                   |
-| `php-contexts.ts`          | N private PHP instances in N worker threads: values, in-thread timestamps and thread CPU per run             |
-| `php-concurrent.ts`        | independent PHP requests at 1/2/4/8 widths in four arms, plus per-context memory                             |
-| `drupal-breakdown.ts`      | the uncached Drupal render split into SQL, ROM inflate, lazy compile and PHP execution                       |
-| `php-compile.ts`           | the Zend compile share of the Drupal render under the shipped opcache arms, plus a timer per include         |
-| `php-intra.ts`             | one request submitting independent jobs to private PHP contexts (explicit task API), against plain PHP       |
-| `indirect-sites.ts`        | counts the targets of every `call_indirect` in the PHP artifact while it renders                             |
-| `php-snapshot.ts`          | clones a PHP context by copying its Wasm memory and times the copy                                           |
-| `worksp.ts`                | counts or traces one PHP request (count or trace mode) and writes its work-span ladder                       |
-| `worksp-instrument.ts`     | rewrites the PHP module with counters, load and store hooks, and allocator, output and `execute_ex` extents  |
-| `worksp-recorder.ts`       | turns dispatch events and accesses into userland-call segments with merged intervals                         |
-| `worksp-hooks.ts`          | the hook imports a worker binds to an instrumented module, and the record it returns                         |
-| `worksp-refcount.ts`       | the counter experiment that checks refcount tags (0 verified sites)                                          |
-| `php-regen.ts`             | regeneration of a Drupal page set by 1 to 16 private contexts pulling from one queue, against serial         |
-| `php-blocks.ts`            | warm Drupal render with N placed blocks: variant and response marks, isolated block builds, write tables     |
-| `site-concurrency.ts`      | one workerd process against several for a real Drupal payload: forced full renders, throughput, footprint    |
-| `boot-image.ts`            | captures a booted context's memory, bakes it into the module with binaryen, renders from it, times delivery  |
-| `php-sql-census.ts`        | statement log of node, user, term, render and cron units: tables touched, pair conflicts, SQL share of wall  |
-| `tasks-runtime.ts`         | the task pool's behavior checks under the runtime that runs the script (Node or Bun)                         |
-| `workerd-concurrency.ts`   | CPU-bound requests at 1 to 16 concurrent against one workerd process and against four                        |
-| `worksp-validate.ts`       | differential validation of private sites: serial digest against the explicit task API on private contexts    |
+| file                       | measures                                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `sharing-probe.mjs`        | backing-store identity, aliasing, atomics, RSS controls, growth, creator exit                                   |
+| `cpu-probe.ts`             | tiny, stream and compute kernels at 1, 2 and 4 workers                                                          |
+| `large-probe.ts`           | the 256 MiB combined capacity and CPU proof                                                                     |
+| `scaling-probe.ts`         | the 207-sample 1/2/4/8 worker sweep with profiling                                                              |
+| `control-probe.mjs`        | the generalized C entry, untouched against 1/2/4/8 workers                                                      |
+| `control-affinity.mjs`     | the same entry with pinned and unpinned workers                                                                 |
+| `integration-probe.ts`     | real tinyimg and machine core artifacts against native instances                                                |
+| `artifact-coverage.ts`     | per-export inspect coverage and real Linux process-memory differential calls                                    |
+| `php-preparation.ts`       | shipping PHP original/emitted function counts and generated helper census                                       |
+| `php-render.ts`            | shipping PHP boot and uncached Drupal render, native against prepared Folio                                     |
+| `pages-probe.ts`           | actual native Wasm over bounded page leases against a complete native oracle                                    |
+| `consumer.ts`              | any Wasm consumer, native against 1/2/4/8 workers, whole memory compared                                        |
+| `php-workloads.ts`         | ten PHP userland workloads on the shipping artifact, native against Folio                                       |
+| `php-render-pairs.ts`      | the uncached Drupal render in alternating native and Folio processes                                            |
+| `purity-census.ts`         | why each function of a module is not a worker region, by first blocking rule                                    |
+| `admission-calibration.ts` | synthetic regions that fit the admission cost model: instruction speed, region overhead, tracked access cost    |
+| `admission-sites.ts`       | every region candidate of each consumer with its estimate, verdict and the default threshold                    |
+| `old-build.ts`             | unpacks the archived pre-admission `src/` so a harness can run it beside the current build                      |
+| `php-contexts.ts`          | N private PHP instances in N worker threads: values, in-thread timestamps and thread CPU per run                |
+| `php-concurrent.ts`        | independent PHP requests at 1/2/4/8 widths in four arms, plus per-context memory                                |
+| `drupal-breakdown.ts`      | the uncached Drupal render split into SQL, ROM inflate, lazy compile and PHP execution                          |
+| `php-compile.ts`           | the Zend compile share of the Drupal render under the shipped opcache arms, plus a timer per include            |
+| `php-intra.ts`             | one request submitting independent jobs to private PHP contexts (explicit task API), against plain PHP          |
+| `indirect-sites.ts`        | counts the targets of every `call_indirect` in the PHP artifact while it renders                                |
+| `php-snapshot.ts`          | clones a PHP context by copying its Wasm memory and times the copy                                              |
+| `worksp.ts`                | counts or traces one PHP request (count or trace mode) and writes its work-span ladder                          |
+| `worksp-instrument.ts`     | rewrites the PHP module with counters, load and store hooks, and allocator, output and `execute_ex` extents     |
+| `worksp-recorder.ts`       | turns dispatch events and accesses into userland-call segments with merged intervals                            |
+| `worksp-hooks.ts`          | the hook imports a worker binds to an instrumented module, and the record it returns                            |
+| `worksp-refcount.ts`       | the counter experiment that checks refcount tags (0 verified sites)                                             |
+| `php-regen.ts`             | regeneration of a Drupal page set by 1 to 16 private contexts pulling from one queue, against serial            |
+| `php-blocks.ts`            | warm Drupal render with N placed blocks: variant and response marks, isolated block builds, write tables        |
+| `site-concurrency.ts`      | one workerd process against several for a real Drupal payload: forced full renders, throughput, footprint       |
+| `boot-image.ts`            | captures a booted context's memory, bakes it with `src/bake.ts`, renders from it, times delivery                |
+| `bake-secrets.ts`          | what a baked image holds: leak scans, replay with the rekey step, RNG state                                     |
+| `product-bake.ts`          | reads a Durable Object host's heap snapshot from its SQLite file, bakes it, writes the host source that uses it |
+| `bake-rekey.ts`            | the PHP that gives a replayed Drupal heap its site's salt, key and random seed                                  |
+| `php-sql-census.ts`        | statement log of node, user, term, render and cron units: tables touched, pair conflicts, SQL share of wall     |
+| `tasks-runtime.ts`         | the task pool's behavior checks under the runtime that runs the script (Node or Bun)                            |
+| `workerd-concurrency.ts`   | CPU-bound requests at 1 to 16 concurrent against one workerd process and against four                           |
+| `worksp-validate.ts`       | differential validation of private sites: serial digest against the explicit task API on private contexts       |
 
 `php-preparation.ts` and `php-render.ts` need a checkout of the Drupal-on-Wasm consumer with its dependencies and
 a restored interpreter. `FOLIO_CONSUMER` names it. `php-render.ts` bundles the consumer's TypeScript with esbuild first, because Node does

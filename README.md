@@ -19,6 +19,7 @@ the same engine.
 - [Managed Workers](#-managed-workers)
 - [Browser Execution and Page Leases](#-browser-execution-and-page-leases)
 - [Task Pool](#-task-pool)
+- [Baked Boot Images](#-baked-boot-images)
 - [Execution and Memory](#-execution-and-memory)
 - [API Reference](#-api-reference)
 - [Consumer Harness](#-consumer-harness)
@@ -60,6 +61,7 @@ and a small job loses to dispatch overhead.
   copied snapshots between lanes.
 - 🧰 **Task pool** that runs named functions in private contexts on other threads, with ordered
   joins and an optional differential audit.
+- 🧊 **Baked boot images** that write a booted memory into the module as data segments.
 - 📊 **Opt-in profiling** of worker time, validation, commit and replay cost.
 
 ## 📦 Install
@@ -241,6 +243,83 @@ tasks ran at the same time.
 
 The pool does not discover independent work. Region discovery and ordered validation stay in the
 core engine, and the task pool covers programs that can say which calls are independent.
+
+## 🧊 Baked Boot Images
+
+`@gmitch215/folio/bake` moves a booted memory into the module. `captureImage(booted, fresh)` compares
+a booted memory with a fresh instance of the same module and keeps the 64 KiB pages that differ.
+`bakeModule(bytes, image)` returns the module with those pages as active data segments after its own,
+so instantiating it starts from the booted memory. It uses binaryen, loaded on the first bake, and
+writes memory 0.
+
+```ts
+import { bakeModule, captureImage, imagePages, moduleDigest } from '@gmitch215/folio/bake';
+
+const fresh = new WebAssembly.Memory({ initial: 1024 });
+const booted = new WebAssembly.Memory({ initial: 1024 });
+// instantiate `bytes` on each memory, then run the boot sequence on `booted`
+
+const image = captureImage(booted, fresh, { module: await moduleDigest(bytes) });
+const baked = await bakeModule(bytes, image);
+
+const memory = new WebAssembly.Memory({ initial: imagePages(image).memoryPages });
+const { instance } = await WebAssembly.instantiate(baked, { env: { memory } });
+```
+
+The caller creates an imported memory with at least `memoryPages` pages. A defined memory that
+starts smaller has its initial pages raised to the image size, and its maximum, shared and memory64
+flags stay as they are. A page that boot zeroed but the module's own data had set is stored as
+zeros, and pages that are zero in both are left out. Pass the global values and the function table
+of both instances to `captureImage` as `globals` and `table` and the image records what boot
+changed. `bakeModule` writes changed i32, i64, f32 and f64 globals into their initial values and
+refuses changed table slots unless `allowTableChanges` is set. It throws `ImageMismatchError`, which
+has a `code`, for a wrong module digest, no memory, an image over the memory maximum and a global it
+cannot rewrite. Adjacent pages become one segment of at most `maxSegmentBytes` (64 MiB).
+
+`applyImage(memory, image)` copies the pages into a fresh instance's memory without baking.
+`captureImage` takes a `context` string beside the module digest, a digest of whatever else shapes
+the heap (settings, shims, assets), and `applyImage(memory, image, { module, context })` refuses an
+image whose module or context differs, or that carries none, with `ImageMismatchError` code `digest`
+or `context` and before it writes a byte. `encodeImage` and `decodeImage` store an image beside the
+module and reject truncated or unknown input with `ImageFormatError`. `checkBaked(baked, image)`
+reads the data segments back and compares them with the image without instantiating.
+`bakeModule` throws code `memories` for a module with more than one memory.
+
+The image is the heap as it was, so anything the booted process held is in the baked module and
+becomes public with it. State kept in JavaScript, such as handles and open descriptors, is not
+captured. `findInImage(image, needles)` returns every offset where a needle's bytes occur in the
+image pages, so a secret and its base64 and hex forms can be searched for before the module ships.
+Freed memory is not zeroed, so a secret that was ever in the heap cannot be scrubbed out of an
+image afterwards: bake a site whose key and salt are throwaway values, and give the replaying site
+its own.
+
+For a Drupal heap that means three replacements after the replay. The hash salt lives in the static
+`Settings` object; the private key lives in the `State` cache collector, which serves it from memory
+once read; and PHP's Mersenne Twister state is in the heap, so every replayed instance would draw
+the same `mt_rand()` sequence. Values the bake computed from the old key and salt, such as the
+permissions hash of the anonymous user, sit in the `cache.memory` bin. This snippet makes the
+replayed instance use the replaying site's values, with `$salt` set to that site's hash salt:
+
+```php
+use Drupal\Core\Site\Settings;
+
+(function (string $salt) {
+	$this->storage['hash_salt'] = $salt;
+})->call(Settings::getInstance(), $salt);
+
+(function () {
+	$this->reset();
+	$this->keysSetDuringRequest = [];
+})->call(Drupal::state());
+
+Drupal::service('cache.memory')->deleteAll();
+mt_srand(unpack('V', random_bytes(4))[1]);
+```
+
+Run it before any other PHP in the replayed instance. A host that resets `State` at the start of
+each request still needs the salt and the random seed, and needs the key step for code that runs
+before the first request. The measured effect for a PHP interpreter is in the Baked Boot Images
+section of the technical report.
 
 ## 🧱 Execution and Memory
 

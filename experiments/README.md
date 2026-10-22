@@ -34,15 +34,16 @@ node experiments/managed/local.ts        # managed lanes in local workerd, 39 ro
 node experiments/deploy.ts managed       # live deploy, needs FREE_* credentials
 node experiments/cleanup.ts NAME managed # recover a run whose driver died
 node experiments/browser/extraction/prepare.ts
-FOLIO_BROWSER_EXTRACTION=1 node experiments/deploy.ts browser  # bounded automatic extraction proof
-node experiments/consumer/prepare.ts                           # page, lane, kernel, process ABI and tinyimg assets
-node experiments/consumer/local.ts tinyimg 5 OUT.json          # the same page in a local Chromium
-node experiments/deploy.ts consumer                            # paired harness on Browser Run, 3 sessions
-node experiments/consumer/php/prepare.ts                       # stage the PHP artifacts from FOLIO_CONSUMER
-node experiments/deploy.ts php                                 # original PHP module in a Durable Object
-node experiments/deploy.ts prepared                            # the four-module prepared set
-node experiments/bootimage/prepare.ts                          # stage the baked modules after a hash check
-FOLIO_BOOTIMAGE_VARIANT=b node experiments/deploy.ts bootimage # a, b or c: one module set per deploy
+FOLIO_BROWSER_EXTRACTION=1 node experiments/deploy.ts browser                              # bounded automatic extraction proof
+node experiments/consumer/prepare.ts                                                       # page, lane, kernel, process ABI and tinyimg assets
+node experiments/consumer/local.ts tinyimg 5 OUT.json                                      # the same page in a local Chromium
+node experiments/deploy.ts consumer                                                        # paired harness on Browser Run, 3 sessions
+node experiments/consumer/php/prepare.ts                                                   # stage the PHP artifacts from FOLIO_CONSUMER
+node experiments/deploy.ts php                                                             # original PHP module in a Durable Object
+node experiments/deploy.ts prepared                                                        # the four-module prepared set
+node experiments/bootimage/prepare.ts                                                      # stage the baked modules after a hash check
+FOLIO_BOOTIMAGE_VARIANT=b node experiments/deploy.ts bootimage                             # a, b or c: one module set per deploy
+FOLIO_BOOTIMAGE_MODE=memory FOLIO_BOOTIMAGE_VARIANT=a node experiments/deploy.ts bootimage # ballast boundary, a or c
 ```
 
 `deploy.ts cloud|managed|browser|consumer|php|prepared|bootimage` reads `FREE_CLOUDFLARE_ACCOUNT_ID` and
@@ -67,19 +68,21 @@ Drupal consumer checkout, so `typecheck:php` needs those checkouts and is not pa
 carries a local label and is not Cloudflare evidence. Re-running a probe adds a file and never
 overwrites one.
 
-| file                                              | records                                                                     | where it ran              |
-| ------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------- |
-| `cloud/results-local.json`                        | capability probe: raw rows and summary                                      | local workerd             |
-| `cloud/results-managed.json`                      | managed lane run, 8 rows, baseline restored                                 | deployed                  |
-| `cloud/results-host-local.json`, `-local-v2.json` | stock workerd to the Node execution host, first runs                        | local workerd             |
-| `cloud/results-host-final.json`, `-20261020.json` | the same probe on Miniflare 5.20260815.0-alpha                              | local workerd             |
-| `cloud/results-host-consolidated.json`            | the same probe on Miniflare 5.20261019.0-beta                               | local workerd             |
-| `managed/results-local.json`                      | an earlier managed lane attempt, 30 rows, stopped on an unexpected fallback | local workerd             |
-| `managed/results-local-final.json`                | managed lanes, 39 rows, passed                                              | local workerd             |
-| `managed/results-local-consolidated.json`         | the same 39 rows with preparation counted in wall time                      | local workerd             |
-| `browser/results-local.json`                      | physical sharing, aliasing, copy control and growth                         | local Chromium            |
-| `browser/results-free-extraction-20261020.json`   | automatic counted-loop extraction without JSPI, baseline restored           | FREE account, Browser Run |
-| `consumer/results-free-consumer-20261020.json`    | paired native and Folio harness, three sessions                             | FREE account, Browser Run |
-| `consumer/results-free-php-20261020.json`         | original PHP module in a Worker and a Durable Object                        | FREE account              |
-| `consumer/results-free-prepared-*-20261020.json`  | the four-module prepared set, combined and as parts                         | FREE account              |
-| `bootimage/results-free-bootimage-20261022.json`  | unmodified, baked boot and baked render modules, empty memories, 3 deploys  | FREE account              |
+| file                                                    | records                                                                            | where it ran              |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------- |
+| `cloud/results-local.json`                              | capability probe: raw rows and summary                                             | local workerd             |
+| `cloud/results-managed.json`                            | managed lane run, 8 rows, baseline restored                                        | deployed                  |
+| `cloud/results-host-local.json`, `-local-v2.json`       | stock workerd to the Node execution host, first runs                               | local workerd             |
+| `cloud/results-host-final.json`, `-20261020.json`       | the same probe on Miniflare 5.20260815.0-alpha                                     | local workerd             |
+| `cloud/results-host-consolidated.json`                  | the same probe on Miniflare 5.20261019.0-beta                                      | local workerd             |
+| `managed/results-local.json`                            | an earlier managed lane attempt, 30 rows, stopped on an unexpected fallback        | local workerd             |
+| `managed/results-local-final.json`                      | managed lanes, 39 rows, passed                                                     | local workerd             |
+| `managed/results-local-consolidated.json`               | the same 39 rows with preparation counted in wall time                             | local workerd             |
+| `browser/results-local.json`                            | physical sharing, aliasing, copy control and growth                                | local Chromium            |
+| `browser/results-free-extraction-20261020.json`         | automatic counted-loop extraction without JSPI, baseline restored                  | FREE account, Browser Run |
+| `consumer/results-free-consumer-20261020.json`          | paired native and Folio harness, three sessions                                    | FREE account, Browser Run |
+| `consumer/results-free-php-20261020.json`               | original PHP module in a Worker and a Durable Object                               | FREE account              |
+| `consumer/results-free-prepared-*-20261020.json`        | the four-module prepared set, combined and as parts                                | FREE account              |
+| `bootimage/results-free-bootimage-20261022.json`        | unmodified, baked boot and baked render modules, empty memories, 3 deploys         | FREE account              |
+| `bootimage/results-free-bootimage-memory-20261022.json` | ballast boundary at 64 MiB and 1322-page memories, GB-s per instantiate, 2 deploys | FREE account              |
+| `bootimage/results-free-s34-20261022-a.json`, `-b.json` | Drupal host cold object, plain boot against baked boot image, 5 and 3 per arm      | FREE account              |

@@ -68,3 +68,69 @@ One Durable Object class on one Free account, 4 to 10 requests per group, one da
 milliseconds from the tail. A reset shows as a changed `moduleTag` or an outcome other than `ok`;
 whether the platform reuses an isolate for different object names is not something the reply can
 prove.
+
+## Host Boot Path A/B
+
+`s34.ts` compares a Durable Object Drupal host with and without a baked image on its own boot path.
+The host is a scratch copy of its release, built from the pinned PHP 8.5.2 module, with no KV, D1 or
+cron bindings. `scripts/probe/product-bake.ts` reads the host's heap snapshot out of the object's
+SQLite file, bakes it, and writes the source that picks the baked path when the live context (pack
+generation, enabled modules, driver digest) equals the image's. A cold object is a fresh site name:
+the pack migrates twice, a throwaway key and salt are seeded, and the first render returns the body.
+Arms alternate inside each round, and `cpuTime` comes from `wrangler tail` joined by a request tag.
+
+```sh
+S34_CONTROL_DIR=... S34_BAKED_DIR=... S34_FALLBACK_DIR=... S34_ROUNDS=5 node experiments/bootimage/s34.ts
+node experiments/bootimage/s34-report.ts <run dir> <json>
+```
+
+The stop rule is 60,000 rows written, 500 requests or 40 requests per arm, whichever comes first
+(`withinBudget`). A refused upload is the result and is not retried. `S34_REBOOT=1` adds a re-boot
+step after 30 s idle; it found the interpreter retained, so it produced warm requests only. The
+account usage meter did not count these requests, so rows are the sum of each migrate's `rowsWritten`.
+
+## Memory Boundary and Meter
+
+`FOLIO_BOOTIMAGE_MODE=memory FOLIO_BOOTIMAGE_VARIANT=a|c node experiments/deploy.ts bootimage` asks where
+a deployed isolate runs out of memory with a live module memory, and what the platform meters for it.
+The startup sequence above is unchanged and stays the default.
+
+| deploy | configuration | module              | memory per instantiate |
+| ------ | ------------- | ------------------- | ---------------------- |
+| `a`    | `a64`         | unmodified          | 1024 pages (64 MiB)    |
+| `a`    | `a86`         | unmodified          | 1322 pages (82.6 MiB)  |
+| `c`    | `c86`         | baked render module | 1322 pages (82.6 MiB)  |
+
+`/inst?m=NAME&pages=N&keep=1` instantiates with `N` pages (the registered count when omitted) and keeps
+the memory in the object. `/ballast?mib=8` then allocates one filled `Uint8Array` of that size per
+request, keeps it referenced, and returns `ballastBytes`, `memoryBytes` and their sum `liveBytes`. A
+request on an object that holds nothing answers 409 with `held: false`, which is how a reset that
+happens between two requests shows up. A reset during a request would show as a failed request.
+
+Per configuration the driver (`driveMemory` in `plan.ts`) takes three fresh object names, alternating
+the configurations of a deploy, and sends one step per request up to 40, stopping at the first reply
+that is not a 200 with `held: true` and sending one more request to see the new module tag. The largest
+`liveBytes` of an answered step is that object's boundary. An object whose first reply shows
+`moduleCalls` above `objectCalls` shared its module instance with an earlier object and is left out of
+the range. Each configuration also gets three more objects that only instantiate, four requests each.
+
+The meter comes from `durableObjectsPeriodicGroups` (`activeTime`, `cpuTime`, `duration`,
+`exceededMemoryErrors`, by object name). Its dataset lags about 8 minutes, so `deploy.ts` waits once
+after the requests, polls until every object has a row and two reads agree, saves the reply to
+`periodic.json`, and only then deletes the Worker. `analyze.ts` reports GB-s per active second and per
+request for the instantiate-only objects and `exceededMemoryErrors` for the boundary objects.
+
+The request bound is 1 + 40 requests per boundary object and 12 per configuration for the meter, so 270
+Durable Object requests for deploy `a` and 135 for deploy `c`, plus at most 4 readiness requests each.
+Stopping at the reset usually sends far fewer. No storage, alarms, queues or other bindings.
+`node experiments/bootimage/local.ts a|c memory 3` runs the same driver in local workerd with 3 steps.
+
+The 1322-page memory is 86,638,592 bytes: 86.6 MB and 82.6 MiB. A reset showed up between two requests
+in all nine boundary runs: the request that crossed the limit answered 200, and the next request found
+`held: false` under a new module tag. The largest `liveBytes` is therefore the total at the request
+that crossed it, and the limit lies in the 8 MiB step before. `wrangler tail` is a second instrument and
+a sampled one (it can miss invocations or fail to connect), so the boundary does not depend on it.
+`periodic.json` is the reply read by the deploy and `periodic-late.json` a later read of the same
+dataset, which kept adding rows and activeTime for a few minutes after the deploy ended. A re-read about
+40 minutes after deploy `a` returned none of its rows (one observation), so the capture has to be taken
+while the rows are fresh.

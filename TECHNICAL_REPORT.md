@@ -39,7 +39,7 @@ Folio has three execution backends. They were measured separately and are not on
 | Real consumer artifacts                                | tinyimg (809,683 bytes) and machine core (4,303 bytes) match native returns and every memory byte                      | `results/integration-generalized-final.json`                            |
 
 | Independent PHP and Drupal tasks | **7.65x** median regenerating 31 pages on ten private contexts (n=20), process CPU 1.087x; **7.06x** for eight concurrent renders; **7.58x** for eight named tasks inside one request | Paisley Park, `results/20261022-phpregen/`, `20261020-phpparallel/`, `20261020-phpintra/` |
-| Cold start of a booted Wasm PHP interpreter | a baked after-render image cuts open plus first render from 1,247 ms to 373 ms (70%), renders equal to a booted context in 80 of 80; deployed instantiate adds 5 to 35 ms of cpuTime | Mac, `results/20261022-bootimage/`; FREE account, `experiments/bootimage/` |
+| Cold start of a booted Wasm PHP interpreter | a baked after-render image cuts open plus first render from 1,247 ms to 373 ms (70%), local only, renders equal to a booted context in 80 of 80; deployed render unmeasured because the image exceeds the upload limit; the boot image that fits saves 22.5% of cpuTime on a fresh Drupal site (n=8, 7 to 21% by run) | Mac, `results/20261022-bootimage/`; FREE account, `experiments/bootimage/` |
 | One uncached Drupal render, automatic extraction | no speedup: 0.87x to 1.02x, zero workers dispatched; no independent sibling work found (best 1.004) | M2 Pro, `results/20261020-php/`, `20261020-worksp2/` |
 
 ### What Decides the Design
@@ -1558,14 +1558,14 @@ overhead was not measured.
 
 **Status of the routes.**
 
-| Route                                              | Status                                                                                                                         |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Warm private contexts for independent Drupal tasks | Measured: 7.65x on ten cores, 9.63x with SMT siblings; needs the host to have the cores                                        |
-| Baked boot image in the compiled module            | Renders equal booted in 80 of 80 locally, 70% off open plus first render; deployed render and the image's private key are open |
-| Several workerd processes per site                 | Request concurrency, not Folio; 1.93x, 3.13x, 4.41x at 2, 4, 8 processes with the real payload, 0.3 to 0.4 GB each             |
-| Bun-hosted task executor behind a Worker binding   | Runtime checks pass; shared database state for the contexts is unresolved                                                      |
-| Early launch of block rendering inside one request | Warm bound 1.20x to 1.42x for 10 to 40 launchable blocks (Mac, assumed transfer cost); no prototype                            |
-| SQL-level ordered commit for write workloads       | Neither supported nor ruled out; needs a hand-checked row-identity census                                                      |
+| Route                                              | Status                                                                                                                                                                   |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Warm private contexts for independent Drupal tasks | Measured: 7.65x on ten cores, 9.63x with SMT siblings; needs the host to have the cores                                                                                  |
+| Baked boot image in the compiled module            | Renders equal booted in 80 of 80 locally, 70% off open plus first render (local only); deployed boot image 22.5% of cpuTime (n=8); deployed render image refused by size |
+| Several workerd processes per site                 | Request concurrency, not Folio; 1.93x, 3.13x, 4.41x at 2, 4, 8 processes with the real payload, 0.3 to 0.4 GB each                                                       |
+| Bun-hosted task executor behind a Worker binding   | Runtime checks pass; shared database state for the contexts is unresolved                                                                                                |
+| Early launch of block rendering inside one request | Warm bound 1.20x to 1.42x for 10 to 40 launchable blocks (Mac, assumed transfer cost); no prototype                                                                      |
+| SQL-level ordered commit for write workloads       | Neither supported nor ruled out; needs a hand-checked row-identity census                                                                                                |
 
 ### Baked Boot Images
 
@@ -1583,6 +1583,16 @@ them (7.27 MB) differ from the module's own initial memory. After the first rend
 bytes with 790 nonzero pages (51.8 MB), 727 of them (47.6 MB) a delta. Deflated at 200,000-byte rows
 they are 1.7 MB and 14.4 MB. Boot changes no global except the stack pointer's value, which equals
 its initial value, and no table slot, so the module needs no global or table edit.
+
+**Library path.** The capture, bake, restore and check steps are `src/bake.ts`
+(`@gmitch215/folio/bake`), and `scripts/probe/boot-image.ts` calls them instead of carrying copies.
+Baking the stored boot and after-render delta images through the library reproduces the earlier
+baked modules byte for byte (sha256 `a114980e...` and `83509647...`), so the bake step is
+deterministic. A new capture selects the same pages, but a new boot is not byte-identical to an old
+one: 701 bytes of the boot delta and about 4.3 MB of the after-render delta differ between two
+boots. The library's unit tests build their modules in the test, so they cover globals, runs,
+zeroed pages and refusals, which the PHP module never exercised (it changes no global or table slot).
+The one limit with no test is a module with several memories: only memory 0 is written.
 
 **Delivery.** Instantiating the baked module takes 4.8 ms (boot image) and 9.1 ms (after-render
 image), against 3.7 ms unmodified. Reading the same images as 200,000-byte deflated rows from an
@@ -1625,14 +1635,96 @@ requests per cell, so the extra cost follows the size of the delta. Every instan
 about 64.6 MB with the other 3.6 MB of the bundle, is 2.5 MB under the 64 MiB uncompressed limit,
 and a larger interpreter build would take that margin.
 
-**What this does not show.** A render from a baked module on the deployed plane has not run, so the
-deployed saving is unmeasured. The Durable Object probe stubs the imports and does not boot
-anything. An after-render image holds the heap of the process that produced it, and that heap
-contains the site's private key (74 bytes, found in the after-render image and not in the boot
-image), so a shared image would share it; whether the runtime reads that copy or generates a new one
-is untested. The bake is tied to one module build and one boot, so it reruns for each interpreter
-build. The measurement used a stock site, n=10 processes for the main arms, and one process for the
-seed variants.
+**On a deployed Drupal host.** The image was then put on the boot path of a Durable Object Drupal
+host (a scratch copy of its release, built from the pinned PHP 8.5.2 module; the host's own tree
+was not touched). The baked path skips the interpreter's constructors and `pib_init`, replays the
+recorded JS-side state, then the host's own stream and handle replay and the rekey step. Locally,
+on that host's real snapshot path, a cold object served the front page in 288 ms against 1,634 ms
+plain, with the same normalized body, and the host's snapshot read back from Durable Object SQLite
+was byte-equal to a direct memory dump (0 differing pages in both images). An image whose digest or
+site context does not match falls back to the plain boot, and refuses when no plain module is
+bundled.
+
+The after-render image did not deploy: the FREE account refused the upload with "exceeded the
+uncompressed size limit of 63.9 MiB" (the bundle was 64.4 MiB). The boot image (36.6 MiB) deployed,
+and the host rendered the front page from a fresh site name, which is a first boot with the site's
+file pack replayed from SQLite (about 3,600 rows). Medians of cpuTime per cold object, arms
+alternating in each round:
+
+| Run | Objects per arm |             Plain boot |             Boot image | Saved |
+| --- | --------------: | ---------------------: | ---------------------: | ----: |
+| a   |               5 | 3,556 (2,786 to 4,243) | 2,819 (2,349 to 3,611) | 20.7% |
+| b   |               3 | 3,739 (3,446 to 3,754) | 3,469 (2,598 to 3,592) |  7.2% |
+| all |               8 |                  3,648 |                  2,827 | 22.5% |
+
+The paired differences by round were 234, 1,408, -55, 511, 1,513, 270, 1,156 and -146 ms (median
+390), so the baked arm was slower in 2 of 8 rounds. Wall time fell 23.8% and 5.2% in the two runs.
+All 16 responses were 200 with 17,686 bytes and one normalized body hash, all 172 invocations
+ended `ok`, and one CSRF token was seen across all baked and plain objects of each run. The saving
+is below 25% in each run and pooled, and the spread is wide, so this build does not show a
+deployed win from the boot image. It is also larger than the local boot image's 6%, and the
+difference is not explained.
+
+The control is a first boot, 2,786 to 4,243 ms, which is not the 1,264 ms hibernated cold boot the
+host publishes. An attempt to produce a cold re-boot after 30 s idle found the interpreter still
+retained, so there is no re-boot arm. The scratch copy came from the nearest commit to the
+published bundle (4,255 bytes larger) because no commit reproduces it.
+
+**What this does not show.** The 70% is a local figure: a render from a baked module on the deployed
+plane has not run, so the deployed saving of the after-render image is unmeasured. The earlier
+Durable Object probe stubs the imports and does not boot anything. The measurements used a stock
+site, n=10 processes for the main local arms, one process for the seed variants and 3 to 5 objects
+per deployed arm. The deployed arms have no phase split, so they do not separate the replay of the site's pack from the
+boot. Local phases suggest that what remains with the boot image is that replay and the first
+render (1,673 ms locally against 1,681 plain), which a boot image does not remove.
+
+**Limits of the technique.**
+
+- **Secrets in the image.** An after-render image holds the heap of the process that produced it.
+  That heap contains the site's private key (74 bytes, found in the after-render image and not in
+  the boot image), the configured hash salt and the state of the userland random generator. The
+  module is a published file, so anything in the image is public, and freed memory is not zeroed, so
+  scrubbing after the fact does not remove the bytes. The baked copy of the key is the one read
+  until something resets it. A safe image is built from a state that never held a real secret
+  (throwaway values pre-seeded before the bake render), and the real values are put in on replay.
+  `results/20261022-bakesecrets/` tests this on the PHP 8.5.2 module. The real key and salt, a test
+  user's name, mail and password hash and a planted session cookie are absent from the image and
+  the baked module in raw, base64 and hex form, and a control bake that read real values contains
+  all of them, so the scanner (`findInImage`) detects. After replay, a rekey step (set the salt in
+  place, reset the state cache, flush the memory cache, call `mt_srand` with a fresh seed) makes a
+  CSRF token validate in a reference boot with the site's key and fail in one with the bake's, 9 of 9
+  and 0 of 9. Without it the baked sentinel key and salt are used before any request, and after the
+  first render the key is the site's but the salt is still the bake's, so tokens validate nowhere.
+  The bake render seeded `mt_rand`, so ten replays without the step return the same first value
+  and with it ten distinct values. The step costs 14.3 ms, and the saving holds at 70.2%. One item
+  fails: the bake request's PHP session id (32 hex characters, never stored) is in the image. A host
+  that sets a new id at the start of each request replaces it; one that does not would hand every
+  replay the same public id.
+- **Memory.** The after-render image needs a memory of 1,322 pages (82.6 MiB) against 1,024
+  pages (64 MiB) for the unmodified module. On the FREE plan a Durable Object isolate was not reset
+  at the documented 128 MB: with the unmodified module and 64 MiB of memory it held 216 MiB of live
+  memory and buffers before a reset, and with 1,322 pages 194.6 MiB (n=3 objects each, one 8 MiB
+  step per request; the limit lies in the last 8 MiB step). The larger memory cost 40 MiB of
+  headroom (32 to 48 at that resolution) for 18.6 MiB of added memory, and the baked render module,
+  which writes at least 47.6 MB into it, had the same boundary as the unmodified module, so touched
+  and untouched pages cost alike. The cause of the factor of 2.1 is not determined. Billing does not
+  see the memory: duration is 0.128 GB-s per active second in all three configurations, and the per
+  request cost follows active time (3.4 times higher for the render module because of its
+  instantiate cost). Headroom for a real site's growth past the initial pages was not measured.
+- **Bundle margin.** The probe's largest variant is about 2.5 MB under the 64 MiB limit. With a
+  real host's code and heap around it, the after-render image was 0.5 MiB over the FREE account's
+  63.9 MiB uncompressed limit (64.4 MiB against 63.9) and was refused, so there is no margin for a
+  larger interpreter build. An interim PHP 8.5.12 module is about 0.6 MB larger. A smaller image (leaving
+  out pages the first render does not need) was not tried; it would change the image, not the
+  limit.
+- **One image per module build and site configuration.** The image holds a container, plugin
+  discovery and template state built against the baking site's seed. It is valid only for sites with
+  the same module set and driver, so it needs a key on both digests, and it reruns for each
+  interpreter build.
+- **A derived artifact.** The baked module is not the interpreter that was built and signed. It needs
+  a deterministic, pinned derivation and a recorded digest of its inputs.
+- **Replay surface.** Replaying the JS-side state reopens the host bridge the interpreter was built
+  to close, unless replay registers only the wrappers that the sealed bridge allows.
 
 ### Distributed Page Ownership and Writeback
 
