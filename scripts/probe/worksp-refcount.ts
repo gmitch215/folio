@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { openContexts } from './php-contexts.ts';
 import { instrumentWorksp, phpExtents } from './worksp-instrument.ts';
 
@@ -8,9 +9,7 @@ import { instrumentWorksp, phpExtents } from './worksp-instrument.ts';
 // usage: node scripts/probe/worksp-refcount.ts OUTPUT.json
 const [output] = process.argv.slice(2);
 if (!output) throw new Error('usage: worksp-refcount.ts OUTPUT.json');
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 const original = readFileSync(resolve(consumer, '.interp/php8.5.tuned.wasm'));
 const extents = phpExtents(original);

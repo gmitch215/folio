@@ -5,8 +5,8 @@ cd "$(dirname "$0")/../.."
 set_name=${1:?usage: php-regen.sh SET NAME [label]}
 name=${2:?usage: php-regen.sh SET NAME [label]}
 label=${3:-folio-phpregen-$(date +%Y%m%d)}
-node_bin=${FOLIO_RIG_NODE:-$HOME/.nvm/versions/node/v26.10.0/bin/node}
-sweep=${FOLIO_RIG_SWEEP:-$HOME/gmux-rig/bin/sweep.sh}
+node_bin=${FOLIO_RIG_NODE:-node}
+sweep=${FOLIO_RIG_SWEEP:?set FOLIO_RIG_SWEEP to the rig sweep script}
 mask=${FOLIO_RIG_MASK:-2-11}
 pairs=${FOLIO_PAIRS:-20}
 widths=${FOLIO_WIDTHS:-2,4,8}
@@ -20,7 +20,7 @@ finish() {
 	trap - EXIT
 	if [ "$held" = 1 ]; then
 		bash "$sweep" end "$label" || true
-		rmdir /tmp/paisley-timing.lock || true
+		rmdir /tmp/folio-timing.lock || true
 	fi
 	printf '%s\n' "$code" > "$out/$name-exit-code"
 	touch "$out/$name-finished"
@@ -30,7 +30,7 @@ trap finish EXIT
 
 export FOLIO_CONSUMER=$stage/consumer
 export FOLIO_WORKER_BUNDLE=$stage/php-context-worker.mjs
-export FOLIO_MACHINE="paisley-park Ryzen 9 9900X, cpus $mask, nice 19"
+export FOLIO_MACHINE="${FOLIO_RIG_MACHINE:-Ryzen 9 9900X}, cpus $mask, nice 19"
 export FOLIO_AFFINITY=$mask
 
 run() {
@@ -39,7 +39,7 @@ run() {
 
 mkdir -p "$out"
 for _ in $(seq 60); do
-	if mkdir /tmp/paisley-timing.lock 2> /dev/null; then
+	if mkdir /tmp/folio-timing.lock 2> /dev/null; then
 		held=1
 		break
 	fi

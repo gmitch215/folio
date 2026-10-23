@@ -1,19 +1,18 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { deserialize, serialize } from 'node:v8';
 import { prepare } from '../../src/compiler.ts';
 import { Folio } from '../../src/node.ts';
+import { consumerRoot } from './consumer-root.ts';
 import { openOldBuild } from './old-build.ts';
 
 // usage: [FOLIO_OLD_BUILD=1] node scripts/probe/php-workloads.ts OUTPUT.jsonl [PAIRS] [WORKERS,...] [PREPARED.bin] [NAME,...]
-// FOLIO_CONSUMER names a drupflare worker checkout with a restored .interp
+// FOLIO_CONSUMER names a Drupal host checkout with a restored .interp
 // FOLIO_OLD_BUILD=1 adds an old-N arm per width from the archived pre-admission build and its own plan
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const [output, pairsArg, workersArg, planArg, namesArg] = process.argv.slice(2);
 if (!output)
 	throw new Error('usage: php-workloads.ts OUTPUT.jsonl [PAIRS] [WORKERS] [PLAN] [NAMES]');
@@ -159,7 +158,7 @@ emit({
 	v8: process.versions.v8,
 	cpu: cpus()[0]!.model,
 	hardwareThreads: cpus().length,
-	php: 'drupflare php8.5.tuned.wasm',
+	php: 'php8.5.tuned.wasm',
 	artifactSha256: createHash('sha256').update(original).digest('hex'),
 	arms: arms.map((arm) => arm.name),
 	pairs,

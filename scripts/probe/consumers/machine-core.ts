@@ -2,9 +2,8 @@ import { readFileSync } from 'node:fs';
 import { memoryImports } from '../../../src/memory.ts';
 import type { Call, Consumer } from '../consumer.ts';
 
-const path =
-	process.env.FOLIO_GMUX_CORE ??
-	new URL('../../../../../gmux/build/router/gmux-core.wasm', import.meta.url).pathname;
+const path = process.env.FOLIO_MACHINE_CORE;
+if (!path) throw new Error('set FOLIO_MACHINE_CORE to the machine core module');
 const bytes = readFileSync(path);
 const descriptor = memoryImports(bytes)[0]!;
 
@@ -17,7 +16,7 @@ const queue = (): Call[] => [
 ];
 
 const consumer: Consumer = {
-	name: 'gmux-core',
+	name: 'machine-core',
 	bytes,
 	imports() {
 		const memory = new WebAssembly.Memory({

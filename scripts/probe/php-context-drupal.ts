@@ -1,12 +1,8 @@
-import {
-	mkdirp,
-	mountDriver,
-	mountDrupalLazy
-} from 'consumer:node_modules/@drupflare/cartridge/src/fs.ts';
-import { withMask } from 'consumer:node_modules/@drupflare/cartridge/src/mask.ts';
-import 'consumer:node_modules/@drupflare/cartridge/src/worker-shim.ts';
-import { PHP_CODEC } from 'consumer:node_modules/@drupflare/durabledb/src/codec.ts';
-import { SiteDurableObject } from 'consumer:node_modules/@drupflare/durabledb/src/do-sqlite.ts';
+import { PHP_CODEC } from 'consumer:host/codec';
+import { mkdirp, mountDriver, mountDrupalLazy } from 'consumer:host/fs';
+import { withMask } from 'consumer:host/mask';
+import { SiteDurableObject } from 'consumer:host/site-store';
+import 'consumer:host/worker-shim';
 import { decodeParam } from 'consumer:src/db/migrate-sql.ts';
 import { INTERPRETER_MEMORY } from 'consumer:src/do/isolate.ts';
 import { SERVICES_YAML, settingsOverride } from 'consumer:src/do/settings.ts';

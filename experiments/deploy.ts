@@ -120,9 +120,9 @@ const config = extraction
 	: kind in configs
 		? configs[kind as keyof typeof configs]
 		: `experiments/${kind}/wrangler.jsonc`;
-const consumerNames = (process.env.FOLIO_CONSUMER_RUNS ?? 'kernel-control,gmux-abi,tinyimg').split(
-	','
-);
+const consumerNames = (
+	process.env.FOLIO_CONSUMER_RUNS ?? 'kernel-control,process-abi,tinyimg'
+).split(',');
 const consumerPairs = Number(process.env.FOLIO_CONSUMER_PAIRS ?? 30);
 const secret = crypto.randomUUID();
 const startedAt = Date.now();

@@ -2,16 +2,15 @@ import { readFileSync } from 'node:fs';
 import { memoryImports } from '../../../src/memory.ts';
 import type { Consumer } from '../consumer.ts';
 
-const path =
-	process.env.FOLIO_GMUX_ABI ??
-	new URL('../../../../../gmux/build/probes/abi.wasm', import.meta.url).pathname;
+const path = process.env.FOLIO_PROCESS_ABI;
+if (!path) throw new Error('set FOLIO_PROCESS_ABI to the process ABI module');
 const bytes = readFileSync(path);
 const module = new WebAssembly.Module(bytes);
 const descriptor = memoryImports(bytes)[0]!;
 const mebibyte = 1048576;
 
 const consumer: Consumer = {
-	name: 'gmux-abi',
+	name: 'process-abi',
 	bytes,
 	imports() {
 		const maximum = descriptor.maximum ?? 32768;

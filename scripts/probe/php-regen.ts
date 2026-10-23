@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { openContexts } from './php-contexts.ts';
 
 // regenerating a set of pages: W private Drupal contexts pull urls from one queue and render them
@@ -56,9 +56,7 @@ async function main(output: string, args: string[]) {
 	const pairs = Number(args[0] ?? 10);
 	const widths = (args[1] ?? '2,4,8').split(',').map(Number);
 	const nodeCount = Number(args[2] ?? 30);
-	const consumer = resolve(
-		process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-	);
+	const consumer = consumerRoot();
 	const bundle = process.env.FOLIO_WORKER_BUNDLE;
 	const lines: string[] = [];
 	const emit = (row: object) => {

@@ -48,7 +48,7 @@ const kernel: Consumer = {
 	}
 };
 
-const gmux: Consumer = {
+const machine: Consumer = {
 	widths: [8],
 	fresh(module, memories) {
 		const descriptor = memories[0]!;
@@ -86,7 +86,7 @@ const gmux: Consumer = {
 		return { imports, memory };
 	},
 	spec: {
-		name: 'gmux-abi',
+		name: 'process-abi',
 		cases: [
 			{
 				name: 'memset-16mib',
@@ -208,6 +208,6 @@ const tinyimg: Consumer = {
 
 export const consumers: Record<string, Consumer> = {
 	'kernel-control': kernel,
-	'gmux-abi': gmux,
+	'process-abi': machine,
 	tinyimg
 };

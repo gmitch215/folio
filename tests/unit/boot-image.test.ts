@@ -3,8 +3,10 @@ import {
 	decide,
 	deployed,
 	referenceHashes,
+	scriptLimitBytes,
 	summarizeAnatomy,
 	summarizeArms,
+	summarizeBundle,
 	summarizeDelivery,
 	summarizeInterpreter,
 	summarizePhases,
@@ -308,4 +310,45 @@ test('interpreter summary lists the digests, the PHP versions and any run that c
 	expect(out.rowsWithout).toBe(1);
 	expect(out.runsChecked).toBe(2);
 	expect(out.allUnchanged).toBe(false);
+});
+
+test('bundle summary gives growth over the plain module and headroom under the script limit', () => {
+	expect(scriptLimitBytes).toBe(67004006);
+	const [boot, render] = summarizeBundle([
+		{ name: 'boot', moduleBytes: 21_000_000, originalBytes: 14_000_000, deltaBytes: 7_012_352 },
+		{
+			name: 'render',
+			moduleBytes: 64_500_000,
+			originalBytes: 14_000_000,
+			deltaBytes: 50_528_256
+		}
+	]);
+	expect(boot).toMatchObject({ growthBytes: 7_000_000, deltaPages: 107, deltaMiB: 6.69 });
+	expect(render).toMatchObject({
+		growthBytes: 50_500_000,
+		deltaPages: 771,
+		deltaMiB: 48.19,
+		headroomBytes: 2_504_006,
+		plainHeadroomBytes: 53_004_006
+	});
+});
+
+test('bundle summary sets the module plus the rest of the bundle against the limit', () => {
+	const [render] = summarizeBundle(
+		[
+			{
+				name: 'render',
+				moduleBytes: 64_500_000,
+				originalBytes: 14_000_000,
+				deltaBytes: 50_500_000
+			}
+		],
+		{ kind: 'bundle', nonModuleKiB: 3_800 }
+	);
+	expect(render!.bundleKiB).toBeCloseTo(66_788.3, 1);
+	expect(render!.limitKiB).toBeCloseTo(65_433.6, 1);
+	expect(render!.overLimitKiB).toBeCloseTo(1_354.7, 1);
+	expect(
+		summarizeBundle([{ name: 'x', moduleBytes: 1, originalBytes: 1, deltaBytes: 0 }])[0]
+	).not.toHaveProperty('overLimitKiB');
 });

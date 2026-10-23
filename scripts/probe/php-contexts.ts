@@ -1,7 +1,8 @@
 import { mkdirSync, readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
 import { deserialize } from 'node:v8';
 import { Worker } from 'node:worker_threads';
+import { consumerRoot, resolveConsumer } from './consumer-root.ts';
 import type { HookConfig } from './worksp-hooks.ts';
 
 // private PHP contexts: N worker threads, each with its own prepared PHP instance and state.
@@ -12,7 +13,7 @@ export interface ContextOptions {
 	kind: 'plain' | 'drupal';
 	/** native binds the original module; folio opens it through Folio.open with the plan */
 	mode: 'native' | 'folio';
-	/** a drupflare worker checkout with a restored .interp */
+	/** a Drupal host checkout with a restored .interp */
 	consumer?: string;
 	/** interpreter file relative to the consumer */
 	interp?: string;
@@ -23,7 +24,7 @@ export interface ContextOptions {
 	/** a prebuilt worker bundle, for machines without the consumer's TypeScript sources */
 	bundle?: string;
 	workers?: number;
-	/** replaces the opcache ini lines (the default turns opcache off, as drupflare ships it) */
+	/** replaces the ini lines that configure the code cache (the default turns it off) */
 	opcache?: string[];
 	/** a replacement for the consumer's module; with `instrument` it must import folio.ci */
 	module?: WebAssembly.Module;
@@ -75,7 +76,7 @@ export async function buildWorker(consumer: string, outfile: string) {
 				name: 'consumer',
 				setup(builder) {
 					builder.onResolve({ filter: /^consumer:/ }, (args) => ({
-						path: join(consumer, args.path.slice('consumer:'.length))
+						path: resolveConsumer(consumer, args.path)
 					}));
 					builder.onResolve({ filter: /^fflate-real$/ }, () =>
 						builder.resolve('fflate', {
@@ -143,11 +144,7 @@ export interface Contexts {
 }
 
 export async function openContexts(options: ContextOptions): Promise<Contexts> {
-	const consumer = resolve(
-		options.consumer ??
-			process.env.FOLIO_CONSUMER ??
-			new URL('../../../drupflare/worker', import.meta.url).pathname
-	);
+	const consumer = consumerRoot(options.consumer);
 	const interp = options.interp ?? '.interp/php8.5-worker.tuned.mjs';
 	const original = readFileSync(join(consumer, '.interp/php8.5.tuned.wasm'));
 	const module = options.module ?? new WebAssembly.Module(original);

@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { openContexts } from './php-contexts.ts';
 
 // usage: node scripts/probe/php-snapshot.ts OUTPUT.jsonl [SAMPLES]
@@ -11,9 +11,7 @@ import { openContexts } from './php-contexts.ts';
 const [output, samplesArg] = process.argv.slice(2);
 if (!output) throw new Error('usage: php-snapshot.ts OUTPUT.jsonl [SAMPLES]');
 const samples = Number(samplesArg ?? 20);
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 const lines: string[] = [];
 const emit = (row: object) => {

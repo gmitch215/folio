@@ -2,7 +2,8 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { openOldBuild } from './old-build.ts';
 
 // usage: [FOLIO_OLD_BUILD=1] node scripts/probe/php-render-pairs.ts OUTPUT.jsonl [PAIRS] [WORKERS,...]
@@ -11,9 +12,7 @@ const [output, pairsArg, workersArg] = process.argv.slice(2);
 if (!output) throw new Error('usage: php-render-pairs.ts OUTPUT.jsonl [PAIRS] [WORKERS]');
 const pairs = Number(pairsArg ?? 10);
 const widths = (workersArg ?? '2,8').split(',').map(Number);
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = new URL('../../build/php-render.mjs', import.meta.url).pathname;
 const scratch = new URL('../../build/php-render-pairs/', import.meta.url).pathname;
 mkdirSync(scratch, { recursive: true });

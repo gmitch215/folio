@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { cpus } from 'node:os';
-import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { openContexts, type Contexts, type SqlStatement } from './php-contexts.ts';
 import { seedCode } from './php-regen.ts';
 
@@ -214,9 +214,7 @@ async function pass(
 
 async function main(output: string, args: string[]) {
 	const count = Number(args[0] ?? 8);
-	const consumer = resolve(
-		process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-	);
+	const consumer = consumerRoot();
 	const lines: string[] = [];
 	const emit = (row: object) => {
 		lines.push(JSON.stringify(row));

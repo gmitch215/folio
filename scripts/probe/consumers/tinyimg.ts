@@ -1,9 +1,8 @@
 import { readFileSync } from 'node:fs';
 import type { Api, Call, Case, Consumer } from '../consumer.ts';
 
-const path =
-	process.env.FOLIO_TINYIMG ??
-	new URL('../../../../../c-c++/tinyimg/dist/tinyimg.wasm', import.meta.url).pathname;
+const path = process.env.FOLIO_TINYIMG;
+if (!path) throw new Error('set FOLIO_TINYIMG to the tinyimg module');
 const size = 1024;
 const call = (api: Api, name: string, ...args: number[]) =>
 	(api.exports[name] as CallableFunction)(...args) as number;

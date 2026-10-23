@@ -105,9 +105,9 @@ test('measureConsumer reports the pairs completed when the budget ends a run', a
 });
 
 test('the consumer specs name the exports and cases the consumers run', () => {
-	expect(Object.keys(consumers)).toEqual(['kernel-control', 'gmux-abi', 'tinyimg']);
+	expect(Object.keys(consumers)).toEqual(['kernel-control', 'process-abi', 'tinyimg']);
 	expect(consumers.tinyimg!.spec.cases).toHaveLength(13);
-	expect(consumers['gmux-abi']!.spec.cases.map((item) => item.name)).toEqual([
+	expect(consumers['process-abi']!.spec.cases.map((item) => item.name)).toEqual([
 		'memset-16mib',
 		'memcpy-16mib',
 		'memset-memcpy-chain'

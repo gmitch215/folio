@@ -4,8 +4,8 @@ cd "$(dirname "$0")/../.."
 
 kind=${1:?usage: run.sh sharing|cpu|large|scaling|control|affinity|all [label]}
 label=${2:-folio-$kind-$(date +%Y%m%d)}
-node_bin=${FOLIO_RIG_NODE:-$HOME/.nvm/versions/node/v26.10.0/bin/node}
-sweep=${FOLIO_RIG_SWEEP:-$HOME/gmux-rig/bin/sweep.sh}
+node_bin=${FOLIO_RIG_NODE:-node}
+sweep=${FOLIO_RIG_SWEEP:?set FOLIO_RIG_SWEEP to the rig sweep script}
 held=0
 
 case "$kind" in
@@ -21,7 +21,7 @@ finish() {
 	trap - EXIT
 	if [ "$held" = 1 ]; then
 		bash "$sweep" end "$label" || true
-		rmdir /tmp/paisley-timing.lock || true
+		rmdir /tmp/folio-timing.lock || true
 	fi
 	printf '%s\n' "$code" > results/exit-code
 	touch results/finished
@@ -46,7 +46,7 @@ sharing() {
 }
 
 mkdir -p results
-mkdir /tmp/paisley-timing.lock
+mkdir /tmp/folio-timing.lock
 held=1
 bash "$sweep" start "$label"
 

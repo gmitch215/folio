@@ -1,16 +1,24 @@
 import { randomBytes } from 'node:crypto';
 import { expect, test } from 'vitest';
 import {
+	clusterSweep,
+	compareSweeps,
 	diffImages,
+	entropy,
+	expectedEntropy,
+	isBridgeCall,
 	judge,
 	scanBytes,
 	scanImage,
 	secretForms,
 	summarizeArms,
 	summarizeBakeSecrets,
+	summarizeCensus,
 	summarizeRekey,
 	summarizeRng,
 	summarizeScans,
+	summarizeSweep,
+	sweepBytes,
 	type Secret
 } from '../../scripts/analyze/bakesecrets.ts';
 import type { Row } from '../../scripts/analyze/lib.ts';
@@ -335,4 +343,132 @@ test('rekeyCode joins the chosen parts and writes the salt once as a literal', (
 	expect(saltOnly).not.toContain('reset()');
 	expect(rekeyCode(salt, variants['salt+key']!)).not.toContain('mt_srand');
 	expect(Object.values(variants.full!).every(Boolean)).toBe(true);
+});
+
+const heap = (...parts: string[]) => Buffer.from(parts.join('\0'), 'latin1');
+
+test('entropy and its random expectation separate keys from words and paths', () => {
+	expect(entropy('aaaa')).toBe(0);
+	expect(entropy('abab')).toBeCloseTo(1, 10);
+	expect(expectedEntropy(43)).toBeCloseTo(4.94, 2);
+	expect(entropy(key)).toBeGreaterThan(expectedEntropy(key.length) - 0.35);
+	expect(entropy('Drupal_Core_Block_Attribute_Block_discovery_cache_items')).toBeLessThan(
+		expectedEntropy(55) - 0.35
+	);
+});
+
+test('sweepBytes finds session id shaped hex, digests and random base64url runs', () => {
+	const sid = 'a3f9c0de51b7488a9d2e6f10c4b87d35';
+	const sha = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+	const std = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	const found = sweepBytes(heap(`PHPSESSID=${sid};`, `x:${sha}:y`, `s:74:"${key}";`, `=${std}=`));
+	expect([...new Set(found.map((f) => f.class))].sort()).toEqual([
+		'base64',
+		'base64url',
+		'hex32',
+		'hex64'
+	]);
+	expect(found.find((f) => f.class === 'base64')).toMatchObject({ length: 65 });
+	const hex32 = found.find((f) => f.class === 'hex32')!;
+	expect(hex32).toMatchObject({ length: 32, count: 1 });
+	expect(hex32.before).toBe('*=');
+	expect(found.find((f) => f.class === 'base64url')).toMatchObject({ length: key.length });
+	expect(JSON.stringify(found)).not.toContain(key);
+	expect(JSON.stringify(found)).not.toContain(std);
+	expect(JSON.stringify(found)).not.toContain(sid);
+});
+
+test('sweepBytes drops paths and identifiers, bounds hex runs, and counts repeats', () => {
+	const noise = heap(
+		'/drupal/core/lib/Drupal/Core/Cache/CacheTagsInvalidatorInterface.php',
+		'Drupal_Core_Block_Attribute_Block_discovery_cache_items_list',
+		`${'0123456789abcdef'.repeat(3)}`,
+		'0123456789abcdef0123456789abcdef0'
+	);
+	expect(sweepBytes(noise)).toEqual([]);
+	expect(sweepBytes(heap('"0123456789abcdef0123456789abcdef"')).map((f) => f.class)).toEqual([
+		'hex32'
+	]);
+	const twice = sweepBytes(heap(`:${key}:`, `:${key}:`));
+	expect(twice.filter((f) => f.class === 'base64url')).toHaveLength(1);
+	expect(twice.find((f) => f.class === 'base64url')!.count).toBe(2);
+});
+
+test('compareSweeps splits shared strings from one-sided ones and clusterSweep groups by context', () => {
+	const a = sweepBytes(heap(`id:"${key}"`, 'x:0123456789abcdef0123456789abcdef'));
+	const other = key.split('').reverse().join('');
+	const b = sweepBytes(heap(`id:"${other}"`, 'x:0123456789abcdef0123456789abcdef'));
+	const diff = compareSweeps(a, b);
+	expect(diff.shared.map((f) => f.class)).toEqual(['hex32']);
+	expect(diff.onlyA.map((f) => f.class)).toEqual(['base64url']);
+	expect(diff.onlyB.map((f) => f.class)).toEqual(['base64url']);
+	const groups = clusterSweep([...a, ...b]);
+	expect(groups).toHaveLength(2);
+	expect(groups.find((g) => g.class === 'base64url')).toMatchObject({
+		length: key.length,
+		distinct: 2,
+		occurrences: 2
+	});
+});
+
+const handles = (is: string[]) => ({
+	handles: is.map((name, i) => ({ id: i + 1, is: name })),
+	rootFrozen: true,
+	rootPrototypeNull: true,
+	rootKeys: 0,
+	rootIsGlobalThis: false
+});
+
+test('summarizeCensus separates harness calls from module calls and bridge from runtime', () => {
+	expect(isBridgeCall('env.emscripten_asm_const_int')).toBe(true);
+	expect(isBridgeCall('env.__asyncjs__vrzno_await_internal')).toBe(true);
+	expect(isBridgeCall('Module.cfwSqlExec')).toBe(true);
+	expect(isBridgeCall('wasi_snapshot_preview1.fd_read')).toBe(false);
+	const row = (via: string): Row => ({
+		kind: 'census',
+		via,
+		calls: { open: { 'harness:env.emscripten_asm_const_int': 1 }, replay: {} },
+		callsByPhase: {
+			open: { 'harness:env.emscripten_asm_const_int': 1 },
+			request: {
+				'env.emscripten_asm_const_int': 2,
+				'Module.cfwSqlExec': 2,
+				'env.__syscall_openat': 5
+			}
+		},
+		handlesAfterReplay: handles(['cfwRoot', 'sealed:cfwSqlExec']),
+		bridgeProbe: { process: null },
+		stackGlobals: { emscripten_stack_get_end: 4 },
+		deepRecursion: { thrown: 'RangeError: too deep\n   at x' },
+		renderSha256: 'r'
+	});
+	const [out] = summarizeCensus([row('baked'), row('baked')]);
+	expect(out!.n).toBe(2);
+	expect(out!.beforeFirstPhp).toMatchObject({
+		harnessCalls: 1,
+		moduleCalls: 0,
+		moduleBridgeCalls: 0,
+		sameInEveryRun: true
+	});
+	expect(out!.byPhase.request).toMatchObject({ bridgeCalls: 4, runtimeCalls: 5 });
+	expect(out!.byPhase.rekey).toBeUndefined();
+	expect(out!.everyHandleIsRootOrSealed).toBe(true);
+	expect(out!.deepRecursion).toEqual(['"RangeError: too deep"']);
+	const bad = { ...row('baked'), handlesAfterReplay: handles(['cfwRoot', 'other']) };
+	expect(summarizeCensus([bad])[0]!.everyHandleIsRootOrSealed).toBe(false);
+	expect(summarizeBakeSecrets([]).census).toBeUndefined();
+});
+
+test('summarizeSweep keeps the per-bake strings and counts the ones nobody explained', () => {
+	const out = summarizeSweep([
+		{ kind: 'sweep', tag: 'a', bytes: 10, distinct: 3, occurrences: 4, byClass: {}, known: [] },
+		{ kind: 'sweepCompare', shared: 2, onlyLeft: 1 },
+		{ kind: 'sweepOnlyLeft', class: 'hex32', length: 32, count: 1, known: 'bakeSessionId' },
+		{ kind: 'sweepOnlyLeft', class: 'hex64', length: 64, count: 3 }
+	]);
+	expect(out.images).toHaveLength(1);
+	expect(out.compare).toMatchObject({ shared: 2, onlyLeft: 1 });
+	expect(out.perBake.map((row) => row.known)).toEqual(['bakeSessionId', undefined]);
+	expect(out.perBakeUnexplained).toBe(1);
+	expect(summarizeBakeSecrets([{ kind: 'sweep', tag: 'a' }]).sweep).toBeDefined();
 });

@@ -3,12 +3,13 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { deserialize } from 'node:v8';
+import { consumerRoot } from '../../../scripts/probe/consumer-root.ts';
 import { memoryImports } from '../../../src/memory.ts';
 import { bundleFit } from '../plan.ts';
 
 const root = new URL('../../../', import.meta.url);
 const out = new URL('../build/php/', import.meta.url);
-const consumer = process.env.FOLIO_CONSUMER ?? new URL('../../drupflare/worker', root).pathname;
+const consumer = consumerRoot();
 
 const sha256 = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex');
 

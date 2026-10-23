@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { loadPlan, openContexts } from './php-contexts.ts';
 
 // usage: node scripts/probe/drupal-breakdown.ts OUTPUT.jsonl [PROCESSES] [INSTANCES]
@@ -11,9 +11,7 @@ import { loadPlan, openContexts } from './php-contexts.ts';
 const [output, processesArg, instancesArg, child] = process.argv.slice(2);
 if (!output) throw new Error('usage: drupal-breakdown.ts OUTPUT.jsonl [PROCESSES] [INSTANCES]');
 const instances = Number(instancesArg ?? 4);
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 
 if (child === 'child') {

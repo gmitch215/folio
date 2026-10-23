@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { defaultSizes, openTaskContexts, requestCode, workloads } from './php-tasks.ts';
 
 // differential validation of a private-state site: the request runs serially in the owner (plain) and
@@ -9,9 +9,7 @@ import { defaultSizes, openTaskContexts, requestCode, workloads } from './php-ta
 const [output, samplesArg] = process.argv.slice(2);
 if (!output) throw new Error('usage: worksp-validate.ts OUTPUT.jsonl [SAMPLES]');
 const samples = Number(samplesArg ?? 3);
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 const rows: object[] = [];
 const emit = (row: object) => {

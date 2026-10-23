@@ -6,15 +6,21 @@ import { memoryImports } from '../../src/memory.ts';
 
 const root = new URL('../../', import.meta.url);
 
-/** Where each consumer's original module lives; the sibling checkouts are read only. */
+const required = (name: string) => {
+	const value = process.env[name];
+	if (!value) throw new Error(`set ${name}`);
+	return value;
+};
+
+/** Where each consumer's original module lives; the files are read only. */
 export const artifacts: Record<string, string> = {
 	'kernel-control': fileURLToPath(new URL('build/fixture.wasm', root)),
-	'gmux-abi':
-		process.env.FOLIO_GMUX_ABI ??
-		fileURLToPath(new URL('../../gmux/build/probes/abi.wasm', root)),
-	tinyimg:
-		process.env.FOLIO_TINYIMG ??
-		fileURLToPath(new URL('../../c-c++/tinyimg/dist/tinyimg.wasm', root))
+	get 'process-abi'() {
+		return required('FOLIO_PROCESS_ABI');
+	},
+	get tinyimg() {
+		return required('FOLIO_TINYIMG');
+	}
 };
 
 async function bundle(entry: string) {

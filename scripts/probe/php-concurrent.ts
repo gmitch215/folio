@@ -1,20 +1,19 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { join, resolve } from 'node:path';
+import { join } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { type Contexts, loadPlan, openContexts, overlapMs } from './php-contexts.ts';
 
 // usage: node scripts/probe/php-concurrent.ts cpu|drupal OUTPUT.jsonl [PAIRS] [WIDTHS] [WORKLOADS]
 //        node scripts/probe/php-concurrent.ts memory OUTPUT.jsonl cpu|drupal native|folio COUNT
 // four arms per width: native-serial, native-concurrent, folio-serial, folio-concurrent
-// FOLIO_CONSUMER names a drupflare worker checkout; FOLIO_WORKER_BUNDLE a prebuilt worker bundle;
+// FOLIO_CONSUMER names a Drupal host checkout; FOLIO_WORKER_BUNDLE a prebuilt worker bundle;
 // FOLIO_PLAN the prepared admit plan; FOLIO_MACHINE labels the machine in the environment row
 const [kind, output, ...rest] = process.argv.slice(2);
 if (!kind || !output)
 	throw new Error('usage: php-concurrent.ts cpu|drupal|memory OUTPUT.jsonl ...');
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 const planPath =
 	process.env.FOLIO_PLAN ??

@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { resolve } from 'node:path';
 import { parseStatement } from '../analyze/sqlcensus.ts';
+import { consumerRoot } from './consumer-root.ts';
 import { openContexts, type Contexts, type SqlStatement } from './php-contexts.ts';
 import { seedCode } from './php-regen.ts';
 
@@ -171,9 +171,7 @@ async function renderRow(contexts: Contexts, nid: number) {
 
 async function main(output: string, args: string[]) {
 	const counts = (args[0] ?? '0,10,20,40').split(',').map(Number);
-	const consumer = resolve(
-		process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-	);
+	const consumer = consumerRoot();
 	const lines: string[] = [];
 	const emit = (row: object) => {
 		lines.push(JSON.stringify(row));

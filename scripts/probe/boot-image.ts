@@ -3,10 +3,11 @@ import { createHash } from 'node:crypto';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { cpus, loadavg } from 'node:os';
-import { join, resolve } from 'node:path';
+import { basename, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { gzipSync } from 'node:zlib';
 import { bakeModule, captureImage, checkBaked, type MemoryImage } from '../../src/bake.ts';
+import { consumerRoot, resolveConsumer } from './consumer-root.ts';
 
 // can a booted Drupal heap reach a new instance faster than the interpreter boots? One script, two
 // roles: the plain node process drives and builds modules (binaryen); the same file bundled with
@@ -17,6 +18,7 @@ import { bakeModule, captureImage, checkBaked, type MemoryImage } from '../../sr
 //   probe             build/bootimage/probe.wasm: the module with its two mutable globals exported
 //   anatomy OUT       Q2 image anatomy; writes the images under build/bootimage/
 //   bake NAME OUT     the module with the delta image (NAME boot or render) as data segments
+//   bundle OUT DIR    the host's dry-run bundle size (wrangler deploy --dry-run in DIR), minus the plain module
 //   deliver OUT N     Q3 a, b and c on the stored images; d on the baked modules (compile, instance)
 //   retain OUT N      Q3 d memory retention, one process per variant and round
 //   workerd OUT [N]   R3 modules in local workerd: instantiate, empty-memory modules, rss
@@ -29,10 +31,9 @@ import { bakeModule, captureImage, checkBaked, type MemoryImage } from '../../sr
 
 const PAGE = 65536;
 const here = new URL('.', import.meta.url);
-const root = process.env.FOLIO_BOOTIMAGE_ROOT ?? new URL('../../', import.meta.url).pathname;
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const repo = new URL('../../', import.meta.url).pathname;
+const root = process.env.FOLIO_BOOTIMAGE_ROOT ?? repo;
+const consumer = consumerRoot();
 const work = join(root, 'build/bootimage');
 const bundle = join(root, 'build/boot-image-child.mjs');
 // the interpreter is copied once into build/bootimage/interp so a rebuild of the consumer's
@@ -96,7 +97,7 @@ async function buildChild() {
 				name: 'consumer',
 				setup(builder) {
 					builder.onResolve({ filter: /^consumer:/ }, (args) => ({
-						path: join(consumer, args.path.slice('consumer:'.length))
+						path: resolveConsumer(consumer, args.path)
 					}));
 					builder.onResolve({ filter: /^fflate-real$/ }, () =>
 						builder.resolve('fflate', {
@@ -146,13 +147,15 @@ async function loadModule(bytes: Uint8Array = readFileSync(original)) {
 
 /**
  * copies a PHP build once into build/bootimage/interp; FOLIO_PIN_SOURCE is a folder holding
- * php.wasm and glue.mjs (default experiments/consumer/build/php) and FOLIO_PIN_WASM_SHA256, when
- * set, must equal the module's digest or the pin refuses. REPIN=1 replaces an existing pin.
+ * php.wasm and glue.mjs (default experiments/consumer/build/php). FOLIO_PIN_WASM_SHA256 and
+ * FOLIO_PIN_GLUE_SHA256, when set, must equal the copied files' digests or the pin refuses. A
+ * second build gets its own images and results by setting FOLIO_BOOTIMAGE_ROOT to another folder.
+ * REPIN=1 replaces an existing pin.
  */
 function pinInterpreter() {
 	mkdirSync(pinned, { recursive: true });
 	const source = process.env.FOLIO_PIN_SOURCE ?? join(root, 'experiments/consumer/build/php');
-	const expected = process.env.FOLIO_PIN_WASM_SHA256;
+	const expected = [process.env.FOLIO_PIN_WASM_SHA256, process.env.FOLIO_PIN_GLUE_SHA256];
 	const rows = [
 		['php.wasm', 'php8.5.tuned.wasm'],
 		['glue.mjs', 'php8.5-worker.tuned.mjs']
@@ -163,13 +166,39 @@ function pinInterpreter() {
 		if (copied) writeFileSync(to, readFileSync(path));
 		return { name, copied, bytes: readFileSync(to).length, sha256: digestOf(to) };
 	});
-	if (expected && rows[0]!.sha256 !== expected)
-		throw new Error(`pinned module ${rows[0]!.sha256} is not the expected ${expected}`);
+	rows.forEach((row, i) => {
+		if (expected[i] && row.sha256 !== expected[i])
+			throw new Error(`pinned ${row.name} ${row.sha256} is not the expected ${expected[i]}`);
+	});
 	emit({
 		kind: 'pin',
-		source,
+		source: basename(source),
 		files: rows,
 		consumerInterpNowSha256: digestOf(join(consumer, '.interp/php8.5.tuned.wasm'))
+	});
+}
+
+/** the upload size of a host bundle with the plain module; what is not the module is what a baked module is added to */
+function bundleSize(dir: string) {
+	const run = spawnSync(
+		'npx',
+		['wrangler', 'deploy', '--dry-run', '-c', 'wrangler.deploy.jsonc', '--outdir', 'dry'],
+		{
+			cwd: dir,
+			encoding: 'utf8',
+			env: { ...process.env, WRANGLER_SEND_METRICS: 'false', CI: '1' }
+		}
+	);
+	const total = /Total Upload: ([\d.]+) KiB/.exec(`${run.stdout}${run.stderr}`);
+	if (!total) throw new Error('no Total Upload line in the dry-run output');
+	const moduleBytes = readFileSync(join(dir, '.interp/php8.5.tuned.wasm')).length;
+	const totalUploadKiB = Number(total[1]);
+	emit({
+		kind: 'bundle',
+		moduleBytes,
+		moduleSha256: digestOf(join(dir, '.interp/php8.5.tuned.wasm')),
+		totalUploadKiB,
+		nonModuleKiB: Math.round((totalUploadKiB - moduleBytes / 1024) * 100) / 100
 	});
 }
 
@@ -324,7 +353,7 @@ async function workerdBench(reps: number) {
 	const meta = readMeta();
 	const dir = join(work, 'workerd');
 	mkdirSync(dir, { recursive: true });
-	const bin = join(root, 'node_modules/workerd/bin/workerd');
+	const bin = join(repo, 'node_modules/workerd/bin/workerd');
 	writeFileSync(join(dir, 'worker.mjs'), workerSource);
 	const variants: { name: string; bytes: Uint8Array; pages: number; kind: string }[] = [
 		{ name: 'unmodified', bytes: readFileSync(original), pages: 1024, kind: 'interpreter' },
@@ -483,6 +512,7 @@ if (!child) {
 	environment();
 	if (mode === 'workerd') await workerdBench(Number(rest[0] ?? 20));
 	else if (mode === 'pin') pinInterpreter();
+	else if (mode === 'bundle') bundleSize(arg2 ?? consumer);
 	else if (mode === 'probe') await buildProbe();
 	else if (mode === 'bake') await bake(arg1!);
 	else {
@@ -604,54 +634,14 @@ interface Replay {
 let heapStoreModule: any;
 const heapStore = async () => (heapStoreModule ??= await import('consumer:src/db/heap-store.ts'));
 
-const cfwName = /^cfw[A-Za-z0-9]*$/;
-
 /**
- * vrzno_env hands PHP a sealed wrapper per Module.cfw* function, kept in Module.__cfwSealed; this
- * builds or finds the same wrapper the glue would (the expression is the glue's own)
+ * reopens the descriptors and re-registers the handles at their ids, as the product does; the
+ * handle table goes through the glue's own Module.__cfwSeal and Module.__cfwRoot
  */
-function sealedWrapper(binary: any, name: string) {
-	const f = binary[name];
-	if (typeof f !== 'function') return undefined;
-	const map: WeakMap<object, object> = (binary.__cfwSealed ??= new WeakMap());
-	let w = map.get(f) as any;
-	if (!w) {
-		w = (...a: unknown[]) => {
-			const r = f(...a);
-			return r !== null && (typeof r === 'object' || typeof r === 'function') ? null : r;
-		};
-		Object.setPrototypeOf(w, null);
-		map.set(f, w);
-	}
-	return w;
-}
-
-/** Module as the handle table sees it: each cfw function is its sealed wrapper */
-function sealedView(binary: any) {
-	const view: Record<string, unknown> = {};
-	for (const key of Object.keys(binary)) {
-		const value = binary[key];
-		const sealed =
-			cfwName.test(key) && typeof value === 'function' && binary.__cfwSealed?.get(value);
-		view[key] = sealed || value;
-	}
-	return view;
-}
-
-/** reopens the descriptors and re-registers the handles at their ids, as the product does */
 function replayState(binary: any, replay: Replay) {
 	const h = heapStoreModule;
 	const streams = h.replayStreams(binary.FS, replay.streams);
-	const resolver = new Proxy(
-		{},
-		{
-			get: (_, name: string) =>
-				cfwName.test(name) && replay.sealed
-					? sealedWrapper(binary, name)
-					: (binary as any)[name]
-		}
-	);
-	const handles = h.replayHandles(binary.targets, resolver, replay.handles);
+	const handles = h.replayHandles(binary.targets, binary, replay.handles);
 	return {
 		streamsReplayed: streams.replayed.length,
 		streamsFailed: streams.failed,
@@ -920,9 +910,9 @@ async function anatomy(round: number) {
 		stackPointer: (ctx.imports.env as any).__stack_pointer
 			? Number((ctx.imports.env as any).__stack_pointer.value)
 			: undefined,
-		sealed: !!ctx.binary.__cfwSealed,
+		sealed: typeof ctx.binary.__cfwSeal === 'function',
 		streams: heapStore.captureStreams(ctx.binary.FS),
-		...heapStore.captureHandles(ctx.binary.targets, sealedView(ctx.binary))
+		...heapStore.captureHandles(ctx.binary.targets, ctx.binary)
 	});
 	const bootState = jsState();
 	const dbBefore = tableDigests(ctx.drupal.database());
@@ -1639,7 +1629,9 @@ async function renderBaked(name: string, variant: string, round = 0, seed?: stri
 			seed,
 			ok: false,
 			stage,
-			error: String((error as Error)?.stack ?? error).slice(0, 2500)
+			error: String((error as Error)?.stack ?? error)
+				.replace(/file:\/\/\/[^\s)]*\//g, '')
+				.slice(0, 2500)
 		});
 	}
 }

@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
 import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { openContexts } from './php-contexts.ts';
 import { defaultSizes, drupalPrelude, prelude, requestCode, workloads } from './php-tasks.ts';
 import type { HookConfig } from './worksp-hooks.ts';
@@ -22,9 +23,7 @@ if (!output || !modeArg || !inputsArg)
 	throw new Error('usage: worksp.ts OUTPUT.jsonl count|trace INPUTS [REPEATS] [RC_SITES.json]');
 const mode = modeArg as Mode;
 const repeats = Number(repeatsArg ?? 1);
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 const original = readFileSync(resolve(consumer, '.interp/php8.5.tuned.wasm'));
 const lines: string[] = [];

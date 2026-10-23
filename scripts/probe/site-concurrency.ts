@@ -17,14 +17,15 @@ import { Worker } from 'node:worker_threads';
 
 // does a real Drupal site on workerd serve CPU-bound requests one at a time, and what do several
 // workerd processes do for the same batch? Each host is one workerd with its own Durable Object
-// files, planned by bastion's own planner and fed by its own adapters (bastion's cgroup step is
-// Linux only, so the runtime itself cannot start a tenant here).
+// files, planned by the self-hosted runtime's own planner and fed by its own adapters (its cgroup
+// step is Linux only, so the runtime itself cannot start a tenant here).
 // arms: queue-cN = one process, N requests in flight; static-N = N processes, one in flight each,
 // request i goes to process i mod N; spin-cN = a JS spin loop on N threads, the CPU headroom control.
 // usage: node scripts/probe/site-concurrency.ts OUTDIR [ROUNDS] [HOSTS]
 //        bun scripts/probe/site-concurrency.ts host ROOT PAYLOAD   (one hosted site; internal)
-// env: SITE_PAYLOAD (site.js, wasm files and assets/), BASTION_CORE (bastion's core directory),
-// WORKERD_BINARY, FOLIO_MACHINE
+// env: SITE_PAYLOAD (site.js, wasm files and assets/), SITE_CORE (the runtime's core directory),
+// SITE_ASSET_PROFILE and SITE_PROBE (the runtime's names for the site's asset profile and probe),
+// SITE_HEADER_PREFIX (prefix of the runtime's request headers), WORKERD_BINARY, FOLIO_MACHINE
 
 export const batchSize = 31;
 export type Kind = 'queue' | 'static' | 'spin';
@@ -78,7 +79,9 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // #region host
 
 const hostSite = async (root: string, payload: string) => {
-	const core = process.env.BASTION_CORE!;
+	const core = process.env.SITE_CORE!;
+	const profile = process.env.SITE_ASSET_PROFILE!;
+	const headerPrefix = process.env.SITE_HEADER_PREFIX!;
 	const workerd = process.env.WORKERD_BINARY!;
 	const load = (path: string) => import(pathToFileURL(join(core, 'src', path)).href);
 	const [assets, cache, generate, plan, context, kv, files, server] = await Promise.all([
@@ -101,7 +104,7 @@ const hostSite = async (root: string, payload: string) => {
 		assets: assets.assetResolver(
 			files.nodeFiles(),
 			join(payload, 'assets'),
-			assets.ASSET_PROFILES.drupflare
+			assets.ASSET_PROFILES[profile]
 		),
 		tenant: 'acme'
 	};
@@ -115,10 +118,10 @@ const hostSite = async (root: string, payload: string) => {
 				for (const [name, value] of Object.entries(req.headers))
 					if (
 						typeof value === 'string' &&
-						(name === 'content-type' || name.startsWith('x-bastion-'))
+						(name === 'content-type' || name.startsWith(headerPrefix))
 					)
 						headers[name] = value;
-				const url = new URL(`http://bastion${req.url ?? '/'}`);
+				const url = new URL(`http://runtime${req.url ?? '/'}`);
 				const asked = new Request(url, {
 					method: req.method,
 					headers,
@@ -148,7 +151,7 @@ const hostSite = async (root: string, payload: string) => {
 	}
 	const config = plan.planSite({
 		tenant: { name: 'acme', sites: [] },
-		site: { host: '127.0.0.1', bundle: payload, probe: 'drupflare' },
+		site: { host: '127.0.0.1', bundle: payload, probe: process.env.SITE_PROBE! },
 		paths: {
 			bundle: payload,
 			storage: join(root, 'storage'),
@@ -159,7 +162,7 @@ const hostSite = async (root: string, payload: string) => {
 		modules: plan.modulesFrom(context.defaultContext(), payload, 'site.js', root),
 		compatibilityDate: '2026-08-01',
 		compatibilityFlags: ['nodejs_compat'],
-		uniqueKey: 'bastion-e2e-probe',
+		uniqueKey: 'site-probe',
 		durableObjectClass: 'SitePhpDurableObject',
 		residency: 'evict',
 		bindings: {

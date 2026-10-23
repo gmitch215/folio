@@ -2,6 +2,7 @@ import binaryen from 'binaryen';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
 import { resolve } from 'node:path';
+import { consumerRoot } from './consumer-root.ts';
 import { openContexts } from './php-contexts.ts';
 import { defaultSizes, prelude, requestCode, workloads } from './php-tasks.ts';
 import { census, children } from './purity-census.ts';
@@ -14,9 +15,7 @@ import { census, children } from './purity-census.ts';
 const [output, rendersArg, moduleArg] = process.argv.slice(2);
 if (!output) throw new Error('usage: indirect-sites.ts OUTPUT.jsonl [RENDERS] [MODULE.wasm]');
 const renders = Number(rendersArg ?? 3);
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 const original = readFileSync(moduleArg ?? resolve(consumer, '.interp/php8.5.tuned.wasm'));
 const lines: string[] = [];

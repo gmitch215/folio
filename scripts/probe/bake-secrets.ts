@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { join, resolve } from 'node:path';
+import { basename, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
 	applyImage,
@@ -12,11 +12,22 @@ import {
 	decodeImage,
 	encodeImage,
 	ImageMismatchError,
-	type ApplyExpectation,
+	type ApplyOptions,
 	type MemoryImage
 } from '../../src/bake.ts';
-import { diffImages, judge, scanBytes, scanImage, type Secret } from '../analyze/bakesecrets.ts';
+import {
+	clusterSweep,
+	compareSweeps,
+	diffImages,
+	judge,
+	scanBytes,
+	scanImage,
+	sweepBytes,
+	type Secret,
+	type SweepFinding
+} from '../analyze/bakesecrets.ts';
 import { phpString, rekeyCode, variants } from './bake-rekey.ts';
+import { resolveConsumer } from './consumer-root.ts';
 
 const usage = `usage: node scripts/probe/bake-secrets.ts MODE OUTPUT.jsonl [ARGS]
   pin               copy the interpreter into build/bakesecrets/interp (refuses another digest)
@@ -25,11 +36,16 @@ const usage = `usage: node scripts/probe/bake-secrets.ts MODE OUTPUT.jsonl [ARGS
   keying            the module and context digest checks of applyImage on the sentinel image
   t2 N              T2: replay into a site with its own key and salt, per rekey variant, then validate
   t3 N              T3: first random values in N fresh replays, without and with the rekey step
+  census N          the host calls a replay and a plain boot make before the first request, per phase, N processes
+  sweep             a static scan of the baked heap for secret-shaped strings beyond the sentinels
   arms N            plain boot, baked replay, and baked replay with the rekey step, N processes each
 FOLIO_CONSUMER names the consumer copy; FOLIO_MACHINE labels the rows`;
 
 const PAGE = 65536;
-const pinSha256 = '95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4';
+const pinSha256 =
+	process.env.FOLIO_PIN_WASM_SHA256 ??
+	'95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4';
+const pinGlueSha256 = process.env.FOLIO_PIN_GLUE_SHA256;
 const root = process.env.FOLIO_BAKESECRETS_ROOT ?? new URL('../../', import.meta.url).pathname;
 const here = new URL('.', import.meta.url);
 const consumerEnv = process.env.FOLIO_CONSUMER;
@@ -40,7 +56,7 @@ const pinned = join(work, 'interp');
 const original = join(pinned, 'php8.5.tuned.wasm');
 const glue = join(pinned, 'php8.5-worker.tuned.mjs');
 const child = process.env.FOLIO_BAKESECRETS_CHILD === '1';
-const wave11 = join(root, 'build/bootimage');
+const bootimageWork = join(root, 'build/bootimage');
 
 type Row = Record<string, any>;
 const [mode, output, ...rest] = process.argv.slice(2);
@@ -60,10 +76,10 @@ const writeJson = (name: string, value: unknown) =>
 
 // a base64url key of 55 bytes, the shape Drupal's Crypt::randomBytesBase64(55) gives (74 characters)
 const randomSecret = () => randomBytes(55).toString('base64url');
-// the salt the consumer harness hard-codes, and what wave 11's images were taken with
+// the salt the consumer harness hard-codes, and what the boot image probe's images were taken with
 const legacySalt = 'folio-render-proof-fixed-salt';
 
-/** what makes a replaying site's heap valid for the image, other than the module: asset and glue identity */
+/** what makes a replaying site's heap valid for the image, other than the module: glue, driver and database identity */
 function contextDigest(generation?: string) {
 	const manifest = JSON.parse(
 		readFileSync(join(consumer, 'assets/drupal-sql/manifest.json'), 'utf8')
@@ -71,7 +87,7 @@ function contextDigest(generation?: string) {
 	return sha(
 		JSON.stringify({
 			glue: interp.glueSha256,
-			pack: sha(readFileSync(join(consumer, 'assets/pack.json'))),
+			driver: sha(readFileSync(join(consumer, 'assets/driver.json'))),
 			sql: generation ?? manifest.generation
 		})
 	);
@@ -143,8 +159,10 @@ function pinInterpreter() {
 	});
 	if (rows[0]!.sha256 !== pinSha256)
 		throw new Error(`the module ${rows[0]!.sha256} is not the pinned ${pinSha256}`);
+	if (pinGlueSha256 && rows[1]!.sha256 !== pinGlueSha256)
+		throw new Error(`the glue ${rows[1]!.sha256} is not the pinned ${pinGlueSha256}`);
 	Object.assign(interp, { wasmSha256: digestOf(original), glueSha256: digestOf(glue) });
-	emit({ kind: 'pin', source, files: rows });
+	emit({ kind: 'pin', source: basename(source), files: rows });
 }
 
 async function buildProbe() {
@@ -180,7 +198,7 @@ async function buildChild() {
 				name: 'consumer',
 				setup(builder) {
 					builder.onResolve({ filter: /^consumer:/ }, (args) => ({
-						path: join(consumer, args.path.slice('consumer:'.length))
+						path: resolveConsumer(consumer, args.path)
 					}));
 				}
 			}
@@ -215,6 +233,9 @@ const expectations: Record<'sentinel' | 'control', Record<string, Secret['expect
 		sessionSid: 'absent',
 		bakeSessionId: 'absent',
 		bakeCsrfSeed: 'info',
+		permissionsHash: 'info',
+		viewDomId: 'info',
+		fileCachePrefix: 'info',
 		cronKey: 'info',
 		packSalt: 'info'
 	},
@@ -225,6 +246,9 @@ const expectations: Record<'sentinel' | 'control', Record<string, Secret['expect
 		sessionSid: 'present',
 		bakeSessionId: 'info',
 		bakeCsrfSeed: 'info',
+		permissionsHash: 'info',
+		viewDomId: 'info',
+		fileCachePrefix: 'info',
 		cronKey: 'info',
 		packSalt: 'info'
 	}
@@ -330,21 +354,21 @@ async function captureMode() {
 	if (!only) diffRows();
 }
 
-/** pages and bytes that differ from the image wave 11 took, and between the runs of this lane */
+/** pages and bytes that differ from the boot image probe's render image, and between the runs here */
 function diffRows() {
-	const w11meta = JSON.parse(readFileSync(join(wave11, 'meta.json'), 'utf8'));
-	const w11: MemoryImage = {
-		byteLength: w11meta.images.render.memoryBytes,
-		pages: JSON.parse(readFileSync(join(wave11, 'render.delta.pages.json'), 'utf8')),
-		data: new Uint8Array(readFileSync(join(wave11, 'render.delta.bin')))
+	const earlierMeta = JSON.parse(readFileSync(join(bootimageWork, 'meta.json'), 'utf8'));
+	const earlier: MemoryImage = {
+		byteLength: earlierMeta.images.render.memoryBytes,
+		pages: JSON.parse(readFileSync(join(bootimageWork, 'render.delta.pages.json'), 'utf8')),
+		data: new Uint8Array(readFileSync(join(bootimageWork, 'render.delta.bin')))
 	};
 	const a = loadImage('sentinel-a');
 	const b = loadImage('sentinel-b');
 	const control = loadImage('control');
 	const pairs: [string, string, MemoryImage, MemoryImage][] = [
-		['wave11', 'sentinel-a', w11, a],
-		['wave11', 'sentinel-b', w11, b],
-		['wave11', 'legacy', w11, loadImage('legacy')],
+		['bootimage', 'sentinel-a', earlier, a],
+		['bootimage', 'sentinel-b', earlier, b],
+		['bootimage', 'legacy', earlier, loadImage('legacy')],
 		['legacy', 'sentinel-a', loadImage('legacy'), a],
 		['sentinel-a', 'sentinel-b', a, b],
 		['sentinel-a', 'control', a, control]
@@ -354,7 +378,7 @@ function diffRows() {
 			kind: 'diff',
 			left,
 			right,
-			wave11InterpSha256: w11meta.interpSha256,
+			bootimageInterpSha256: earlierMeta.interpSha256,
 			...diffImages(x, y)
 		});
 }
@@ -364,12 +388,16 @@ async function keyingMode() {
 	const context = contextDigest();
 	const wrongContext = contextDigest('0000000000000000');
 	const wrongModule = '1'.repeat(64);
-	const cases: [string, ApplyExpectation][] = [
-		['match', { module: interp.wasmSha256, context }],
-		['module only', { module: interp.wasmSha256 }],
-		['no expectation', {}],
-		['wrong module', { module: wrongModule, context }],
-		['wrong context', { module: interp.wasmSha256, context: wrongContext }]
+	// the sentinel image records changed globals, which applyImage refuses unless told to copy
+	// memory only; the digest cases pass that knowingly so each one reaches its own check
+	const only = { memoryOnly: true };
+	const cases: [string, ApplyOptions][] = [
+		['match', { module: interp.wasmSha256, context, ...only }],
+		['module only', { module: interp.wasmSha256, ...only }],
+		['no expectation', { ...only }],
+		['wrong module', { module: wrongModule, context, ...only }],
+		['wrong context', { module: interp.wasmSha256, context: wrongContext, ...only }],
+		['changed globals, default', { module: interp.wasmSha256, context }]
 	];
 	for (const [name, expect] of cases) {
 		const memory = new WebAssembly.Memory({ initial: image.byteLength / PAGE });
@@ -449,6 +477,85 @@ async function armsMode(count: number) {
 		for (const arm of ['plain', 'baked', 'rekeyed']) runChild(['arm', output!, arm, String(i)]);
 }
 
+/**
+ * a static sweep of two independent sentinel images for secret-shaped strings. A string both images
+ * hold cannot be a per-bake secret; a string only one holds is random or derived from the bake's
+ * key, salt or request, and is listed with the text before it so each can be named.
+ */
+function sweepMode() {
+	const tags = ['sentinel-a', 'sentinel-b'];
+	const sweeps = tags.map((tag) => {
+		const image = loadImage(tag);
+		const secrets = readJson(`${tag}.secrets.json`);
+		const needles = readJson(`${tag}.meta.json`).needles as Record<string, string>;
+		const known = new Map<string, string>(
+			Object.entries({ bakeKey: secrets.key, bakeSalt: secrets.salt, ...needles }).map(
+				([name, value]) => [sha(value as string).slice(0, 16), name]
+			)
+		);
+		const t = performance.now();
+		const findings = sweepBytes(image.data);
+		emit({
+			kind: 'sweep',
+			tag,
+			bytes: image.data.length,
+			sweepMs: performance.now() - t,
+			distinct: findings.length,
+			occurrences: findings.reduce((n, finding) => n + finding.count, 0),
+			byClass: Object.fromEntries(
+				['hex32', 'hex40', 'hex64', 'base64url', 'base64'].map((name) => {
+					const list = findings.filter((finding) => finding.class === name);
+					return [
+						name,
+						{
+							distinct: list.length,
+							occurrences: list.reduce((n, f) => n + f.count, 0)
+						}
+					];
+				})
+			),
+			known: findings
+				.filter((finding) => known.has(finding.sha16))
+				.map((finding) => ({
+					name: known.get(finding.sha16),
+					class: finding.class,
+					count: finding.count
+				}))
+		});
+		return { tag, findings, known };
+	});
+	const [a, b] = sweeps as [(typeof sweeps)[number], (typeof sweeps)[number]];
+	const diff = compareSweeps(a.findings, b.findings);
+	// a random string Drupal puts in the page and replaces before it answers
+	const placeholder = /placeholder token="$|holder token="$/;
+	const show = (finding: SweepFinding, known: Map<string, string>) => ({
+		...finding,
+		known:
+			known.get(finding.sha16) ??
+			(placeholder.test(finding.before) ? 'placeholderToken' : undefined)
+	});
+	emit({
+		kind: 'sweepCompare',
+		left: a.tag,
+		right: b.tag,
+		shared: diff.shared.length,
+		onlyLeft: diff.onlyA.length,
+		onlyRight: diff.onlyB.length,
+		sharedOccurrences: diff.shared.reduce((n, finding) => n + finding.count, 0),
+		onlyLeftOccurrences: diff.onlyA.reduce((n, finding) => n + finding.count, 0),
+		sharedClusters: clusterSweep(diff.shared).slice(0, 40),
+		onlyLeftClusters: clusterSweep(diff.onlyA).slice(0, 60)
+	});
+	for (const finding of diff.onlyA) emit({ kind: 'sweepOnlyLeft', ...show(finding, a.known) });
+}
+
+async function censusMode(count: number) {
+	await buildChild();
+	for (let i = 0; i < count; i++)
+		for (const via of ['plain', 'baked', 'apply'])
+			runChild(['census', output!, via, String(i)]);
+}
+
 if (!child) {
 	if (!mode) throw new Error(usage);
 	if (!consumerEnv) throw new Error('set FOLIO_CONSUMER to the consumer copy');
@@ -468,6 +575,8 @@ if (!child) {
 	else if (mode === 'keying') await keyingMode();
 	else if (mode === 't2') await t2Mode(Number(rest[0] ?? 3));
 	else if (mode === 't3') await t3Mode(Number(rest[0] ?? 10));
+	else if (mode === 'census') await censusMode(Number(rest[0] ?? 3));
+	else if (mode === 'sweep') sweepMode();
 	else if (mode === 'arms') await armsMode(Number(rest[0] ?? 10));
 	else if (mode !== 'pin') throw new Error(usage);
 	const after = { wasmSha256: digestOf(original), glueSha256: digestOf(glue) };
@@ -503,13 +612,56 @@ interface OpenOptions {
 	pages?: number;
 	replay?: Replay;
 	/** copied over the fresh instance right after instantiation, with its keying checks */
-	apply?: { image: MemoryImage; expect: ApplyExpectation };
+	apply?: { image: MemoryImage; expect: ApplyOptions };
 	traceAsm?: Row[];
 	/** the private key and hash salt this site holds, seeded before the first read; no key, no row */
 	key?: string;
 	salt: string;
 	/** extra rows for the private database before the context opens */
 	seed?: (db: any) => void;
+	/** counts every call the module makes into the host, by phase */
+	census?: Census;
+}
+
+/** wasm to host calls by phase and import; harness calls are the ones this script makes itself */
+interface Census {
+	phase: string;
+	harness: boolean;
+	calls: Record<string, Record<string, number>>;
+	/** the cfw functions as they were before the counting wrappers went on */
+	originals: Record<string, unknown>;
+}
+
+const bump = (census: Census, name: string) => {
+	const phase = (census.calls[census.phase] ??= {});
+	const key = census.harness ? `harness:${name}` : name;
+	phase[key] = (phase[key] ?? 0) + 1;
+};
+
+/** replaces every function import with a counting wrapper; call before the module is instantiated */
+function countImports(given: any, module: WebAssembly.Module, census: Census) {
+	for (const item of WebAssembly.Module.imports(module)) {
+		const table = given[item.module];
+		const original = table?.[item.name];
+		if (item.kind !== 'function' || typeof original !== 'function') continue;
+		table[item.name] = (...args: unknown[]) => {
+			bump(census, `${item.module}.${item.name}`);
+			return original(...args);
+		};
+	}
+}
+
+/** wraps each Module.cfw* host function; the glue seals the wrapper, so PHP calls count here */
+function countCfw(binary: any, census: Census) {
+	for (const name of Object.keys(binary))
+		if (/^cfw[A-Za-z0-9]*$/.test(name) && typeof binary[name] === 'function') {
+			const original = binary[name];
+			census.originals[name] = original;
+			binary[name] = (...args: unknown[]) => {
+				bump(census, `Module.${name}`);
+				return original(...args);
+			};
+		}
 }
 
 interface Context {
@@ -524,46 +676,10 @@ interface Context {
 
 let heapStoreModule: any;
 const heapStore = async () => (heapStoreModule ??= await import('consumer:src/db/heap-store.ts'));
-const cfwName = /^cfw[A-Za-z0-9]*$/;
-
-function sealedWrapper(binary: any, name: string) {
-	const f = binary[name];
-	if (typeof f !== 'function') return undefined;
-	const map: WeakMap<object, object> = (binary.__cfwSealed ??= new WeakMap());
-	let w = map.get(f) as any;
-	if (!w) {
-		w = (...a: unknown[]) => {
-			const r = f(...a);
-			return r !== null && (typeof r === 'object' || typeof r === 'function') ? null : r;
-		};
-		Object.setPrototypeOf(w, null);
-		map.set(f, w);
-	}
-	return w;
-}
-
-function sealedView(binary: any) {
-	const copy: Record<string, unknown> = {};
-	for (const key of Object.keys(binary)) {
-		const value = binary[key];
-		const sealed =
-			cfwName.test(key) && typeof value === 'function' && binary.__cfwSealed?.get(value);
-		copy[key] = sealed || value;
-	}
-	return copy;
-}
-
 function replayState(binary: any, replay: Replay) {
 	const h = heapStoreModule;
 	const streams = h.replayStreams(binary.FS, replay.streams);
-	const resolver = new Proxy(
-		{},
-		{
-			get: (_, name: string) =>
-				cfwName.test(name) && replay.sealed ? sealedWrapper(binary, name) : binary[name]
-		}
-	);
-	const handles = h.replayHandles(binary.targets, resolver, replay.handles);
+	const handles = h.replayHandles(binary.targets, binary, replay.handles);
 	return {
 		streamsReplayed: streams.replayed.length,
 		streamsFailed: streams.failed,
@@ -649,6 +765,7 @@ async function openContext(module: WebAssembly.Module, options: OpenOptions): Pr
 					if (options.replay?.stackPointer !== undefined)
 						(given.env as any).__stack_pointer.value = options.replay.stackPointer;
 					if (options.traceAsm) traceAsm(given, memory, options.traceAsm, () => stage);
+					if (options.census) countImports(given, module, options.census);
 					const ti = now();
 					instance = new WebAssembly.Instance(module, given);
 					marks.instantiateMs = now() - ti;
@@ -662,9 +779,11 @@ async function openContext(module: WebAssembly.Module, options: OpenOptions): Pr
 						const wrapped = instance.exports[name] as (...args: any[]) => any;
 						exports[name] = (...args: any[]) => {
 							if (options.baked) {
+								if (options.census) options.census.harness = true;
 								for (const call of options.replay?.asm ?? [])
 									if (call.stage === name)
 										(given.env as any)[call.key](call.code, 0, 0);
+								if (options.census) options.census.harness = false;
 								return 0;
 							}
 							stage = name;
@@ -695,6 +814,10 @@ async function openContext(module: WebAssembly.Module, options: OpenOptions): Pr
 	const tb = now();
 	await drupal.boot(binary, run, { jsOnly: options.baked, salt: options.salt });
 	marks.bootMs = now() - tb;
+	if (options.census) {
+		countCfw(binary, options.census);
+		options.census.phase = 'replay';
+	}
 	if (options.replay) {
 		const t = now();
 		marks.replay = replayState(binary, options.replay);
@@ -720,7 +843,8 @@ async function render(ctx: Context, route = '/', request: Row = {}) {
 		rawSha256: sha(page.html),
 		status: page.status as number,
 		bytes: page.bytes as number,
-		permissionsHash: /"permissionsHash":"([0-9a-f]{64})"/.exec(page.html)?.[1]
+		permissionsHash: /"permissionsHash":"([0-9a-f]{64})"/.exec(page.html)?.[1],
+		viewDomId: /js-view-dom-id-([0-9a-f]{64})/.exec(page.html)?.[1]
 	};
 }
 
@@ -799,11 +923,12 @@ async function capture(tag: string, role: Role) {
 		: undefined;
 	const js = {
 		stackPointer,
-		sealed: !!ctx.binary.__cfwSealed,
+		sealed: typeof ctx.binary.__cfwSeal === 'function',
 		streams: heap.captureStreams(ctx.binary.FS),
-		...heap.captureHandles(ctx.binary.targets, sealedView(ctx.binary))
+		...heap.captureHandles(ctx.binary.targets, ctx.binary)
 	};
 	const post = parse(await ctx.run(SESSION_PHP));
+	const prefix = parse(await ctx.run(FILE_CACHE_PHP));
 	const db = ctx.drupal.database();
 	const cronRow = db
 		.prepare(
@@ -813,9 +938,8 @@ async function capture(tag: string, role: Role) {
 	const cronKey = cronRow
 		? /"([^"]+)"/.exec(Buffer.from(cronRow.value).toString())?.[1]
 		: undefined;
-	const packSettings = readFileSync(
-		join(consumer, 'drupal-src/sites/default/settings.php'),
-		'utf8'
+	const packSettings = new TextDecoder().decode(
+		ctx.binary.FS.readFile('/drupal/sites/default/settings.php')
 	);
 	const needles: Record<string, string> = {
 		userName: user.name,
@@ -827,7 +951,12 @@ async function capture(tag: string, role: Role) {
 			? { packSalt: /hash_salt'\] = '([^']+)'/.exec(packSettings)![1]! }
 			: {}),
 		...(post.sessionId ? { bakeSessionId: String(post.sessionId) } : {}),
-		...(post.csrfSeed ? { bakeCsrfSeed: String(post.csrfSeed) } : {})
+		...(post.csrfSeed ? { bakeCsrfSeed: String(post.csrfSeed) } : {}),
+		...(first.permissionsHash ? { permissionsHash: first.permissionsHash } : {}),
+		...(first.viewDomId ? { viewDomId: first.viewDomId } : {}),
+		...(/[0-9a-f]{64}/.exec(String(prefix.prefix))
+			? { fileCachePrefix: /[0-9a-f]{64}/.exec(String(prefix.prefix))![0] }
+			: {})
 	};
 	writeFileSync(path(`${tag}.img`), encodeImage(image));
 	writeJson(`${tag}.meta.json`, {
@@ -909,7 +1038,8 @@ async function replay(test: string, variant: string, tag: string, index: number,
 	const real = JSON.parse(readFileSync(path('real.secrets.json'), 'utf8'));
 	const bake = JSON.parse(readFileSync(path(`${tag}.secrets.json`), 'utf8'));
 	const meta = JSON.parse(readFileSync(path(`${tag}.meta.json`), 'utf8'));
-	const expect = { module: interp.wasmSha256, context: contextDigest() };
+	// the apply route copies memory only; the census and the stack bounds row show what that leaves
+	const expect = { module: interp.wasmSha256, context: contextDigest(), memoryOnly: true };
 	const image =
 		via === 'apply' ? decodeImage(new Uint8Array(readFileSync(path(`${tag}.img`)))) : undefined;
 	const bytes = via === 'apply' ? readFileSync(original) : readFileSync(path(`${tag}.wasm`));
@@ -1046,12 +1176,140 @@ async function arm(name: string, round: number) {
 	ctx.drupal.close();
 }
 
+const FILE_CACHE_PHP = `<?php
+echo json_encode(['prefix' => Drupal\\Core\\Site\\Settings::getApcuPrefix('file_cache', DRUPAL_ROOT)]);`;
+
+const STACK_PHP = `<?php
+function folio_deep($n) { return array_map('folio_deep', [$n + 1]); }
+try {
+	folio_deep(0);
+	echo json_encode(['returned' => true]);
+} catch (Throwable $e) {
+	echo json_encode(['class' => get_class($e), 'message' => substr($e->getMessage(), 0, 90)]);
+}`;
+
+const BRIDGE_PHP = `<?php echo json_encode([
+	'process' => vrzno_env('process'),
+	'globalThis' => vrzno_env('globalThis'),
+	'require' => vrzno_env('require'),
+	'cfwSqlExecIsObject' => is_object(vrzno_env('cfwSqlExec'))
+]);`;
+
+/** what each handle PHP holds points at: the frozen root, a sealed cfw wrapper, or something else */
+function handleAudit(binary: any, originals: Record<string, unknown>) {
+	const root = binary.__cfwRoot;
+	const sealed = new Map<unknown, string>();
+	for (const name of Object.keys(binary))
+		if (/^cfw[A-Za-z0-9]*$/.test(name) && typeof binary[name] === 'function') {
+			for (const f of [binary[name], originals[name]]) {
+				const wrapper = binary.__cfwSealed?.get(f);
+				if (wrapper) sealed.set(wrapper, name);
+			}
+		}
+	const handles: Row[] = [];
+	for (const [id, object] of binary.targets.byInteger as Iterable<[number, any]>)
+		handles.push({
+			id: Number(id),
+			is:
+				object === root
+					? 'cfwRoot'
+					: object === globalThis
+						? 'globalThis'
+						: sealed.has(object)
+							? `sealed:${sealed.get(object)}`
+							: 'other',
+			sealedPrototype:
+				typeof object === 'function' ? Object.getPrototypeOf(object) === null : undefined
+		});
+	return {
+		handles: handles.sort((a, b) => a.id - b.id),
+		rootFrozen: Object.isFrozen(root),
+		rootPrototypeNull: Object.getPrototypeOf(root) === null,
+		rootKeys: Reflect.ownKeys(root).length,
+		rootIsGlobalThis: root === globalThis
+	};
+}
+
+/**
+ * one replay of the sentinel image through the baked module (via baked) or applyImage (via apply),
+ * or a plain boot for contrast (via plain), counting every call the module makes into the host. phase open covers instantiation and the
+ * harness's own JS setup, replay covers the handle and descriptor replay, rekey and request are
+ * the first PHP that runs.
+ */
+async function census(via: string, index: number) {
+	const real = JSON.parse(readFileSync(path('real.secrets.json'), 'utf8'));
+	const meta = JSON.parse(readFileSync(path('sentinel-a.meta.json'), 'utf8'));
+	const image =
+		via === 'apply'
+			? decodeImage(new Uint8Array(readFileSync(path('sentinel-a.img'))))
+			: undefined;
+	const bytes = via === 'baked' ? readFileSync(path('sentinel-a.wasm')) : readFileSync(original);
+	const counter: Census = { phase: 'open', harness: false, calls: {}, originals: {} };
+	const ctx = await openContext(
+		new WebAssembly.Module(bytes),
+		via === 'plain'
+			? { key: real.key, salt: real.salt, census: counter }
+			: {
+					baked: true,
+					pages: meta.memoryPages,
+					replay: replayOf(meta),
+					apply: image && {
+						image,
+						expect: {
+							module: interp.wasmSha256,
+							context: contextDigest(),
+							memoryOnly: true
+						}
+					},
+					key: real.key,
+					salt: real.salt,
+					census: counter
+				}
+	);
+	counter.phase = 'idle';
+	const afterReplay = handleAudit(ctx.binary, counter.originals);
+	const callsBeforeFirstPhp = JSON.parse(JSON.stringify(counter.calls));
+	counter.phase = 'rekey';
+	await ctx.run('<?php ' + rekeyCode(real.salt, variants.full!));
+	counter.phase = 'request';
+	const front = await render(ctx, '/');
+	counter.phase = 'bridge-probe';
+	const bridge = parse(await ctx.run(BRIDGE_PHP));
+	const exports = ctx.instance.exports as Record<string, any>;
+	const stack = Object.fromEntries(
+		['emscripten_stack_get_base', 'emscripten_stack_get_end', 'emscripten_stack_get_free'].map(
+			(name) => [name, Number(exports[name]?.() ?? NaN)]
+		)
+	);
+	counter.phase = 'stack-probe';
+	const deep = await ctx.run(STACK_PHP).then(
+		(raw) => parse(raw),
+		(error) => ({ thrown: String(error?.stack ?? error).slice(0, 160) })
+	);
+	emit({
+		kind: 'census',
+		via,
+		index,
+		replay: ctx.marks.replay,
+		handlesAfterReplay: afterReplay,
+		calls: callsBeforeFirstPhp,
+		callsByPhase: counter.calls,
+		bridgeProbe: bridge,
+		stackGlobals: stack,
+		deepRecursion: deep,
+		status: front.status,
+		renderSha256: front.sha256
+	});
+	ctx.drupal.close();
+}
+
 const [childMode, , ...args] = process.argv.slice(2);
 if (childMode === 'capture') await capture(args[0]!, args[1] as Role);
 else if (childMode === 'replay')
 	await replay(args[0]!, args[1]!, args[2]!, Number(args[3]), args[4]!);
 else if (childMode === 'reference') await reference(args[0]!, args[1]!, Number(args[2]));
 else if (childMode === 'arm') await arm(args[0]!, Number(args[1]));
+else if (childMode === 'census') await census(args[0]!, Number(args[1]));
 else throw new Error(`unknown child mode ${childMode}`);
 
 // #endregion

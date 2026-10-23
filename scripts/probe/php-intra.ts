@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { resolve } from 'node:path';
 import { peakConcurrency } from '../../src/tasks.ts';
+import { consumerRoot } from './consumer-root.ts';
 import { type Contexts, overlapMs } from './php-contexts.ts';
 import { costCode, defaultSizes, openTaskContexts, requestCode, workloads } from './php-tasks.ts';
 
@@ -20,9 +20,7 @@ const args = calibrate ? rest.slice(1) : rest;
 const pairs = Number(args[0] ?? 20);
 const widths = (args[1] ?? '1,2,4,8').split(',').map(Number);
 const names = args[2] ? args[2].split(',') : workloads.map((w) => w.name);
-const consumer = resolve(
-	process.env.FOLIO_CONSUMER ?? new URL('../../../drupflare/worker', import.meta.url).pathname
-);
+const consumer = consumerRoot();
 const bundle = process.env.FOLIO_WORKER_BUNDLE;
 const jobCount = Number(process.env.FOLIO_JOBS ?? 8);
 const lines: string[] = [];

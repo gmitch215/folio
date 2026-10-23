@@ -6,7 +6,7 @@ import { Folio } from '../../src/node.ts';
 
 const [tinyPath, corePath] = process.argv.slice(2);
 if (!tinyPath || !corePath)
-	throw new Error('Usage: node scripts/integration-probe.ts TINYIMG.wasm GMUX-CORE.wasm');
+	throw new Error('Usage: node scripts/integration-probe.ts TINYIMG.wasm MACHINE-CORE.wasm');
 const results: unknown[] = [];
 {
 	const bytes = readFileSync(tinyPath),
@@ -105,7 +105,7 @@ const results: unknown[] = [];
 		assert.deepEqual(values.slice(-4), [33, 11, 22, -1]);
 		assert.deepEqual(new Uint8Array(actual.buffer), new Uint8Array(expected.buffer));
 		results.push({
-			workload: 'actual gmux core ABI1 queue and imported globals/table',
+			workload: 'machine core ABI1 queue and imported globals/table',
 			bytes: bytes.length,
 			sha256: createHash('sha256').update(bytes).digest('hex'),
 			calls: calls.length,
