@@ -69,77 +69,6 @@ export function summarizeIntra(rows: Row[], hash: string) {
 	};
 }
 
-// the Zend compile share of an uncached Drupal render under the shipped opcache arms
-export function summarizeCompile(rows: Row[], hash: string) {
-	const environment = rows.find((row) => row.kind === 'environment')!;
-	const samples = rows.filter((row) => row.kind === 'sample' && row.arm !== 'shm');
-	assert.ok(samples.length > 0, 'no samples');
-	assert.equal(
-		new Set(rows.filter((r) => r.sha256).map((r) => r.sha256)).size,
-		1,
-		'outputs differ'
-	);
-	const byArm = (arm: string) => samples.filter((r) => r.arm === arm);
-	const off = new Map(byArm('off').map((r) => [r.round, r]));
-	const arms: Record<string, unknown> = {};
-	for (const arm of [...new Set(samples.map((r) => r.arm))]) {
-		const s = byArm(arm);
-		const paired = s.filter((r) => off.has(r.round));
-		arms[arm] = {
-			n: s.length,
-			renderWallMs: {
-				...stats(s.map((r) => r.renderWallMs)),
-				p95: p95(s.map((r) => r.renderWallMs))
-			},
-			renderThreadCpuMs: stats(s.map((r) => r.renderThreadCpuMs)),
-			inflateMs: stats(s.map((r) => r.inflateMs)),
-			inflateCalls: median(s.map((r) => r.inflateCalls)),
-			sqlMs: stats(s.map((r) => r.sqlMs)),
-			wallOverOff: stats(paired.map((r) => r.renderWallMs / off.get(r.round)!.renderWallMs)),
-			savedMsVsOff: stats(paired.map((r) => off.get(r.round)!.renderWallMs - r.renderWallMs))
-		};
-	}
-	const packSaved = (arms.pack as any)?.savedMsVsOff?.median as number | undefined;
-	const inflateSaved =
-		(arms.off as any).inflateMs.median - ((arms.pack as any)?.inflateMs.median ?? 0);
-	const offWall = (arms.off as any).renderWallMs.median as number;
-	const includes = rows.filter((row) => row.kind === 'includes');
-	const perOptimizer: Record<string, unknown> = {};
-	for (const optimizer of [...new Set(includes.map((r) => r.optimizer))]) {
-		const s = includes.filter((r) => r.optimizer === optimizer);
-		const per = s[0]!.perInclude as { bytes: number; ms: number }[];
-		const total = sum(per.map((p) => p.ms));
-		const sorted = [...per].sort((a, b) => b.ms - a.ms);
-		perOptimizer[optimizer] = {
-			rounds: s.length,
-			includes: s[0]!.includes,
-			bytes: s[0]!.bytes,
-			compileMs: stats(s.map((r) => r.compileMs)),
-			readMs: stats(s.map((r) => r.readMs)),
-			compileShareOfOffRender: median(s.map((r) => r.compileMs)) / offWall,
-			firstRoundTop10: s[0]!.top,
-			firstRoundTop10ShareOfCompile: sum(sorted.slice(0, 10).map((p) => p.ms)) / total,
-			firstRoundTop100ShareOfCompile: sum(sorted.slice(0, 100).map((p) => p.ms)) / total,
-			includesOver1Ms: per.filter((p) => p.ms > 1).length,
-			medianIncludeMs: median(per.map((p) => p.ms))
-		};
-	}
-	return {
-		environment,
-		measuredSamples: samples.length,
-		bake: rows.find((row) => row.kind === 'bake'),
-		shm:
-			rows.find((row) => row.arm === 'shm') ?? rows.find((row) => row.kind === 'shm-refused'),
-		arms,
-		packSavedShareOfOff: packSaved === undefined ? undefined : packSaved / offWall,
-		packNetOfInflateMs: packSaved === undefined ? undefined : packSaved - inflateSaved,
-		packNetOfInflateShareOfOff:
-			packSaved === undefined ? undefined : (packSaved - inflateSaved) / offWall,
-		perInclude: perOptimizer,
-		hash
-	};
-}
-
 // where the dynamic call_indirect executions of a run go, by site and by purity-census label
 export function summarizeIndirect(rows: Row[], hash: string) {
 	const environment = rows.find((row) => row.kind === 'environment')!;
@@ -231,7 +160,6 @@ export function summarizeSnapshot(rows: Row[], hash: string) {
 
 const summarizers = {
 	intra: summarizeIntra,
-	compile: summarizeCompile,
 	indirect: summarizeIndirect,
 	snapshot: summarizeSnapshot
 };

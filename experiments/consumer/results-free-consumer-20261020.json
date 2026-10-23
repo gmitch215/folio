@@ -121,7 +121,7 @@
       }
     },
     {
-      "consumer": "gmux-abi",
+      "consumer": "process-abi",
       "pairs": 30,
       "truncated": false,
       "exactOutputs": true,
@@ -145,7 +145,7 @@
       },
       "elapsedMs": 19626.330000000016,
       "cases": {
-        "gmux-abi/memset-16mib": {
+        "process-abi/memset-16mib": {
           "native": {
             "wallMs": {
               "n": 30,
@@ -180,7 +180,7 @@
             }
           }
         },
-        "gmux-abi/memcpy-16mib": {
+        "process-abi/memcpy-16mib": {
           "native": {
             "wallMs": {
               "n": 30,
@@ -215,7 +215,7 @@
             }
           }
         },
-        "gmux-abi/memset-memcpy-chain": {
+        "process-abi/memset-memcpy-chain": {
           "native": {
             "wallMs": {
               "n": 30,

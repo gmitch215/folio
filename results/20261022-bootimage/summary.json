@@ -1706,7 +1706,7 @@
       }
     }
   },
-  "wave11": {
+  "baked": {
     "interpreter": {
       "rowsWithDigest": 487,
       "rowsWithout": 0,
@@ -1724,7 +1724,7 @@
     },
     "pin": {
       "kind": "pin",
-      "source": "/Users/gamer/gmitch215/js/folio/experiments/consumer/build/php",
+      "source": "experiments/consumer/build/php",
       "files": [
         {
           "name": "php8.5.tuned.wasm",
@@ -2440,7 +2440,7 @@
         "rows": 1,
         "processes": 1,
         "failed": 1,
-        "firstError": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file:///Users/gamer/gmitch215/js/folio/build/bootimage/interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file:///Users/gamer/gmitch215/js/folio/build/bootimage/interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file:///Users/gamer/gmitch215/js/folio/build/bootimage/interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/0e8dfb56:wasm-function[8854]:0x64c3a9\n    at wasm://wasm",
+        "firstError": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file://build/bootimage/interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file://build/bootimage/interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file://build/bootimage/interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/0e8dfb56:wasm-function[8854]:0x64c3a9\n    at wasm://wasm/0e8dfb56:wasm-function[10891]:0x8147b5\n    at wasm://wasm/0e8dfb56:wasm-function[2332]:0x1e380c",
         "failedStage": "render / first",
         "perPath": {}
       },
@@ -2448,7 +2448,7 @@
         "rows": 1,
         "processes": 1,
         "failed": 1,
-        "firstError": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file:///Users/gamer/gmitch215/js/folio/build/bootimage/interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file:///Users/gamer/gmitch215/js/folio/build/bootimage/interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file:///Users/gamer/gmitch215/js/folio/build/bootimage/interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/04edfb52:wasm-function[8854]:0x64c3a9\n    at wasm://wasm",
+        "firstError": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file://build/bootimage/interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file://build/bootimage/interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file://build/bootimage/interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/04edfb52:wasm-function[8854]:0x64c3a9\n    at wasm://wasm/04edfb52:wasm-function[10891]:0x8147b5\n    at wasm://wasm/04edfb52:wasm-function[2332]:0x1e380c",
         "failedStage": "render / first",
         "perPath": {}
       }
@@ -4252,7 +4252,7 @@
       "replay": false,
       "ok": false,
       "stage": "render",
-      "error": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file:///Users/gamer/gmitch215/drupflare/worker/.interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file:///Users/gamer/gmitch215/drupflare/worker/.interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file:///Users/gamer/gmitch215/drupflare/worker/.interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/0e8dfb56:wasm-function[8854]:0x64c3a9\n    at wasm://wasm/0e8dfb56:wasm-function[10891]:0x8147b5\n    at wasm://wasm/0e8dfb56:wasm-function[2332]:0x1e380c\n    at wasm://wasm/0e8df",
+      "error": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file:///home/user/gmitch215/host/.interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file:///home/user/gmitch215/host/.interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file:///home/user/gmitch215/host/.interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/0e8dfb56:wasm-function[8854]:0x64c3a9\n    at wasm://wasm/0e8dfb56:wasm-function[10891]:0x8147b5\n    at wasm://wasm/0e8dfb56:wasm-function[2332]:0x1e380c\n    at wasm://wasm/0e8dfb56:wasm-function[5770]:0x3d08fe\n    at in",
       "load": [
         4.67333984375,
         4.88916015625,
@@ -4265,7 +4265,7 @@
       "replay": true,
       "ok": false,
       "stage": "render",
-      "error": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file:///Users/gamer/gmitch215/drupflare/worker/.interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file:///Users/gamer/gmitch215/drupflare/worker/.interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file:///Users/gamer/gmitch215/drupflare/worker/.interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/04edfb52:wasm-function[8854]:0x64c3a9\n    at wasm://wasm/04edfb52:wasm-function[10891]:0x8147b5\n    at wasm://wasm/04edfb52:wasm-function[2332]:0x1e380c\n    at wasm://wasm/04edf",
+      "error": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4212569 (file:///home/user/gmitch215/host/.interp/php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (file:///home/user/gmitch215/host/.interp/php8.5-worker.tuned.mjs:9:132798)\n    at _emscripten_asm_const_int (file:///home/user/gmitch215/host/.interp/php8.5-worker.tuned.mjs:9:132905)\n    at wasm://wasm/04edfb52:wasm-function[8854]:0x64c3a9\n    at wasm://wasm/04edfb52:wasm-function[10891]:0x8147b5\n    at wasm://wasm/04edfb52:wasm-function[2332]:0x1e380c\n    at wasm://wasm/04edfb52:wasm-function[5770]:0x3d08fe\n    at in",
       "load": [
         4.619140625,
         4.8740234375,

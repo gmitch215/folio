@@ -1,7 +1,6 @@
 import { receiveMessageOnPort } from 'node:worker_threads';
 import { expect, test } from 'vitest';
 import {
-	summarizeCompile,
 	summarizeIndirect,
 	summarizeIntra,
 	summarizeSnapshot
@@ -58,47 +57,6 @@ test('intra summary refuses samples whose outputs differ from each other', () =>
 		intraRow('api-1', 0, 10, { sha256: 'other' })
 	];
 	expect(() => summarizeIntra(rows, 'h')).toThrow(/outputs differ/);
-});
-
-test('compile summary reports the pack saving net of the avoided ROM inflate', () => {
-	const rows: any[] = [{ kind: 'environment' }];
-	for (let round = 0; round < 3; round++)
-		for (const [arm, wall, inflate] of [
-			['off', 500, 40],
-			['file-cold', 850, 40],
-			['pack', 350, 2]
-		] as const)
-			rows.push({
-				kind: 'sample',
-				arm,
-				round,
-				renderWallMs: wall,
-				renderThreadCpuMs: wall,
-				inflateMs: inflate,
-				inflateCalls: 1,
-				sqlMs: 10,
-				sha256: 'x'
-			});
-	rows.push({
-		kind: 'includes',
-		round: 0,
-		optimizer: '0',
-		includes: 2,
-		bytes: 10,
-		readMs: 1,
-		compileMs: 100,
-		top: [],
-		perInclude: [
-			{ bytes: 5, ms: 90 },
-			{ bytes: 5, ms: 10 }
-		]
-	});
-	const summary: any = summarizeCompile(rows, 'h');
-	expect(summary.packSavedShareOfOff).toBeCloseTo(0.3, 5);
-	expect(summary.packNetOfInflateMs).toBeCloseTo(150 - 38, 5);
-	expect(summary.perInclude['0'].compileShareOfOffRender).toBeCloseTo(0.2, 5);
-	expect(summary.perInclude['0'].firstRoundTop10ShareOfCompile).toBe(1);
-	expect(summary.arms.pack.wallOverOff.median).toBeCloseTo(0.7, 5);
 });
 
 test('indirect summary weights sites by dynamic calls and labels targets by census class', () => {

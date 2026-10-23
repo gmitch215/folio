@@ -28,7 +28,7 @@
   },
   "pin": {
     "kind": "pin",
-    "source": "/Users/gamer/gmitch215/js/folio/experiments/consumer/build/php",
+    "source": "experiments/consumer/build/php",
     "files": [
       {
         "name": "php8.5.tuned.wasm",
@@ -1771,9 +1771,9 @@
   "diffs": [
     {
       "kind": "diff",
-      "left": "wave11",
+      "left": "bootimage",
       "right": "sentinel-a",
-      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "bootimageInterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
       "memoryBytesEqual": false,
       "pagesA": 727,
       "pagesB": 728,
@@ -1796,9 +1796,9 @@
     },
     {
       "kind": "diff",
-      "left": "wave11",
+      "left": "bootimage",
       "right": "sentinel-b",
-      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "bootimageInterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
       "memoryBytesEqual": false,
       "pagesA": 727,
       "pagesB": 728,
@@ -1821,9 +1821,9 @@
     },
     {
       "kind": "diff",
-      "left": "wave11",
+      "left": "bootimage",
       "right": "legacy",
-      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "bootimageInterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
       "memoryBytesEqual": true,
       "pagesA": 727,
       "pagesB": 727,
@@ -1848,7 +1848,7 @@
       "kind": "diff",
       "left": "legacy",
       "right": "sentinel-a",
-      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "bootimageInterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
       "memoryBytesEqual": false,
       "pagesA": 727,
       "pagesB": 728,
@@ -1873,7 +1873,7 @@
       "kind": "diff",
       "left": "sentinel-a",
       "right": "sentinel-b",
-      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "bootimageInterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
       "memoryBytesEqual": true,
       "pagesA": 728,
       "pagesB": 728,
@@ -1898,7 +1898,7 @@
       "kind": "diff",
       "left": "sentinel-a",
       "right": "control",
-      "wave11InterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
+      "bootimageInterpSha256": "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4",
       "memoryBytesEqual": false,
       "pagesA": 728,
       "pagesB": 767,

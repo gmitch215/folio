@@ -3,7 +3,7 @@ import { parseRows, readRaw, resultsRoot, stats, writeSummary, type Row } from '
 
 // boot image summary from boot-image.ts rows: boot phases, image anatomy, delivery cost per
 // route, and the ratio of each route to the boot it would replace
-// usage: analyzeBootImage('20261022-bootimage')
+// usage: analyzeBootImage('20261022-bootimage'), analyzeBakedBuild('20261022-bootimage-php8512')
 
 // deployed figures from the product's report (edge cpuTime, ms); context for the ratios only
 export const deployed = { kernelBootLow: 616, kernelBootHigh: 1036, interpreterFloor: 490 };
@@ -280,7 +280,7 @@ export function loadRange(rows: Row[]) {
 		: undefined;
 }
 
-// #region wave 11: replay, arms, seed coupling, workerd
+// #region baked replay, arms, seed coupling, workerd
 
 /** booted hashes keyed by seed then path; '/' is the front page */
 export function referenceHashes(rows: Row[]) {
@@ -392,7 +392,7 @@ export function summarizeSeedTests(rows: Row[], references: ReturnType<typeof re
 	return summarizeReplay(rows, references);
 }
 
-/** every row of a wave 11 run names the module it ran on; one digest, one PHP version, no change */
+/** every row of a baked run names the module it ran on; one digest, one PHP version, no change */
 export function summarizeInterpreter(files: Record<string, Row[]>) {
 	const rows = Object.values(files).flat();
 	const withInterp = rows.filter((row) => row.interp?.wasmSha256);
@@ -465,6 +465,91 @@ export function summarizeWorkerd(rows: Row[]) {
 
 // #endregion
 
+const bakedFiles = [
+	'pin',
+	'anatomy',
+	'bake',
+	'seed',
+	'reference',
+	'render',
+	'replay',
+	'seedtest',
+	'arms',
+	'workerd'
+];
+
+/** the 63.9 MiB uncompressed script limit of a deployed Worker, in bytes */
+export const scriptLimitBytes = Math.floor(63.9 * 1024 * 1024);
+
+/**
+ * Module sizes against the plain module and the script limit. `moduleBytes` is the baked module,
+ * `originalBytes` the plain one; the image an asset route would carry is the delta pages alone.
+ * A `bundle` row (the host's dry-run upload with the plain module) gives the part of the bundle
+ * that is not the module, so the bundle a baked module would make can be set against the limit.
+ */
+export function summarizeBundle(bakes: Row[], bundle?: Row) {
+	const limitKiB = scriptLimitBytes / 1024;
+	return bakes.map((row) => {
+		const totalKiB = bundle && bundle.nonModuleKiB + row.moduleBytes / 1024;
+		return {
+			image: row.name,
+			moduleBytes: row.moduleBytes,
+			plainBytes: row.originalBytes,
+			growthBytes: row.moduleBytes - row.originalBytes,
+			deltaBytes: row.deltaBytes,
+			deltaMiB: Math.round((row.deltaBytes / 1024 / 1024) * 100) / 100,
+			deltaPages: row.deltaBytes / 65536,
+			scriptLimitBytes,
+			headroomBytes: scriptLimitBytes - row.moduleBytes,
+			plainHeadroomBytes: scriptLimitBytes - row.originalBytes,
+			...(bundle && {
+				nonModuleKiB: bundle.nonModuleKiB,
+				bundleKiB: Math.round(totalKiB * 100) / 100,
+				limitKiB: Math.round(limitKiB * 100) / 100,
+				overLimitKiB: Math.round((totalKiB - limitKiB) * 100) / 100
+			})
+		};
+	});
+}
+
+/** the baked-image rows of one interpreter build: anatomy, bake, replay against a booted render, arms, workerd */
+function summarizeBaked(read: (name: string) => Row[], withBundle = false) {
+	const baked = Object.fromEntries(
+		bakedFiles.map((name) => [name, read(`mac-baked-${name}.jsonl`)])
+	);
+	const references = referenceHashes(baked.reference!);
+	return {
+		interpreter: summarizeInterpreter(baked as Record<string, Row[]>),
+		pin: baked.pin!.find((row) => row.kind === 'pin'),
+		loadAverage1m: Object.fromEntries(
+			Object.entries(baked).map(([name, rows]) => [name, loadRange(rows)])
+		),
+		anatomy: summarizeAnatomy(baked.anatomy!),
+		dbstate: baked
+			.anatomy!.filter((row) => row.kind === 'dbstate')
+			.map((row) => ({
+				round: row.round,
+				rowsWritten: row.rowsWritten,
+				changed: row.changed,
+				seedBytes: row.seedBytes
+			})),
+		bake: baked.bake!.filter((row) => row.kind === 'bake'),
+		...(withBundle && {
+			bundle: summarizeBundle(
+				baked.bake!.filter((row) => row.kind === 'bake'),
+				baked.bake!.find((row) => row.kind === 'bundle')
+			)
+		}),
+		seeds: baked.seed!.filter((row) => row.kind === 'seedgen'),
+		references,
+		plainAndFd: summarizeReplay(baked.render!, references),
+		replay: summarizeReplay(baked.replay!, references),
+		seedTests: summarizeSeedTests(baked.seedtest!, references),
+		arms: summarizeArms(baked.arms!),
+		workerd: summarizeWorkerd(baked.workerd!)
+	};
+}
+
 export function analyzeBootImage(set: string) {
 	const root = resultsRoot(set);
 	const read = (name: string) =>
@@ -473,21 +558,6 @@ export function analyzeBootImage(set: string) {
 	const raw = Object.fromEntries(files.map((name) => [name, read(`mac-${name}.jsonl`)]));
 	const phases = summarizePhases(raw.phases!);
 	const delivery = summarizeDelivery(raw.deliver!);
-	const w11 = Object.fromEntries(
-		[
-			'pin',
-			'anatomy',
-			'bake',
-			'seed',
-			'reference',
-			'render',
-			'replay',
-			'seedtest',
-			'arms',
-			'workerd'
-		].map((name) => [name, read(`mac-w11-${name}.jsonl`)])
-	);
-	const references = referenceHashes(w11.reference!);
 	const summary = {
 		environment: raw.phases!.find((row) => row.kind === 'environment'),
 		loadAverage1m: Object.fromEntries(files.map((name) => [name, loadRange(raw[name]!)])),
@@ -497,33 +567,23 @@ export function analyzeBootImage(set: string) {
 		delivery,
 		retain: summarizeRetain(raw.retain!),
 		decision: decide(delivery, phases),
-		wave11: {
-			interpreter: summarizeInterpreter(w11 as Record<string, Row[]>),
-			pin: w11.pin!.find((row) => row.kind === 'pin'),
-			loadAverage1m: Object.fromEntries(
-				Object.entries(w11).map(([name, rows]) => [name, loadRange(rows)])
-			),
-			anatomy: summarizeAnatomy(w11.anatomy!),
-			dbstate: w11
-				.anatomy!.filter((row) => row.kind === 'dbstate')
-				.map((row) => ({
-					round: row.round,
-					rowsWritten: row.rowsWritten,
-					changed: row.changed,
-					seedBytes: row.seedBytes
-				})),
-			bake: w11.bake!.filter((row) => row.kind === 'bake'),
-			seeds: w11.seed!.filter((row) => row.kind === 'seedgen'),
-			references,
-			plainAndFd: summarizeReplay(w11.render!, references),
-			replay: summarizeReplay(w11.replay!, references),
-			seedTests: summarizeSeedTests(w11.seedtest!, references),
-			arms: summarizeArms(w11.arms!),
-			workerd: summarizeWorkerd(w11.workerd!)
-		},
+		baked: summarizeBaked(read),
 		render: raw
 			.render!.filter((row) => row.kind === 'render')
 			.map((row) => ({ ...row, error: row.error?.slice(0, 600) }))
+	};
+	writeSummary(root, summary);
+	return summary;
+}
+
+/** a result set that holds only the baked-image run of one interpreter build */
+export function analyzeBakedBuild(set: string) {
+	const root = resultsRoot(set);
+	const read = (name: string) =>
+		existsSync(new URL(name, root)) ? parseRows(readRaw(root, name)) : [];
+	const summary = {
+		environment: read('mac-baked-pin.jsonl').find((row) => row.kind === 'environment'),
+		...summarizeBaked(read, true)
 	};
 	writeSummary(root, summary);
 	return summary;

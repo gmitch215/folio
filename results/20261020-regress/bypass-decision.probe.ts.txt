@@ -1,10 +1,10 @@
 import { createHash } from 'node:crypto';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { prepare } from '/Users/gamer/gmitch215/js/folio/src/compiler.ts';
-import { Coordinator } from '/Users/gamer/gmitch215/js/folio/src/coordinator.ts';
-import { Folio } from '/Users/gamer/gmitch215/js/folio/src/node.ts';
-import consumer from '/Users/gamer/gmitch215/js/folio/scripts/probe/consumers/small-trips.ts';
+import { prepare } from 'src/compiler.ts';
+import { Coordinator } from 'src/coordinator.ts';
+import { Folio } from 'src/node.ts';
+import consumer from 'scripts/probe/consumers/small-trips.ts';
 
 const [output, pairsArg, widthsArg] = process.argv.slice(2);
 const pairs = Number(pairsArg ?? 20);

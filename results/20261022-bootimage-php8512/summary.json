@@ -1,0 +1,2626 @@
+{
+  "environment": {
+    "kind": "environment",
+    "machine": "mac-m2pro",
+    "node": "v26.8.2",
+    "cpu": "Apple M2 Pro",
+    "hardwareThreads": 12,
+    "mode": "pin",
+    "interp": {},
+    "load": [
+      5.22265625,
+      3.70263671875,
+      3.54833984375
+    ]
+  },
+  "interpreter": {
+    "rowsWithDigest": 488,
+    "rowsWithout": 2,
+    "wasmSha256": [
+      "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce"
+    ],
+    "glueSha256": [
+      "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+    ],
+    "phpVersions": [
+      "8.5.12"
+    ],
+    "runsChecked": 15,
+    "allUnchanged": true
+  },
+  "pin": {
+    "kind": "pin",
+    "source": "interp",
+    "files": [
+      {
+        "name": "php8.5.tuned.wasm",
+        "copied": true,
+        "bytes": 14011467,
+        "sha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce"
+      },
+      {
+        "name": "php8.5-worker.tuned.mjs",
+        "copied": true,
+        "bytes": 433029,
+        "sha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+      }
+    ],
+    "consumerInterpNowSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+    "interp": {},
+    "load": [
+      5.22265625,
+      3.70263671875,
+      3.54833984375
+    ]
+  },
+  "loadAverage1m": {
+    "pin": {
+      "first": 5.22265625,
+      "last": 5.22265625,
+      "min": 5.22265625,
+      "max": 5.22265625
+    },
+    "anatomy": {
+      "first": 5.36474609375,
+      "last": 4.7802734375,
+      "min": 4.7802734375,
+      "max": 5.49560546875
+    },
+    "bake": {
+      "first": 5.22265625,
+      "last": 4.041015625,
+      "min": 4.041015625,
+      "max": 5.36474609375
+    },
+    "seed": {
+      "first": 4.041015625,
+      "last": 4.041015625,
+      "min": 4.041015625,
+      "max": 4.041015625
+    },
+    "reference": {
+      "first": 4.041015625,
+      "last": 3.8154296875,
+      "min": 3.79736328125,
+      "max": 4.041015625
+    },
+    "render": {
+      "first": 3.8154296875,
+      "last": 3.75,
+      "min": 3.75,
+      "max": 3.8154296875
+    },
+    "replay": {
+      "first": 3.75,
+      "last": 4.34814453125,
+      "min": 3.75,
+      "max": 4.92529296875
+    },
+    "seedtest": {
+      "first": 4.34814453125,
+      "last": 4.31982421875,
+      "min": 4.31982421875,
+      "max": 4.34814453125
+    },
+    "arms": {
+      "first": 4.5078125,
+      "last": 3.89208984375,
+      "min": 3.89208984375,
+      "max": 5.14013671875
+    },
+    "workerd": {
+      "first": 3.89208984375,
+      "last": 6.59765625,
+      "min": 1.50634765625,
+      "max": 10.35400390625
+    }
+  },
+  "anatomy": {
+    "images": {
+      "boot": {
+        "rounds": 3,
+        "memoryBytes": 67108864,
+        "pages": 1024,
+        "nonzeroPages": 170,
+        "nonzeroBytes": 11141120,
+        "freshNonzeroPages": 66,
+        "deltaPages": 107,
+        "deltaBytes": 7012352,
+        "deltaZeroedByBootPages": 0,
+        "globals": [
+          37970912,
+          4416480,
+          37970912,
+          0
+        ],
+        "freshGlobals": [
+          37970912,
+          0,
+          0,
+          0
+        ],
+        "globalsChanged": 2,
+        "table": {
+          "sealed": true,
+          "streams": [],
+          "handles": [
+            {
+              "id": 1,
+              "name": "@globalThis"
+            },
+            {
+              "id": 2,
+              "name": "cfwZlib"
+            },
+            {
+              "id": 3,
+              "name": "cfwSqlExec"
+            },
+            {
+              "id": 4,
+              "name": "cfwSqlTxn"
+            }
+          ],
+          "unnameable": [],
+          "memoryBytes": 67108864,
+          "globals": [
+            37970912,
+            4416480,
+            37970912,
+            0
+          ],
+          "tableLength": 6822,
+          "tableChangedInInitialRange": 0,
+          "tableExtra": 0,
+          "tableExtraNames": [],
+          "tableUnchanged": true
+        },
+        "nonzero": {
+          "rawBytes": 11141120,
+          "wholeDeflateBytes": 3105679,
+          "wholeDeflateMs": 265.4535000000001,
+          "chunkRows": 56,
+          "chunkStoredBytes": 3129284,
+          "chunkStoredRaw": 0,
+          "chunkDeflateMs": 255.63749999999982
+        },
+        "delta": {
+          "rawBytes": 7012352,
+          "wholeDeflateBytes": 1648949,
+          "wholeDeflateMs": 159.67449999999963,
+          "chunkRows": 36,
+          "chunkStoredBytes": 1671072,
+          "chunkStoredRaw": 0,
+          "chunkDeflateMs": 152.78262500000028
+        },
+        "writerParity": {
+          "rows": 56,
+          "compressedBytes": 3129284,
+          "keptPages": 170
+        },
+        "pageCountsIdenticalAcrossRounds": true,
+        "chunkBytesIdenticalAcrossRounds": false,
+        "deflateMs": {
+          "nonzero": {
+            "n": 3,
+            "median": 255.63749999999982,
+            "min": 246.72445800000014,
+            "max": 256.96262499999966
+          },
+          "delta": {
+            "n": 3,
+            "median": 152.78262500000028,
+            "min": 149.0730410000001,
+            "max": 155.1672920000001
+          }
+        }
+      },
+      "render": {
+        "rounds": 3,
+        "memoryBytes": 89063424,
+        "pages": 1359,
+        "nonzeroPages": 834,
+        "nonzeroBytes": 54657024,
+        "freshNonzeroPages": 66,
+        "deltaPages": 771,
+        "deltaBytes": 50528256,
+        "deltaZeroedByBootPages": 0,
+        "globals": [
+          37970912,
+          4416480,
+          37970912,
+          0
+        ],
+        "freshGlobals": [
+          37970912,
+          0,
+          0,
+          0
+        ],
+        "globalsChanged": 2,
+        "table": {
+          "sealed": true,
+          "streams": [
+            {
+              "fd": 3,
+              "path": "/dev/urandom",
+              "flags": 32768,
+              "position": 1722,
+              "seekable": false,
+              "nodeId": 10,
+              "isDir": false
+            }
+          ],
+          "handles": [
+            {
+              "id": 1,
+              "name": "@globalThis"
+            },
+            {
+              "id": 2,
+              "name": "cfwZlib"
+            },
+            {
+              "id": 3,
+              "name": "cfwSqlExec"
+            },
+            {
+              "id": 4,
+              "name": "cfwSqlTxn"
+            }
+          ],
+          "unnameable": [],
+          "memoryBytes": 89063424,
+          "globals": [
+            37970912,
+            4416480,
+            37970912,
+            0
+          ],
+          "tableLength": 6822,
+          "tableChangedInInitialRange": 0,
+          "tableExtra": 0,
+          "tableExtraNames": [],
+          "tableUnchanged": true
+        },
+        "nonzero": {
+          "rawBytes": 54657024,
+          "wholeDeflateBytes": 16250805,
+          "wholeDeflateMs": 1665.075334,
+          "chunkRows": 274,
+          "chunkStoredBytes": 16438503,
+          "chunkStoredRaw": 0,
+          "chunkDeflateMs": 1426.6884169999994
+        },
+        "delta": {
+          "rawBytes": 50528256,
+          "wholeDeflateBytes": 14796403,
+          "wholeDeflateMs": 1290.8297499999999,
+          "chunkRows": 253,
+          "chunkStoredBytes": 14994614,
+          "chunkStoredRaw": 0,
+          "chunkDeflateMs": 1279.580833000001
+        },
+        "pageCountsIdenticalAcrossRounds": true,
+        "chunkBytesIdenticalAcrossRounds": false,
+        "deflateMs": {
+          "nonzero": {
+            "n": 3,
+            "median": 1370.2051249999995,
+            "min": 1366.1996669999999,
+            "max": 1426.6884169999994
+          },
+          "delta": {
+            "n": 3,
+            "median": 1279.580833000001,
+            "min": 1262.964916,
+            "max": 1333.1156249999995
+          }
+        }
+      }
+    },
+    "dirty": {
+      "rounds": 3,
+      "bootToFirstRenderPages": {
+        "n": 3,
+        "median": 747,
+        "min": 747,
+        "max": 747
+      },
+      "firstToSecondRenderPages": {
+        "n": 3,
+        "median": 375,
+        "min": 373,
+        "max": 387
+      },
+      "memoryGrewBytes": {
+        "n": 3,
+        "median": 21954560,
+        "min": 21954560,
+        "max": 21954560
+      },
+      "fdsAfterBoot": [
+        {
+          "fd": 0,
+          "path": "/dev/stdin",
+          "flags": 0
+        },
+        {
+          "fd": 1,
+          "path": "/dev/stdout",
+          "flags": 1
+        },
+        {
+          "fd": 2,
+          "path": "/dev/stderr",
+          "flags": 1
+        }
+      ],
+      "fdsAfterRender": [
+        {
+          "fd": 0,
+          "path": "/dev/stdin",
+          "flags": 0
+        },
+        {
+          "fd": 1,
+          "path": "/dev/stdout",
+          "flags": 1
+        },
+        {
+          "fd": 2,
+          "path": "/dev/stderr",
+          "flags": 1
+        },
+        {
+          "fd": 3,
+          "path": "/dev/urandom",
+          "flags": 32768
+        }
+      ],
+      "handlesAfterBoot": 4,
+      "handlesAfterRender": 4
+    }
+  },
+  "dbstate": [
+    {
+      "round": 0,
+      "rowsWritten": 68,
+      "changed": [
+        {
+          "table": "cache_bootstrap",
+          "rowsBefore": 3,
+          "rowsAfter": 5
+        },
+        {
+          "table": "cache_data",
+          "rowsBefore": 1,
+          "rowsAfter": 5
+        },
+        {
+          "table": "cache_default",
+          "rowsBefore": 15,
+          "rowsAfter": 29
+        },
+        {
+          "table": "cache_discovery",
+          "rowsBefore": 71,
+          "rowsAfter": 90
+        },
+        {
+          "table": "cache_dynamic_page_cache",
+          "rowsBefore": 0,
+          "rowsAfter": 2
+        },
+        {
+          "table": "cache_menu",
+          "rowsBefore": 0,
+          "rowsAfter": 2
+        },
+        {
+          "table": "cache_render",
+          "rowsBefore": 0,
+          "rowsAfter": 18
+        },
+        {
+          "table": "cache_routes",
+          "rowsBefore": 7,
+          "rowsAfter": 12
+        },
+        {
+          "table": "key_value",
+          "rowsBefore": 378,
+          "rowsAfter": 380
+        }
+      ],
+      "seedBytes": 2947111
+    },
+    {
+      "round": 1,
+      "rowsWritten": 68,
+      "changed": [
+        {
+          "table": "cache_bootstrap",
+          "rowsBefore": 3,
+          "rowsAfter": 5
+        },
+        {
+          "table": "cache_data",
+          "rowsBefore": 1,
+          "rowsAfter": 5
+        },
+        {
+          "table": "cache_default",
+          "rowsBefore": 15,
+          "rowsAfter": 29
+        },
+        {
+          "table": "cache_discovery",
+          "rowsBefore": 71,
+          "rowsAfter": 90
+        },
+        {
+          "table": "cache_dynamic_page_cache",
+          "rowsBefore": 0,
+          "rowsAfter": 2
+        },
+        {
+          "table": "cache_menu",
+          "rowsBefore": 0,
+          "rowsAfter": 2
+        },
+        {
+          "table": "cache_render",
+          "rowsBefore": 0,
+          "rowsAfter": 18
+        },
+        {
+          "table": "cache_routes",
+          "rowsBefore": 7,
+          "rowsAfter": 12
+        },
+        {
+          "table": "key_value",
+          "rowsBefore": 378,
+          "rowsAfter": 380
+        }
+      ],
+      "seedBytes": 2947112
+    },
+    {
+      "round": 2,
+      "rowsWritten": 68,
+      "changed": [
+        {
+          "table": "cache_bootstrap",
+          "rowsBefore": 3,
+          "rowsAfter": 5
+        },
+        {
+          "table": "cache_data",
+          "rowsBefore": 1,
+          "rowsAfter": 5
+        },
+        {
+          "table": "cache_default",
+          "rowsBefore": 15,
+          "rowsAfter": 29
+        },
+        {
+          "table": "cache_discovery",
+          "rowsBefore": 71,
+          "rowsAfter": 90
+        },
+        {
+          "table": "cache_dynamic_page_cache",
+          "rowsBefore": 0,
+          "rowsAfter": 2
+        },
+        {
+          "table": "cache_menu",
+          "rowsBefore": 0,
+          "rowsAfter": 2
+        },
+        {
+          "table": "cache_render",
+          "rowsBefore": 0,
+          "rowsAfter": 18
+        },
+        {
+          "table": "cache_routes",
+          "rowsBefore": 7,
+          "rowsAfter": 12
+        },
+        {
+          "table": "key_value",
+          "rowsBefore": 378,
+          "rowsAfter": 380
+        }
+      ],
+      "seedBytes": 2947111
+    }
+  ],
+  "bake": [
+    {
+      "kind": "bake",
+      "name": "boot",
+      "readMs": 2274.913708,
+      "bakeMs": 2860.1209999999996,
+      "checkMs": 12.39629100000002,
+      "segmentsAdded": 8,
+      "segmentsTotal": 19553,
+      "originalSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+      "bakedSha256": "0bab02f9637f71d0e37ae22176093df12ef842f7e79be627dc312d50b9813a54",
+      "deltaBytes": 7012352,
+      "moduleBytes": 21023906,
+      "originalBytes": 14011467,
+      "globalsSet": [
+        {
+          "name": "global$0",
+          "initial": 37970912,
+          "booted": 37970912
+        },
+        {
+          "name": "global$1",
+          "initial": 0,
+          "booted": 4416480
+        },
+        {
+          "name": "global$2",
+          "initial": 0,
+          "booted": 37970912
+        },
+        {
+          "name": "global$3",
+          "initial": 0,
+          "booted": 0
+        }
+      ],
+      "globalsReadBack": [
+        37970912,
+        4416480,
+        37970912,
+        0
+      ],
+      "checkEqual": true,
+      "valid": true,
+      "interp": {
+        "wasmSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+        "glueSha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+      },
+      "load": [
+        4.419921875,
+        3.71484375,
+        3.560546875
+      ]
+    },
+    {
+      "kind": "bake",
+      "name": "render",
+      "readMs": 2269.262792,
+      "bakeMs": 3975.766459,
+      "checkMs": 47.00404100000014,
+      "segmentsAdded": 7,
+      "segmentsTotal": 19552,
+      "originalSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+      "bakedSha256": "a4564cd0b9856eb9bbc4cacd0bfad66857fcb6638b92f28d76b0defc3e8e95fb",
+      "deltaBytes": 50528256,
+      "moduleBytes": 64539801,
+      "originalBytes": 14011467,
+      "globalsSet": [
+        {
+          "name": "global$0",
+          "initial": 37970912,
+          "booted": 37970912
+        },
+        {
+          "name": "global$1",
+          "initial": 0,
+          "booted": 4416480
+        },
+        {
+          "name": "global$2",
+          "initial": 0,
+          "booted": 37970912
+        },
+        {
+          "name": "global$3",
+          "initial": 0,
+          "booted": 0
+        }
+      ],
+      "globalsReadBack": [
+        37970912,
+        4416480,
+        37970912,
+        0
+      ],
+      "checkEqual": true,
+      "valid": true,
+      "interp": {
+        "wasmSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+        "glueSha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+      },
+      "load": [
+        4.30615234375,
+        3.70263671875,
+        3.55712890625
+      ]
+    }
+  ],
+  "bundle": [
+    {
+      "image": "boot",
+      "moduleBytes": 21023906,
+      "plainBytes": 14011467,
+      "growthBytes": 7012439,
+      "deltaBytes": 7012352,
+      "deltaMiB": 6.69,
+      "deltaPages": 107,
+      "scriptLimitBytes": 67004006,
+      "headroomBytes": 45980100,
+      "plainHeadroomBytes": 52992539,
+      "nonModuleKiB": 3871.58,
+      "bundleKiB": 24402.74,
+      "limitKiB": 65433.6,
+      "overLimitKiB": -41030.86
+    },
+    {
+      "image": "render",
+      "moduleBytes": 64539801,
+      "plainBytes": 14011467,
+      "growthBytes": 50528334,
+      "deltaBytes": 50528256,
+      "deltaMiB": 48.19,
+      "deltaPages": 771,
+      "scriptLimitBytes": 67004006,
+      "headroomBytes": 2464205,
+      "plainHeadroomBytes": 52992539,
+      "nonModuleKiB": 3871.58,
+      "bundleKiB": 66898.73,
+      "limitKiB": 65433.6,
+      "overLimitKiB": 1465.13
+    }
+  ],
+  "seeds": [
+    {
+      "kind": "seedgen",
+      "name": "A",
+      "titles": [
+        "Folio seed node one",
+        "Folio seed node two",
+        "Folio seed node three"
+      ],
+      "promote": 0,
+      "printed": "{\"ok\":true,\"count\":3}",
+      "tablesBefore": 1,
+      "tables": [
+        [
+          "node",
+          3
+        ],
+        [
+          "node__body",
+          3
+        ],
+        [
+          "node_access",
+          1
+        ],
+        [
+          "node_field_data",
+          3
+        ],
+        [
+          "node_field_revision",
+          3
+        ],
+        [
+          "node_revision",
+          3
+        ],
+        [
+          "node_revision__body",
+          3
+        ]
+      ],
+      "bytes": 2378,
+      "interp": {
+        "wasmSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+        "glueSha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+      },
+      "load": [
+        4.041015625,
+        3.65771484375,
+        3.5419921875
+      ]
+    },
+    {
+      "kind": "seedgen",
+      "name": "B",
+      "titles": [
+        "Different node alpha",
+        "Different node beta"
+      ],
+      "promote": 1,
+      "printed": "{\"ok\":true,\"count\":2}",
+      "tablesBefore": 1,
+      "tables": [
+        [
+          "node",
+          2
+        ],
+        [
+          "node__body",
+          2
+        ],
+        [
+          "node_access",
+          1
+        ],
+        [
+          "node_field_data",
+          2
+        ],
+        [
+          "node_field_revision",
+          2
+        ],
+        [
+          "node_revision",
+          2
+        ],
+        [
+          "node_revision__body",
+          2
+        ]
+      ],
+      "bytes": 1937,
+      "interp": {
+        "wasmSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+        "glueSha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+      },
+      "load": [
+        4.041015625,
+        3.65771484375,
+        3.5419921875
+      ]
+    }
+  ],
+  "references": {
+    "none": {
+      "/": [
+        "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+      ]
+    },
+    "A": {
+      "/": [
+        "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+      ],
+      "/node/1": [
+        "f22e1548af08aed87d5134506e975f2ad184bdd36ac0e312e7216621664fa16c"
+      ],
+      "/node/2": [
+        "072718fa6b6940da3d1f0dae98f7375d049f367bab83c28378b4802eecf826b1"
+      ],
+      "/node/3": [
+        "5ebeb6ff4af0e402d9e3eda4fd536425d2e6c20a474947799d088eb702f8e1da"
+      ]
+    },
+    "B": {
+      "/": [
+        "7f2e61f1c7ddca220132ad29b337d3e865a84d0a32db5a8bb6aecf071a871942"
+      ],
+      "/node/1": [
+        "ce823a1ca87b644a12f060d80cc76acc39e3de271792f89c560e064437ee96fd"
+      ],
+      "/node/2": [
+        "258912acebff887eac0a7681fbe43261dab40e866724e6a00e0d338d0cea42c8"
+      ]
+    }
+  },
+  "plainAndFd": {
+    "boot/plain/none/first": {
+      "rows": 1,
+      "processes": 1,
+      "failed": 1,
+      "firstError": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4266505 (php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (php8.5-worker.tuned.mjs:9:129675)\n    at _emscripten_asm_const_int (php8.5-worker.tuned.mjs:9:129782)\n    at wasm://wasm/0503328a:wasm-function[9289]:0x6b40af\n    at wasm://wasm/0503328a:wasm-function[11347]:0x8951b7\n    at wasm://wasm/0503328a:wasm-function[2346]:0x1f101b\n    at wasm://wasm/0503328a:wasm-function[6191]:0x3fe571\n    at invoke_vii (php8.5-worker",
+      "failedStage": "render / first",
+      "perPath": {}
+    },
+    "render/plain/none/first": {
+      "rows": 1,
+      "processes": 1,
+      "failed": 1,
+      "firstError": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4266505 (php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (php8.5-worker.tuned.mjs:9:129675)\n    at _emscripten_asm_const_int (php8.5-worker.tuned.mjs:9:129782)\n    at wasm://wasm/0f633266:wasm-function[9289]:0x6b40af\n    at wasm://wasm/0f633266:wasm-function[11347]:0x8951b7\n    at wasm://wasm/0f633266:wasm-function[2346]:0x1f101b\n    at wasm://wasm/0f633266:wasm-function[6191]:0x3fe571\n    at invoke_vii (php8.5-worker",
+      "failedStage": "render / first",
+      "perPath": {}
+    },
+    "boot/fd/none/first": {
+      "rows": 1,
+      "processes": 1,
+      "failed": 1,
+      "firstError": "TypeError: Cannot read properties of undefined (reading 'get')\n    at 4266505 (php8.5-worker.tuned.mjs:9:14122)\n    at runEmAsmFunction (php8.5-worker.tuned.mjs:9:129675)\n    at _emscripten_asm_const_int (php8.5-worker.tuned.mjs:9:129782)\n    at wasm://wasm/0503328a:wasm-function[9289]:0x6b40af\n    at wasm://wasm/0503328a:wasm-function[11347]:0x8951b7\n    at wasm://wasm/0503328a:wasm-function[2346]:0x1f101b\n    at wasm://wasm/0503328a:wasm-function[6191]:0x3fe571\n    at invoke_vii (php8.5-worker",
+      "failedStage": "render / first",
+      "perPath": {}
+    }
+  },
+  "replay": {
+    "boot/replay/A/first": {
+      "rows": 40,
+      "processes": 10,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 10,
+          "matches": 10,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 10,
+          "matches": 10,
+          "expected": "f22e1548af08aed87d5134506e975f2ad184bdd36ac0e312e7216621664fa16c",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 10,
+          "matches": 10,
+          "expected": "072718fa6b6940da3d1f0dae98f7375d049f367bab83c28378b4802eecf826b1",
+          "distinctHashes": 1
+        },
+        "/node/3": {
+          "n": 10,
+          "matches": 10,
+          "expected": "5ebeb6ff4af0e402d9e3eda4fd536425d2e6c20a474947799d088eb702f8e1da",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 0,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "boot/replay/A/second": {
+      "rows": 40,
+      "processes": 10,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 10,
+          "matches": 10,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 10,
+          "matches": 10,
+          "expected": "f22e1548af08aed87d5134506e975f2ad184bdd36ac0e312e7216621664fa16c",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 10,
+          "matches": 10,
+          "expected": "072718fa6b6940da3d1f0dae98f7375d049f367bab83c28378b4802eecf826b1",
+          "distinctHashes": 1
+        },
+        "/node/3": {
+          "n": 10,
+          "matches": 10,
+          "expected": "5ebeb6ff4af0e402d9e3eda4fd536425d2e6c20a474947799d088eb702f8e1da",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 0,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "render/replay/A/first": {
+      "rows": 40,
+      "processes": 10,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 10,
+          "matches": 10,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 10,
+          "matches": 10,
+          "expected": "f22e1548af08aed87d5134506e975f2ad184bdd36ac0e312e7216621664fa16c",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 10,
+          "matches": 10,
+          "expected": "072718fa6b6940da3d1f0dae98f7375d049f367bab83c28378b4802eecf826b1",
+          "distinctHashes": 1
+        },
+        "/node/3": {
+          "n": 10,
+          "matches": 10,
+          "expected": "5ebeb6ff4af0e402d9e3eda4fd536425d2e6c20a474947799d088eb702f8e1da",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 1,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "render/replay/A/second": {
+      "rows": 40,
+      "processes": 10,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 10,
+          "matches": 10,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 10,
+          "matches": 10,
+          "expected": "f22e1548af08aed87d5134506e975f2ad184bdd36ac0e312e7216621664fa16c",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 10,
+          "matches": 10,
+          "expected": "072718fa6b6940da3d1f0dae98f7375d049f367bab83c28378b4802eecf826b1",
+          "distinctHashes": 1
+        },
+        "/node/3": {
+          "n": 10,
+          "matches": 10,
+          "expected": "5ebeb6ff4af0e402d9e3eda4fd536425d2e6c20a474947799d088eb702f8e1da",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 1,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    }
+  },
+  "seedTests": {
+    "boot/replay/B/first": {
+      "rows": 3,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "7f2e61f1c7ddca220132ad29b337d3e865a84d0a32db5a8bb6aecf071a871942",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 1,
+          "matches": 1,
+          "expected": "ce823a1ca87b644a12f060d80cc76acc39e3de271792f89c560e064437ee96fd",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 1,
+          "matches": 1,
+          "expected": "258912acebff887eac0a7681fbe43261dab40e866724e6a00e0d338d0cea42c8",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 0,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "boot/replay/B/second": {
+      "rows": 3,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "7f2e61f1c7ddca220132ad29b337d3e865a84d0a32db5a8bb6aecf071a871942",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 1,
+          "matches": 1,
+          "expected": "ce823a1ca87b644a12f060d80cc76acc39e3de271792f89c560e064437ee96fd",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 1,
+          "matches": 1,
+          "expected": "258912acebff887eac0a7681fbe43261dab40e866724e6a00e0d338d0cea42c8",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 0,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "render/replay/B/first": {
+      "rows": 3,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "7f2e61f1c7ddca220132ad29b337d3e865a84d0a32db5a8bb6aecf071a871942",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 1,
+          "matches": 1,
+          "expected": "ce823a1ca87b644a12f060d80cc76acc39e3de271792f89c560e064437ee96fd",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 1,
+          "matches": 1,
+          "expected": "258912acebff887eac0a7681fbe43261dab40e866724e6a00e0d338d0cea42c8",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 1,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "render/replay/B/second": {
+      "rows": 3,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "7f2e61f1c7ddca220132ad29b337d3e865a84d0a32db5a8bb6aecf071a871942",
+          "distinctHashes": 1
+        },
+        "/node/1": {
+          "n": 1,
+          "matches": 1,
+          "expected": "ce823a1ca87b644a12f060d80cc76acc39e3de271792f89c560e064437ee96fd",
+          "distinctHashes": 1
+        },
+        "/node/2": {
+          "n": 1,
+          "matches": 1,
+          "expected": "258912acebff887eac0a7681fbe43261dab40e866724e6a00e0d338d0cea42c8",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 1,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "boot/replay/R/first": {
+      "rows": 1,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 0,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "boot/replay/R/second": {
+      "rows": 1,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 0,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "render/replay/R/first": {
+      "rows": 1,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 1,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    },
+    "render/replay/R/second": {
+      "rows": 1,
+      "processes": 1,
+      "failed": 0,
+      "perPath": {
+        "/": {
+          "n": 1,
+          "matches": 1,
+          "expected": "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05",
+          "distinctHashes": 1
+        }
+      },
+      "replay": {
+        "streamsReplayed": 1,
+        "streamsFailed": [],
+        "handlesReplayed": 4,
+        "handlesFailed": [],
+        "handleNextId": 4
+      }
+    }
+  },
+  "arms": {
+    "arms": {
+      "plain/first": {
+        "n": 10,
+        "fields": {
+          "totalMs": {
+            "n": 10,
+            "median": 1343.677083,
+            "min": 1274.854875,
+            "max": 1367.729417
+          },
+          "openMs": {
+            "n": 10,
+            "median": 347.785084,
+            "min": 343.81399999999996,
+            "max": 381.10745899999995
+          },
+          "seedMs": {
+            "n": 10,
+            "median": 49.589666,
+            "min": 45.790959,
+            "max": 50.304459
+          },
+          "importMs": {
+            "n": 10,
+            "median": 8.378708000000003,
+            "min": 6.545708000000005,
+            "max": 8.84345900000001
+          },
+          "factoryMs": {
+            "n": 10,
+            "median": 35.59245899999999,
+            "min": 33.54979199999998,
+            "max": 37.526583999999986
+          },
+          "memoryMs": {
+            "n": 10,
+            "median": 0.1356660000000005,
+            "min": 0.10787500000000705,
+            "max": 0.1660839999999979
+          },
+          "instantiateMs": {
+            "n": 10,
+            "median": 4.609000000000009,
+            "min": 4.09975,
+            "max": 5.390040999999982
+          },
+          "pib_initMs": {
+            "n": 10,
+            "median": 20.225750000000005,
+            "min": 19.659333000000004,
+            "max": 21.693542000000008
+          },
+          "bootMs": {
+            "n": 10,
+            "median": 255.81329200000002,
+            "min": 252.450291,
+            "max": 292.703167
+          },
+          "mountsMs": {
+            "n": 10,
+            "median": 151.44420799999997,
+            "min": 145.68870900000002,
+            "max": 156.938375
+          },
+          "shimsMs": {
+            "n": 10,
+            "median": 16.354333999999994,
+            "min": 15.708624999999984,
+            "max": 17.163999999999987
+          },
+          "kernelMs": {
+            "n": 10,
+            "median": 89.721791,
+            "min": 85.72470899999996,
+            "max": 118.845666
+          },
+          "firstRenderMs": {
+            "n": 10,
+            "median": 991.549584,
+            "min": 931.040875,
+            "max": 1011.1646250000001
+          },
+          "secondRenderMs": {
+            "n": 10,
+            "median": 45.65104199999996,
+            "min": 42.25395900000012,
+            "max": 47.20741699999985
+          },
+          "openCpuMs": {
+            "n": 10,
+            "median": 598.868,
+            "min": 587.973,
+            "max": 640.47
+          },
+          "compileMs": {
+            "n": 10,
+            "median": 11.947041999999996,
+            "min": 11.378208,
+            "max": 12.635957999999995
+          },
+          "rssBytes": {
+            "n": 10,
+            "median": 411041792,
+            "min": 328253440,
+            "max": 419069952
+          }
+        },
+        "shas": [
+          "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+        ]
+      },
+      "plain/second": {
+        "n": 10,
+        "fields": {
+          "totalMs": {
+            "n": 10,
+            "median": 1110.5487919999998,
+            "min": 1038.7310840000002,
+            "max": 1171.778416
+          },
+          "openMs": {
+            "n": 10,
+            "median": 249.2766670000001,
+            "min": 223.7655420000001,
+            "max": 258.0350410000001
+          },
+          "seedMs": {
+            "n": 10,
+            "median": 48.84762499999988,
+            "min": 43.01420800000005,
+            "max": 53.01599999999985
+          },
+          "importMs": {
+            "n": 10,
+            "median": 0.14541699999995217,
+            "min": 0.10095799999999144,
+            "max": 0.23725000000013097
+          },
+          "factoryMs": {
+            "n": 10,
+            "median": 19.66574999999989,
+            "min": 15.371875000000045,
+            "max": 29.844542000000047
+          },
+          "memoryMs": {
+            "n": 10,
+            "median": 0.2998330000000351,
+            "min": 0.19499999999993634,
+            "max": 1.603749999999991
+          },
+          "instantiateMs": {
+            "n": 10,
+            "median": 3.571958999999879,
+            "min": 3.0267919999998867,
+            "max": 7.396375000000035
+          },
+          "pib_initMs": {
+            "n": 10,
+            "median": 3.046000000000049,
+            "min": 2.789792000000034,
+            "max": 4.256208000000015
+          },
+          "bootMs": {
+            "n": 10,
+            "median": 177.32037499999979,
+            "min": 161.0725,
+            "max": 184.1545000000001
+          },
+          "mountsMs": {
+            "n": 10,
+            "median": 126.05070899999987,
+            "min": 114.11379099999999,
+            "max": 133.15716700000007
+          },
+          "shimsMs": {
+            "n": 10,
+            "median": 4.566000000000031,
+            "min": 4.334250000000111,
+            "max": 5.225875000000087
+          },
+          "kernelMs": {
+            "n": 10,
+            "median": 46.52229199999988,
+            "min": 42.600374999999985,
+            "max": 47.82616599999983
+          },
+          "firstRenderMs": {
+            "n": 10,
+            "median": 861.8647080000001,
+            "min": 814.9655420000001,
+            "max": 913.743375
+          },
+          "secondRenderMs": {
+            "n": 10,
+            "median": 44.98683300000039,
+            "min": 40.98783299999968,
+            "max": 46.64687499999991
+          },
+          "openCpuMs": {
+            "n": 10,
+            "median": 359.01,
+            "min": 326.57,
+            "max": 390.864
+          },
+          "rssBytes": {
+            "n": 10,
+            "median": 496091136,
+            "min": 408518656,
+            "max": 524206080
+          }
+        },
+        "shas": [
+          "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+        ]
+      },
+      "boot/first": {
+        "n": 10,
+        "fields": {
+          "totalMs": {
+            "n": 10,
+            "median": 1268.773251,
+            "min": 1217.539458,
+            "max": 1326.3411660000002
+          },
+          "openMs": {
+            "n": 10,
+            "median": 223.682,
+            "min": 213.256792,
+            "max": 228.44954199999998
+          },
+          "seedMs": {
+            "n": 10,
+            "median": 48.685832999999995,
+            "min": 45.441582999999994,
+            "max": 50.407042
+          },
+          "importMs": {
+            "n": 10,
+            "median": 8.370499999999993,
+            "min": 6.648542000000006,
+            "max": 8.718457999999998
+          },
+          "factoryMs": {
+            "n": 10,
+            "median": 14.846416999999988,
+            "min": 14.306207999999998,
+            "max": 15.64608299999999
+          },
+          "memoryMs": {
+            "n": 10,
+            "median": 0.12945799999999963,
+            "min": 0.11420800000000497,
+            "max": 0.1628340000000037
+          },
+          "instantiateMs": {
+            "n": 10,
+            "median": 4.955124999999995,
+            "min": 3.9481659999999863,
+            "max": 5.428250000000006
+          },
+          "pib_initMs": {
+            "n": 10,
+            "median": 0.4347500000000082,
+            "min": 0.4185410000000047,
+            "max": 0.46529200000000515
+          },
+          "bootMs": {
+            "n": 10,
+            "median": 152.77624999999998,
+            "min": 144.92304199999998,
+            "max": 155.099208
+          },
+          "mountsMs": {
+            "n": 10,
+            "median": 152.77624999999998,
+            "min": 144.92304199999998,
+            "max": 155.099208
+          },
+          "replayMs": {
+            "n": 10,
+            "median": 0.2167919999999981,
+            "min": 0.19462500000003047,
+            "max": 0.24945800000000418
+          },
+          "firstRenderMs": {
+            "n": 10,
+            "median": 1046.5591670000001,
+            "min": 994.859125,
+            "max": 1101.237458
+          },
+          "secondRenderMs": {
+            "n": 10,
+            "median": 45.794624999999996,
+            "min": 42.25654200000008,
+            "max": 47.30358300000012
+          },
+          "openCpuMs": {
+            "n": 10,
+            "median": 294.673,
+            "min": 280.746,
+            "max": 302.085
+          },
+          "compileMs": {
+            "n": 10,
+            "median": 12.408917000000002,
+            "min": 12.158083000000005,
+            "max": 12.877667000000002
+          },
+          "rssBytes": {
+            "n": 10,
+            "median": 408043520,
+            "min": 275922944,
+            "max": 421937152
+          }
+        },
+        "shas": [
+          "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+        ],
+        "replayCounts": {
+          "streamsReplayed": 0,
+          "streamsFailed": [],
+          "handlesReplayed": 4,
+          "handlesFailed": [],
+          "handleNextId": 4
+        }
+      },
+      "boot/second": {
+        "n": 10,
+        "fields": {
+          "totalMs": {
+            "n": 10,
+            "median": 1085.370833,
+            "min": 1033.195541,
+            "max": 1142.986542
+          },
+          "openMs": {
+            "n": 10,
+            "median": 198.1942919999999,
+            "min": 179.22300000000018,
+            "max": 244.27825000000007
+          },
+          "seedMs": {
+            "n": 10,
+            "median": 47.41616700000009,
+            "min": 43.56591700000013,
+            "max": 51.982499999999845
+          },
+          "importMs": {
+            "n": 10,
+            "median": 0.11362500000018372,
+            "min": 0.09162500000002183,
+            "max": 0.2642920000000686
+          },
+          "factoryMs": {
+            "n": 10,
+            "median": 22.501833000000033,
+            "min": 15.575582999999824,
+            "max": 34.81383299999993
+          },
+          "memoryMs": {
+            "n": 10,
+            "median": 0.1984589999999571,
+            "min": 0.05454099999997197,
+            "max": 0.28233399999999165
+          },
+          "instantiateMs": {
+            "n": 10,
+            "median": 4.414833999999928,
+            "min": 3.7236669999999776,
+            "max": 11.786833000000115
+          },
+          "pib_initMs": {
+            "n": 10,
+            "median": 0.05908300000010058,
+            "min": 0.053875000000061846,
+            "max": 0.08783400000015718
+          },
+          "bootMs": {
+            "n": 10,
+            "median": 123.40866700000015,
+            "min": 114.68879200000015,
+            "max": 157.15499999999997
+          },
+          "mountsMs": {
+            "n": 10,
+            "median": 123.40866700000015,
+            "min": 114.68879200000015,
+            "max": 157.15499999999997
+          },
+          "replayMs": {
+            "n": 10,
+            "median": 0.04737500000010186,
+            "min": 0.03899999999998727,
+            "max": 0.05995899999993526
+          },
+          "firstRenderMs": {
+            "n": 10,
+            "median": 898.708292,
+            "min": 851.2095830000001,
+            "max": 907.1695830000001
+          },
+          "secondRenderMs": {
+            "n": 10,
+            "median": 44.69637499999999,
+            "min": 41.05629200000021,
+            "max": 45.49091599999974
+          },
+          "openCpuMs": {
+            "n": 10,
+            "median": 285.059,
+            "min": 260.159,
+            "max": 336.506
+          },
+          "rssBytes": {
+            "n": 10,
+            "median": 506986496,
+            "min": 388595712,
+            "max": 533430272
+          }
+        },
+        "shas": [
+          "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+        ],
+        "replayCounts": {
+          "streamsReplayed": 0,
+          "streamsFailed": [],
+          "handlesReplayed": 4,
+          "handlesFailed": [],
+          "handleNextId": 4
+        }
+      },
+      "render/first": {
+        "n": 10,
+        "fields": {
+          "totalMs": {
+            "n": 10,
+            "median": 349.6680829999999,
+            "min": 336.62012500000003,
+            "max": 361.3045000000001
+          },
+          "openMs": {
+            "n": 10,
+            "median": 226.008792,
+            "min": 216.98462500000002,
+            "max": 234.882042
+          },
+          "seedMs": {
+            "n": 10,
+            "median": 46.929334,
+            "min": 45.322958,
+            "max": 50.68575
+          },
+          "importMs": {
+            "n": 10,
+            "median": 7.001208000000005,
+            "min": 6.605417000000003,
+            "max": 7.212666999999996
+          },
+          "factoryMs": {
+            "n": 10,
+            "median": 20.60929200000001,
+            "min": 18.677082999999996,
+            "max": 23.81649999999999
+          },
+          "memoryMs": {
+            "n": 10,
+            "median": 0.12649999999999295,
+            "min": 0.11720799999997666,
+            "max": 0.1519999999999868
+          },
+          "instantiateMs": {
+            "n": 10,
+            "median": 10.080749999999995,
+            "min": 8.048417,
+            "max": 13.22479199999998
+          },
+          "pib_initMs": {
+            "n": 10,
+            "median": 0.46429200000000037,
+            "min": 0.4254160000000127,
+            "max": 0.5314589999999839
+          },
+          "bootMs": {
+            "n": 10,
+            "median": 151.27170800000002,
+            "min": 143.458,
+            "max": 153.582709
+          },
+          "mountsMs": {
+            "n": 10,
+            "median": 151.27170800000002,
+            "min": 143.458,
+            "max": 153.582709
+          },
+          "replayMs": {
+            "n": 10,
+            "median": 0.2293329999999969,
+            "min": 0.2011669999999981,
+            "max": 0.24412499999999682
+          },
+          "firstRenderMs": {
+            "n": 10,
+            "median": 122.30254199999996,
+            "min": 117.642,
+            "max": 135.29570800000005
+          },
+          "secondRenderMs": {
+            "n": 10,
+            "median": 46.006332999999984,
+            "min": 43.52479199999999,
+            "max": 47.46116699999999
+          },
+          "openCpuMs": {
+            "n": 10,
+            "median": 293.024,
+            "min": 281.411,
+            "max": 301.829
+          },
+          "compileMs": {
+            "n": 10,
+            "median": 17.940416999999997,
+            "min": 16.412374999999997,
+            "max": 33.69458300000001
+          },
+          "rssBytes": {
+            "n": 10,
+            "median": 420904960,
+            "min": 419184640,
+            "max": 429490176
+          }
+        },
+        "shas": [
+          "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+        ],
+        "replayCounts": {
+          "streamsReplayed": 1,
+          "streamsFailed": [],
+          "handlesReplayed": 4,
+          "handlesFailed": [],
+          "handleNextId": 4
+        }
+      },
+      "render/second": {
+        "n": 10,
+        "fields": {
+          "totalMs": {
+            "n": 10,
+            "median": 265.2132920000001,
+            "min": 235.44208400000014,
+            "max": 293.961583
+          },
+          "openMs": {
+            "n": 10,
+            "median": 210.14312499999994,
+            "min": 184.71908400000007,
+            "max": 220.21050000000002
+          },
+          "seedMs": {
+            "n": 10,
+            "median": 46.56287500000002,
+            "min": 44.186874999999986,
+            "max": 50.61024999999995
+          },
+          "importMs": {
+            "n": 10,
+            "median": 0.11858400000005531,
+            "min": 0.09420799999998053,
+            "max": 0.15229099999999107
+          },
+          "factoryMs": {
+            "n": 10,
+            "median": 26.905250000000024,
+            "min": 23.032416999999953,
+            "max": 37.286249999999995
+          },
+          "memoryMs": {
+            "n": 10,
+            "median": 0.18237500000009277,
+            "min": 0.1324170000000322,
+            "max": 0.265041999999994
+          },
+          "instantiateMs": {
+            "n": 10,
+            "median": 9.011666999999989,
+            "min": 6.685375000000022,
+            "max": 14.92629199999999
+          },
+          "pib_initMs": {
+            "n": 10,
+            "median": 0.05516700000009678,
+            "min": 0.04833299999995688,
+            "max": 0.060417000000029475
+          },
+          "bootMs": {
+            "n": 10,
+            "median": 129.63300000000004,
+            "min": 116.31845800000008,
+            "max": 142.48325
+          },
+          "mountsMs": {
+            "n": 10,
+            "median": 129.63300000000004,
+            "min": 116.31845800000008,
+            "max": 142.48325
+          },
+          "replayMs": {
+            "n": 10,
+            "median": 0.06362500000000182,
+            "min": 0.047207999999955064,
+            "max": 0.08079099999997652
+          },
+          "firstRenderMs": {
+            "n": 10,
+            "median": 55.681917,
+            "min": 50.72300000000007,
+            "max": 73.751083
+          },
+          "secondRenderMs": {
+            "n": 10,
+            "median": 43.72112500000003,
+            "min": 40.79808400000002,
+            "max": 69.59170900000004
+          },
+          "openCpuMs": {
+            "n": 10,
+            "median": 279.174,
+            "min": 254.171,
+            "max": 312.725
+          },
+          "rssBytes": {
+            "n": 10,
+            "median": 561266688,
+            "min": 330727424,
+            "max": 571686912
+          }
+        },
+        "shas": [
+          "2ed7c06db68ec4a5985b18a971c51a53f6758fe88659d6a570cc646a2eda3f05"
+        ],
+        "replayCounts": {
+          "streamsReplayed": 1,
+          "streamsFailed": [],
+          "handlesReplayed": 4,
+          "handlesFailed": [],
+          "handleNextId": 4
+        }
+      }
+    },
+    "saving": {
+      "boot/first": {
+        "plainMs": 1343.677083,
+        "armMs": 1268.773251,
+        "savedMs": 74.90383199999997,
+        "ratio": 0.9442545884367071
+      },
+      "render/first": {
+        "plainMs": 1343.677083,
+        "armMs": 349.6680829999999,
+        "savedMs": 994.0090000000001,
+        "ratio": 0.26023222947235447
+      },
+      "boot/second": {
+        "plainMs": 1110.5487919999998,
+        "armMs": 1085.370833,
+        "savedMs": 25.177958999999873,
+        "ratio": 0.9773283630747492
+      },
+      "render/second": {
+        "plainMs": 1110.5487919999998,
+        "armMs": 265.2132920000001,
+        "savedMs": 845.3354999999997,
+        "ratio": 0.23881282291287217
+      }
+    }
+  },
+  "workerd": {
+    "modules": {
+      "unmodified": {
+        "moduleBytes": 14011467,
+        "gzipBytes": 4366007,
+        "pages": 1024,
+        "valid": true
+      },
+      "baked-boot": {
+        "moduleBytes": 21023906,
+        "gzipBytes": 5964784,
+        "pages": 1024,
+        "valid": true
+      },
+      "baked-render": {
+        "moduleBytes": 64539801,
+        "gzipBytes": 18710202,
+        "pages": 1359,
+        "valid": true
+      },
+      "empty-16mib": {
+        "moduleBytes": 14,
+        "pages": 256,
+        "valid": true
+      },
+      "empty-64mib": {
+        "moduleBytes": 14,
+        "pages": 1024,
+        "valid": true
+      },
+      "empty-128mib": {
+        "moduleBytes": 14,
+        "pages": 2048,
+        "valid": true
+      },
+      "empty-import-16mib": {
+        "moduleBytes": 26,
+        "pages": 256,
+        "valid": true
+      },
+      "empty-import-64mib": {
+        "moduleBytes": 26,
+        "pages": 1024,
+        "valid": true
+      },
+      "empty-import-128mib": {
+        "moduleBytes": 26,
+        "pages": 2048,
+        "valid": true
+      }
+    },
+    "variants": {
+      "unmodified": {
+        "operation": "/instantiate",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.4483330000002752
+        },
+        "startMs": {
+          "n": 20,
+          "median": 56.03283300000112,
+          "min": 37.94541599999502,
+          "max": 212.78787499999817
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 7.479417000002286,
+          "min": 3.621791999998095,
+          "max": 9.335959000000003
+        },
+        "warmMs": {
+          "n": 100,
+          "median": 3.8662919999987935,
+          "min": 2.5686249999926076,
+          "max": 6.150541999995767
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 3.8839374999995924,
+          "min": 3.3715000000003785,
+          "max": 7.876520800000071
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 7,
+          "min": 3,
+          "max": 8
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 119062528,
+          "min": 118751232,
+          "max": 119226368
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 8634368,
+            "min": 8470528,
+            "max": 8814592
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 14336000,
+            "min": 14139392,
+            "max": 14467072
+          },
+          "held3": {
+            "n": 20,
+            "median": 18956288,
+            "min": 18776064,
+            "max": 19120128
+          },
+          "touched3": {
+            "n": 20,
+            "median": 66568192,
+            "min": 66387968,
+            "max": 66748416
+          },
+          "dropped": {
+            "n": 20,
+            "median": 66584576,
+            "min": 66404352,
+            "max": 66764800
+          }
+        }
+      },
+      "baked-boot": {
+        "operation": "/instantiate",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.4436249999998836
+        },
+        "startMs": {
+          "n": 20,
+          "median": 62.313584000003175,
+          "min": 55.31904100000247,
+          "max": 83.52858299999934
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 8.740582999998878,
+          "min": 4.396374999996624,
+          "max": 10.942999999999302
+        },
+        "warmMs": {
+          "n": 100,
+          "median": 4.586084000002302,
+          "min": 3.0991250000006403,
+          "max": 7.636041999990994
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 4.432591700000193,
+          "min": 4.1322791999999025,
+          "max": 4.718762499999866
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 8,
+          "min": 4,
+          "max": 10
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 161087488,
+          "min": 160792576,
+          "max": 161366016
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 15532032,
+            "min": 15433728,
+            "max": 15630336
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 28065792,
+            "min": 27983872,
+            "max": 28164096
+          },
+          "held3": {
+            "n": 20,
+            "median": 39583744,
+            "min": 39501824,
+            "max": 39698432
+          },
+          "touched3": {
+            "n": 20,
+            "median": 82083840,
+            "min": 82018304,
+            "max": 82198528
+          },
+          "dropped": {
+            "n": 20,
+            "median": 82100224,
+            "min": 82034688,
+            "max": 82231296
+          }
+        }
+      },
+      "baked-render": {
+        "operation": "/instantiate",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.4063749999986612
+        },
+        "startMs": {
+          "n": 20,
+          "median": 113.6232910000108,
+          "min": 108.94779199999903,
+          "max": 230.27216600000247
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 13.724167000007583,
+          "min": 9.901082999997016,
+          "max": 19.507291999994777
+        },
+        "warmMs": {
+          "n": 100,
+          "median": 8.623500000001513,
+          "min": 7.284583999993629,
+          "max": 16.287667000011425
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 7.993691599999875,
+          "min": 7.724237500000163,
+          "max": 9.67284589999981
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 13,
+          "min": 9,
+          "max": 19
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 422166528,
+          "min": 422084608,
+          "max": 422445056
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 59031552,
+            "min": 58966016,
+            "max": 59113472
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 115064832,
+            "min": 115015680,
+            "max": 115179520
+          },
+          "held3": {
+            "n": 20,
+            "median": 170098688,
+            "min": 170049536,
+            "max": 170196992
+          },
+          "touched3": {
+            "n": 20,
+            "median": 196427776,
+            "min": 196378624,
+            "max": 196526080
+          },
+          "dropped": {
+            "n": 20,
+            "median": 196444160,
+            "min": 196395008,
+            "max": 196542464
+          }
+        }
+      },
+      "empty-16mib": {
+        "operation": "/instantiate",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.42216600000392646
+        },
+        "startMs": {
+          "n": 20,
+          "median": 29.91425000000163,
+          "min": 28.394375000003492,
+          "max": 30.820250000004307
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 1.0442929999990156,
+          "min": 0.5299579999991693,
+          "max": 1.2389579999871785
+        },
+        "warmMs": {
+          "n": 100,
+          "median": 0.013250000003608875,
+          "min": -0.27308300000731833,
+          "max": 0.2131249999947613
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 0.030416700000932904,
+          "min": 0.00040829999779816716,
+          "max": 0.05750419999967562
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 0,
+          "min": 0,
+          "max": 1
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 31883264,
+          "min": 31768576,
+          "max": 31997952
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 655360,
+            "min": 606208,
+            "max": 819200
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 688128,
+            "min": 622592,
+            "max": 835584
+          },
+          "held3": {
+            "n": 20,
+            "median": 720896,
+            "min": 655360,
+            "max": 868352
+          },
+          "touched3": {
+            "n": 20,
+            "median": 737280,
+            "min": 671744,
+            "max": 917504
+          },
+          "dropped": {
+            "n": 20,
+            "median": 770048,
+            "min": 688128,
+            "max": 966656
+          }
+        }
+      },
+      "empty-64mib": {
+        "operation": "/instantiate",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.4233749999984866
+        },
+        "startMs": {
+          "n": 20,
+          "median": 29.963042000003043,
+          "min": 28.266457999998238,
+          "max": 30.969083999996656
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 0.9242079999967245,
+          "min": 0.5181670000019949,
+          "max": 1.3332500000105938
+        },
+        "warmMs": {
+          "n": 100,
+          "median": 0.014875000008032657,
+          "min": -0.17487500001152512,
+          "max": 2.7744999999995343
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 0.027962500001012813,
+          "min": 0.006008299998939037,
+          "max": 0.03681249999935972
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 0,
+          "min": 0,
+          "max": 1
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 31883264,
+          "min": 31768576,
+          "max": 31981568
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 1245184,
+            "min": 1196032,
+            "max": 1327104
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 1245184,
+            "min": 1196032,
+            "max": 1327104
+          },
+          "held3": {
+            "n": 20,
+            "median": 1261568,
+            "min": 1212416,
+            "max": 1343488
+          },
+          "touched3": {
+            "n": 20,
+            "median": 1277952,
+            "min": 1228800,
+            "max": 1409024
+          },
+          "dropped": {
+            "n": 20,
+            "median": 1327104,
+            "min": 1261568,
+            "max": 1441792
+          }
+        }
+      },
+      "empty-128mib": {
+        "operation": "/instantiate",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.41612500000337604
+        },
+        "startMs": {
+          "n": 20,
+          "median": 30.105249999993248,
+          "min": 29.006999999997788,
+          "max": 33.20079199998872
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 0.9866670000046724,
+          "min": 0.6393749999842839,
+          "max": 1.2700829999957932
+        },
+        "warmMs": {
+          "n": 100,
+          "median": 0.007375000001047738,
+          "min": -0.1784590000024764,
+          "max": 2.7121250000054715
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 0.025700100001995452,
+          "min": 0.014333400000759866,
+          "max": 0.047558300000673626
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 0,
+          "min": 0,
+          "max": 1
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 31866880,
+          "min": 31768576,
+          "max": 31932416
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 1245184,
+            "min": 1212416,
+            "max": 1310720
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 1245184,
+            "min": 1212416,
+            "max": 1310720
+          },
+          "held3": {
+            "n": 20,
+            "median": 1261568,
+            "min": 1228800,
+            "max": 1376256
+          },
+          "touched3": {
+            "n": 20,
+            "median": 1277952,
+            "min": 1245184,
+            "max": 1392640
+          },
+          "dropped": {
+            "n": 20,
+            "median": 1310720,
+            "min": 1277952,
+            "max": 1425408
+          }
+        }
+      },
+      "empty-import-16mib": {
+        "operation": "/memory",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.39141700000618584
+        },
+        "startMs": {
+          "n": 20,
+          "median": 30.310249999980442,
+          "min": 28.016582999989623,
+          "max": 33.509499999985565
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 0.6311660000064876,
+          "min": 0.08566699997754768,
+          "max": 0.8810829999856651
+        },
+        "warmMs": {
+          "n": 100,
+          "median": -0.01570799999171868,
+          "min": -0.3020410000171978,
+          "max": 3.875917000026675
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 0.024808399999164975,
+          "min": 0.004004199997871183,
+          "max": 0.0686792000051355
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 0,
+          "min": 0,
+          "max": 1
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 31899648,
+          "min": 31817728,
+          "max": 32129024
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 540672,
+            "min": 475136,
+            "max": 655360
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 540672,
+            "min": 475136,
+            "max": 655360
+          },
+          "held3": {
+            "n": 20,
+            "median": 540672,
+            "min": 475136,
+            "max": 655360
+          },
+          "touched3": {
+            "n": 20,
+            "median": 540672,
+            "min": 475136,
+            "max": 655360
+          },
+          "dropped": {
+            "n": 20,
+            "median": 540672,
+            "min": 475136,
+            "max": 655360
+          }
+        }
+      },
+      "empty-import-64mib": {
+        "operation": "/memory",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.32491600001230836
+        },
+        "startMs": {
+          "n": 20,
+          "median": 29.021458000002895,
+          "min": 27.97804200000246,
+          "max": 40.81508299999405
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 0.5022499999904539,
+          "min": 0.317750000016531,
+          "max": 1.0970000000088476
+        },
+        "warmMs": {
+          "n": 100,
+          "median": 0.0036660000041592866,
+          "min": -0.40983399999095127,
+          "max": 4.95250000001397
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 0.021095899998908863,
+          "min": -0.006716700000106357,
+          "max": 0.056541700000525455
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 31932416,
+          "min": 31801344,
+          "max": 32063488
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 1196032,
+            "min": 1146880,
+            "max": 1327104
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 1212416,
+            "min": 1146880,
+            "max": 1327104
+          },
+          "held3": {
+            "n": 20,
+            "median": 1196032,
+            "min": -5423104,
+            "max": 1277952
+          },
+          "touched3": {
+            "n": 20,
+            "median": 1196032,
+            "min": -5472256,
+            "max": 1277952
+          },
+          "dropped": {
+            "n": 20,
+            "median": 1196032,
+            "min": -5455872,
+            "max": 1277952
+          }
+        }
+      },
+      "empty-import-128mib": {
+        "operation": "/memory",
+        "processes": 20,
+        "noopMs": {
+          "n": 120,
+          "median": 0.4232499999925494
+        },
+        "startMs": {
+          "n": 20,
+          "median": 30.851458999997703,
+          "min": 28.499833000008948,
+          "max": 32.364208000013605
+        },
+        "coldMs": {
+          "n": 20,
+          "median": 0.6975410000013653,
+          "min": 0.3457500000076834,
+          "max": 1.080207999999402
+        },
+        "warmMs": {
+          "n": 100,
+          "median": -0.004916999983834103,
+          "min": -0.4299170000012964,
+          "max": 2.2279170000110753
+        },
+        "manyPerInstanceMs": {
+          "n": 20,
+          "median": 0.04425420000043232,
+          "min": 0.004133300003013573,
+          "max": 0.09159579999977722
+        },
+        "innerClockMs": {
+          "n": 20,
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "rssStartBytes": {
+          "n": 20,
+          "median": 31997952,
+          "min": 31817728,
+          "max": 32145408
+        },
+        "rssGrowthBytes": {
+          "afterFirst": {
+            "n": 20,
+            "median": 1196032,
+            "min": 1130496,
+            "max": 1294336
+          },
+          "afterMany": {
+            "n": 20,
+            "median": 1196032,
+            "min": 1130496,
+            "max": 1294336
+          },
+          "held3": {
+            "n": 20,
+            "median": 1196032,
+            "min": 1130496,
+            "max": 1294336
+          },
+          "touched3": {
+            "n": 20,
+            "median": 1196032,
+            "min": 1130496,
+            "max": 1294336
+          },
+          "dropped": {
+            "n": 20,
+            "median": 1196032,
+            "min": 1130496,
+            "max": 1294336
+          }
+        }
+      }
+    }
+  }
+}

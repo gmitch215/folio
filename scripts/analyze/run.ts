@@ -2,11 +2,12 @@ import { analyzeAdmission } from './admission.ts';
 import { analyzeAffinity } from './affinity.ts';
 import { analyzeBakeSecrets } from './bakesecrets.ts';
 import { analyzeBlocks } from './blocks.ts';
-import { analyzeBootImage } from './bootimage.ts';
+import { analyzeBakedBuild, analyzeBootImage } from './bootimage.ts';
 import { analyzeBreakdown, analyzeMemory } from './breakdown.ts';
 import { analyzeConcurrent } from './concurrent.ts';
 import { analyzeControl } from './control.ts';
 import { analyzeIntra } from './intra.ts';
+import { analyzePageDrop } from './pagedrop.ts';
 import { analyzePaired } from './paired.ts';
 import { analyzeRegen } from './regen.ts';
 import { analyzeScaling } from './scaling.ts';
@@ -20,7 +21,7 @@ analyzeScaling();
 for (const set of ['20261020-control', '20261020-control-b']) analyzeControl(set);
 for (const set of ['20261020-affinity', '20261020-affinity-final']) analyzeAffinity(set);
 for (const file of ['workloads.jsonl', 'render.jsonl']) analyzePaired('20261020-php', file);
-for (const name of ['kernel-control', 'negative', 'gmux-core', 'gmux-abi', 'tinyimg'])
+for (const name of ['kernel-control', 'negative', 'machine-core', 'process-abi', 'tinyimg'])
 	analyzePaired('20261020-consumers', `${name}.jsonl`);
 analyzeAdmission('20261020-regress');
 for (const file of ['php-workloads.jsonl', 'php-render.jsonl'])
@@ -31,9 +32,9 @@ for (const name of [
 	'negative',
 	'small-trips',
 	'small-trips-b',
-	'gmux-core',
-	'gmux-abi',
-	'gmux-abi-b',
+	'machine-core',
+	'process-abi',
+	'process-abi-b',
 	'tinyimg'
 ])
 	analyzePaired('20261020-regress', `${name}.jsonl`);
@@ -49,7 +50,6 @@ analyzeIntra(
 	['intra-drupal-rig.jsonl'],
 	'intra-drupal-rig.summary.json'
 );
-analyzeIntra('compile', '20261020-phpintra', ['compile-rig.jsonl'], 'compile-rig.summary.json');
 analyzeIntra('indirect', '20261020-phpintra', ['indirect-mac.jsonl'], 'indirect-mac.summary.json');
 analyzeIntra('snapshot', '20261020-phpintra', ['snapshot-rig.jsonl'], 'snapshot-rig.summary.json');
 for (const set of ['20261020-phpwidth-nosmt', '20261020-phpwidth-smt'])
@@ -72,5 +72,8 @@ analyzeCensus('20261022-sqlcensus', 'census.jsonl', 'summary.json');
 analyzeSiteConc('20261022-site-concurrency');
 analyzeBlocks('20261022-blocks', 'mac-blocks.jsonl');
 analyzeBootImage('20261022-bootimage');
+analyzeBakedBuild('20261022-bootimage-php8512');
 analyzeBakeSecrets('20261022-bakesecrets');
+analyzeBakeSecrets('20261022-bakesecrets-php8512');
+analyzePageDrop('20261022-pagedrop');
 console.log('regenerated every summary.json under results/');

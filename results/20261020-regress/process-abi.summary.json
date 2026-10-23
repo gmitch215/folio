@@ -1,7 +1,7 @@
 {
   "environment": {
     "kind": "environment",
-    "consumer": "gmux-abi",
+    "consumer": "process-abi",
     "node": "v26.8.2",
     "v8": "14.6.202.34-node.28",
     "cpu": "Apple M2 Pro",
@@ -38,7 +38,7 @@
   },
   "measuredSamples": 540,
   "workloads": {
-    "gmux-abi/memset-16mib": {
+    "process-abi/memset-16mib": {
       "folio-1": {
         "wallMs": {
           "n": 20,
@@ -458,7 +458,7 @@
         ]
       }
     },
-    "gmux-abi/memcpy-16mib": {
+    "process-abi/memcpy-16mib": {
       "folio-1": {
         "wallMs": {
           "n": 20,
@@ -878,7 +878,7 @@
         ]
       }
     },
-    "gmux-abi/memset-memcpy-chain": {
+    "process-abi/memset-memcpy-chain": {
       "folio-1": {
         "wallMs": {
           "n": 20,
@@ -1305,5 +1305,5 @@
     "min": 3.95703125,
     "max": 5.072265625
   },
-  "hash": "db9893d3084f8958e4eb129f687ce2472aefb58d60a97778c2e25f923218295c"
+  "hash": "01e60448b01db0f285de01f05230098ef9c857b2db0b3e691ab25a161a76481f"
 }

@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { findInImage, type MemoryImage } from '../../src/bake.ts';
 import { parseRows, readRaw, resultsRoot, stats, writeSummary, type Row } from './lib.ts';
@@ -168,6 +169,121 @@ export function diffImages(a: MemoryImage, b: MemoryImage) {
 	};
 }
 
+// #region sweep
+
+export type SweepClass = 'hex32' | 'hex40' | 'hex64' | 'base64url' | 'base64';
+
+export interface SweepFinding {
+	class: SweepClass;
+	length: number;
+	/** Shannon entropy in bits per character */
+	entropy: number;
+	/** how many times this exact string occurs in the heap */
+	count: number;
+	/** first 16 hex digits of the string's SHA-256, so a value can be matched without storing it */
+	sha16: string;
+	/** the 14 characters before the first occurrence, unprintable bytes as a dot, long runs as a star */
+	before: string;
+}
+
+/** Shannon entropy of a string in bits per character */
+export function entropy(value: string): number {
+	const counts = new Map<string, number>();
+	for (const ch of value) counts.set(ch, (counts.get(ch) ?? 0) + 1);
+	let bits = 0;
+	for (const n of counts.values()) bits -= (n / value.length) * Math.log2(n / value.length);
+	return bits;
+}
+
+/** the entropy a string of this length drawn uniformly from `symbols` symbols is expected to have */
+export const expectedEntropy = (length: number, symbols = 64) =>
+	Math.log2(symbols) - (symbols - 1) / (2 * length * Math.LN2);
+
+const sweepPatterns: [SweepClass, RegExp][] = [
+	['hex32', /(?<![0-9A-Za-z])[0-9a-f]{32}(?![0-9A-Za-z])/g],
+	['hex40', /(?<![0-9A-Za-z])[0-9a-f]{40}(?![0-9A-Za-z])/g],
+	['hex64', /(?<![0-9A-Za-z])[0-9a-f]{64}(?![0-9A-Za-z])/g],
+	['base64url', /(?<![A-Za-z0-9_-])[A-Za-z0-9_-]{43,}(?![A-Za-z0-9_-])/g],
+	[
+		'base64',
+		/(?<![A-Za-z0-9+/_-])(?=[A-Za-z0-9]*[+/])[A-Za-z0-9+/]{40,}={0,2}(?![A-Za-z0-9+/=_-])/g
+	]
+];
+
+/**
+ * Every string in a heap that is shaped like a secret: 32, 40 and 64 character lowercase hex
+ * (session ids, SHA-1 and SHA-256 digests), and runs of 43 or more base64url or 40 or more base64
+ * characters (base64 only when a plus or a slash is in the run) whose entropy is within `margin` bits per character of what random characters give,
+ * so identifiers, paths and prose drop out. One finding per distinct string, with its count and
+ * its SHA-256 prefix rather than the value.
+ */
+export function sweepBytes(bytes: Uint8Array, margin = 0.35): SweepFinding[] {
+	const text = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.length).toString('latin1');
+	const found = new Map<string, SweepFinding>();
+	for (const [name, pattern] of sweepPatterns) {
+		for (const match of text.matchAll(pattern)) {
+			const value = match[0];
+			const bits = entropy(value);
+			const prose = name === 'base64url' || name === 'base64';
+			if (prose && bits < expectedEntropy(value.length) - margin) continue;
+			const key = `${name}:${value}`;
+			const seen = found.get(key);
+			if (seen) {
+				seen.count++;
+				continue;
+			}
+			const at = match.index!;
+			found.set(key, {
+				class: name,
+				length: value.length,
+				entropy: Math.round(bits * 100) / 100,
+				count: 1,
+				sha16: createHash('sha256').update(value).digest('hex').slice(0, 16),
+				before: text
+					.slice(Math.max(0, at - 14), at)
+					.replace(/[^\x20-\x7e]/g, '.')
+					.replace(/[A-Za-z0-9_-]{8,}/g, '*')
+			});
+		}
+	}
+	return [...found.values()];
+}
+
+/** strings found in both heaps (by class and digest) against those only one holds */
+export function compareSweeps(a: SweepFinding[], b: SweepFinding[]) {
+	const id = (finding: SweepFinding) => `${finding.class}:${finding.sha16}`;
+	const inB = new Set(b.map(id));
+	const inA = new Set(a.map(id));
+	return {
+		shared: a.filter((finding) => inB.has(id(finding))),
+		onlyA: a.filter((finding) => !inB.has(id(finding))),
+		onlyB: b.filter((finding) => !inA.has(id(finding)))
+	};
+}
+
+/** findings grouped by class, length and the text before them, largest group first */
+export function clusterSweep(findings: SweepFinding[]) {
+	const groups = new Map<string, SweepFinding[]>();
+	for (const finding of findings) {
+		const key = `${finding.class}\0${finding.length}\0${finding.before}`;
+		groups.set(key, [...(groups.get(key) ?? []), finding]);
+	}
+	return [...groups]
+		.map(([key, list]) => {
+			const [cls, length, before] = key.split('\0');
+			return {
+				class: cls as SweepClass,
+				length: Number(length),
+				before: before!,
+				distinct: list.length,
+				occurrences: list.reduce((n, finding) => n + finding.count, 0)
+			};
+		})
+		.sort((x, y) => y.distinct - x.distinct);
+}
+
+// #endregion
+
 const by = <T>(rows: T[], key: (row: T) => string) => {
 	const groups = new Map<string, T[]>();
 	for (const row of rows) groups.set(key(row), [...(groups.get(key(row)) ?? []), row]);
@@ -301,6 +417,123 @@ export function summarizeArms(rows: Row[]) {
 	});
 }
 
+/** a call into the host that the bridge carries: EM_ASM blocks, async imports and the cfw functions */
+export const isBridgeCall = (name: string) =>
+	/emscripten_asm_const|__asyncjs__/.test(name) || name.startsWith('Module.cfw');
+
+const censusPhases = ['open', 'replay', 'idle', 'rekey', 'request', 'bridge-probe', 'stack-probe'];
+
+/**
+ * Host calls per phase of a replay, from the census rows. A harness call is one the replaying
+ * script made itself (the recorded init block); a module call is one the wasm made. Calls before
+ * the first PHP run are the `calls` field, the phases after it are `callsByPhase`.
+ */
+export function summarizeCensus(rows: Row[]) {
+	const census = rows.filter((row) => row.kind === 'census');
+	const sum = (calls: Record<string, number> | undefined, keep: (name: string) => boolean) =>
+		Object.entries(calls ?? {})
+			.filter(([name]) => keep(name))
+			.reduce((n, [, count]) => n + count, 0);
+	const harness = (name: string) => name.startsWith('harness:');
+	return [...by(census, (row) => row.via)].map(([via, group]) => {
+		const totals = (row: Row) => {
+			const out: Record<string, number> = {};
+			for (const calls of Object.values(row.calls as Record<string, Record<string, number>>))
+				for (const [name, count] of Object.entries(calls))
+					out[name] = (out[name] ?? 0) + count;
+			return out;
+		};
+		const before = totals(group[0]!);
+		const phases = (name: string) =>
+			group.map((row) => (row.callsByPhase as Record<string, Record<string, number>>)[name]);
+		const handles = group.map((row) => row.handlesAfterReplay);
+		const only = (list: unknown[]) => [...new Set(list.map((value) => JSON.stringify(value)))];
+		return {
+			via,
+			n: group.length,
+			beforeFirstPhp: {
+				harnessCalls: sum(before, harness),
+				moduleCalls: sum(before, (name) => !harness(name)),
+				moduleBridgeCalls: sum(before, (name) => !harness(name) && isBridgeCall(name)),
+				sameInEveryRun: new Set(group.map((row) => JSON.stringify(totals(row)))).size === 1,
+				names: before
+			},
+			byPhase: Object.fromEntries(
+				censusPhases.map((name) => {
+					const calls = phases(name).filter(Boolean) as Record<string, number>[];
+					const first = calls[0];
+					return [
+						name,
+						first && {
+							runs: calls.length,
+							bridgeCalls: sum(first, (call) => !harness(call) && isBridgeCall(call)),
+							runtimeCalls: sum(
+								first,
+								(call) => !harness(call) && !isBridgeCall(call)
+							),
+							harnessCalls: sum(first, harness),
+							bridgeByName: Object.fromEntries(
+								Object.entries(first).filter(([call]) => isBridgeCall(call))
+							)
+						}
+					];
+				})
+			),
+			handleTables: only(
+				handles.map((h) => h.handles.map((x: Row) => `${x.id}:${x.is}`).join(' '))
+			),
+			everyHandleIsRootOrSealed: handles.every((h) =>
+				h.handles.every(
+					(x: Row) => x.is === 'cfwRoot' || String(x.is).startsWith('sealed:')
+				)
+			),
+			root: only(
+				handles.map((h) => ({
+					frozen: h.rootFrozen,
+					prototypeNull: h.rootPrototypeNull,
+					keys: h.rootKeys,
+					isGlobalThis: h.rootIsGlobalThis
+				}))
+			),
+			bridgeProbe: only(group.map((row) => row.bridgeProbe)),
+			stackGlobals: only(group.map((row) => row.stackGlobals)),
+			deepRecursion: only(
+				group.map((row) => row.deepRecursion?.thrown?.split('\n')[0] ?? row.deepRecursion)
+			),
+			renderShas: [...new Set(group.map((row) => row.renderSha256))]
+		};
+	});
+}
+
+/** the sweep rows: counts per image, what two independent bakes share, and what only one holds */
+export function summarizeSweep(rows: Row[]) {
+	const compare = rows.find((row) => row.kind === 'sweepCompare');
+	const perBake = rows.filter((row) => row.kind === 'sweepOnlyLeft');
+	return {
+		images: rows
+			.filter((row) => row.kind === 'sweep')
+			.map(({ tag, bytes, distinct, occurrences, byClass, known }) => ({
+				tag,
+				bytes,
+				distinct,
+				occurrences,
+				byClass,
+				known
+			})),
+		compare,
+		perBake: perBake.map(({ class: cls, length, entropy, count, sha16, before, known }) => ({
+			class: cls,
+			length,
+			entropy,
+			count,
+			sha16,
+			before,
+			known
+		})),
+		perBakeUnexplained: perBake.filter((row) => !row.known).length
+	};
+}
+
 export function summarizeBakeSecrets(rows: Row[]) {
 	const environment = rows.find((row) => row.kind === 'environment');
 	const interpreters = rows.filter((row) => row.interp);
@@ -320,6 +553,8 @@ export function summarizeBakeSecrets(rows: Row[]) {
 		bakes: rows.filter((row) => row.kind === 'bake'),
 		scans: summarizeScans(rows),
 		keying: rows.filter((row) => row.kind === 'keying'),
+		...(rows.some((row) => row.kind === 'census') && { census: summarizeCensus(rows) }),
+		...(rows.some((row) => row.kind === 'sweep') && { sweep: summarizeSweep(rows) }),
 		rekey: summarizeRekey(rows),
 		rng: summarizeRng(rows),
 		diffs: rows.filter((row) => row.kind === 'diff'),
@@ -337,9 +572,13 @@ function loadRange(rows: Row[]) {
 
 export function analyzeBakeSecrets(set: string) {
 	const root = resultsRoot(set);
-	const files = ['mac-capture.jsonl', 'mac-replay.jsonl', 'mac-arms.jsonl'].filter((name) =>
-		existsSync(new URL(name, root))
-	);
+	const files = [
+		'mac-capture.jsonl',
+		'mac-replay.jsonl',
+		'mac-census.jsonl',
+		'mac-sweep.jsonl',
+		'mac-arms.jsonl'
+	].filter((name) => existsSync(new URL(name, root)));
 	const rows = files.flatMap((name) => parseRows(readRaw(root, name)));
 	writeSummary(root, summarizeBakeSecrets(rows));
 }

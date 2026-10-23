@@ -3,7 +3,7 @@
   "v8": "14.6.202.34-node.28",
   "rows": [
     {
-      "artifact": "gmux-core.wasm",
+      "artifact": "machine-core.wasm",
       "bytes": 4303,
       "sha256": "0a92cb8087557b71c763e5aa38c72d17b3cf47fafa67352150df30f2a1340a22",
       "preparationMs": 65.53279200000003,
@@ -242,17 +242,17 @@
         },
         {
           "module": "env",
-          "name": "__gmux_vfork",
+          "name": "__machine_vfork",
           "kind": "function"
         },
         {
           "module": "env",
-          "name": "__gmux_vfork_exec",
+          "name": "__machine_vfork_exec",
           "kind": "function"
         },
         {
           "module": "env",
-          "name": "__gmux_vfork_exit",
+          "name": "__machine_vfork_exit",
           "kind": "function"
         },
         {
@@ -297,7 +297,7 @@
         },
         {
           "module": "env",
-          "name": "__gmux_fork",
+          "name": "__machine_fork",
           "kind": "function"
         }
       ],
@@ -512,7 +512,7 @@
             "ordered native recursion: frexpl"
           ]
         },
-        "__gmux_main": {
+        "__machine_main": {
           "automatic": true,
           "nativeGuard": false,
           "mechanism": "control-flow",
@@ -932,7 +932,7 @@
             "ordered native recursion: frexpl"
           ]
         },
-        "__gmux_sigsetjmp_save": {
+        "__machine_sigsetjmp_save": {
           "automatic": true,
           "nativeGuard": false,
           "mechanism": "control-flow",
@@ -1002,7 +1002,7 @@
             "ordered native recursion: frexpl"
           ]
         },
-        "__gmux_sigsetjmp_tail": {
+        "__machine_sigsetjmp_tail": {
           "automatic": true,
           "nativeGuard": false,
           "mechanism": "control-flow",
@@ -1037,7 +1037,7 @@
             "ordered native recursion: frexpl"
           ]
         },
-        "__gmux_vfork_slot": {
+        "__machine_vfork_slot": {
           "automatic": false,
           "nativeGuard": false,
           "mechanism": "native",
@@ -1072,7 +1072,7 @@
             "ordered native recursion: frexpl"
           ]
         },
-        "__gmux_vfork_result": {
+        "__machine_vfork_result": {
           "automatic": false,
           "nativeGuard": false,
           "mechanism": "native",

@@ -1,7 +1,7 @@
 {
   "environment": {
     "kind": "environment",
-    "consumer": "gmux-core",
+    "consumer": "machine-core",
     "node": "v26.8.2",
     "v8": "14.6.202.34-node.28",
     "cpu": "Apple M2 Pro",
@@ -30,7 +30,7 @@
   },
   "measuredSamples": 200,
   "workloads": {
-    "gmux-core/ready-queue-batch": {
+    "machine-core/ready-queue-batch": {
       "folio-2": {
         "wallMs": {
           "n": 20,
@@ -238,7 +238,7 @@
         ]
       }
     },
-    "gmux-core/ready-queue-calls": {
+    "machine-core/ready-queue-calls": {
       "folio-2": {
         "wallMs": {
           "n": 20,
@@ -453,5 +453,5 @@
     "min": 4.32861328125,
     "max": 4.32861328125
   },
-  "hash": "d498ea5fbf9f44fb6eee9de05785fd3c3301c9d325eff29d58527d34c76b56c3"
+  "hash": "1134c5da4ad97b5742f5c12a62dff9ee43509b2f2280e5b933b3e1ef41d6758a"
 }
