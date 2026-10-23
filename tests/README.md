@@ -32,3 +32,8 @@ Fixture bytes must not depend on the machine's `PATH`; `tests/unit/fixtures.test
 managed lanes. Each run snapshots the account's Workers and Durable Object namespaces first and
 fails if they differ afterwards. Set `FOLIO_E2E_BROWSER=1` to include Browser Run, which has a daily
 minute allowance on Free.
+
+The Free plan allows 100,000 Durable Object rows written per UTC day across the account. Before the
+first deploy the suite reads the account's rows written today and skips with a notice that names the
+reset time when a run would not fit; a deploy that the platform refuses for the same reason skips
+too, instead of failing. The meter can under-read on Free, so the refusal text is the second check.
