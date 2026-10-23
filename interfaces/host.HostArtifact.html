@@ -16,7 +16,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">HostArtifact</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#create">create</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">()</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><br/>        <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">dispose</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">()</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">options</span><span class="tsd-signature-symbol">?:</span> <a href="node.FolioOptions.html" class="tsd-signature-type tsd-kind-interface">FolioOptions</a> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-signature-symbol">&gt;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">dispose</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">()</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">void</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">options</span><span class="tsd-signature-symbol">?:</span> <a href="node.FolioOptions.html" class="tsd-signature-type tsd-kind-interface">FolioOptions</a> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#exports">exports</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-keyword">readonly</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#program">program</a><span class="tsd-signature-symbol">:</span> <a href="../types/node.ProgramInput.html" class="tsd-signature-type tsd-kind-type-alias">ProgramInput</a><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/f870c16aa8d730fe6b6c40313e85a7a8a8c2588a/src/host.ts#L6">src/host.ts:6</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/b2b67f8f9656ee50c22f44941a6b831a39a77123/src/host.ts#L6">src/host.ts:6</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -38,21 +38,21 @@
 as the memory and imports, and a <code>dispose</code> called once after the group's workers join.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/f870c16aa8d730fe6b6c40313e85a7a8a8c2588a/src/host.ts#L15">src/host.ts:15</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/b2b67f8f9656ee50c22f44941a6b831a39a77123/src/host.ts#L15">src/host.ts:15</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="exports"><span>exports</span><a href="#exports" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">exports</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-keyword">readonly</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Explicit allowlist; a registered module does not expose every export.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/f870c16aa8d730fe6b6c40313e85a7a8a8c2588a/src/host.ts#L10">src/host.ts:10</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/b2b67f8f9656ee50c22f44941a6b831a39a77123/src/host.ts#L10">src/host.ts:10</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="program"><span>program</span><a href="#program" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">program</span><span class="tsd-signature-symbol">:</span> <a href="../types/node.ProgramInput.html" class="tsd-signature-type tsd-kind-type-alias">ProgramInput</a></div>
 <div class="tsd-comment tsd-typography"><p>The program or prepared plan every session of this artifact runs.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/f870c16aa8d730fe6b6c40313e85a7a8a8c2588a/src/host.ts#L8">src/host.ts:8</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/b2b67f8f9656ee50c22f44941a6b831a39a77123/src/host.ts#L8">src/host.ts:8</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

@@ -2,12 +2,12 @@
 
 The folder decides the runtime.
 
-| where              | what                                                           | runtime                   |
-| ------------------ | -------------------------------------------------------------- | ------------------------- |
-| `scripts/build/`   | C fixture compilation and prepared-plan generation             | Bun, also runs under Node |
-| `scripts/analyze/` | deterministic summaries of the raw samples in `results/`       | Bun, also runs under Node |
-| `scripts/probe/`   | measurement instruments that need real `worker_threads` and V8 | Node 26                   |
-| `scripts/rig/`     | the timing rig on Paisley Park (`taskset`, `nice`, a lock)     | Bash                      |
+| where              | what                                                            | runtime                   |
+| ------------------ | --------------------------------------------------------------- | ------------------------- |
+| `scripts/build/`   | C fixture compilation and prepared-plan generation              | Bun, also runs under Node |
+| `scripts/analyze/` | deterministic summaries of the raw samples in `results/`        | Bun, also runs under Node |
+| `scripts/probe/`   | measurement instruments that need real `worker_threads` and V8  | Node 26                   |
+| `scripts/rig/`     | the timing rig on the Ryzen machine (`taskset`, `nice`, a lock) | Bash                      |
 
 Everything outside `probe/` and `rig/` is TypeScript and uses `import.meta.main`, so
 `bun scripts/build/fixtures.ts` and `node scripts/build/fixtures.ts` both work.
@@ -28,7 +28,7 @@ evidence names.
 
 `bun scripts/analyze/run.ts` regenerates every `results/*/summary.json` from its raw `.jsonl`.
 Each analyzer also takes a set name: `bun scripts/analyze/control.ts 20261020-control-b`. The
-outputs match the summaries recorded on Paisley Park byte for byte, with one exception:
+outputs match the summaries recorded on the Ryzen rig byte for byte, with one exception:
 `results/20261019/summary.json` lists its input files in sorted order now, because directory
 listing order differed between the two machines.
 
@@ -39,43 +39,54 @@ Bun lane because they measure Node's `worker_threads`, shared backing stores and
 which Bun does not implement the same way. Moving a file does not change what it measures;
 rewriting it might, so change one only with a paired run against the old version.
 
-| file                       | measures                                                                                                     |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `sharing-probe.mjs`        | backing-store identity, aliasing, atomics, RSS controls, growth, creator exit                                |
-| `cpu-probe.ts`             | tiny, stream and compute kernels at 1, 2 and 4 workers                                                       |
-| `large-probe.ts`           | the 256 MiB combined capacity and CPU proof                                                                  |
-| `scaling-probe.ts`         | the 207-sample 1/2/4/8 worker sweep with profiling                                                           |
-| `control-probe.mjs`        | the generalized C entry, untouched against 1/2/4/8 workers                                                   |
-| `control-affinity.mjs`     | the same entry with pinned and unpinned workers                                                              |
-| `integration-probe.ts`     | real tinyimg and gmux core artifacts against native instances                                                |
-| `artifact-coverage.ts`     | per-export inspect coverage and real gmux process-memory differential calls                                  |
-| `php-preparation.ts`       | shipping PHP original/emitted function counts and generated helper census                                    |
-| `php-render.ts`            | shipping PHP boot and uncached Drupal render, native against prepared Folio                                  |
-| `pages-probe.ts`           | actual native Wasm over bounded page leases against a complete native oracle                                 |
-| `consumer.ts`              | any Wasm consumer, native against 1/2/4/8 workers, whole memory compared                                     |
-| `php-workloads.ts`         | ten PHP userland workloads on the shipping artifact, native against Folio                                    |
-| `php-render-pairs.ts`      | the uncached Drupal render in alternating native and Folio processes                                         |
-| `purity-census.ts`         | why each function of a module is not a worker region, by first blocking rule                                 |
-| `admission-calibration.ts` | synthetic regions that fit the admission cost model: instruction speed, region overhead, tracked access cost |
-| `admission-sites.ts`       | every region candidate of each consumer with its estimate, verdict and the default threshold                 |
-| `old-build.ts`             | unpacks the archived pre-admission `src/` so a harness can run it beside the current build                   |
-| `php-contexts.ts`          | N private PHP instances in N worker threads: values, in-thread timestamps and thread CPU per run             |
-| `php-concurrent.ts`        | independent PHP requests at 1/2/4/8 widths in four arms, plus per-context memory                             |
-| `drupal-breakdown.ts`      | the uncached Drupal render split into SQL, ROM inflate, lazy compile and PHP execution                       |
-| `php-compile.ts`           | the Zend compile share of the Drupal render under the shipped opcache arms, plus a timer per include         |
-| `php-intra.ts`             | one request submitting independent jobs to private PHP contexts (explicit task API), against plain PHP       |
-| `indirect-sites.ts`        | counts the targets of every `call_indirect` in the PHP artifact while it renders                             |
-| `php-snapshot.ts`          | clones a PHP context by copying its Wasm memory and times the copy                                           |
-| `worksp.ts`                | counts or traces one PHP request (count or trace mode) and writes its work-span ladder                       |
-| `worksp-instrument.ts`     | rewrites the PHP module with counters, load and store hooks, and allocator, output and `execute_ex` extents  |
-| `worksp-recorder.ts`       | turns dispatch events and accesses into userland-call segments with merged intervals                         |
-| `worksp-hooks.ts`          | the hook imports a worker binds to an instrumented module, and the record it returns                         |
-| `worksp-refcount.ts`       | the counter experiment that checks refcount tags (0 verified sites so far)                                   |
-| `worksp-validate.ts`       | differential validation of private sites: serial digest against the explicit task API on private contexts    |
+| file                       | measures                                                                                                                                                                                                                    |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sharing-probe.mjs`        | backing-store identity, aliasing, atomics, RSS controls, growth, creator exit                                                                                                                                               |
+| `cpu-probe.ts`             | tiny, stream and compute kernels at 1, 2 and 4 workers                                                                                                                                                                      |
+| `large-probe.ts`           | the 256 MiB combined capacity and CPU proof                                                                                                                                                                                 |
+| `scaling-probe.ts`         | the 207-sample 1/2/4/8 worker sweep with profiling                                                                                                                                                                          |
+| `control-probe.mjs`        | the generalized C entry, untouched against 1/2/4/8 workers                                                                                                                                                                  |
+| `control-affinity.mjs`     | the same entry with pinned and unpinned workers                                                                                                                                                                             |
+| `integration-probe.ts`     | real tinyimg and machine core artifacts against native instances                                                                                                                                                            |
+| `artifact-coverage.ts`     | per-export inspect coverage and real Linux process-memory differential calls                                                                                                                                                |
+| `php-preparation.ts`       | shipping PHP original/emitted function counts and generated helper census                                                                                                                                                   |
+| `php-render.ts`            | shipping PHP boot and uncached Drupal render, native against prepared Folio                                                                                                                                                 |
+| `pages-probe.ts`           | actual native Wasm over bounded page leases against a complete native oracle                                                                                                                                                |
+| `consumer.ts`              | any Wasm consumer, native against 1/2/4/8 workers, whole memory compared                                                                                                                                                    |
+| `php-workloads.ts`         | ten PHP userland workloads on the shipping artifact, native against Folio                                                                                                                                                   |
+| `php-render-pairs.ts`      | the uncached Drupal render in alternating native and Folio processes                                                                                                                                                        |
+| `purity-census.ts`         | why each function of a module is not a worker region, by first blocking rule                                                                                                                                                |
+| `admission-calibration.ts` | synthetic regions that fit the admission cost model: instruction speed, region overhead, tracked access cost                                                                                                                |
+| `admission-sites.ts`       | every region candidate of each consumer with its estimate, verdict and the default threshold                                                                                                                                |
+| `old-build.ts`             | unpacks the archived pre-admission `src/` so a harness can run it beside the current build                                                                                                                                  |
+| `php-contexts.ts`          | N private PHP instances in N worker threads: values, in-thread timestamps and thread CPU per run                                                                                                                            |
+| `php-concurrent.ts`        | independent PHP requests at 1/2/4/8 widths in four arms, plus per-context memory                                                                                                                                            |
+| `drupal-breakdown.ts`      | the uncached Drupal render split into SQL, ROM inflate, lazy compile and PHP execution                                                                                                                                      |
+| `php-intra.ts`             | one request submitting independent jobs to private PHP contexts (explicit task API), against plain PHP                                                                                                                      |
+| `indirect-sites.ts`        | counts the targets of every `call_indirect` in the PHP artifact while it renders                                                                                                                                            |
+| `php-snapshot.ts`          | clones a PHP context by copying its Wasm memory and times the copy                                                                                                                                                          |
+| `worksp.ts`                | counts or traces one PHP request (count or trace mode) and writes its work-span ladder                                                                                                                                      |
+| `worksp-instrument.ts`     | rewrites the PHP module with counters, load and store hooks, and allocator, output and `execute_ex` extents                                                                                                                 |
+| `worksp-recorder.ts`       | turns dispatch events and accesses into userland-call segments with merged intervals                                                                                                                                        |
+| `worksp-hooks.ts`          | the hook imports a worker binds to an instrumented module, and the record it returns                                                                                                                                        |
+| `worksp-refcount.ts`       | the counter experiment that checks refcount tags (0 verified sites)                                                                                                                                                         |
+| `php-regen.ts`             | regeneration of a Drupal page set by 1 to 16 private contexts pulling from one queue, against serial                                                                                                                        |
+| `php-blocks.ts`            | warm Drupal render with N placed blocks: variant and response marks, isolated block builds, write tables                                                                                                                    |
+| `site-concurrency.ts`      | one workerd process against several for a real Drupal payload: forced full renders, throughput, footprint                                                                                                                   |
+| `boot-image.ts`            | captures a booted context's memory, bakes it with `src/bake.ts`, renders from it, times delivery; `FOLIO_BOOTIMAGE_ROOT`, `FOLIO_PIN_SOURCE` and the two `FOLIO_PIN_*_SHA256` digests keep a second interpreter build apart |
+| `bake-secrets.ts`          | what a baked image holds: leak scans, replay with the rekey step, RNG state, host-call census of a replay, heap sweep for secret-shaped strings                                                                             |
+| `product-bake.ts`          | reads a Durable Object host's heap snapshot from its SQLite file, bakes it, writes the host source that uses it                                                                                                             |
+| `page-drop.ts`             | labels each page of a baked image by dlmalloc chunk, drops free-chunk pages, searches the pages a render does not read                                                                                                      |
+| `bake-rekey.ts`            | the PHP that gives a replayed Drupal heap its site's salt, key and random seed                                                                                                                                              |
+| `php-sql-census.ts`        | statement log of node, user, term, render and cron units: tables touched, pair conflicts, SQL share of wall                                                                                                                 |
+| `tasks-runtime.ts`         | the task pool's behavior checks under the runtime that runs the script (Node or Bun)                                                                                                                                        |
+| `workerd-concurrency.ts`   | CPU-bound requests at 1 to 16 concurrent against one workerd process and against four                                                                                                                                       |
+| `worksp-validate.ts`       | differential validation of private sites: serial digest against the explicit task API on private contexts                                                                                                                   |
 
-`php-preparation.ts` and `php-render.ts` need a drupflare worker checkout with its dependencies and
-a restored `.interp`. `FOLIO_CONSUMER` names it, and `../drupflare/worker` beside this repository is
-the default. `php-render.ts` bundles the consumer's TypeScript with esbuild first, because Node does
+`php-preparation.ts` and `php-render.ts` need a checkout of the Drupal-on-Wasm consumer with its dependencies and
+a restored interpreter. `FOLIO_CONSUMER` names it, and `FOLIO_HOST_MODULES` names a JSON file that maps the
+roles the probes import (`fs`, `mask`, `worker-shim`, `codec`, `site-store`) to paths under the checkout.
+`php-render.ts` bundles the consumer's TypeScript with esbuild first, because Node does
 not strip types under `node_modules`, then runs `native` or `folio` mode.
 
 ## Consumers
@@ -139,9 +150,8 @@ Arguments and results travel as `base64(serialize(...))`, the owner blocks in `A
 joins, and each server context runs one named function at a time. `php-intra.ts OUT.jsonl [PAIRS]
 [WIDTHS] [WORKLOADS]` alternates a `plain` arm (direct calls), an `api-inline` arm (the API in one
 context) and `api-W` arms, and records task intervals, thread CPU, copy sizes and wait time.
-`php-compile.ts OUT.jsonl [ROUNDS] [INCLUDE_ROUNDS]`, `indirect-sites.ts OUT.jsonl [RENDERS]` and
-`php-snapshot.ts OUT.jsonl [SAMPLES]` take the same environment variables. `scripts/analyze/intra.ts`
-summarizes all four.
+`indirect-sites.ts OUT.jsonl [RENDERS]` and `php-snapshot.ts OUT.jsonl [SAMPLES]` take the same
+environment variables. `scripts/analyze/intra.ts` summarizes all three.
 
 `worksp.ts OUT.jsonl count|trace INPUTS [REPEATS] [RC_SITES.json]` takes inputs from `drupal-render`,
 `hash-chains`, `dependent-chain`, `serialize-json`, `twig-render` and `calls`; trace mode needs a heap
@@ -154,12 +164,12 @@ and `FOLIO_WORKSP_DEADSTACK=0` switch a recorder rule off for a comparison. `wor
 
 ## Rig
 
-`scripts/rig/php-intra.sh SET` runs the compile, explicit API and snapshot probes (`FOLIO_STEPS` picks
+`scripts/rig/php-intra.sh SET` runs the explicit API and snapshot probes (`FOLIO_STEPS` picks
 the steps). `scripts/rig/php-concurrent.sh SET` and `drupal-breakdown.sh SET` run the PHP probes above from a staged
 directory (`FOLIO_STAGE`: the consumer subset, the worker bundle and the admit plan), under the same
 lock, `nice 19` and a CPU mask (`FOLIO_RIG_MASK`, default `2-11`).
 
-`scripts/rig/run.sh KIND [LABEL]` runs one probe on Paisley Park under `nice 19` and a fixed CPU
+`scripts/rig/run.sh KIND [LABEL]` runs one probe on the Ryzen rig under `nice 19` and a fixed CPU
 mask, holds the timing lock and writes `results/exit-code`. `KIND` is `sharing`, `cpu`, `large`,
 `all`, `scaling`, `control` or `affinity`. `FOLIO_RIG_NODE` and `FOLIO_RIG_SWEEP` override the Node
 binary and the sweep helper.

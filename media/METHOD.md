@@ -56,7 +56,7 @@ CPU telemetry where available. A named object may share its isolate with other
 objects. No CPU count is inferred from the number of object IDs.
 
 Public execution requires `PROBE_TOKEN`. The deployment
-driver uses only the FREE or STUDENT credentials, snapshots existing scripts/namespaces,
+driver uses only the `FOLIO_CLOUDFLARE_*` or `FREE_CLOUDFLARE_*` credentials, snapshots existing scripts/namespaces,
 and removes its own classes and script before comparing the account baseline.
 The fixed matrix allows at most 640 lane invocations and 700 total invocations,
 with no application SQL reads/writes. Each body is capped at 2 MiB in this probe;
@@ -76,8 +76,8 @@ node experiments/managed/analyze.ts RESULT_JSON [SUMMARY_JSON]
 ```
 
 `local.ts` bundles the Worker with a Wrangler dry run and drives it in local workerd through
-Miniflare. `deploy.ts` reads `FREE_CLOUDFLARE_ACCOUNT_ID` and `FREE_CLOUDFLARE_API_TOKEN`, falls
-back to `STUDENT_*`, and never selects another account. `FOLIO_WRANGLER` overrides the Wrangler
+Miniflare. `deploy.ts` reads `FOLIO_CLOUDFLARE_ACCOUNT_ID` and `FOLIO_CLOUDFLARE_API_TOKEN`, falls
+back to `FREE_CLOUDFLARE_*`, and never selects another account. `FOLIO_WRANGLER` overrides the Wrangler
 entry. Local workerd results are labelled local; deployed rows and cleanup records stay in their
 own run directory. `node experiments/cleanup.ts NAME managed` recovers a run whose driver died
 before its own cleanup. In-memory owner state is not a durable checkpoint across eviction or host

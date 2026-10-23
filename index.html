@@ -28,6 +28,7 @@ the same engine.</p>
 <li><a href="#-managed-workers">Managed Workers</a></li>
 <li><a href="#-browser-execution-and-page-leases">Browser Execution and Page Leases</a></li>
 <li><a href="#-task-pool">Task Pool</a></li>
+<li><a href="#-baked-boot-images">Baked Boot Images</a></li>
 <li><a href="#-execution-and-memory">Execution and Memory</a></li>
 <li><a href="#-api-reference">API Reference</a></li>
 <li><a href="#-consumer-harness">Consumer Harness</a></li>
@@ -67,6 +68,7 @@ with imported memories, tables, globals and host functions bound as in native in
 copied snapshots between lanes.</li>
 <li>🧰 <strong>Task pool</strong> that runs named functions in private contexts on other threads, with ordered
 joins and an optional differential audit.</li>
+<li>🧊 <strong>Baked boot images</strong> that write a booted memory into the module as data segments.</li>
 <li>📊 <strong>Opt-in profiling</strong> of worker time, validation, commit and replay cost.</li>
 </ul>
 <h2 id="📦-install" class="tsd-anchor-link">📦 Install<a href="#📦-install" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
@@ -165,6 +167,56 @@ start and end time, thread CPU time and byte counts, and <code>peakConcurrency(r
 tasks ran at the same time.</p>
 <p>The pool does not discover independent work. Region discovery and ordered validation stay in the
 core engine, and the task pool covers programs that can say which calls are independent.</p>
+<h2 id="🧊-baked-boot-images" class="tsd-anchor-link">🧊 Baked Boot Images<a href="#🧊-baked-boot-images" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@gmitch215/folio/bake</code> moves a booted memory into the module. <code>captureImage(booted, fresh)</code> compares
+a booted memory with a fresh instance of the same module and keeps the 64 KiB pages that differ.
+<code>bakeModule(bytes, image)</code> returns the module with those pages as active data segments after its own,
+so instantiating it starts from the booted memory. It uses binaryen, loaded on the first bake, and
+writes memory 0.</p>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">bakeModule</span><span class="hl-1">, </span><span class="hl-5">captureImage</span><span class="hl-1">, </span><span class="hl-5">imagePages</span><span class="hl-1">, </span><span class="hl-5">moduleDigest</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/bake&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">fresh</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Memory</span><span class="hl-1">({ </span><span class="hl-5">initial:</span><span class="hl-1"> </span><span class="hl-8">1024</span><span class="hl-1"> });</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">booted</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Memory</span><span class="hl-1">({ </span><span class="hl-5">initial:</span><span class="hl-1"> </span><span class="hl-8">1024</span><span class="hl-1"> });</span><br/><span class="hl-3">// instantiate `bytes` on each memory, then run the boot sequence on `booted`</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">image</span><span class="hl-1"> = </span><span class="hl-0">captureImage</span><span class="hl-1">(</span><span class="hl-5">booted</span><span class="hl-1">, </span><span class="hl-5">fresh</span><span class="hl-1">, { </span><span class="hl-5">module:</span><span class="hl-1"> </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">moduleDigest</span><span class="hl-1">(</span><span class="hl-5">bytes</span><span class="hl-1">) });</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">baked</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">bakeModule</span><span class="hl-1">(</span><span class="hl-5">bytes</span><span class="hl-1">, </span><span class="hl-5">image</span><span class="hl-1">);</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">memory</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Memory</span><span class="hl-1">({ </span><span class="hl-5">initial:</span><span class="hl-1"> </span><span class="hl-0">imagePages</span><span class="hl-1">(</span><span class="hl-5">image</span><span class="hl-1">).</span><span class="hl-5">memoryPages</span><span class="hl-1"> });</span><br/><span class="hl-6">const</span><span class="hl-1"> { </span><span class="hl-7">instance</span><span class="hl-1"> } = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">instantiate</span><span class="hl-1">(</span><span class="hl-5">baked</span><span class="hl-1">, { </span><span class="hl-5">env:</span><span class="hl-1"> { </span><span class="hl-5">memory</span><span class="hl-1"> } });</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The caller creates an imported memory with at least <code>memoryPages</code> pages. A defined memory that
+starts smaller has its initial pages raised to the image size, and its maximum, shared and memory64
+flags stay as they are. A page that boot zeroed but the module's own data had set is stored as
+zeros, and pages that are zero in both are left out. Pass the global values and the function table
+of both instances to <code>captureImage</code> as <code>globals</code> and <code>table</code> and the image records what boot
+changed. <code>bakeModule</code> writes changed i32, i64, f32 and f64 globals into their initial values and
+refuses changed table slots unless <code>allowTableChanges</code> is set. It throws <code>ImageMismatchError</code>, which
+has a <code>code</code>, for a wrong module digest, no memory, an image over the memory maximum and a global it
+cannot rewrite. Adjacent pages become one segment of at most <code>maxSegmentBytes</code> (64 MiB).</p>
+<p><code>applyImage(memory, image)</code> copies the pages into a fresh instance's memory without baking. It
+cannot set a module's globals or table slots, so an image that records changed ones is refused with
+code <code>global</code> or <code>table</code>; <code>{ memoryOnly: true }</code> copies the memory anyway and leaves the instance
+with its fresh globals, which is not a booted instance. A module whose boot changes globals (the
+PHP 8.5.12 build changes its stack bounds) belongs in <code>bakeModule</code>.
+<code>captureImage</code> takes a <code>context</code> string beside the module digest, a digest of whatever else shapes
+the heap (settings, shims, assets), and <code>applyImage(memory, image, { module, context })</code> refuses an
+image whose module or context differs, or that carries none, with <code>ImageMismatchError</code> code <code>digest</code>
+or <code>context</code> and before it writes a byte. <code>encodeImage</code> and <code>decodeImage</code> store an image beside the
+module and reject truncated or unknown input with <code>ImageFormatError</code>. <code>checkBaked(baked, image)</code>
+reads the data segments back and compares them with the image without instantiating.
+<code>bakeModule</code> throws code <code>memories</code> for a module with more than one memory.</p>
+<p>The image is the heap as it was, so anything the booted process held is in the baked module and
+becomes public with it. State kept in JavaScript, such as handles and open descriptors, is not
+captured. <code>findInImage(image, needles)</code> returns every offset where a needle's bytes occur in the
+image pages, so a secret and its base64 and hex forms can be searched for before the module ships.
+Freed memory is not zeroed, so a secret that was ever in the heap cannot be scrubbed out of an
+image afterwards: bake a site whose key and salt are throwaway values, and give the replaying site
+its own.</p>
+<p>For a Drupal heap that means three replacements after the replay. The hash salt lives in the static
+<code>Settings</code> object; the private key lives in the <code>State</code> cache collector, which serves it from memory
+once read; and PHP's Mersenne Twister state is in the heap, so every replayed instance would draw
+the same <code>mt_rand()</code> sequence. Values the bake computed from the old key and salt, such as the
+permissions hash of the anonymous user, sit in the <code>cache.memory</code> bin. This snippet makes the
+replayed instance use the replaying site's values, with <code>$salt</code> set to that site's hash salt:</p>
+<pre><code class="php"><span class="hl-6">use</span><span class="hl-1"> Drupal\Core\Site\</span><span class="hl-9">Settings</span><span class="hl-1">;</span><br/><br/><span class="hl-1">(</span><span class="hl-6">function</span><span class="hl-1"> (</span><span class="hl-6">string</span><span class="hl-1"> </span><span class="hl-5">$salt</span><span class="hl-1">) {</span><br/><span class="hl-1">	</span><span class="hl-6">$this</span><span class="hl-1">-&gt;</span><span class="hl-5">storage</span><span class="hl-1">[</span><span class="hl-2">&#39;hash_salt&#39;</span><span class="hl-1">] = </span><span class="hl-5">$salt</span><span class="hl-1">;</span><br/><span class="hl-1">})-&gt;</span><span class="hl-0">call</span><span class="hl-1">(</span><span class="hl-9">Settings</span><span class="hl-1">::</span><span class="hl-0">getInstance</span><span class="hl-1">(), </span><span class="hl-5">$salt</span><span class="hl-1">);</span><br/><br/><span class="hl-1">(</span><span class="hl-6">function</span><span class="hl-1"> () {</span><br/><span class="hl-1">	</span><span class="hl-6">$this</span><span class="hl-1">-&gt;</span><span class="hl-0">reset</span><span class="hl-1">();</span><br/><span class="hl-1">	</span><span class="hl-6">$this</span><span class="hl-1">-&gt;</span><span class="hl-5">keysSetDuringRequest</span><span class="hl-1"> = [];</span><br/><span class="hl-1">})-&gt;</span><span class="hl-0">call</span><span class="hl-1">(</span><span class="hl-9">Drupal</span><span class="hl-1">::</span><span class="hl-0">state</span><span class="hl-1">());</span><br/><br/><span class="hl-9">Drupal</span><span class="hl-1">::</span><span class="hl-0">service</span><span class="hl-1">(</span><span class="hl-2">&#39;cache.memory&#39;</span><span class="hl-1">)-&gt;</span><span class="hl-0">deleteAll</span><span class="hl-1">();</span><br/><span class="hl-0">mt_srand</span><span class="hl-1">(</span><span class="hl-0">unpack</span><span class="hl-1">(</span><span class="hl-2">&#39;V&#39;</span><span class="hl-1">, </span><span class="hl-0">random_bytes</span><span class="hl-1">(</span><span class="hl-8">4</span><span class="hl-1">))[</span><span class="hl-8">1</span><span class="hl-1">]);</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Run it before any other PHP in the replayed instance. A host that resets <code>State</code> at the start of
+each request still needs the salt and the random seed, and needs the key step for code that runs
+before the first request. The measured effect for a PHP interpreter is in the Baked Boot Images
+section of the technical report.</p>
 <h2 id="🧱-execution-and-memory" class="tsd-anchor-link">🧱 Execution and Memory<a href="#🧱-execution-and-memory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Proved finite, nontrapping i32 kernels use runtime bounds and cross-region overlap checks, then
 run native instructions against the shared allocation with no tracking or commit copy. A failed
@@ -276,10 +328,9 @@ the current one.</p>
 fallbacks, mode and the reason it stayed serial. The closing row holds <code>inspect</code> coverage for each
 entry that ran. The summary reports the paired speedup (native over Folio, within each round) and
 the CPU ratio, so a run that finds nothing to split says so with its numbers. The consumers in
-<code>scripts/probe/consumers/</code> cover tinyimg, the gmux core and process artifacts, a serial recurrence
-the compute kernel and a kernel whose trip count is too small to pay for dispatch.
-<code>scripts/probe/php-workloads.ts</code> runs the same comparison on the drupflare
-PHP artifact.</p>
+<code>scripts/probe/consumers/</code> cover tinyimg, a Linux machine core and a process ABI probe, a serial
+recurrence, the compute kernel and a kernel whose trip count is too small to pay for dispatch.
+<code>scripts/probe/php-workloads.ts</code> runs the same comparison on a PHP 8.5 build that serves Drupal.</p>
 <p><code>scripts/probe/php-contexts.ts</code> opens N private PHP instances, one per worker thread, and runs a
 snippet or the uncached Drupal render in each. Every result carries timestamps from inside the
 thread and thread CPU, so a run can show that two instances executed at the same time.
@@ -287,6 +338,9 @@ thread and thread CPU, so a run can show that two instances executed at the same
 (native serial, native concurrent, Folio serial, Folio concurrent). Independent requests scale
 with the number of instances whether or not Folio is involved; the library adds nothing to that
 result and the numbers are in the technical report.</p>
+<p><code>scripts/probe/php-regen.ts</code> regenerates a set of Drupal pages with private contexts pulling from
+one queue and aborts if any page differs from the serial render. On ten cores it reproduced 31 pages
+7.65x faster than one context. It also runs under Bun, which the task pool supports.</p>
 <h2 id="📈-measured-results" class="tsd-anchor-link">📈 Measured Results<a href="#📈-measured-results" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <table>
 <thead>
@@ -308,6 +362,11 @@ result and the numbers are in the technical report.</p>
 <td>7.62x, with total CPU 1.037x of serial</td>
 </tr>
 <tr>
+<td>Node, Drupal regeneration</td>
+<td>Ryzen 9 9900X, ten private contexts, 31 pages, n=20</td>
+<td>7.65x median over one context, 1.087x process CPU, every page equal to the serial render</td>
+</tr>
+<tr>
 <td>Managed Workers</td>
 <td>deployed Durable Object lanes</td>
 <td>39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes</td>
@@ -322,6 +381,11 @@ result and the numbers are in the technical report.</p>
 <td>FREE account, no JSPI, one ordinary counted-loop call over 256 MiB</td>
 <td>3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time</td>
 </tr>
+<tr>
+<td>Baked boot image</td>
+<td>PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm</td>
+<td>first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime</td>
+</tr>
 </tbody>
 </table>
 <p>A streaming workload stops improving near four workers, and <code>maximumWorkers</code> caps the pool per run.
@@ -335,7 +399,8 @@ live in <a href="media/results">results/</a>, and the Cloudflare probes are desc
 
 <p>Fixtures need <code>clang</code> and <code>wasm-ld</code> with the <code>wasm32</code> target. Tests need Node 26 for JSPI.
 <code>bun run test:coverage</code> runs the unit and integration projects with coverage, and <code>bun run test:e2e</code> deploys the probes to a Cloudflare account when <code>FREE_CLOUDFLARE_ACCOUNT_ID</code> and
-<code>FREE_CLOUDFLARE_API_TOKEN</code> are set. Layout notes live in <a href="media/README-1.md">tests/</a>,
+<code>FREE_CLOUDFLARE_API_TOKEN</code> are set; the experiments also accept <code>FOLIO_CLOUDFLARE_ACCOUNT_ID</code> and
+<code>FOLIO_CLOUDFLARE_API_TOKEN</code>. Layout notes live in <a href="media/README-1.md">tests/</a>,
 <a href="media/README-2.md">scripts/</a> and <a href="media/README.md">experiments/</a>.</p>
 <h2 id="🤝-contributing" class="tsd-anchor-link">🤝 Contributing<a href="#🤝-contributing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Open an issue before a large change. Run <code>bun run typecheck</code>, <code>bun run test</code> and
@@ -371,6 +436,7 @@ samples.</p>
 <li><a href="#📡-managed-workers"><span>📡 <wbr/>Managed <wbr/>Workers</span></a></li>
 <li><a href="#🔗-browser-execution-and-page-leases"><span>🔗 <wbr/>Browser <wbr/>Execution and <wbr/>Page <wbr/>Leases</span></a></li>
 <li><a href="#🧰-task-pool"><span>🧰 <wbr/>Task <wbr/>Pool</span></a></li>
+<li><a href="#🧊-baked-boot-images"><span>🧊 <wbr/>Baked <wbr/>Boot <wbr/>Images</span></a></li>
 <li><a href="#🧱-execution-and-memory"><span>🧱 <wbr/>Execution and <wbr/>Memory</span></a></li>
 <li><a href="#📖-api-reference"><span>📖 <wbr/>API <wbr/>Reference</span></a></li>
 <li><a href="#🧪-consumer-harness"><span>🧪 <wbr/>Consumer <wbr/>Harness</span></a></li>
