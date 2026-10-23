@@ -276,7 +276,11 @@ refuses changed table slots unless `allowTableChanges` is set. It throws `ImageM
 has a `code`, for a wrong module digest, no memory, an image over the memory maximum and a global it
 cannot rewrite. Adjacent pages become one segment of at most `maxSegmentBytes` (64 MiB).
 
-`applyImage(memory, image)` copies the pages into a fresh instance's memory without baking.
+`applyImage(memory, image)` copies the pages into a fresh instance's memory without baking. It
+cannot set a module's globals or table slots, so an image that records changed ones is refused with
+code `global` or `table`; `{ memoryOnly: true }` copies the memory anyway and leaves the instance
+with its fresh globals, which is not a booted instance. A module whose boot changes globals (the
+PHP 8.5.12 build changes its stack bounds) belongs in `bakeModule`.
 `captureImage` takes a `context` string beside the module digest, a digest of whatever else shapes
 the heap (settings, shims, assets), and `applyImage(memory, image, { module, context })` refuses an
 image whose module or context differs, or that carries none, with `ImageMismatchError` code `digest`
@@ -440,6 +444,7 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 | Managed Workers              | deployed Durable Object lanes                                      | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes        |
 | Browser Run                  | deployed Chromium, eight workers on one 256 MiB allocation         | 3.87x with four workers on explicit partitions                                                     |
 | Browser automatic extraction | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                    |
+| Baked boot image             | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm    | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime        |
 
 A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The
@@ -462,7 +467,8 @@ bun run example
 Fixtures need `clang` and `wasm-ld` with the `wasm32` target. Tests need Node 26 for JSPI.
 `bun run test:coverage` runs the unit and integration projects with coverage, and `bun run
 test:e2e` deploys the probes to a Cloudflare account when `FREE_CLOUDFLARE_ACCOUNT_ID` and
-`FREE_CLOUDFLARE_API_TOKEN` are set. Layout notes live in [tests/](tests/README.md),
+`FREE_CLOUDFLARE_API_TOKEN` are set; the experiments also accept `FOLIO_CLOUDFLARE_ACCOUNT_ID` and
+`FOLIO_CLOUDFLARE_API_TOKEN`. Layout notes live in [tests/](tests/README.md),
 [scripts/](scripts/README.md) and [experiments/](experiments/README.md).
 
 ## 🤝 Contributing

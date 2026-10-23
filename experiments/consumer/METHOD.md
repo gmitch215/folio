@@ -12,9 +12,9 @@ run and keeps the rows.
 | ---------------- | ----------------------------------------------- | --------------------- | ------------------------------------ |
 | `kernel-control` | `build/fixture.wasm`, counted loop `program`    | native, 2, 4, 8 lanes | one, 67 words x 524,288 rounds       |
 | `process-abi`    | a Linux process ABI probe, 64 MiB shared memory | native, Folio         | memset, memcpy, chain of 16 MiB      |
-| `tinyimg`        | `c-c++/tinyimg/dist/tinyimg.wasm`               | native, Folio         | 13 operations on a 1024 x 1024 image |
+| `tinyimg`        | `FOLIO_TINYIMG`                                 | native, Folio         | 13 operations on a 1024 x 1024 image |
 
-The consumer modules are read from the sibling checkouts and are never edited. `prepare.ts` runs the
+The consumer modules are read from `FOLIO_PROCESS_ABI`, `FOLIO_TINYIMG` and `FOLIO_MACHINE_CORE` and are never edited. `prepare.ts` runs the
 compiler's `prepare()` on each module and ships only the trusted loop metadata and the original bytes.
 The browser path applies `BrowserFolio`'s own `minimumParallelWork`; the static admission rule of
 `extract.ts` is not in this path. The process ABI and tinyimg have no counted-loop plan, so Folio runs

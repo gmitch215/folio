@@ -80,8 +80,8 @@ Current primary documentation, read 2026-10-20:
 
 ## Reproduction
 
-From the Folio root, with a Free account selected through `FREE_CLOUDFLARE_ACCOUNT_ID` and
-`FREE_CLOUDFLARE_API_TOKEN`:
+From the Folio root, with an account selected through `FOLIO_CLOUDFLARE_ACCOUNT_ID` and
+`FOLIO_CLOUDFLARE_API_TOKEN` (or the `FREE_CLOUDFLARE_*` pair):
 
 ```sh
 bun install
@@ -142,7 +142,7 @@ failed browser binding or API call must retain its HTTP status and error before
 trying the separately documented CDP route; it does not refute shared memory
 inside Chromium.
 
-Deployed STUDENT evidence is retained in
+Deployed evidence is retained in
 `runs/cfw-folio-browser-0e66d825/`: the shared 256 MiB arena and all controls
 pass across eight browser workers. Four-worker elapsed median is 30.785 ms
 against 119.250 ms at the owner (3.874x); all three observations per width

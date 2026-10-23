@@ -1,9 +1,9 @@
 # folio - repo guide
 
 Native WebAssembly across several V8 isolates over one physical memory allocation, with a compiler
-that discovers independent regions and an ordered validator that keeps the serial result. Library
-for drupflare and gmux; it depends on neither. Bun for tooling, Node 26 for anything that needs
-`worker_threads` or JSPI, strict ESM TypeScript with erasable syntax only.
+that discovers independent regions and an ordered validator that keeps the serial result. Bun for
+tooling, Node 26 for anything that needs `worker_threads` or JSPI, strict ESM TypeScript with
+erasable syntax only.
 
 `TECHNICAL_REPORT.md` is the evidence and the limits. Read its "Limits and Open Questions" before
 claiming anything about speed, isolates, accounts or consumers.
@@ -49,9 +49,3 @@ bun run prettier
   Raw deploy records under `experiments/*/runs/` stay ignored.
 - Live deploys snapshot the account first and must leave it equal to the baseline.
 - Style: tabs, 100 columns, single quotes, no trailing commas. Comments are short and lowercase.
-
-## Open Work for v1
-
-The v1 gaps are in project memory (`folio-v1-remaining`). The short list: record the PHP prepared
-function count against the original, a FREE-account managed run, an isolated managed kernel timing,
-and `folio.inspect()` coverage on the gmux machine core.

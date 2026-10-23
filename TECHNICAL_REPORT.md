@@ -26,20 +26,20 @@ Folio has three execution backends. They were measured separately and are not on
 | Managed Workers | named Durable Object lanes, JSPI owner | copied frozen snapshots, ordered validation | **1.618x** end to end (four lanes, binary fetch)                                                 |
 | Browser Run     | Chromium Web Workers                   | one physical 256 MiB Wasm allocation        | **3.449x** automatic extraction at eight workers on FREE; earlier explicit partitions **3.874x** |
 
-|                                                        | measured                                                                                                               | instrument                                                              |
-| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Physical sharing across isolates                       | additional RSS **3.871 MiB** for four isolates on a touched 64 MiB backing, against **259.930 MiB** for copied buffers | Node 26.10.0, `results/20261019/`                                       |
-| One unannotated entry on several CPUs                  | **7.619x** at eight workers on a compute kernel, CPU ratio 1.037, 207 byte-exact samples                               | Paisley Park, `results/20261019-d/`                                     |
-| Normally inlined C, automatic region discovery         | **7.519x** median at eight pinned workers; **5.636x** unpinned                                                         | Paisley Park, `results/20261020-affinity-final/`                        |
-| Streaming workload                                     | stops improving near four workers (3.497x at four, 3.474x at eight)                                                    | same sweep family, shared memory system                                 |
-| Managed Workers, deployed                              | all **39** rows exact, 64 regions, 2/4/8 distinct module UUIDs per row                                                 | STUDENT account, `experiments/managed/runs/cfw-folio-managed-a627504d/` |
-| Browser Run, deployed                                  | eight workers, **40000** exact atomic increments, 256 MiB arena, growth and zero fill                                  | STUDENT account, `experiments/browser/runs/cfw-folio-browser-0e66d825/` |
-| Cross-isolate shared memory through managed Worker RPC | refused in both directions; `MessageChannel` refuses SAB                                                               | deployed capability probe                                               |
-| Stock workerd to the Node host                         | four distinct Folio threads, all 131072 bytes exact, i64 and void results exact                                        | Miniflare on workerd 1.20260815.1 and again on 1.20261019.1             |
-| Real consumer artifacts                                | tinyimg (809,683 bytes) and machine core (4,303 bytes) match native returns and every memory byte                      | `results/integration-generalized-final.json`                            |
+|                                                        | measured                                                                                                               | instrument                                                               |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Physical sharing across isolates                       | additional RSS **3.871 MiB** for four isolates on a touched 64 MiB backing, against **259.930 MiB** for copied buffers | Node 26.10.0, `results/20261019/`                                        |
+| One unannotated entry on several CPUs                  | **7.619x** at eight workers on a compute kernel, CPU ratio 1.037, 207 byte-exact samples                               | Ryzen rig, `results/20261019-d/`                                         |
+| Normally inlined C, automatic region discovery         | **7.519x** median at eight pinned workers; **5.636x** unpinned                                                         | Ryzen rig, `results/20261020-affinity-final/`                            |
+| Streaming workload                                     | stops improving near four workers (3.497x at four, 3.474x at eight)                                                    | same sweep family, shared memory system                                  |
+| Managed Workers, deployed                              | all **39** rows exact, 64 regions, 2/4/8 distinct module UUIDs per row                                                 | deployed account, `experiments/managed/runs/cfw-folio-managed-a627504d/` |
+| Browser Run, deployed                                  | eight workers, **40000** exact atomic increments, 256 MiB arena, growth and zero fill                                  | deployed account, `experiments/browser/runs/cfw-folio-browser-0e66d825/` |
+| Cross-isolate shared memory through managed Worker RPC | refused in both directions; `MessageChannel` refuses SAB                                                               | deployed capability probe                                                |
+| Stock workerd to the Node host                         | four distinct Folio threads, all 131072 bytes exact, i64 and void results exact                                        | Miniflare on workerd 1.20260815.1 and again on 1.20261019.1              |
+| Real consumer artifacts                                | tinyimg (809,683 bytes) and machine core (4,303 bytes) match native returns and every memory byte                      | `results/integration-generalized-final.json`                             |
 
-| Independent PHP and Drupal tasks | **7.65x** median regenerating 31 pages on ten private contexts (n=20), process CPU 1.087x; **7.06x** for eight concurrent renders; **7.58x** for eight named tasks inside one request | Paisley Park, `results/20261022-phpregen/`, `20261020-phpparallel/`, `20261020-phpintra/` |
-| Cold start of a booted Wasm PHP interpreter | a baked after-render image cuts open plus first render from 1,247 ms to 373 ms (70%), local only, renders equal to a booted context in 80 of 80; deployed render unmeasured because the image exceeds the upload limit; the boot image that fits saves 22.5% of cpuTime on a fresh Drupal site (n=8, 7 to 21% by run) | Mac, `results/20261022-bootimage/`; FREE account, `experiments/bootimage/` |
+| Independent PHP and Drupal tasks | **7.65x** median regenerating 31 pages on ten private contexts (n=20), process CPU 1.087x; **7.06x** for eight concurrent renders; **7.58x** for eight named tasks inside one request | Ryzen rig, `results/20261022-phpregen/`, `20261020-phpparallel/`, `20261020-phpintra/` |
+| Cold start of a booted Wasm PHP interpreter | a baked after-render image cuts open plus first render from 1,247 ms to 373 ms (70%) locally, renders equal to a booted context in 80 of 80; deployed as static assets it cuts the first request of a fresh site that matches the pack by 60 to 72% of cpuTime (n=5 per run, two runs) and, on PHP 8.5.12, 72% again (n=5); the `/bootphase` re-boot rows (8.5.2: 19% to 33% less cpuTime; 8.5.12: 9% more cpuTime and 40% more wall time) measure an instrument that rebuilds a second kernel; the serve path after a drop, which is what a host runs after an eviction, takes 555 ms of cpuTime baked against 989 ms plain on PHP 8.5.12 (44% less, n=4 per arm, paid account) and a cold boot after a real eviction 682 and 799 ms against 1,751 and 2,035 ms (n=2 per arm); as data segments it exceeds the upload limit; a site with edited config boots plain | Mac, `results/20261022-bootimage/`; FREE account, `experiments/bootimage/` |
 | One uncached Drupal render, automatic extraction | no speedup: 0.87x to 1.02x, zero workers dispatched; no independent sibling work found (best 1.004) | M2 Pro, `results/20261020-php/`, `20261020-worksp2/` |
 
 ### What Decides the Design
@@ -230,7 +230,7 @@ message and the snapshot.
 
 ## 📏 Measurements: Physical Sharing
 
-Paisley Park, Ryzen 9 9900X, Node 26.10.0 with V8 14.6, `nice 19`. Raw sets and exact source
+Ryzen 9 9900X, Node 26.10.0 with V8 14.6, `nice 19`. Raw sets and exact source
 snapshots are in `results/20261019/`, `results/20261019-b/` and `results/20261019-c/`.
 
 | Control                                                        | Result                                                                              |
@@ -358,7 +358,7 @@ medians are 0.011690 and 0.016300 ms. Eight-worker lane wall times exceed their 
 which motivated the placement check below. Peak RSS was 1690.637 MiB, with five comparison arenas,
 a verification copy and 14 worker wrappers across pools. Source artifact SHA256 is
 `9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19`, the measured
-`source.tar.gz` is `5deff99fe587108b3f378bcf8adcd1244ab7d035930c6bc60e702f00233d601c`, and the raw
+`source.tar.gz` is `868554729acdc86b9183c7862753fd26a17fc81ac6747c4af1d8a96b18736f66`, and the raw
 `control.jsonl` is `ba815a8e1b60d2febe695061fc04cc1c4ce5dec30ccb907db5c4b0a68d10becf`.
 `scripts/analyze/control.ts` regenerates the summary. This is a different workload from the
 207-sample sweep, so the speedups are not a matched before and after.
@@ -517,7 +517,7 @@ baseline.
 ### Browser Run
 
 `experiments/browser/` serves a cross-origin-isolated page from a deployed Worker and drives it
-through the Browser Run binding. Run `cfw-folio-browser-0e66d825` (STUDENT) passes cross-origin
+through the Browser Run binding. Run `cfw-folio-browser-0e66d825` passes cross-origin
 isolation, eight distinct worker UUIDs, a 256 MiB shared Wasm attachment, 40000 native atomic
 increments, bidirectional and cross-worker aliasing, an isolated copied-buffer control, growth and
 zero fill. Creator termination is requested and surviving holders keep access; the browser API
@@ -817,7 +817,7 @@ These hooks belong in the machine, and Folio takes no dependency on it.
 ### Speedup Search on PHP and Other Consumers
 
 Recorded 2026-10-20 on an Apple M2 Pro laptop with 12 hardware threads, Node 26.8.2. This is not the
-Paisley Park rig, and the machine was not quiet: the load average had a median of 3.7 during the
+Ryzen rig, and the machine was not quiet: the load average had a median of 3.7 during the
 ten-workload set, because other runs on the same machine overlapped it. Every figure comes from alternating
 rounds in one process (or, for the Drupal render, one process per sample), so each speedup is a
 native time divided by the Folio time of the same round. Wall time is `performance.now()` around the
@@ -1026,7 +1026,7 @@ native CPU. `Folio.runAll` over the same calls reads 0.17x. No other workload mi
 
 ### Independent PHP Requests and the Drupal Render Breakdown
 
-Recorded 2026-10-20 on Paisley Park (Ryzen 9 9900X, Node 26.10.0, governor `powersave`, cpus 2 to 11
+Recorded 2026-10-20 on a Ryzen 9 9900X (Node 26.10.0, governor `powersave`, cpus 2 to 11
 under `nice 19`, ten physical cores for up to eight worker threads plus the main thread and V8's
 compile threads), plus one Mac set that is labeled as the Mac. Raw rows, summaries and the machine
 state are in `results/20261020-phpparallel/`; the instruments are `scripts/probe/php-contexts.ts`,
@@ -1046,7 +1046,7 @@ coordinator and no workers: the Folio arms run untouched native PHP by construct
 runs every width and arm once in rotating order. All output digests are equal across arms and
 rounds (the Drupal digest equals the one from the boot and render check after the same two-field normalization).
 
-**CPU-heavy read-only endpoints** (Paisley Park, n=20 rounds per cell, 960 samples; every cell
+**CPU-heavy read-only endpoints** (Ryzen rig, n=20 rounds per cell, 960 samples; every cell
 records load, per-request latency, per-thread CPU, process CPU and in-thread intervals). Scaling is
 the native serial wall time of N requests over the wall time of N concurrent requests, per round;
 the spread is the minimum over rounds.
@@ -1104,15 +1104,15 @@ in a fresh process, the warm one is what a long-lived isolate pays). `phpExecuti
 time minus SQL and ROM inflate and so includes the Wasm interpreter running Drupal's PHP, the host
 imports it calls and the filesystem shims.
 
-| Part of one uncached render                             |     Paisley Park cold (n=10) | Paisley Park warm (n=30) |  Mac M2 Pro cold |  Mac M2 Pro warm |
-| ------------------------------------------------------- | ---------------------------: | -----------------------: | ---------------: | ---------------: |
-| Render wall time                                        |                       589 ms |                   516 ms |           876 ms |           766 ms |
-| SQL (801 calls, 267 queries)                            |               12.3 ms (2.1%) |           12.0 ms (2.3%) |   15.1 ms (1.7%) |   12.1 ms (1.6%) |
-| ROM inflate (1,633 files, 8.8 MB)                       |               42.8 ms (7.3%) |           42.7 ms (8.3%) |   68.5 ms (7.8%) |   65.5 ms (8.6%) |
-| Lazy Wasm compilation (cold minus warm)                 |                73 ms (12.4%) |                        0 |   110 ms (12.6%) |                0 |
-| PHP execution (the rest)                                | 534 ms (90.7% incl. compile) |           462 ms (89.5%) |           797 ms |           687 ms |
-| CPU on other threads (V8 background compile)            |                       337 ms |                    83 ms |           383 ms |            78 ms |
-| Not in the render: SQLite seed / PHP boot / kernel boot |             31 / 25 / 214 ms |         31 / 15 / 176 ms | 49 / 34 / 262 ms | 45 / 16 / 207 ms |
+| Part of one uncached render                             |        Ryzen rig cold (n=10) | Ryzen rig warm (n=30) |  Mac M2 Pro cold |  Mac M2 Pro warm |
+| ------------------------------------------------------- | ---------------------------: | --------------------: | ---------------: | ---------------: |
+| Render wall time                                        |                       589 ms |                516 ms |           876 ms |           766 ms |
+| SQL (801 calls, 267 queries)                            |               12.3 ms (2.1%) |        12.0 ms (2.3%) |   15.1 ms (1.7%) |   12.1 ms (1.6%) |
+| ROM inflate (1,633 files, 8.8 MB)                       |               42.8 ms (7.3%) |        42.7 ms (8.3%) |   68.5 ms (7.8%) |   65.5 ms (8.6%) |
+| Lazy Wasm compilation (cold minus warm)                 |                73 ms (12.4%) |                     0 |   110 ms (12.6%) |                0 |
+| PHP execution (the rest)                                | 534 ms (90.7% incl. compile) |        462 ms (89.5%) |           797 ms |           687 ms |
+| CPU on other threads (V8 background compile)            |                       337 ms |                 83 ms |           383 ms |            78 ms |
+| Not in the render: SQLite seed / PHP boot / kernel boot |             31 / 25 / 214 ms |      31 / 15 / 176 ms | 49 / 34 / 262 ms | 45 / 16 / 207 ms |
 
 The Mac set carries load 2.4 to 3.7 and ran while the rig ran, so it is labeled and not used for any
 claim. The Folio arm (`folio` in the summaries) matches native here too (589 ms cold, 518 ms warm on
@@ -1126,47 +1126,17 @@ is paid once per module and is already spread over V8's background threads (337 
 threads in the cold render). **No independent PHP-runtime work was identified in this breakdown**,
 and about 90% of the render is the interpreter executing PHP on one thread. What would have to
 change to move that fraction: PHP would have to expose independent units of work (a task boundary),
-or Zend would need to run with an enabled opcode cache (`opcache.enable=0` in the harness, so each
-render re-lexes and re-compiles the included files, and how much of the 462 ms that is has not been
-measured), or the guest bytecode would have to be visible to a scheduler. Level C (a faster
+or the guest bytecode would have to be visible to a scheduler. Level C (a faster
 unchanged Drupal render) is not shown.
 
 ### Work Inside One PHP Request
 
-Recorded 2026-10-20 on Paisley Park (cpus 2 to 11, `nice 19`, powersave governor, Node 26.10.0) unless a
+Recorded 2026-10-20 on the Ryzen rig (cpus 2 to 11, `nice 19`, powersave governor, Node 26.10.0) unless a
 row says Mac. Raw samples, summaries and the rig records are in `results/20261020-phpintra/`; the
-instruments are `scripts/probe/php-compile.ts`, `php-intra.ts` (with `php-tasks.ts` and
+instruments are `scripts/probe/php-intra.ts` (with `php-tasks.ts` and
 `php-task-bridge.ts`), `indirect-sites.ts` and `php-snapshot.ts`, summarized by
 `scripts/analyze/intra.ts`. Nothing here is Folio region extraction: the Folio compiler is not
 involved in any row, and the explicit API is a harness mechanism.
-
-**Zend compile share.** The consumer ships with opcache off: its default opcache mode is `off`, no
-deployment configuration sets another, and the `pack` arm mounts nothing by default because no cache
-is baked. Each row below is a fresh Drupal context rendering once, 20 rounds with the arm order rotated, and
-all 60 output digests equal the earlier one (`ed8d6feb`).
-
-| Arm (uncached Drupal render, n=20)                          | Wall median (min to max) | p95 ms | ROM files inflated | Paired wall over `off` |
-| ----------------------------------------------------------- | -----------------------: | -----: | -----------------: | ---------------------: |
-| `off`, the shipped default                                  |    507.9 ms (505 to 514) |  510.8 |              1,633 |                  1.000 |
-| `file`, cold (compile, then write the cache)                |    850.0 ms (846 to 860) |  852.5 |              1,633 |                  1.674 |
-| `pack`, a cache baked by a `file` run and mounted read-only |    356.5 ms (332 to 360) |  359.5 |                 72 |                  0.700 |
-
-The pack arm removes 30.3% of the render (151 ms at the median), of which 41 ms is ROM inflate that
-opcache never needs because it does not read the source (1,633 files down to 72). **Net of the inflate,
-the pack removes 112 ms, 22.1% of the `off` render.** A PHP-side timer per include brackets that number
-from above: `opcache_compile_file` over the 1,608 files (8.88 MB) that one render includes takes 166 ms
-with the optimizer off (n=5 contexts, 165 to 167) and 326 ms with the shipped optimizer level, which is
-33% and 64% of the `off` render, but that call also persists the script, so both are upper bounds. The
-compile cost is therefore between about 112 ms (22%) and 166 ms (33%) of the render. It is spread thin:
-the median include compiles in 0.05 ms, 8 of 1,608 take over 1 ms, the ten slowest are 8.7% of the total
-and the hundred slowest 32.7%. Writing a cache on a cold instance costs 342 ms more than not caching,
-so the shipped `file` arm can only pay on a later render in the same instance. The `shm` arm ran
-once (n=1, 720 ms) and fits the interpreter memory; its repeat-render gain in a long-lived instance is
-not measured. The baked cache is 1,682 files and 25.65 MB.
-
-What this means for splitting: of the 462 ms the render breakdown above called PHP execution, 112 to 166 ms is
-compile and the remaining 296 to 350 ms is execution that a cache cannot touch. A baked cache is a
-lever for level C (a faster render, 0.700x here), not a parallel mechanism and not Folio.
 
 **Explicit parallel API, not automatic extraction (B-a).** The harness gives PHP two calls,
 `task_submit($fn, $args)` and `task_join($id)`, backed by host functions the PHP shim reaches the way the
@@ -1471,7 +1441,7 @@ rig rows say so.
 
 **Independent whole tasks scale.** Regenerating 31 pages (the front page and 30 nodes, with the page,
 dynamic page and render caches emptied before each render) with W private Drupal contexts pulling from
-one queue, on Paisley Park, n=20 pairs: 1,111 ms serial and 147 ms at ten contexts on ten cores (7.65x
+one queue, on the Ryzen rig, n=20 pairs: 1,111 ms serial and 147 ms at ten contexts on ten cores (7.65x
 median, 5.76x to 7.99x). With the SMT siblings of those cores, sixteen contexts reach 9.63x at 1.39x
 the serial process CPU. Every arm reproduced the serial oracle's normalized sha256 for every url. A
 fresh context pays 666 to 801 ms for its first render against 35 ms for a steady node page (19x to
@@ -1558,14 +1528,14 @@ overhead was not measured.
 
 **Status of the routes.**
 
-| Route                                              | Status                                                                                                                                                                   |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Warm private contexts for independent Drupal tasks | Measured: 7.65x on ten cores, 9.63x with SMT siblings; needs the host to have the cores                                                                                  |
-| Baked boot image in the compiled module            | Renders equal booted in 80 of 80 locally, 70% off open plus first render (local only); deployed boot image 22.5% of cpuTime (n=8); deployed render image refused by size |
-| Several workerd processes per site                 | Request concurrency, not Folio; 1.93x, 3.13x, 4.41x at 2, 4, 8 processes with the real payload, 0.3 to 0.4 GB each                                                       |
-| Bun-hosted task executor behind a Worker binding   | Runtime checks pass; shared database state for the contexts is unresolved                                                                                                |
-| Early launch of block rendering inside one request | Warm bound 1.20x to 1.42x for 10 to 40 launchable blocks (Mac, assumed transfer cost); no prototype                                                                      |
-| SQL-level ordered commit for write workloads       | Neither supported nor ruled out; needs a hand-checked row-identity census                                                                                                |
+| Route                                              | Status                                                                                                                                                                                                                                                                                                                                                                          |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Warm private contexts for independent Drupal tasks | Measured: 7.65x on ten cores, 9.63x with SMT siblings; needs the host to have the cores                                                                                                                                                                                                                                                                                         |
+| Baked boot image in the compiled module            | Renders equal booted in 80 of 80 locally, 70% off open plus first render; deployed as static assets 60 to 72% off a fresh matching site's first request on 8.5.2 and 8.5.12; the `/bootphase` re-boot rows are an instrument artifact; on 8.5.12 the serve path after a drop is 44% cheaper in cpuTime (555 against 989 ms, n=4); only for sites whose config equals the pack's |
+| Several workerd processes per site                 | Request concurrency, not Folio; 1.93x, 3.13x, 4.41x at 2, 4, 8 processes with the real payload, 0.3 to 0.4 GB each                                                                                                                                                                                                                                                              |
+| Bun-hosted task executor behind a Worker binding   | Runtime checks pass; shared database state for the contexts is unresolved                                                                                                                                                                                                                                                                                                       |
+| Early launch of block rendering inside one request | Warm bound 1.20x to 1.42x for 10 to 40 launchable blocks (Mac, assumed transfer cost); no prototype                                                                                                                                                                                                                                                                             |
+| SQL-level ordered commit for write workloads       | Neither supported nor ruled out; needs a hand-checked row-identity census                                                                                                                                                                                                                                                                                                       |
 
 ### Baked Boot Images
 
@@ -1636,8 +1606,7 @@ about 64.6 MB with the other 3.6 MB of the bundle, is 2.5 MB under the 64 MiB un
 and a larger interpreter build would take that margin.
 
 **On a deployed Drupal host.** The image was then put on the boot path of a Durable Object Drupal
-host (a scratch copy of its release, built from the pinned PHP 8.5.2 module; the host's own tree
-was not touched). The baked path skips the interpreter's constructors and `pib_init`, replays the
+host (a copy of its release built with the pinned PHP 8.5.2 module). The baked path skips the interpreter's constructors and `pib_init`, replays the
 recorded JS-side state, then the host's own stream and handle replay and the rekey step. Locally,
 on that host's real snapshot path, a cold object served the front page in 288 ms against 1,634 ms
 plain, with the same normalized body, and the host's snapshot read back from Durable Object SQLite
@@ -1667,16 +1636,201 @@ difference is not explained.
 
 The control is a first boot, 2,786 to 4,243 ms, which is not the 1,264 ms hibernated cold boot the
 host publishes. An attempt to produce a cold re-boot after 30 s idle found the interpreter still
-retained, so there is no re-boot arm. The scratch copy came from the nearest commit to the
-published bundle (4,255 bytes larger) because no commit reproduces it.
+retained, so the re-boot arm below forces one through `/bootphase`. The copy came from the commit
+nearest the published bundle (4,255 bytes larger); no commit reproduces it.
 
-**What this does not show.** The 70% is a local figure: a render from a baked module on the deployed
-plane has not run, so the deployed saving of the after-render image is unmeasured. The earlier
-Durable Object probe stubs the imports and does not boot anything. The measurements used a stock
-site, n=10 processes for the main local arms, one process for the seed variants and 3 to 5 objects
-per deployed arm. The deployed arms have no phase split, so they do not separate the replay of the site's pack from the
-boot. Local phases suggest that what remains with the boot image is that replay and the first
-render (1,673 ms locally against 1,681 plain), which a boot image does not remove.
+**The after-render image as static assets.** The size limit applies to the module, and the host's
+static assets do not count toward it. The 771 delta pages (48.2 MiB) were written as 13 files of
+4 MiB plus an index of page numbers and a 32-bit hash per page, and the module shipped with no data
+segments. At boot the object reads the files from its own `ASSETS` binding and writes them straight
+into the memory view, one 4 MiB buffer at a time, so no second copy of the image sits in the
+isolate. The bundle was 16,617.22 KiB against 16,616.67 KiB for the unbaked control, 0.55 KiB
+larger, and the platform accepted the upload (4,763 asset files, startup 27 ms). The per-file limit
+read from the platform's limits page (a summary of the page, not its full text) is 25 MiB, so the
+chunks are not required by it. Fetch, copy and instantiate cost 124 to 144 ms of cpuTime per cold
+object on the edge (three objects; hashing all 771 pages adds about 20 ms and found none wrong),
+against 46 ms for the data-segment module and 1.6 to 2.0 s for the host's rows route. The 13
+fetches are sequential and account for most of the 250 to 314 ms of wall.
+
+First request of a fresh site, n=5 per arm, alternating, fresh deploy, one normalized body hash
+and one CSRF token across arms, no memory reset (106 and 146 invocations, all `ok`):
+
+| Run | Control cpuTime | Baked cpuTime | Saved | Control wall | Baked wall |
+| --- | --------------: | ------------: | ----: | -----------: | ---------: |
+| 1   |           3,375 |           945 | 72.0% |        4,175 |      2,317 |
+| 2   |           2,837 |         1,139 | 59.9% |        3,607 |      2,163 |
+
+The baked arm was faster in 10 of 10 paired rounds. Run 2 added the config key described below;
+the 194 ms difference between the baked medians cannot be attributed to the key (locally it costs 1
+to 6 ms), and the two runs differ in time of day, so the range seen is 60 to 72%. The control is a
+first boot of a fresh site, which includes building every cache. The phase split (n=2 per arm,
+cpuTime): the plain boot floor is 289 to 338 ms and the baked floor 421 to 430 ms (delivery and
+adopt add 90 to 140), a warm render costs about 640 ms on the control, which also boots its kernel
+there, against 67 to 70 ms baked. About 640 of the baked 1,139 ms is first-request work that a
+re-boot of the same object does not pay.
+
+**Re-boot.** After the first request, `/bootphase` drops the interpreter and the object boots again
+(n=5 per arm). The control took 789 ms of cpuTime (637 to 999) and 940 ms of wall, the baked arm
+637 ms (634 to 736) and 1,360 ms, so cpuTime fell 19.3% and wall rose 44.7%. The control's re-boot
+was a plain boot: the host's own heap restore ran and refused with "no snapshot for this pack
+generation", because the host's snapshot producer is off by default and was left off. This control
+reproduces neither the 1,264 ms nor the 1,328 ms the host publishes for its re-boot; its pack mount
+and caches are warm.
+
+A later run on a second account (n=4 per arm, one deploy) put four of the 13 chunk fetches in
+flight at a time, each written into memory as it arrives:
+
+| Arm                   | First request cpuTime | Re-boot cpuTime | Re-boot wall |
+| --------------------- | --------------------: | --------------: | -----------: |
+| plain boot            |                 3,368 |             869 |        1,086 |
+| baked, sequential     |                 1,058 |             659 |        1,315 |
+| baked, four in flight |                   945 |             581 |          951 |
+
+Four in flight brings the baked re-boot wall to the control's level (951 against 1,086 ms, ranges
+877 to 1,369 and 949 to 1,265, faster in 3 of 4 rounds), so at this n the two are level, not
+different. The first request saves 72% of cpuTime. The boot floor is not lower in cpuTime with
+more fetches in flight (407 against 392 ms, one object each); the gain is wall time. Eight and 13
+in flight were not run on the edge, and each in-flight chunk is 4 MiB of isolate memory.
+
+The `/bootphase` instrument is not the path a served site takes after its interpreter is dropped.
+It builds a second kernel from the database and ignores the kernel the image carries. A baked
+object's first request writes 27 cache rows against the plain boot's 67, because the theme registry,
+the discovery caches and `system.theme.files` live only in the image's memory, so the first
+`/bootphase` reads about 2.4 MB and writes about 1 MB through the SQL bridge: the work the plain
+boot did in its first request. The 149 extra pages are the second kernel's structures. Locally, on
+8.5.12, a drop followed by an ordinary render takes 266 ms baked against 537 ms plain, with 161 KB
+of bridge output against 1.195 MB, and the first request plus the first `/bootphase` totals 2,167
+ms baked against 4,743 ms plain, so the cost of building those caches moved rather than grew. The
+`/bootphase` rows in this section and in the 8.5.12 section therefore measure the instrument as much
+as the image.
+
+The serve path was then measured on the edge (PHP 8.5.12, host commit `f902595ccb`, Workers Paid
+account, n=4 per arm, alternating, one deploy, meter read before and after each step, both Workers
+deleted afterwards and the account inventory equal to the one taken first). Medians of cpuTime from
+`wrangler tail`, ranges in brackets:
+
+| Step               |             Plain boot |          Baked image |                 Saved |
+| ------------------ | ---------------------: | -------------------: | --------------------: |
+| First request      | 3,822 [3,699 to 3,897] | 1,035 [815 to 1,078] |    72.9% (wall 52.4%) |
+| Serve after drop   |     989 [970 to 1,092] |     555 [413 to 707] |     43.9% (wall 8.9%) |
+| First `/bootphase` |   1,028 [906 to 1,334] | 1,016 [876 to 1,497] | 1.2% (wall 51% worse) |
+
+The serve step is what a host does after an eviction: drop the interpreter, then render. The baked
+arm was cheaper in all 4 paired rounds (592, 447, 263 and 509 ms), and its serve step moves 161 KB
+out through the SQL bridge against 1.196 MB for the plain boot. The wall time of the serve step is
+level within the spread (1,014 against 1,112 ms, one baked outlier at 1,862 ms). No request returned
+a 5xx, no object reset memory, all 138 invocations were `ok`, and both arms returned one normalized
+body (17,686 bytes) and one CSRF token. Four idle probes were real evictions (a new module tag and a
+boot counter of 1): the plain boot's cold boot took 1,751 and 2,035 ms of cpuTime, the baked arm's
+682 and 799 ms through the image (n=2 per arm; the wall times were 2.3 to 8.0 s and mixed). The
+first `/bootphase` keeps its wall penalty on the edge for the reason above.
+
+Idle probes (one request per object after 30, 90 or 150 s of idle, n=12, exploratory) found the
+Durable Object instance rebuilt every time and the isolate's module state intact in 11 of 12, at
+47 to 771 ms of cpuTime. One plain-boot object probed at 90 s idle was evicted and re-booted cold
+at 1,292 ms of cpuTime and 2,132 ms of wall, against 869 and 1,086 ms for the `/bootphase`
+re-boot, so a real eviction may cost more than the simulated one. No baked object was evicted, so
+what an eviction costs a baked object is not measured. The account is on the Free plan, so the run was not charged.
+
+**Stale state.** The image holds the baking site's heap, and the first version served it to a site
+whose database had changed. After the site was renamed, a cold boot from the image rendered the
+baking site's name in the page title while a plain cold boot of the same database rendered the new
+name, because the heap kept the config object that the bake render read and nothing invalidated
+it. The image's context key (pack generation, enabled-module fingerprint, driver digest) was
+identical before and after the edit, and the host's warm-interpreter flag read 1. A second key, a
+digest of the 175 `config` rows read at boot (1 to 6 ms), sends such a site to the plain boot, and
+every case below matched the plain boot's body:
+
+| Edit (table the render reads)             | Key that changed   | Cold boot         |
+| ----------------------------------------- | ------------------ | ----------------- |
+| site name (config)                        | config digest      | plain boot        |
+| promoted node, block label (node, config) | config digest      | plain boot        |
+| maintenance mode (key_value)              | none               | image, body equal |
+| path alias (path_alias)                   | none               | image, body equal |
+| module install (config, key_value)        | module fingerprint | plain boot        |
+| theme color, visible (config)             | config digest      | plain boot        |
+
+State edits stay correct because the rekey step resets the State cache. Menu links, user data,
+authenticated sessions and state in tables outside the ones above were not tested. A site boots
+from the image only when its pack generation, module set, driver and config rows all equal the
+bake's. Any config save, module change or driver update sends it to the plain boot, so the image
+serves unconfigured sites (benchmarks, demos, a new site before its first setup change) and no
+site that has changed config. A per-site bake would cost a boot and 50 MB of assets per site. The
+share of real cold boots that qualifies is not known, and whether a new site's first-run claim
+writes config, which would exclude every claimed site, was not tested.
+
+**Shrinking the image.** The delta image is 771 pages (50.5 MB). The allocator is dlmalloc, 32-bit,
+and the page walk reads 273,907 chunks with no anomaly; 48.85 MB of the image is live allocator
+memory and 734 of the 771 pages are at least 90% live. The largest free chunk (32,944 bytes) is
+smaller than a page. Dropping pages that lie wholly inside free chunks (keeping chunk headers and
+the links of the free lists) removes 4 pages, 262,144 bytes, 0.52% of the image. A second search
+poisoned candidate pages with 0xA5 and rendered eight steps (front page, login, filter tips, a 404,
+the front page twice, a cache invalidation, the front page): 98 pages (6.4 MB, 12.7%) did not
+change the output. The search is over about 1,500 trials, the effect of poisoning pages is not
+additive, and the replayed allocator breaks, so the result means only that those pages were not read
+on these paths. Neither drop is near the target of adding 5 to 10 MB. A cold first request is 1,286
+ms plain against 310 to 340 ms for the full, the sound and the empirical image alike, so the drops
+do not change the time either. Delivering the image as assets is the route that meets the size
+goal.
+
+**PHP 8.5.12.** The interpreter was rebuilt as PHP 8.5.12 (module sha256 `3fb16024...b80ce`,
+14,011,467 bytes; glue `4a049fb6...bd28`, 433,029 bytes). The library results were repeated on it
+against the host at commit `f902595ccb`, and the host path was run again on the same commit. A first
+complete local run on the previous commit (before the interpreter pin) gave the same pass and fail
+outcomes and the same render hashes.
+
+The module imports no `__stack_pointer`. It has four mutable defined globals, and boot changes two
+of them (stack end 4,416,480 and stack base 37,970,912), so this was the first time `bakeModule`'s
+globals rewrite ran on real values. `applyImage` copies memory only and left the stack getters at 0
+and 0; it now refuses an image that records changed globals (code `global`) or changed table slots
+(code `table`) unless the caller passes `memoryOnly: true`. The page counts equal the 8.5.2 ones:
+107 delta pages after boot and 771 after the first render (50,528,256 bytes). Replay through the
+host's sealed `__cfwSeal` and `__cfwRoot` handles works unmodified (four handles, none failed), and
+before the first PHP statement the module makes no call into the host; the one call is the
+harness's replay of the recorded `pib_init` block, where a plain boot makes 2,029 calls, 9 of them
+bridge calls. Renders equal a booted context in 80 of 80 for both images. The real key and salt are
+absent from the image and the module in raw, base64 and hex form; with the rekey step a CSRF token
+validates under the site's key in 9 of 9 reference boots and under the bake's in 0 of 9; the first
+`mt_rand` value is identical across 10 replays without the step and distinct with it. The static
+sweep finds 204 secret-shaped strings in each bake, 197 identical across two bakes, and the other 7
+(the bake request's session id, a file-cache prefix derived from the salt, the permissions hash, a
+view DOM id, the sentinel key and salt, and a render placeholder token) are all identified. The
+bake request's session id stays in the image, as on 8.5.2. Open plus first render, first context,
+median of 10 processes (milliseconds):
+
+| Arm                      | 8.5.12 | Saved |
+| ------------------------ | -----: | ----: |
+| Plain boot               | 1343.7 |       |
+| Baked after boot         | 1268.8 |    6% |
+| Baked after first render |  349.7 |   74% |
+
+The rekey step costs 11.5 ms. As data segments the baked render module is 64,539,801 bytes, which
+with the rest of the bundle (3,871.58 KiB) is 1,465 KiB over the 63.9 MiB limit; the boot image fits.
+
+On the host path (second account, Free plan, n=5 per arm, alternating, one deploy), the first
+request of a fresh site took 3,709 ms of cpuTime on the plain boot and 1,039 ms with the asset
+image and four fetches in flight (72.0%, wall 4,283 and 1,855 ms), against 3,368 and 945 ms on
+8.5.2. The body hash and the CSRF token are the same in both arms and no object reset memory (142
+invocations, all `ok`). The first `/bootphase` takes 1,034 ms of cpuTime and 1,152 ms of wall on
+the plain boot and 1,128 and 1,613 on the baked arm (9% and 40% more), where on 8.5.2 the baked arm
+took 581 ms. The cause is the instrument described under Re-boot, not the image: the baked arm
+did use the image on that request, and the 8.5.2 module on the same host commit moves the same
+bridge bytes. All ten idle probes
+(30 to 150 s) found the object instance rebuilt and the module state intact, so no eviction was
+observed on either arm. The deployed bundle is 17,563.04 KiB for the control and 0.71 KiB more for
+the asset variant, 46.7 MiB under the limit; the data-segment variant is 67,547 KiB, 2.06 MiB over.
+Spool serving is on by default on this commit; `/hostbody` runs the in-object render and does not go
+through it, so the first request of both arms measures the same work as before and what spool adds
+to a page view is not measured. A local proof on this commit (equal bodies for four paths, token,
+random values, fallback on a context mismatch, and the stale matrix) passes in every case.
+
+**What this does not show.** The deployed saving of 60 to 72% is for the first request of a fresh
+site that matches the pack, n=5 on one deploy pair per run, and the local 70% was a different
+machine and instrument. The `/bootphase` re-boot rows do not describe the serving path (see the
+note under Re-boot). No deployed phase split separates
+pack replay from the boot (the replay, about 3,600 rows, runs in the two migrate calls before the
+measured request). The earlier Durable Object probe stubs the imports and does not boot anything.
+The local arms used a stock site, n=10 processes for the main arms and one for the seed variants.
 
 **Limits of the technique.**
 
@@ -1714,9 +1868,9 @@ render (1,673 ms locally against 1,681 plain), which a boot image does not remov
 - **Bundle margin.** The probe's largest variant is about 2.5 MB under the 64 MiB limit. With a
   real host's code and heap around it, the after-render image was 0.5 MiB over the FREE account's
   63.9 MiB uncompressed limit (64.4 MiB against 63.9) and was refused, so there is no margin for a
-  larger interpreter build. An interim PHP 8.5.12 module is about 0.6 MB larger. A smaller image (leaving
-  out pages the first render does not need) was not tried; it would change the image, not the
-  limit.
+  larger interpreter build. The PHP 8.5.12 module is 609,716 bytes larger. Shipping the
+  image as static assets takes it out of the module: the bundle grew by 0.55 KiB, and the platform
+  accepted 4,763 asset files with the image in 13 of them.
 - **One image per module build and site configuration.** The image holds a container, plugin
   discovery and template state built against the baking site's seed. It is valid only for sites with
   the same module set and driver, so it needs a key on both digests, and it reruns for each
@@ -1833,24 +1987,25 @@ open work, a reporting rule, or a claim this report does not make.
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | PHP preparation exceeded V8's function cap because Folio emitted a helper per memory site.                                                                                                                       | Resolved: 12,378 original defined functions; corrected coordinator 191,925 defined, 66,023 helpers, all binaries validate. Boot/render is a separate check.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `module UUID` counts distinct module instances. It is not a native V8 isolate identifier, and named objects can share an isolate. Managed rows report the identities they measured and no more.                  | Reported as measured; no native isolate identity exists for managed runs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| A FREE-account run was previously missing.                                                                                                                                                                       | Resolved for browser automatic extraction: run `cfw-folio-browser-72ad9035`, 256 MiB, no JSPI, all bytes/returns exact, baseline restored. Earlier DO kernel figures remain STUDENT measurements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| A FREE-account run was previously missing.                                                                                                                                                                       | Resolved for browser automatic extraction: run `cfw-folio-browser-72ad9035`, 256 MiB, no JSPI, all bytes/returns exact, baseline restored. Earlier DO kernel figures remain measurements from a different account.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Managed medians use two samples per arm and include preparation, admission, a serial oracle and close. No isolated kernel timing, warm and cold split, or snapshot scaling curve toward the 32 MiB limit exists. | Open                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | Managed Workers have no aggregate CPU measurement and Folio has no energy measurement on any route.                                                                                                              | Not claimed; energy is open                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 7x on managed Workers needs a small serial fraction. Nothing here shows it, and nothing here proves a 1.6x ceiling either.                                                                                       | Not claimed in either direction                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | Node's 7.519x remains a synthetic kernel result.                                                                                                                                                                 | Machine-core coverage now recorded: core 6/12, lifted region 0/1, process artifact 63/188; three real process-memory calls exact. Full process and CMS speedup remains unmeasured.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | The managed snapshot backend still needs its canonical heap to fit its owner.                                                                                                                                    | Page leases/writeback now implemented and locally tested with native spans. Transparent arbitrary-Wasm paging, remote owner adapters and durable recovery are still required for a managed capacity fallback.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | Browser Run has no JSPI in the measured managed configuration.                                                                                                                                                   | Counted-loop automatic extraction implemented and deployed; general CFG continuation lowering remains open. Separate product and allowance limits still apply.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| No PHP speedup exists on any backend.                                                                                                                                                                            | Open. Ten userland workloads (n=20) and the Drupal render (n=10) dispatch zero workers on Node, on an M2 Pro and not the rig. Closed: existing regions on builtins and host `runAll` over exported hash updates, and indirect-call specialization to pure targets and forking a Drupal context by Wasm memory copy. Open: private stack slices (ceiling 1.12x on the profiled render), speculative controller loads, shared heap, an automatic recognizer for the explicit task API.                                                                                                                                                                                                                                                                                                                                                                                      |
-| Independent PHP requests: do they scale, and does Folio add to that?                                                                                                                                             | Shown for the request level (A), not for work inside one request. Paisley Park, n=20 (CPU endpoints) and n=10 (Drupal render): 7.06x median at eight instances for the Drupal render (min 6.69), 5.1x to 7.7x for the CPU endpoints, tail latency 14% above single-request at eight. Folio arms run the original module (the admit plan has no region) and match native at 1.00 median. Not shown: any gain from Folio, any parallel work inside one request, energy. Instruments `php-contexts.ts`, `php-concurrent.ts`; results `20261020-phpparallel/`.                                                                                                                                                                                                                                                                                                                |
+| No automatic PHP speedup exists on any backend. Explicit speedups do: independent tasks on private contexts (7.65x) and a baked boot image (72% off a first request).                                            | Open. Ten userland workloads (n=20) and the Drupal render (n=10) dispatch zero workers on Node, on an M2 Pro and not the rig. Closed: existing regions on builtins and host `runAll` over exported hash updates, and indirect-call specialization to pure targets and forking a Drupal context by Wasm memory copy. Open: private stack slices (ceiling 1.12x on the profiled render), speculative controller loads, shared heap, an automatic recognizer for the explicit task API.                                                                                                                                                                                                                                                                                                                                                                                      |
+| Independent PHP requests: do they scale, and does Folio add to that?                                                                                                                                             | Shown for the request level (A), not for work inside one request. Ryzen rig, n=20 (CPU endpoints) and n=10 (Drupal render): 7.06x median at eight instances for the Drupal render (min 6.69), 5.1x to 7.7x for the CPU endpoints, tail latency 14% above single-request at eight. Folio arms run the original module (the admit plan has no region) and match native at 1.00 median. Not shown: any gain from Folio, any parallel work inside one request, energy. Instruments `php-contexts.ts`, `php-concurrent.ts`; results `20261020-phpparallel/`.                                                                                                                                                                                                                                                                                                                   |
 | Does the uncached Drupal render contain independent sibling work for a parallel mechanism?                                                                                                                       | Not found under the task rung for one-parent sibling sets: ten sets, best 1.004, with the profiler's four controls passed on three traces each. The binding dependence is heap value flow between consecutive siblings (render arrays and return values). Not shown for unions of sets across parents, sets under 2% of the work or with a refcount matcher; the fine trace is n=1, owner nodes keep program order, and the model treats the allocator, the cycle collector buffer and the object store word as private context state, an assumption added until the Twig control passed. Open.                                                                                                                                                                                                                                                                           |
 | Is the work-span profiler a valid instrument?                                                                                                                                                                    | Controls pass at the task rung: 8 sha256 chains 7.97 (expected 7.2 to 8.8), dependent chain 1.000, Twig arrays 7.05 (a zero overhead bound above the measured 4.51x), shared variable 1.000 with its validation failing. The 817,245 stack edges in the first ladder were reads of words a chunk had written itself and caller code charged to the last callback, not dead stack. Open: a refcount matcher, an allocator epoch model, a rig run of the fine trace.                                                                                                                                                                                                                                                                                                                                                                                                        |
 | How much of the uncached Drupal render is independent of the PHP thread?                                                                                                                                         | At most 8% (ROM inflate), plus 2% SQL that PHP triggers, plus 12% lazy compile in a cold process that V8 already spreads over background threads. About 90% is PHP execution on one thread with no independent unit identified. Zend compilation is 22% to 33% of the `off` render (112 to 166 ms of 508 ms, n=20 and n=5 contexts), so execution that no cache removes is about 296 to 350 ms. See "Work Inside One PHP Request".                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| Does an explicit task boundary overlap real PHP work inside one request, and does automatic extraction?                                                                                                          | Explicit API shown (B-a), not Folio: 8 independent operations on private contexts run 7.58x (sha256 chains), 7.63x (compression), 6.77x (serialize), 4.51x (Drupal render arrays through Twig), 3.99x (mixed), 2.14x (preg with a 37% serial setup) at 8 workers against untouched native PHP, n=20 per arm on Paisley Park, outputs equal in all 840 samples, process CPU ratio 1.01 to 1.13 (1.32 for 1 ms tasks). Automatic extraction not shown: 0.0% of dynamic `call_indirect` targets in a Drupal render are pure, 70.6% of calls go through one site with 461 targets, and cloning a Wasm memory costs 40 ms per fork and fails for Drupal (0 of 5). Open: a PHP-source or bytecode recognizer feeding the task contexts, and what share of real Drupal work such a pass could mark independent.                                                                  |
+| Does an explicit task boundary overlap real PHP work inside one request, and does automatic extraction?                                                                                                          | Explicit API shown (B-a), not Folio: 8 independent operations on private contexts run 7.58x (sha256 chains), 7.63x (compression), 6.77x (serialize), 4.51x (Drupal render arrays through Twig), 3.99x (mixed), 2.14x (preg with a 37% serial setup) at 8 workers against untouched native PHP, n=20 per arm on the Ryzen rig, outputs equal in all 840 samples, process CPU ratio 1.01 to 1.13 (1.32 for 1 ms tasks). Automatic extraction not shown: 0.0% of dynamic `call_indirect` targets in a Drupal render are pure, 70.6% of calls go through one site with 461 targets, and cloning a Wasm memory costs 40 ms per fork and fails for Drupal (0 of 5). Open: a PHP-source or bytecode recognizer feeding the task contexts, and what share of real Drupal work such a pass could mark independent.                                                                 |
 | How parallel is an uncached Drupal render under a stated set of removed dependence classes?                                                                                                                      | Measured once per shape on a laptop in IR nodes executed: 291,151 userland invocations, 7.7 G nodes. Spawn and join only gives 20.4, every recorded conflict gives 1.000, and the rungs after M1 are invalid because 817,245 stack read-after-write edges join unrelated invocations; with that check ignored they stay at 1.000 (static binds, then heap) and speculation falls to 0.882 from replays. M4 equals M3 because 0 refcount tags were verified. The sha256 chains give 7.97, 1.000 and 1.000 against the measured 7.58x of private contexts: no agreement, and the model keeps shared static and heap words that private contexts copy. One input per shape, no time, host calls free, 8-byte granules. Open: a dataflow-aware refcount matcher, an allocator epoch model, silent-store removal, finer than whole-call segments.                              |
 | Is the work-span trace affordable?                                                                                                                                                                               | Counter mode costs 4.6x and the full trace 150x to 169x (about 150 s) on the Drupal render, with 48.1 M merged intervals, 2.3 M nodes and 18.5 M edges at 8-byte granules; interval merging per segment kept the trace inside memory without sampling or caps. Not measured on the rig or for other inputs at full size.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Can a faster Drupal render come from the compile share?                                                                                                                                                          | Not Folio, not parallel. A baked read-only opcache (`pack` arm) renders at 0.700x of the shipped `off` arm (508 to 357 ms, n=20, 1,682 files and 25.65 MB of cache); `file` cold is 1.674x and `shm` was run once. The repository bakes no cache (`OPCACHE_PACK` is undefined). Open: a repeat-render figure in one long-lived instance for `file` and `shm`, and the cache size against the deployed limits.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| The consumer harness found no consumer speedup, and Folio no longer slows the consumers it cannot split.                                                                                                         | Before static admission tinyimg, the Linux process artifact, the machine core and a serial recurrence ran 0.0002x to 1.0x of native with up to 14,892x the CPU. Now none has an admitted region and each runs the original module at 0.96x to 1.03x with a CPU ratio near 1 (tinyimg, process ABI, serial recurrence and PHP, n=20 to 60, M2 Pro, not the rig). The kernel control keeps 7.48x at eight workers against 7.41x for the old build (n=40). Missed: the machine core ready queue at 0.052x per call, where each call is about 34 ns and `Folio.run` adds about 0.65 us. The 200,000 threshold is calibrated on one machine and gives up speedup for independent regions of 15k to 200k units. Open: the same calibration and paired rerun on the Paisley Park rig.                                                                                            |
+| The consumer harness found no consumer speedup, and Folio no longer slows the consumers it cannot split.                                                                                                         | Before static admission tinyimg, the Linux process artifact, the machine core and a serial recurrence ran 0.0002x to 1.0x of native with up to 14,892x the CPU. Now none has an admitted region and each runs the original module at 0.96x to 1.03x with a CPU ratio near 1 (tinyimg, process ABI, serial recurrence and PHP, n=20 to 60, M2 Pro, not the rig). The kernel control keeps 7.48x at eight workers against 7.41x for the old build (n=40). Missed: the machine core ready queue at 0.052x per call, where each call is about 34 ns and `Folio.run` adds about 0.65 us. The 200,000 threshold is calibrated on one machine and gives up speedup for independent regions of 15k to 200k units. Open: the same calibration and paired rerun on the Ryzen rig.                                                                                                   |
 | A FREE-account run of the harness or of PHP was not made.                                                                                                                                                        | Resolved for the platform. Browser Run on the FREE account runs the paired harness (n=30): kernel control 3.6x at four lanes, process ABI and tinyimg 0.97x to 1.01x through the serial path, outputs exact, CPU not measurable in a page. The original PHP module and the 55.8 MiB prepared set both deploy (startup 1 to 3 ms) and the original boots and runs PHP workloads with exact output in a Durable Object. Refused: a booted interpreter plus the prepared set in one isolate (`exceededMemory`), and the documented 128 MB is not the observed isolate boundary (184 MiB of buffers, 230.4 MiB of PHP memory, n=1). Open: any deployed PHP speedup (Folio's PHP route adds nothing), an executed prepared coordinator on the target, and the same harness on the managed Durable Object backend. See "Free-Account Consumer Harness and PHP Platform Limits". |
+| Does a baked boot image shorten a deployed cold start?                                                                                                                                                           | Measured on a Durable Object Drupal host (PHP 8.5.2 and 8.5.12): the first request of a fresh site that matches the pack costs 60 to 73% less cpuTime and the serve path after a drop 44% less (n=4 per arm), at 0.71 KiB of bundle growth with the image as static assets. Not shown: the share of real sites whose config equals the pack's, an eviction cost beyond n=2 per arm, what spool serving adds to a page view, a per-site bake, and any gain for a site whose config has changed (it boots plain). Billing: a Durable Object is billed for requests, duration and storage, so the wall time saved is the billed saving; the cpuTime saved is not a billed meter on an object.                                                                                                                                                                                |
+| Can a baked image hold no secret?                                                                                                                                                                                | A throwaway key and salt in the bake and a rekey step on replay pass every test, and the real values are absent from the image. The bake request's PHP session id stays in the image. Open: a host that does not set a new id at the start of each request would hand every replay the same public id.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | The 101 library and probe tests in the earlier record came from a log that was read and not re-run by the auditors. The current gate is listed under Reproduction and Verification.                              | Superseded                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 Free and Paid show no measured difference in memory semantics, and nothing here argues that
@@ -1876,7 +2031,7 @@ bun scripts/analyze/run.ts
 `bun run build:c` compiles the three C fixtures in `tests/c/` with the existing freestanding
 LLVM and clang flags, without Emscripten. Builds strip `node_modules/.bin` from `PATH` because
 binaryen's `wasm-opt` there changed a 511-byte fixture into a 458-byte one; a regression test
-covers it. Measurements run on Paisley Park through `scripts/rig/run.sh`, which holds the timing
+covers it. Measurements run on the Ryzen rig through `scripts/rig/run.sh`, which holds the timing
 lock and applies `nice 19` with a fixed CPU mask. Local probes and the live deploy:
 
 ```sh
@@ -1888,8 +2043,8 @@ node experiments/deploy.ts managed
 node experiments/cleanup.ts NAME KIND
 ```
 
-Live deploys read `FREE_CLOUDFLARE_ACCOUNT_ID` and `FREE_CLOUDFLARE_API_TOKEN` (falling back to
-`STUDENT_*`), snapshot the account's scripts, namespaces, KV, R2 and D1 first, and compare them afterwards.
+Live deploys read `FOLIO_CLOUDFLARE_ACCOUNT_ID` and `FOLIO_CLOUDFLARE_API_TOKEN` (falling back to
+`FREE_CLOUDFLARE_*`), snapshot the account's scripts, namespaces, KV, R2 and D1 first, and compare them afterwards.
 FREE consumer harness: `node experiments/consumer/prepare.ts` and `node experiments/consumer/php/prepare.ts`
 stage the assets, `node experiments/consumer/local.ts CONSUMER PAIRS OUT.json` runs the page in a local
 Chromium, `node experiments/deploy.ts consumer|php|prepared` deploys, measures and tears down, and
@@ -1908,10 +2063,9 @@ The summaries in `results/*/summary.json` regenerate byte for byte from the raw 
 `scripts/analyze/`, apart from the row order of `results/20261019/summary.json`, which now sorts
 its input files.
 
-Current gate on Node 26.8.2: typecheck passes for the library and three Worker projects;
-**248 unit tests pass** in 28 files (run 2026-10-22), with no failures or skips. The three integration
-tests and the coverage run were last executed on 2026-10-20 and not repeated, since `src/` has not
-changed since: coverage is 88.93% of statements, 83.6% of branches, 91.23% of functions and 92.03% of
+Current gate on Node 26.8.2 (run 2026-10-23): typecheck passes for the library and the experiment
+projects; **370 unit tests pass** in 36 files, with no failures or skips; the three integration
+tests pass; coverage is 90.6% of statements, 85.3% of branches, 92.39% of functions and 93.27% of
 lines. The library builds;
 `examples/basic.ts` reports four workers and four native-shared regions with zero replays and
 fallbacks. The generated documentation builds with nonfatal documentation warnings. The integration project runs the host
@@ -1923,7 +2077,7 @@ consumer evidence outside these tests. The compiler, runtime, probes and the pre
 extractor are retained in `results/folio-v1-proof-sources-20261020.tar.gz`, which also holds the
 first copy of the Drupal harness that `scripts/probe/php-render.ts` now replaces.
 
-Rig footprints on Paisley Park stayed small (control 752 KiB, placement 1020 KiB, the earlier rigs
+Rig footprints on the Ryzen rig stayed small (control 752 KiB, placement 1020 KiB, the earlier rigs
 200 to 264 KiB), with 133 GiB free on `/` and over 25 GiB of available RAM afterwards. No server
 setting, package installation, unrelated service restart or protected mount access was involved.
 

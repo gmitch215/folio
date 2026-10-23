@@ -10,7 +10,7 @@ toolchain. It does not construct or compile Wasm bytes during a request.
 ## Deployment
 
 `deploy.ts` owns deployment and cleanup. It uses one temporary `cfw-folio-<random>` script on the
-authorized `FREE_` or `STUDENT_` account. Map the account's existing environment variables to
+authorized account named by `FOLIO_CLOUDFLARE_*` or `FREE_CLOUDFLARE_*`. Map the account's existing environment variables to
 `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` without printing values. Wrangler reads the
 account from the environment; the checked-in config contains no account or credential.
 
