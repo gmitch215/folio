@@ -10,6 +10,9 @@ export interface StreamRow {
 	path: string;
 	flags: number;
 	position: number;
+	seekable?: boolean;
+	nodeId?: number | null;
+	isDir?: boolean;
 }
 
 /** one recorded call of an emscripten_asm_const import */
@@ -116,10 +119,13 @@ export interface BakedSource {
 	streams: StreamRow[];
 	handles: { id: number; name: string }[];
 	image: string;
+	assets?: string;
+	config?: string;
+	globals?: Record<string, number>;
 	plainFallback: boolean;
 }
 
-/** the generated `src/s34/baked.ts` of a clone */
+/** the generated `src/hostboot/baked.ts` of a clone */
 export function bakedSource(meta: BakedSource | null): string {
 	const head = `export type AsmCall = { stage: string; key: string; args: number[] };
 
@@ -127,9 +133,20 @@ export type BakedMeta = {
 	pages: number;
 	context: string;
 	asm: AsmCall[];
-	streams: { fd: number; path: string; flags: number; position: number }[];
+	streams: {
+		fd: number;
+		path: string;
+		flags: number;
+		position: number;
+		seekable?: boolean;
+		nodeId?: number | null;
+		isDir?: boolean;
+	}[];
 	handles: { id: number; name: string }[];
 	image: string;
+	assets?: string;
+	config?: string;
+	globals?: Record<string, number>;
 };
 `;
 	if (!meta)
@@ -168,6 +185,45 @@ function freshMemory(wasm: Uint8Array): WebAssembly.Memory {
 	return memory;
 }
 
+/**
+ * The wasm global each getter export reads, with its initial value. An emscripten module keeps its
+ * stack pointer, stack limits and return register in mutable globals that only a getter export can
+ * read back, and a getter's body is one `global.get`.
+ */
+export async function getterGlobals(wasm: Uint8Array, getters: string[]) {
+	const binaryen: any = (await import('binaryen')).default;
+	const mod = binaryen.readBinary(wasm);
+	try {
+		const exported = new Map<string, string>();
+		for (let i = 0; i < mod.getNumExports(); i++) {
+			const info = binaryen.getExportInfo(mod.getExportByIndex(i));
+			exported.set(info.name, info.value);
+		}
+		const indexOf = new Map<string, number>();
+		for (let i = 0; i < mod.getNumGlobals(); i++)
+			indexOf.set(binaryen.getGlobalInfo(mod.getGlobalByIndex(i)).name, i);
+		const found: Record<string, { index: number; initial: number }> = {};
+		for (const getter of getters) {
+			const target = exported.get(getter);
+			if (target === undefined) continue;
+			const body = binaryen.getExpressionInfo(
+				binaryen.getFunctionInfo(mod.getFunction(target)).body
+			);
+			if (body.id !== binaryen.GlobalGetId)
+				throw new Error(`${getter} does not read one global`);
+			const index = indexOf.get(body.name)!;
+			const global = binaryen.getGlobalInfo(mod.getGlobalByIndex(index));
+			if (!global.mutable) continue;
+			const initial = binaryen.getExpressionInfo(global.init).value;
+			if (typeof initial !== 'number') throw new Error(`global ${index} is not an i32`);
+			found[getter] = { index, initial };
+		}
+		return found;
+	} finally {
+		mod.dispose();
+	}
+}
+
 interface CliOptions {
 	sqlite: string;
 	meta: string;
@@ -197,7 +253,19 @@ export async function bake(options: CliOptions) {
 	const wasm = new Uint8Array(readFileSync(options.wasm));
 	const digest = await moduleDigest(wasm);
 	const context = `${meta.context}|module=${digest}`;
-	const image = captureImage(stored.heap, freshMemory(wasm), { module: digest, context });
+	const read = (meta.globals ?? {}) as Record<string, number>;
+	const located = await getterGlobals(wasm, Object.keys(read));
+	const booted: Record<number, number> = {};
+	const fresh: Record<number, number> = {};
+	for (const [name, { index, initial }] of Object.entries(located)) {
+		booted[index] = read[name]!;
+		fresh[index] = initial;
+	}
+	const image = captureImage(stored.heap, freshMemory(wasm), {
+		module: digest,
+		context,
+		globals: { booted, fresh }
+	});
 	const baked = await bakeModule(wasm, image);
 	const check = checkBaked(baked, image);
 	const imageBytes = encodeImage(image);
@@ -210,6 +278,7 @@ export async function bake(options: CliOptions) {
 		streams: stored.streams,
 		handles: stored.handles,
 		image: sha256(imageBytes),
+		globals: Object.fromEntries(Object.keys(located).map((name) => [name, read[name]!])),
 		plainFallback: false
 	};
 	writeFileSync(`${options.out}/${options.name}.json`, JSON.stringify(source));
@@ -223,6 +292,7 @@ export async function bake(options: CliOptions) {
 		memoryPages: source.pages,
 		keptPages: stored.keptPages,
 		deltaPages: image.pages.length,
+		globalsChanged: image.globals ?? {},
 		checkEqual: check.equal,
 		dumpEqual: dump ? differingPages(stored.heap, dump) === 0 : null,
 		dumpDifferingPages: dump ? differingPages(stored.heap, dump) : null,
@@ -250,15 +320,93 @@ if (import.meta.main) {
 			)
 		);
 	} else if (mode === 'source') {
-		const [file, json, fallback] = rest;
+		const [file, json, fallback, ...extra] = rest;
 		const meta =
 			json && json !== '-' ? (JSON.parse(readFileSync(json, 'utf8')) as BakedSource) : null;
-		if (meta) meta.plainFallback = fallback === 'plain';
+		if (meta) {
+			meta.plainFallback = fallback === 'plain';
+			for (const item of extra) {
+				const [key, value] = item.split('=');
+				if (key === 'assets' || key === 'config') meta[key] = value;
+			}
+		}
 		writeFileSync(file!, bakedSource(meta));
-	} else {
+	} else if (mode !== 'assets') {
 		console.error(
-			'usage: product-bake.ts bake <sqlite> <meta.json> <dump|-> <wasm> <outdir> <name> | source <file> <json|-> [plain]'
+			'usage: product-bake.ts bake <sqlite> <meta.json> <dump|-> <wasm> <outdir> <name> | source <file> <json|-> [plain|none] [assets=<index path>] [config=<digest>]'
 		);
 		process.exit(2);
 	}
+}
+
+/** a 32-bit hash over the little-endian words of one page; the same loop runs in the clone */
+export function pageHash(page: Uint8Array): number {
+	// an image decoded from a file can start a page at an offset that is not a multiple of 4
+	const aligned = page.byteOffset % 4 === 0 ? page : page.slice();
+	const words = new Int32Array(aligned.buffer, aligned.byteOffset, aligned.byteLength >> 2);
+	let hash = 0;
+	for (let i = 0; i < words.length; i++) hash = (Math.imul(hash, 31) + words[i]!) | 0;
+	return hash;
+}
+
+export interface AssetIndex {
+	version: 1;
+	pageBytes: number;
+	memoryPages: number;
+	module?: string;
+	context?: string;
+	chunks: { file: string; pages: number[]; hashes: number[] }[];
+}
+
+/**
+ * Splits an image into files of at most `chunkPages` pages. The index lists, per file, the page
+ * numbers in file order and a hash of each page, so a smaller page list is the same format.
+ */
+export function chunkImage(
+	image: {
+		byteLength: number;
+		pages: number[];
+		data: Uint8Array;
+		module?: string;
+		context?: string;
+	},
+	chunkPages: number
+) {
+	if (!Number.isInteger(chunkPages) || chunkPages < 1)
+		throw new RangeError('chunkPages must be a positive integer');
+	const index: AssetIndex = {
+		version: 1,
+		pageBytes: PAGE,
+		memoryPages: image.byteLength / PAGE,
+		module: image.module,
+		context: image.context,
+		chunks: []
+	};
+	const files: Record<string, Uint8Array> = {};
+	for (let at = 0; at < image.pages.length; at += chunkPages) {
+		const pages = image.pages.slice(at, at + chunkPages);
+		const bytes = image.data.subarray(at * PAGE, (at + pages.length) * PAGE);
+		const file = `c${String(index.chunks.length).padStart(3, '0')}.bin`;
+		files[file] = bytes;
+		const hashes = pages.map((_, i) => pageHash(bytes.subarray(i * PAGE, (i + 1) * PAGE)));
+		index.chunks.push({ file, pages, hashes });
+	}
+	return { index, files };
+}
+
+if (import.meta.main && process.argv[2] === 'assets') {
+	const { decodeImage } = await import('../../src/bake.ts');
+	const [, , , imageFile, outDir, chunkPages] = process.argv;
+	const image = decodeImage(new Uint8Array(readFileSync(imageFile!)));
+	const { index, files } = chunkImage(image, Number(chunkPages ?? 64));
+	mkdirSync(outDir!, { recursive: true });
+	writeFileSync(`${outDir}/index.json`, JSON.stringify(index));
+	for (const [name, bytes] of Object.entries(files)) writeFileSync(`${outDir}/${name}`, bytes);
+	console.log(
+		JSON.stringify({
+			files: Object.keys(files).length,
+			pages: image.pages.length,
+			bytes: image.data.length
+		})
+	);
 }

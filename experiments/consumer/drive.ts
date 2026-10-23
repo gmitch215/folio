@@ -13,7 +13,7 @@ type Save = (file: string, value: unknown) => Promise<void>;
 type Log = (stage: string, extra?: object) => void;
 
 /** Reads today's account usage from the GraphQL analytics API; an unreadable meter is reported, not guessed. */
-export async function readMeter(account: string, token: string): Promise<Meter> {
+export async function readMeter(account: string, token: string, since?: string): Promise<Meter> {
 	const empty = {
 		workerRequests: 0,
 		durableObjectRequests: 0,
@@ -21,11 +21,11 @@ export async function readMeter(account: string, token: string): Promise<Meter> 
 		rowsRead: 0,
 		rowsWritten: 0
 	};
-	const day = new Date().toISOString().slice(0, 10);
+	const day = since ?? new Date().toISOString().slice(0, 10);
 	const query = `query($a:String!,$d:Date!){viewer{accounts(filter:{accountTag:$a}){
-		w:workersInvocationsAdaptive(limit:100,filter:{date_geq:$d}){sum{requests}}
-		d:durableObjectsInvocationsAdaptiveGroups(limit:100,filter:{date_geq:$d}){sum{requests}}
-		p:durableObjectsPeriodicGroups(limit:100,filter:{date_geq:$d}){sum{duration rowsRead rowsWritten}}}}}`;
+		w:workersInvocationsAdaptive(limit:10000,filter:{date_geq:$d}){sum{requests}}
+		d:durableObjectsInvocationsAdaptiveGroups(limit:10000,filter:{date_geq:$d}){sum{requests}}
+		p:durableObjectsPeriodicGroups(limit:10000,filter:{date_geq:$d}){sum{duration rowsRead rowsWritten}}}}}`;
 	try {
 		const response = await fetch('https://api.cloudflare.com/client/v4/graphql', {
 			method: 'POST',

@@ -1,0 +1,798 @@
+{
+ "note": "local workerd; PHP 8.5.12 tuned module; render image delivered as asset files (13 files of up to 4 MiB, 781 pages), config digest as the second key, K=4 loader with every page hashed as it lands",
+ "hostCommit": "f902595ccb",
+ "interpreter": {
+  "wasmSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+  "wasmBytes": 14011467,
+  "glueSha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+ },
+ "bake": {
+  "memoryPages": 1378,
+  "keptPages": 844,
+  "deltaPages": 781,
+  "imageBytes": 51186946,
+  "dataSegmentModuleBytes": 65195161,
+  "globalsChanged": {
+   "1": 4416480,
+   "2": 37970912
+  },
+  "checkBakedEqual": true,
+  "dumpDifferingPages": 0,
+  "sentinelFoundInImage": {
+   "key": 1,
+   "salt": 1
+  },
+  "realKeyAndSaltInImage": 0
+ },
+ "proof": {
+  "checks": {
+   "bodyEqual": [
+    {
+     "path": "/",
+     "equal": true,
+     "controlHash": "c0a4fbff6e667153",
+     "bakedHash": "c0a4fbff6e667153"
+    },
+    {
+     "path": "/node",
+     "equal": true,
+     "controlHash": "c0a4fbff6e667153",
+     "bakedHash": "c0a4fbff6e667153"
+    },
+    {
+     "path": "/user/login",
+     "equal": true,
+     "controlHash": "dac4dfa43e8613de",
+     "bakedHash": "dac4dfa43e8613de"
+    },
+    {
+     "path": "/filter/tips",
+     "equal": true,
+     "controlHash": "348e02952191f39d",
+     "bakedHash": "348e02952191f39d"
+    }
+   ],
+   "csrfEqualsControl": true,
+   "csrfDiffersFromSentinel": true,
+   "keyHashDiffersFromSentinel": true,
+   "mtRandDiffers": true,
+   "mismatchBakedFalse": true,
+   "mismatchReason": "context mismatch, plain boot",
+   "mismatchBodyEqual": true
+  },
+  "rows": {
+   "control": [
+    {
+     "path": "/",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "c0a4fbff6e667153",
+     "baked": false,
+     "reason": "none",
+     "mtRand": 625614090
+    },
+    {
+     "path": "/node",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "c0a4fbff6e667153",
+     "baked": false,
+     "reason": "none",
+     "mtRand": 313141654
+    },
+    {
+     "path": "/user/login",
+     "status": 200,
+     "bytes": 18418,
+     "hash": "dac4dfa43e8613de",
+     "baked": false,
+     "reason": "none",
+     "mtRand": 1616987044
+    },
+    {
+     "path": "/filter/tips",
+     "status": 200,
+     "bytes": 24939,
+     "hash": "348e02952191f39d",
+     "baked": false,
+     "reason": "none",
+     "mtRand": 1162611496
+    }
+   ],
+   "baked": [
+    {
+     "path": "/",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "c0a4fbff6e667153",
+     "baked": true,
+     "reason": "context match",
+     "pagesVerified": 781,
+     "imageFiles": 13,
+     "adoptMs": 21,
+     "mtRand": 618881252
+    },
+    {
+     "path": "/node",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "c0a4fbff6e667153",
+     "baked": true,
+     "reason": "context match",
+     "pagesVerified": 781,
+     "imageFiles": 13,
+     "adoptMs": 1,
+     "mtRand": 2029470159
+    },
+    {
+     "path": "/user/login",
+     "status": 200,
+     "bytes": 18418,
+     "hash": "dac4dfa43e8613de",
+     "baked": true,
+     "reason": "context match",
+     "pagesVerified": 781,
+     "imageFiles": 13,
+     "adoptMs": 1,
+     "mtRand": 532425419
+    },
+    {
+     "path": "/filter/tips",
+     "status": 200,
+     "bytes": 24939,
+     "hash": "348e02952191f39d",
+     "baked": true,
+     "reason": "context match",
+     "pagesVerified": 781,
+     "imageFiles": 13,
+     "adoptMs": 1,
+     "mtRand": 1989549355
+    },
+    {
+     "path": "/",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "c0a4fbff6e667153",
+     "baked": true,
+     "reason": "context match",
+     "pagesVerified": 781,
+     "imageFiles": 13,
+     "adoptMs": 1,
+     "mtRand": 1865560727
+    }
+   ],
+   "mismatch": [
+    {
+     "path": "/",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "c0a4fbff6e667153",
+     "baked": false,
+     "reason": "context mismatch, plain boot",
+     "mtRand": 907927017
+    }
+   ],
+   "sentinel": [
+    {
+     "path": "/",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "a4903aa8f4e9a354",
+     "baked": false,
+     "reason": "none",
+     "mtRand": 635794358
+    }
+   ]
+  }
+ },
+ "staleMatrix": {
+  "rename": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "name": "Renamed Site"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17692,
+     "hash": "0149fccef328e75c",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17692,
+     "hash": "0149fccef328e75c",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "name": "Renamed Site"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17692,
+     "hash": "0149fccef328e75c",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17692,
+     "hash": "0149fccef328e75c",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ]
+  },
+  "content": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "nid": "1",
+      "block": "Edited Block"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 16321,
+     "hash": "e0609ddb7a87883a",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 16321,
+     "hash": "e0609ddb7a87883a",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "nid": "1",
+      "block": "Edited Block"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 16321,
+     "hash": "e0609ddb7a87883a",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 16321,
+     "hash": "e0609ddb7a87883a",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ]
+  },
+  "maintenance": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "maintenance": true
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 503,
+     "bytes": 9882,
+     "hash": "26d6875194698d6d",
+     "markers": [],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 503,
+     "bytes": 9882,
+     "hash": "26d6875194698d6d",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "maintenance": true
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 503,
+     "bytes": 9882,
+     "hash": "26d6875194698d6d",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 503,
+     "bytes": 9882,
+     "hash": "26d6875194698d6d",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    }
+   ]
+  },
+  "alias": {
+   "control": [
+    {
+     "step": "first",
+     "status": 404,
+     "bytes": 15451,
+     "hash": "3f62557855289358",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "alias": "1"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 18425,
+     "hash": "be568ddcb6bb48bc",
+     "markers": [],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 18426,
+     "hash": "763c94719847293c",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 404,
+     "bytes": 15451,
+     "hash": "3f62557855289358",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "alias": "1"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 18426,
+     "hash": "763c94719847293c",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 18425,
+     "hash": "e454419d244de979",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    }
+   ]
+  },
+  "module": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "error": "unparseable: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+      "raw": "\nFatal error: Uncaught Error: Class \"Drupal\" not found in php-wasm run script:2\nStack trace:\n#0 {main}\n  thrown in php-wasm run script on line 2\n"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "history": true
+     },
+     "context": "b41028cf34e0ce14|1022:d6259409|d19525eaa6063013|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1022:d6259409|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ]
+  },
+  "theme": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "favicon": false
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "favicon": false
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ]
+  },
+  "themecolor": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "color": "#ff2200"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17685,
+     "hash": "1ec0db9fb90fccaa",
+     "markers": [],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17685,
+     "hash": "1ec0db9fb90fccaa",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "6f045907ce7ba8b2",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "color": "#ff2200"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17685,
+     "hash": "1ec0db9fb90fccaa",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|d19525eaa6063013|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17685,
+     "hash": "1ec0db9fb90fccaa",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    }
+   ]
+  }
+ },
+ "staleNote": "alias: the cold hashes differ in this run, but each arm produced both 18425 and 18426 byte bodies across its warm and cold requests (18425 and 18426 in the control, 18426 and 18425 in the baked arm); 14 later alias runs of both arms gave 18426 bytes and equal hashes every time"
+}

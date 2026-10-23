@@ -1,0 +1,14 @@
+{
+  "note": "local workerd, asset-baked render image, plain module; page hashes verified on every page as it landed",
+  "deliverProbe": [
+    { "inflight": 1, "instantiateMs": 23, "totalMs": 44, "fetchMsSum": 33, "pagesChecked": 771, "bad": 0 },
+    { "inflight": 4, "instantiateMs": 4, "totalMs": 40, "fetchMsSum": 88, "pagesChecked": 771, "bad": 0 },
+    { "inflight": 13, "instantiateMs": 3, "totalMs": 33, "fetchMsSum": 309, "pagesChecked": 771, "bad": 0 }
+  ],
+  "boot": [
+    { "arm": "sequential", "baked": true, "verified": 771, "totalMs": 110, "bodyHash": "7432ebf726b2", "csrf": "same as control", "mtRand": 274703399 },
+    { "arm": "inflight 4", "baked": true, "verified": 771, "totalMs": 63, "bodyHash": "7432ebf726b2", "csrf": "same as control", "mtRand": 1186355326 },
+    { "arm": "inflight 13", "baked": true, "verified": 771, "totalMs": 92, "bodyHash": "7432ebf726b2", "csrf": "same as control", "mtRand": 1558407591 },
+    { "arm": "control", "baked": false, "bodyHash": "7432ebf726b2", "mtRand": 121096225 }
+  ]
+}

@@ -1,0 +1,515 @@
+{
+  "note": "deployed serve-path confirmation on a paid Workers account: one control and one baked deploy (4 files in flight), 4 objects per arm alternating, fresh sites; first = first request, serve = /hostdrop then an ordinary render (the host path after an eviction), reboot = /bootphase on the same object; idle probes after 150 and 90 s on the last two rounds. n=4 per arm: a confirmation, not a statistic.",
+  "account": "paid",
+  "hostCommit": "f902595ccb",
+  "interpreter": {
+    "wasmSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+    "glueSha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+  },
+  "plan": {
+    "gateAfterRounds": 2,
+    "rounds": 4,
+    "whyNotFive": "the 40 requests per arm cap allows 4 objects per arm with serve, re-boot and idle probes (5 would need 47)",
+    "strict": "any 5xx, failed request or request over 30 s ends the run",
+    "guards": {
+      "rowsGrowth": 150000,
+      "durationGbSGrowth": 1500
+    }
+  },
+  "spent": {
+    "rowsWritten": 28872,
+    "requests": 71,
+    "perArm": {
+      "control": 36,
+      "par": 35
+    }
+  },
+  "outcomes": {
+    "control": {
+      "ok": 70
+    },
+    "par": {
+      "ok": 68
+    }
+  },
+  "sizesKiB": {
+    "control": 17563.38,
+    "par": 17564.08
+  },
+  "arms": {
+    "control": {
+      "arm": "control",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 3822,
+        "min": 3699,
+        "max": 3897
+      },
+      "wall": {
+        "n": 4,
+        "median": 4521.297062499994,
+        "min": 4307.022834000003,
+        "max": 4721.823000000004
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b6a81e5f5320200e"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": [
+        "ny3ph8T1kvWq0YcqgLRrWQRYSU0fXn_uzLdHyRjQDFk"
+      ]
+    },
+    "par": {
+      "arm": "par",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 1035,
+        "min": 815,
+        "max": 1078
+      },
+      "wall": {
+        "n": 4,
+        "median": 2152.0930630000003,
+        "min": 1707.3687499999942,
+        "max": 7072.0585830000055
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b6a81e5f5320200e"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "ny3ph8T1kvWq0YcqgLRrWQRYSU0fXn_uzLdHyRjQDFk"
+      ]
+    },
+    "control-reboot": {
+      "arm": "control-reboot",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 1028,
+        "min": 906,
+        "max": 1334
+      },
+      "wall": {
+        "n": 4,
+        "median": 1206.1859585000057,
+        "min": 1046.689333000002,
+        "max": 1468.913916999998
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": []
+    },
+    "par-reboot": {
+      "arm": "par-reboot",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 1016,
+        "min": 876,
+        "max": 1497
+      },
+      "wall": {
+        "n": 4,
+        "median": 1820.7975205000112,
+        "min": 1258.4712500000023,
+        "max": 5764.186791999993
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    },
+    "control-serve": {
+      "arm": "control-serve",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 989,
+        "min": 970,
+        "max": 1092
+      },
+      "wall": {
+        "n": 4,
+        "median": 1111.9635414999939,
+        "min": 1105.5575420000096,
+        "max": 1384.6999999999825
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b6a81e5f5320200e"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": []
+    },
+    "par-serve": {
+      "arm": "par-serve",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 554.5,
+        "min": 413,
+        "max": 707
+      },
+      "wall": {
+        "n": 4,
+        "median": 1013.5466880000095,
+        "min": 718.9107919999951,
+        "max": 1862.1133329999866
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "b6a81e5f5320200e"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    }
+  },
+  "saving": {
+    "par-first": {
+      "cpuRatio": 0.2708006279434851,
+      "cpuSavingPercent": 72.91993720565148,
+      "wallRatio": 0.4759901933561577,
+      "wallSavingPercent": 52.400980664384235
+    },
+    "par-reboot": {
+      "cpuRatio": 0.9883268482490273,
+      "cpuSavingPercent": 1.1673151750972721,
+      "wallRatio": 1.5095495911462333,
+      "wallSavingPercent": -50.954959114623335
+    },
+    "par-serve": {
+      "cpuRatio": 0.5606673407482305,
+      "cpuSavingPercent": 43.93326592517695,
+      "wallRatio": 0.9114927335052514,
+      "wallSavingPercent": 8.850726649474861
+    }
+  },
+  "pairs": {
+    "par-first": [
+      {
+        "round": 0,
+        "control": 3897,
+        "other": 815
+      },
+      {
+        "round": 1,
+        "control": 3757,
+        "other": 1000
+      },
+      {
+        "round": 2,
+        "control": 3887,
+        "other": 1078
+      },
+      {
+        "round": 3,
+        "control": 3699,
+        "other": 1070
+      }
+    ],
+    "par-reboot": [
+      {
+        "round": 0,
+        "control": 1334,
+        "other": 876
+      },
+      {
+        "round": 1,
+        "control": 906,
+        "other": 963
+      },
+      {
+        "round": 2,
+        "control": 1077,
+        "other": 1497
+      },
+      {
+        "round": 3,
+        "control": 979,
+        "other": 1069
+      }
+    ],
+    "par-serve": [
+      {
+        "round": 0,
+        "control": 1005,
+        "other": 413
+      },
+      {
+        "round": 1,
+        "control": 973,
+        "other": 526
+      },
+      {
+        "round": 2,
+        "control": 970,
+        "other": 707
+      },
+      {
+        "round": 3,
+        "control": 1092,
+        "other": 583
+      }
+    ]
+  },
+  "bridgeBytesByStep": {
+    "control": {
+      "bridgeInBytes": {
+        "min": 1431765,
+        "max": 1431765
+      },
+      "bridgeOutBytes": {
+        "min": 2310827,
+        "max": 2310827
+      }
+    },
+    "control-serve": {
+      "bridgeInBytes": {
+        "min": 21971,
+        "max": 21971
+      },
+      "bridgeOutBytes": {
+        "min": 1196078,
+        "max": 1196078
+      }
+    },
+    "control-reboot": {
+      "bridgeInBytes": {
+        "min": 18940,
+        "max": 18940
+      },
+      "bridgeOutBytes": {
+        "min": 1194833,
+        "max": 1194833
+      }
+    },
+    "par": {
+      "bridgeInBytes": {
+        "min": 243472,
+        "max": 243499
+      },
+      "bridgeOutBytes": {
+        "min": 10131,
+        "max": 10131
+      }
+    },
+    "par-serve": {
+      "bridgeInBytes": {
+        "min": 8233,
+        "max": 8233
+      },
+      "bridgeOutBytes": {
+        "min": 161421,
+        "max": 161444
+      }
+    },
+    "par-reboot": {
+      "bridgeInBytes": {
+        "min": 990406,
+        "max": 990454
+      },
+      "bridgeOutBytes": {
+        "min": 2415271,
+        "max": 2415295
+      }
+    }
+  },
+  "idleProbes": [
+    {
+      "arm": "par",
+      "object": "par-3-9d730e8e",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 4806.345625000016,
+      "cpuMs": 682,
+      "idleMs": 94807,
+      "moduleTag": "05c97ef2",
+      "objectTag": "1788e7c0",
+      "bootCalls": 1,
+      "moduleTagKept": false,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-3-9d730e8e",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 2267.984959000023,
+      "cpuMs": 1751,
+      "idleMs": 92271,
+      "moduleTag": "6cd3c98c",
+      "objectTag": "bea2b0a5",
+      "bootCalls": 1,
+      "moduleTagKept": false,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-2-9d730e8e",
+      "phase": "idle-150",
+      "status": 200,
+      "wallMs": 8046.46420799999,
+      "cpuMs": 2035,
+      "idleMs": 158047,
+      "moduleTag": "84c61ff0",
+      "objectTag": "54a1e95a",
+      "bootCalls": 1,
+      "moduleTagKept": false,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-2-9d730e8e",
+      "phase": "idle-150",
+      "status": 200,
+      "wallMs": 2453.2020839999896,
+      "cpuMs": 799,
+      "idleMs": 152453,
+      "moduleTag": "40170169",
+      "objectTag": "d81c698c",
+      "bootCalls": 1,
+      "moduleTagKept": false,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    }
+  ],
+  "heapStatus": {
+    "arm": "control",
+    "object": "control-0-9d730e8e",
+    "phase": "heap-status",
+    "status": 200,
+    "cpuMs": 3,
+    "heapRestore": {
+      "restored": false,
+      "reason": "no snapshot for this pack generation",
+      "droppedStale": 0
+    },
+    "latest": null,
+    "imagedGeneration": null,
+    "enabled": true
+  },
+  "meter": {
+    "startRows": 790590,
+    "startDurationGbS": 22221.4,
+    "endRows": 790745,
+    "endDurationGbS": 22222.42,
+    "note": "month-to-date totals from the account meter; its rows and requests lag the traffic by several minutes, so these deltas under-read until it settles"
+  },
+  "inventory": {
+    "ownDifferences": 0,
+    "foreignDifferences": 0,
+    "baselineRestored": true
+  },
+  "failure": null
+}

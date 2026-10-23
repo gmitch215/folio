@@ -1,0 +1,290 @@
+{
+  "run": "cfw-folio-hostboot-51b081c5",
+  "budget": {
+    "maxRowsWritten": 60000,
+    "maxRequests": 500,
+    "maxRequestsPerArm": 40
+  },
+  "spent": {
+    "rowsWritten": 36090,
+    "requests": 55,
+    "perArm": {
+      "control": 26,
+      "baked": 29
+    }
+  },
+  "variants": {
+    "control": "v-control",
+    "baked": "v-asset"
+  },
+  "arms": {
+    "control": {
+      "arm": "control",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 3375,
+        "min": 3279,
+        "max": 4221
+      },
+      "wall": {
+        "n": 5,
+        "median": 4175.484499999991,
+        "min": 3847.363249999995,
+        "max": 5126.376417000007
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "357c3f1c7ab82041"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": [
+        "lkB1gB-_5lUQK0ANDGjKTj5-XAJDcWBIv9ctpjIIads"
+      ]
+    },
+    "baked": {
+      "arm": "baked",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 945,
+        "min": 921,
+        "max": 1355
+      },
+      "wall": {
+        "n": 5,
+        "median": 2316.950332999986,
+        "min": 1664.4234589999978,
+        "max": 4786.320500000002
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "357c3f1c7ab82041"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "lkB1gB-_5lUQK0ANDGjKTj5-XAJDcWBIv9ctpjIIads"
+      ]
+    }
+  },
+  "outcomes": {
+    "control": {
+      "ok": 50
+    },
+    "baked": {
+      "ok": 56
+    }
+  },
+  "saving": {
+    "-first": {
+      "cpuRatio": 0.28,
+      "cpuSavingPercent": 72,
+      "wallRatio": 0.554893769333832,
+      "wallSavingPercent": 44.510623066616795
+    }
+  },
+  "pairs": {
+    "-first": [
+      {
+        "round": 0,
+        "control": 3279,
+        "other": 943
+      },
+      {
+        "round": 1,
+        "control": 3327,
+        "other": 945
+      },
+      {
+        "round": 2,
+        "control": 4221,
+        "other": 921
+      },
+      {
+        "round": 3,
+        "control": 3375,
+        "other": 954
+      },
+      {
+        "round": 4,
+        "control": 3608,
+        "other": 1355
+      }
+    ]
+  },
+  "delivery": [
+    {
+      "tag": "deliver051b081c5",
+      "status": 200,
+      "wallMs": 1148.6446250000154,
+      "cpuMs": 133,
+      "check": 0,
+      "instantiateMs": 0,
+      "totalMs": 314,
+      "indexMs": 0,
+      "fetchMs": [
+        14,
+        25,
+        23,
+        32,
+        22,
+        22,
+        19,
+        28,
+        30,
+        26,
+        25,
+        29,
+        19
+      ],
+      "copyMs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pages": 771,
+      "memoryBytes": 88997888,
+      "checked": null
+    },
+    {
+      "tag": "deliver151b081c5",
+      "status": 200,
+      "wallMs": 979.3376670000143,
+      "cpuMs": 124,
+      "check": 0,
+      "instantiateMs": 0,
+      "totalMs": 251,
+      "indexMs": 0,
+      "fetchMs": [
+        13,
+        30,
+        19,
+        20,
+        16,
+        19,
+        16,
+        18,
+        22,
+        20,
+        17,
+        26,
+        15
+      ],
+      "copyMs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pages": 771,
+      "memoryBytes": 88997888,
+      "checked": null
+    },
+    {
+      "tag": "deliver251b081c5",
+      "status": 200,
+      "wallMs": 1228.0538749999832,
+      "cpuMs": 144,
+      "check": 1,
+      "instantiateMs": 0,
+      "totalMs": 294,
+      "indexMs": 4,
+      "fetchMs": [
+        21,
+        20,
+        16,
+        22,
+        21,
+        21,
+        58,
+        19,
+        19,
+        23,
+        21,
+        21,
+        8
+      ],
+      "copyMs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "pages": 771,
+      "memoryBytes": 88997888,
+      "checked": {
+        "checked": 771,
+        "bad": 0
+      }
+    }
+  ],
+  "failure": null
+}

@@ -1,0 +1,806 @@
+{
+ "note": "local workerd, asset-baked render image; withoutCheck = context key only, withConfigDigest = context key plus a digest of the config table rows",
+ "withoutCheck": {
+  "rename": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "name": "Renamed Site"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17690,
+     "hash": "1d2caa49337caf09",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17690,
+     "hash": "1d2caa49337caf09",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "name": "Renamed Site"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17690,
+     "hash": "1d2caa49337caf09",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17688,
+     "hash": "c14a12b3f4a5a961",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 1,
+     "baked": true
+    }
+   ]
+  },
+  "content": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "nid": "1",
+      "block": "Edited Block"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "nid": "1",
+      "block": "Edited Block"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 1,
+     "baked": true
+    }
+   ]
+  }
+ },
+ "withConfigDigest": {
+  "rename": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "name": "Renamed Site"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17690,
+     "hash": "1d2caa49337caf09",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17690,
+     "hash": "1d2caa49337caf09",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "name": "Renamed Site"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 17690,
+     "hash": "1d2caa49337caf09",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 17690,
+     "hash": "1d2caa49337caf09",
+     "markers": [
+      "Renamed Site"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ]
+  },
+  "content": {
+   "control": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 0,
+     "baked": false
+    },
+    {
+     "step": "edit",
+     "note": {
+      "nid": "1",
+      "block": "Edited Block"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": false
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 1,
+     "baked": false
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ],
+   "baked": [
+    {
+     "step": "first",
+     "status": 200,
+     "bytes": 17686,
+     "hash": "69bddab20b78790d",
+     "markers": [],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "edit",
+     "note": {
+      "nid": "1",
+      "block": "Edited Block"
+     },
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+     "baked": true
+    },
+    {
+     "step": "warm after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 1,
+     "baked": true
+    },
+    {
+     "step": "drop",
+     "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+    },
+    {
+     "step": "cold after edit",
+     "status": 200,
+     "bytes": 16319,
+     "hash": "7ee2905d24e563b7",
+     "markers": [
+      "Edit Node"
+     ],
+     "warm": 0,
+     "baked": false
+    }
+   ]
+  }
+ },
+ "outsideConfig": {
+  "note": "edits to state outside the config table, with the config digest key on; control = plain cold boot",
+  "maintenanceAliasModuleTheme": {
+   "maintenance": {
+    "control": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     },
+     {
+      "step": "edit",
+      "note": {
+       "maintenance": true
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": false
+     },
+     {
+      "step": "warm after edit",
+      "status": 503,
+      "bytes": 9882,
+      "hash": "d7cd45cce4cf9da5",
+      "markers": [],
+      "warm": 1,
+      "baked": false
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 503,
+      "bytes": 9882,
+      "hash": "d7cd45cce4cf9da5",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ],
+    "baked": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "edit",
+      "note": {
+       "maintenance": true
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": true
+     },
+     {
+      "step": "warm after edit",
+      "status": 503,
+      "bytes": 9882,
+      "hash": "d7cd45cce4cf9da5",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 503,
+      "bytes": 9882,
+      "hash": "d7cd45cce4cf9da5",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     }
+    ]
+   },
+   "alias": {
+    "control": [
+     {
+      "step": "first",
+      "status": 404,
+      "bytes": 15446,
+      "hash": "936a4cb2a99c412d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     },
+     {
+      "step": "edit",
+      "note": {
+       "alias": "1"
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": false
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 18416,
+      "hash": "f51829aef7f2216a",
+      "markers": [],
+      "warm": 1,
+      "baked": false
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 18416,
+      "hash": "f51829aef7f2216a",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ],
+    "baked": [
+     {
+      "step": "first",
+      "status": 404,
+      "bytes": 15446,
+      "hash": "936a4cb2a99c412d",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "edit",
+      "note": {
+       "alias": "1"
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": true
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 18416,
+      "hash": "f51829aef7f2216a",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 18416,
+      "hash": "f51829aef7f2216a",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     }
+    ]
+   },
+   "module": {
+    "control": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     },
+     {
+      "step": "edit",
+      "note": {
+       "history": true
+      },
+      "context": "b41028cf34e0ce14|1022:d6259409|6562a53aefa2c005|",
+      "baked": false
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1022:d6259409|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ],
+    "baked": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "edit",
+      "note": {
+       "history": true
+      },
+      "context": "b41028cf34e0ce14|1022:d6259409|6562a53aefa2c005|",
+      "baked": true
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1022:d6259409|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ]
+   },
+   "theme": {
+    "control": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     },
+     {
+      "step": "edit",
+      "note": {
+       "favicon": false
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": false
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 1,
+      "baked": false
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ],
+    "baked": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "edit",
+      "note": {
+       "favicon": false
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": true
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ]
+   }
+  },
+  "themeColor": {
+   "themecolor": {
+    "control": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     },
+     {
+      "step": "edit",
+      "note": {
+       "color": "#ff2200"
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": false
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 17685,
+      "hash": "492735b7ba1bc295",
+      "markers": [],
+      "warm": 1,
+      "baked": false
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 17685,
+      "hash": "492735b7ba1bc295",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ],
+    "baked": [
+     {
+      "step": "first",
+      "status": 200,
+      "bytes": 17686,
+      "hash": "69bddab20b78790d",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "edit",
+      "note": {
+       "color": "#ff2200"
+      },
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|",
+      "baked": true
+     },
+     {
+      "step": "warm after edit",
+      "status": 200,
+      "bytes": 17685,
+      "hash": "492735b7ba1bc295",
+      "markers": [],
+      "warm": 1,
+      "baked": true
+     },
+     {
+      "step": "drop",
+      "context": "b41028cf34e0ce14|1004:d7f89195|6562a53aefa2c005|"
+     },
+     {
+      "step": "cold after edit",
+      "status": 200,
+      "bytes": 17685,
+      "hash": "492735b7ba1bc295",
+      "markers": [],
+      "warm": 0,
+      "baked": false
+     }
+    ]
+   }
+  }
+ }
+}

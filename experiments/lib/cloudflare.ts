@@ -1,4 +1,5 @@
 import { spawn, type ChildProcess } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
@@ -7,7 +8,7 @@ import { dirname, join } from 'node:path';
 export interface Credentials {
 	account: string;
 	token: string;
-	label: 'FREE' | 'STUDENT';
+	label: 'FREE' | 'SELECTED';
 }
 
 export interface Snapshot {
@@ -38,14 +39,17 @@ export type Kind = keyof typeof classesFor;
 export const isKind = (value: unknown): value is Kind =>
 	typeof value === 'string' && value in classesFor;
 
-// FREE_* is the account the e2e workflow holds; STUDENT_* is what the recorded runs used
-export function credentials(): Credentials {
-	for (const label of ['FREE', 'STUDENT'] as const) {
-		const account = process.env[`${label}_CLOUDFLARE_ACCOUNT_ID`];
-		const token = process.env[`${label}_CLOUDFLARE_API_TOKEN`];
+// FOLIO_CLOUDFLARE_* names the account to use; FREE_CLOUDFLARE_* is the Free plan account CI holds
+export function credentials(env: Record<string, string | undefined> = process.env): Credentials {
+	for (const [prefix, label] of [
+		['FOLIO', 'SELECTED'],
+		['FREE', 'FREE']
+	] as const) {
+		const account = env[`${prefix}_CLOUDFLARE_ACCOUNT_ID`];
+		const token = env[`${prefix}_CLOUDFLARE_API_TOKEN`];
 		if (account && token) return { account, token, label };
 	}
-	throw new Error('set FREE_CLOUDFLARE_ACCOUNT_ID and FREE_CLOUDFLARE_API_TOKEN');
+	throw new Error('set FOLIO_CLOUDFLARE_ACCOUNT_ID and FOLIO_CLOUDFLARE_API_TOKEN');
 }
 
 export function createApi({ account, token }: Credentials) {
@@ -95,6 +99,87 @@ export async function snapshot(api: Api): Promise<Snapshot> {
 		r2,
 		d1
 	};
+}
+
+/** names and modified times of what the account lists, so two of these show what changed between them */
+export async function inventory(api: Api) {
+	const list = async (
+		path: string,
+		pick: (row: any) => Record<string, unknown>,
+		unwrap = (x: any) => x
+	) => {
+		try {
+			return (unwrap(await api(path)) as any[]).map(pick);
+		} catch {
+			return null;
+		}
+	};
+	return {
+		scripts: await list('/workers/scripts', (r) => ({
+			name: r.id,
+			modified: r.modified_on,
+			created: r.created_on
+		})),
+		namespaces: await list('/workers/durable_objects/namespaces', (r) => ({
+			name: r.name,
+			script: r.script,
+			class: r.class,
+			id: r.id
+		})),
+		kv: await list('/storage/kv/namespaces?per_page=100', (r) => ({ name: r.title, id: r.id })),
+		r2: await list(
+			'/r2/buckets',
+			(r) => ({ name: r.name, created: r.creation_date }),
+			(x) => x.buckets ?? x
+		),
+		d1: await list('/d1/database', (r) => ({ name: r.name, created: r.created_at, id: r.uuid }))
+	};
+}
+
+export type Inventory = Awaited<ReturnType<typeof inventory>>;
+
+/**
+ * What differs between two inventories. `mine` says whether an entry belongs to the caller; a
+ * difference that is not the caller's carries only a short hash of its name, never the name.
+ */
+export function inventoryDiff(
+	before: Inventory,
+	after: Inventory,
+	mine: (entry: Record<string, unknown>) => boolean
+) {
+	const out: { type: string; change: string; mine: boolean; ref: string }[] = [];
+	for (const type of Object.keys(before) as (keyof Inventory)[]) {
+		const a = before[type];
+		const b = after[type];
+		if (a === null || b === null) {
+			if (a !== b) out.push({ type, change: 'unreadable', mine: false, ref: '' });
+			continue;
+		}
+		const key = (e: Record<string, unknown>) => JSON.stringify([e.name, e.id ?? '']);
+		const was = new Map(a.map((e) => [key(e), JSON.stringify(e)]));
+		const now = new Map(b.map((e) => [key(e), JSON.stringify(e)]));
+		const entries = new Map([...a, ...b].map((e) => [key(e), e]));
+		for (const [k, e] of entries) {
+			const change = !was.has(k)
+				? 'added'
+				: !now.has(k)
+					? 'removed'
+					: was.get(k) !== now.get(k)
+						? 'modified'
+						: '';
+			if (!change) continue;
+			const own = mine(e);
+			out.push({
+				type,
+				change,
+				mine: own,
+				ref: own
+					? String(e.name ?? '')
+					: createHash('sha256').update(k).digest('hex').slice(0, 8)
+			});
+		}
+	}
+	return out;
 }
 
 // a Durable Object script cannot be deleted while it owns classes, so retire the classes first

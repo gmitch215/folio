@@ -1,0 +1,465 @@
+{
+  "note": "deployed A/B on a Free plan account, one deploy per arm, n=5 per arm, arms alternating by round, fresh site names; control is the plain PHP 8.5.12 module, par is the asset-delivered render image with the config digest key and 4 files in flight; first = first request of a fresh site, reboot = /bootphase on the same object; idle probes at 30, 90, 150 and 90 s on the same objects",
+  "hostCommit": "f902595ccb",
+  "interpreter": {
+    "wasmSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+    "wasmBytes": 14011467,
+    "glueSha256": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28"
+  },
+  "sizesKiB": {
+    "control": {
+      "totalUpload": 17563.04,
+      "gzip": 5575.79
+    },
+    "par": {
+      "totalUpload": 17563.75,
+      "gzip": 5576.29
+    },
+    "dataSegmentModule": {
+      "totalUpload": 67547.12,
+      "gzip": 20018.74,
+      "deployed": false
+    }
+  },
+  "uncompressedLimitMiB": 63.9,
+  "assets": {
+    "control": 5560,
+    "par": 5575,
+    "imageFiles": 14
+  },
+  "controlRebootPath": "plain boot (heap restore refused: no snapshot for this pack generation)",
+  "run": "cfw-folio-hostboot-f06601fc",
+  "budget": {
+    "maxRowsWritten": 36500,
+    "maxRequests": 300,
+    "maxRequestsPerArm": 40
+  },
+  "spent": {
+    "rowsWritten": 36090,
+    "requests": 73,
+    "perArm": {
+      "control": 37,
+      "par": 36
+    }
+  },
+  "variants": {
+    "control": "v-control",
+    "par": "v-par"
+  },
+  "arms": {
+    "control": {
+      "arm": "control",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 3709,
+        "min": 2520,
+        "max": 3956
+      },
+      "wall": {
+        "n": 5,
+        "median": 4283.128540999998,
+        "min": 3237.091042,
+        "max": 4654.405333000002
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "06ea2a5abbfb88b1"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": [
+        "gduVmMLfC2EXGB4CKwaicOIcI54nvW5NYVP4z-c3kYQ"
+      ]
+    },
+    "par": {
+      "arm": "par",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 1039,
+        "min": 915,
+        "max": 1473
+      },
+      "wall": {
+        "n": 5,
+        "median": 1854.5366249999934,
+        "min": 1590.551250000004,
+        "max": 2439.3596249999828
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "06ea2a5abbfb88b1"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "gduVmMLfC2EXGB4CKwaicOIcI54nvW5NYVP4z-c3kYQ"
+      ]
+    },
+    "control-reboot": {
+      "arm": "control-reboot",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 1034,
+        "min": 765,
+        "max": 1095
+      },
+      "wall": {
+        "n": 5,
+        "median": 1152.1770829999878,
+        "min": 903.2083339999954,
+        "max": 1227.291750000004
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": []
+    },
+    "par-reboot": {
+      "arm": "par-reboot",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 1128,
+        "min": 869,
+        "max": 1267
+      },
+      "wall": {
+        "n": 5,
+        "median": 1613.2611670000188,
+        "min": 1400.1019589999923,
+        "max": 1862.8270409999968
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    }
+  },
+  "outcomes": {
+    "control": {
+      "ok": 72
+    },
+    "par": {
+      "ok": 70
+    }
+  },
+  "saving": {
+    "par-first": {
+      "cpuRatio": 0.2801294149366406,
+      "cpuSavingPercent": 71.98705850633593,
+      "wallRatio": 0.4329864507328112,
+      "wallSavingPercent": 56.701354926718885
+    },
+    "par-reboot": {
+      "cpuRatio": 1.0909090909090908,
+      "cpuSavingPercent": -9.090909090909083,
+      "wallRatio": 1.4001850850908097,
+      "wallSavingPercent": -40.018508509080974
+    }
+  },
+  "pairs": {
+    "par-first": [
+      {
+        "round": 0,
+        "control": 2520,
+        "other": 1032
+      },
+      {
+        "round": 1,
+        "control": 3709,
+        "other": 1039
+      },
+      {
+        "round": 2,
+        "control": 3609,
+        "other": 915
+      },
+      {
+        "round": 3,
+        "control": 3956,
+        "other": 1473
+      },
+      {
+        "round": 4,
+        "control": 3738,
+        "other": 1061
+      }
+    ],
+    "par-reboot": [
+      {
+        "round": 0,
+        "control": 765,
+        "other": 1267
+      },
+      {
+        "round": 1,
+        "control": 997,
+        "other": 1196
+      },
+      {
+        "round": 2,
+        "control": 1034,
+        "other": 869
+      },
+      {
+        "round": 3,
+        "control": 1061,
+        "other": 1128
+      },
+      {
+        "round": 4,
+        "control": 1095,
+        "other": 1099
+      }
+    ]
+  },
+  "phases": [
+    {
+      "arm": "control",
+      "object": "control-0-f06601fc",
+      "phase": "heap-status",
+      "status": 200,
+      "cpuMs": 1,
+      "heapRestore": {
+        "restored": false,
+        "reason": "no snapshot for this pack generation",
+        "droppedStale": 0
+      },
+      "latest": null,
+      "imagedGeneration": null,
+      "enabled": true
+    },
+    {
+      "arm": "control",
+      "object": "control-0-f06601fc",
+      "phase": "idle-30",
+      "status": 200,
+      "wallMs": 207.28270799999882,
+      "cpuMs": 51,
+      "idleMs": 30208,
+      "moduleTag": "c54d2f65",
+      "objectTag": "7f219c9b",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-0-f06601fc",
+      "phase": "idle-30",
+      "status": 200,
+      "wallMs": 537.513082999998,
+      "cpuMs": 63,
+      "idleMs": 30539,
+      "moduleTag": "dc94d28d",
+      "objectTag": "ef992d26",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-1-f06601fc",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 229.25991600000998,
+      "cpuMs": 64,
+      "idleMs": 90231,
+      "moduleTag": "9d6344c4",
+      "objectTag": "e5c4318a",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-4-f06601fc",
+      "phase": "idle-30",
+      "status": 200,
+      "wallMs": 724.288125000021,
+      "cpuMs": 68,
+      "idleMs": 30742,
+      "moduleTag": "272aebaa",
+      "objectTag": "a2c68cf3",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-1-f06601fc",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 226.27399999997579,
+      "cpuMs": 65,
+      "idleMs": 90229,
+      "moduleTag": "a82eb3ad",
+      "objectTag": "3481a46e",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-4-f06601fc",
+      "phase": "idle-30",
+      "status": 200,
+      "wallMs": 183.7501250000205,
+      "cpuMs": 55,
+      "idleMs": 30186,
+      "moduleTag": "34e419af",
+      "objectTag": "cc69d96c",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-3-f06601fc",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 765.3897920000018,
+      "cpuMs": 68,
+      "idleMs": 90785,
+      "moduleTag": "0d7cdc3d",
+      "objectTag": "c47e2840",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-3-f06601fc",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 276.7864160000172,
+      "cpuMs": 65,
+      "idleMs": 90279,
+      "moduleTag": "4adf92e7",
+      "objectTag": "760ba851",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-2-f06601fc",
+      "phase": "idle-150",
+      "status": 200,
+      "wallMs": 607.2513750000508,
+      "cpuMs": 68,
+      "idleMs": 150612,
+      "moduleTag": "e9c4ac92",
+      "objectTag": "8b833e69",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-2-f06601fc",
+      "phase": "idle-150",
+      "status": 200,
+      "wallMs": 666.8878750000149,
+      "cpuMs": 47,
+      "idleMs": 150669,
+      "moduleTag": "73d3ade8",
+      "objectTag": "416d2a0b",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    }
+  ],
+  "failure": null
+}

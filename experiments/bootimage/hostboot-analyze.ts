@@ -30,7 +30,7 @@ export const range = (values: number[]) => ({
 export interface StepRow {
 	arm: string;
 	object: string;
-	kind: 'migrate' | 'seed' | 'measure' | 'csrf';
+	kind: 'migrate' | 'seed' | 'measure' | 'csrf' | 'deliver' | 'phase';
 	tag?: string;
 	status?: number;
 	wallMs?: number;
@@ -41,6 +41,8 @@ export interface StepRow {
 	token?: string;
 	rowsWritten?: number;
 	error?: string;
+	delivery?: Record<string, any>;
+	phase?: string;
 }
 
 /** the Durable Object invocation of a tagged request, from a tail file */
@@ -150,6 +152,21 @@ export interface Budget {
 	maxRequestsPerArm: number;
 }
 
+/** the stop rule; each limit may be lowered through the environment and never has a higher default */
+export function budgetFromEnv(env: Record<string, string | undefined>): Budget {
+	const limit = (name: string, fallback: number) => {
+		const value = Number(env[name] ?? fallback);
+		if (!Number.isFinite(value) || value <= 0 || value > fallback)
+			throw new RangeError(`${name} must be a number from 1 to ${fallback}`);
+		return value;
+	};
+	return {
+		maxRowsWritten: limit('HOSTBOOT_MAX_ROWS', 60_000),
+		maxRequests: limit('HOSTBOOT_MAX_REQUESTS', 500),
+		maxRequestsPerArm: limit('HOSTBOOT_MAX_ARM_REQUESTS', 40)
+	};
+}
+
 /** whether another object may start, given what has been spent */
 export function withinBudget(
 	budget: Budget,
@@ -165,23 +182,57 @@ export function withinBudget(
 /** the per-arm summary of one run, from its step rows and the tail file of each arm */
 export function summarizeRun(rows: StepRow[], tails: Record<string, string>) {
 	const summary: Record<string, any> = { arms: {}, outcomes: {}, saving: {}, pairs: {} };
-	for (const suffix of ['', '-reboot']) {
+	const everyTail = Object.values(tails).join('\n');
+	for (const suffix of ['', '-reboot', '-serve']) {
 		for (const arm of Object.keys(tails)) {
 			if (!rows.some((row) => row.arm === `${arm}${suffix}`)) continue;
 			summary.arms[`${arm}${suffix}`] = summarizeArm(`${arm}${suffix}`, rows, tails[arm]!);
 		}
 		const control = summary.arms[`control${suffix}`];
-		const baked = summary.arms[`baked${suffix}`];
-		if (control && baked) {
-			summary.saving[suffix || '-first'] = saving(control, baked);
-			summary.pairs[suffix || '-first'] = pairedCpu(
+		if (!control) continue;
+		for (const arm of Object.keys(tails)) {
+			const other = summary.arms[`${arm}${suffix}`];
+			if (arm === 'control' || !other) continue;
+			summary.saving[`${arm}${suffix || '-first'}`] = saving(control, other);
+			summary.pairs[`${arm}${suffix || '-first'}`] = pairedCpu(
 				rows,
-				`${tails.control}${tails.baked}`,
+				everyTail,
 				`control${suffix}`,
-				`baked${suffix}`
+				`${arm}${suffix}`
 			);
 		}
 	}
 	for (const arm of Object.keys(tails)) summary.outcomes[arm] = outcomes(tails[arm]!);
+	const deliveries = rows.filter((row) => row.kind === 'deliver');
+	if (deliveries.length) {
+		const tail = Object.values(tails).join('\n');
+		const joined = cpuByTag(
+			tail,
+			deliveries.map((row) => row.tag!)
+		);
+		summary.delivery = deliveries.map((row) => ({
+			tag: row.tag,
+			status: row.status,
+			wallMs: row.wallMs,
+			cpuMs: joined[row.tag!]?.cpuMs ?? null,
+			...row.delivery
+		}));
+	}
+	const phases = rows.filter((row) => row.kind === 'phase');
+	if (phases.length) {
+		const joined = cpuByTag(
+			Object.values(tails).join('\n'),
+			phases.map((row) => row.tag!)
+		);
+		summary.phases = phases.map((row) => ({
+			arm: row.arm,
+			object: row.object,
+			phase: row.phase,
+			status: row.status,
+			wallMs: row.wallMs,
+			cpuMs: joined[row.tag!]?.cpuMs ?? null,
+			...row.delivery
+		}));
+	}
 	return summary;
 }

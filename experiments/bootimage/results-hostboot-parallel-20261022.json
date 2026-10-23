@@ -1,0 +1,667 @@
+{
+  "run": "cfw-folio-hostboot-fac061b9",
+  "budget": {
+    "maxRowsWritten": 60000,
+    "maxRequests": 500,
+    "maxRequestsPerArm": 40
+  },
+  "spent": {
+    "rowsWritten": 43308,
+    "requests": 97,
+    "perArm": {
+      "control": 33,
+      "seq": 32,
+      "par": 32
+    }
+  },
+  "variants": {
+    "control": "v-control",
+    "seq": "v-asset",
+    "par": "v-par"
+  },
+  "arms": {
+    "control": {
+      "arm": "control",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 3368,
+        "min": 2643,
+        "max": 3834
+      },
+      "wall": {
+        "n": 4,
+        "median": 4441.9300629999925,
+        "min": 3083.090333,
+        "max": 4713.816041000013
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "7d4aaae1c6051269"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": [
+        "gDEb8fHxyRXBGDQk_hqGjq2autBngsFz00yUEK5ykdk"
+      ]
+    },
+    "par": {
+      "arm": "par",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 944.5,
+        "min": 889,
+        "max": 1132
+      },
+      "wall": {
+        "n": 4,
+        "median": 1817.2316249999858,
+        "min": 1451.506040999986,
+        "max": 2926.0615829999733
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "7d4aaae1c6051269"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "gDEb8fHxyRXBGDQk_hqGjq2autBngsFz00yUEK5ykdk"
+      ]
+    },
+    "seq": {
+      "arm": "seq",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 1057.5,
+        "min": 913,
+        "max": 1431
+      },
+      "wall": {
+        "n": 4,
+        "median": 2342.2493954999954,
+        "min": 1886.1732499999925,
+        "max": 6266.395290999993
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "7d4aaae1c6051269"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "gDEb8fHxyRXBGDQk_hqGjq2autBngsFz00yUEK5ykdk"
+      ]
+    },
+    "control-reboot": {
+      "arm": "control-reboot",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 868.5,
+        "min": 812,
+        "max": 1127
+      },
+      "wall": {
+        "n": 4,
+        "median": 1085.5205829999904,
+        "min": 948.9803749999846,
+        "max": 1265.3525419999787
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": []
+    },
+    "par-reboot": {
+      "arm": "par-reboot",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 581,
+        "min": 553,
+        "max": 819
+      },
+      "wall": {
+        "n": 4,
+        "median": 950.6311669999704,
+        "min": 876.7335829999938,
+        "max": 1369.3379589999968
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    },
+    "seq-reboot": {
+      "arm": "seq-reboot",
+      "objects": 4,
+      "cpu": {
+        "n": 4,
+        "median": 658.5,
+        "min": 451,
+        "max": 879
+      },
+      "wall": {
+        "n": 4,
+        "median": 1315.2858540000016,
+        "min": 887.6927499999874,
+        "max": 1484.7630000000063
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    }
+  },
+  "outcomes": {
+    "control": {
+      "ok": 64
+    },
+    "par": {
+      "ok": 62
+    },
+    "seq": {
+      "ok": 62
+    }
+  },
+  "saving": {
+    "par-first": {
+      "cpuRatio": 0.2804334916864608,
+      "cpuSavingPercent": 71.95665083135393,
+      "wallRatio": 0.4091085629953983,
+      "wallSavingPercent": 59.08914370046017
+    },
+    "seq-first": {
+      "cpuRatio": 0.31398456057007124,
+      "cpuSavingPercent": 68.60154394299288,
+      "wallRatio": 0.5273044289936627,
+      "wallSavingPercent": 47.26955710063373
+    },
+    "par-reboot": {
+      "cpuRatio": 0.6689694876223373,
+      "cpuSavingPercent": 33.103051237766266,
+      "wallRatio": 0.8757375787134004,
+      "wallSavingPercent": 12.42624212865996
+    },
+    "seq-reboot": {
+      "cpuRatio": 0.7582037996545768,
+      "cpuSavingPercent": 24.179620034542314,
+      "wallRatio": 1.2116636704990174,
+      "wallSavingPercent": -21.166367049901737
+    }
+  },
+  "pairs": {
+    "par-first": [
+      {
+        "round": 0,
+        "control": 3056,
+        "other": 959
+      },
+      {
+        "round": 1,
+        "control": 2643,
+        "other": 1132
+      },
+      {
+        "round": 2,
+        "control": 3680,
+        "other": 889
+      },
+      {
+        "round": 3,
+        "control": 3834,
+        "other": 930
+      }
+    ],
+    "seq-first": [
+      {
+        "round": 0,
+        "control": 3056,
+        "other": 1011
+      },
+      {
+        "round": 1,
+        "control": 2643,
+        "other": 913
+      },
+      {
+        "round": 2,
+        "control": 3680,
+        "other": 1104
+      },
+      {
+        "round": 3,
+        "control": 3834,
+        "other": 1431
+      }
+    ],
+    "par-reboot": [
+      {
+        "round": 0,
+        "control": 875,
+        "other": 599
+      },
+      {
+        "round": 1,
+        "control": 812,
+        "other": 819
+      },
+      {
+        "round": 2,
+        "control": 862,
+        "other": 553
+      },
+      {
+        "round": 3,
+        "control": 1127,
+        "other": 563
+      }
+    ],
+    "seq-reboot": [
+      {
+        "round": 0,
+        "control": 875,
+        "other": 668
+      },
+      {
+        "round": 1,
+        "control": 812,
+        "other": 451
+      },
+      {
+        "round": 2,
+        "control": 862,
+        "other": 649
+      },
+      {
+        "round": 3,
+        "control": 1127,
+        "other": 879
+      }
+    ]
+  },
+  "phases": [
+    {
+      "arm": "control",
+      "object": "control-0-fac061b9",
+      "phase": "heap-status",
+      "status": 200,
+      "cpuMs": 2,
+      "heapRestore": {
+        "restored": false,
+        "reason": "no snapshot for this pack generation",
+        "droppedStale": 0
+      },
+      "latest": null,
+      "imagedGeneration": null,
+      "enabled": true
+    },
+    {
+      "arm": "control",
+      "object": "control-0-fac061b9",
+      "phase": "drop",
+      "status": 200,
+      "wallMs": 140.06408399999782,
+      "cpuMs": 1,
+      "baked": false
+    },
+    {
+      "arm": "control",
+      "object": "control-0-fac061b9",
+      "phase": "boot-only",
+      "status": 200,
+      "wallMs": 615.0328750000044,
+      "cpuMs": 335,
+      "bootMs": 0
+    },
+    {
+      "arm": "control",
+      "object": "control-0-fac061b9",
+      "phase": "render-warm",
+      "status": 200,
+      "wallMs": 764.740208999996,
+      "cpuMs": 539,
+      "baked": false,
+      "runMs": 0
+    },
+    {
+      "arm": "seq",
+      "object": "seq-0-fac061b9",
+      "phase": "drop",
+      "status": 200,
+      "wallMs": 117.2910419999971,
+      "cpuMs": 1,
+      "baked": true
+    },
+    {
+      "arm": "seq",
+      "object": "seq-0-fac061b9",
+      "phase": "boot-only",
+      "status": 200,
+      "wallMs": 884.4916669999948,
+      "cpuMs": 392,
+      "bootMs": 500
+    },
+    {
+      "arm": "seq",
+      "object": "seq-0-fac061b9",
+      "phase": "render-warm",
+      "status": 200,
+      "wallMs": 145.4215410000179,
+      "cpuMs": 73,
+      "baked": true,
+      "runMs": 0
+    },
+    {
+      "arm": "control",
+      "object": "control-0-fac061b9",
+      "phase": "idle-30",
+      "status": 200,
+      "wallMs": 542.9114169999957,
+      "cpuMs": 47,
+      "idleMs": 30544,
+      "moduleTag": "956395d5",
+      "objectTag": "5271c1b9",
+      "bootCalls": 3,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-0-fac061b9",
+      "phase": "drop",
+      "status": 200,
+      "wallMs": 72.85062499999185,
+      "cpuMs": 1,
+      "baked": true
+    },
+    {
+      "arm": "par",
+      "object": "par-0-fac061b9",
+      "phase": "boot-only",
+      "status": 200,
+      "wallMs": 711.7713330000115,
+      "cpuMs": 407,
+      "bootMs": 148
+    },
+    {
+      "arm": "par",
+      "object": "par-0-fac061b9",
+      "phase": "render-warm",
+      "status": 200,
+      "wallMs": 216.40583299999707,
+      "cpuMs": 54,
+      "baked": true,
+      "runMs": 0
+    },
+    {
+      "arm": "seq",
+      "object": "seq-0-fac061b9",
+      "phase": "idle-30",
+      "status": 200,
+      "wallMs": 271.7047500000044,
+      "cpuMs": 122,
+      "idleMs": 30278,
+      "moduleTag": "294d75f0",
+      "objectTag": "f87b8df9",
+      "bootCalls": 3,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-0-fac061b9",
+      "phase": "idle-30",
+      "status": 200,
+      "wallMs": 885.4159170000057,
+      "cpuMs": 98,
+      "idleMs": 30888,
+      "moduleTag": "b3d14f85",
+      "objectTag": "a6510cc1",
+      "bootCalls": 3,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "seq",
+      "object": "seq-1-fac061b9",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 927.3253750000149,
+      "cpuMs": 343,
+      "idleMs": 90931,
+      "moduleTag": "9d857d57",
+      "objectTag": "2970349e",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-1-fac061b9",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 1319.1580409999588,
+      "cpuMs": 771,
+      "idleMs": 91321,
+      "moduleTag": "c3d7e835",
+      "objectTag": "dc07d757",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-1-fac061b9",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 2131.532542000001,
+      "cpuMs": 1292,
+      "idleMs": 92134,
+      "moduleTag": "29609d8c",
+      "objectTag": "e84013c5",
+      "bootCalls": 1,
+      "moduleTagKept": false,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-3-fac061b9",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 762.8242500000051,
+      "cpuMs": 246,
+      "idleMs": 90769,
+      "moduleTag": "863922fc",
+      "objectTag": "68822244",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "seq",
+      "object": "seq-3-fac061b9",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 728.0628750000033,
+      "cpuMs": 482,
+      "idleMs": 90730,
+      "moduleTag": "ac373fc9",
+      "objectTag": "cea0d83b",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-3-fac061b9",
+      "phase": "idle-90",
+      "status": 200,
+      "wallMs": 609.2198750000098,
+      "cpuMs": 335,
+      "idleMs": 90612,
+      "moduleTag": "0b8d51dd",
+      "objectTag": "e3c98895",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "par",
+      "object": "par-2-fac061b9",
+      "phase": "idle-150",
+      "status": 200,
+      "wallMs": 1075.2614170000306,
+      "cpuMs": 368,
+      "idleMs": 151080,
+      "moduleTag": "c49cb406",
+      "objectTag": "167b19e1",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "control",
+      "object": "control-2-fac061b9",
+      "phase": "idle-150",
+      "status": 200,
+      "wallMs": 703.9222500000033,
+      "cpuMs": 296,
+      "idleMs": 150734,
+      "moduleTag": "606fcd8d",
+      "objectTag": "9bccb4a6",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    },
+    {
+      "arm": "seq",
+      "object": "seq-2-fac061b9",
+      "phase": "idle-150",
+      "status": 200,
+      "wallMs": 693.1619169999612,
+      "cpuMs": 434,
+      "idleMs": 150696,
+      "moduleTag": "4e4cd21d",
+      "objectTag": "5a38c42c",
+      "bootCalls": 2,
+      "moduleTagKept": true,
+      "objectTagKept": false,
+      "bootCallsFirst": 1
+    }
+  ],
+  "failure": null
+}

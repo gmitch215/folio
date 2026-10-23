@@ -1,0 +1,398 @@
+{
+  "run": "cfw-folio-hostboot-a49e09f7",
+  "budget": {
+    "maxRowsWritten": 60000,
+    "maxRequests": 500,
+    "maxRequestsPerArm": 40
+  },
+  "spent": {
+    "rowsWritten": 36090,
+    "requests": 75,
+    "perArm": {
+      "control": 38,
+      "baked": 37
+    }
+  },
+  "variants": {
+    "control": "v-control",
+    "baked": "v-asset"
+  },
+  "arms": {
+    "control": {
+      "arm": "control",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 2837,
+        "min": 2375,
+        "max": 3704
+      },
+      "wall": {
+        "n": 5,
+        "median": 3606.9881669999886,
+        "min": 2665.341207999998,
+        "max": 5460.586916999993
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "66b8e5d6f2168a93"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": [
+        "Zxoi1Om-I9oUmj0qhxbnJGJX-0dU8IqDdqNKNUlIfOU"
+      ]
+    },
+    "baked": {
+      "arm": "baked",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 1139,
+        "min": 1046,
+        "max": 1449
+      },
+      "wall": {
+        "n": 5,
+        "median": 2162.755999999994,
+        "min": 1768.3640829999931,
+        "max": 3231.829249999995
+      },
+      "missingCpu": [],
+      "bodyHashes": [
+        "66b8e5d6f2168a93"
+      ],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": [
+        "Zxoi1Om-I9oUmj0qhxbnJGJX-0dU8IqDdqNKNUlIfOU"
+      ]
+    },
+    "control-reboot": {
+      "arm": "control-reboot",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 789,
+        "min": 637,
+        "max": 999
+      },
+      "wall": {
+        "n": 5,
+        "median": 939.9525409999915,
+        "min": 768.3744580000057,
+        "max": 1251.877290999997
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tokens": []
+    },
+    "baked-reboot": {
+      "arm": "baked-reboot",
+      "objects": 5,
+      "cpu": {
+        "n": 5,
+        "median": 637,
+        "min": 634,
+        "max": 736
+      },
+      "wall": {
+        "n": 5,
+        "median": 1360.1397920000018,
+        "min": 1219.4566660000128,
+        "max": 1498.4280830000062
+      },
+      "missingCpu": [],
+      "bodyHashes": [],
+      "statuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "bytes": [
+        17686,
+        17686,
+        17686,
+        17686,
+        17686
+      ],
+      "warm": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tokens": []
+    }
+  },
+  "outcomes": {
+    "control": {
+      "ok": 74
+    },
+    "baked": {
+      "ok": 72
+    }
+  },
+  "saving": {
+    "-first": {
+      "cpuRatio": 0.40148043708142406,
+      "cpuSavingPercent": 59.8519562918576,
+      "wallRatio": 0.5996016343460328,
+      "wallSavingPercent": 40.039836565396726
+    },
+    "-reboot": {
+      "cpuRatio": 0.8073510773130546,
+      "cpuSavingPercent": 19.264892268694545,
+      "wallRatio": 1.44703028362792,
+      "wallSavingPercent": -44.70302836279201
+    }
+  },
+  "pairs": {
+    "-first": [
+      {
+        "round": 0,
+        "control": 3586,
+        "other": 1139
+      },
+      {
+        "round": 1,
+        "control": 2837,
+        "other": 1291
+      },
+      {
+        "round": 2,
+        "control": 2810,
+        "other": 1064
+      },
+      {
+        "round": 3,
+        "control": 2375,
+        "other": 1046
+      },
+      {
+        "round": 4,
+        "control": 3704,
+        "other": 1449
+      }
+    ],
+    "-reboot": [
+      {
+        "round": 0,
+        "control": 789,
+        "other": 634
+      },
+      {
+        "round": 1,
+        "control": 999,
+        "other": 635
+      },
+      {
+        "round": 2,
+        "control": 738,
+        "other": 675
+      },
+      {
+        "round": 3,
+        "control": 637,
+        "other": 637
+      },
+      {
+        "round": 4,
+        "control": 876,
+        "other": 736
+      }
+    ]
+  },
+  "phases": [
+    {
+      "arm": "control",
+      "object": "control-0-a49e09f7",
+      "phase": "heap-status",
+      "status": 200,
+      "cpuMs": 1,
+      "heapRestore": {
+        "restored": false,
+        "reason": "no snapshot for this pack generation",
+        "droppedStale": 0
+      },
+      "latest": null,
+      "imagedGeneration": null,
+      "enabled": true
+    },
+    {
+      "arm": "control",
+      "object": "control-0-a49e09f7",
+      "phase": "drop",
+      "status": 200,
+      "wallMs": 54.701708000007784,
+      "cpuMs": 1,
+      "baked": false
+    },
+    {
+      "arm": "control",
+      "object": "control-0-a49e09f7",
+      "phase": "boot-only",
+      "status": 200,
+      "wallMs": 424.8589579999971,
+      "cpuMs": 338,
+      "bootMs": 46
+    },
+    {
+      "arm": "control",
+      "object": "control-0-a49e09f7",
+      "phase": "render-warm",
+      "status": 200,
+      "wallMs": 792.6760420000064,
+      "cpuMs": 641,
+      "baked": false,
+      "runMs": 0
+    },
+    {
+      "arm": "baked",
+      "object": "baked-0-a49e09f7",
+      "phase": "drop",
+      "status": 200,
+      "wallMs": 110.31700000001001,
+      "cpuMs": 1,
+      "baked": true
+    },
+    {
+      "arm": "baked",
+      "object": "baked-0-a49e09f7",
+      "phase": "boot-only",
+      "status": 200,
+      "wallMs": 1073.444125000009,
+      "cpuMs": 430,
+      "bootMs": 563
+    },
+    {
+      "arm": "baked",
+      "object": "baked-0-a49e09f7",
+      "phase": "render-warm",
+      "status": 200,
+      "wallMs": 255.01091699999233,
+      "cpuMs": 70,
+      "baked": true,
+      "runMs": 0
+    },
+    {
+      "arm": "baked",
+      "object": "baked-1-a49e09f7",
+      "phase": "drop",
+      "status": 200,
+      "wallMs": 66.10116700000071,
+      "cpuMs": 1,
+      "baked": true
+    },
+    {
+      "arm": "baked",
+      "object": "baked-1-a49e09f7",
+      "phase": "boot-only",
+      "status": 200,
+      "wallMs": 3030.595208999992,
+      "cpuMs": 421,
+      "bootMs": 3509
+    },
+    {
+      "arm": "baked",
+      "object": "baked-1-a49e09f7",
+      "phase": "render-warm",
+      "status": 200,
+      "wallMs": 144.26483400000143,
+      "cpuMs": 67,
+      "baked": true,
+      "runMs": 0
+    },
+    {
+      "arm": "control",
+      "object": "control-1-a49e09f7",
+      "phase": "drop",
+      "status": 200,
+      "wallMs": 135.69341700000223,
+      "cpuMs": 1,
+      "baked": false
+    },
+    {
+      "arm": "control",
+      "object": "control-1-a49e09f7",
+      "phase": "boot-only",
+      "status": 200,
+      "wallMs": 651.0980829999899,
+      "cpuMs": 289,
+      "bootMs": 0
+    },
+    {
+      "arm": "control",
+      "object": "control-1-a49e09f7",
+      "phase": "render-warm",
+      "status": 200,
+      "wallMs": 813.9649170000048,
+      "cpuMs": 639,
+      "baked": false,
+      "runMs": 0
+    }
+  ],
+  "failure": null
+}
