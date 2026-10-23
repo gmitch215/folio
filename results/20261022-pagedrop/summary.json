@@ -1,0 +1,864 @@
+{
+  "interpreter": [
+    "95447d3dd001ccbdbb392a6f5f64210380712a76cf22b00487333277414ba6e4:c815ae66de8af38b9e206c42740030f76aa52c4842f3430c7a59f734333edaad"
+  ],
+  "classify": [
+    {
+      "image": "771 delta pages of 1358",
+      "snapshotEqualsDump": true,
+      "allocator": {
+        "name": "dlmalloc 2.8 (32-bit), state at",
+        "state": 4237888,
+        "ok": true,
+        "errors": [],
+        "chunks": 273907,
+        "free": 1474,
+        "linked": 1474
+      },
+      "largestFreeChunks": [
+        32944,
+        32728,
+        26584,
+        17800,
+        17480,
+        17056,
+        16600,
+        15736
+      ],
+      "mixedPages": [
+        {
+          "page": 578,
+          "outsideBytes": 37120
+        },
+        {
+          "page": 1357,
+          "outsideBytes": 16384
+        }
+      ],
+      "stackPages": [
+        577
+      ],
+      "equalRuns": [
+        {
+          "minRun": 64,
+          "bytes": 3230219,
+          "runs": 13926
+        },
+        {
+          "minRun": 256,
+          "bytes": 1270750,
+          "runs": 798
+        },
+        {
+          "minRun": 1024,
+          "bytes": 930981,
+          "runs": 154
+        },
+        {
+          "minRun": 4096,
+          "bytes": 662002,
+          "runs": 32
+        },
+        {
+          "minRun": 16384,
+          "bytes": 527535,
+          "runs": 16
+        }
+      ],
+      "summary": {
+        "deltaPages": {
+          "pages": 771,
+          "bytes": 50528256
+        },
+        "regions": {
+          "data": {
+            "pages": 4,
+            "bytes": 262144
+          },
+          "stack": {
+            "pages": 1,
+            "bytes": 65536
+          },
+          "heap": {
+            "pages": 766,
+            "bytes": 50200576
+          },
+          "beyond": {
+            "pages": 0,
+            "bytes": 0
+          }
+        },
+        "allZero": {
+          "pages": 0,
+          "bytes": 0
+        },
+        "heapBytesByLabel": {
+          "live": 48854316,
+          "free": 717160,
+          "top": 373728,
+          "meta": 1119372
+        },
+        "chunks": {
+          "inuse": {
+            "chunks": 272431,
+            "bytes": 49944040
+          },
+          "free": {
+            "chunks": 1099,
+            "bytes": 66672
+          },
+          "tree": {
+            "chunks": 375,
+            "bytes": 680024
+          },
+          "dv": {
+            "chunks": 1,
+            "bytes": 64
+          },
+          "top": {
+            "chunks": 1,
+            "bytes": 373736
+          }
+        },
+        "pagesWithFreeShareAtLeast": {
+          "0.01": 63,
+          "0.1": 30,
+          "0.5": 12,
+          "0.9": 7
+        },
+        "strict": {
+          "pages": 4,
+          "bytes": 262144
+        },
+        "strictInHeap": {
+          "pages": 4,
+          "bytes": 262144
+        },
+        "droppable": {
+          "pages": 4,
+          "bytes": 262144
+        },
+        "droppableByRegion": {
+          "data": {
+            "pages": 0,
+            "bytes": 0
+          },
+          "stack": {
+            "pages": 0,
+            "bytes": 0
+          },
+          "heap": {
+            "pages": 4,
+            "bytes": 262144
+          },
+          "beyond": {
+            "pages": 0,
+            "bytes": 0
+          }
+        },
+        "unclassified": {
+          "pages": 2,
+          "bytes": 131072
+        },
+        "anomalies": 0
+      }
+    }
+  ],
+  "drops": [
+    {
+      "name": "sound",
+      "droppedPages": 4,
+      "keptPages": 767,
+      "keptBytes": 50266112,
+      "bakedBytes": 63667935,
+      "growthOverPlainMiB": 47.94,
+      "checkEqual": true,
+      "droppedReadFresh": true,
+      "droppedPagesNotInsideFreeBytes": 0,
+      "allocatorOk": true,
+      "allocatorErrors": 0
+    },
+    {
+      "name": "empirical",
+      "droppedPages": 98,
+      "keptPages": 673,
+      "keptBytes": 44105728,
+      "bakedBytes": 57507998,
+      "growthOverPlainMiB": 42.06,
+      "checkEqual": true,
+      "droppedReadFresh": true,
+      "droppedPagesNotInsideFreeBytes": 94,
+      "allocatorOk": false,
+      "allocatorErrors": 20
+    }
+  ],
+  "trials": {
+    "baseline": [
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "baseline-baked-0",
+        "pass": true
+      },
+      {
+        "phase": "baseline-baked-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-1",
+        "pass": true
+      },
+      {
+        "phase": "reference-plain-2",
+        "pass": true
+      }
+    ],
+    "search": {
+      "n": 1529,
+      "pass": 76,
+      "passedPages": 99
+    },
+    "confirm": [
+      {
+        "phase": "confirm-0",
+        "pages": 99,
+        "pass": false
+      },
+      {
+        "phase": "confirm-2",
+        "pages": 99,
+        "pass": false
+      },
+      {
+        "phase": "confirm-1",
+        "pages": 99,
+        "pass": false
+      },
+      {
+        "phase": "confirm-greedy-1",
+        "pages": 97,
+        "pass": true
+      },
+      {
+        "phase": "confirm-greedy-0",
+        "pages": 97,
+        "pass": true
+      },
+      {
+        "phase": "confirm-greedy-2",
+        "pages": 97,
+        "pass": true
+      },
+      {
+        "phase": "confirm-reverify-1",
+        "pages": 98,
+        "pass": true
+      },
+      {
+        "phase": "confirm-reverify-0",
+        "pages": 98,
+        "pass": true
+      },
+      {
+        "phase": "confirm-reverify-2",
+        "pages": 98,
+        "pass": true
+      },
+      {
+        "phase": "check-full 8861-0",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-full 8861-1",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-full 8861-2",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-sound 8871-0",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-sound 8871-1",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-sound 8871-2",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-empirical 8872-0",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-empirical 8872-1",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-empirical 8872-2",
+        "pages": null,
+        "pass": false
+      },
+      {
+        "phase": "check-full-0",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-full-1",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-full-2",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-sound-0",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-sound-1",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-sound-2",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-empirical-0",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-empirical-1",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-empirical-2",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-full-0",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-full-1",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-full-2",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-sound-0",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-sound-1",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-sound-2",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-empirical-0",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-empirical-1",
+        "pages": null,
+        "pass": true
+      },
+      {
+        "phase": "check-empirical-2",
+        "pages": null,
+        "pass": true
+      }
+    ]
+  },
+  "poison": [
+    {
+      "candidates": 771,
+      "clearedPages": 99,
+      "neededPages": 672,
+      "tries": 1495,
+      "confirm": [
+        false,
+        false,
+        false
+      ],
+      "classesOfCleared": {
+        "data": 0,
+        "stack": 1,
+        "heap": 98
+      }
+    }
+  ],
+  "followUp": [
+    {
+      "kind": "greedy",
+      "clearedPages": 97,
+      "refusedPages": 2,
+      "confirm": [
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "kind": "reverify",
+      "clearedPages": 98,
+      "refusedPages": 1,
+      "flipped": 2,
+      "confirm": [
+        true,
+        true,
+        true
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "label": "full",
+      "runs": [
+        true,
+        true,
+        true
+      ],
+      "rekey": {
+        "tokenEqualsPlain": false,
+        "keyHashEqualsPlain": false,
+        "saltHashEqualsPlain": false,
+        "secondObjectTokenEqual": true
+      }
+    },
+    {
+      "label": "sound",
+      "runs": [
+        true,
+        true,
+        true
+      ],
+      "rekey": {
+        "tokenEqualsPlain": false,
+        "keyHashEqualsPlain": false,
+        "saltHashEqualsPlain": false,
+        "secondObjectTokenEqual": true
+      }
+    },
+    {
+      "label": "empirical",
+      "runs": [
+        true,
+        true,
+        true
+      ],
+      "rekey": {
+        "tokenEqualsPlain": false,
+        "keyHashEqualsPlain": false,
+        "saltHashEqualsPlain": false,
+        "secondObjectTokenEqual": true
+      }
+    },
+    {
+      "label": "full",
+      "runs": [
+        true,
+        true,
+        true
+      ],
+      "rekey": {
+        "tokenEqualsPlain": true,
+        "keyHashEqualsPlain": true,
+        "saltHashEqualsPlain": true,
+        "secondObjectTokenEqual": true
+      }
+    },
+    {
+      "label": "sound",
+      "runs": [
+        true,
+        true,
+        true
+      ],
+      "rekey": {
+        "tokenEqualsPlain": true,
+        "keyHashEqualsPlain": true,
+        "saltHashEqualsPlain": true,
+        "secondObjectTokenEqual": true
+      }
+    },
+    {
+      "label": "empirical",
+      "runs": [
+        true,
+        true,
+        true
+      ],
+      "rekey": {
+        "tokenEqualsPlain": true,
+        "keyHashEqualsPlain": true,
+        "saltHashEqualsPlain": true,
+        "secondObjectTokenEqual": true
+      }
+    }
+  ],
+  "cold": [
+    {
+      "label": "plain",
+      "n": 6,
+      "firstWallMs": {
+        "n": 6,
+        "median": 1286,
+        "min": 1205,
+        "max": 1706
+      },
+      "firstRenderMs": {
+        "n": 6,
+        "median": 1015,
+        "min": 990,
+        "max": 1206
+      },
+      "rebootWallMs": {
+        "n": 6,
+        "median": 470,
+        "min": 451,
+        "max": 542
+      },
+      "load1": {
+        "n": 6,
+        "median": 5.259765625,
+        "min": 5.072265625,
+        "max": 5.259765625
+      },
+      "bodies": [
+        "0b6113a33d7a60a8",
+        "161c49399615adf6"
+      ]
+    },
+    {
+      "label": "full",
+      "n": 6,
+      "firstWallMs": {
+        "n": 6,
+        "median": 307,
+        "min": 265,
+        "max": 393
+      },
+      "firstRenderMs": {
+        "n": 6,
+        "median": 120,
+        "min": 111,
+        "max": 171
+      },
+      "rebootWallMs": {
+        "n": 6,
+        "median": 215,
+        "min": 173,
+        "max": 302
+      },
+      "load1": {
+        "n": 6,
+        "median": 5.13427734375,
+        "min": 5.07861328125,
+        "max": 5.13427734375
+      },
+      "bodies": [
+        "83988bd2081ac289",
+        "48275738a373bc42"
+      ]
+    },
+    {
+      "label": "sound",
+      "n": 6,
+      "firstWallMs": {
+        "n": 6,
+        "median": 312,
+        "min": 251,
+        "max": 393
+      },
+      "firstRenderMs": {
+        "n": 6,
+        "median": 112,
+        "min": 106,
+        "max": 125
+      },
+      "rebootWallMs": {
+        "n": 6,
+        "median": 167,
+        "min": 160,
+        "max": 202
+      },
+      "load1": {
+        "n": 6,
+        "median": 5.13427734375,
+        "min": 5.072265625,
+        "max": 5.13427734375
+      },
+      "bodies": [
+        "a12eda4679a88192",
+        "19ab2c3a1d0caaaa"
+      ]
+    },
+    {
+      "label": "empirical",
+      "n": 6,
+      "firstWallMs": {
+        "n": 6,
+        "median": 342,
+        "min": 273,
+        "max": 571
+      },
+      "firstRenderMs": {
+        "n": 6,
+        "median": 115,
+        "min": 110,
+        "max": 116
+      },
+      "rebootWallMs": {
+        "n": 6,
+        "median": 176,
+        "min": 172,
+        "max": 189
+      },
+      "load1": {
+        "n": 6,
+        "median": 5.072265625,
+        "min": 4.8828125,
+        "max": 5.13427734375
+      },
+      "bodies": [
+        "9c153e0f66cb6ced",
+        "24b5d0282832a0b6"
+      ]
+    }
+  ],
+  "scans": [
+    {
+      "image": "full.image",
+      "pages": 771,
+      "results": [
+        {
+          "secret": "sentinel.txt#0",
+          "total": 2,
+          "forms": {
+            "raw": 2,
+            "base64": 0,
+            "hex": 0
+          }
+        },
+        {
+          "secret": "sentinel.txt#1",
+          "total": 2,
+          "forms": {
+            "raw": 2,
+            "base64": 0,
+            "hex": 0
+          }
+        },
+        {
+          "secret": "real.txt#0",
+          "total": 0,
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          }
+        },
+        {
+          "secret": "real.txt#1",
+          "total": 0,
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          }
+        }
+      ]
+    },
+    {
+      "image": "sound.image",
+      "pages": 767,
+      "results": [
+        {
+          "secret": "sentinel.txt#0",
+          "total": 2,
+          "forms": {
+            "raw": 2,
+            "base64": 0,
+            "hex": 0
+          }
+        },
+        {
+          "secret": "sentinel.txt#1",
+          "total": 2,
+          "forms": {
+            "raw": 2,
+            "base64": 0,
+            "hex": 0
+          }
+        },
+        {
+          "secret": "real.txt#0",
+          "total": 0,
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          }
+        },
+        {
+          "secret": "real.txt#1",
+          "total": 0,
+          "forms": {
+            "raw": 0,
+            "base64": 0,
+            "hex": 0
+          }
+        }
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "label": "full-image",
+      "moduleBytes": 63930069,
+      "totalUploadKiB": 65958.95,
+      "nonModuleKiB": 3527.24,
+      "limitMiB": 63.9
+    },
+    {
+      "label": "sound-drop",
+      "moduleBytes": 63667935,
+      "totalUploadKiB": 65702.96,
+      "nonModuleKiB": 3527.24,
+      "limitMiB": 63.9
+    },
+    {
+      "label": "empirical-drop",
+      "moduleBytes": 57507998,
+      "totalUploadKiB": 59687.4,
+      "nonModuleKiB": 3527.25,
+      "limitMiB": 63.9
+    }
+  ]
+}
