@@ -691,6 +691,39 @@ test('applyImage refuses a module or context digest that differs, and writes not
 	expect(same(bytesOf(freshMemory), bytesOf(bootedMemory))).toBe(true);
 });
 
+test('applyImage refuses an image with changed globals or table slots unless memoryOnly is set', () => {
+	const { freshMemory, fresh, bootedMemory, booted } = boot();
+	const image = captureImage(bootedMemory, freshMemory, {
+		globals: { booted: globalsOf(booted), fresh: globalsOf(fresh) }
+	});
+	expect(Object.keys(image.globals!)).toEqual(['0', '1', '2']);
+	const code = (target: WebAssembly.Memory, options?: Parameters<typeof applyImage>[2]) => {
+		try {
+			applyImage(target, image, options);
+		} catch (error) {
+			expect(error).toBeInstanceOf(ImageMismatchError);
+			return (error as ImageMismatchError).code;
+		}
+	};
+	const refused = new WebAssembly.Memory({ initial: 4 });
+	expect(code(refused)).toBe('global');
+	expect(code(refused, { memoryOnly: false })).toBe('global');
+	expect(refused.buffer.byteLength).toBe(4 * page);
+	expect(bytesOf(refused).every((value) => value === 0)).toBe(true);
+	expect(code(freshMemory, { memoryOnly: true })).toBeUndefined();
+	expect(same(bytesOf(freshMemory), bytesOf(bootedMemory))).toBe(true);
+	expect(globalsOf(fresh)).toEqual({ 0: 7, 1: 9n, 2: 1.5 });
+	expect(globalsOf(booted)).not.toEqual(globalsOf(fresh));
+	const slots = { ...image, globals: undefined, tableSlots: [3] };
+	expect(() => applyImage(new WebAssembly.Memory({ initial: 4 }), slots)).toThrow(
+		/changed table slot/
+	);
+	applyImage(new WebAssembly.Memory({ initial: 4 }), slots, { memoryOnly: true });
+	const digestFirst = { ...image, module: 'a'.repeat(64) };
+	const target = new WebAssembly.Memory({ initial: 4 });
+	expect(() => applyImage(target, digestFirst, { module: 'b'.repeat(64) })).toThrow(/digest/);
+});
+
 test('bakeModule refuses a module with more than one memory', async () => {
 	const image: MemoryImage = { byteLength: page, pages: [0], data: new Uint8Array(page).fill(1) };
 	const mixed = wasm('(module (import "env" "memory" (memory 1)) (memory 1))');

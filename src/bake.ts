@@ -33,6 +33,14 @@ export interface MemoryImage {
 	tableSlots?: number[];
 }
 
+/** The same thing read from the booted instance and from a fresh instance of the module. */
+export interface BootedAndFresh<T> {
+	/** The value on the instance whose boot sequence has run. */
+	booted: T;
+	/** The value on a fresh instance of the same module. */
+	fresh: T;
+}
+
 /** Values `captureImage` reads from two instances; the caller supplies them. */
 export interface CaptureOptions {
 	/** sha256 hex of the module bytes; `moduleDigest(bytes)` computes it. */
@@ -40,9 +48,17 @@ export interface CaptureOptions {
 	/** The context digest to record in the image. */
 	context?: string;
 	/** Global values read from the booted and the fresh instance, by wasm global index. */
-	globals?: { booted: Record<number, GlobalValue>; fresh: Record<number, GlobalValue> };
+	globals?: BootedAndFresh<Record<number, GlobalValue>>;
 	/** The `__indirect_function_table` of the booted and the fresh instance. */
-	table?: { booted: WebAssembly.Table; fresh: WebAssembly.Table };
+	table?: BootedAndFresh<WebAssembly.Table>;
+}
+
+/** The result of `imagePages`. */
+export interface ImagePages {
+	/** Pages the memory must have to take the image. */
+	memoryPages: number;
+	/** Pages the image carries, each 64 KiB. */
+	deltaPages: number;
 }
 
 /** What `bakeModule` may do beyond its defaults. */
@@ -61,18 +77,36 @@ export interface ApplyExpectation {
 	context?: string;
 }
 
+/** `ApplyExpectation` plus the one switch `applyImage` has. */
+export interface ApplyOptions extends ApplyExpectation {
+	/**
+	 * Copy the memory pages of an image that also records changed globals or table slots. The copy
+	 * does not set them: the instance keeps its fresh values, so it is not a booted instance, and
+	 * only the caller can restore them (a module's own globals cannot be written from outside).
+	 * Without this flag such an image is refused with code `global` or `table`.
+	 */
+	memoryOnly?: boolean;
+}
+
 /** The result of `checkBaked`. */
 export interface BakedCheck {
+	/** True when every image page reads back from the module's data segments unchanged. */
 	equal: boolean;
 	/** Byte offset in memory of the first byte where a baked page differs from the image. */
 	firstDifference?: number;
 }
 
+/**
+ * Why an image does not fit: a wrong module `digest` or `context`, a module with `no-memory` or
+ * several `memories`, an image over the memory `maximum`, or a `global` or `table` change the
+ * operation cannot write.
+ */
 export type ImageMismatchCode =
 	'digest' | 'context' | 'no-memory' | 'memories' | 'maximum' | 'global' | 'table';
 
 /** The image cannot be baked into this module. */
 export class ImageMismatchError extends Error {
+	/** The reason, for a caller that handles one mismatch differently from another. */
 	readonly code: ImageMismatchCode;
 
 	constructor(code: ImageMismatchCode, detail: string) {
@@ -82,10 +116,12 @@ export class ImageMismatchError extends Error {
 	}
 }
 
+/** Why bytes are not an image: a wrong `magic` or `version`, `truncated` input, or `invalid` contents. */
 export type ImageFormatCode = 'magic' | 'version' | 'truncated' | 'invalid';
 
 /** Bytes are not an encoded image, or an image object is inconsistent. */
 export class ImageFormatError extends Error {
+	/** The reason the bytes were rejected. */
 	readonly code: ImageFormatCode;
 
 	constructor(code: ImageFormatCode, detail: string) {
@@ -110,7 +146,7 @@ export async function moduleDigest(bytes: Uint8Array): Promise<string> {
 }
 
 /** Memory size to create for an image, and how many of its pages the image carries. */
-export function imagePages(image: MemoryImage) {
+export function imagePages(image: MemoryImage): ImagePages {
 	return { memoryPages: image.byteLength / pageBytes, deltaPages: image.pages.length };
 }
 
@@ -223,7 +259,9 @@ export function captureImage(
 
 /**
  * Copies the image pages into a live memory, which must hold a fresh instance's contents; the
- * memory grows to the image size first. Globals and table slots are not restored.
+ * memory grows to the image size first. Globals and table slots are not restored, so an image that
+ * records changed ones is refused with `ImageMismatchError` code `global` or `table` unless
+ * `memoryOnly` is set; `bakeModule` is the route that writes changed globals into the module.
  *
  * `expect` names the module and context digests of the site doing the replay. Each one given must
  * equal the image's own, so an image that carries none is refused too; `ImageMismatchError` has
@@ -232,7 +270,7 @@ export function captureImage(
 export function applyImage(
 	memory: WebAssembly.Memory,
 	image: MemoryImage,
-	expect: ApplyExpectation = {}
+	expect: ApplyOptions = {}
 ): void {
 	assertImage(image);
 	for (const [field, code] of [
@@ -244,6 +282,20 @@ export function applyImage(
 			throw new ImageMismatchError(
 				code,
 				`replay expects ${field} ${wanted}, image has ${image[field] ?? 'none'}`
+			);
+	}
+	if (!expect.memoryOnly) {
+		const globals = Object.keys(image.globals ?? {}).length;
+		if (globals)
+			throw new ImageMismatchError(
+				'global',
+				`the image records ${globals} changed global(s) that applyImage cannot set; use bakeModule or pass memoryOnly`
+			);
+		const slots = image.tableSlots?.length ?? 0;
+		if (slots)
+			throw new ImageMismatchError(
+				'table',
+				`the image records ${slots} changed table slot(s) that applyImage cannot set; use bakeModule or pass memoryOnly`
 			);
 	}
 	const needed = image.byteLength / pageBytes;
