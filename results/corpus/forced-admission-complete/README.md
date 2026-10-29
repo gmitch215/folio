@@ -22,7 +22,7 @@ retained in `m6502-capped.jsonl`), and a separate run with a 900 second cap comp
 
 The eleven speculative cases are AES-CBC decrypt, AES-CTR, LZ4 compress, MD5, miniz compress and
 decompress, QOI encode and decode, SHA-1, SHA-256 and the 6502 emulator. At width 8 their wall time
-is between 110 and 45,000 times native: 0.06 ms native against 2,899 ms for QOI decode, 0.2 ms
+is between 108 and 45,645 times native by paired median: 0.06 ms native against 2,899 ms for QOI decode, 0.2 ms
 against 6,987 ms for the 6502 emulator, 0.2 ms against 225 ms for SHA-256. They split work into
 thousands of regions (67,600 for SHA-256, 77,824 for AES-CTR, 170,390 for the 6502 emulator), each far smaller than the cost of
 dispatching it.

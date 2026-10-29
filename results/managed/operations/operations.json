@@ -1,0 +1,1279 @@
+{
+  "schema": "folio.managed-operations.v1",
+  "storedSha256": "4e644416cc38a4a80ac8f1e8da4b0efa5e269f55e09d0d58ed5d1c0a6c37d345",
+  "invocations": 36,
+  "completeCpuInvocations": 35,
+  "scope": "width four, 64 regions of 2,097,152 rounds, direct calls in one invocation; costs are differences between invocations that ran 0, 1 and 5 operations after the same setup",
+  "costs": {
+    "128/false": {
+      "invocations": 9,
+      "invocationsWithCpu": 8,
+      "cpuMs": {
+        "setup": 260,
+        "firstUse": 676,
+        "steady": 676
+      },
+      "wallMs": {
+        "setup": 755.6856660000049,
+        "firstUse": 576.5770840000041,
+        "steady": 599.4283957499974
+      },
+      "ownerAwaitMs": {
+        "firstOperation": 619.5,
+        "laterOperation": 419.5
+      },
+      "bytesPerOperation": {
+        "sent": 33572092,
+        "received": 9828
+      },
+      "lanePerOperation": 4
+    },
+    "128/true": {
+      "invocations": 9,
+      "invocationsWithCpu": 9,
+      "cpuMs": {
+        "setup": 285,
+        "firstUse": 706,
+        "steady": 404.5
+      },
+      "wallMs": {
+        "setup": 728.3891670000012,
+        "firstUse": 758.1555419999931,
+        "steady": 424.5728852500033
+      },
+      "ownerAwaitMs": {
+        "firstOperation": 0,
+        "laterOperation": 0
+      },
+      "bytesPerOperation": {
+        "sent": 0,
+        "received": 0
+      },
+      "lanePerOperation": 0
+    },
+    "2/false": {
+      "invocations": 9,
+      "invocationsWithCpu": 9,
+      "cpuMs": {
+        "setup": 258,
+        "firstUse": 315,
+        "steady": 304.25
+      },
+      "wallMs": {
+        "setup": 807.9253330000065,
+        "firstUse": 21.550749999994878,
+        "steady": 155.34822925000117
+      },
+      "ownerAwaitMs": {
+        "firstOperation": 423,
+        "laterOperation": 113
+      },
+      "bytesPerOperation": {
+        "sent": 541948,
+        "received": 9828
+      },
+      "lanePerOperation": 4
+    },
+    "2/true": {
+      "invocations": 9,
+      "invocationsWithCpu": 9,
+      "cpuMs": {
+        "setup": 265,
+        "firstUse": 468,
+        "steady": 210.5
+      },
+      "wallMs": {
+        "setup": 809.9347499999858,
+        "firstUse": 345.571666000018,
+        "steady": 267.1212604999964
+      },
+      "ownerAwaitMs": {
+        "firstOperation": 0,
+        "laterOperation": 0
+      },
+      "bytesPerOperation": {
+        "sent": 0,
+        "received": 0
+      },
+      "lanePerOperation": 0
+    }
+  },
+  "invocationsDetail": [
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 0,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 265,
+      "wallMs": 940.4942079999892,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 1,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 733,
+      "wallMs": 1155.5064160000038,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 5,
+      "repeat": 0,
+      "observedEvents": 26,
+      "expectedEvents": 26,
+      "cpuMs": 3213,
+      "wallMs": 3339.6348339999968,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 640,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 424,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 360,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 351,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 379,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 5,
+      "repeat": 2,
+      "observedEvents": 26,
+      "expectedEvents": 26,
+      "cpuMs": 1874,
+      "wallMs": 1555.2400000000052,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 445,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 110,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 102,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 158,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 136,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 1,
+      "repeat": 0,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 541,
+      "wallMs": 1110.659083000006,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 0,
+      "repeat": 0,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 258,
+      "wallMs": 807.9253330000065,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 0,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 243,
+      "wallMs": 671.4233749999985,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 1,
+      "repeat": 0,
+      "observedEvents": 10,
+      "expectedEvents": 10,
+      "cpuMs": 936,
+      "wallMs": 1336.2295000000013,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 616,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 0,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 253,
+      "wallMs": 712.4671249999956,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 5,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 2961,
+      "wallMs": 3725.203125,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 5,
+      "repeat": 0,
+      "observedEvents": 26,
+      "expectedEvents": 26,
+      "cpuMs": 1790,
+      "wallMs": 1450.869000000006,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 574,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 116,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 121,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 108,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 127,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 0,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 266,
+      "wallMs": 728.3891670000012,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 5,
+      "repeat": 0,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 1507,
+      "wallMs": 2028.7199580000015,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 5,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 2381,
+      "wallMs": 2961.2120409999916,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 5,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 1575,
+      "wallMs": 2223.9914579999895,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 0,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 291,
+      "wallMs": 685.8841660000035,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 1,
+      "repeat": 0,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 774,
+      "wallMs": 1324.8787079999893,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 1,
+      "repeat": 2,
+      "observedEvents": 10,
+      "expectedEvents": 10,
+      "cpuMs": 585,
+      "wallMs": 829.4760830000014,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 344,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 1,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 1242,
+      "wallMs": 1712.8445000000065,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 1,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 991,
+      "wallMs": 1486.5447089999943,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 1,
+      "repeat": 1,
+      "observedEvents": 10,
+      "expectedEvents": 10,
+      "cpuMs": 573,
+      "wallMs": 948.1372089999932,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 480,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 0,
+      "repeat": 0,
+      "observedEvents": 5,
+      "expectedEvents": 6,
+      "cpuMs": null,
+      "wallMs": 755.6856660000049,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 0,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 262,
+      "wallMs": 1111.5516249999928,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 1,
+      "repeat": 2,
+      "observedEvents": 10,
+      "expectedEvents": 10,
+      "cpuMs": 886,
+      "wallMs": 1295.8723750000063,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 610,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 0,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 254,
+      "wallMs": 778.1167080000014,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 5,
+      "repeat": 0,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 2609,
+      "wallMs": 3184.8362500000076,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 1,
+      "repeat": 0,
+      "observedEvents": 10,
+      "expectedEvents": 10,
+      "cpuMs": 556,
+      "wallMs": 813.7486669999926,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 345,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 5,
+      "repeat": 2,
+      "observedEvents": 26,
+      "expectedEvents": 26,
+      "cpuMs": 3852,
+      "wallMs": 3977.8411659999983,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 623,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 334,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 415,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 496,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 501,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 1,
+      "repeat": 1,
+      "observedEvents": 10,
+      "expectedEvents": 10,
+      "cpuMs": 946,
+      "wallMs": 1332.262750000009,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 601,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 0,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 266,
+      "wallMs": 673.0476670000062,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 5,
+      "repeat": 2,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 1659,
+      "wallMs": 2382.2574999999924,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 128,
+      "serial": false,
+      "operations": 5,
+      "repeat": 1,
+      "observedEvents": 26,
+      "expectedEvents": 26,
+      "cpuMs": 3640,
+      "wallMs": 3729.9763329999987,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 661,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 404,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 449,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 465,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 476,
+          "sent": 33572092,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 0,
+      "repeat": 0,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 269,
+      "wallMs": 809.9347499999858,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 128,
+      "serial": true,
+      "operations": 0,
+      "repeat": 0,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 285,
+      "wallMs": 917.7773339999985,
+      "setupAwaitMs": 0,
+      "ops": []
+    },
+    {
+      "pages": 2,
+      "serial": false,
+      "operations": 5,
+      "repeat": 1,
+      "observedEvents": 26,
+      "expectedEvents": 26,
+      "cpuMs": 1747,
+      "wallMs": 1268.6642920000013,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 401,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 102,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 132,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 97,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        },
+        {
+          "ownerAwaitMs": 100,
+          "sent": 541948,
+          "received": 9828,
+          "frames": 4,
+          "mode": "speculative",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    },
+    {
+      "pages": 2,
+      "serial": true,
+      "operations": 1,
+      "repeat": 1,
+      "observedEvents": 6,
+      "expectedEvents": 6,
+      "cpuMs": 746,
+      "wallMs": 1330.9161249999888,
+      "setupAwaitMs": 0,
+      "ops": [
+        {
+          "ownerAwaitMs": 0,
+          "sent": 0,
+          "received": 0,
+          "frames": 0,
+          "mode": "serial",
+          "replayed": 0,
+          "fallbacks": 0,
+          "transportFallbacks": 0
+        }
+      ]
+    }
+  ]
+}

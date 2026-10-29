@@ -11,6 +11,8 @@
 - [Changed-Page Reset](page-reset/README.md)
 - [Reset Policies](reset-policies/README.md)
 - [Varied Inputs](varied-inputs/README.md)
+- [Kernel Results](kernel-results/README.md)
+- [Focused Repeat](focused-repeat/README.md)
 
 Explicit task-batch acceleration and automatic extraction of one entry are separate results. See the
 technical report for the full denominator and reset-policy limits.
