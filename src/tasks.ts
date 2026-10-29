@@ -217,9 +217,23 @@ export class TaskPool {
 		const seq = this.#seq++;
 		const id = `${worker}:${seq}`;
 		const submitMs = now();
-		const request: Request = { id, name, input, submitMs };
-		this.#owner[worker]!.port.postMessage(request);
-		const audited = this.#audit && seq % this.#audit.every! === 0 ? input : undefined;
+		// postMessage shares a SharedArrayBuffer instead of copying it
+		const posted =
+			typeof input !== 'string' && input.buffer instanceof SharedArrayBuffer
+				? Uint8Array.from(input)
+				: input;
+		this.#owner[worker]!.port.postMessage({
+			id,
+			name,
+			input: posted,
+			submitMs
+		} satisfies Request);
+		const sampled = this.#audit && seq % this.#audit.every! === 0;
+		const audited = sampled
+			? typeof input === 'string' || posted !== input
+				? posted
+				: Uint8Array.from(input)
+			: undefined;
 		this.#pending.set(id, {
 			id,
 			worker,

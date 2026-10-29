@@ -202,6 +202,31 @@ test('audit every n checks only the sampled tasks', async () => {
 	assert.deepEqual(seen, ['a', 'c']);
 });
 
+test('tasks and audits retain submitted bytes when the caller reuses a buffer', async () => {
+	const decoder = new TextDecoder();
+	const seen: string[] = [];
+	const pool = await start(1, {
+		audit: {
+			run: (_, input) => {
+				const text = typeof input === 'string' ? input : decoder.decode(input);
+				seen.push(text);
+				return text.toUpperCase();
+			}
+		}
+	});
+	for (const input of [
+		Uint8Array.of(97),
+		Buffer.from('a'),
+		new Uint8Array(new SharedArrayBuffer(1))
+	]) {
+		input[0] = 97;
+		const handle = pool.submit('upper', input);
+		input[0] = 98;
+		assert.equal(pool.join(handle).text(), 'A');
+	}
+	assert.deepEqual(seen, ['a', 'a', 'a']);
+});
+
 test('audit reports a length difference at the end of the shorter output', async () => {
 	const pool = await start(1, { audit: { run: () => 'ABCD' } });
 	const handle = pool.submit('upper', 'abcdef');
