@@ -19,11 +19,13 @@ the same engine.
 - [Managed Workers](#-managed-workers)
 - [Browser Execution and Page Leases](#-browser-execution-and-page-leases)
 - [Task Pool](#-task-pool)
+- [Context Checkpoints](#-context-checkpoints)
 - [Baked Boot Images](#-baked-boot-images)
 - [Execution and Memory](#-execution-and-memory)
 - [API Reference](#-api-reference)
 - [Consumer Harness](#-consumer-harness)
 - [Measured Results](#-measured-results)
+- [Examples](#-examples)
 - [Development](#-development)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -170,7 +172,8 @@ whose `execute(frame)` returns a binary response, and `FolioLane` runs the track
 The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
 ordered byte validation connect independent lanes. A transport failure falls back to native owner
 execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
-must fit the owner runtime. See [the managed procedure](experiments/managed/METHOD.md).
+must fit the owner runtime. Frames carry the whole snapshot. `snapshotEncoding: 'auto'` omits pages
+that are all zero, which saves traffic for sparse arenas and requires lanes from this version. See [the managed procedure](experiments/managed/METHOD.md).
 
 ## 🔗 Browser Execution and Page Leases
 
@@ -244,6 +247,39 @@ tasks ran at the same time.
 The pool does not discover independent work. Region discovery and ordered validation stay in the
 core engine, and the task pool covers programs that can say which calls are independent.
 
+## 🔄 Context Checkpoints
+
+`@gmitch215/folio/context` resets a private Wasm instance between independent jobs.
+`prepareContext(bytes)` from `@gmitch215/folio/compiler` adds exports for every memory, mutable
+numeric global and table, and leaves function bodies and start sections as they are. An
+`InstanceCheckpoint` copies that state once after initialization. `restore()` compares each 64 KiB
+page with the copy, rewrites the pages that differ, and puts back globals and table references.
+`restore('full')` copies every byte instead. Different inputs may dirty different pages, so the
+checkpoint learns no page set from an earlier run.
+
+```ts
+import { prepareContext } from '@gmitch215/folio/compiler';
+import { InstanceCheckpoint } from '@gmitch215/folio/context';
+
+const plan = prepareContext(bytes);
+const instance = new WebAssembly.Instance(new WebAssembly.Module(plan.bytes), imports);
+initialize(instance);
+const checkpoint = new InstanceCheckpoint(instance, plan);
+
+for (const job of jobs) {
+  run(instance, job);
+  checkpoint.restore();
+}
+```
+
+A module that drops a passive data or element segment, uses Wasm GC objects, or holds a reference or
+`v128` global cannot be restored through exports. `prepareContext` then keeps the original bytes and
+lists the causes in `plan.reasons`, and `InstanceCheckpoint` throws so the caller creates a fresh
+instance for each job. Memory or table growth throws `ContextResetError` before anything is
+written, and the caller instantiates a new context. Host resources and the objects behind
+`externref` values stay with the caller. `restore()` reads every page, so its cost follows the memory
+size and not the number of changed pages.
+
 ## 🧊 Baked Boot Images
 
 `@gmitch215/folio/bake` moves a booted memory into the module. `captureImage(booted, fresh)` compares
@@ -269,11 +305,11 @@ const { instance } = await WebAssembly.instantiate(baked, { env: { memory } });
 The caller creates an imported memory with at least `memoryPages` pages. A defined memory that
 starts smaller has its initial pages raised to the image size, and its maximum, shared and memory64
 flags stay as they are. A page that boot zeroed but the module's own data had set is stored as
-zeros, and pages that are zero in both are left out. Pass the global values and the function table
-of both instances to `captureImage` as `globals` and `table` and the image records what boot
+zeros, and pages that are zero in both are left out. Pass the global values and a pre-boot copy of
+the same instance's table references to `captureImage` as `globals` and `table`; it records what boot
 changed. `bakeModule` writes changed i32, i64, f32 and f64 globals into their initial values and
 refuses changed table slots unless `allowTableChanges` is set. It throws `ImageMismatchError`, which
-has a `code`, for a wrong module digest, no memory, an image over the memory maximum and a global it
+has a `code`, for a wrong module digest, a start function, no memory, an image over the memory maximum and a global it
 cannot rewrite. Adjacent pages become one segment of at most `maxSegmentBytes` (64 MiB).
 
 `applyImage(memory, image)` copies the pages into a fresh instance's memory without baking. It
@@ -386,7 +422,9 @@ Run options:
 Pool options are `workers` (up to four by default), `memory`, `imports`, `minimumParallelWork`
 (100,000 estimated iterations for proved kernels), `minimumRegionWork` and `assumedTripCount` (both
 apply when `open` prepares raw bytes), `fuel` (100,000,000), `maxTransactionBytes` (262,144),
-`promising` and `profile`. A one-worker pool uses its native entry and creates no idle
+`promising`, `profile` and `adaptiveRouting`. With `adaptiveRouting`, a call shape (entry, width,
+memory size and numeric arguments) whose last two runs mostly replayed or fell back runs natively
+for the next 16 calls and is then probed again. It is off by default. A one-worker pool uses its native entry and creates no idle
 worker.
 
 Profiling is opt-in. `report.profile` holds elapsed time, worker observations, validation, commit
@@ -410,7 +448,7 @@ bun scripts/analyze/paired.ts mine tinyimg.jsonl
 ```
 
 `FOLIO_OLD_BUILD=1` adds an `old-N` arm per worker count that runs the archived source from before
-static admission (`results/20261020-regress/old-build-src.tar.gz`), alternating with the current
+static admission (`results/execution/admission/old-build-src.tar.gz`), alternating with the current
 build in the same rounds. The summary then reports `versusOld`, the old build's wall time divided by
 the current one.
 
@@ -436,21 +474,28 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 
 ## 📈 Measured Results
 
-| Backend                      | Environment                                                        | Result                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| Node, shared allocation      | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                 | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact |
-| Node, compute kernel         | eight workers, 207 byte-exact samples                              | 7.62x, with total CPU 1.037x of serial                                                             |
-| Node, Drupal regeneration    | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render           |
-| Managed Workers              | deployed Durable Object lanes                                      | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes        |
-| Browser Run                  | deployed Chromium, eight workers on one 256 MiB allocation         | 3.87x with four workers on explicit partitions                                                     |
-| Browser automatic extraction | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                    |
-| Baked boot image             | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm    | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime        |
+| Backend                            | Environment                                                            | Result                                                                                                                                                              |
+| ---------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Node, shared allocation            | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                     | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact                                                                  |
+| Node, compute kernel               | eight workers, 207 byte-exact samples                                  | 7.62x, with total CPU 1.037x of serial                                                                                                                              |
+| Node, Drupal regeneration          | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                    | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render                                                                            |
+| Managed Workers                    | deployed Durable Object lanes                                          | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes                                                                         |
+| Browser Run                        | deployed Chromium, eight workers on one 256 MiB allocation             | 3.87x with four workers on explicit partitions                                                                                                                      |
+| Browser automatic extraction       | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB     | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                     |
+| Baked boot image                   | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm        | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime                                                                         |
+| Independent corpus                 | 21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro | default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native             |
+| Explicit tasks on private contexts | the same 21 kernels, eight batched `TaskPool` workers                  | 18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs |
+| Baked Drupal lifecycle             | Apple M2 Pro, 15 paired rounds, compile through first render           | 830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image                                                  |
 
 A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The
 [technical report](TECHNICAL_REPORT.md) lists every figure with its instrument, the raw samples
 live in [results/](results), and the Cloudflare probes are described in
 [experiments/](experiments/README.md).
+
+## 🧩 Examples
+
+The [examples](examples) run against the built package with `node examples/<name>.ts` after `bun run build:c` and `bun run build`: `basic` runs one entry, `routing` reads the report and shows capped and adaptive routing, `context-reset` resets a private instance between jobs, `task-pool` joins independent jobs in order, and `boot-image` bakes captured memory into a module.
 
 ## 🔧 Development
 
