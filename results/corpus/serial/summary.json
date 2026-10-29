@@ -1,0 +1,6870 @@
+{
+  "schema": "folio.research-summary.v1",
+  "rawSha256": "622a10867fce116c60600107973bc0416bd7d743be24c1c95c2c58288a3a2bc2",
+  "samples": 945,
+  "environments": [
+    {
+      "kind": "environment",
+      "schema": "folio.research.v1",
+      "observedAt": "2026-10-29T06:18:40.193Z",
+      "revision": "b2b67f8f9656ee50c22f44941a6b831a39a77123",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "os": "darwin",
+      "release": "25.5.0",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "load": [
+        5.86865234375,
+        4.2939453125,
+        3.5859375
+      ],
+      "configuration": {
+        "pairs": 9,
+        "widths": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "scope": "one upstream entry; default admission; verification outside timing"
+      },
+      "sources": {
+        "src/bake.ts": "3531f1b70bbe8e8bc4cc6fc61c47b4ad158486729860fd506f01a84b047edb5c",
+        "src/browser-worker.ts": "90786fe738fd92e5d628465cb187d41790668d3fcf6fb0c71d92e761a3c78a3e",
+        "src/browser.ts": "242aa96ecbcdbd3839e647c5fda2537456bcfcad8113415f00d056a703c2dbd4",
+        "src/compiler.ts": "52700448dc6d101723608f2e627ec28b602b571b0418139755da32d53b4a3f7e",
+        "src/coordinator.ts": "6e913cccfee61e09284c3c91aaf4b4f070d579c9ebb5d4bde47a1d657dd04f09",
+        "src/extract.ts": "90f8d7c7ad3ae7c532436d7763f876081315e83cb13f0d31af8c2ee53de7c323",
+        "src/frames.ts": "4c68a0d7d1eac750525c640480dc2162e469f19f8bfb5b8063161138fdaaa273",
+        "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
+        "src/host.ts": "8b0fafb6ef8991778598cc78fd7e10415f49875c30b79c75e4e7eac901c80fed",
+        "src/import-order.ts": "0b725a68bd59f9c0e0a5bc63fcc4c31f08b5f718438e67d271a44f4d7e575905",
+        "src/index.ts": "a8c9f3dfbefa3170329c7950cb58f5e3c20e0f7264affb0ffd3bd1b3c1ba364b",
+        "src/managed.ts": "25a0db53f47d4f870b2b7352195be8473bcbfe5f04724ca3941e854155df2812",
+        "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+        "src/node.ts": "4917b63e83916d021d1f22780e33bd88d29b1d6e9c4c520e6533c990e78b7a0b",
+        "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
+        "src/remote.ts": "16dbba9b681966a2b4040c82fe3ca98c5a171eee25fd8d7ce43edf0bb5222e8d",
+        "src/tasks.ts": "9b3566ef6eacb8c99f3aebf654c3c5d19a7d1475c67b60e2a3f6cddf38afd2c7",
+        "src/transaction.ts": "c4ae45c13c8e980ecb9811f69aedc243561d73d39a6eb855bfeeb51bf600c4f4",
+        "src/values.ts": "56b4c8777a3856441480eee0cb585a2b40e6b03966c3efc245e17a2536196374",
+        "src/worker.ts": "f1ab49593f1ce9bbb39a7adb4727c2cb4c303d74ceccc674474ef1d991ee82e5",
+        "scripts/research/boot-eligibility.ts": "a68e445797305921963b948915f1e89c5ec99ae777eb06f4912c923e1721b2ac",
+        "scripts/research/cases/include/assert.h": "2e0b7e0adab1df0793e150b60890843771f584e8094b3e74fdbd1a6d0d3f4508",
+        "scripts/research/cases/include/int_lib.h": "cf4f25bd15803ccfc1774ccab9ed5228132758cc546e180f9f37f31f65e90931",
+        "scripts/research/cases/include/math.h": "6f6751b2957db0e6615f14371cc3132d0decf54b175e2670be6e8e6de08dfb3b",
+        "scripts/research/cases/include/memory.h": "3234d45b96216a3c36f25932364b800eeadf703964e85fdf25cabacf9aeedc2e",
+        "scripts/research/cases/include/miniz_export.h": "195259dc89fb3f83a96426a90ee03dc45acef113150cd3475ea9cfbf1f7784f3",
+        "scripts/research/cases/include/stdio.h": "0bd8c3e9e8a873b890704afcd45369c8e7d79991be6d2de55ec058264219ae77",
+        "scripts/research/cases/include/stdlib.h": "c328dcb08baa26c16bc8b768b4c0ca32e2b32e94772c419dda8f9fb25e3695bb",
+        "scripts/research/cases/include/string.h": "3db545ced6638221254c50e3d022269170442967dc330f081f9f996d9c4e228a",
+        "scripts/research/cases/kernel.c": "02d4f6651bc6e3000031219de503ce841dd366ffbf38d5ad4b5d004f143a62da",
+        "scripts/research/cases/support.c": "338207e7fe78b4195f707326f24f0416161efb76dd9a8afb765d7d321724602e",
+        "scripts/research/cases/upstream.ts": "74ef77e2bdc5a9bb32ad4057227d34f3ca562df31749dfeba5fdb27d8c6d30ac",
+        "scripts/research/corpus-manifest.json": "8ba08eaab61702d48e80cca5ffa1930c95aa727d9ed8174926305be512b86ce4",
+        "scripts/research/corpus-mechanisms.ts": "012f7dd8ede787f1babeb8eb127a638062a7fa9c79ca52304992a9e90bf3c8c5",
+        "scripts/research/corpus-serial.ts": "e9919c117801a463a9e6d396054401dc77853abef868e6d1991da24e1daf197b",
+        "scripts/research/corpus-worker.ts": "b353da62569963673609aac5f206c76b5ed6fb488bca91c1b5e316ae6f15f69d",
+        "scripts/research/corpus.ts": "54a34b5097f79b84a71517cb6c4a818b6b0994e1cf07233454bd3c7803f79bd5",
+        "scripts/research/crossover-worker.ts": "b21027e6c126644897dfe81b628f10a778317dce348a5654b4079895527906f1",
+        "scripts/research/crossover.ts": "cbc0b44cb685c7e15f9dd44dcbe871cb3ede04245334d58d9c21407e8c61a080",
+        "scripts/research/differential.ts": "88bbe7d94e06f518020db493e5bb1b9ab37f0136a345ec565d9db7100366242f",
+        "scripts/research/environment.ts": "112648033e073bc6f91d1eea836fcbf65d43d0c212532cbfaf8eb50b813b887d",
+        "scripts/research/evidence.ts": "da415d77a6936914c593c707afc0dcd6e865a87eff02e9e91ad87a411e314382"
+      },
+      "sourceDigest": "99495ae31b79516aa1e84b8448978b88b2ad1d63248b3a218447c6f3bd19f79d"
+    },
+    {
+      "kind": "environment",
+      "consumer": "lz4-compress",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 7478,
+      "moduleSha256": "d5f59cf9fcede9938041cb8c8deb28181206c19eacc7726d2dd1dce6501b67c7",
+      "prepareMs": 78.51391699999999,
+      "openMs": {
+        "native": 0.6107920000000036,
+        "folio-1": 1.1674999999999613,
+        "folio-2": 0.49783400000001166,
+        "folio-4": 1.7372500000000173,
+        "folio-8": 0.5492080000000215
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 5,
+      "case": "lz4-compress"
+    },
+    {
+      "kind": "environment",
+      "consumer": "lz4-decompress",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 8661,
+      "moduleSha256": "af546b95f5c907900c16347511a54f9d6ad403e7dc7872178b1e0eb99e70874d",
+      "prepareMs": 73.89883299999997,
+      "openMs": {
+        "native": 0.4420420000000149,
+        "folio-1": 0.5817500000000564,
+        "folio-2": 0.7024169999999685,
+        "folio-4": 0.8159580000000233,
+        "folio-8": 0.5912910000000693
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 6,
+      "case": "lz4-decompress"
+    },
+    {
+      "kind": "environment",
+      "consumer": "miniz-compress",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 22944,
+      "moduleSha256": "0adf9667d5d919c6299cfd84e4fb7b3c4bc550afacedccc70635a4eb36db01e0",
+      "prepareMs": 125.07320799999991,
+      "openMs": {
+        "native": 0.46070800000006784,
+        "folio-1": 0.5870829999998932,
+        "folio-2": 0.6043329999999969,
+        "folio-4": 0.5990840000001754,
+        "folio-8": 0.5109580000000733
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 7,
+      "case": "miniz-compress"
+    },
+    {
+      "kind": "environment",
+      "consumer": "miniz-decompress",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 33305,
+      "moduleSha256": "8d19715d7e8b9ed2d37735d2d9e4e62cdb6c408e50dd7f1e2b9bc07707172de1",
+      "prepareMs": 256.5109580000001,
+      "openMs": {
+        "native": 0.42191700000012133,
+        "folio-1": 0.596958000000086,
+        "folio-2": 0.46250000000009095,
+        "folio-4": 0.5052499999999327,
+        "folio-8": 0.46229200000016135
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 7,
+      "case": "miniz-decompress"
+    },
+    {
+      "kind": "environment",
+      "consumer": "miniz-crc32",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 24195,
+      "moduleSha256": "34ef135202e4f616012e31a84a1cf14970340e2bc392c4bef81f677899776ff3",
+      "prepareMs": 126.80550000000017,
+      "openMs": {
+        "native": 0.48483299999998053,
+        "folio-1": 0.6475000000000364,
+        "folio-2": 0.47795799999994415,
+        "folio-4": 0.4447500000001128,
+        "folio-8": 0.5779159999999592
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 7,
+      "case": "miniz-crc32"
+    },
+    {
+      "kind": "environment",
+      "consumer": "miniz-adler32",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 22879,
+      "moduleSha256": "9e287e6d4f5f37b09406fc139f308e7e24b2c6ef637d21e0dadd88281c9af9be",
+      "prepareMs": 120.72412499999973,
+      "openMs": {
+        "native": 0.48037499999963984,
+        "folio-1": 0.6431669999997212,
+        "folio-2": 0.5139160000003358,
+        "folio-4": 0.43537500000002183,
+        "folio-8": 0.467167000000245
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 7,
+      "case": "miniz-adler32"
+    },
+    {
+      "kind": "environment",
+      "consumer": "jsmn-parse",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 3532,
+      "moduleSha256": "cf577a595fce485e17b0635a2443f46a3ac04fa1fa3923a80242cac733209f6b",
+      "prepareMs": 22.79841600000009,
+      "openMs": {
+        "native": 0.4513749999996435,
+        "folio-1": 0.5655839999999444,
+        "folio-2": 0.4262080000003152,
+        "folio-4": 0.4286659999997937,
+        "folio-8": 0.47691600000007384
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 6,
+      "case": "jsmn-parse"
+    },
+    {
+      "kind": "environment",
+      "consumer": "kissfft-complex",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 4313,
+      "moduleSha256": "761bd0ab1bd412fe06cd45f6e6596024055d241164072254c58e8b6047fa0e94",
+      "prepareMs": 21.214124999999967,
+      "openMs": {
+        "native": 0.4463330000003225,
+        "folio-1": 0.602542000000085,
+        "folio-2": 0.49854199999981574,
+        "folio-4": 0.48866699999962293,
+        "folio-8": 0.5219590000001517
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 2,
+      "case": "kissfft-complex"
+    },
+    {
+      "kind": "environment",
+      "consumer": "kissfft-real",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 5075,
+      "moduleSha256": "b7b8c29bff2679715b12128a5c32784b9a20c84bc395a563c7551124f094d2a8",
+      "prepareMs": 30.635166000000027,
+      "openMs": {
+        "native": 0.7012920000001941,
+        "folio-1": 0.6886250000002292,
+        "folio-2": 0.7195830000000569,
+        "folio-4": 1.5257919999999103,
+        "folio-8": 0.9017080000003261
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 2,
+      "case": "kissfft-real"
+    },
+    {
+      "kind": "environment",
+      "consumer": "aes-cbc-encrypt",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 4109,
+      "moduleSha256": "1870354ce1b7b21bcf99e471f64708169bbf9bc35c4d52f93cba86235b5f4e18",
+      "prepareMs": 25.023666999999932,
+      "openMs": {
+        "native": 0.46604200000001583,
+        "folio-1": 0.5084160000001248,
+        "folio-2": 0.4248330000000351,
+        "folio-4": 0.4559999999996762,
+        "folio-8": 0.42470800000000963
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 4,
+      "case": "aes-cbc-encrypt"
+    },
+    {
+      "kind": "environment",
+      "consumer": "aes-cbc-decrypt",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 6755,
+      "moduleSha256": "8f0d960706545c9b5d53805e3c323a98f5896adacc58e02fe2ccd4aa9667eac9",
+      "prepareMs": 31.683917000000292,
+      "openMs": {
+        "native": 0.5274999999996908,
+        "folio-1": 0.5003750000000764,
+        "folio-2": 0.421875,
+        "folio-4": 0.3887079999999514,
+        "folio-8": 0.3995420000001104
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 6,
+      "case": "aes-cbc-decrypt"
+    },
+    {
+      "kind": "environment",
+      "consumer": "aes-ctr",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 4359,
+      "moduleSha256": "2936e61287514d59babde28c34c680ffb2083062415a2dea71bb7a0e9a5d95e7",
+      "prepareMs": 19.708040999999866,
+      "openMs": {
+        "native": 0.5055839999999989,
+        "folio-1": 0.48716700000022684,
+        "folio-2": 0.4145419999999831,
+        "folio-4": 0.38020800000003874,
+        "folio-8": 0.5715420000001359
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 6,
+      "case": "aes-ctr"
+    },
+    {
+      "kind": "environment",
+      "consumer": "xxhash32",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 1931,
+      "moduleSha256": "c1d5ae0d5c050629361626f011568cefd90ef7fab818e07420d6735748244334",
+      "prepareMs": 9.931040999999823,
+      "openMs": {
+        "native": 0.5225000000000364,
+        "folio-1": 0.5750420000003942,
+        "folio-2": 0.44145899999966787,
+        "folio-4": 0.39029200000004494,
+        "folio-8": 0.3715840000004391
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 3,
+      "case": "xxhash32"
+    },
+    {
+      "kind": "environment",
+      "consumer": "xxhash64",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 2892,
+      "moduleSha256": "ac1f18a34164f4a6385102c1a90dde988c3d32dcf018ea62a4cf7c7da7733fec",
+      "prepareMs": 11.871292000000722,
+      "openMs": {
+        "native": 0.4978339999997843,
+        "folio-1": 0.47537499999998545,
+        "folio-2": 0.3852499999993597,
+        "folio-4": 0.39333299999998417,
+        "folio-8": 0.5905839999995806
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 3,
+      "case": "xxhash64"
+    },
+    {
+      "kind": "environment",
+      "consumer": "xxhash3",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 5032,
+      "moduleSha256": "836badcd3498d8052318da5e4a8859d5377840d93cf906e766c3b7d256aa5e13",
+      "prepareMs": 15.653999999999542,
+      "openMs": {
+        "native": 0.4859999999998763,
+        "folio-1": 0.4627920000002632,
+        "folio-2": 0.5340410000007978,
+        "folio-4": 0.4322500000007494,
+        "folio-8": 0.4195419999996375
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 6,
+      "case": "xxhash3"
+    },
+    {
+      "kind": "environment",
+      "consumer": "qoi-encode",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 2492,
+      "moduleSha256": "c9e5cabf721bd8e7bbd67b7d30e747df40001d680cd27754089e05b97b083acf",
+      "prepareMs": 11.447540999999546,
+      "openMs": {
+        "native": 0.4642499999999927,
+        "folio-1": 0.4517500000001746,
+        "folio-2": 0.5067909999997937,
+        "folio-4": 0.43249999999989086,
+        "folio-8": 0.4137080000000424
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 5,
+      "case": "qoi-encode"
+    },
+    {
+      "kind": "environment",
+      "consumer": "qoi-decode",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 3340,
+      "moduleSha256": "47e8e79fb901d4100ddcbe1479d7cb16f15811582f317fd51cbc5a53dd9d8bed",
+      "prepareMs": 17.915750000000116,
+      "openMs": {
+        "native": 0.5024579999999332,
+        "folio-1": 0.5086250000003929,
+        "folio-2": 0.7390830000003916,
+        "folio-4": 0.7096249999995052,
+        "folio-8": 0.5621250000003783
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 5,
+      "case": "qoi-decode"
+    },
+    {
+      "kind": "environment",
+      "consumer": "sha256",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 2775,
+      "moduleSha256": "fd5145c6c25ddb55de07eb78b4018b5848ef46b53aad22bc86fb90f16723ea77",
+      "prepareMs": 9.788540999999896,
+      "openMs": {
+        "native": 0.5196249999999054,
+        "folio-1": 0.5917909999998301,
+        "folio-2": 0.47225000000071304,
+        "folio-4": 0.4037500000004002,
+        "folio-8": 0.49779099999977916
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 6,
+      "case": "sha256"
+    },
+    {
+      "kind": "environment",
+      "consumer": "sha1",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 2492,
+      "moduleSha256": "a5ae93611caeb7727e03e10d38e7f527385ff35ae2382dd0af17a204859b181b",
+      "prepareMs": 10.005291999999827,
+      "openMs": {
+        "native": 0.4562500000001819,
+        "folio-1": 0.5485000000007858,
+        "folio-2": 0.6192499999997381,
+        "folio-4": 0.5334590000002208,
+        "folio-8": 0.5582080000003771
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 5,
+      "case": "sha1"
+    },
+    {
+      "kind": "environment",
+      "consumer": "md5",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 3688,
+      "moduleSha256": "f905b823e373edcca3bca3c22146c13d53c0db3d69922fd0250919b963d86030",
+      "prepareMs": 15.74591700000019,
+      "openMs": {
+        "native": 0.4937500000005457,
+        "folio-1": 0.6237909999999829,
+        "folio-2": 0.441291000000092,
+        "folio-4": 0.4236659999996846,
+        "folio-8": 0.41629199999988487
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 3,
+      "case": "md5"
+    },
+    {
+      "kind": "environment",
+      "consumer": "m6502",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "moduleBytes": 57873,
+      "moduleSha256": "9a0bf38e171acf38c481692509983520461808ce6d52618d49cef8db797c57db",
+      "prepareMs": 11561.480583,
+      "openMs": {
+        "native": 0.6453750000000582,
+        "folio-1": 0.9230420000021695,
+        "folio-2": 0.5898750000014843,
+        "folio-4": 1.0360000000000582,
+        "folio-8": 0.6592500000006112
+      },
+      "arms": [
+        "native",
+        "folio-1",
+        "folio-2",
+        "folio-4",
+        "folio-8"
+      ],
+      "pairs": 9,
+      "warmup": 2,
+      "functionExports": 3,
+      "diagnostics": 3,
+      "case": "m6502"
+    }
+  ],
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 305419896,
+    "unit": "paired round",
+    "independentReplication": false
+  },
+  "groups": {
+    "lz4-compress": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.022249999999985448,
+          "min": 0.01720799999998235,
+          "max": 0.05441700000005767,
+          "medianCi95": [
+            0.019249999999942702,
+            0.04670899999996436
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.025,
+          "min": 0.018,
+          "max": 0.064,
+          "medianCi95": [
+            0.021,
+            0.052
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1.152099999996109,
+          "min": 0.40810776044166835,
+          "max": 1.6760449438203975,
+          "medianCi95": [
+            0.4516985778783442,
+            1.5137246943020297
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 0.8461538461538461,
+          "min": 0.5208333333333334,
+          "max": 2.56,
+          "medianCi95": [
+            0.6,
+            2.3636363636363638
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.075481844170678,
+          "min": 1.0460251046035833,
+          "max": 1.2555230943842524,
+          "medianCi95": [
+            1.0499999999949865,
+            1.1761030560290382
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.01933299999996052,
+          "min": 0.016917000000034932,
+          "max": 0.034457999999972344,
+          "medianCi95": [
+            0.017042000000060398,
+            0.02791700000000219
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.022,
+          "min": 0.019,
+          "max": 0.042,
+          "medianCi95": [
+            0.019,
+            0.034
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1.2635219010457188,
+          "min": 0.6493412270018246,
+          "max": 1.9289298091375164,
+          "medianCi95": [
+            0.7955009492415395,
+            1.6460137931012933
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 0.8846153846153847,
+          "min": 0.4375,
+          "max": 1.68,
+          "medianCi95": [
+            0.5428571428571428,
+            1.36
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1148926182333447,
+          "min": 1.0482758620658095,
+          "max": 1.2460721638307506,
+          "medianCi95": [
+            1.0862256245819524,
+            1.2178959057204333
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.026917000000025837,
+          "min": 0.017291999999997643,
+          "max": 0.04466700000000401,
+          "medianCi95": [
+            0.017707999999970525,
+            0.04179199999998673
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.032,
+          "min": 0.022,
+          "max": 0.051,
+          "medianCi95": [
+            0.023,
+            0.049
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.8312590556150179,
+          "min": 0.5114615237375897,
+          "max": 1.7253065001188312,
+          "medianCi95": [
+            0.5410482011335405,
+            1.654407524062927
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.28,
+          "min": 0.5416666666666666,
+          "max": 2.2272727272727275,
+          "medianCi95": [
+            0.6285714285714284,
+            1.9615384615384615
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1724732006129297,
+          "min": 1.0728334724038968,
+          "max": 1.298847978317048,
+          "medianCi95": [
+            1.1417825240109123,
+            1.2722646310434305
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.022375000000010914,
+          "min": 0.018707999999946878,
+          "max": 0.03729199999997945,
+          "medianCi95": [
+            0.020499999999969987,
+            0.029834000000050764
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.025,
+          "min": 0.022,
+          "max": 0.048,
+          "medianCi95": [
+            0.022,
+            0.035
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1257204610962261,
+          "min": 1.029239766080207,
+          "max": 1.2871393328334884,
+          "medianCi95": [
+            1.0758472296918689,
+            1.1731581417155075
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.026917000000025837,
+          "min": 0.020125000000007276,
+          "max": 0.043292000000064945,
+          "medianCi95": [
+            0.020624999999995453,
+            0.031416999999919426
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.031,
+          "min": 0.022,
+          "max": 0.047,
+          "medianCi95": [
+            0.022,
+            0.035
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.880608423142305,
+          "min": 0.47352859650603424,
+          "max": 1.8530186335386818,
+          "medianCi95": [
+            0.695025448598615,
+            1.0363636363655406
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.1481481481481481,
+          "min": 0.4583333333333333,
+          "max": 2.0434782608695654,
+          "medianCi95": [
+            0.9714285714285714,
+            1.590909090909091
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0931677018629589,
+          "min": 1.0553191489335563,
+          "max": 1.3002934948161537,
+          "medianCi95": [
+            1.0666666666669018,
+            1.2000171431030924
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "lz4-decompress": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009000000000014552,
+          "min": 0.007583000000067841,
+          "max": 0.01391599999999471,
+          "medianCi95": [
+            0.007624999999961801,
+            0.010541999999986729
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.014,
+          "min": 0.01,
+          "max": 0.017,
+          "medianCi95": [
+            0.011,
+            0.016
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.7950128775455441,
+          "min": 0.5820381664310976,
+          "max": 1.9670315178475033,
+          "medianCi95": [
+            0.6758888888866432,
+            1.5901639344301404
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.307692307692308,
+          "min": 0.5,
+          "max": 1.75,
+          "medianCi95": [
+            0.6666666666666666,
+            1.5
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.4000000000012733,
+          "min": 1.1497556769190918,
+          "max": 1.750000000016513,
+          "medianCi95": [
+            1.180405272473802,
+            1.612597230129141
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009833999999955267,
+          "min": 0.007875000000012733,
+          "max": 0.0236250000000382,
+          "medianCi95": [
+            0.008166999999957625,
+            0.019874999999956344
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.013,
+          "min": 0.01,
+          "max": 0.079,
+          "medianCi95": [
+            0.01,
+            0.029
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6228421052581355,
+          "min": 0.42679365079333,
+          "max": 1.642188704184146,
+          "medianCi95": [
+            0.47798742138483497,
+            1.4846332802781914
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.375,
+          "min": 0.5,
+          "max": 5.266666666666667,
+          "medianCi95": [
+            0.5714285714285714,
+            2.230769230769231
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2698412698392167,
+          "min": 1.1009578333248404,
+          "max": 3.9748427673043283,
+          "medianCi95": [
+            1.1578947368417727,
+            1.5917717644260378
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009332999999969616,
+          "min": 0.00808299999994233,
+          "max": 0.03674999999998363,
+          "medianCi95": [
+            0.008458000000018728,
+            0.02991599999995742
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.013,
+          "min": 0.01,
+          "max": 0.051,
+          "medianCi95": [
+            0.01,
+            0.039
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6847954599096354,
+          "min": 0.3299319727884212,
+          "max": 1.7210107303413735,
+          "medianCi95": [
+            0.42756384543425247,
+            0.7320301868113575
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.625,
+          "min": 0.5,
+          "max": 3.1874999999999996,
+          "medianCi95": [
+            1.25,
+            1.857142857142857
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2857602057258188,
+          "min": 1.1282051282054966,
+          "max": 1.536824683765823,
+          "medianCi95": [
+            1.153801776846817,
+            1.3877551020414345
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009500000000002728,
+          "min": 0.005791999999928521,
+          "max": 0.014915999999971064,
+          "medianCi95": [
+            0.005916999999953987,
+            0.012790999999992891
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.013,
+          "min": 0.008,
+          "max": 0.021,
+          "medianCi95": [
+            0.008,
+            0.02
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.3408420488092518,
+          "min": 1.28929881979458,
+          "max": 1.6417793761247497,
+          "medianCi95": [
+            1.315140555649128,
+            1.578947368420599
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.016999999999939064,
+          "min": 0.008208999999965272,
+          "max": 0.03779199999996763,
+          "medianCi95": [
+            0.0095410000000129,
+            0.02975000000003547
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.023,
+          "min": 0.011,
+          "max": 0.052,
+          "medianCi95": [
+            0.012,
+            0.036
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.48362056687562527,
+          "min": 0.15656752751796824,
+          "max": 1.5633581385547528,
+          "medianCi95": [
+            0.20447058823470157,
+            1.4770373979803109
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.6,
+          "min": 0.6,
+          "max": 6.5,
+          "medianCi95": [
+            0.8125,
+            4.5
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2100840336120025,
+          "min": 0.9814418272653151,
+          "max": 1.5836277256736504,
+          "medianCi95": [
+            1.1394388263858017,
+            1.3759525825583334
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "miniz-compress": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.33029199999987213,
+          "min": 0.32379199999991215,
+          "max": 0.37254200000006676,
+          "medianCi95": [
+            0.3292919999998958,
+            0.33600000000001273
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.338,
+          "min": 0.326,
+          "max": 0.382,
+          "medianCi95": [
+            0.332,
+            0.342
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9852490295026868,
+          "min": 0.9125360362052152,
+          "max": 1.0727040816327436,
+          "medianCi95": [
+            0.9763358778626415,
+            1.018725022169148
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0148367952522255,
+          "min": 0.9340974212034385,
+          "max": 1.1072463768115943,
+          "medianCi95": [
+            0.9912023460410557,
+            1.0212765957446808
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0172816780307428,
+          "min": 1.0058076302019217,
+          "max": 1.026444614506599,
+          "medianCi95": [
+            1.0068191925683416,
+            1.025387741516209
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.33495799999991505,
+          "min": 0.3222910000001775,
+          "max": 0.3858749999999418,
+          "medianCi95": [
+            0.32233399999995527,
+            0.3607079999999314
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.339,
+          "min": 0.324,
+          "max": 0.385,
+          "medianCi95": [
+            0.329,
+            0.359
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1.0025877235167604,
+          "min": 0.8810055069648862,
+          "max": 1.0115502961498422,
+          "medianCi95": [
+            0.9299987801769872,
+            1.0093221939704684
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0030395136778116,
+          "min": 0.9878048780487805,
+          "max": 1.1159420289855073,
+          "medianCi95": [
+            0.9879879879879879,
+            1.0527859237536656
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0120671845427964,
+          "min": 0.995264867982047,
+          "max": 1.0258751902592234,
+          "medianCi95": [
+            0.9977324263040054,
+            1.0237827843170308
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3360419999999067,
+          "min": 0.3228750000000673,
+          "max": 0.3469169999998485,
+          "medianCi95": [
+            0.3250829999999496,
+            0.3457499999999527
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.343,
+          "min": 0.328,
+          "max": 0.352,
+          "medianCi95": [
+            0.33,
+            0.349
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9799404468508971,
+          "min": 0.9545944429022291,
+          "max": 1.0757506775063497,
+          "medianCi95": [
+            0.9615613524506103,
+            0.997345812670739
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0205278592375364,
+          "min": 0.9398280802292265,
+          "max": 1.045731707317073,
+          "medianCi95": [
+            1.0030395136778116,
+            1.0338461538461539
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0151253679831034,
+          "min": 1.0031078430493694,
+          "max": 1.0207057451154775,
+          "medianCi95": [
+            1.006507592191027,
+            1.0185355916721666
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3354580000000169,
+          "min": 0.3197500000001128,
+          "max": 0.34733299999993505,
+          "medianCi95": [
+            0.32312500000011823,
+            0.3399580000000242
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.337,
+          "min": 0.325,
+          "max": 0.349,
+          "medianCi95": [
+            0.328,
+            0.345
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0148312438594633,
+          "min": 1.0045967006301326,
+          "max": 1.0166087292391113,
+          "medianCi95": [
+            1.0047994287904265,
+            1.016520697076781
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3312499999999545,
+          "min": 0.32724999999982174,
+          "max": 0.3530829999999696,
+          "medianCi95": [
+            0.3285000000000764,
+            0.3509590000001026
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.335,
+          "min": 0.33,
+          "max": 0.355,
+          "medianCi95": [
+            0.332,
+            0.351
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9873949579840924,
+          "min": 0.9357702751605637,
+          "max": 1.0234550692874271,
+          "medianCi95": [
+            0.9685725104125358,
+            1.0211811263316253
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0118694362017804,
+          "min": 0.9765395894428153,
+          "max": 1.054054054054054,
+          "medianCi95": [
+            0.9768115942028986,
+            1.0307692307692309
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0083018867925913,
+          "min": 1.0001168227624804,
+          "max": 1.0147671336609383,
+          "medianCi95": [
+            1.0045662100454285,
+            1.0145499101354827
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "miniz-decompress": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05466699999988123,
+          "min": 0.05233399999997346,
+          "max": 0.05720900000005713,
+          "medianCi95": [
+            0.053792000000157714,
+            0.05583400000000438
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.058,
+          "min": 0.055,
+          "max": 0.061,
+          "medianCi95": [
+            0.056,
+            0.06
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.957253886011894,
+          "min": 0.8833184954347839,
+          "max": 1.0015429803670413,
+          "medianCi95": [
+            0.8860038929081612,
+            0.9888409064873681
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0701754385964912,
+          "min": 0.9661016949152543,
+          "max": 1.1428571428571428,
+          "medianCi95": [
+            1,
+            1.1224489795918366
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0596371207583448,
+          "min": 1.0099526240392869,
+          "max": 1.146482210418283,
+          "medianCi95": [
+            1.025474956822966,
+            1.0967317394187157
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05470900000000256,
+          "min": 0.051832999999987805,
+          "max": 0.07187500000009095,
+          "medianCi95": [
+            0.052500000000009095,
+            0.05833300000017516
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.059,
+          "min": 0.056,
+          "max": 0.082,
+          "medianCi95": [
+            0.058,
+            0.071
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9235767061508935,
+          "min": 0.7721739130416407,
+          "max": 1.0047017504138624,
+          "medianCi95": [
+            0.8853546995833413,
+            0.9983987035304892
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0701754385964912,
+          "min": 0.9830508474576273,
+          "max": 1.4489795918367345,
+          "medianCi95": [
+            1.0350877192982455,
+            1.4385964912280702
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0951868426544806,
+          "min": 1.0403587443948226,
+          "max": 1.352380952380718,
+          "medianCi95": [
+            1.0457202612554957,
+            1.1408695652159477
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05674999999996544,
+          "min": 0.05275000000006003,
+          "max": 0.06854100000009566,
+          "medianCi95": [
+            0.05445799999984047,
+            0.06154199999991761
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.059,
+          "min": 0.056,
+          "max": 0.072,
+          "medianCi95": [
+            0.056,
+            0.065
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.8746488939111787,
+          "min": 0.7860258823184174,
+          "max": 0.9881246995522914,
+          "medianCi95": [
+            0.8408891488764252,
+            0.9716846009815028
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.1403508771929824,
+          "min": 1.0181818181818183,
+          "max": 1.263157894736842,
+          "medianCi95": [
+            1.0181818181818183,
+            1.2075471698113207
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.047817047817555,
+          "min": 1.028315399026113,
+          "max": 1.0803264247826943,
+          "medianCi95": [
+            1.031111111113612,
+            1.0616113744063749
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05262500000003456,
+          "min": 0.04762499999992542,
+          "max": 0.055499999999938154,
+          "medianCi95": [
+            0.04825000000005275,
+            0.053875000000061846
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.055,
+          "min": 0.049,
+          "max": 0.059,
+          "medianCi95": [
+            0.049,
+            0.057
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0393831733294385,
+          "min": 1.015544041449667,
+          "max": 1.108855811155372,
+          "medianCi95": [
+            1.0241545893703248,
+            1.0846200871619363
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.06162499999982174,
+          "min": 0.05375000000003638,
+          "max": 0.07945900000004258,
+          "medianCi95": [
+            0.05424999999991087,
+            0.07058299999994233
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.067,
+          "min": 0.059,
+          "max": 0.163,
+          "medianCi95": [
+            0.059,
+            0.078
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.850220264318628,
+          "min": 0.6381781799427375,
+          "max": 0.9790697674418408,
+          "medianCi95": [
+            0.7538359094978115,
+            0.9484513908802505
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.204081632653061,
+          "min": 1.0350877192982455,
+          "max": 2.963636363636364,
+          "medianCi95": [
+            1.0909090909090908,
+            1.3220338983050848
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0875576036884227,
+          "min": 1.0396475770931441,
+          "max": 2.051372405893765,
+          "medianCi95": [
+            1.075422999711092,
+            1.1050819602462878
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "miniz-crc32": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.18433300000015151,
+          "min": 0.17524999999977808,
+          "max": 0.19516699999985576,
+          "medianCi95": [
+            0.1817909999999756,
+            0.19150000000036016
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.189,
+          "min": 0.177,
+          "max": 0.209,
+          "medianCi95": [
+            0.184,
+            0.197
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.965308609731306,
+          "min": 0.8966587662824808,
+          "max": 1.1239995379318048,
+          "medianCi95": [
+            0.9203656355856645,
+            1.0608673323824576
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.037037037037037,
+          "min": 0.8767772511848342,
+          "max": 1.1942857142857144,
+          "medianCi95": [
+            0.9365079365079364,
+            1.0965909090909092
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0120183736388244,
+          "min": 1.0011317141101508,
+          "max": 1.133817601839216,
+          "medianCi95": [
+            1.0093919566327587,
+            1.0234986945150464
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.18337500000006912,
+          "min": 0.17549999999982901,
+          "max": 0.19437500000003638,
+          "medianCi95": [
+            0.17970900000000256,
+            0.1918749999999818
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.188,
+          "min": 0.178,
+          "max": 0.2,
+          "medianCi95": [
+            0.184,
+            0.197
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9886353101557214,
+          "min": 0.8797427652745696,
+          "max": 1.0737922445110555,
+          "medianCi95": [
+            0.9361563517927384,
+            1.0396418654588733
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.010928961748634,
+          "min": 0.9289099526066351,
+          "max": 1.1363636363636365,
+          "medianCi95": [
+            0.9735449735449735,
+            1.0742857142857143
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.026710097719967,
+          "min": 1.0088616223581746,
+          "max": 1.0384388066775578,
+          "medianCi95": [
+            1.0124087749299937,
+            1.0300014188801103
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.18624999999974534,
+          "min": 0.1717079999998532,
+          "max": 0.20058300000027884,
+          "medianCi95": [
+            0.18170899999995527,
+            0.1924999999996544
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.189,
+          "min": 0.174,
+          "max": 0.208,
+          "medianCi95": [
+            0.183,
+            0.198
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9733744966449484,
+          "min": 0.8845016776085071,
+          "max": 1.1214271601682633,
+          "medianCi95": [
+            0.8883116883147194,
+            1.0354322454405502
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.027027027027027,
+          "min": 0.8862559241706162,
+          "max": 1.1555555555555554,
+          "medianCi95": [
+            0.9666666666666667,
+            1.1250000000000002
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0147651006725285,
+          "min": 1.004403516469587,
+          "max": 1.0369772114272438,
+          "medianCi95": [
+            1.0071047664124784,
+            1.0285714285732752
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.17962500000021464,
+          "min": 0.17045899999993708,
+          "max": 0.20433300000013332,
+          "medianCi95": [
+            0.1710000000002765,
+            0.18683299999975134
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.183,
+          "min": 0.175,
+          "max": 0.211,
+          "medianCi95": [
+            0.176,
+            0.189
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.016582668611333,
+          "min": 1.0094268331032838,
+          "max": 1.0326281119538319,
+          "medianCi95": [
+            1.011598593397588,
+            1.0299234516341207
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.1803330000002461,
+          "min": 0.1722080000004098,
+          "max": 0.19170800000028976,
+          "medianCi95": [
+            0.17416699999967022,
+            0.18783299999995506
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.185,
+          "min": 0.174,
+          "max": 0.197,
+          "medianCi95": [
+            0.175,
+            0.193
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9794768104585898,
+          "min": 0.9274104367041817,
+          "max": 1.087843989076372,
+          "medianCi95": [
+            0.9483226785844407,
+            1.0849263681089538
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 0.9943181818181818,
+          "min": 0.9146919431279621,
+          "max": 1.0944444444444446,
+          "medianCi95": [
+            0.9206349206349206,
+            1.05
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0258798999614465,
+          "min": 1.0023885487133104,
+          "max": 1.027749229190024,
+          "medianCi95": [
+            1.0102413888965234,
+            1.0275084782761612
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "miniz-adler32": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.028624999999919964,
+          "min": 0.027208999999857042,
+          "max": 0.04337500000019645,
+          "medianCi95": [
+            0.02741699999978664,
+            0.04266699999971024
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.031,
+          "min": 0.028,
+          "max": 0.05,
+          "medianCi95": [
+            0.029,
+            0.049
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.8697948478449276,
+          "min": 0.5437002881853009,
+          "max": 0.9280017641322558,
+          "medianCi95": [
+            0.6660182342368423,
+            0.9118430171165882
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.037037037037037,
+          "min": 1,
+          "max": 1.75,
+          "medianCi95": [
+            1.0333333333333334,
+            1.4814814814814816
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0829694323174384,
+          "min": 1.0290712631903824,
+          "max": 1.252173913045855,
+          "medianCi95": [
+            1.0577378998513944,
+            1.171865844806046
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.028874999999970896,
+          "min": 0.025874999999814463,
+          "max": 0.04491700000016863,
+          "medianCi95": [
+            0.02608299999974406,
+            0.033584000000246306
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.032,
+          "min": 0.028,
+          "max": 0.051,
+          "medianCi95": [
+            0.029,
+            0.04
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.8196017316042329,
+          "min": 0.6326557873385062,
+          "max": 0.9680634896441992,
+          "medianCi95": [
+            0.7459373404265852,
+            0.959577485812808
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.103448275862069,
+          "min": 1.037037037037037,
+          "max": 1.4571428571428569,
+          "medianCi95": [
+            1.0714285714285714,
+            1.3333333333333335
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1354275663959867,
+          "min": 1.0290456431458221,
+          "max": 1.1910433539693497,
+          "medianCi95": [
+            1.0513351957068902,
+            1.1774891774903644
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.029583000000002357,
+          "min": 0.025500000000192813,
+          "max": 0.03249999999979991,
+          "medianCi95": [
+            0.02687500000001819,
+            0.03154100000028848
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.033,
+          "min": 0.027,
+          "max": 0.037,
+          "medianCi95": [
+            0.028,
+            0.037
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.8394348105311216,
+          "min": 0.7675542438248337,
+          "max": 0.9803921568588987,
+          "medianCi95": [
+            0.7910461538512147,
+            0.9286758674815251
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.103448275862069,
+          "min": 0.9310344827586207,
+          "max": 1.3703703703703702,
+          "medianCi95": [
+            1,
+            1.2962962962962965
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.081702329040241,
+          "min": 1.0418604651155738,
+          "max": 1.2578188740688636,
+          "medianCi95": [
+            1.0588235294037587,
+            1.1597190902621721
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.02500000000009095,
+          "min": 0.02358300000014424,
+          "max": 0.028416999999990367,
+          "medianCi95": [
+            0.02366600000004837,
+            0.026041000000077474
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.029,
+          "min": 0.026,
+          "max": 0.035,
+          "medianCi95": [
+            0.027,
+            0.03
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.15999999999578,
+          "min": 1.0502158777079422,
+          "max": 1.231657106661923,
+          "medianCi95": [
+            1.0693069306870608,
+            1.197901606832744
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.033083000000260654,
+          "min": 0.026959000000260858,
+          "max": 0.0648750000000291,
+          "medianCi95": [
+            0.029540999999881024,
+            0.0398750000003929
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.036,
+          "min": 0.032,
+          "max": 0.141,
+          "medianCi95": [
+            0.032,
+            0.044
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.752304660185051,
+          "min": 0.43802697495148546,
+          "max": 0.8747728031424031,
+          "medianCi95": [
+            0.6447398119060284,
+            0.8547442537572721
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.3103448275862069,
+          "min": 1.0666666666666667,
+          "max": 4.028571428571428,
+          "medianCi95": [
+            1.1379310344827587,
+            1.6296296296296295
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1170914999537223,
+          "min": 0.9974911585932352,
+          "max": 2.173410404623302,
+          "medianCi95": [
+            1.0406504065075124,
+            1.1869876478983035
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "jsmn-parse": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.1869579999997768,
+          "min": 0.17891699999972843,
+          "max": 0.1985420000000886,
+          "medianCi95": [
+            0.18100000000004002,
+            0.1940839999997479
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.19,
+          "min": 0.181,
+          "max": 0.202,
+          "medianCi95": [
+            0.184,
+            0.199
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9741847826108145,
+          "min": 0.9427430093189446,
+          "max": 1.0400802369944033,
+          "medianCi95": [
+            0.9429188786233038,
+            1.0100158173903309
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0451977401129944,
+          "min": 0.9583333333333333,
+          "max": 1.0730337078651686,
+          "medianCi95": [
+            0.9836956521739131,
+            1.0687830687830688
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0119840213046523,
+          "min": 1.0056952961889032,
+          "max": 1.0253292388875872,
+          "medianCi95": [
+            1.0081390070607288,
+            1.022099447513586
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.18074999999998909,
+          "min": 0.1787920000001577,
+          "max": 0.1946250000000873,
+          "medianCi95": [
+            0.1794169999998303,
+            0.1885419999998703
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.185,
+          "min": 0.18,
+          "max": 0.195,
+          "medianCi95": [
+            0.18,
+            0.191
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9856033709182455,
+          "min": 0.9543939867773324,
+          "max": 1.047077050424775,
+          "medianCi95": [
+            0.961675016054579,
+            1.0369193113422228
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0169491525423728,
+          "min": 0.9523809523809523,
+          "max": 1.0502793296089385,
+          "medianCi95": [
+            0.9685863874345549,
+            1.0326086956521738
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0119840213046523,
+          "min": 1.0019267822731537,
+          "max": 1.024459666746934,
+          "medianCi95": [
+            1.0032494133787224,
+            1.0137066074263448
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.19158299999980954,
+          "min": 0.18149999999968713,
+          "max": 0.2005420000000413,
+          "medianCi95": [
+            0.18287499999996726,
+            0.19574999999986176
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.194,
+          "min": 0.186,
+          "max": 0.202,
+          "medianCi95": [
+            0.186,
+            0.199
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9773831707413247,
+          "min": 0.8826081319606038,
+          "max": 1.0314545454547341,
+          "medianCi95": [
+            0.9031519795674577,
+            0.9881213836188262
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0208333333333333,
+          "min": 0.9841269841269841,
+          "max": 1.1284916201117319,
+          "medianCi95": [
+            1,
+            1.1242937853107347
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.012615941916521,
+          "min": 1.0030831608725488,
+          "max": 1.0293121195051913,
+          "medianCi95": [
+            1.0072702974935845,
+            1.0247933884315186
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.18070899999975154,
+          "min": 0.176792000000205,
+          "max": 0.1902909999998883,
+          "medianCi95": [
+            0.1768339999998716,
+            0.18724999999994907
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.184,
+          "min": 0.177,
+          "max": 0.192,
+          "medianCi95": [
+            0.178,
+            0.191
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0112994350300777,
+          "min": 1.0009387335022026,
+          "max": 1.0209205020912628,
+          "medianCi95": [
+            1.0068328883648219,
+            1.0200267022699703
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.19808400000010806,
+          "min": 0.19037500000013097,
+          "max": 0.22087499999997817,
+          "medianCi95": [
+            0.19200000000000728,
+            0.20100000000002183
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.201,
+          "min": 0.192,
+          "max": 0.309,
+          "medianCi95": [
+            0.195,
+            0.21
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9123007950123414,
+          "min": 0.8477645727219811,
+          "max": 0.983369665132411,
+          "medianCi95": [
+            0.8896349983399828,
+            0.9802498390207472
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.1016949152542375,
+          "min": 1.0158730158730158,
+          "max": 1.6178010471204187,
+          "medianCi95": [
+            1.0208333333333333,
+            1.1629213483146068
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0102634726929942,
+          "min": 1.0060206466377266,
+          "max": 1.3989813242785762,
+          "medianCi95": [
+            1.008535784634894,
+            1.0450112073660016
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "kissfft-complex": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.015249999999923602,
+          "min": 0.00937500000009095,
+          "max": 0.019959000000199012,
+          "medianCi95": [
+            0.009790999999950145,
+            0.01650000000017826
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.017,
+          "min": 0.011,
+          "max": 0.021,
+          "medianCi95": [
+            0.012,
+            0.02
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.5126666666690001,
+          "min": 0.396613056763564,
+          "max": 0.8426105607091987,
+          "medianCi95": [
+            0.43984777804816816,
+            0.777813333302253
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.2222222222222223,
+          "min": 0.8571428571428571,
+          "max": 2.1,
+          "medianCi95": [
+            1,
+            1.6666666666666667
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1581521039691782,
+          "min": 1.0303030302918994,
+          "max": 1.3114754098426358,
+          "medianCi95": [
+            1.0521569216789723,
+            1.2256153610520992
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.013457999999900494,
+          "min": 0.00945899999987887,
+          "max": 0.017707999999856838,
+          "medianCi95": [
+            0.011167000000114058,
+            0.014833000000180618
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.016,
+          "min": 0.012,
+          "max": 0.02,
+          "medianCi95": [
+            0.015,
+            0.019
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.5882003269491332,
+          "min": 0.423537384245784,
+          "max": 0.770906015421582,
+          "medianCi95": [
+            0.4831119800298558,
+            0.7387839168780777
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.4166666666666667,
+          "min": 1,
+          "max": 1.7999999999999998,
+          "medianCi95": [
+            1.0714285714285714,
+            1.6666666666666667
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2720488466987283,
+          "min": 1.0706638115730223,
+          "max": 1.5857913098839291,
+          "medianCi95": [
+            1.1294330246307709,
+            1.4327930509390685
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.013542000000143162,
+          "min": 0.0097499999997126,
+          "max": 0.01670799999965311,
+          "medianCi95": [
+            0.011167000000114058,
+            0.016208000000005995
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.017,
+          "min": 0.011,
+          "max": 0.021,
+          "medianCi95": [
+            0.013,
+            0.019
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.5606545454499129,
+          "min": 0.45391429256099397,
+          "max": 0.8675897436286396,
+          "medianCi95": [
+            0.49099210267406806,
+            0.7088743619541553
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.307692307692308,
+          "min": 0.7857142857142857,
+          "max": 2.111111111111111,
+          "medianCi95": [
+            1,
+            1.5833333333333333
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1999657152430703,
+          "min": 1.0488647581437385,
+          "max": 1.3818181818108697,
+          "medianCi95": [
+            1.1063829787121,
+            1.3693693693596751
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.007708999999977095,
+          "min": 0.00716599999987011,
+          "max": 0.00845900000012989,
+          "medianCi95": [
+            0.007291999999779364,
+            0.008249999999861757
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.012,
+          "min": 0.009,
+          "max": 0.014,
+          "medianCi95": [
+            0.01,
+            0.014
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.5999999999650754,
+          "min": 1.23422929241255,
+          "max": 1.6969696969981327,
+          "medianCi95": [
+            1.263264274882651,
+            1.6745743790423544
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.0128340000001117,
+          "min": 0.008874999999989086,
+          "max": 0.017084000000068045,
+          "medianCi95": [
+            0.01108299999987139,
+            0.0157920000001468
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.016,
+          "min": 0.012,
+          "max": 0.022,
+          "medianCi95": [
+            0.013,
+            0.021
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.5617279593596203,
+          "min": 0.46175278620260757,
+          "max": 0.8686197183083465,
+          "medianCi95": [
+            0.4829079840686547,
+            0.7142470450342654
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.2999999999999998,
+          "min": 1,
+          "max": 2.3333333333333335,
+          "medianCi95": [
+            1.1428571428571428,
+            1.5714285714285714
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1999717653858335,
+          "min": 1.0463671440606488,
+          "max": 1.352112676058001,
+          "medianCi95": [
+            1.1546391752390244,
+            1.3297872340301917
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "kissfft-real": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.012791999999990367,
+          "min": 0.008957999999893218,
+          "max": 0.024249999999938154,
+          "medianCi95": [
+            0.009415999999873748,
+            0.020916999999826658
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.017,
+          "min": 0.011,
+          "max": 0.031,
+          "medianCi95": [
+            0.011,
+            0.027
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.7023889261113404,
+          "min": 0.2749278350566509,
+          "max": 0.8704247237389587,
+          "medianCi95": [
+            0.33666395755804074,
+            0.7478759558010677
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.3333333333333335,
+          "min": 0.9166666666666666,
+          "max": 3.875,
+          "medianCi95": [
+            1.1333333333333335,
+            3
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2030075188151568,
+          "min": 1.1162790697761305,
+          "max": 1.4675414364821995,
+          "medianCi95": [
+            1.1682242990810843,
+            1.2908160826229265
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.011041999999633845,
+          "min": 0.008915999999771884,
+          "max": 0.021375000000261934,
+          "medianCi95": [
+            0.009250000000065484,
+            0.012833000000227912
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.014,
+          "min": 0.013,
+          "max": 0.025,
+          "medianCi95": [
+            0.013,
+            0.019
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6944117380698601,
+          "min": 0.3294502924021935,
+          "max": 1.222604600658349,
+          "medianCi95": [
+            0.5225479611373254,
+            0.7986534653301068
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.2666666666666666,
+          "min": 0.8421052631578948,
+          "max": 2.777777777777778,
+          "medianCi95": [
+            1.1666666666666667,
+            2
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2892988197800432,
+          "min": 1.1626941283991143,
+          "max": 1.57021085692667,
+          "medianCi95": [
+            1.168861528850121,
+            1.5135135135027988
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.012833000000227912,
+          "min": 0.008584000000155356,
+          "max": 0.019624999999905413,
+          "medianCi95": [
+            0.00874999999996362,
+            0.018999999999778083
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.015,
+          "min": 0.011,
+          "max": 0.03,
+          "medianCi95": [
+            0.012,
+            0.022
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.7013245692388883,
+          "min": 0.35089473685182376,
+          "max": 1.5726933830122902,
+          "medianCi95": [
+            0.35882802548877046,
+            0.7856474988263346
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.4545454545454546,
+          "min": 0.5789473684210527,
+          "max": 3.75,
+          "medianCi95": [
+            1,
+            2.4444444444444446
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.246688483748455,
+          "min": 1.1210191082856578,
+          "max": 1.6000000000066523,
+          "medianCi95": [
+            1.1659541391444674,
+            1.5789473684394943
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.0070420000001831795,
+          "min": 0.0061670000000049185,
+          "max": 0.013500000000021828,
+          "medianCi95": [
+            0.006292000000030384,
+            0.010082999999667663
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.011,
+          "min": 0.007,
+          "max": 0.019,
+          "medianCi95": [
+            0.008,
+            0.015
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.4074074074051317,
+          "min": 0.9940357853266044,
+          "max": 1.9071837253563337,
+          "medianCi95": [
+            1.1999400029806313,
+            1.487652484428682
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.01804100000026665,
+          "min": 0.012999999999919964,
+          "max": 0.031415999999808264,
+          "medianCi95": [
+            0.013167000000066764,
+            0.024041000000124768
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.022,
+          "min": 0.017,
+          "max": 0.039,
+          "medianCi95": [
+            0.019,
+            0.029
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.4743846153879143,
+          "min": 0.28915202444161936,
+          "max": 0.609040873405284,
+          "medianCi95": [
+            0.29291626804819404,
+            0.5063416116103119
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 2.111111111111111,
+          "min": 1.4210526315789473,
+          "max": 3.25,
+          "medianCi95": [
+            1.4666666666666666,
+            3.2222222222222228
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.274873898323821,
+          "min": 1.0954538664604363,
+          "max": 1.4867256637011148,
+          "medianCi95": [
+            1.20627261760532,
+            1.4615384615474596
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "aes-cbc-encrypt": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.5264170000000377,
+          "min": 0.4919159999999465,
+          "max": 0.5464160000001357,
+          "medianCi95": [
+            0.503041999999823,
+            0.539375000000291
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.528,
+          "min": 0.494,
+          "max": 0.546,
+          "medianCi95": [
+            0.508,
+            0.539
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9881211253898868,
+          "min": 0.9184241019693162,
+          "max": 1.014569176725579,
+          "medianCi95": [
+            0.9326499068897814,
+            1.003146681847958
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0122950819672132,
+          "min": 0.9885496183206107,
+          "max": 1.092,
+          "medianCi95": [
+            0.9888475836431226,
+            1.0673267326732674
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0042364956619703,
+          "min": 0.9791074931917572,
+          "max": 1.0122827346460355,
+          "medianCi95": [
+            0.9913037321089164,
+            1.0120468745727973
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.5120839999999589,
+          "min": 0.485667000000376,
+          "max": 0.530250000000251,
+          "medianCi95": [
+            0.48624999999992724,
+            0.5193340000000717
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.513,
+          "min": 0.488,
+          "max": 0.535,
+          "medianCi95": [
+            0.492,
+            0.522
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1.0029519129726834,
+          "min": 0.9279618809173732,
+          "max": 1.0918839451712945,
+          "medianCi95": [
+            0.939665032521964,
+            1.0599835475572088
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 0.992,
+          "min": 0.9144981412639405,
+          "max": 1.084016393442623,
+          "medianCi95": [
+            0.9384615384615385,
+            1.0524193548387097
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0089580386605315,
+          "min": 1.0017887690301615,
+          "max": 1.0130397988737532,
+          "medianCi95": [
+            1.003598971722515,
+            1.012157969083546
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.5267079999998714,
+          "min": 0.49912499999982174,
+          "max": 0.5450840000003154,
+          "medianCi95": [
+            0.5160420000001977,
+            0.5385000000001128
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.53,
+          "min": 0.504,
+          "max": 0.54,
+          "medianCi95": [
+            0.519,
+            0.537
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9810289553081222,
+          "min": 0.8921395601401411,
+          "max": 1.026370950728517,
+          "medianCi95": [
+            0.9300519962858905,
+            1.0164322979511924
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0161290322580645,
+          "min": 0.9646840148698884,
+          "max": 1.1065573770491803,
+          "medianCi95": [
+            0.9808795411089866,
+            1.0633663366336634
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0065395640686816,
+          "min": 0.9906729971888508,
+          "max": 1.0116251482799177,
+          "medianCi95": [
+            0.997214484679457,
+            1.0096077451056318
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.5154169999996157,
+          "min": 0.48629099999971004,
+          "max": 0.5302919999999176,
+          "medianCi95": [
+            0.487999999999829,
+            0.5223340000002281
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.52,
+          "min": 0.488,
+          "max": 0.538,
+          "medianCi95": [
+            0.496,
+            0.527
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0090681332815952,
+          "min": 1.003514356630682,
+          "max": 1.016393442623307,
+          "medianCi95": [
+            1.0083201386488962,
+            1.0145353880505148
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.5172090000000935,
+          "min": 0.4900840000000244,
+          "max": 0.5366249999997308,
+          "medianCi95": [
+            0.49066699999957564,
+            0.5302080000001297
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.519,
+          "min": 0.492,
+          "max": 0.532,
+          "medianCi95": [
+            0.492,
+            0.531
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9754663925612794,
+          "min": 0.9171702426209923,
+          "max": 1.0820430783292072,
+          "medianCi95": [
+            0.9262879768572472,
+            1.0559305553034586
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0133587786259541,
+          "min": 0.9144981412639405,
+          "max": 1.0881147540983607,
+          "medianCi95": [
+            0.9407265774378585,
+            1.0645161290322582
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0034628167721487,
+          "min": 0.9895178197069954,
+          "max": 1.009646680596487,
+          "medianCi95": [
+            1.001493753394649,
+            1.006234320663834
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "aes-cbc-decrypt": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 1.1092079999998532,
+          "min": 1.082582999999886,
+          "max": 1.1673749999999927,
+          "medianCi95": [
+            1.0914589999997588,
+            1.1673329999998714
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 1.114,
+          "min": 1.09,
+          "max": 1.169,
+          "medianCi95": [
+            1.097,
+            1.166
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1.0064667378235528,
+          "min": 0.9224396616340811,
+          "max": 1.0351602224291745,
+          "medianCi95": [
+            0.952140180494463,
+            1.029970556501163
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 0.992818671454219,
+          "min": 0.9741302408563783,
+          "max": 1.0834105653382762,
+          "medianCi95": [
+            0.9754816112084065,
+            1.04735883424408
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0038192326682969,
+          "min": 0.9988580807705499,
+          "max": 1.0068512067897935,
+          "medianCi95": [
+            1.0012313892308404,
+            1.0050766909249385
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 1.0989580000000387,
+          "min": 1.0810409999999138,
+          "max": 1.1299159999998665,
+          "medianCi95": [
+            1.0819590000000971,
+            1.1224999999999454
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 1.104,
+          "min": 1.083,
+          "max": 1.138,
+          "medianCi95": [
+            1.086,
+            1.125
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9975501113584805,
+          "min": 0.9615653532762212,
+          "max": 1.053362212981111,
+          "medianCi95": [
+            0.994935147392291,
+            1.0455183606773832
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.002714932126697,
+          "min": 0.9516695957820739,
+          "max": 1.03985171455051,
+          "medianCi95": [
+            0.9553415061295972,
+            1.0045495905368518
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0045872450721913,
+          "min": 1.0008797834210563,
+          "max": 1.0071545141409932,
+          "medianCi95": [
+            1.0009621436670915,
+            1.005274019720486
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 1.1260830000001079,
+          "min": 1.0760409999998046,
+          "max": 1.1403340000001663,
+          "medianCi95": [
+            1.0902080000000751,
+            1.134375000000091
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 1.124,
+          "min": 1.081,
+          "max": 1.144,
+          "medianCi95": [
+            1.093,
+            1.137
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9877289805830743,
+          "min": 0.9619251903387996,
+          "max": 1.051268492557856,
+          "medianCi95": [
+            0.9691743362830451,
+            1.0161879146878237
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0127504553734061,
+          "min": 0.9499121265377857,
+          "max": 1.0352941176470587,
+          "medianCi95": [
+            0.9842381786339757,
+            1.030027297543221
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0023140495866965,
+          "min": 0.9947633321741761,
+          "max": 1.0046085604546633,
+          "medianCi95": [
+            1.000814327185378,
+            1.004592033548977
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 1.1089170000000195,
+          "min": 1.0768330000000788,
+          "max": 1.1482080000000678,
+          "medianCi95": [
+            1.0933340000001408,
+            1.1312080000002425
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 1.111,
+          "min": 1.079,
+          "max": 1.142,
+          "medianCi95": [
+            1.098,
+            1.138
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0034999228428665,
+          "min": 0.9945933141033092,
+          "max": 1.0073697530166719,
+          "medianCi95": [
+            1.0011163206074216,
+            1.0060042008187318
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 1.117040999999972,
+          "min": 1.0851250000000618,
+          "max": 1.1635409999998956,
+          "medianCi95": [
+            1.0859159999999974,
+            1.1525839999999334
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 1.122,
+          "min": 1.09,
+          "max": 1.165,
+          "medianCi95": [
+            1.092,
+            1.162
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9814538463142884,
+          "min": 0.9254792052881466,
+          "max": 1.0487114967460462,
+          "medianCi95": [
+            0.9613991049626787,
+            1.0319087662709605
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0200364298724955,
+          "min": 0.9605954465849388,
+          "max": 1.0797034291010195,
+          "medianCi95": [
+            0.9723461195361285,
+            1.0334841628959275
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0044394073270617,
+          "min": 1.000913267622511,
+          "max": 1.0081694696439192,
+          "medianCi95": [
+            1.0012539308886448,
+            1.0056026432983791
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "aes-ctr": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.6260420000003251,
+          "min": 0.6220420000008744,
+          "max": 1.6457500000005894,
+          "medianCi95": [
+            0.6223330000002534,
+            0.6521659999998519
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.632,
+          "min": 0.623,
+          "max": 1.627,
+          "medianCi95": [
+            0.624,
+            0.66
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1.0033455129497075,
+          "min": 0.4170590915990097,
+          "max": 1.1310876733118884,
+          "medianCi95": [
+            0.9968506949674192,
+            1.0698881789134247
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 0.9968944099378882,
+          "min": 0.922740524781341,
+          "max": 2.3443804034582136,
+          "medianCi95": [
+            0.9276218611521417,
+            1.0031746031746032
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0026786302505988,
+          "min": 0.9886070180765106,
+          "max": 1.0120122790825494,
+          "medianCi95": [
+            1.00136478845763,
+            1.0095169333681635
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.6427499999999782,
+          "min": 0.6264579999997295,
+          "max": 1.8429999999998472,
+          "medianCi95": [
+            0.6293749999999818,
+            0.7307080000000497
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.648,
+          "min": 0.628,
+          "max": 2.274,
+          "medianCi95": [
+            0.631,
+            0.724
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9836732103907354,
+          "min": 0.3724226804120309,
+          "max": 1.106378840917674,
+          "medianCi95": [
+            0.9136686610781445,
+            1.0015581372161135
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0062111801242235,
+          "min": 0.944606413994169,
+          "max": 3.2766570605187324,
+          "medianCi95": [
+            1.0014771048744462,
+            1.096969696969697
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0024614579114182,
+          "min": 0.9908198623799804,
+          "max": 1.2338578404775846,
+          "medianCi95": [
+            0.9908659115816659,
+            1.0096729158358242
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.6392079999995985,
+          "min": 0.6232079999999769,
+          "max": 2.4246659999998883,
+          "medianCi95": [
+            0.6258339999999407,
+            1.7937080000001515
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.643,
+          "min": 0.625,
+          "max": 1.661,
+          "medianCi95": [
+            0.631,
+            1.603
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9949856227773359,
+          "min": 0.25764703262235344,
+          "max": 1.1114228243942106,
+          "medianCi95": [
+            0.3826570433979545,
+            1.0535497429641247
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.004823151125402,
+          "min": 0.9402332361516035,
+          "max": 2.5566188197767143,
+          "medianCi95": [
+            0.9409158050221565,
+            2.393371757925072
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.002875444474434,
+          "min": 0.6611219854611208,
+          "max": 1.0082545850817626,
+          "medianCi95": [
+            0.9260147136545411,
+            1.0080755447135967
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.6427920000000995,
+          "min": 0.620082999999795,
+          "max": 0.7111249999998108,
+          "medianCi95": [
+            0.6243750000003274,
+            0.6863749999993161
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.644,
+          "min": 0.622,
+          "max": 0.694,
+          "medianCi95": [
+            0.63,
+            0.686
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0030915216192118,
+          "min": 0.9646686588155142,
+          "max": 1.0111090875988948,
+          "medianCi95": [
+            0.9885789178069365,
+            1.0108249346770855
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.6554579999992711,
+          "min": 0.6240829999997004,
+          "max": 1.9387079999996786,
+          "medianCi95": [
+            0.6259159999999611,
+            0.7036669999997684
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.657,
+          "min": 0.625,
+          "max": 1.562,
+          "medianCi95": [
+            0.626,
+            0.712
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9695982627582507,
+          "min": 0.3540373279521361,
+          "max": 1.1394718330737292,
+          "medianCi95": [
+            0.8873160173782952,
+            1.0594413861704326
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.029874213836478,
+          "min": 0.9110787172011661,
+          "max": 2.250720461095101,
+          "medianCi95": [
+            0.9606060606060606,
+            1.1301587301587301
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0023525534828024,
+          "min": 0.805691212911,
+          "max": 1.01184224924607,
+          "medianCi95": [
+            1.0001342033116887,
+            1.0076004343108929
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "xxhash32": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.01641699999981938,
+          "min": 0.012499999999818101,
+          "max": 0.026749999999992724,
+          "medianCi95": [
+            0.012958999999682419,
+            0.021333000000595348
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.021,
+          "min": 0.017,
+          "max": 0.029,
+          "medianCi95": [
+            0.018,
+            0.027
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6048703389531671,
+          "min": 0.4563738317795852,
+          "max": 1.0432822363306158,
+          "medianCi95": [
+            0.47850747665158444,
+            0.7588548498913125
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.4666666666666666,
+          "min": 1.1333333333333335,
+          "max": 2.0714285714285716,
+          "medianCi95": [
+            1.2666666666666666,
+            1.9090909090909094
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2878300064595414,
+          "min": 1.034500594827788,
+          "max": 1.664701394255321,
+          "medianCi95": [
+            1.0841121495330053,
+            1.38899606454519
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.01320899999973335,
+          "min": 0.012375000000247383,
+          "max": 0.01749999999992724,
+          "medianCi95": [
+            0.012749999999869033,
+            0.01729200000045239
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.018,
+          "min": 0.013,
+          "max": 0.022,
+          "medianCi95": [
+            0.014,
+            0.02
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.7538799303386493,
+          "min": 0.5822346436472626,
+          "max": 1.1423255107836787,
+          "medianCi95": [
+            0.5904571428695031,
+            0.7801895444486583
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.2666666666666666,
+          "min": 0.8333333333333334,
+          "max": 2,
+          "medianCi95": [
+            0.9333333333333333,
+            1.6363636363636362
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.1392116655216784,
+          "min": 1.0505050504840503,
+          "max": 1.4117647058968543,
+          "medianCi95": [
+            1.0700091714938844,
+            1.362707245087695
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.014042000000699772,
+          "min": 0.011999999999716238,
+          "max": 0.024083999999675143,
+          "medianCi95": [
+            0.012333000000580796,
+            0.01583299999947485
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.02,
+          "min": 0.014,
+          "max": 0.03,
+          "medianCi95": [
+            0.016,
+            0.021
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.7002563737061287,
+          "min": 0.5068925427779958,
+          "max": 1.219573501974916,
+          "medianCi95": [
+            0.6084444444623328,
+            0.8194999999777552
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.2142857142857144,
+          "min": 0.9333333333333333,
+          "max": 2.142857142857143,
+          "medianCi95": [
+            1.0666666666666667,
+            1.9090909090909094
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.3333333333696746,
+          "min": 1.026694045130269,
+          "max": 1.62166545034121,
+          "medianCi95": [
+            1.1275773195435894,
+            1.4242985329015323
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009957999999642198,
+          "min": 0.009583000000020547,
+          "max": 0.015041000000564964,
+          "medianCi95": [
+            0.009832999999161984,
+            0.012208000000100583
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.015,
+          "min": 0.011,
+          "max": 0.018,
+          "medianCi95": [
+            0.011,
+            0.015
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.4236322961878256,
+          "min": 1.1186819892118414,
+          "max": 1.525475439975427,
+          "medianCi95": [
+            1.1467889908162396,
+            1.506326571654847
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.016459000000395463,
+          "min": 0.013167000000066764,
+          "max": 0.02358300000014424,
+          "medianCi95": [
+            0.0157920000001468,
+            0.022249999999985448
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.021,
+          "min": 0.018,
+          "max": 0.032,
+          "medianCi95": [
+            0.02,
+            0.028
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.5974239017513655,
+          "min": 0.42225331805034527,
+          "max": 0.818557823175556,
+          "medianCi95": [
+            0.5486741573082502,
+            0.7847649426688652
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.5,
+          "min": 1.2,
+          "max": 2.1333333333333333,
+          "medianCi95": [
+            1.3333333333333335,
+            2
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2877546242046578,
+          "min": 1.258426966292958,
+          "max": 1.3670539986260142,
+          "medianCi95": [
+            1.2598425196809975,
+            1.3569096382904755
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "xxhash64": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009291000000303029,
+          "min": 0.008541999999579275,
+          "max": 0.01795899999979156,
+          "medianCi95": [
+            0.008915999999771884,
+            0.01599999999962165
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.014,
+          "min": 0.01,
+          "max": 0.024,
+          "medianCi95": [
+            0.011,
+            0.017
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.7029901442421541,
+          "min": 0.6009041007354475,
+          "max": 1.7939025646461055,
+          "medianCi95": [
+            0.6542171377652876,
+            1.5156250000035527
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.2222222222222223,
+          "min": 0.5555555555555556,
+          "max": 2,
+          "medianCi95": [
+            0.5666666666666668,
+            1.625
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.3363773038743,
+          "min": 1.0625000000251248,
+          "max": 1.57021085692667,
+          "medianCi95": [
+            1.105950011098501,
+            1.544958286137445
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009417000000212283,
+          "min": 0.008332999999765889,
+          "max": 0.03304200000002311,
+          "medianCi95": [
+            0.008500000000822183,
+            0.015542000000095868
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.013,
+          "min": 0.011,
+          "max": 0.039,
+          "medianCi95": [
+            0.011,
+            0.021
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6421887041966626,
+          "min": 0.3820894619057407,
+          "max": 2.0490588233339304,
+          "medianCi95": [
+            0.5718358416330305,
+            1.56028825114746
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.375,
+          "min": 0.4074074074074074,
+          "max": 2,
+          "medianCi95": [
+            0.7000000000000001,
+            1.857142857142857
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2110536166573245,
+          "min": 1.127096731402176,
+          "max": 1.5925378227368487,
+          "medianCi95": [
+            1.128205128185764,
+            1.560062402539929
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.009500000000116415,
+          "min": 0.008124999999381544,
+          "max": 0.034541999999419204,
+          "medianCi95": [
+            0.008625000000392902,
+            0.028374999999869033
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.013,
+          "min": 0.01,
+          "max": 0.043,
+          "medianCi95": [
+            0.011,
+            0.035
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6762898550609102,
+          "min": 0.3654970760381736,
+          "max": 1.6077703375040366,
+          "medianCi95": [
+            0.6138149779772157,
+            0.7138127948153928
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.2962962962962965,
+          "min": 0.5,
+          "max": 2.0476190476190474,
+          "medianCi95": [
+            0.8333333333333334,
+            1.857142857142857
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2307692308629141,
+          "min": 0.9944971160030639,
+          "max": 1.5072463767429334,
+          "medianCi95": [
+            1.0526315789344693,
+            1.2753623189169672
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.00633300000026793,
+          "min": 0.005583000000115135,
+          "max": 0.024249999999483407,
+          "medianCi95": [
+            0.0058330000001660665,
+            0.01741700000002311
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.011,
+          "min": 0.007,
+          "max": 0.03,
+          "medianCi95": [
+            0.007,
+            0.027
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.31514055559997,
+          "min": 1.1998628727107554,
+          "max": 1.894836570265643,
+          "medianCi95": [
+            1.2000685753129965,
+            1.66336633659436
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.01375000000007276,
+          "min": 0.010167000000365078,
+          "max": 0.04545899999993708,
+          "medianCi95": [
+            0.010750000000371074,
+            0.02474999999958527
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.017,
+          "min": 0.014,
+          "max": 0.053,
+          "medianCi95": [
+            0.016,
+            0.03
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.5100676546781965,
+          "min": 0.3831364526286811,
+          "max": 2.3851676992832336,
+          "medianCi95": [
+            0.40459180134813216,
+            0.5863756883173957
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.8181818181818183,
+          "min": 0.5333333333333333,
+          "max": 2.857142857142857,
+          "medianCi95": [
+            1.4166666666666667,
+            2
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.3597117411072848,
+          "min": 1.163636363630206,
+          "max": 1.5737188944059672,
+          "medianCi95": [
+            1.1658857431987804,
+            1.4883720929718796
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "xxhash3": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.008833000000777247,
+          "min": 0.007832999999664025,
+          "max": 0.01170799999999872,
+          "medianCi95": [
+            0.00795899999957328,
+            0.010917000000517874
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.013,
+          "min": 0.01,
+          "max": 0.016,
+          "medianCi95": [
+            0.011,
+            0.016
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6756032171650252,
+          "min": 0.47656010622571887,
+          "max": 2.367938412503979,
+          "medianCi95": [
+            0.626303030344548,
+            0.7862395974345442
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.4444444444444444,
+          "min": 0.5909090909090909,
+          "max": 1.857142857142857,
+          "medianCi95": [
+            1,
+            1.777777777777778
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.465604103621966,
+          "min": 1.1234807476832713,
+          "max": 1.6596450913516658,
+          "medianCi95": [
+            1.1612154054001935,
+            1.5600624023696579
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.008249999999861757,
+          "min": 0.007458000000042375,
+          "max": 0.013874999999643478,
+          "medianCi95": [
+            0.007625000000189175,
+            0.010957999999845924
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.014,
+          "min": 0.008,
+          "max": 0.015,
+          "medianCi95": [
+            0.009,
+            0.015
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6776393442790487,
+          "min": 0.565575757562876,
+          "max": 2.804505229199421,
+          "medianCi95": [
+            0.5855855856216081,
+            0.8181818182333598
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.5555555555555558,
+          "min": 0.36363636363636365,
+          "max": 2.142857142857143,
+          "medianCi95": [
+            0.8999999999999999,
+            2
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2776054024636656,
+          "min": 1.0726736390392257,
+          "max": 1.967213114705292,
+          "medianCi95": [
+            1.0810810811088598,
+            1.967213114705292
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.008249999999861757,
+          "min": 0.007625000000189175,
+          "max": 0.01266600000053586,
+          "medianCi95": [
+            0.008042000000386906,
+            0.012332999999671301
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.013,
+          "min": 0.009,
+          "max": 0.016,
+          "medianCi95": [
+            0.01,
+            0.016
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.6700779727935741,
+          "min": 0.45609340792440106,
+          "max": 2.6008455606169907,
+          "medianCi95": [
+            0.5713236194244826,
+            0.731239920344423
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.4444444444444444,
+          "min": 0.40909090909090906,
+          "max": 1.857142857142857,
+          "medianCi95": [
+            1,
+            1.777777777777778
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2183235868506674,
+          "min": 1.0540825427995195,
+          "max": 1.9393939394264375,
+          "medianCi95": [
+            1.1191245958178317,
+            1.7049180327445865
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.005624999999781721,
+          "min": 0.00466599999981554,
+          "max": 0.020915999999488122,
+          "medianCi95": [
+            0.005167000000255939,
+            0.008125000000291038
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.009,
+          "min": 0.007,
+          "max": 0.022,
+          "medianCi95": [
+            0.007,
+            0.01
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.2444444444927352,
+          "min": 1.0518263530569136,
+          "max": 2.1431633091288744,
+          "medianCi95": [
+            1.10769230765263,
+            1.9353590090003225
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.010708000000704487,
+          "min": 0.009707999999591266,
+          "max": 0.017374999999447027,
+          "medianCi95": [
+            0.01020799999969313,
+            0.0154579999998532
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.015,
+          "min": 0.011,
+          "max": 0.02,
+          "medianCi95": [
+            0.014,
+            0.019
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.5253081807444573,
+          "min": 0.39621194697905715,
+          "max": 2.0657777777702724,
+          "medianCi95": [
+            0.44362589930006446,
+            0.6363636364170869
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.7999999999999998,
+          "min": 0.5,
+          "max": 2.2857142857142856,
+          "medianCi95": [
+            1.5,
+            2.2222222222222223
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.3386880857087993,
+          "min": 1.0864197531090605,
+          "max": 1.4942099363977726,
+          "medianCi95": [
+            1.0935251798909174,
+            1.4694357367212898
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "qoi-encode": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.06491599999935715,
+          "min": 0.058624999999665306,
+          "max": 0.07208400000035908,
+          "medianCi95": [
+            0.060042000000066764,
+            0.07004099999994651
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.067,
+          "min": 0.062,
+          "max": 0.075,
+          "medianCi95": [
+            0.063,
+            0.074
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.942889154259211,
+          "min": 0.8618417401929538,
+          "max": 1.0499650244929857,
+          "medianCi95": [
+            0.8661498265352671,
+            0.9964520255952914
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0454545454545454,
+          "min": 0.9545454545454545,
+          "max": 1.1904761904761905,
+          "medianCi95": [
+            1,
+            1.1587301587301586
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0422466840858318,
+          "min": 0.9980198019709953,
+          "max": 1.0825755304608062,
+          "medianCi95": [
+            1.0172040157572249,
+            1.0775510204126435
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.0626669999992373,
+          "min": 0.05833399999937683,
+          "max": 0.07249999999930878,
+          "medianCi95": [
+            0.05887499999971624,
+            0.06816599999910977
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.068,
+          "min": 0.059,
+          "max": 0.076,
+          "medianCi95": [
+            0.061,
+            0.07
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9827297450895278,
+          "min": 0.8221253997675483,
+          "max": 1.0658174097724564,
+          "medianCi95": [
+            0.8367724138053613,
+            1.055696506347375
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0461538461538462,
+          "min": 0.8939393939393938,
+          "max": 1.2063492063492063,
+          "medianCi95": [
+            0.9104477611940298,
+            1.1311475409836067
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0448196917715535,
+          "min": 1.0114170123878061,
+          "max": 1.0851006111801682,
+          "medianCi95": [
+            1.0122348384957476,
+            1.082712687423634
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.06374999999934516,
+          "min": 0.05887499999971624,
+          "max": 0.06795800000054442,
+          "medianCi95": [
+            0.06000000000040018,
+            0.06708299999991141
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.067,
+          "min": 0.059,
+          "max": 0.072,
+          "medianCi95": [
+            0.063,
+            0.069
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.935003973041176,
+          "min": 0.9071551401979713,
+          "max": 1.07077707008037,
+          "medianCi95": [
+            0.930126362449531,
+            0.9660078431567447
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.05,
+          "min": 0.9218749999999999,
+          "max": 1.1428571428571428,
+          "medianCi95": [
+            1,
+            1.0952380952380953
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0285765395121138,
+          "min": 1.0021231422553607,
+          "max": 1.083333333326108,
+          "medianCi95": [
+            1.0046565031513341,
+            1.0779734099953058
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.06212500000037835,
+          "min": 0.056040999999822816,
+          "max": 0.06395900000006804,
+          "medianCi95": [
+            0.058417000000190455,
+            0.06354100000044127
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.064,
+          "min": 0.06,
+          "max": 0.067,
+          "medianCi95": [
+            0.061,
+            0.066
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0319110680268577,
+          "min": 1.0140845070360776,
+          "max": 1.0884887850001403,
+          "medianCi95": [
+            1.0151962183831693,
+            1.0717243394986662
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.06395799999972951,
+          "min": 0.059333000000151515,
+          "max": 0.06937500000003638,
+          "medianCi95": [
+            0.06208299999980227,
+            0.06908300000031886
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.068,
+          "min": 0.064,
+          "max": 0.072,
+          "medianCi95": [
+            0.065,
+            0.072
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9605905411197655,
+          "min": 0.8781610526472546,
+          "max": 1.0575902111791193,
+          "medianCi95": [
+            0.8785095076012355,
+            0.9919462654962878
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0303030303030303,
+          "min": 0.9552238805970149,
+          "max": 1.1500000000000001,
+          "medianCi95": [
+            0.9848484848484849,
+            1.1428571428571428
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0422245704394377,
+          "min": 1.0063430104912174,
+          "max": 1.0788329841504083,
+          "medianCi95": [
+            1.021281708533194,
+            1.0786577452654773
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "qoi-decode": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05274999999983265,
+          "min": 0.050416000000041095,
+          "max": 0.06437499999992724,
+          "medianCi95": [
+            0.05124999999952706,
+            0.054667000000335975
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.055,
+          "min": 0.052,
+          "max": 0.072,
+          "medianCi95": [
+            0.053,
+            0.061
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9182005712463558,
+          "min": 0.7864077669889196,
+          "max": 0.9328530805785522,
+          "medianCi95": [
+            0.881859449538603,
+            0.9313514424257303
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.1063829787234043,
+          "min": 1.0192307692307692,
+          "max": 1.2857142857142856,
+          "medianCi95": [
+            1.0576923076923077,
+            1.1568627450980393
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.053658536595089,
+          "min": 1.0220691221547302,
+          "max": 1.1184834123258232,
+          "medianCi95": [
+            1.0233240654886895,
+            1.1184466019430117
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05349999999998545,
+          "min": 0.05054199999995035,
+          "max": 0.06333300000005693,
+          "medianCi95": [
+            0.05150000000048749,
+            0.055583000000297034
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.058,
+          "min": 0.052,
+          "max": 0.066,
+          "medianCi95": [
+            0.052,
+            0.062
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.8988737863991421,
+          "min": 0.7855304501616258,
+          "max": 0.9513473942589392,
+          "medianCi95": [
+            0.8605794392621786,
+            0.9108000647605192
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.1176470588235294,
+          "min": 1,
+          "max": 1.2692307692307694,
+          "medianCi95": [
+            1.0892857142857142,
+            1.215686274509804
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0737901022969303,
+          "min": 1.00970873785452,
+          "max": 1.1588785046732124,
+          "medianCi95": [
+            1.0288472953197554,
+            1.101279763043549
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05224999999973079,
+          "min": 0.04791700000077981,
+          "max": 0.06687499999952706,
+          "medianCi95": [
+            0.048541999999542895,
+            0.055416999999579275
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.056,
+          "min": 0.052,
+          "max": 0.069,
+          "medianCi95": [
+            0.056,
+            0.062
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9011247660984985,
+          "min": 0.7439252336520792,
+          "max": 1.0137200774757096,
+          "medianCi95": [
+            0.8707517730542147,
+            0.9912974518208477
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0980392156862746,
+          "min": 1.0357142857142858,
+          "max": 1.326923076923077,
+          "medianCi95": [
+            1.0384615384615385,
+            1.1914893617021276
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0866510538557252,
+          "min": 1.0317757009418762,
+          "max": 1.1536401466879678,
+          "medianCi95": [
+            1.0717703349337517,
+            1.1187902629242057
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.04808300000058807,
+          "min": 0.04604100000051403,
+          "max": 0.05062499999985448,
+          "medianCi95": [
+            0.046291999999994005,
+            0.04975000000013097
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.051,
+          "min": 0.047,
+          "max": 0.056,
+          "medianCi95": [
+            0.049,
+            0.054
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0814633030252692,
+          "min": 1.015294219303683,
+          "max": 1.1077083468958233,
+          "medianCi95": [
+            1.0315789473755317,
+            1.1061728395093524
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.05650000000059663,
+          "min": 0.05141599999933533,
+          "max": 0.06695900000067923,
+          "medianCi95": [
+            0.054500000000189175,
+            0.06454199999916455
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.061,
+          "min": 0.055,
+          "max": 0.072,
+          "medianCi95": [
+            0.057,
+            0.07
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.8148849557527053,
+          "min": 0.7172383874158412,
+          "max": 0.9675976349924946,
+          "medianCi95": [
+            0.7348974745719523,
+            0.9239487516414931
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.215686274509804,
+          "min": 0.9821428571428571,
+          "max": 1.4893617021276597,
+          "medianCi95": [
+            1.1176470588235294,
+            1.411764705882353
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0777422104967518,
+          "min": 1.003796174625742,
+          "max": 1.1669519215959165,
+          "medianCi95": [
+            1.03244588121619,
+            1.0973451327317751
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "sha256": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.36366699999962293,
+          "min": 0.3404160000000047,
+          "max": 0.37695800000074087,
+          "medianCi95": [
+            0.34308299999975134,
+            0.3699580000002243
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.365,
+          "min": 0.346,
+          "max": 0.378,
+          "medianCi95": [
+            0.347,
+            0.371
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9562147172686758,
+          "min": 0.8943304028548326,
+          "max": 1.013183059151491,
+          "medianCi95": [
+            0.917645397926726,
+            1.0036439823769412
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0499999999999998,
+          "min": 0.9862637362637362,
+          "max": 1.1183431952662721,
+          "medianCi95": [
+            0.9945945945945945,
+            1.088235294117647
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0052365174020945,
+          "min": 1.002764233679235,
+          "max": 1.016403459296846,
+          "medianCi95": [
+            1.0028165359304977,
+            1.0114170623442476
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3445000000001528,
+          "min": 0.3401669999993828,
+          "max": 0.37462499999946886,
+          "medianCi95": [
+            0.342000000000553,
+            0.3736659999995027
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.349,
+          "min": 0.345,
+          "max": 0.382,
+          "medianCi95": [
+            0.345,
+            0.378
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9811690962093875,
+          "min": 0.9022355689028155,
+          "max": 1.0734053772972703,
+          "medianCi95": [
+            0.9094565735187333,
+            1.0503134978222721
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0203488372093024,
+          "min": 0.9351351351351351,
+          "max": 1.1235294117647059,
+          "medianCi95": [
+            0.9505494505494505,
+            1.1085043988269794
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.011598593397588,
+          "min": 1.0043541364291626,
+          "max": 1.0233236151608056,
+          "medianCi95": [
+            1.0063669288813921,
+            1.019686353021132
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.35825000000022555,
+          "min": 0.3389580000002752,
+          "max": 0.37358300000050804,
+          "medianCi95": [
+            0.34383299999990413,
+            0.36375000000043656
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.359,
+          "min": 0.34,
+          "max": 0.379,
+          "medianCi95": [
+            0.345,
+            0.365
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.986095030828798,
+          "min": 0.9047520898950927,
+          "max": 1.0451318282650979,
+          "medianCi95": [
+            0.9268041237102679,
+            1.0206027777772024
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0117302052785921,
+          "min": 0.9615384615384615,
+          "max": 1.1147058823529412,
+          "medianCi95": [
+            0.981081081081081,
+            1.0798816568047336
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0056700902037552,
+          "min": 1.0010881392799893,
+          "max": 1.0145001244689522,
+          "medianCi95": [
+            1.0020935101180013,
+            1.008333333331703
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3398329999999987,
+          "min": 0.33654099999967,
+          "max": 0.3674170000003869,
+          "medianCi95": [
+            0.33712500000001455,
+            0.36183299999993324
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.341,
+          "min": 0.338,
+          "max": 0.37,
+          "medianCi95": [
+            0.34,
+            0.364
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0059171597640932,
+          "min": 1.000491417843474,
+          "max": 1.0221637185375252,
+          "medianCi95": [
+            1.0019010430053965,
+            1.0071597207219054
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3669999999992797,
+          "min": 0.34100000000034925,
+          "max": 0.3739999999997963,
+          "medianCi95": [
+            0.3419579999999769,
+            0.3732499999996435
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.364,
+          "min": 0.342,
+          "max": 0.378,
+          "medianCi95": [
+            0.344,
+            0.375
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.977528089885744,
+          "min": 0.8998422459889127,
+          "max": 1.046262079495378,
+          "medianCi95": [
+            0.9104701942406519,
+            0.9997741496625993
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.026627218934911,
+          "min": 0.9615384615384615,
+          "max": 1.099706744868035,
+          "medianCi95": [
+            0.9972972972972973,
+            1.0901162790697676
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.004688546551529,
+          "min": 0.9918256130809657,
+          "max": 1.013970256872145,
+          "medianCi95": [
+            1.00267379679199,
+            1.012046241839329
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "sha1": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.2264999999997599,
+          "min": 0.2147500000000946,
+          "max": 0.24729200000001583,
+          "medianCi95": [
+            0.22166700000070705,
+            0.24416700000074343
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.228,
+          "min": 0.218,
+          "max": 0.247,
+          "medianCi95": [
+            0.222,
+            0.245
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9719258843370222,
+          "min": 0.8834009996253781,
+          "max": 1.0242778504956138,
+          "medianCi95": [
+            0.897950992556055,
+            1.0001749639374906
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0183486238532111,
+          "min": 0.9913043478260869,
+          "max": 1.1055045871559632,
+          "medianCi95": [
+            0.9916317991631799,
+            1.1026785714285714
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0116027145324633,
+          "min": 0.9907316047425081,
+          "max": 1.0251698336350732,
+          "medianCi95": [
+            1.0015022533768756,
+            1.0220365422880915
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.21904199999971752,
+          "min": 0.21391700000003766,
+          "max": 0.23445799999990413,
+          "medianCi95": [
+            0.2152089999999589,
+            0.22933300000022427
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.223,
+          "min": 0.218,
+          "max": 0.235,
+          "medianCi95": [
+            0.219,
+            0.234
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9980948029688245,
+          "min": 0.920915473134612,
+          "max": 1.0890576137617143,
+          "medianCi95": [
+            0.9439613655214246,
+            1.043178933722583
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0092165898617511,
+          "min": 0.9246861924686193,
+          "max": 1.0779816513761467,
+          "medianCi95": [
+            0.9608695652173913,
+            1.0642201834862386
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0190868420927819,
+          "min": 1.0023117146785185,
+          "max": 1.0297792632651321,
+          "medianCi95": [
+            1.0089389249563325,
+            1.0269087259363792
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.2211669999996957,
+          "min": 0.21437499999956344,
+          "max": 0.2428330000002461,
+          "medianCi95": [
+            0.2144589999998061,
+            0.2311249999993379
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.226,
+          "min": 0.216,
+          "max": 0.247,
+          "medianCi95": [
+            0.22,
+            0.236
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9886425094681317,
+          "min": 0.8891542747480274,
+          "max": 1.0235195335266984,
+          "medianCi95": [
+            0.9537792278416913,
+            1.0230963314784394
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0138248847926268,
+          "min": 0.96,
+          "max": 1.1330275229357798,
+          "medianCi95": [
+            0.9790794979079499,
+            1.0511627906976744
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0210924824258565,
+          "min": 1.0048939641109618,
+          "max": 1.0335580468557808,
+          "medianCi95": [
+            1.0075801749291655,
+            1.025837106394224
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.218457999999373,
+          "min": 0.21266599999944447,
+          "max": 0.234375,
+          "medianCi95": [
+            0.21591600000010658,
+            0.22850000000016735
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.223,
+          "min": 0.215,
+          "max": 0.239,
+          "medianCi95": [
+            0.217,
+            0.23
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0197333333333334,
+          "min": 1.0028885037551898,
+          "max": 1.0254447011885024,
+          "medianCi95": [
+            1.0065645514215824,
+            1.0250815833305251
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.22379199999977573,
+          "min": 0.21433299999989686,
+          "max": 0.23770799999965675,
+          "medianCi95": [
+            0.2209999999995489,
+            0.23024999999961437
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.228,
+          "min": 0.219,
+          "max": 0.243,
+          "medianCi95": [
+            0.223,
+            0.237
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9668576177887849,
+          "min": 0.8946522624385866,
+          "max": 1.066098081024748,
+          "medianCi95": [
+            0.9396190451300828,
+            1.0186541378569576
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.04,
+          "min": 0.9521739130434782,
+          "max": 1.1146788990825687,
+          "medianCi95": [
+            0.9790794979079499,
+            1.0871559633027523
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0217745284212203,
+          "min": 1.0035597118048123,
+          "max": 1.0313719858450494,
+          "medianCi95": [
+            1.0162866449528423,
+            1.0226244343912276
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "md5": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.15441700000064884,
+          "min": 0.14666699999997945,
+          "max": 0.16387500000018917,
+          "medianCi95": [
+            0.1477920000006634,
+            0.16308400000070833
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.157,
+          "min": 0.149,
+          "max": 0.17,
+          "medianCi95": [
+            0.149,
+            0.168
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9908636884897976,
+          "min": 0.9071914569023753,
+          "max": 1.0844531366312855,
+          "medianCi95": [
+            0.9333104412435733,
+            1.020128689425177
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 0.9875776397515528,
+          "min": 0.9454545454545454,
+          "max": 1.1258278145695366,
+          "medianCi95": [
+            0.9551282051282051,
+            1.070063694267516
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0151457235441648,
+          "min": 1.003154574129591,
+          "max": 1.037376048816499,
+          "medianCi95": [
+            1.0081736494487603,
+            1.031483233467088
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.15320799999972223,
+          "min": 0.14712499999950523,
+          "max": 0.16554199999973207,
+          "medianCi95": [
+            0.1492499999994834,
+            0.16274999999950523
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.156,
+          "min": 0.15,
+          "max": 0.172,
+          "medianCi95": [
+            0.151,
+            0.166
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.988603836531912,
+          "min": 0.9109062980070037,
+          "max": 1.1126777408650386,
+          "medianCi95": [
+            0.9551956603169176,
+            1.014005228954315
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0062111801242235,
+          "min": 0.9272727272727272,
+          "max": 1.064102564102564,
+          "medianCi95": [
+            0.9869281045751633,
+            1.0552147239263803
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0263381478369265,
+          "min": 1.0016051364372522,
+          "max": 1.0390112479025164,
+          "medianCi95": [
+            1.0050251256316194,
+            1.0341951626350778
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.15154199999960838,
+          "min": 0.14708299999983865,
+          "max": 0.16745799999989686,
+          "medianCi95": [
+            0.14737500000046566,
+            0.16370800000004238
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.156,
+          "min": 0.148,
+          "max": 0.169,
+          "medianCi95": [
+            0.15,
+            0.165
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9946897783302535,
+          "min": 0.8852966116893818,
+          "max": 1.138527226124573,
+          "medianCi95": [
+            0.9575853316790057,
+            1.0327938931294118
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0124223602484472,
+          "min": 0.8969696969696969,
+          "max": 1.0833333333333335,
+          "medianCi95": [
+            0.9872611464968153,
+            1.0264900662251657
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.009226281552934,
+          "min": 1.006234575036968,
+          "max": 1.0517387616591025,
+          "medianCi95": [
+            1.006995260410557,
+            1.036012559271866
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.1520410000002812,
+          "min": 0.14487499999995634,
+          "max": 0.16745799999989686,
+          "medianCi95": [
+            0.14816700000028504,
+            0.1597910000000411
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.156,
+          "min": 0.15,
+          "max": 0.165,
+          "medianCi95": [
+            0.151,
+            0.163
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0156996219710686,
+          "min": 0.9853216926041254,
+          "max": 1.0560828300262026,
+          "medianCi95": [
+            1.0075661332613137,
+            1.05227655986375
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.15708300000005693,
+          "min": 0.1525419999998121,
+          "max": 0.16849999999976717,
+          "medianCi95": [
+            0.1544579999999769,
+            0.16575000000011642
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.16,
+          "min": 0.158,
+          "max": 0.176,
+          "medianCi95": [
+            0.158,
+            0.167
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.952102653684902,
+          "min": 0.9023204747803637,
+          "max": 1.0660478855117115,
+          "medianCi95": [
+            0.9182986425358739,
+            1.0164304615509079
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0326797385620916,
+          "min": 0.9757575757575757,
+          "max": 1.1428571428571428,
+          "medianCi95": [
+            0.9813664596273292,
+            1.0636942675159236
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0249358619324922,
+          "min": 1.0050379115532297,
+          "max": 1.0445103857581197,
+          "medianCi95": [
+            1.0075414781290057,
+            1.0358803040310243
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    },
+    "m6502": {
+      "folio-2": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3169999999990978,
+          "min": 0.29737500000192085,
+          "max": 0.3328750000000582,
+          "medianCi95": [
+            0.30245799999829615,
+            0.32541700000001583
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.322,
+          "min": 0.299,
+          "max": 0.608,
+          "medianCi95": [
+            0.307,
+            0.334
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.960305993691615,
+          "min": 0.9140313266607757,
+          "max": 1.062069777212362,
+          "medianCi95": [
+            0.9151333083007619,
+            1.0205251638208055
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0422077922077921,
+          "min": 0.9314641744548287,
+          "max": 1.974025974025974,
+          "medianCi95": [
+            0.9847094801223242,
+            1.107744107744108
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0150169610383242,
+          "min": 1.0033796470144698,
+          "max": 1.8683719658160773,
+          "medianCi95": [
+            1.0053326339704465,
+            1.0192321990547613
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-4": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3093749999970896,
+          "min": 0.2957910000004631,
+          "max": 0.32520800000202144,
+          "medianCi95": [
+            0.2981249999975262,
+            0.32020900000134134
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.311,
+          "min": 0.298,
+          "max": 0.332,
+          "medianCi95": [
+            0.3,
+            0.323
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9711722958801846,
+          "min": 0.9524184034551737,
+          "max": 1.0964938081279387,
+          "medianCi95": [
+            0.958575921395929,
+            1.0353576519907275
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0342679127725858,
+          "min": 0.91131498470948,
+          "max": 1.045307443365696,
+          "medianCi95": [
+            0.9646302250803859,
+            1.0390879478827362
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0071736757303453,
+          "min": 1.005252525261982,
+          "max": 1.0208850950712662,
+          "medianCi95": [
+            1.0062893081844508,
+            1.013638039077377
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "folio-8": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.31600000000253203,
+          "min": 0.29650000000037835,
+          "max": 0.332457999997132,
+          "medianCi95": [
+            0.2968330000003334,
+            0.3300420000014128
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.318,
+          "min": 0.298,
+          "max": 0.338,
+          "medianCi95": [
+            0.299,
+            0.334
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9610488599258927,
+          "min": 0.9106413441744067,
+          "max": 1.0926446857327676,
+          "medianCi95": [
+            0.9352324855498787,
+            1.0652040472180884
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.045307443365696,
+          "min": 0.91131498470948,
+          "max": 1.0974025974025974,
+          "medianCi95": [
+            0.9314641744548287,
+            1.0739549839228297
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0089455752065417,
+          "min": 1.0017290992715513,
+          "max": 1.0166697748374707,
+          "medianCi95": [
+            1.0039315035715883,
+            1.0162866449488277
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      },
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3046250000006694,
+          "min": 0.29504199999792036,
+          "max": 0.32433300000047893,
+          "medianCi95": [
+            0.30266599999959,
+            0.31583300000056624
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.309,
+          "min": 0.297,
+          "max": 0.327,
+          "medianCi95": [
+            0.307,
+            0.321
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.00848507146654,
+          "min": 1.0066363433073713,
+          "max": 1.0176233868370324,
+          "medianCi95": [
+            1.0075615714165052,
+            1.0173410404660463
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "replayed": 0
+      },
+      "folio-1": {
+        "wallMs": {
+          "n": 9,
+          "median": 0.3141250000007858,
+          "min": 0.2948340000002645,
+          "max": 0.3327080000017304,
+          "medianCi95": [
+            0.3087089999971795,
+            0.3243339999971795
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 0.318,
+          "min": 0.297,
+          "max": 0.338,
+          "medianCi95": [
+            0.312,
+            0.332
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9826215678357413,
+          "min": 0.9096856943782833,
+          "max": 1.0411214446120751,
+          "medianCi95": [
+            0.9149674789839508,
+            1.023076748664444
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.0194805194805194,
+          "min": 0.9611650485436893,
+          "max": 1.1178451178451179,
+          "medianCi95": [
+            0.9719626168224299,
+            1.1009771986970684
+          ]
+        },
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.012335853558948,
+          "min": 1.0073465068470175,
+          "max": 1.0236361281977442,
+          "medianCi95": [
+            1.0095473449792418,
+            1.0159058393493456
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "replayed": 0
+      }
+    }
+  }
+}

@@ -1,45 +1,50 @@
-# `results/`
+# Results
 
-Raw samples, exact source snapshots and the summaries generated from them. A summary is
-regenerated with `bun scripts/analyze/run.ts` and never edited by hand. Sets are named by the date
-the run started, and a rerun adds a set instead of overwriting one.
+Measurements are grouped by topic and named study. Each study has a README with its
+instrument, artifacts and reproduction steps. Dates, runtime versions, source digests,
+parameters and sample counts are recorded in the data.
 
-| entry                                     | what                                                                                                                                                                                                      | instrument                                                                             |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `20261019/`                               | sharing controls and the first CPU sweep                                                                                                                                                                  | `scripts/probe/sharing-probe.mjs`                                                      |
-| `20261019-b/`, `20261019-c/`              | combined 256 MiB proof and its large-arena rerun                                                                                                                                                          | `scripts/probe/large-probe.ts`                                                         |
-| `20261019-d/`                             | 207-sample 1/2/4/8 worker scaling sweep                                                                                                                                                                   | `scripts/probe/scaling-probe.ts`                                                       |
-| `20261020-control/`, `-control-b/`        | generalized C entry against 1/2/4/8 workers                                                                                                                                                               | `scripts/probe/control-probe.mjs`                                                      |
-| `20261020-affinity/`, `-affinity-final/`  | the same entry, pinned and unpinned                                                                                                                                                                       | `scripts/probe/control-affinity.mjs`                                                   |
-| `integration*.json`                       | tinyimg and the machine core against native instances                                                                                                                                                     | `scripts/probe/integration-probe.ts`                                                   |
-| `php-preparation*-20261020.json`          | shipping PHP function census before and after the fix                                                                                                                                                     | `scripts/probe/php-preparation.ts`                                                     |
-| `php-render-20261020.json`                | native against prepared Folio, boot and uncached Drupal render                                                                                                                                            | `scripts/probe/php-render.ts`                                                          |
-| `machine-artifact-coverage-20261020.json` | per-export inspect coverage of the Linux machine artifacts                                                                                                                                                | `scripts/probe/artifact-coverage.ts`                                                   |
-| `page-leases-20261020.json`               | native Wasm over bounded page leases                                                                                                                                                                      | `scripts/probe/pages-probe.ts`                                                         |
-| `browser-extraction-local*.json`          | local Chromium control, with and without JSPI                                                                                                                                                             | `experiments/browser/extraction/local.ts`                                              |
-| `folio-v1-proof-sources-20261020.tar.gz`  | sources behind the 2026-10-20 consumer results                                                                                                                                                            | archive                                                                                |
-| `20261020-php/`                           | PHP census, profile, ten workloads and the Drupal render pairs                                                                                                                                            | `scripts/probe/php-*.ts`, `purity-census.ts`                                           |
-| `20261020-consumers/`                     | tinyimg, machine core and process artifacts, controls, paired                                                                                                                                             | `scripts/probe/consumer.ts`                                                            |
-| `20261020-regress/`                       | static admission: calibration, region sites, old build against new, bypass decision                                                                                                                       | `scripts/probe/consumer.ts`, `admission-*.ts`                                          |
-| `20261020-phpparallel/`                   | independent PHP requests at 1/2/4/8, four arms; Drupal render breakdown; memory                                                                                                                           | `scripts/probe/php-concurrent.ts`, `drupal-breakdown.ts`                               |
-| `20261020-phpintra/`                      | explicit task API inside one request; call_indirect target counts; Wasm memory clone                                                                                                                      | `scripts/probe/php-compile.ts`, `php-intra.ts`, `indirect-sites.ts`, `php-snapshot.ts` |
-| `20261020-worksp2/`                       | task-rung controls (sha256 chains, dependent chain, shared variable, Twig arrays), Drupal render sibling tables and task rungs, site validation                                                           | `scripts/probe/worksp.ts`, `worksp-validate.ts`, `scripts/analyze/worksp.ts`           |
-| `20261020-worksp/`                        | work-span ladders of one Drupal render and four PHP requests; counter-mode sizes; refcount tag check                                                                                                      | `scripts/probe/worksp.ts`, `worksp-refcount.ts`, `scripts/analyze/worksp.ts`           |
-| `20261020-phptasks-lib/`, `-lib-b/`       | the explicit task API again through `src/tasks.ts`; sha256, serialize, compress and Drupal render arrays at 1/2/4/8                                                                                       | `scripts/probe/php-intra.ts`, `scripts/rig/php-intra.sh`                               |
-| `20261020-phpwidth-nosmt/`, `-smt/`       | the task pool at 4, 8, 10, 12 and 16 workers on 48 jobs, 10 cores and 10 cores with SMT siblings                                                                                                          | `scripts/probe/php-intra.ts`, `scripts/rig/php-intra.sh`                               |
-| `20261022-workerd-concurrency/`           | one workerd process against four processes: CPU-bound requests at 1/2/4/8/16 concurrent, four arms, Mac                                                                                                   | `scripts/probe/workerd-concurrency.ts`                                                 |
-| `20261022-phpregen/`                      | regeneration of 31 Drupal pages by 1 to 16 private contexts on 10 cores and 10 cores with SMT siblings, plus a Mac smoke run                                                                              | `scripts/probe/php-regen.ts`, `scripts/rig/php-regen.sh`, `scripts/analyze/regen.ts`   |
-| `20261022-tasks-runtime/`                 | the task pool behavior checks under Bun and Node                                                                                                                                                          | `scripts/probe/tasks-runtime.ts`                                                       |
-| `20261022-bun-drupal/`                    | private Drupal contexts under Bun and Node: output hashes, render, boot and first-render times                                                                                                            | `scripts/probe/php-regen.ts`, `scripts/analyze/runtimecmp.ts`                          |
-| `20261022-blocks/`                        | warm render wall time and per-block build cost at 0, 10, 20 and 40 placed blocks, with the early-launch speedup bound                                                                                     | `scripts/probe/php-blocks.ts`, `scripts/analyze/blocks.ts`                             |
-| `20261022-site-concurrency/`              | a real Drupal payload on workerd: one process against 2, 4 and 8 processes, and the same batch on private contexts                                                                                        | `scripts/probe/site-concurrency.ts`, `scripts/analyze/siteconc.ts`                     |
-| `20261022-bootimage/`                     | boot phases, image anatomy, delivery routes, baked modules, render from a baked image and local workerd costs for the PHP 8.5.2 module                                                                    | `scripts/probe/boot-image.ts`, `scripts/analyze/bootimage.ts`                          |
-| `20261022-bakesecrets/`                   | a baked image built from throwaway secrets: leak scan of the image and module, rekey on replay, CSRF validation and RNG state across replays                                                              | `scripts/probe/bake-secrets.ts`, `scripts/analyze/bakesecrets.ts`                      |
-| `20261022-bootimage-php8512/`             | the baked image library on the PHP 8.5.12 module: anatomy, bake with changed globals, replay through sealed handles, render equality, timing, local workerd costs and the bundle against the script limit | `scripts/probe/boot-image.ts`, `scripts/analyze/bootimage.ts`                          |
-| `20261022-bakesecrets-php8512/`           | the same secret, keying, rekey, RNG and timing tests on the 8.5.12 module, plus the host-call census of a replay and a sweep of the baked heap for secret-shaped strings                                  | `scripts/probe/bake-secrets.ts`, `scripts/analyze/bakesecrets.ts`                      |
-| `20261022-pagedrop/`                      | the delta pages of a Drupal host's baked render image by allocator class, the pages the allocator rule drops, and the pages a render set does not read when poisoned                                      | `scripts/probe/page-drop.ts`, `scripts/analyze/pagedrop.ts`                            |
-| `20261022-sqlcensus/`                     | statement log of node, user, term, render and cron units: tables read and written, pair conflicts, SQL share of wall time                                                                                 | `scripts/probe/php-sql-census.ts`, `scripts/analyze/sqlcensus.ts`                      |
-| `source-manifest.json`, `verification*`   | hashes and logs of earlier gates                                                                                                                                                                          | recorded at the time                                                                   |
+| Topic                                    | Evidence                                                    |
+| ---------------------------------------- | ----------------------------------------------------------- |
+| [Execution](execution/README.md)         | Automatic extraction, scaling, placement and admission      |
+| [Memory](memory/README.md)               | Shared backing, large arenas and page leases                |
+| [Compatibility](compatibility/README.md) | Consumer modules, PHP rendering and source archives         |
+| [Compiler](compiler/README.md)           | Preparation and generated-function counts                   |
+| [Tasks](tasks/README.md)                 | Explicit task pools, runtime compatibility and CPU topology |
+| [PHP](php/README.md)                     | Requests, render work, SQL effects and deployment           |
+| [Boot](boot/README.md)                   | Boot images, delivery, eligibility, replay and residency    |
+| [Browser](browser/README.md)             | Physical sharing, extraction and consumer execution         |
+| [Managed](managed/README.md)             | Copied-snapshot lane validation                             |
+| [Portability](portability/README.md)     | Host bridge, runtime capabilities and concurrency           |
+| [Analysis](analysis/README.md)           | Work/span models and their controls                         |
+| [Verification](verification/README.md)   | Historical test and verification records                    |
 
-Results from Cloudflare deployments live beside their probes as `experiments/*/results-*.json`.
-The FREE consumer harness and PHP platform summaries are `experiments/consumer/results-free-*.json`.
+## Provenance
+
+[index.json](index.json) records the original v1 path, byte count and SHA256 for each
+migrated artifact. Historical raw files, summaries and source archives retain their original
+bytes. Original names inside records and archives identify the measured run; the index resolves
+them to the current layout.
+
+New studies use short role names such as `raw.jsonl`, `summary.json`, `environment.json`,
+`source.tar.gz` and `run.log`. Use mechanism names for separate arms and record the reason
+for a repeat in its README. Add a new record instead of overwriting a completed run.
+
+## Reproduction
+
+From the repository root:
+
+```sh
+node scripts/research/evidence.ts
+node scripts/research/evidence.ts --summaries
+bun scripts/analyze/run.ts
+```
+
+The first command verifies every historical artifact. The second regenerates summaries in a
+temporary copy and compares their bytes. The last writes regenerated summaries into this tree.
+See [scripts](../scripts/README.md) for toolchains and external consumer inputs, and
+[experiments](../experiments/README.md) for local and deployed procedures.
+
+Local timing, deployed latency, CPU meters and billing quantities use different instruments.
+A successful comparison does not imply parallel worker dispatch; the execution reports record
+routing separately.

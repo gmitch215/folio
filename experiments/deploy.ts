@@ -6,13 +6,14 @@ import { periodicRows, settlePeriodic } from './bootimage/periodic.ts';
 import {
 	boundaryName,
 	boundaryObjects,
-	isVariant,
 	memoryBound,
 	memoryConfigs,
 	meterName,
 	meterObjects,
+	moduleOf,
 	readinessAttempts,
-	requestBound
+	requestBound,
+	variantOf
 } from './bootimage/plan.ts';
 import { collect } from './cloud/run.ts';
 import { readMeter, runPhp, runSessions } from './consumer/drive.ts';
@@ -73,7 +74,7 @@ const budgets = {
 		expectedCharges: 0
 	},
 	bootimage: (memoryMode ? memoryBound : requestBound)(
-		isVariant(process.env.FOLIO_BOOTIMAGE_VARIANT) ? process.env.FOLIO_BOOTIMAGE_VARIANT : 'a'
+		variantOf(process.env.FOLIO_BOOTIMAGE_VARIANT) ?? 'a'
 	)
 };
 
@@ -97,9 +98,9 @@ const sourceFiles = {
 };
 
 // one deploy per variant: three modules together pass the 64 MiB bundle
-const bootVariant = process.env.FOLIO_BOOTIMAGE_VARIANT;
+const bootVariant = variantOf(process.env.FOLIO_BOOTIMAGE_VARIANT);
 if (kind === 'bootimage')
-	assert.ok(isVariant(bootVariant), 'set FOLIO_BOOTIMAGE_VARIANT to a, b or c');
+	assert.ok(bootVariant, 'set FOLIO_BOOTIMAGE_VARIANT to original, boot or render');
 if (kind === 'bootimage' && memoryMode)
 	assert.ok(bootVariant === 'a' || bootVariant === 'c', 'memory mode runs variant a or c');
 
@@ -107,7 +108,7 @@ const configs = {
 	consumer: 'experiments/consumer/wrangler.jsonc',
 	php: 'experiments/consumer/php/wrangler.jsonc',
 	prepared: 'experiments/consumer/php/wrangler.prepared.jsonc',
-	bootimage: `experiments/bootimage/wrangler.${bootVariant}.jsonc`
+	bootimage: `experiments/bootimage/wrangler.${moduleOf[bootVariant ?? 'a']}.jsonc`
 } as const;
 
 const root = new URL('../', import.meta.url);

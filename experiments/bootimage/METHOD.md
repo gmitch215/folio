@@ -9,7 +9,8 @@ instantiating them and nothing about rendering.
 ## Deploys
 
 Three modules together pass the 64 MiB uncompressed bundle, so each variant is its own deploy
-(`FOLIO_BOOTIMAGE_VARIANT=a|b|c node experiments/deploy.ts bootimage`).
+(`FOLIO_BOOTIMAGE_VARIANT=original|boot|render node experiments/deploy.ts bootimage`).
+Historical records use `a`, `b` and `c` for these variants respectively; both forms are accepted.
 
 | variant | modules in the bundle                                                | memory per instantiate |
 | ------- | -------------------------------------------------------------------- | ---------------------- |
@@ -20,7 +21,7 @@ Three modules together pass the 64 MiB uncompressed bundle, so each variant is i
 `prepare.ts` copies the three PHP modules into `build/` only if their size and SHA-256 equal
 `hashes.json`, builds the small modules byte by byte, instantiates each PHP module locally and writes
 `build/expected.json`: a 32-bit FNV-1a over pages 64, 580 and 620 (they hold different bytes in all
-three modules) and the memory byte length. `local.ts a|b|c` runs the same sequence in local workerd
+three modules) and the memory byte length. `local.ts original|boot|render` runs the same sequence in local workerd
 and compares both values before anything is uploaded.
 
 ## Worker
@@ -91,7 +92,7 @@ account usage meter did not count these requests, so rows are the sum of each mi
 
 ## Memory Boundary and Meter
 
-`FOLIO_BOOTIMAGE_MODE=memory FOLIO_BOOTIMAGE_VARIANT=a|c node experiments/deploy.ts bootimage` asks where
+`FOLIO_BOOTIMAGE_MODE=memory FOLIO_BOOTIMAGE_VARIANT=original|render node experiments/deploy.ts bootimage` asks where
 a deployed isolate runs out of memory with a live module memory, and what the platform meters for it.
 The startup sequence above is unchanged and stays the default.
 
@@ -123,7 +124,7 @@ request for the instantiate-only objects and `exceededMemoryErrors` for the boun
 The request bound is 1 + 40 requests per boundary object and 12 per configuration for the meter, so 270
 Durable Object requests for deploy `a` and 135 for deploy `c`, plus at most 4 readiness requests each.
 Stopping at the reset usually sends far fewer. No storage, alarms, queues or other bindings.
-`node experiments/bootimage/local.ts a|c memory 3` runs the same driver in local workerd with 3 steps.
+`node experiments/bootimage/local.ts original|render memory 3` runs the same driver in local workerd with 3 steps.
 
 The 1322-page memory is 86,638,592 bytes: 86.6 MB and 82.6 MiB. A reset showed up between two requests
 in all nine boundary runs: the request that crossed the limit answered 200, and the next request found
@@ -160,7 +161,7 @@ the module fingerprint and the driver digest; none of them changes when a config
 rename of the site leaves the baked cold boot serving the old name in the page title (config objects
 read at bake time stay in the heap). A digest of the `config` table rows (175 rows, 1 to 6 ms locally)
 as a second key sends the edited site to a plain boot with the correct body; the site then loses the
-image's saving. `results-local-stale-20261022.json` holds both runs.
+image's saving. [stale.json](../../results/boot/eligibility/stale.json) holds both runs.
 
 `HOSTBOOT_BOOTPHASE=1` adds, per object after the first request, a re-boot request through `/bootphase`
 (which drops the interpreter; its `alreadyBooted` and the boot path come back in the reply), and for
@@ -206,11 +207,11 @@ HOSTBOOT_ARMS=control= HOSTBOOT_BOOTPHASE=1 HOSTBOOT_PHASE_ROUNDS=0 HOSTBOOT_IDL
   HOSTBOOT_MAX_ROWS=36500 HOSTBOOT_MAX_REQUESTS=300 < dir > ,par= < dir > HOSTBOOT_ROUNDS=5 node experiments/bootimage/hostboot.ts
 ```
 
-`results-local-proof-php8512-20261022.json` holds the local proof: normalized bodies of four paths equal
+[php-8512.json](../../results/boot/loader/php-8512.json) holds the local proof: normalized bodies of four paths equal
 between a plain cold boot and a cold boot from the image, the CSRF token equal to the plain object seeded
 with the same key and different from one seeded with the sentinel, first `mt_rand` values that differ across
 two cold baked objects, a context mismatch that boots the plain module with the same body, and the stale
-matrix of `stale.ts`. `results-hostboot-assets-php8512-20261022-a.json` is the deployed run: 5 objects per arm
+matrix of `stale.ts`. [result.json](../../results/boot/deployed-serve/result.json) is the deployed run: 5 objects per arm
 on one deploy per arm, the control on the plain module and the host's own boot path (its heap restore
 refused for lack of a snapshot, so a plain boot), the other arm on the image with 4 files in flight.
 

@@ -2,11 +2,11 @@ import { Miniflare, convertV4MiniflareOptions } from 'miniflare';
 import assert from 'node:assert/strict';
 import { readFileSync, rmSync } from 'node:fs';
 import { bundle, bundleModules } from '../lib/bundle.ts';
-import { driveMemory, isVariant, sequence, type Variant } from './plan.ts';
+import { driveMemory, moduleOf, sequence, variantOf, type Variant } from './plan.ts';
 
 // run `node experiments/bootimage/prepare.ts` first; the bundle needs the staged modules
 export async function runLocal(variant: Variant) {
-	const root = bundle('bootimage', `experiments/bootimage/wrangler.${variant}.jsonc`);
+	const root = bundle('bootimage', `experiments/bootimage/wrangler.${moduleOf[variant]}.jsonc`);
 	const mf = new Miniflare(
 		convertV4MiniflareOptions({
 			...bundleModules(root),
@@ -32,7 +32,7 @@ export async function runLocal(variant: Variant) {
 
 /** The memory-mode sequence in local workerd, with the ballast capped so the dry run stays small. */
 export async function runLocalMemory(variant: Variant, maxSteps: number) {
-	const root = bundle('bootimage', `experiments/bootimage/wrangler.${variant}.jsonc`);
+	const root = bundle('bootimage', `experiments/bootimage/wrangler.${moduleOf[variant]}.jsonc`);
 	const mf = new Miniflare(
 		convertV4MiniflareOptions({
 			...bundleModules(root),
@@ -60,8 +60,8 @@ export async function runLocalMemory(variant: Variant, maxSteps: number) {
 }
 
 if (import.meta.main && process.argv[3] === 'memory') {
-	const variant = process.argv[2];
-	assert.ok(variant === 'a' || variant === 'c', 'usage: local.ts a|c memory [steps]');
+	const variant = variantOf(process.argv[2]);
+	assert.ok(variant === 'a' || variant === 'c', 'usage: local.ts original|render memory [steps]');
 	const rows = await runLocalMemory(variant, Number(process.argv[4] ?? 3));
 	const bodies = rows.map((row: any) => ({ ...row, body: JSON.parse(row.body) }));
 	const last = (group: string) => bodies.filter((row: any) => row.group === group);
@@ -84,8 +84,8 @@ if (import.meta.main && process.argv[3] === 'memory') {
 		})
 	);
 } else if (import.meta.main) {
-	const variant = process.argv[2];
-	assert.ok(isVariant(variant), 'usage: local.ts a|b|c');
+	const variant = variantOf(process.argv[2]);
+	assert.ok(variant, 'usage: local.ts original|boot|render');
 	const expected = JSON.parse(
 		readFileSync(new URL('build/expected.json', import.meta.url), 'utf8')
 	);

@@ -15,6 +15,17 @@ export interface Step {
 export const isVariant = (value: unknown): value is Variant =>
 	value === 'a' || value === 'b' || value === 'c';
 
+export const variantOf = (value: unknown): Variant | undefined =>
+	isVariant(value)
+		? value
+		: value === 'original'
+			? 'a'
+			: value === 'boot'
+				? 'b'
+				: value === 'render'
+					? 'c'
+					: undefined;
+
 /** The fixed request sequence of one deploy: 21 Durable Object requests, one per step. */
 export function sequence(variant: Variant): Step[] {
 	const steps: Step[] = [];
