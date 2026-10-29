@@ -1,0 +1,38 @@
+{
+  "samples": [
+    {
+      "kind": "image",
+      "sourceBytes": 14011467,
+      "bakedBytes": 61852825,
+      "bakedGzipBytes": 18403637,
+      "imageBytes": 47844350,
+      "pages": 730,
+      "bakeMs": 3947.946167000001,
+      "context": "e1517485cb77823cea271b65ae17ad85be2b2564f8b0b3c9720a5aa187f14efd",
+      "probeSha256": "8dfa4ffefb5a0aa90d1fb56a23111e8a2b53157817f721215762b3128253c39a",
+      "moduleSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce"
+    },
+    {
+      "kind": "generation",
+      "wallMs": 10366.68025,
+      "cpuMs": 11362.805,
+      "scope": "probe export construction through fresh boot, render, capture, bake, gzip, files and database backup; excludes process imports and harness bundling",
+      "moduleSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce"
+    }
+  ],
+  "model": {
+    "guarded": {
+      "wallSavingMs": 385.79729300000014,
+      "cpuSavingMs": 606.2890000000001,
+      "generationWallBreakEvenBoots": 27,
+      "generationCpuBreakEvenBoots": 19
+    },
+    "memory": {
+      "wallSavingMs": 369.97441800000007,
+      "cpuSavingMs": 598.1160000000001,
+      "generationWallBreakEvenBoots": 29,
+      "generationCpuBreakEvenBoots": 19
+    }
+  },
+  "limitations": "single local generation observation; model uses difference of cohort medians, excludes storage/network/deployment/retention costs; each native boot includes actual Drupal boot and first render"
+}

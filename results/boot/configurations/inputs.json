@@ -1,0 +1,56 @@
+{
+  "schema": "folio.boot-source.v1",
+  "inputs": {
+    "php8.5.tuned.wasm": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+    "php8.5-worker.tuned.mjs": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28",
+    "renewal": "f0bbb62a9a94072f14e56d723156ed206bda016f2280e8982e9e203ddd98c2ba",
+    "boot-image.ts": "23bf6be7caa8f8dfccf941d3e037a7d96de6e768e8cb4293cfd90ec7602f376f",
+    "php-context-drupal.ts": "c358f543989ada64a2a3d3c7b8de60ca21a83531e11ae46b9ecdeb3b1c1a60d9",
+    "bundle": "043cc567f0014f3ce156d3332e5cc82f407b89ee5f0c328bbfda187f9c00894a"
+  },
+  "sourceFiles": {
+    "src/bake.ts": "e6ef4e996680d3b5451b7e43526746e2f80934255a08ed478d03540d8fd04b11",
+    "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+    "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
+    "scripts/probe/boot-image.ts": "23bf6be7caa8f8dfccf941d3e037a7d96de6e768e8cb4293cfd90ec7602f376f",
+    "scripts/probe/php-context-drupal.ts": "c358f543989ada64a2a3d3c7b8de60ca21a83531e11ae46b9ecdeb3b1c1a60d9",
+    "scripts/probe/consumer-root.ts": "1d93f2749f59f991ce7e3dd7baf76f01dbb75c0b9601ac43ca07ce41f4a41b97",
+    "scripts/probe/timed-fflate.ts": "ca980eceffc7099a0af7ecd25d85dee37e85a27450e597ea9634074887c24b29",
+    "scripts/research/analyze.ts": "96449e54d58410b22e44c90dd8c70a3e7e3e9b594b370b972ea141985203c52b",
+    "scripts/research/environment.ts": "35eed05e53ff27f686dd2d18a4fb8a3390c084738aef4fb5c2b30c00d027ce75",
+    "experiments/lib/cloudflare.ts": "4e03f5564f44c94f94dd4e55175d4b4b108fbe448c0b3bcaaa3afd29ff807242",
+    "experiments/bootimage/analyze.ts": "12d09619b88ca74783547005ee19f00095d6a9255816b96fc7df5a97066b8c15",
+    "experiments/bootimage/research/METHOD.md": "91e50f2612c721451e7ee65741b0d022045cfdb3b1e28bafa5ebd26fed98ab50",
+    "experiments/bootimage/research/README.md": "d3bba4a0759a959384c22d8122ae56ea1d151012a579d1a72a9f2111db608772",
+    "experiments/bootimage/research/adapter.d.ts": "bf285021cde57689d4cd878f4111dbbbc621deb0f071ff67bc2c99dda6376883",
+    "experiments/bootimage/research/analyze.ts": "ca7056b58fbda45177ac466bede0a2aa5a8a3043548e94eed51c3a48098ea1c1",
+    "experiments/bootimage/research/build.ts": "49b044a947799bc2c20317a90a785b722b3307ae02de2b1fe19ddbda562eed3e",
+    "experiments/bootimage/research/deploy.ts": "0e16db3c7c988ecfde80c96cf1cb237381f15bec24644960ef1559ba5a92ce31",
+    "experiments/bootimage/research/drive.ts": "cd4735f2fc8d176bb0838d981f6edf8b9d45fa2b86bac8e91f5727531237f8bd",
+    "experiments/bootimage/research/policy.ts": "819cc17f3d55c60a6f8ec1e9b6922234a5595f73a186d157f49dcab8a02c0799",
+    "experiments/bootimage/research/publish.ts": "b2840bcae5eb98a230e6c140392328433cde2fdba232ae4fbc3ff62ec626b5ee",
+    "experiments/bootimage/research/run.ts": "caf57eda839b52b285eee87b18692f142c25e24985492529890fd1a412982734",
+    "experiments/bootimage/research/stored.ts": "3bcd3e73a9880831ee26955b3a4798362cf11d423b15d0077d3e5376808af49a",
+    "experiments/bootimage/research/tsconfig.json": "5fea288093d403f203d70312563d55aa380a6c4f374d45d72e8332750b48d740",
+    "experiments/bootimage/research/worker.ts": "ccdb82c9762fd046d03d57ee70d56b8ff556825634395389e54d0d43a364afc3"
+  },
+  "provenance": "The executed local bundle is identified by inputs.bundle. The archive contains unchanged measured bake/memory/page sources and public reproduction tooling, including later policy extraction, generation instrumentation and delivery diagnostics. The external consumer code, heap and databases are omitted.",
+  "generationInputs": {
+    "php8.5.tuned.wasm": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+    "php8.5-worker.tuned.mjs": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28",
+    "renewal": "f0bbb62a9a94072f14e56d723156ed206bda016f2280e8982e9e203ddd98c2ba",
+    "boot-image.ts": "23bf6be7caa8f8dfccf941d3e037a7d96de6e768e8cb4293cfd90ec7602f376f",
+    "php-context-drupal.ts": "c358f543989ada64a2a3d3c7b8de60ca21a83531e11ae46b9ecdeb3b1c1a60d9",
+    "bundle": "b71fedc028eb06c48647f51cfac5698eeef039ecea9a70891295dcc87f4e3168"
+  },
+  "deliveryWorkerSources": {
+    "original": "54d2afeae967b43aee20667f25e8fff540cef27b5d0a1f9f41706e9a4ebe9c76",
+    "assets": "54d2afeae967b43aee20667f25e8fff540cef27b5d0a1f9f41706e9a4ebe9c76",
+    "baked": "54d2afeae967b43aee20667f25e8fff540cef27b5d0a1f9f41706e9a4ebe9c76"
+  },
+  "generationArtifacts": {
+    "image.wasm": "51a1cfd66db1c3b2c4b7806671edebc7269cc9643cdaa4e271463db1d003f6da",
+    "image.bin": "cd676c1182649ce27a68d2132c57169460f5e4503d7f95e1c1e9bf2453fc2147",
+    "meta.json": "ad1b7bd170765d1fc2ace35d303ab33aa44433819696422f5f1a30d5e0217a20"
+  }
+}

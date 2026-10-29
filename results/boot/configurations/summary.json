@@ -1,0 +1,3367 @@
+{
+  "schema": "folio.boot-research.v1",
+  "rawSha256": "5a97211c0a8347e25f76fc944179e07bd663a2c65a28795dcd53c20590d3c570",
+  "names": [
+    "base",
+    "rename",
+    "mail",
+    "timezone",
+    "theme",
+    "color",
+    "module",
+    "maintenance",
+    "cache",
+    "alias",
+    "content",
+    "key",
+    "salt"
+  ],
+  "strictEligible": 7,
+  "resetEligible": 12,
+  "comparisons": [
+    {
+      "name": "base",
+      "arm": "plain",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 842.548625,
+      "cpuMs": 1425.749
+    },
+    {
+      "name": "base",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 412.174708,
+      "cpuMs": 765.585
+    },
+    {
+      "name": "base",
+      "arm": "reset",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 401.95279200000004,
+      "cpuMs": 762.177
+    },
+    {
+      "name": "base",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 393.531,
+      "cpuMs": 748.068
+    },
+    {
+      "name": "rename",
+      "arm": "plain",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "5c6e3e47f91297c9ed63817aeda76e6ada97c01e688a19018ca6004920603225",
+      "wallMs": 785.1086659999999,
+      "cpuMs": 1365.397
+    },
+    {
+      "name": "rename",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "5c6e3e47f91297c9ed63817aeda76e6ada97c01e688a19018ca6004920603225",
+      "wallMs": 802.9901249999999,
+      "cpuMs": 1386.631
+    },
+    {
+      "name": "rename",
+      "arm": "reset",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "5c6e3e47f91297c9ed63817aeda76e6ada97c01e688a19018ca6004920603225",
+      "wallMs": 457.300083,
+      "cpuMs": 819.958
+    },
+    {
+      "name": "rename",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": false,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 413.49120899999997,
+      "cpuMs": 765.643
+    },
+    {
+      "name": "mail",
+      "arm": "plain",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 788.2090840000001,
+      "cpuMs": 1367.052
+    },
+    {
+      "name": "mail",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 805.4164579999999,
+      "cpuMs": 1398.824
+    },
+    {
+      "name": "mail",
+      "arm": "reset",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 571.789625,
+      "cpuMs": 900.81
+    },
+    {
+      "name": "mail",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 425.5057499999999,
+      "cpuMs": 794.228
+    },
+    {
+      "name": "timezone",
+      "arm": "plain",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 799.609583,
+      "cpuMs": 1387.146
+    },
+    {
+      "name": "timezone",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 817.249458,
+      "cpuMs": 1373.737
+    },
+    {
+      "name": "timezone",
+      "arm": "reset",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 441.9475,
+      "cpuMs": 823.215
+    },
+    {
+      "name": "timezone",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 411.39387500000004,
+      "cpuMs": 773.553
+    },
+    {
+      "name": "theme",
+      "arm": "plain",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 795.956416,
+      "cpuMs": 1375.342
+    },
+    {
+      "name": "theme",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 819.8947090000001,
+      "cpuMs": 1418.987
+    },
+    {
+      "name": "theme",
+      "arm": "reset",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 428.48499999999996,
+      "cpuMs": 796.699
+    },
+    {
+      "name": "theme",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 423.955208,
+      "cpuMs": 787.768
+    },
+    {
+      "name": "color",
+      "arm": "plain",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "400d54d8831afde66db17218654ed5b6573f9cbc1157f0a281c43fa67c11d946",
+      "wallMs": 891.508208,
+      "cpuMs": 1485.566
+    },
+    {
+      "name": "color",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "400d54d8831afde66db17218654ed5b6573f9cbc1157f0a281c43fa67c11d946",
+      "wallMs": 806.4738330000001,
+      "cpuMs": 1399.585
+    },
+    {
+      "name": "color",
+      "arm": "reset",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "400d54d8831afde66db17218654ed5b6573f9cbc1157f0a281c43fa67c11d946",
+      "wallMs": 428.344792,
+      "cpuMs": 780.922
+    },
+    {
+      "name": "color",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": false,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 431.53041699999994,
+      "cpuMs": 788.46
+    },
+    {
+      "name": "module",
+      "arm": "plain",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": false,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 1341.623583,
+      "cpuMs": 2026.598
+    },
+    {
+      "name": "module",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": false,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 1383.590125,
+      "cpuMs": 2075.343
+    },
+    {
+      "name": "module",
+      "arm": "reset",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": false,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 1294.598959,
+      "cpuMs": 1973.145
+    },
+    {
+      "name": "module",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": false,
+      "resetEligible": false,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 430.94570899999997,
+      "cpuMs": 785.596
+    },
+    {
+      "name": "maintenance",
+      "arm": "plain",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 503,
+      "bodySha256": "bda0fc68e0897ef7042943deff4b42e46fc4c37441f90155d5dcbb355b3fd80b",
+      "wallMs": 624.145125,
+      "cpuMs": 1122.376
+    },
+    {
+      "name": "maintenance",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 503,
+      "bodySha256": "bda0fc68e0897ef7042943deff4b42e46fc4c37441f90155d5dcbb355b3fd80b",
+      "wallMs": 424.199292,
+      "cpuMs": 811.198
+    },
+    {
+      "name": "maintenance",
+      "arm": "reset",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 503,
+      "bodySha256": "bda0fc68e0897ef7042943deff4b42e46fc4c37441f90155d5dcbb355b3fd80b",
+      "wallMs": 431.494083,
+      "cpuMs": 802.446
+    },
+    {
+      "name": "maintenance",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 503,
+      "bodySha256": "bda0fc68e0897ef7042943deff4b42e46fc4c37441f90155d5dcbb355b3fd80b",
+      "wallMs": 431.518709,
+      "cpuMs": 787.641
+    },
+    {
+      "name": "cache",
+      "arm": "plain",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 806.844,
+      "cpuMs": 1397.281
+    },
+    {
+      "name": "cache",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 411.25529199999994,
+      "cpuMs": 767.49
+    },
+    {
+      "name": "cache",
+      "arm": "reset",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 419.840625,
+      "cpuMs": 784.981
+    },
+    {
+      "name": "cache",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 450.412417,
+      "cpuMs": 825.801
+    },
+    {
+      "name": "alias",
+      "arm": "plain",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "0a9f2cd4d41a8177e450ba262bc7d3b084ad07f7d44bd3300e6c0a074a9edd37",
+      "wallMs": 785.6870829999999,
+      "cpuMs": 1363.226
+    },
+    {
+      "name": "alias",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "0a9f2cd4d41a8177e450ba262bc7d3b084ad07f7d44bd3300e6c0a074a9edd37",
+      "wallMs": 456.08525000000003,
+      "cpuMs": 873.763
+    },
+    {
+      "name": "alias",
+      "arm": "reset",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "0a9f2cd4d41a8177e450ba262bc7d3b084ad07f7d44bd3300e6c0a074a9edd37",
+      "wallMs": 462.989583,
+      "cpuMs": 880.575
+    },
+    {
+      "name": "alias",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "0a9f2cd4d41a8177e450ba262bc7d3b084ad07f7d44bd3300e6c0a074a9edd37",
+      "wallMs": 468.259042,
+      "cpuMs": 891.915
+    },
+    {
+      "name": "content",
+      "arm": "plain",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "d97b07cfeb1d51501789dbc03d695d8700b7ae398bb7edf3a81b745a01f757e1",
+      "wallMs": 1016.2577080000001,
+      "cpuMs": 1648.976
+    },
+    {
+      "name": "content",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "d97b07cfeb1d51501789dbc03d695d8700b7ae398bb7edf3a81b745a01f757e1",
+      "wallMs": 595.712166,
+      "cpuMs": 1044.258
+    },
+    {
+      "name": "content",
+      "arm": "reset",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "d97b07cfeb1d51501789dbc03d695d8700b7ae398bb7edf3a81b745a01f757e1",
+      "wallMs": 617.532792,
+      "cpuMs": 1075.131
+    },
+    {
+      "name": "content",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "d97b07cfeb1d51501789dbc03d695d8700b7ae398bb7edf3a81b745a01f757e1",
+      "wallMs": 759.934292,
+      "cpuMs": 1103.33
+    },
+    {
+      "name": "key",
+      "arm": "plain",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 803.8755000000001,
+      "cpuMs": 1388.115
+    },
+    {
+      "name": "key",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 414.87891699999994,
+      "cpuMs": 775.68
+    },
+    {
+      "name": "key",
+      "arm": "reset",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 406.53450000000004,
+      "cpuMs": 773.284
+    },
+    {
+      "name": "key",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 406.841167,
+      "cpuMs": 774.084
+    },
+    {
+      "name": "salt",
+      "arm": "plain",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": false,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 800.4813750000001,
+      "cpuMs": 1400.26
+    },
+    {
+      "name": "salt",
+      "arm": "guarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 419.645542,
+      "cpuMs": 783.601
+    },
+    {
+      "name": "salt",
+      "arm": "reset",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 407.19599999999997,
+      "cpuMs": 769.928
+    },
+    {
+      "name": "salt",
+      "arm": "unguarded",
+      "round": 0,
+      "eligible": true,
+      "resetEligible": true,
+      "useImage": true,
+      "equal": true,
+      "status": 200,
+      "bodySha256": "b361331db989738747800e1cfb4cbfe9f122dabd7cb79584e36fac5e18644711",
+      "wallMs": 414.802875,
+      "cpuMs": 779.336
+    }
+  ],
+  "safety": {
+    "guardedComparisons": 39,
+    "guardedEqual": 39,
+    "keyEqual": true,
+    "saltEqual": true,
+    "replayedRandomSequences": 32,
+    "uniqueRandomSequences": 32,
+    "formBuildIds": 4,
+    "uniqueFormBuildIds": 4,
+    "replayFailures": [],
+    "renewalErrors": []
+  },
+  "statistics": {
+    "schema": "folio.research-summary.v1",
+    "rawSha256": "5a97211c0a8347e25f76fc944179e07bd663a2c65a28795dcd53c20590d3c570",
+    "samples": 39,
+    "environments": [
+      {
+        "kind": "environment",
+        "schema": "folio.research.v1",
+        "observedAt": "2026-10-29T18:27:16.879Z",
+        "revision": "160f2685b669a8a598e52dbc16e16b1877552485",
+        "node": "v26.8.2",
+        "v8": "14.6.202.34-node.28",
+        "os": "darwin",
+        "release": "25.5.0",
+        "cpu": "Apple M2 Pro",
+        "hardwareThreads": 12,
+        "load": [
+          3.6962890625,
+          3.75927734375,
+          3.6435546875
+        ],
+        "configuration": {
+          "mode": "configurations",
+          "pairs": 1,
+          "clock": "Node elapsed and process CPU",
+          "independentProcessPerSample": true
+        },
+        "sources": {
+          "src/bake.ts": "e6ef4e996680d3b5451b7e43526746e2f80934255a08ed478d03540d8fd04b11",
+          "src/browser-worker.ts": "90786fe738fd92e5d628465cb187d41790668d3fcf6fb0c71d92e761a3c78a3e",
+          "src/browser.ts": "242aa96ecbcdbd3839e647c5fda2537456bcfcad8113415f00d056a703c2dbd4",
+          "src/compiler.ts": "0dc2c324236071d8da74c280edfd6e9107364b24d9ce21118247a0148ed686ce",
+          "src/context.ts": "125ae0a1011a500f38e62834bc24e58b613d848f5752bf255e6c57319128f988",
+          "src/coordinator.ts": "6e913cccfee61e09284c3c91aaf4b4f070d579c9ebb5d4bde47a1d657dd04f09",
+          "src/extract.ts": "90f8d7c7ad3ae7c532436d7763f876081315e83cb13f0d31af8c2ee53de7c323",
+          "src/frames.ts": "4c68a0d7d1eac750525c640480dc2162e469f19f8bfb5b8063161138fdaaa273",
+          "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
+          "src/host.ts": "8b0fafb6ef8991778598cc78fd7e10415f49875c30b79c75e4e7eac901c80fed",
+          "src/import-order.ts": "0b725a68bd59f9c0e0a5bc63fcc4c31f08b5f718438e67d271a44f4d7e575905",
+          "src/index.ts": "a8c9f3dfbefa3170329c7950cb58f5e3c20e0f7264affb0ffd3bd1b3c1ba364b",
+          "src/managed.ts": "25a0db53f47d4f870b2b7352195be8473bcbfe5f04724ca3941e854155df2812",
+          "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+          "src/node.ts": "4917b63e83916d021d1f22780e33bd88d29b1d6e9c4c520e6533c990e78b7a0b",
+          "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
+          "src/remote.ts": "16dbba9b681966a2b4040c82fe3ca98c5a171eee25fd8d7ce43edf0bb5222e8d",
+          "src/tasks.ts": "9b3566ef6eacb8c99f3aebf654c3c5d19a7d1475c67b60e2a3f6cddf38afd2c7",
+          "src/transaction.ts": "c4ae45c13c8e980ecb9811f69aedc243561d73d39a6eb855bfeeb51bf600c4f4",
+          "src/values.ts": "56b4c8777a3856441480eee0cb585a2b40e6b03966c3efc245e17a2536196374",
+          "src/worker.ts": "f1ab49593f1ce9bbb39a7adb4727c2cb4c303d74ceccc674474ef1d991ee82e5",
+          "scripts/research/admission-diagnostic.ts": "7a4e3e6bf2a50ccf6837a6900dd0cc7849f0bb0fa7a8863b0b7ce476e9770988",
+          "scripts/research/analyze.ts": "96449e54d58410b22e44c90dd8c70a3e7e3e9b594b370b972ea141985203c52b",
+          "scripts/research/boot-eligibility.ts": "32717c8da20fcf23210b814592ae1584a0da4284cd51c5e43ee629c74a60327d",
+          "scripts/research/cases/include/assert.h": "2e0b7e0adab1df0793e150b60890843771f584e8094b3e74fdbd1a6d0d3f4508",
+          "scripts/research/cases/include/int_lib.h": "cf4f25bd15803ccfc1774ccab9ed5228132758cc546e180f9f37f31f65e90931",
+          "scripts/research/cases/include/math.h": "6f6751b2957db0e6615f14371cc3132d0decf54b175e2670be6e8e6de08dfb3b",
+          "scripts/research/cases/include/memory.h": "3234d45b96216a3c36f25932364b800eeadf703964e85fdf25cabacf9aeedc2e",
+          "scripts/research/cases/include/miniz_export.h": "195259dc89fb3f83a96426a90ee03dc45acef113150cd3475ea9cfbf1f7784f3",
+          "scripts/research/cases/include/stdio.h": "0bd8c3e9e8a873b890704afcd45369c8e7d79991be6d2de55ec058264219ae77",
+          "scripts/research/cases/include/stdlib.h": "c328dcb08baa26c16bc8b768b4c0ca32e2b32e94772c419dda8f9fb25e3695bb",
+          "scripts/research/cases/include/string.h": "3db545ced6638221254c50e3d022269170442967dc330f081f9f996d9c4e228a",
+          "scripts/research/cases/kernel.c": "ed306b90b0e9e4e2479379f12b4cdf9f9ef7f1f220a12bf5c878d5fb7986035b",
+          "scripts/research/cases/support.c": "e7274295036f111a09f4728b0c821728c2403d36f3195b1db4a1d174014d8630",
+          "scripts/research/cases/upstream.ts": "74ef77e2bdc5a9bb32ad4057227d34f3ca562df31749dfeba5fdb27d8c6d30ac",
+          "scripts/research/corpus-manifest.json": "8ba08eaab61702d48e80cca5ffa1930c95aa727d9ed8174926305be512b86ce4",
+          "scripts/research/corpus-mechanisms.ts": "c4ce9bada77a841b07d62dd649d131fac8f04847b7caab2e70db5e5914504911",
+          "scripts/research/corpus-serial.ts": "11cdced86812c399bf9e9ef182b15f36ad7c698d9f697edf5aae05948bdeea93",
+          "scripts/research/corpus-worker.ts": "ec44a3875d7f16b814ab17a38a69204625f5314d845cf5b56de14d28c0ae89f0",
+          "scripts/research/corpus.ts": "fb3d9e180649d7eae32fa8a92c0610d6b5d069d76c6577d9cd888d0771394c07",
+          "scripts/research/crossover-worker.ts": "ce3a36ab1695c973c9a69ad0eb52bcc4802fb3e8fb840c6c49a382d1fe7f960f",
+          "scripts/research/crossover.ts": "f0958198a63172852201a6746bc88211ed209f57f43881951da8c0dbd12a8b18",
+          "scripts/research/differential.ts": "08c0d911bc655cc9420cd96fc519c6270ec97c695fa2e9fbf6f1461307e226e4",
+          "scripts/research/environment.ts": "35eed05e53ff27f686dd2d18a4fb8a3390c084738aef4fb5c2b30c00d027ce75",
+          "scripts/research/evidence.ts": "2e904add50c4a4a5c1651d64e4fd93d455df4d72c8fe05cd3c77985cbcd70be0",
+          "scripts/research/inputs.ts": "9affb7946a26adab52402fd5342e37b1d6e52f90904ec75a8335d1d6cab48945"
+        },
+        "sourceDigest": "0d8ece0c0b981270a75fb3e2cde03dba339be47dae9b787ad714a132a8494ba3",
+        "inputs": {
+          "php8.5.tuned.wasm": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+          "php8.5-worker.tuned.mjs": "4a049fb65a8b82ba1d86837dca690c674e1b7aa9a684b629b3d5d2872911bd28",
+          "renewal": "f0bbb62a9a94072f14e56d723156ed206bda016f2280e8982e9e203ddd98c2ba",
+          "boot-image.ts": "23bf6be7caa8f8dfccf941d3e037a7d96de6e768e8cb4293cfd90ec7602f376f",
+          "php-context-drupal.ts": "c358f543989ada64a2a3d3c7b8de60ca21a83531e11ae46b9ecdeb3b1c1a60d9",
+          "bundle": "043cc567f0014f3ce156d3332e5cc82f407b89ee5f0c328bbfda187f9c00894a"
+        }
+      }
+    ],
+    "bootstrap": {
+      "resamples": 2000,
+      "seed": 305419896,
+      "unit": "paired round",
+      "independentReplication": false
+    },
+    "groups": {
+      "base": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 842.548625,
+            "min": 842.548625,
+            "max": 842.548625,
+            "medianCi95": [
+              842.548625,
+              842.548625
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1425.749,
+            "min": 1425.749,
+            "max": 1425.749,
+            "medianCi95": [
+              1425.749,
+              1425.749
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.6921860147834198,
+            "min": 1.6921860147834198,
+            "max": 1.6921860147834198,
+            "medianCi95": [
+              1.6921860147834198,
+              1.6921860147834198
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 351.785417,
+            "min": 351.785417,
+            "max": 351.785417,
+            "medianCi95": [
+              351.785417,
+              351.785417
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 412.174708,
+            "min": 412.174708,
+            "max": 412.174708,
+            "medianCi95": [
+              412.174708,
+              412.174708
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 765.585,
+            "min": 765.585,
+            "max": 765.585,
+            "medianCi95": [
+              765.585,
+              765.585
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 2.0441541138909476,
+            "min": 2.0441541138909476,
+            "max": 2.0441541138909476,
+            "medianCi95": [
+              2.0441541138909476,
+              2.0441541138909476
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5369703924042731,
+            "min": 0.5369703924042731,
+            "max": 0.5369703924042731,
+            "medianCi95": [
+              0.5369703924042731,
+              0.5369703924042731
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8574283796180915,
+            "min": 1.8574283796180915,
+            "max": 1.8574283796180915,
+            "medianCi95": [
+              1.8574283796180915,
+              1.8574283796180915
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 201.11400000000003,
+            "min": 201.11400000000003,
+            "max": 201.11400000000003,
+            "medianCi95": [
+              201.11400000000003,
+              201.11400000000003
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 401.95279200000004,
+            "min": 401.95279200000004,
+            "max": 401.95279200000004,
+            "medianCi95": [
+              401.95279200000004,
+              401.95279200000004
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 762.177,
+            "min": 762.177,
+            "max": 762.177,
+            "medianCi95": [
+              762.177,
+              762.177
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 2.0961382574498946,
+            "min": 2.0961382574498946,
+            "max": 2.0961382574498946,
+            "medianCi95": [
+              2.0961382574498946,
+              2.0961382574498946
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5345800698439908,
+            "min": 0.5345800698439908,
+            "max": 0.5345800698439908,
+            "medianCi95": [
+              0.5345800698439908,
+              0.5345800698439908
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8961853609913473,
+            "min": 1.8961853609913473,
+            "max": 1.8961853609913473,
+            "medianCi95": [
+              1.8961853609913473,
+              1.8961853609913473
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 185.94541600000002,
+            "min": 185.94541600000002,
+            "max": 185.94541600000002,
+            "medianCi95": [
+              185.94541600000002,
+              185.94541600000002
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "rename": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 785.1086659999999,
+            "min": 785.1086659999999,
+            "max": 785.1086659999999,
+            "medianCi95": [
+              785.1086659999999,
+              785.1086659999999
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1365.397,
+            "min": 1365.397,
+            "max": 1365.397,
+            "medianCi95": [
+              1365.397,
+              1365.397
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.739118492929742,
+            "min": 1.739118492929742,
+            "max": 1.739118492929742,
+            "medianCi95": [
+              1.739118492929742,
+              1.739118492929742
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 303.65679200000005,
+            "min": 303.65679200000005,
+            "max": 303.65679200000005,
+            "medianCi95": [
+              303.65679200000005,
+              303.65679200000005
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 802.9901249999999,
+            "min": 802.9901249999999,
+            "max": 802.9901249999999,
+            "medianCi95": [
+              802.9901249999999,
+              802.9901249999999
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1386.631,
+            "min": 1386.631,
+            "max": 1386.631,
+            "medianCi95": [
+              1386.631,
+              1386.631
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 0.9777314085898627,
+            "min": 0.9777314085898627,
+            "max": 0.9777314085898627,
+            "medianCi95": [
+              0.9777314085898627,
+              0.9777314085898627
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1.0155515209129653,
+            "min": 1.0155515209129653,
+            "max": 1.0155515209129653,
+            "medianCi95": [
+              1.0155515209129653,
+              1.0155515209129653
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7268344364757913,
+            "min": 1.7268344364757913,
+            "max": 1.7268344364757913,
+            "medianCi95": [
+              1.7268344364757913,
+              1.7268344364757913
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 316.0796250000001,
+            "min": 316.0796250000001,
+            "max": 316.0796250000001,
+            "medianCi95": [
+              316.0796250000001,
+              316.0796250000001
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 457.300083,
+            "min": 457.300083,
+            "max": 457.300083,
+            "medianCi95": [
+              457.300083,
+              457.300083
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 819.958,
+            "min": 819.958,
+            "max": 819.958,
+            "medianCi95": [
+              819.958,
+              819.958
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.7168347332226483,
+            "min": 1.7168347332226483,
+            "max": 1.7168347332226483,
+            "medianCi95": [
+              1.7168347332226483,
+              1.7168347332226483
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.6005271726831097,
+            "min": 0.6005271726831097,
+            "max": 0.6005271726831097,
+            "medianCi95": [
+              0.6005271726831097,
+              0.6005271726831097
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.793041441455413,
+            "min": 1.793041441455413,
+            "max": 1.793041441455413,
+            "medianCi95": [
+              1.793041441455413,
+              1.793041441455413
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 212.06595899999996,
+            "min": 212.06595899999996,
+            "max": 212.06595899999996,
+            "medianCi95": [
+              212.06595899999996,
+              212.06595899999996
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "mail": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 788.2090840000001,
+            "min": 788.2090840000001,
+            "max": 788.2090840000001,
+            "medianCi95": [
+              788.2090840000001,
+              788.2090840000001
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1367.052,
+            "min": 1367.052,
+            "max": 1367.052,
+            "medianCi95": [
+              1367.052,
+              1367.052
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.734377372387654,
+            "min": 1.734377372387654,
+            "max": 1.734377372387654,
+            "medianCi95": [
+              1.734377372387654,
+              1.734377372387654
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 304.385417,
+            "min": 304.385417,
+            "max": 304.385417,
+            "medianCi95": [
+              304.385417,
+              304.385417
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 805.4164579999999,
+            "min": 805.4164579999999,
+            "max": 805.4164579999999,
+            "medianCi95": [
+              805.4164579999999,
+              805.4164579999999
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1398.824,
+            "min": 1398.824,
+            "max": 1398.824,
+            "medianCi95": [
+              1398.824,
+              1398.824
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 0.9786354328508149,
+            "min": 0.9786354328508149,
+            "max": 0.9786354328508149,
+            "medianCi95": [
+              0.9786354328508149,
+              0.9786354328508149
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1.0232412519787104,
+            "min": 1.0232412519787104,
+            "max": 1.0232412519787104,
+            "medianCi95": [
+              1.0232412519787104,
+              1.0232412519787104
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7367710655845578,
+            "min": 1.7367710655845578,
+            "max": 1.7367710655845578,
+            "medianCi95": [
+              1.7367710655845578,
+              1.7367710655845578
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 308.819125,
+            "min": 308.819125,
+            "max": 308.819125,
+            "medianCi95": [
+              308.819125,
+              308.819125
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 571.789625,
+            "min": 571.789625,
+            "max": 571.789625,
+            "medianCi95": [
+              571.789625,
+              571.789625
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 900.81,
+            "min": 900.81,
+            "max": 900.81,
+            "medianCi95": [
+              900.81,
+              900.81
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.3784949036107468,
+            "min": 1.3784949036107468,
+            "max": 1.3784949036107468,
+            "medianCi95": [
+              1.3784949036107468,
+              1.3784949036107468
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.6589434783753654,
+            "min": 0.6589434783753654,
+            "max": 0.6589434783753654,
+            "medianCi95": [
+              0.6589434783753654,
+              0.6589434783753654
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.5754220794055156,
+            "min": 1.5754220794055156,
+            "max": 1.5754220794055156,
+            "medianCi95": [
+              1.5754220794055156,
+              1.5754220794055156
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 273.544292,
+            "min": 273.544292,
+            "max": 273.544292,
+            "medianCi95": [
+              273.544292,
+              273.544292
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "timezone": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 799.609583,
+            "min": 799.609583,
+            "max": 799.609583,
+            "medianCi95": [
+              799.609583,
+              799.609583
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1387.146,
+            "min": 1387.146,
+            "max": 1387.146,
+            "medianCi95": [
+              1387.146,
+              1387.146
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7347791090692817,
+            "min": 1.7347791090692817,
+            "max": 1.7347791090692817,
+            "medianCi95": [
+              1.7347791090692817,
+              1.7347791090692817
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 317.178042,
+            "min": 317.178042,
+            "max": 317.178042,
+            "medianCi95": [
+              317.178042,
+              317.178042
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 817.249458,
+            "min": 817.249458,
+            "max": 817.249458,
+            "medianCi95": [
+              817.249458,
+              817.249458
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1373.737,
+            "min": 1373.737,
+            "max": 1373.737,
+            "medianCi95": [
+              1373.737,
+              1373.737
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 0.9784155561960618,
+            "min": 0.9784155561960618,
+            "max": 0.9784155561960618,
+            "medianCi95": [
+              0.9784155561960618,
+              0.9784155561960618
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.990333389563896,
+            "min": 0.990333389563896,
+            "max": 0.990333389563896,
+            "medianCi95": [
+              0.990333389563896,
+              0.990333389563896
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.6809273919396104,
+            "min": 1.6809273919396104,
+            "max": 1.6809273919396104,
+            "medianCi95": [
+              1.6809273919396104,
+              1.6809273919396104
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 313.05058299999996,
+            "min": 313.05058299999996,
+            "max": 313.05058299999996,
+            "medianCi95": [
+              313.05058299999996,
+              313.05058299999996
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 441.9475,
+            "min": 441.9475,
+            "max": 441.9475,
+            "medianCi95": [
+              441.9475,
+              441.9475
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 823.215,
+            "min": 823.215,
+            "max": 823.215,
+            "medianCi95": [
+              823.215,
+              823.215
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.8092863586738246,
+            "min": 1.8092863586738246,
+            "max": 1.8092863586738246,
+            "medianCi95": [
+              1.8092863586738246,
+              1.8092863586738246
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5934595204830638,
+            "min": 0.5934595204830638,
+            "max": 0.5934595204830638,
+            "medianCi95": [
+              0.5934595204830638,
+              0.5934595204830638
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8626986237053045,
+            "min": 1.8626986237053045,
+            "max": 1.8626986237053045,
+            "medianCi95": [
+              1.8626986237053045,
+              1.8626986237053045
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 215.42162499999995,
+            "min": 215.42162499999995,
+            "max": 215.42162499999995,
+            "medianCi95": [
+              215.42162499999995,
+              215.42162499999995
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "theme": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 795.956416,
+            "min": 795.956416,
+            "max": 795.956416,
+            "medianCi95": [
+              795.956416,
+              795.956416
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1375.342,
+            "min": 1375.342,
+            "max": 1375.342,
+            "medianCi95": [
+              1375.342,
+              1375.342
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.727911192564594,
+            "min": 1.727911192564594,
+            "max": 1.727911192564594,
+            "medianCi95": [
+              1.727911192564594,
+              1.727911192564594
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 309.998458,
+            "min": 309.998458,
+            "max": 309.998458,
+            "medianCi95": [
+              309.998458,
+              309.998458
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 819.8947090000001,
+            "min": 819.8947090000001,
+            "max": 819.8947090000001,
+            "medianCi95": [
+              819.8947090000001,
+              819.8947090000001
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1418.987,
+            "min": 1418.987,
+            "max": 1418.987,
+            "medianCi95": [
+              1418.987,
+              1418.987
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 0.9708032107815442,
+            "min": 0.9708032107815442,
+            "max": 0.9708032107815442,
+            "medianCi95": [
+              0.9708032107815442,
+              0.9708032107815442
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1.0317339250891777,
+            "min": 1.0317339250891777,
+            "max": 1.0317339250891777,
+            "medianCi95": [
+              1.0317339250891777,
+              1.0317339250891777
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.730694178683863,
+            "min": 1.730694178683863,
+            "max": 1.730694178683863,
+            "medianCi95": [
+              1.730694178683863,
+              1.730694178683863
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 328.26008400000006,
+            "min": 328.26008400000006,
+            "max": 328.26008400000006,
+            "medianCi95": [
+              328.26008400000006,
+              328.26008400000006
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 428.48499999999996,
+            "min": 428.48499999999996,
+            "max": 428.48499999999996,
+            "medianCi95": [
+              428.48499999999996,
+              428.48499999999996
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 796.699,
+            "min": 796.699,
+            "max": 796.699,
+            "medianCi95": [
+              796.699,
+              796.699
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.8576062545946768,
+            "min": 1.8576062545946768,
+            "max": 1.8576062545946768,
+            "medianCi95": [
+              1.8576062545946768,
+              1.8576062545946768
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5792733734591105,
+            "min": 0.5792733734591105,
+            "max": 0.5792733734591105,
+            "medianCi95": [
+              0.5792733734591105,
+              0.5792733734591105
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8593393000921854,
+            "min": 1.8593393000921854,
+            "max": 1.8593393000921854,
+            "medianCi95": [
+              1.8593393000921854,
+              1.8593393000921854
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 201.04587499999997,
+            "min": 201.04587499999997,
+            "max": 201.04587499999997,
+            "medianCi95": [
+              201.04587499999997,
+              201.04587499999997
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "color": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 891.508208,
+            "min": 891.508208,
+            "max": 891.508208,
+            "medianCi95": [
+              891.508208,
+              891.508208
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1485.566,
+            "min": 1485.566,
+            "max": 1485.566,
+            "medianCi95": [
+              1485.566,
+              1485.566
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.666351455510099,
+            "min": 1.666351455510099,
+            "max": 1.666351455510099,
+            "medianCi95": [
+              1.666351455510099,
+              1.666351455510099
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 331.0732080000001,
+            "min": 331.0732080000001,
+            "max": 331.0732080000001,
+            "medianCi95": [
+              331.0732080000001,
+              331.0732080000001
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 806.4738330000001,
+            "min": 806.4738330000001,
+            "max": 806.4738330000001,
+            "medianCi95": [
+              806.4738330000001,
+              806.4738330000001
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1399.585,
+            "min": 1399.585,
+            "max": 1399.585,
+            "medianCi95": [
+              1399.585,
+              1399.585
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.1054397198278345,
+            "min": 1.1054397198278345,
+            "max": 1.1054397198278345,
+            "medianCi95": [
+              1.1054397198278345,
+              1.1054397198278345
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.9421223964468761,
+            "min": 0.9421223964468761,
+            "max": 0.9421223964468761,
+            "medianCi95": [
+              0.9421223964468761,
+              0.9421223964468761
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.735437583627093,
+            "min": 1.735437583627093,
+            "max": 1.735437583627093,
+            "medianCi95": [
+              1.735437583627093,
+              1.735437583627093
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 308.54012500000005,
+            "min": 308.54012500000005,
+            "max": 308.54012500000005,
+            "medianCi95": [
+              308.54012500000005,
+              308.54012500000005
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 428.344792,
+            "min": 428.344792,
+            "max": 428.344792,
+            "medianCi95": [
+              428.344792,
+              428.344792
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 780.922,
+            "min": 780.922,
+            "max": 780.922,
+            "medianCi95": [
+              780.922,
+              780.922
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 2.081286441787764,
+            "min": 2.081286441787764,
+            "max": 2.081286441787764,
+            "medianCi95": [
+              2.081286441787764,
+              2.081286441787764
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5256730431364207,
+            "min": 0.5256730431364207,
+            "max": 0.5256730431364207,
+            "medianCi95": [
+              0.5256730431364207,
+              0.5256730431364207
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.823115430804631,
+            "min": 1.823115430804631,
+            "max": 1.823115430804631,
+            "medianCi95": [
+              1.823115430804631,
+              1.823115430804631
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 205.822791,
+            "min": 205.822791,
+            "max": 205.822791,
+            "medianCi95": [
+              205.822791,
+              205.822791
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "module": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 1341.623583,
+            "min": 1341.623583,
+            "max": 1341.623583,
+            "medianCi95": [
+              1341.623583,
+              1341.623583
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 2026.598,
+            "min": 2026.598,
+            "max": 2026.598,
+            "medianCi95": [
+              2026.598,
+              2026.598
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.5105563331469851,
+            "min": 1.5105563331469851,
+            "max": 1.5105563331469851,
+            "medianCi95": [
+              1.5105563331469851,
+              1.5105563331469851
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 297.011708,
+            "min": 297.011708,
+            "max": 297.011708,
+            "medianCi95": [
+              297.011708,
+              297.011708
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 1383.590125,
+            "min": 1383.590125,
+            "max": 1383.590125,
+            "medianCi95": [
+              1383.590125,
+              1383.590125
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 2075.343,
+            "min": 2075.343,
+            "max": 2075.343,
+            "medianCi95": [
+              2075.343,
+              2075.343
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 0.9696683712598774,
+            "min": 0.9696683712598774,
+            "max": 0.9696683712598774,
+            "medianCi95": [
+              0.9696683712598774,
+              0.9696683712598774
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1.0240526241514103,
+            "min": 1.0240526241514103,
+            "max": 1.0240526241514103,
+            "medianCi95": [
+              1.0240526241514103,
+              1.0240526241514103
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.4999695086722304,
+            "min": 1.4999695086722304,
+            "max": 1.4999695086722304,
+            "medianCi95": [
+              1.4999695086722304,
+              1.4999695086722304
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 306.516708,
+            "min": 306.516708,
+            "max": 306.516708,
+            "medianCi95": [
+              306.516708,
+              306.516708
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 1294.598959,
+            "min": 1294.598959,
+            "max": 1294.598959,
+            "medianCi95": [
+              1294.598959,
+              1294.598959
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1973.145,
+            "min": 1973.145,
+            "max": 1973.145,
+            "medianCi95": [
+              1973.145,
+              1973.145
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.036323699840083,
+            "min": 1.036323699840083,
+            "max": 1.036323699840083,
+            "medianCi95": [
+              1.036323699840083,
+              1.036323699840083
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.9736242708223338,
+            "min": 0.9736242708223338,
+            "max": 0.9736242708223338,
+            "medianCi95": [
+              0.9736242708223338,
+              0.9736242708223338
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.5241360934849941,
+            "min": 1.5241360934849941,
+            "max": 1.5241360934849941,
+            "medianCi95": [
+              1.5241360934849941,
+              1.5241360934849941
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 295.71700000000004,
+            "min": 295.71700000000004,
+            "max": 295.71700000000004,
+            "medianCi95": [
+              295.71700000000004,
+              295.71700000000004
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "maintenance": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 624.145125,
+            "min": 624.145125,
+            "max": 624.145125,
+            "medianCi95": [
+              624.145125,
+              624.145125
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1122.376,
+            "min": 1122.376,
+            "max": 1122.376,
+            "medianCi95": [
+              1122.376,
+              1122.376
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7982612617538267,
+            "min": 1.7982612617538267,
+            "max": 1.7982612617538267,
+            "medianCi95": [
+              1.7982612617538267,
+              1.7982612617538267
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 310.465916,
+            "min": 310.465916,
+            "max": 310.465916,
+            "medianCi95": [
+              310.465916,
+              310.465916
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 424.199292,
+            "min": 424.199292,
+            "max": 424.199292,
+            "medianCi95": [
+              424.199292,
+              424.199292
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 811.198,
+            "min": 811.198,
+            "max": 811.198,
+            "medianCi95": [
+              811.198,
+              811.198
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.4713488135666195,
+            "min": 1.4713488135666195,
+            "max": 1.4713488135666195,
+            "medianCi95": [
+              1.4713488135666195,
+              1.4713488135666195
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.7227506646613969,
+            "min": 0.7227506646613969,
+            "max": 0.7227506646613969,
+            "medianCi95": [
+              0.7227506646613969,
+              0.7227506646613969
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.9123039931900687,
+            "min": 1.9123039931900687,
+            "max": 1.9123039931900687,
+            "medianCi95": [
+              1.9123039931900687,
+              1.9123039931900687
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 204.55566599999997,
+            "min": 204.55566599999997,
+            "max": 204.55566599999997,
+            "medianCi95": [
+              204.55566599999997,
+              204.55566599999997
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 431.494083,
+            "min": 431.494083,
+            "max": 431.494083,
+            "medianCi95": [
+              431.494083,
+              431.494083
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 802.446,
+            "min": 802.446,
+            "max": 802.446,
+            "medianCi95": [
+              802.446,
+              802.446
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.446474354087493,
+            "min": 1.446474354087493,
+            "max": 1.446474354087493,
+            "medianCi95": [
+              1.446474354087493,
+              1.446474354087493
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.7149529213026651,
+            "min": 0.7149529213026651,
+            "max": 0.7149529213026651,
+            "medianCi95": [
+              0.7149529213026651,
+              0.7149529213026651
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.859691781683134,
+            "min": 1.859691781683134,
+            "max": 1.859691781683134,
+            "medianCi95": [
+              1.859691781683134,
+              1.859691781683134
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 217.61370899999997,
+            "min": 217.61370899999997,
+            "max": 217.61370899999997,
+            "medianCi95": [
+              217.61370899999997,
+              217.61370899999997
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "cache": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 806.844,
+            "min": 806.844,
+            "max": 806.844,
+            "medianCi95": [
+              806.844,
+              806.844
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1397.281,
+            "min": 1397.281,
+            "max": 1397.281,
+            "medianCi95": [
+              1397.281,
+              1397.281
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7317858222903062,
+            "min": 1.7317858222903062,
+            "max": 1.7317858222903062,
+            "medianCi95": [
+              1.7317858222903062,
+              1.7317858222903062
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 311.999584,
+            "min": 311.999584,
+            "max": 311.999584,
+            "medianCi95": [
+              311.999584,
+              311.999584
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 411.25529199999994,
+            "min": 411.25529199999994,
+            "max": 411.25529199999994,
+            "medianCi95": [
+              411.25529199999994,
+              411.25529199999994
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 767.49,
+            "min": 767.49,
+            "max": 767.49,
+            "medianCi95": [
+              767.49,
+              767.49
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.9619054531218048,
+            "min": 1.9619054531218048,
+            "max": 1.9619054531218048,
+            "medianCi95": [
+              1.9619054531218048,
+              1.9619054531218048
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5492739112605124,
+            "min": 0.5492739112605124,
+            "max": 0.5492739112605124,
+            "medianCi95": [
+              0.5492739112605124,
+              0.5492739112605124
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8662130674782906,
+            "min": 1.8662130674782906,
+            "max": 1.8662130674782906,
+            "medianCi95": [
+              1.8662130674782906,
+              1.8662130674782906
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 192.53249999999997,
+            "min": 192.53249999999997,
+            "max": 192.53249999999997,
+            "medianCi95": [
+              192.53249999999997,
+              192.53249999999997
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 419.840625,
+            "min": 419.840625,
+            "max": 419.840625,
+            "medianCi95": [
+              419.840625,
+              419.840625
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 784.981,
+            "min": 784.981,
+            "max": 784.981,
+            "medianCi95": [
+              784.981,
+              784.981
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.9217863921577385,
+            "min": 1.9217863921577385,
+            "max": 1.9217863921577385,
+            "medianCi95": [
+              1.9217863921577385,
+              1.9217863921577385
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.561791794206033,
+            "min": 0.561791794206033,
+            "max": 0.561791794206033,
+            "medianCi95": [
+              0.561791794206033,
+              0.561791794206033
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8697118698315582,
+            "min": 1.8697118698315582,
+            "max": 1.8697118698315582,
+            "medianCi95": [
+              1.8697118698315582,
+              1.8697118698315582
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 199.796334,
+            "min": 199.796334,
+            "max": 199.796334,
+            "medianCi95": [
+              199.796334,
+              199.796334
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "alias": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 785.6870829999999,
+            "min": 785.6870829999999,
+            "max": 785.6870829999999,
+            "medianCi95": [
+              785.6870829999999,
+              785.6870829999999
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1363.226,
+            "min": 1363.226,
+            "max": 1363.226,
+            "medianCi95": [
+              1363.226,
+              1363.226
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7350749802259384,
+            "min": 1.7350749802259384,
+            "max": 1.7350749802259384,
+            "medianCi95": [
+              1.7350749802259384,
+              1.7350749802259384
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 308.250834,
+            "min": 308.250834,
+            "max": 308.250834,
+            "medianCi95": [
+              308.250834,
+              308.250834
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 456.08525000000003,
+            "min": 456.08525000000003,
+            "max": 456.08525000000003,
+            "medianCi95": [
+              456.08525000000003,
+              456.08525000000003
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 873.763,
+            "min": 873.763,
+            "max": 873.763,
+            "medianCi95": [
+              873.763,
+              873.763
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.7226759317474087,
+            "min": 1.7226759317474087,
+            "max": 1.7226759317474087,
+            "medianCi95": [
+              1.7226759317474087,
+              1.7226759317474087
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.6409524172807737,
+            "min": 0.6409524172807737,
+            "max": 0.6409524172807737,
+            "medianCi95": [
+              0.6409524172807737,
+              0.6409524172807737
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.9157887697530231,
+            "min": 1.9157887697530231,
+            "max": 1.9157887697530231,
+            "medianCi95": [
+              1.9157887697530231,
+              1.9157887697530231
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 189.481541,
+            "min": 189.481541,
+            "max": 189.481541,
+            "medianCi95": [
+              189.481541,
+              189.481541
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 462.989583,
+            "min": 462.989583,
+            "max": 462.989583,
+            "medianCi95": [
+              462.989583,
+              462.989583
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 880.575,
+            "min": 880.575,
+            "max": 880.575,
+            "medianCi95": [
+              880.575,
+              880.575
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.696986523776713,
+            "min": 1.696986523776713,
+            "max": 1.696986523776713,
+            "medianCi95": [
+              1.696986523776713,
+              1.696986523776713
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.6459493877024058,
+            "min": 0.6459493877024058,
+            "max": 0.6459493877024058,
+            "medianCi95": [
+              0.6459493877024058,
+              0.6459493877024058
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.9019326402425778,
+            "min": 1.9019326402425778,
+            "max": 1.9019326402425778,
+            "medianCi95": [
+              1.9019326402425778,
+              1.9019326402425778
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 190.0525,
+            "min": 190.0525,
+            "max": 190.0525,
+            "medianCi95": [
+              190.0525,
+              190.0525
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "content": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 1016.2577080000001,
+            "min": 1016.2577080000001,
+            "max": 1016.2577080000001,
+            "medianCi95": [
+              1016.2577080000001,
+              1016.2577080000001
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1648.976,
+            "min": 1648.976,
+            "max": 1648.976,
+            "medianCi95": [
+              1648.976,
+              1648.976
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.6225963031022836,
+            "min": 1.6225963031022836,
+            "max": 1.6225963031022836,
+            "medianCi95": [
+              1.6225963031022836,
+              1.6225963031022836
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 316.90183399999995,
+            "min": 316.90183399999995,
+            "max": 316.90183399999995,
+            "medianCi95": [
+              316.90183399999995,
+              316.90183399999995
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 595.712166,
+            "min": 595.712166,
+            "max": 595.712166,
+            "medianCi95": [
+              595.712166,
+              595.712166
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1044.258,
+            "min": 1044.258,
+            "max": 1044.258,
+            "medianCi95": [
+              1044.258,
+              1044.258
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.7059542611389273,
+            "min": 1.7059542611389273,
+            "max": 1.7059542611389273,
+            "medianCi95": [
+              1.7059542611389273,
+              1.7059542611389273
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.6332766516917165,
+            "min": 0.6332766516917165,
+            "max": 0.6332766516917165,
+            "medianCi95": [
+              0.6332766516917165,
+              0.6332766516917165
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.752957316638049,
+            "min": 1.752957316638049,
+            "max": 1.752957316638049,
+            "medianCi95": [
+              1.752957316638049,
+              1.752957316638049
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 211.563,
+            "min": 211.563,
+            "max": 211.563,
+            "medianCi95": [
+              211.563,
+              211.563
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 617.532792,
+            "min": 617.532792,
+            "max": 617.532792,
+            "medianCi95": [
+              617.532792,
+              617.532792
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1075.131,
+            "min": 1075.131,
+            "max": 1075.131,
+            "medianCi95": [
+              1075.131,
+              1075.131
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.645674077822899,
+            "min": 1.645674077822899,
+            "max": 1.645674077822899,
+            "medianCi95": [
+              1.645674077822899,
+              1.645674077822899
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.651999180097224,
+            "min": 0.651999180097224,
+            "max": 0.651999180097224,
+            "medianCi95": [
+              0.651999180097224,
+              0.651999180097224
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.741010378603506,
+            "min": 1.741010378603506,
+            "max": 1.741010378603506,
+            "medianCi95": [
+              1.741010378603506,
+              1.741010378603506
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 193.97066700000005,
+            "min": 193.97066700000005,
+            "max": 193.97066700000005,
+            "medianCi95": [
+              193.97066700000005,
+              193.97066700000005
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "key": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 803.8755000000001,
+            "min": 803.8755000000001,
+            "max": 803.8755000000001,
+            "medianCi95": [
+              803.8755000000001,
+              803.8755000000001
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1388.115,
+            "min": 1388.115,
+            "max": 1388.115,
+            "medianCi95": [
+              1388.115,
+              1388.115
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7267785869826855,
+            "min": 1.7267785869826855,
+            "max": 1.7267785869826855,
+            "medianCi95": [
+              1.7267785869826855,
+              1.7267785869826855
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 321.39275,
+            "min": 321.39275,
+            "max": 321.39275,
+            "medianCi95": [
+              321.39275,
+              321.39275
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 414.87891699999994,
+            "min": 414.87891699999994,
+            "max": 414.87891699999994,
+            "medianCi95": [
+              414.87891699999994,
+              414.87891699999994
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 775.68,
+            "min": 775.68,
+            "max": 775.68,
+            "medianCi95": [
+              775.68,
+              775.68
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.9376147282027354,
+            "min": 1.9376147282027354,
+            "max": 1.9376147282027354,
+            "medianCi95": [
+              1.9376147282027354,
+              1.9376147282027354
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5588009638970834,
+            "min": 0.5588009638970834,
+            "max": 0.5588009638970834,
+            "medianCi95": [
+              0.5588009638970834,
+              0.5588009638970834
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8696539356807087,
+            "min": 1.8696539356807087,
+            "max": 1.8696539356807087,
+            "medianCi95": [
+              1.8696539356807087,
+              1.8696539356807087
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 195.953666,
+            "min": 195.953666,
+            "max": 195.953666,
+            "medianCi95": [
+              195.953666,
+              195.953666
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 406.53450000000004,
+            "min": 406.53450000000004,
+            "max": 406.53450000000004,
+            "medianCi95": [
+              406.53450000000004,
+              406.53450000000004
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 773.284,
+            "min": 773.284,
+            "max": 773.284,
+            "medianCi95": [
+              773.284,
+              773.284
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.9773856831339038,
+            "min": 1.9773856831339038,
+            "max": 1.9773856831339038,
+            "medianCi95": [
+              1.9773856831339038,
+              1.9773856831339038
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5570748821243197,
+            "min": 0.5570748821243197,
+            "max": 0.5570748821243197,
+            "medianCi95": [
+              0.5570748821243197,
+              0.5570748821243197
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.9021362270606799,
+            "min": 1.9021362270606799,
+            "max": 1.9021362270606799,
+            "medianCi95": [
+              1.9021362270606799,
+              1.9021362270606799
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 187.94658300000003,
+            "min": 187.94658300000003,
+            "max": 187.94658300000003,
+            "medianCi95": [
+              187.94658300000003,
+              187.94658300000003
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      },
+      "salt": {
+        "native": {
+          "wallMs": {
+            "n": 1,
+            "median": 800.4813750000001,
+            "min": 800.4813750000001,
+            "max": 800.4813750000001,
+            "medianCi95": [
+              800.4813750000001,
+              800.4813750000001
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 1400.26,
+            "min": 1400.26,
+            "max": 1400.26,
+            "medianCi95": [
+              1400.26,
+              1400.26
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 1,
+            "min": 1,
+            "max": 1,
+            "medianCi95": [
+              1,
+              1
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.7492724299800229,
+            "min": 1.7492724299800229,
+            "max": 1.7492724299800229,
+            "medianCi95": [
+              1.7492724299800229,
+              1.7492724299800229
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 313.15575,
+            "min": 313.15575,
+            "max": 313.15575,
+            "medianCi95": [
+              313.15575,
+              313.15575
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "guarded": {
+          "wallMs": {
+            "n": 1,
+            "median": 419.645542,
+            "min": 419.645542,
+            "max": 419.645542,
+            "medianCi95": [
+              419.645542,
+              419.645542
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 783.601,
+            "min": 783.601,
+            "max": 783.601,
+            "medianCi95": [
+              783.601,
+              783.601
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.9075178808881523,
+            "min": 1.9075178808881523,
+            "max": 1.9075178808881523,
+            "medianCi95": [
+              1.9075178808881523,
+              1.9075178808881523
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5596110722294431,
+            "min": 0.5596110722294431,
+            "max": 0.5596110722294431,
+            "medianCi95": [
+              0.5596110722294431,
+              0.5596110722294431
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8672925637799342,
+            "min": 1.8672925637799342,
+            "max": 1.8672925637799342,
+            "medianCi95": [
+              1.8672925637799342,
+              1.8672925637799342
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 187.641125,
+            "min": 187.641125,
+            "max": 187.641125,
+            "medianCi95": [
+              187.641125,
+              187.641125
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        },
+        "reset": {
+          "wallMs": {
+            "n": 1,
+            "median": 407.19599999999997,
+            "min": 407.19599999999997,
+            "max": 407.19599999999997,
+            "medianCi95": [
+              407.19599999999997,
+              407.19599999999997
+            ]
+          },
+          "cpuMs": {
+            "n": 1,
+            "median": 769.928,
+            "min": 769.928,
+            "max": 769.928,
+            "medianCi95": [
+              769.928,
+              769.928
+            ]
+          },
+          "pairedSpeedup": {
+            "n": 1,
+            "median": 1.965838011670056,
+            "min": 1.965838011670056,
+            "max": 1.965838011670056,
+            "medianCi95": [
+              1.965838011670056,
+              1.965838011670056
+            ]
+          },
+          "cpuRatio": {
+            "n": 1,
+            "median": 0.5498464570865411,
+            "min": 0.5498464570865411,
+            "max": 0.5498464570865411,
+            "medianCi95": [
+              0.5498464570865411,
+              0.5498464570865411
+            ]
+          },
+          "averageBusyCpus": {
+            "n": 1,
+            "median": 1.8908044283342667,
+            "min": 1.8908044283342667,
+            "max": 1.8908044283342667,
+            "medianCi95": [
+              1.8908044283342667,
+              1.8908044283342667
+            ]
+          },
+          "openMs": {
+            "n": 1,
+            "median": 188.557542,
+            "min": 188.557542,
+            "max": 188.557542,
+            "medianCi95": [
+              188.557542,
+              188.557542
+            ]
+          },
+          "modes": [],
+          "workers": [],
+          "replayed": 0
+        }
+      }
+    }
+  }
+}

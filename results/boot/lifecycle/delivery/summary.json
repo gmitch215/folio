@@ -1,0 +1,209 @@
+{
+  "schema": "folio.boot-delivery.v1",
+  "arms": [
+    {
+      "mode": "original",
+      "deployment": {
+        "mode": "original",
+        "sourceSha256": "3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce",
+        "sourceBytes": 14011467,
+        "deployment": {
+          "uploadKiB": 13686.44,
+          "gzipKiB": 4289.36,
+          "startupMs": 2,
+          "uploaded": true
+        }
+      },
+      "requests": 24,
+      "successful": 23,
+      "memoryChecks": [
+        {
+          "tag": "original-fresh-0",
+          "equal": true
+        },
+        {
+          "tag": "original-fresh-11",
+          "equal": true
+        },
+        {
+          "tag": "original-repeat-0",
+          "equal": true
+        },
+        {
+          "tag": "original-repeat-11",
+          "equal": true
+        }
+      ],
+      "providerErrors": [
+        {
+          "message": "Worker not found."
+        }
+      ],
+      "moduleCohorts": 12,
+      "objectCohorts": 12,
+      "baselineRestored": true,
+      "groups": {
+        "fresh": {
+          "n": 9,
+          "cpuMsMedian": 14,
+          "wallMsMedian": 17
+        },
+        "repeat": {
+          "n": 10,
+          "cpuMsMedian": 15.5,
+          "wallMsMedian": 16
+        }
+      }
+    },
+    {
+      "mode": "assets",
+      "deployment": {
+        "mode": "assets",
+        "sourceSha256": "8dfa4ffefb5a0aa90d1fb56a23111e8a2b53157817f721215762b3128253c39a",
+        "sourceBytes": 14011547,
+        "deployment": {
+          "uploadKiB": 13690.78,
+          "gzipKiB": 4291.46,
+          "startupMs": 2,
+          "uploaded": true
+        }
+      },
+      "requests": 24,
+      "successful": 20,
+      "memoryChecks": [
+        {
+          "tag": "assets-fresh-11",
+          "equal": true
+        },
+        {
+          "tag": "assets-repeat-0",
+          "equal": true
+        },
+        {
+          "tag": "assets-repeat-11",
+          "equal": true
+        }
+      ],
+      "providerErrors": [
+        {
+          "message": "Worker not found."
+        },
+        {
+          "message": "Worker not found."
+        },
+        {
+          "message": "Worker not found."
+        },
+        {
+          "message": "Worker not found."
+        }
+      ],
+      "moduleCohorts": 8,
+      "objectCohorts": 9,
+      "baselineRestored": true,
+      "groups": {
+        "fresh": {
+          "n": 7,
+          "cpuMsMedian": 92,
+          "wallMsMedian": 543
+        },
+        "repeat": {
+          "n": 10,
+          "cpuMsMedian": 98.5,
+          "wallMsMedian": 432
+        }
+      }
+    },
+    {
+      "mode": "baked",
+      "deployment": {
+        "mode": "baked",
+        "sourceSha256": "caeccb400da72abbeb96d9fa0d3ad2da16d2e1d6de4ec9fe2543c8740eca220c",
+        "sourceBytes": 61852825,
+        "deployment": {
+          "uploadKiB": 60406.52,
+          "gzipKiB": 17976.75,
+          "startupMs": 2,
+          "uploaded": true
+        }
+      },
+      "requests": 24,
+      "successful": 23,
+      "memoryChecks": [
+        {
+          "tag": "baked-fresh-0",
+          "equal": true
+        },
+        {
+          "tag": "baked-fresh-11",
+          "equal": true
+        },
+        {
+          "tag": "baked-repeat-0",
+          "equal": true
+        },
+        {
+          "tag": "baked-repeat-11",
+          "equal": true
+        }
+      ],
+      "providerErrors": [],
+      "moduleCohorts": 12,
+      "objectCohorts": 12,
+      "baselineRestored": true,
+      "groups": {
+        "fresh": {
+          "n": 9,
+          "cpuMsMedian": 49,
+          "wallMsMedian": 53
+        },
+        "repeat": {
+          "n": 10,
+          "cpuMsMedian": 49,
+          "wallMsMedian": 50
+        }
+      }
+    }
+  ],
+  "applicationSqlRows": 0,
+  "requests": 72,
+  "checksums": "full-memory FNV-1a consistency checks on four requests per arm; checked requests excluded from cost summaries",
+  "limitsSource": "https://developers.cloudflare.com/workers/platform/limits/",
+  "failedAttempts": [
+    {
+      "stage": "initial-build",
+      "modes": 3,
+      "requests": 0,
+      "reason": "virtual import alias not processed as CompiledWasm; fixed literal generated import"
+    },
+    {
+      "stage": "baked-first-readiness",
+      "requests": 4,
+      "reason": "six-second readiness window exhausted; no response body retained; no invocation measurements"
+    },
+    {
+      "stage": "baked-repeat-readiness",
+      "responses": [
+        {
+          "mode": "baked",
+          "attempt": 0,
+          "status": 404,
+          "bodySha256": "2000e6b28a1517ba1268e1649cd3163326ef839492edfdba31e8959830580976",
+          "kind": "provider Page not found"
+        },
+        {
+          "mode": "baked",
+          "attempt": 1,
+          "status": 200,
+          "bodySha256": "b24d6d33736ecd5604a4b17bc9c6481039fac362bb7df044ef1c10a2bfd21db6",
+          "kind": "ready"
+        }
+      ]
+    }
+  ],
+  "meterCompleteness": {
+    "original": 23,
+    "assets": 20,
+    "baked": 23
+  }
+}
