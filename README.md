@@ -14,6 +14,7 @@ the same engine.
 - [Features](#-features)
 - [Install](#-install)
 - [Getting Started](#-getting-started)
+- [Examples](#-examples)
 - [Asynchronous Host Effects](#-asynchronous-host-effects)
 - [Execution Host](#-execution-host)
 - [Managed Workers](#-managed-workers)
@@ -25,7 +26,6 @@ the same engine.
 - [API Reference](#-api-reference)
 - [Consumer Harness](#-consumer-harness)
 - [Measured Results](#-measured-results)
-- [Examples](#-examples)
 - [Development](#-development)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -113,6 +113,10 @@ region above the threshold gets no control plan and runs as the original Wasm, s
 memory-bound loop or a serial recurrence stays at native speed. `minimumRegionWork: 0` admits every
 pure region. `folio.diagnostics` says why a plan was refused.
 
+## 🧩 Examples
+
+The [examples](examples) run against the built package with `node examples/<name>.ts` after `bun run build:c` and `bun run build`: `basic` runs one entry, `routing` reads the report and shows capped and adaptive routing, `context-reset` resets a private instance between jobs, `task-pool` joins independent jobs in order, and `boot-image` bakes captured memory into a module.
+
 ## ⏳ Asynchronous Host Effects
 
 ```ts
@@ -172,8 +176,11 @@ whose `execute(frame)` returns a binary response, and `FolioLane` runs the track
 The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
 ordered byte validation connect independent lanes. A transport failure falls back to native owner
 execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
-must fit the owner runtime. Frames carry the whole snapshot. `snapshotEncoding: 'auto'` omits pages
-that are all zero, which saves traffic for sparse arenas and requires lanes from this version. See [the managed procedure](experiments/managed/METHOD.md).
+must fit the owner runtime. Frames carry the whole snapshot by default. `snapshotEncoding: 'auto'` omits pages
+that are all zero, which saves traffic for sparse arenas, and lanes older than 1.0.1 reject its
+frames. The snapshot limit is 31 MiB by default. A frame over `maximumFrameBytes` (the snapshot limit
+plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that call runs at the
+owner and `diagnostics` names the frame size and the limit. See [the managed procedure](experiments/managed/METHOD.md).
 
 ## 🔗 Browser Execution and Page Leases
 
@@ -356,7 +363,9 @@ Drupal::service('cache.memory')->deleteAll();
 mt_srand(unpack('V', random_bytes(4))[1]);
 ```
 
-Run it before any other PHP in the replayed instance. A host that resets `State` at the start of
+Run it before any other PHP in the replayed instance. The bake request's PHP session identifier also
+stays in the heap and the library cannot renew it, so the host sets each request's own identifier
+before it serves the request. A host that resets `State` at the start of
 each request still needs the salt and the random seed, and needs the key step for code that runs
 before the first request. The measured effect for a PHP interpreter is in the Baked Boot Images
 section of the technical report.
@@ -492,10 +501,6 @@ Managed Workers cannot share physical memory across isolates, so that backend co
 [technical report](TECHNICAL_REPORT.md) lists every figure with its instrument, the raw samples
 live in [results/](results), and the Cloudflare probes are described in
 [experiments/](experiments/README.md).
-
-## 🧩 Examples
-
-The [examples](examples) run against the built package with `node examples/<name>.ts` after `bun run build:c` and `bun run build`: `basic` runs one entry, `routing` reads the report and shows capped and adaptive routing, `context-reset` resets a private instance between jobs, `task-pool` joins independent jobs in order, and `boot-image` bakes captured memory into a module.
 
 ## 🔧 Development
 
