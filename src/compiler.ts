@@ -4,6 +4,148 @@ import { admission, extract } from './extract.ts';
 import type { NativePlan } from './guards.ts';
 import { nativePlan } from './guards.ts';
 
+/** Offline exports used to checkpoint a private instance; function bodies remain unchanged. */
+export interface PreparedContext {
+	/** The module as passed in. */
+	original: Uint8Array;
+	/** The module to instantiate: the original plus the added exports, or the original on refusal. */
+	bytes: Uint8Array;
+	/** Export names of every memory. */
+	memories: string[];
+	/** Export names of every mutable numeric global. */
+	globals: string[];
+	/** Export names of every table. */
+	tables: string[];
+	/** A refusal retains original bytes so the caller can recreate a context instead. */
+	reasons: string[];
+}
+
+/**
+ * Exposes Wasm memories, mutable globals and tables for private-context reset. This adds exports
+ * only; start functions and code run normally. Unsupported metadata retains the original module.
+ * Host effects, passive segment drop state and objects behind references require recreation or
+ * a caller-owned reset. Modules using segment drop are refused for checkpoint reuse.
+ * @since 1.0.1
+ */
+export function prepareContext(input: Uint8Array): PreparedContext {
+	const original = Uint8Array.from(input),
+		native = new WebAssembly.Module(original);
+	const result: PreparedContext = {
+		original,
+		bytes: original,
+		memories: [],
+		globals: [],
+		tables: [],
+		reasons: []
+	};
+	let mod: binaryen.Module | undefined;
+	try {
+		mod = binaryen.readBinary(original);
+		mod.setFeatures(binaryen.Features.All);
+		// passive segment and gc state cannot be restored through exported bindings
+		const text = mod.emitText();
+		if (/\((?:data|elem)\.drop(?:\s|\))/.test(text))
+			throw new TypeError('passive segment drop state requires recreation');
+		if (/\((?:struct|array)\./.test(text))
+			throw new TypeError('Wasm GC object state requires recreation');
+		const exports = new Set(WebAssembly.Module.exports(native).map((item) => item.name));
+		let prefix = '__folio_context_';
+		while ([...exports].some((name) => name.startsWith(prefix))) prefix += '_';
+		const additions: number[] = [];
+		const leb = (value: number) => {
+			const out: number[] = [];
+			do {
+				const byte = value & 127;
+				value = Math.floor(value / 128);
+				out.push(byte | (value ? 128 : 0));
+			} while (value);
+			return out;
+		};
+		const add = (kind: number, index: number, names: string[], label: string) => {
+			const name = `${prefix}${label}${index}`,
+				encoded = new TextEncoder().encode(name);
+			additions.push(...leb(encoded.length), ...encoded, kind, ...leb(index));
+			names.push(name);
+		};
+		let cursor = 8,
+			definedMemories = 0;
+		const unsigned = () => {
+			let value = 0,
+				shift = 0,
+				byte: number;
+			do {
+				byte = original[cursor++]!;
+				value += (byte & 127) * 2 ** shift;
+				shift += 7;
+			} while (byte & 128);
+			return value;
+		};
+		const sections: { kind: number; start: number; payload: number; end: number }[] = [];
+		while (cursor < original.length) {
+			const start = cursor,
+				kind = original[cursor++]!,
+				length = unsigned(),
+				payload = cursor,
+				end = cursor + length;
+			if (kind === 5) definedMemories = unsigned();
+			sections.push({ kind, start, payload, end });
+			cursor = end;
+		}
+		const memoryCount =
+			definedMemories +
+			WebAssembly.Module.imports(native).filter((item) => item.kind === 'memory').length;
+		for (let index = 0; index < memoryCount; index++) add(2, index, result.memories, 'memory');
+		for (let index = 0; index < mod.getNumGlobals(); index++) {
+			const global = binaryen.getGlobalInfo(mod.getGlobalByIndex(index));
+			if (
+				![binaryen.i32, binaryen.i64, binaryen.f32, binaryen.f64, binaryen.v128].includes(
+					global.type
+				)
+			)
+				throw new TypeError('reference global state requires recreation');
+			if (!global.mutable) continue;
+			if (global.type === binaryen.v128)
+				throw new TypeError('v128 globals require recreation');
+			add(3, index, result.globals, 'global');
+		}
+		for (let index = 0; index < mod.getNumTables(); index++)
+			add(1, index, result.tables, 'table');
+		const prior = sections.find((section) => section.kind === 7);
+		let count = 0,
+			records = new Uint8Array();
+		if (prior) {
+			cursor = prior.payload;
+			count = unsigned();
+			records = original.subarray(cursor, prior.end);
+		}
+		const addedCount = result.memories.length + result.globals.length + result.tables.length;
+		const payload = Uint8Array.from([...leb(count + addedCount), ...records, ...additions]);
+		const header = Uint8Array.from([7, ...leb(payload.length)]);
+		const position =
+			prior?.start ??
+			sections.find((section) => [8, 9, 12, 10, 11].includes(section.kind))?.start ??
+			original.length;
+		const rest = prior?.end ?? position;
+		const bytes = new Uint8Array(
+			position + header.length + payload.length + original.length - rest
+		);
+		bytes.set(original.subarray(0, position));
+		bytes.set(header, position);
+		bytes.set(payload, position + header.length);
+		bytes.set(original.subarray(rest), position + header.length + payload.length);
+		new WebAssembly.Module(bytes);
+		result.bytes = bytes;
+	} catch (error) {
+		result.memories = [];
+		result.globals = [];
+		result.tables = [];
+		result.reasons.push(error instanceof Error ? error.message : String(error));
+	} finally {
+		mod?.dispose();
+	}
+	return result;
+}
+
 /** A counted loop the splitter can divide: the count parameter and the affine pointer steps. */
 export interface LoopPlan {
 	/** Index of the parameter holding the iteration count. */
