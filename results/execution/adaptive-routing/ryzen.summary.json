@@ -1,0 +1,566 @@
+{
+  "schema": "folio.research-summary.v1",
+  "rawSha256": "6bfae8ae5bdcb696bf77ea7af11c2388e134fad30ecbd6bcb190b63549aee7f5",
+  "samples": 2160,
+  "environments": [
+    {
+      "kind": "environment",
+      "schema": "folio.research.v1",
+      "observedAt": "2026-10-29T19:12:10.287Z",
+      "revision": "160f268",
+      "node": "v26.10.0",
+      "v8": "14.6.202.34-node.34",
+      "os": "linux",
+      "release": "6.8.0-138-generic",
+      "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+      "hardwareThreads": 24,
+      "affinity": "4-11",
+      "governor": "powersave",
+      "load": [
+        1.97,
+        1.67,
+        1.24
+      ],
+      "configuration": {
+        "pairs": 9,
+        "warmup": 2,
+        "calls": 64,
+        "fractions": [
+          0,
+          0.0625,
+          0.125,
+          0.25,
+          0.5,
+          1
+        ],
+        "rounds": [
+          16,
+          1024,
+          65536
+        ],
+        "widths": [
+          2,
+          4,
+          8
+        ],
+        "routingCalls": 40,
+        "synthetic": true,
+        "verificationIncluded": false
+      },
+      "sources": {
+        "src/bake.ts": "e6ef4e996680d3b5451b7e43526746e2f80934255a08ed478d03540d8fd04b11",
+        "src/browser-worker.ts": "90786fe738fd92e5d628465cb187d41790668d3fcf6fb0c71d92e761a3c78a3e",
+        "src/browser.ts": "242aa96ecbcdbd3839e647c5fda2537456bcfcad8113415f00d056a703c2dbd4",
+        "src/compiler.ts": "2e103ab6c02c5337395a7c6005543ef1eab76b83194361c87603836d5e990204",
+        "src/context.ts": "c15d9c8488a9875485012a11610ff400995dd8704233d8fbaf4597f48370a33d",
+        "src/coordinator.ts": "4b9c5cc0f72d73c588ed3bffb17e40d8fd2d3fb2bb0cd5646e24ab967bc70ce8",
+        "src/extract.ts": "90f8d7c7ad3ae7c532436d7763f876081315e83cb13f0d31af8c2ee53de7c323",
+        "src/frames.ts": "cf4b135aabfcc5bb733254cc232b25fd2edb2919a4ff489003939547416f58ca",
+        "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
+        "src/host.ts": "8b0fafb6ef8991778598cc78fd7e10415f49875c30b79c75e4e7eac901c80fed",
+        "src/import-order.ts": "0b725a68bd59f9c0e0a5bc63fcc4c31f08b5f718438e67d271a44f4d7e575905",
+        "src/index.ts": "a8c9f3dfbefa3170329c7950cb58f5e3c20e0f7264affb0ffd3bd1b3c1ba364b",
+        "src/managed.ts": "b6713caec874043186c9c1490da1b6672e8659360286c2b1da40118eb1ef0f25",
+        "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+        "src/node.ts": "126b6b650ac4c3469d14d6239f90f84657ab7385a9fcb54d7235a4033d559263",
+        "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
+        "src/remote.ts": "16dbba9b681966a2b4040c82fe3ca98c5a171eee25fd8d7ce43edf0bb5222e8d",
+        "src/tasks.ts": "7decb7a48c7a3aef2781b92bb3179a6bde434843996293ea8e90a947ca39c1fc",
+        "src/transaction.ts": "c4ae45c13c8e980ecb9811f69aedc243561d73d39a6eb855bfeeb51bf600c4f4",
+        "src/values.ts": "56b4c8777a3856441480eee0cb585a2b40e6b03966c3efc245e17a2536196374",
+        "src/worker.ts": "f1ab49593f1ce9bbb39a7adb4727c2cb4c303d74ceccc674474ef1d991ee82e5",
+        "scripts/research/admission-diagnostic.ts": "8dd8ea2b580f5765b699615045801df1296eb89e95b0eb71c34498551d035f34",
+        "scripts/research/analyze.ts": "96449e54d58410b22e44c90dd8c70a3e7e3e9b594b370b972ea141985203c52b",
+        "scripts/research/boot-eligibility.ts": "32717c8da20fcf23210b814592ae1584a0da4284cd51c5e43ee629c74a60327d",
+        "scripts/research/cases/include/assert.h": "2e0b7e0adab1df0793e150b60890843771f584e8094b3e74fdbd1a6d0d3f4508",
+        "scripts/research/cases/include/int_lib.h": "cf4f25bd15803ccfc1774ccab9ed5228132758cc546e180f9f37f31f65e90931",
+        "scripts/research/cases/include/math.h": "6f6751b2957db0e6615f14371cc3132d0decf54b175e2670be6e8e6de08dfb3b",
+        "scripts/research/cases/include/memory.h": "3234d45b96216a3c36f25932364b800eeadf703964e85fdf25cabacf9aeedc2e",
+        "scripts/research/cases/include/miniz_export.h": "195259dc89fb3f83a96426a90ee03dc45acef113150cd3475ea9cfbf1f7784f3",
+        "scripts/research/cases/include/stdio.h": "0bd8c3e9e8a873b890704afcd45369c8e7d79991be6d2de55ec058264219ae77",
+        "scripts/research/cases/include/stdlib.h": "c328dcb08baa26c16bc8b768b4c0ca32e2b32e94772c419dda8f9fb25e3695bb",
+        "scripts/research/cases/include/string.h": "3db545ced6638221254c50e3d022269170442967dc330f081f9f996d9c4e228a",
+        "scripts/research/cases/kernel.c": "ed306b90b0e9e4e2479379f12b4cdf9f9ef7f1f220a12bf5c878d5fb7986035b",
+        "scripts/research/cases/support.c": "e7274295036f111a09f4728b0c821728c2403d36f3195b1db4a1d174014d8630",
+        "scripts/research/cases/upstream.ts": "74ef77e2bdc5a9bb32ad4057227d34f3ca562df31749dfeba5fdb27d8c6d30ac",
+        "scripts/research/corpus-manifest.json": "8ba08eaab61702d48e80cca5ffa1930c95aa727d9ed8174926305be512b86ce4",
+        "scripts/research/corpus-mechanisms.ts": "24ba33e586bdc64ad586bbb17972ca13784565d3fb5baee6150645194dc57045",
+        "scripts/research/corpus-serial.ts": "af524472b68bb6b10c58d814825bbb5038f96b387cad7f6ce603726e1d78bcab",
+        "scripts/research/corpus-worker.ts": "a13a2b033c394d1bd7c6f84716d365d8376be36c57b8a8840935c85abd25fc2f",
+        "scripts/research/corpus.ts": "51f63c69882721e4f35857cb8d7444105b1847a4cbf62401b02e2ab42e1f4b04",
+        "scripts/research/crossover-worker.ts": "ce3a36ab1695c973c9a69ad0eb52bcc4802fb3e8fb840c6c49a382d1fe7f960f",
+        "scripts/research/crossover.ts": "f0958198a63172852201a6746bc88211ed209f57f43881951da8c0dbd12a8b18",
+        "scripts/research/differential.ts": "08c0d911bc655cc9420cd96fc519c6270ec97c695fa2e9fbf6f1461307e226e4",
+        "scripts/research/environment.ts": "35eed05e53ff27f686dd2d18a4fb8a3390c084738aef4fb5c2b30c00d027ce75",
+        "scripts/research/evidence.ts": "2e904add50c4a4a5c1651d64e4fd93d455df4d72c8fe05cd3c77985cbcd70be0",
+        "scripts/research/graded.ts": "55c372b6fbde99c644aba25d4699c0c464d77e1187d00e92b24dab5d48a23f32",
+        "scripts/research/inputs.ts": "ec5e1a0075f05ba27cbd7af376b907086d483c633e67c894729232f840af758e"
+      },
+      "sourceDigest": "5dc892d1a32728b867ecd9307026cd1a3fb11f40ad2c2be13291961098e0069a"
+    }
+  ],
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 305419896,
+    "unit": "paired round",
+    "independentReplication": false
+  },
+  "groups": {
+    "{\"entry\":\"aliased_program\",\"args\":[1024,64,4096]}": {
+      "native": {
+        "wallMs": {
+          "n": 360,
+          "median": 0.305896999999959,
+          "min": 0.3002369999999246,
+          "max": 0.6865829999997004,
+          "medianCi95": [
+            0.30561150000016823,
+            0.3061115000000427
+          ]
+        },
+        "cpuMs": {
+          "n": 360,
+          "median": 0.306,
+          "min": 0.301,
+          "max": 3.582,
+          "medianCi95": [
+            0.306,
+            0.307
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 360,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 360,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatioPairs": 360,
+        "averageBusyCpus": {
+          "n": 360,
+          "median": 1.0018075074340231,
+          "min": 0.989186394191442,
+          "max": 10.827771329087467,
+          "medianCi95": [
+            1.0015430940824537,
+            1.00198781866564
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "reasons": {},
+        "replayed": 0
+      },
+      "default-8": {
+        "wallMs": {
+          "n": 360,
+          "median": 0.48786999999992986,
+          "min": 0.4400759999998627,
+          "max": 5.5123530000000756,
+          "medianCi95": [
+            0.4844299999999748,
+            0.4927150000000893
+          ]
+        },
+        "cpuMs": {
+          "n": 360,
+          "median": 0.8234999999999999,
+          "min": 0.745,
+          "max": 26.085,
+          "medianCi95": [
+            0.818,
+            0.828
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 360,
+          "median": 0.623730734810086,
+          "min": 0.05557644802499591,
+          "max": 0.779488610364429,
+          "medianCi95": [
+            0.6184229833368019,
+            0.631333714116658
+          ]
+        },
+        "cpuRatio": {
+          "n": 360,
+          "median": 2.6792135433408335,
+          "min": 0.462303664921466,
+          "max": 84.96742671009773,
+          "medianCi95": [
+            2.645631067961165,
+            2.711038961038961
+          ]
+        },
+        "cpuRatioPairs": 360,
+        "averageBusyCpus": {
+          "n": 360,
+          "median": 1.6946104127335357,
+          "min": 1.3841905789310474,
+          "max": 5.091230777268231,
+          "medianCi95": [
+            1.6889765946028177,
+            1.700707324812237
+          ]
+        },
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          8
+        ],
+        "reasons": {
+          "dependency": 360
+        },
+        "replayed": 2520,
+        "validationMs": {
+          "n": 360,
+          "median": 0.0005000000010113581,
+          "min": 0.0003699999992932135,
+          "max": 0.010620000000017171,
+          "medianCi95": [
+            0.00048000000015235855,
+            0.0005499999997482519
+          ]
+        },
+        "commitMs": {
+          "n": 360,
+          "median": 0.0005900000005567563,
+          "min": 0.0005000000001018634,
+          "max": 0.005310000000008586,
+          "medianCi95": [
+            0.0005750000002535671,
+            0.0006100000000515138
+          ]
+        }
+      },
+      "adaptive-8": {
+        "wallMs": {
+          "n": 360,
+          "median": 0.3090465000002496,
+          "min": 0.3011570000003303,
+          "max": 2.2407170000001315,
+          "medianCi95": [
+            0.3083520000000135,
+            0.30960700000014185
+          ]
+        },
+        "cpuMs": {
+          "n": 360,
+          "median": 0.31,
+          "min": 0.302,
+          "max": 9.072,
+          "medianCi95": [
+            0.309,
+            0.31
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 360,
+          "median": 0.9891433663317214,
+          "min": 0.13990477155318223,
+          "max": 2.1900853599383474,
+          "medianCi95": [
+            0.9882604987547219,
+            0.9903855590377959
+          ]
+        },
+        "cpuRatio": {
+          "n": 360,
+          "median": 1.0098360655737706,
+          "min": 0.0876605248464545,
+          "max": 27.39677419354839,
+          "medianCi95": [
+            1.009771986970684,
+            1.013029315960912
+          ]
+        },
+        "cpuRatioPairs": 360,
+        "averageBusyCpus": {
+          "n": 360,
+          "median": 1.0020490969904121,
+          "min": 0.9910087904990008,
+          "max": 10.964235858269852,
+          "medianCi95": [
+            1.0018959686336948,
+            1.0023469922188262
+          ]
+        },
+        "modes": [
+          "speculative",
+          "serial"
+        ],
+        "workers": [
+          8,
+          0
+        ],
+        "reasons": {
+          "dependency": 23,
+          "previous-conflicts": 337
+        },
+        "replayed": 161,
+        "validationMs": {
+          "n": 360,
+          "median": 0,
+          "min": 0,
+          "max": 0.007789999999658903,
+          "medianCi95": [
+            0,
+            0
+          ]
+        },
+        "commitMs": {
+          "n": 360,
+          "median": 0,
+          "min": 0,
+          "max": 0.0013999999996485712,
+          "medianCi95": [
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "{\"entry\":\"dependent_program\",\"args\":[1024,64]}": {
+      "native": {
+        "wallMs": {
+          "n": 360,
+          "median": 0.0005799999998998828,
+          "min": 0.0004500000000007276,
+          "max": 0.0034700000001066655,
+          "medianCi95": [
+            0.0005600000004051253,
+            0.0005999999998493877
+          ]
+        },
+        "cpuMs": {
+          "n": 360,
+          "median": 0.001,
+          "min": 0,
+          "max": 0.008,
+          "medianCi95": [
+            0.001,
+            0.001
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 360,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 355,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatioPairs": 355,
+        "averageBusyCpus": {
+          "n": 360,
+          "median": 1.8181818175107465,
+          "min": 0,
+          "max": 8.000000002008164,
+          "medianCi95": [
+            1.7857142851474757,
+            1.8518518518488576
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "reasons": {},
+        "replayed": 0
+      },
+      "default-8": {
+        "wallMs": {
+          "n": 360,
+          "median": 0.18729849999999715,
+          "min": 0.13196900000002643,
+          "max": 2.8688700000002427,
+          "medianCi95": [
+            0.1823029999998198,
+            0.19232800000031602
+          ]
+        },
+        "cpuMs": {
+          "n": 360,
+          "median": 0.309,
+          "min": 0.212,
+          "max": 20.098,
+          "medianCi95": [
+            0.2935,
+            0.3235
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 360,
+          "median": 0.0030899397122061264,
+          "min": 0.0003241694464016355,
+          "max": 0.019013907002292198,
+          "medianCi95": [
+            0.0029987530611673757,
+            0.00320427600372511
+          ]
+        },
+        "cpuRatio": {
+          "n": 355,
+          "median": 291,
+          "min": 92,
+          "max": 20098,
+          "medianCi95": [
+            282.99999999999994,
+            307
+          ]
+        },
+        "cpuRatioPairs": 355,
+        "averageBusyCpus": {
+          "n": 360,
+          "median": 1.6657114959458559,
+          "min": 1.2014302492859477,
+          "max": 11.595433413654323,
+          "medianCi95": [
+            1.6350262948061645,
+            1.7206200344177849
+          ]
+        },
+        "modes": [
+          "speculative"
+        ],
+        "workers": [
+          8
+        ],
+        "reasons": {
+          "dependency": 360
+        },
+        "replayed": 2520,
+        "validationMs": {
+          "n": 360,
+          "median": 0.00048000000015235855,
+          "min": 0.0003699999992932135,
+          "max": 0.012090000000625878,
+          "medianCi95": [
+            0.0004600000002028537,
+            0.0005000000001018634
+          ]
+        },
+        "commitMs": {
+          "n": 360,
+          "median": 0.005740000000059808,
+          "min": 0.003499999999803549,
+          "max": 0.025179999999636493,
+          "medianCi95": [
+            0.004789999999729844,
+            0.006859999999505817
+          ]
+        }
+      },
+      "adaptive-8": {
+        "wallMs": {
+          "n": 360,
+          "median": 0.002970000000004802,
+          "min": 0.0017299999999522697,
+          "max": 1.807321000000229,
+          "medianCi95": [
+            0.002790000000004511,
+            0.0032499999997526174
+          ]
+        },
+        "cpuMs": {
+          "n": 360,
+          "median": 0.004,
+          "min": 0.002,
+          "max": 6.907,
+          "medianCi95": [
+            0.003,
+            0.004
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 360,
+          "median": 0.1992266208529572,
+          "min": 0.0010494487800477527,
+          "max": 0.39566704676636705,
+          "medianCi95": [
+            0.19378739070396261,
+            0.2059414016053769
+          ]
+        },
+        "cpuRatio": {
+          "n": 355,
+          "median": 3,
+          "min": 1,
+          "max": 5007,
+          "medianCi95": [
+            3,
+            4
+          ]
+        },
+        "cpuRatioPairs": 355,
+        "averageBusyCpus": {
+          "n": 360,
+          "median": 1.1865916202319036,
+          "min": 0.772200772184459,
+          "max": 221.59090907782758,
+          "medianCi95": [
+            1.1641459315788867,
+            1.2060313689773698
+          ]
+        },
+        "modes": [
+          "speculative",
+          "serial"
+        ],
+        "workers": [
+          8,
+          0
+        ],
+        "reasons": {
+          "dependency": 23,
+          "previous-conflicts": 337
+        },
+        "replayed": 161,
+        "validationMs": {
+          "n": 360,
+          "median": 0,
+          "min": 0,
+          "max": 0.0017900000002555316,
+          "medianCi95": [
+            0,
+            0
+          ]
+        },
+        "commitMs": {
+          "n": 360,
+          "median": 0,
+          "min": 0,
+          "max": 0.02198999999973239,
+          "medianCi95": [
+            0,
+            0
+          ]
+        }
+      }
+    }
+  }
+}
