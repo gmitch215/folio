@@ -12,7 +12,7 @@ export interface AdmissionOptions {
 	assumedTripCount?: number;
 }
 
-/** Calibrated on Apple M2 Pro; see `results/20261020-regress/admission-calibration.summary.json`. */
+/** Calibrated on Apple M2 Pro; see `results/execution/admission/admission-calibration.summary.json`. */
 export const DEFAULT_MINIMUM_REGION_WORK = 200_000;
 export const DEFAULT_ASSUMED_TRIP_COUNT = 1000;
 // a tracked load or store costs about this many plain instructions in a speculative lane

@@ -3,7 +3,7 @@ import { parseRows, readRaw, resultsRoot, stats, writeSummary, type Row } from '
 
 // boot image summary from boot-image.ts rows: boot phases, image anatomy, delivery cost per
 // route, and the ratio of each route to the boot it would replace
-// usage: analyzeBootImage('20261022-bootimage'), analyzeBakedBuild('20261022-bootimage-php8512')
+// usage: analyzeBootImage('boot/php-852'), analyzeBakedBuild('boot/php-8512')
 
 // deployed figures from the product's report (edge cpuTime, ms); context for the ratios only
 export const deployed = { kernelBootLow: 616, kernelBootHigh: 1036, interpreterFloor: 490 };

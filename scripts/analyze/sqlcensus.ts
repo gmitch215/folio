@@ -2,7 +2,7 @@ import { writeFileSync } from 'node:fs';
 import { parseRows, readRaw, resultsRoot, sha256, stats, type Row } from './lib.ts';
 
 // table-level SQL dependence of Drupal units, parsed by regex; the row keys are a heuristic.
-// usage: analyzeCensus('20261022-sqlcensus', 'census.jsonl', 'summary.json')
+// usage: analyzeCensus('php/sql-effects', 'census.jsonl', 'summary.json')
 
 export interface Parsed {
 	verb: string;

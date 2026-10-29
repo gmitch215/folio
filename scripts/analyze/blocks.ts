@@ -1,7 +1,7 @@
 import { parseRows, readRaw, resultsRoot, writeSummary, type Row } from './lib.ts';
 
 // warm block cost summary and the early-launch bound, from php-blocks.ts rows
-// usage: analyzeBlocks('20261022-blocks', 'mac-blocks.jsonl', 'summary.json')
+// usage: analyzeBlocks('php/render-blocks', 'mac-blocks.jsonl', 'summary.json')
 
 // 1.6 ms per 6.3 MB from an earlier run; MB read as 10^6 bytes
 const transferMsPerByte = 1.6 / 6.3e6;

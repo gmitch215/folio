@@ -5,7 +5,7 @@ import { parseRows, readRaw, resultsRoot, stats, writeSummary, type Row } from '
 
 // bake secrets summary from bake-secrets.ts rows: what a baked heap holds, whether a replay site's
 // key and salt win, whether replayed instances share random state, and what the rekey step costs
-// usage: analyzeBakeSecrets('20261022-bakesecrets')
+// usage: analyzeBakeSecrets('boot/replay-852')
 
 export type Form = 'raw' | 'base64' | 'hex';
 

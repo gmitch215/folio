@@ -180,4 +180,4 @@ export function analyzeSiteConc(set: string) {
 	return summary;
 }
 
-if (import.meta.main) analyzeSiteConc(process.argv[2] ?? '20261022-site-concurrency');
+if (import.meta.main) analyzeSiteConc(process.argv[2] ?? 'portability/site-concurrency');

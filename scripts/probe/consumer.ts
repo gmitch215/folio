@@ -44,6 +44,8 @@ export interface Options {
 	warmup?: number;
 	/** adds an `old-N` arm per width from the archived pre-admission build */
 	old?: boolean;
+	/** Diagnostic admission override; undefined retains the shipped compiler default. */
+	minimumRegionWork?: number;
 }
 
 type Row = Record<string, any>;
@@ -63,7 +65,7 @@ export async function measure(consumer: Consumer, options: Options = {}): Promis
 	};
 	const module = new WebAssembly.Module(Uint8Array.from(consumer.bytes));
 	const preparedAt = performance.now();
-	const plan = prepare(consumer.bytes);
+	const plan = prepare(consumer.bytes, { minimumRegionWork: options.minimumRegionWork });
 	const prepareMs = performance.now() - preparedAt;
 	const oldBuild = options.old ? await openOldBuild() : undefined;
 	const oldPreparedAt = performance.now();
@@ -155,6 +157,7 @@ export async function measure(consumer: Consumer, options: Options = {}): Promis
 			arms: arms.map((arm) => arm.name),
 			pairs,
 			warmup,
+			minimumRegionWork: options.minimumRegionWork,
 			functionExports: WebAssembly.Module.exports(module).filter(
 				(item) => item.kind === 'function'
 			).length,

@@ -16,64 +16,59 @@ import { analyzeSiteConc } from './siteconc.ts';
 import { analyzeCensus } from './sqlcensus.ts';
 import { analyzeValidation, analyzeWorksp } from './worksp.ts';
 
-for (const set of ['20261019', '20261019-b', '20261019-c']) analyzeSharing(set);
+for (const set of ['memory/sharing', 'memory/large-arena', 'memory/large-repeat'])
+	analyzeSharing(set);
 analyzeScaling();
-for (const set of ['20261020-control', '20261020-control-b']) analyzeControl(set);
-for (const set of ['20261020-affinity', '20261020-affinity-final']) analyzeAffinity(set);
-for (const file of ['workloads.jsonl', 'render.jsonl']) analyzePaired('20261020-php', file);
+for (const set of ['execution/control-pilot', 'execution/control']) analyzeControl(set);
+for (const set of ['execution/placement-pilot', 'execution/placement']) analyzeAffinity(set);
+for (const file of ['workloads.jsonl', 'render.jsonl']) analyzePaired('php/serial', file);
 for (const name of ['kernel-control', 'negative', 'machine-core', 'process-abi', 'tinyimg'])
-	analyzePaired('20261020-consumers', `${name}.jsonl`);
-analyzeAdmission('20261020-regress');
+	analyzePaired('compatibility/consumers', `${name}.jsonl`);
+analyzeAdmission('execution/admission');
 for (const file of ['php-workloads.jsonl', 'php-render.jsonl'])
-	analyzePaired('20261020-regress', file);
+	analyzePaired('execution/admission', file);
 for (const name of [
 	'kernel-control',
-	'kernel-control-b',
+	'kernel-control-repeat',
 	'negative',
 	'small-trips',
-	'small-trips-b',
+	'small-trips-repeat',
 	'machine-core',
 	'process-abi',
-	'process-abi-b',
+	'process-abi-repeat',
 	'tinyimg'
 ])
-	analyzePaired('20261020-regress', `${name}.jsonl`);
-for (const file of ['cpu-rig.jsonl', 'drupal-rig.jsonl'])
-	analyzeConcurrent('20261020-phpparallel', file);
+	analyzePaired('execution/admission', `${name}.jsonl`);
+for (const file of ['cpu-rig.jsonl', 'drupal-rig.jsonl']) analyzeConcurrent('php/requests', file);
 for (const file of ['drupal-breakdown-rig.jsonl', 'mac-drupal-breakdown.jsonl'])
-	analyzeBreakdown('20261020-phpparallel', file);
-analyzeMemory('20261020-phpparallel', ['memory-rig.jsonl']);
-analyzeIntra('intra', '20261020-phpintra', ['intra-rig.jsonl'], 'intra-rig.summary.json');
+	analyzeBreakdown('php/requests', file);
+analyzeMemory('php/requests', ['memory-rig.jsonl']);
+analyzeIntra('intra', 'php/intra-request', ['intra-rig.jsonl'], 'intra-rig.summary.json');
 analyzeIntra(
 	'intra',
-	'20261020-phpintra',
+	'php/intra-request',
 	['intra-drupal-rig.jsonl'],
 	'intra-drupal-rig.summary.json'
 );
-analyzeIntra('indirect', '20261020-phpintra', ['indirect-mac.jsonl'], 'indirect-mac.summary.json');
-analyzeIntra('snapshot', '20261020-phpintra', ['snapshot-rig.jsonl'], 'snapshot-rig.summary.json');
-for (const set of ['20261020-phpwidth-nosmt', '20261020-phpwidth-smt'])
+analyzeIntra('indirect', 'php/intra-request', ['indirect-mac.jsonl'], 'indirect-mac.summary.json');
+analyzeIntra('snapshot', 'php/intra-request', ['snapshot-rig.jsonl'], 'snapshot-rig.summary.json');
+for (const set of ['tasks/physical-cores', 'tasks/smt'])
 	analyzeIntra('intra', set, ['intra-rig.jsonl'], 'intra-rig.summary.json');
-analyzeIntra('intra', '20261020-phptasks-lib', ['intra-rig.jsonl'], 'intra-rig.summary.json');
-analyzeIntra(
-	'intra',
-	'20261020-phptasks-lib',
-	['intra-drupal-rig.jsonl'],
-	'intra-drupal-rig.summary.json'
-);
+analyzeIntra('intra', 'tasks/library', ['intra-rig.jsonl'], 'intra-rig.summary.json');
+analyzeIntra('intra', 'tasks/library', ['intra-drupal-rig.jsonl'], 'intra-drupal-rig.summary.json');
 for (const file of ['count.jsonl', 'trace-small.jsonl', 'trace-drupal.jsonl'])
-	analyzeWorksp('20261020-worksp', file);
+	analyzeWorksp('analysis/span-pilot', file);
 for (const file of ['controls.jsonl', 'drupal-coarse.jsonl', 'drupal-fine.jsonl'])
-	analyzeWorksp('20261020-worksp2', file);
-analyzeValidation('20261020-worksp2', 'validation.jsonl');
-analyzeRegen('20261022-phpregen', 'nosmt-regen.jsonl', 'nosmt-regen.summary.json');
-analyzeRegen('20261022-phpregen', 'smt-regen.jsonl', 'smt-regen.summary.json');
-analyzeCensus('20261022-sqlcensus', 'census.jsonl', 'summary.json');
-analyzeSiteConc('20261022-site-concurrency');
-analyzeBlocks('20261022-blocks', 'mac-blocks.jsonl');
-analyzeBootImage('20261022-bootimage');
-analyzeBakedBuild('20261022-bootimage-php8512');
-analyzeBakeSecrets('20261022-bakesecrets');
-analyzeBakeSecrets('20261022-bakesecrets-php8512');
-analyzePageDrop('20261022-pagedrop');
+	analyzeWorksp('analysis/span-validation', file);
+analyzeValidation('analysis/span-validation', 'validation.jsonl');
+analyzeRegen('php/regeneration', 'nosmt-regen.jsonl', 'nosmt-regen.summary.json');
+analyzeRegen('php/regeneration', 'smt-regen.jsonl', 'smt-regen.summary.json');
+analyzeCensus('php/sql-effects', 'census.jsonl', 'summary.json');
+analyzeSiteConc('portability/site-concurrency');
+analyzeBlocks('php/render-blocks', 'mac-blocks.jsonl');
+analyzeBootImage('boot/php-852');
+analyzeBakedBuild('boot/php-8512');
+analyzeBakeSecrets('boot/replay-852');
+analyzeBakeSecrets('boot/replay-8512');
+analyzePageDrop('boot/residency');
 console.log('regenerated every summary.json under results/');

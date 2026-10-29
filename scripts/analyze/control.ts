@@ -3,7 +3,7 @@ import { parseRows, readRaw, resultsRoot, sha256, spread, writeSummary, type Row
 
 const arms = ['raw', 'auto-1', 'auto-2', 'auto-4', 'auto-8'];
 
-export function analyzeControl(set = '20261020-control-b') {
+export function analyzeControl(set = 'execution/control') {
 	const root = resultsRoot(set);
 	const raw = readRaw(root, 'control.jsonl');
 	const rows = parseRows(raw);

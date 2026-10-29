@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
 import { parseRows, readRaw, resultsRoot, sha256, stats, writeSummary, type Row } from './lib.ts';
 
-export function analyzeSharing(set = '20261019') {
+export function analyzeSharing(set = 'memory/sharing') {
 	const root = resultsRoot(set);
 	const files = readdirSync(root)
 		.filter((name) => name.endsWith('.jsonl'))

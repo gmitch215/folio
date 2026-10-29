@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { parseRows, readRaw, resultsRoot, sha256, stats, writeSummary, type Row } from './lib.ts';
 
-export function analyzeScaling(set = '20261019-d') {
+export function analyzeScaling(set = 'execution/scaling') {
 	const root = resultsRoot(set);
 	const raw = readRaw(root, 'scaling.jsonl');
 	const rows = parseRows(raw);

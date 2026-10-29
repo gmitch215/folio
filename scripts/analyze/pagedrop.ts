@@ -3,7 +3,7 @@ import type { MemoryImage } from '../../src/bake.ts';
 import { parseRows, readRaw, resultsRoot, stats, writeSummary, type Row } from './lib.ts';
 
 // page drop summary: which pages of a baked image hold dlmalloc free memory, and what a render
-// that poisons them still produces. usage: analyzePageDrop('20261022-pagedrop')
+// that poisons them still produces. usage: analyzePageDrop('boot/residency')
 
 export const pageBytes = 65_536;
 
@@ -613,4 +613,4 @@ export function analyzePageDrop(set: string) {
 	return summary;
 }
 
-if (import.meta.main) analyzePageDrop(process.argv[2] ?? '20261022-pagedrop');
+if (import.meta.main) analyzePageDrop(process.argv[2] ?? 'boot/residency');

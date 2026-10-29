@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import type { PreparedProgram } from '../../src/compiler.ts';
 import type { Folio } from '../../src/node.ts';
 
-const archive = new URL('../../results/20261020-regress/old-build-src.tar.gz', import.meta.url);
+const archive = new URL('../../results/execution/admission/old-build-src.tar.gz', import.meta.url);
 const target = new URL('../../build/old-build/', import.meta.url);
 
 export interface OldBuild {

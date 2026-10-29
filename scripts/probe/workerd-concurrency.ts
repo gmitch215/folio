@@ -264,7 +264,7 @@ const stop = (child: ChildProcess) =>
 const main = async () => {
 	const root = resolve(import.meta.dirname, '../..');
 	const outDir = resolve(
-		process.argv[2] ?? resolve(root, 'results/20261022-workerd-concurrency')
+		process.argv[2] ?? resolve(root, 'results/portability/runtime-concurrency')
 	);
 	const rounds = Number(process.argv[3] ?? 20);
 	const bin = resolve(root, 'node_modules/workerd/bin/workerd');

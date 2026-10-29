@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 export type Row = Record<string, any>;
 
@@ -29,8 +31,11 @@ export const spread = (values: number[]) => ({
 });
 
 export function resultsRoot(set: string) {
-	assert.match(set, /^[a-zA-Z0-9-]+$/, 'invalid measurement set');
-	return new URL(`../../results/${set}/`, import.meta.url);
+	assert.match(set, /^[a-zA-Z0-9-]+(?:\/[a-zA-Z0-9-]+)*$/, 'invalid measurement set');
+	const base = process.env.FOLIO_RESULTS_ROOT
+		? pathToFileURL(resolve(process.env.FOLIO_RESULTS_ROOT) + sep)
+		: new URL('../../results/', import.meta.url);
+	return new URL(`${set}/`, base);
 }
 
 export const parseRows = (raw: Buffer): Row[] =>

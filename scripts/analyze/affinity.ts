@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { parseRows, readRaw, resultsRoot, sha256, spread, writeSummary, type Row } from './lib.ts';
 
-export function analyzeAffinity(set = '20261020-affinity') {
+export function analyzeAffinity(set = 'execution/placement-pilot') {
 	const root = resultsRoot(set);
 	const raw = readRaw(root, 'affinity.jsonl');
 	const rows = parseRows(raw);
