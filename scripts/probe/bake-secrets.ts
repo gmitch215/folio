@@ -861,6 +861,17 @@ const exportedGlobals = (instance: WebAssembly.Instance, probe: Row[]) =>
 const tableOf = (instance: WebAssembly.Instance) =>
 	instance.exports.__indirect_function_table as WebAssembly.Table;
 
+// same module, so equal function indexes are the same function; captureImage compares by identity
+const preBootTable = (booted: WebAssembly.Table, fresh: WebAssembly.Table) => {
+	const copy = new WebAssembly.Table({ element: 'anyfunc', initial: fresh.length });
+	for (let slot = 0; slot < fresh.length; slot++) {
+		const then = fresh.get(slot);
+		const now = slot < booted.length ? booted.get(slot) : null;
+		copy.set(slot, then && now && then.name === now.name ? now : then);
+	}
+	return copy;
+};
+
 /** the image a sentinel or control bake takes, plus what a replay of it needs from the JS side */
 async function capture(tag: string, role: Role) {
 	const secrets = JSON.parse(readFileSync(path(`${tag}.secrets.json`), 'utf8'));
@@ -916,7 +927,10 @@ async function capture(tag: string, role: Role) {
 		module: interp.wasmSha256,
 		context: contextDigest(),
 		globals: { booted: bootedGlobals, fresh: exportedGlobals(freshInstance, probe) },
-		table: { booted: tableOf(ctx.instance), fresh: tableOf(freshInstance) }
+		table: {
+			booted: tableOf(ctx.instance),
+			fresh: preBootTable(tableOf(ctx.instance), tableOf(freshInstance))
+		}
 	});
 	const stackPointer = (ctx.imports.env as any).__stack_pointer
 		? Number((ctx.imports.env as any).__stack_pointer.value)

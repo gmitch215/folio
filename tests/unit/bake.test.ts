@@ -183,8 +183,9 @@ const tabled = wasm(`(module
 test('captureImage reports table slots that boot changed, including added ones', () => {
 	const open = () =>
 		new WebAssembly.Instance(new WebAssembly.Module(tabled as BufferSource)).exports as any;
-	const fresh = open();
 	const booted = open();
+	const fresh = { t: new WebAssembly.Table({ element: 'anyfunc', initial: booted.t.length }) };
+	for (let slot = 0; slot < booted.t.length; slot++) fresh.t.set(slot, booted.t.get(slot));
 	expect(
 		captureImage(new Uint8Array(0), new Uint8Array(0), {
 			table: { booted: booted.t, fresh: fresh.t }
@@ -201,6 +202,23 @@ test('captureImage reports table slots that boot changed, including added ones',
 		table: { booted: booted.t, fresh: fresh.t }
 	});
 	expect(grown.tableSlots).toEqual([0, 3, 5]);
+});
+
+test('captureImage does not mistake equally named functions for the same table reference', () => {
+	const original = new WebAssembly.Instance(new WebAssembly.Module(tabled as BufferSource))
+		.exports as any;
+	const foreign = new WebAssembly.Instance(
+		new WebAssembly.Module(wasm('(module (func (export "f") (unreachable)))') as BufferSource)
+	).exports.f as CallableFunction;
+	const before = new WebAssembly.Table({ element: 'anyfunc', initial: original.t.length });
+	for (let slot = 0; slot < before.length; slot++) before.set(slot, original.t.get(slot));
+	expect(foreign.name).toBe(original.t.get(0).name);
+	original.t.set(0, foreign);
+	expect(
+		captureImage(new Uint8Array(0), new Uint8Array(0), {
+			table: { booted: original.t, fresh: before }
+		}).tableSlots
+	).toEqual([0]);
 });
 
 test('bakeModule makes a module whose fresh memory equals the booted memory', async () => {
@@ -306,6 +324,22 @@ const twoPages: MemoryImage = {
 	pages: [1],
 	data: new Uint8Array(page).fill(3)
 };
+
+test('baking refuses a start function that would overwrite captured initialization', async () => {
+	const bytes = wasm(`(module (memory (export "memory") 1)
+		(func $start (i32.store (i32.const 0) (i32.add (i32.load (i32.const 0)) (i32.const 1))))
+		(start $start)
+		(func (export "boot") (call $start)))`);
+	const instance = new WebAssembly.Instance(new WebAssembly.Module(bytes as BufferSource));
+	const fresh = new Uint8Array((instance.exports.memory as WebAssembly.Memory).buffer).slice();
+	(instance.exports.boot as CallableFunction)();
+	const image = captureImage(instance.exports.memory as WebAssembly.Memory, fresh);
+	expect(new Uint32Array(image.data.buffer)[0]).toBe(2);
+	await expect(bakeModule(bytes, image)).rejects.toMatchObject({ code: 'start' });
+	await expect(
+		bakeModule(bytes, { byteLength: page, pages: [], data: new Uint8Array() })
+	).rejects.toMatchObject({ code: 'start' });
+});
 
 test('bakeModule raises a defined memory that starts below the image and keeps its own data', async () => {
 	const { exports, baked } = await defined(

@@ -49,7 +49,11 @@ export interface CaptureOptions {
 	context?: string;
 	/** Global values read from the booted and the fresh instance, by wasm global index. */
 	globals?: BootedAndFresh<Record<number, GlobalValue>>;
-	/** The `__indirect_function_table` of the booted and the fresh instance. */
+	/**
+	 * Table after boot and a table holding the pre-boot function references. Copy the references
+	 * before boot; functions from separately instantiated modules have distinct identities and are
+	 * conservatively reported as changed. Function names cannot establish identity.
+	 */
 	table?: BootedAndFresh<WebAssembly.Table>;
 }
 
@@ -102,7 +106,7 @@ export interface BakedCheck {
  * operation cannot write.
  */
 export type ImageMismatchCode =
-	'digest' | 'context' | 'no-memory' | 'memories' | 'maximum' | 'global' | 'table';
+	'digest' | 'context' | 'no-memory' | 'memories' | 'maximum' | 'global' | 'table' | 'start';
 
 /** The image cannot be baked into this module. */
 export class ImageMismatchError extends Error {
@@ -250,7 +254,7 @@ export function captureImage(
 		for (let slot = 0; slot < Math.max(now.length, then.length); slot++) {
 			const a = slot < now.length ? now.get(slot) : null;
 			const b = slot < then.length ? then.get(slot) : null;
-			if ((a?.name ?? null) !== (b?.name ?? null)) slots.push(slot);
+			if (a !== b) slots.push(slot);
 		}
 		if (slots.length) image.tableSlots = slots;
 	}
@@ -825,7 +829,8 @@ function setGlobal(
  *
  * Throws `ImageMismatchError` for a wrong module digest (taken over `bytes` as passed), a module
  * with no memory or with more than one, an image over the memory maximum, a global that cannot be rewritten and changed
- * table slots (unless `allowTableChanges`).
+ * table slots (unless `allowTableChanges`). A start function is refused because it would run
+ * again over the captured state.
  */
 export async function bakeModule(
 	bytes: Uint8Array,
@@ -867,6 +872,11 @@ export async function bakeModule(
 	const binaryen: Binaryen = (await import('binaryen')).default;
 	const mod = binaryen.readBinary(located.raise(pages));
 	try {
+		if (mod.getStart())
+			throw new ImageMismatchError(
+				'start',
+				'module start would run again after image restoration'
+			);
 		for (const [key, value] of Object.entries(image.globals ?? {}))
 			setGlobal(binaryen, mod, Number(key), value);
 		const memory = memoryName(bytes, zero.imported);
