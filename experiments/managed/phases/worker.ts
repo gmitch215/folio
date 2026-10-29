@@ -147,6 +147,60 @@ export class PhaseOwner extends DurableObject<Env> {
 		return { rows };
 	}
 
+	/** One invocation: setup, a counted number of timed operations and close, with no diagnostics. */
+	async measure(config: Config, serial: boolean, operations: number) {
+		const rows: Record<string, unknown>[] = [];
+		const timed = async (
+			action: string,
+			tag: string,
+			extra: object,
+			invoke: () => Promise<unknown>
+		) => {
+			const began = performance.now();
+			try {
+				const result = await invoke();
+				rows.push({
+					action,
+					tag,
+					...extra,
+					result,
+					ownerAwaitMs: performance.now() - began,
+					passed: true
+				});
+				return true;
+			} catch (error) {
+				rows.push({
+					action,
+					tag,
+					...extra,
+					error: String(error),
+					ownerAwaitMs: performance.now() - began,
+					passed: false
+				});
+				return false;
+			}
+		};
+		const configured = await timed('setup', `${config.key}-setup`, {}, async () =>
+			this.setup(config, `${config.key}-setup`)
+		);
+		try {
+			for (let iteration = 0; configured && iteration < operations; iteration++) {
+				const tag = `${config.key}-op-${iteration}`;
+				if (
+					!(await timed('operation', tag, { iteration }, () =>
+						this.operation(serial, tag)
+					))
+				)
+					break;
+			}
+		} finally {
+			await timed('close', `${config.key}-close`, {}, () =>
+				this.close(`${config.key}-close`)
+			);
+		}
+		return { rows };
+	}
+
 	initialize(memory: WebAssembly.Memory) {
 		new Uint8Array(memory.buffer).fill(0);
 		const words = new Uint32Array(memory.buffer, 1024, this.config!.count);
@@ -299,12 +353,15 @@ export default {
 				phase: string;
 				pages: number;
 				width: number;
+				operations: number;
 			};
 			ensure(/^[a-z0-9-]{1,100}$/.test(input.key), 'invalid owner key');
 			const owner: Stub = env.OWNERS.get(env.OWNERS.idFromName(input.key));
 			const began = performance.now();
 			let result: unknown;
-			if (input.action === 'direct')
+			if (input.action === 'measure')
+				result = await owner.measure(input.config, input.serial, input.operations);
+			else if (input.action === 'direct')
 				result = await owner.cell(input.config, input.serial, input.tag, true);
 			else if (input.action === 'reentrant')
 				result = await owner.cell(input.config, input.serial, input.tag);

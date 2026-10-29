@@ -16,7 +16,7 @@ FOLIO_PHASE_PAGES=2,128 FOLIO_PHASE_WIDTHS=2,8 node experiments/managed/phases/d
 
 The driver creates one temporary Worker and two SQLite-backed DO classes, makes no application
 storage calls, and retires its own resources before comparing the account baseline. Raw records
-remain in ignored `experiments/managed/runs/`. Use an unused output role when analyzing a run:
+remain in ignored `experiments/managed/runs/`. The `measure` entry mode and `measure.ts` produce the [operation costs](../../../results/managed/operations/README.md). Use an unused output role when analyzing a run:
 
 ```sh
 node experiments/managed/phases/analyze.ts experiments/managed/runs/RUN results/managed/phases repeat

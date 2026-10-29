@@ -49,5 +49,7 @@ duration. The study used the Free account, changed no plans and made no applicat
 For reproduction, build fixtures, prepare managed artifacts and run the commands in README.md.
 The driver saves source files/digests, an ignored frozen source archive, environment, all rows,
 tail, usage snapshots and before/after inventories. Analyze to an unused role to avoid overwriting
-evidence. The `FOLIO_PHASE_ENTRY` diagnostic selector accepts `separate`, `held` and `reentrant`;
-the default uses direct calls. `FOLIO_PHASE_PAGES` and `FOLIO_PHASE_WIDTHS` select matrix cells.
+evidence. The `FOLIO_PHASE_ENTRY` diagnostic selector accepts `separate`, `held`, `reentrant` and `measure`;
+the default uses direct calls. `measure` runs one invocation per cell with a counted number of
+operations (0, 1 and 5), no diagnostics and no echo, so that first-use and later-operation costs come
+from differences between counts; `measure.ts` joins stored invocation CPU to those cells. `FOLIO_PHASE_PAGES` and `FOLIO_PHASE_WIDTHS` select matrix cells.

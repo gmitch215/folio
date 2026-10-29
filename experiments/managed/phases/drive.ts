@@ -145,8 +145,42 @@ try {
 		);
 	}
 	let cell = 0;
-	const pageCounts = (process.env.FOLIO_PHASE_PAGES ?? '2,32,128').split(',').map(Number);
+	// operations are counted per invocation so first-use and steady-state CPU come from differences between counts
+	const measureOperations = async () => {
+		const plan = [2, 128].flatMap((pages) =>
+			[true, false].flatMap((serial) =>
+				[0, 1, 5].flatMap((operations) =>
+					[0, 1, 2].map((repeat) => ({ pages, serial, operations, repeat }))
+				)
+			)
+		);
+		let state = 0x2545f491;
+		for (let index = plan.length - 1; index > 0; index--) {
+			state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+			const other = state % (index + 1);
+			[plan[index], plan[other]] = [plan[other]!, plan[index]!];
+		}
+		const width = Number(process.env.FOLIO_PHASE_WIDTHS ?? 4);
+		for (const item of plan) {
+			const key = `cell-${cell++}-${crypto.randomUUID().slice(0, 8)}`;
+			await call({
+				...item,
+				key,
+				width,
+				action: 'measure',
+				tag: `${key}-cell`,
+				config: { key, pages: item.pages, width, count: 64, rounds: 2097152 }
+			});
+			console.log(JSON.stringify({ study: 'managed-phases', cell, total: plan.length }));
+			await save(`checkpoint-${cell}.json`, { rows });
+		}
+	};
+	const measure = process.env.FOLIO_PHASE_ENTRY === 'measure';
+	const pageCounts = measure
+		? []
+		: (process.env.FOLIO_PHASE_PAGES ?? '2,32,128').split(',').map(Number);
 	const widths = (process.env.FOLIO_PHASE_WIDTHS ?? '1,2,4,8').split(',').map(Number);
+	if (measure) await measureOperations();
 	for (const pages of pageCounts) {
 		for (const width of widths) {
 			for (const serial of [true, false]) {
@@ -214,13 +248,15 @@ try {
 		rows,
 		externalCalls,
 		entryMode:
-			process.env.FOLIO_PHASE_ENTRY === 'separate'
-				? 'separate'
-				: process.env.FOLIO_PHASE_ENTRY === 'held'
-					? 'held-cell'
-					: process.env.FOLIO_PHASE_ENTRY === 'reentrant'
-						? 'reentrant'
-						: 'direct',
+			process.env.FOLIO_PHASE_ENTRY === 'measure'
+				? 'measure'
+				: process.env.FOLIO_PHASE_ENTRY === 'separate'
+					? 'separate'
+					: process.env.FOLIO_PHASE_ENTRY === 'held'
+						? 'held-cell'
+						: process.env.FOLIO_PHASE_ENTRY === 'reentrant'
+							? 'reentrant'
+							: 'direct',
 		discardedSamples: 0
 	});
 	await new Promise((resolve) => setTimeout(resolve, 10000));
