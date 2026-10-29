@@ -1,60 +1,76 @@
-# Graded Conflicts
+# Reset Policies
 
-Question: how does speculative execution change as the share of conflicting regions and the work
-per region vary?
+Question: for explicit independent operations on private contexts, what does the reset between
+operations cost, and what does a generalized reset give up against one tuned to a fixed input?
 
-A batch of 64 `mix` calls from the fixture module runs as one ordered sequence. In each cell a
-fraction of the calls updates one shared word, so each of them reads what the previous one wrote
-and must replay; the rest update distinct words. The fraction takes six values (0, 1/16, 1/8, 1/4,
-1/2, 1) and the work per call takes three (16, 1024 and 65,536 rounds, about 0.1, 1.2 and 76
-microseconds on the Ryzen machine). Arms are native, forced speculation at widths 2, 4 and 8, and
-the default route at width 8, in 9 paired rounds after 2 warmups. Every sample compares complete
-memory with the native result. The study replaces the two fixed conflict cells of the
-[crossover sweep](../crossover/README.md) with a graded set.
+Three policies restore the 8 MiB arena of each context between operations:
+
+- `whole` copies the whole arena.
+- `pages` copies the pages that the first execution of a fixed input changed. It is valid only for
+  unchanged code, input and host state.
+- `checkpoint` compares every page of current memory with the initial copy and rewrites the pages
+  that differ, so it learns nothing from an earlier run. Globals and table references are restored
+  too.
+
+All three runs use the same 21 kernels, arms and parameters in one session per machine: 7 paired
+rounds, 4 repeats, 16 jobs per round, native, conventional workers and `TaskPool` at widths 1, 2, 4
+and 8, each batched and unbatched. Every sample checks the final context state and every return
+value. These are explicit independent operations, not automatic extraction.
 
 ## Results
 
-Eight-worker forced speculation, paired median speedup over native, 65,536 rounds per call:
+Paired median speedup over native for eight batched `TaskPool` workers, with process CPU as a ratio
+of native CPU. The full set is in the summaries.
 
-| Conflicting calls | Ryzen | M2 Pro |
-| ---: | ---: | ---: |
-| 0 | 3.50x | 3.54x |
-| 1/16 | 2.81x | 3.05x |
-| 1/8 | 2.09x | 2.31x |
-| 1/4 | 1.65x | 1.77x |
-| 1/2 | 1.11x | 1.24x |
-| all | 0.74x | 0.77x |
+| Kernel | Machine | `whole` | `pages` | `checkpoint` |
+| --- | --- | ---: | ---: | ---: |
+| AES-CBC decrypt | Ryzen | 3.19x / 1.97 | 4.80x / 1.05 | 4.52x / 1.30 |
+| SHA-256 | Ryzen | 0.92x / 5.93 | 3.79x / 1.10 | 2.52x / 2.35 |
+| LZ4 compress | Ryzen | 0.44x / 12.67 | 3.11x / 1.52 | 1.14x / 4.59 |
+| xxHash32 | Ryzen | 0.43x / 12.62 | 2.48x / 1.80 | 1.40x / 3.93 |
+| AES-CBC decrypt | M2 Pro | 5.22x / 1.30 | 4.85x / 1.12 | 5.21x / 1.40 |
+| SHA-256 | M2 Pro | 3.69x / 1.66 | 5.15x / 1.11 | 3.93x / 1.81 |
+| LZ4 compress | M2 Pro | 2.06x / 2.80 | 3.07x / 1.64 | 2.27x / 3.05 |
+| xxHash32 | M2 Pro | 1.69x / 4.21 | 2.27x / 1.99 | 2.20x / 3.05 |
 
-Break-even lies between half and all of the calls conflicting at this region size. At 1,024 rounds
-the best cell is 0.26x on the Ryzen machine (0.23x on the M2 Pro) with no conflicts, falling to
-0.09x with all conflicting. At 16 rounds every cell is 0.02x or lower. Below about 76 microseconds
-per call, dispatch and tracking cost more than the work they distribute, whether or not the calls
-conflict.
+On the Ryzen machine `pages` is ahead of `checkpoint` and `checkpoint` is ahead of `whole` for all
+21 kernels. The checkpoint recovers most of the gain for large kernels and little for small ones,
+because it reads every page on every restore. On the M2 Pro the gaps are smaller and the ordering
+is not consistent: `whole` and `checkpoint` match `pages` for AES-CBC decrypt (5.22x and 5.21x
+against 4.85x), and `pages` leads on most other kernels.
 
-Ordered validation is not the limiting cost. Its share of wall time is at most 0.3% in the
-65,536 round cells and at most 2.1% in any cell. The default route at width 8 gives similar results
-to forced speculation in every cell. The two machines agree to within about 11% in every 65,536
-round cell.
-
-Admission defaults are unchanged. The measured crossover is consistent with the existing floor of
-200,000 estimated work units, and the data does not support lowering it.
+The earlier [changed-page study](../page-reset/README.md) reports 7.42x for AES-CBC decrypt with the
+`pages` policy under the same parameters on the same machine. This run reports 4.80x. Native
+(69.9 ms against 69.5 ms) and one-worker arms agree within 1% between the two runs. The eight-worker
+arm does not (9.44 ms against 14.55 ms), and the box load average was 0.1 at the start of the first
+run and 1.41 at the start of this one. The eight-worker figure for this kernel is a range from 4.8x
+to 7.4x on this machine, not a point value.
 
 ## Reproduction
 
+From the repository root with Node 26 and the built corpus (`node scripts/research/corpus.ts build
+build/research/corpus/build.jsonl`):
+
 ```sh
-node scripts/research/graded.ts build/research/graded 9
-node scripts/research/analyze.ts build/research/graded/raw.jsonl summary.json
+FOLIO_CORPUS_RESET=checkpoint node scripts/research/corpus-mechanisms.ts build/research/reset-checkpoint 7 4
+node scripts/research/analyze.ts build/research/reset-checkpoint/raw.jsonl summary.json
 ```
 
-The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
-shared timing lock. The M2 Pro record ran unpinned on macOS. The raw files here hold the graded
-rows only; the routing rows of the same run are in [adaptive routing](../adaptive-routing/README.md).
+Use `whole` and `pages` for the other policies and a new output path for each run.
+`scripts/research/matched.sh` runs the three policies back to back under a shared timing lock with
+`nice -n 19`, `--max-old-space-size=128` and, on Linux, `taskset -c 4-11`. The Ryzen records come
+from that script on Linux with Node 26.10.0, cores 4 to 11 and the `powersave` governor. The M2 Pro
+records ran on macOS with Node 26.8.2 and no pinning.
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 810 samples each (18 cells, 5 arms, 9 rounds).
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries, including validation and commit time.
+- `ryzen-whole.jsonl`, `ryzen-pages.jsonl`, `ryzen-checkpoint.jsonl`: raw records, 2,499 samples
+  each.
+- `m2-whole.jsonl`, `m2-pages.jsonl`, `m2-checkpoint.jsonl`: the same on the second machine.
+- `*.summary.json`: paired summaries generated from the matching raw file with `analyze.ts`.
+- `source.tar.gz`: the source the Ryzen runs used. The M2 Pro records name their sources by SHA256
+  in the environment row; the corpus harness and `src/` match the archive byte for byte.
 - `manifest.json`: byte lengths and SHA256 digests.
 
-Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
-[reset-policies](../../corpus/reset-policies/source.tar.gz).
+Intervals in the summaries are bootstrap intervals over paired rounds within one run. They do not
+cover run-to-run variation, which the eight-worker arm shows is large.

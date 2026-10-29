@@ -1,49 +1,51 @@
-# Initialized Drupal lifecycle
+# Adaptive Routing
 
-Fifteen paired rounds compare actual Drupal boot plus first render in fresh Node
-processes. All 45 outputs equal native status and normalized HTML. Embedded images
-and copied initialized memory save boot work; this is serial-work elimination,
-with a separate heap per execution.
+Question: when the same conflicting call shape repeats, does running it natively after two bad runs
+recover the lost time?
 
-| Path              | Wall median | Aggregate CPU median | Paired speedup, 95% interval | CPU/native ratio |
-| ----------------- | ----------- | -------------------- | ---------------------------- | ---------------- |
-| Native            | 830.53 ms   | 1,412.78 ms          | 1.00×                        | 1.00             |
-| Embedded image    | 444.73 ms   | 806.49 ms            | 1.903× [1.821, 1.972]        | 0.558            |
-| Memory-image copy | 460.55 ms   | 814.66 ms            | 1.876× [1.786, 1.908]        | 0.578            |
+Two fixture entries conflict by construction: `aliased_program` updates one word in every
+iteration and `dependent_program` reads the previous element. Each arm calls one entry 40 times in
+a row over 9 rounds (360 calls per arm), with the memory reset before each call and every result
+compared with native. Arms are native, the default route at width 8, and the same route with
+`adaptiveRouting: true`. Adaptive routing keys a call shape by entry, width, memory size and numeric
+arguments. After two runs that mostly replayed or fell back, it runs the shape natively for 16
+calls and then probes again. It is off by default.
 
-Intervals bootstrap paired rounds in this one execution. They do not establish
-independent replication or managed-platform render latency. The warm second render
-medians are 66.02, 62.94 and 64.31 ms respectively: retaining an already initialized
-application remains cheaper than restoring it. The copied-image path spends a
-median 10.82 ms applying pages/globals. Renewal is included in total elapsed/CPU but
-is not separately timed. Native rendering finishes with 69,992,448 heap bytes;
-restored rendering uses 87,687,168, so this speedup carries a larger heap.
+## Results
 
-A separate image generation observation costs 10,366.68 ms elapsed and 11,362.81 ms
-CPU, including boot/render, capture, bake, gzip, files and database backup. Baking
-alone costs 3,947.95 ms. It produces a 61,852,825-byte Wasm module and 47,844,350-byte
-encoded image. A model using these costs and cohort median savings breaks even at
-27 embedded-image or 29 memory-copy boots by elapsed time, 19 by CPU. Distribution,
-deployment, storage and retention are excluded; these are calculated thresholds,
-not observed fleet outcomes. The generated heap is not safe to publish as raw data.
+Paired median speedup over native at width 8, with process CPU as a ratio of native CPU:
 
-The capture restores four mutable globals, one filesystem stream, four named/sealed
-host handles and initialization replay. All 30 restored RNG triples are unique;
-key/salt hashes match native, and replay/renewal report no errors. This does not
-serialize arbitrary JavaScript, changed function tables or external resources.
+| Entry | Machine | Native | Default | Adaptive |
+| --- | --- | ---: | ---: | ---: |
+| `aliased_program` | Ryzen | 0.31 ms | 0.62x, CPU 2.7 | 0.99x, CPU 1.0 |
+| `aliased_program` | M2 Pro | 0.49 ms | 0.61x, CPU 3.1 | 0.99x, CPU 1.0 |
+| `dependent_program` | Ryzen | 1 µs | 0.003x, CPU 291 | 0.20x, CPU 3.0 |
+| `dependent_program` | M2 Pro | 1 µs | 0.003x, CPU 349 | 0.25x, CPU 3.0 |
 
-Current [deployed delivery](delivery/README.md) proves this embedded module can be
-uploaded and instantiated on Free, alongside the asset-copy alternative. That
-instrument uses stub imports and measures no Drupal rendering. Prior actual
-managed host render evidence remains in [deployed-serve](../deployed-serve/README.md).
+Adaptive routing served 337 of 360 calls natively (`previous-conflicts`) and spent 23 on probes or
+the first two runs. It removes most of the penalty and does not remove all of it: the probes and the
+route decision still cost time on a 1 µs entry.
 
-| Artifact                           | Contents                                                       |
-| ---------------------------------- | -------------------------------------------------------------- |
-| [raw.jsonl](raw.jsonl)             | 45 samples, exact environment, inputs and phase observations   |
-| [summary.json](summary.json)       | Equality, safety, paired statistics and raw digest             |
-| [phases.json](phases.json)         | Compilation, instantiation, first/warm render and heap medians |
-| [generation.json](generation.json) | Separate generation observation and scoped amortization model  |
-| [source.tar.gz](source.tar.gz)     | Public harness and measured library/helper sources             |
+The result covers one repeated shape on two synthetic entries. A workload whose arguments change on
+every call never repeats a shape, so it gets no benefit. The option stays off by default. Enabling
+it by default needs a consumer whose call shapes repeat.
 
-See [method](../../../experiments/bootimage/research/METHOD.md) and
-[reproduction](../../../experiments/bootimage/research/README.md).
+## Reproduction
+
+```sh
+node scripts/research/graded.ts build/research/graded 9
+node scripts/research/analyze.ts build/research/graded/raw.jsonl summary.json
+```
+
+The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
+shared timing lock. The M2 Pro record ran unpinned on macOS. The raw files here hold the routing
+rows only; the graded cells of the same run are in [graded conflicts](../graded-conflicts/README.md).
+
+## Artifacts
+
+- `ryzen.jsonl`, `m2.jsonl`: raw records, 2,160 samples each (2 entries, 3 arms, 360 calls).
+- `ryzen.summary.json`, `m2.summary.json`: paired summaries with routing reason counts.
+- `manifest.json`: byte lengths and SHA256 digests.
+
+Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
+[reset-policies](../../corpus/reset-policies/source.tar.gz).

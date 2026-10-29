@@ -23,6 +23,7 @@ the same engine.</p>
 <li><a href="#-features">Features</a></li>
 <li><a href="#-install">Install</a></li>
 <li><a href="#-getting-started">Getting Started</a></li>
+<li><a href="#-examples">Examples</a></li>
 <li><a href="#-asynchronous-host-effects">Asynchronous Host Effects</a></li>
 <li><a href="#-execution-host">Execution Host</a></li>
 <li><a href="#-managed-workers">Managed Workers</a></li>
@@ -34,7 +35,6 @@ the same engine.</p>
 <li><a href="#-api-reference">API Reference</a></li>
 <li><a href="#-consumer-harness">Consumer Harness</a></li>
 <li><a href="#-measured-results">Measured Results</a></li>
-<li><a href="#-examples">Examples</a></li>
 <li><a href="#-development">Development</a></li>
 <li><a href="#-contributing">Contributing</a></li>
 <li><a href="#-license">License</a></li>
@@ -100,6 +100,8 @@ each call, and any other loop is assumed to run <code>assumedTripCount</code> ti
 region above the threshold gets no control plan and runs as the original Wasm, so a small kernel, a
 memory-bound loop or a serial recurrence stays at native speed. <code>minimumRegionWork: 0</code> admits every
 pure region. <code>folio.diagnostics</code> says why a plan was refused.</p>
+<h2 id="🧩-examples" class="tsd-anchor-link">🧩 Examples<a href="#🧩-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, and <code>boot-image</code> bakes captured memory into a module.</p>
 <h2 id="⏳-asynchronous-host-effects" class="tsd-anchor-link">⏳ Asynchronous Host Effects<a href="#⏳-asynchronous-host-effects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Folio</span><span class="hl-1">, </span><span class="hl-5">suspending</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">folio</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Folio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-9">module</span><span class="hl-1">, {</span><br/><span class="hl-1">  </span><span class="hl-5">imports:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">host:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-5">read:</span><span class="hl-1"> </span><span class="hl-0">suspending</span><span class="hl-1">(</span><span class="hl-6">async</span><span class="hl-1"> (</span><span class="hl-5">key</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> (</span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">URL</span><span class="hl-1">(</span><span class="hl-0">String</span><span class="hl-1">(</span><span class="hl-5">key</span><span class="hl-1">), </span><span class="hl-5">storageUrl</span><span class="hl-1">))).</span><span class="hl-5">status</span><span class="hl-1">)</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">promising:</span><span class="hl-1"> [</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">]</span><br/><span class="hl-1">});</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">, [</span><span class="hl-8">42</span><span class="hl-1">]);</span><br/><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span>
 </code><button type="button">Copy</button></pre>
@@ -128,8 +130,11 @@ whose <code>execute(frame)</code> returns a binary response, and <code>FolioLane
 The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
 ordered byte validation connect independent lanes. A transport failure falls back to native owner
 execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
-must fit the owner runtime. Frames carry the whole snapshot. <code>snapshotEncoding: 'auto'</code> omits pages
-that are all zero, which saves traffic for sparse arenas and requires lanes from this version. See <a href="media/METHOD.md">the managed procedure</a>.</p>
+must fit the owner runtime. Frames carry the whole snapshot by default. <code>snapshotEncoding: 'auto'</code> omits pages
+that are all zero, which saves traffic for sparse arenas, and lanes older than 1.0.1 reject its
+frames. The snapshot limit is 31 MiB by default. A frame over <code>maximumFrameBytes</code> (the snapshot limit
+plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that call runs at the
+owner and <code>diagnostics</code> names the frame size and the limit. See <a href="media/METHOD.md">the managed procedure</a>.</p>
 <h2 id="🔗-browser-execution-and-page-leases" class="tsd-anchor-link">🔗 Browser Execution and Page Leases<a href="#🔗-browser-execution-and-page-leases" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/browser</code> exports <code>BrowserFolio</code> for Chromium and other hosts without JSPI. It
 takes a precompiled original module and the <code>loops</code>, <code>native</code>, <code>reasons</code> and <code>memories</code> metadata
@@ -234,7 +239,9 @@ replayed instance use the replaying site's values, with <code>$salt</code> set t
 <pre><code class="php"><span class="hl-6">use</span><span class="hl-1"> Drupal\Core\Site\</span><span class="hl-9">Settings</span><span class="hl-1">;</span><br/><br/><span class="hl-1">(</span><span class="hl-6">function</span><span class="hl-1"> (</span><span class="hl-6">string</span><span class="hl-1"> </span><span class="hl-5">$salt</span><span class="hl-1">) {</span><br/><span class="hl-1">	</span><span class="hl-6">$this</span><span class="hl-1">-&gt;</span><span class="hl-5">storage</span><span class="hl-1">[</span><span class="hl-2">&#39;hash_salt&#39;</span><span class="hl-1">] = </span><span class="hl-5">$salt</span><span class="hl-1">;</span><br/><span class="hl-1">})-&gt;</span><span class="hl-0">call</span><span class="hl-1">(</span><span class="hl-9">Settings</span><span class="hl-1">::</span><span class="hl-0">getInstance</span><span class="hl-1">(), </span><span class="hl-5">$salt</span><span class="hl-1">);</span><br/><br/><span class="hl-1">(</span><span class="hl-6">function</span><span class="hl-1"> () {</span><br/><span class="hl-1">	</span><span class="hl-6">$this</span><span class="hl-1">-&gt;</span><span class="hl-0">reset</span><span class="hl-1">();</span><br/><span class="hl-1">	</span><span class="hl-6">$this</span><span class="hl-1">-&gt;</span><span class="hl-5">keysSetDuringRequest</span><span class="hl-1"> = [];</span><br/><span class="hl-1">})-&gt;</span><span class="hl-0">call</span><span class="hl-1">(</span><span class="hl-9">Drupal</span><span class="hl-1">::</span><span class="hl-0">state</span><span class="hl-1">());</span><br/><br/><span class="hl-9">Drupal</span><span class="hl-1">::</span><span class="hl-0">service</span><span class="hl-1">(</span><span class="hl-2">&#39;cache.memory&#39;</span><span class="hl-1">)-&gt;</span><span class="hl-0">deleteAll</span><span class="hl-1">();</span><br/><span class="hl-0">mt_srand</span><span class="hl-1">(</span><span class="hl-0">unpack</span><span class="hl-1">(</span><span class="hl-2">&#39;V&#39;</span><span class="hl-1">, </span><span class="hl-0">random_bytes</span><span class="hl-1">(</span><span class="hl-8">4</span><span class="hl-1">))[</span><span class="hl-8">1</span><span class="hl-1">]);</span>
 </code><button type="button">Copy</button></pre>
 
-<p>Run it before any other PHP in the replayed instance. A host that resets <code>State</code> at the start of
+<p>Run it before any other PHP in the replayed instance. The bake request's PHP session identifier also
+stays in the heap and the library cannot renew it, so the host sets each request's own identifier
+before it serves the request. A host that resets <code>State</code> at the start of
 each request still needs the salt and the random seed, and needs the key step for code that runs
 before the first request. The measured effect for a PHP interpreter is in the Baked Boot Images
 section of the technical report.</p>
@@ -431,8 +438,6 @@ Managed Workers cannot share physical memory across isolates, so that backend co
 <a href="documents/TECHNICAL_REPORT.html">technical report</a> lists every figure with its instrument, the raw samples
 live in <a href="media/results">results/</a>, and the Cloudflare probes are described in
 <a href="media/README.md">experiments/</a>.</p>
-<h2 id="🧩-examples" class="tsd-anchor-link">🧩 Examples<a href="#🧩-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, and <code>boot-image</code> bakes captured memory into a module.</p>
 <h2 id="🔧-development" class="tsd-anchor-link">🔧 Development<a href="#🔧-development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build:c</span><span class="hl-1"> </span><span class="hl-3"># compile the C fixtures in tests/c with LLVM</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">typecheck</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test</span><span class="hl-1">             </span><span class="hl-3"># unit gate</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test:integration</span><span class="hl-1"> </span><span class="hl-3"># local workerd probes and the managed lanes</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">example</span>
 </code><button type="button">Copy</button></pre>
@@ -471,6 +476,7 @@ samples.</p>
 <li><a href="#✨-features"><span>✨ <wbr/>Features</span></a></li>
 <li><a href="#📦-install"><span>📦 <wbr/>Install</span></a></li>
 <li><a href="#🚀-getting-started"><span>🚀 <wbr/>Getting <wbr/>Started</span></a></li>
+<li><a href="#🧩-examples"><span>🧩 <wbr/>Examples</span></a></li>
 <li><a href="#⏳-asynchronous-host-effects"><span>⏳ <wbr/>Asynchronous <wbr/>Host <wbr/>Effects</span></a></li>
 <li><a href="#🌉-execution-host"><span>🌉 <wbr/>Execution <wbr/>Host</span></a></li>
 <li><a href="#📡-managed-workers"><span>📡 <wbr/>Managed <wbr/>Workers</span></a></li>
@@ -482,7 +488,6 @@ samples.</p>
 <li><a href="#📖-api-reference"><span>📖 <wbr/>API <wbr/>Reference</span></a></li>
 <li><a href="#🧪-consumer-harness"><span>🧪 <wbr/>Consumer <wbr/>Harness</span></a></li>
 <li><a href="#📈-measured-results"><span>📈 <wbr/>Measured <wbr/>Results</span></a></li>
-<li><a href="#🧩-examples"><span>🧩 <wbr/>Examples</span></a></li>
 <li><a href="#🔧-development"><span>🔧 <wbr/>Development</span></a></li>
 <li><a href="#🤝-contributing"><span>🤝 <wbr/>Contributing</span></a></li>
 <li><a href="#📄-license"><span>📄 <wbr/>License</span></a></li></ul></div></details></div>

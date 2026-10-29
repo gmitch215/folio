@@ -1,59 +1,43 @@
-# State Loss
+# Initializer Repeat
 
-Question: why did the owner lose its in-memory state in the managed phase studies, and is the cause
-replacement, routing or the instrumentation?
+Question: do the initializer timings of the [initializer study](../corpus/README.md) hold when
+nothing else runs on the host?
 
-The [phase studies](../phases/README.md) preserve four request arrangements and a final
-direct-invocation arrangement. This study reads those records. For each cell it compares the
-identifiers returned by setup with those of later successful operations, groups failures by error
-message, and splits them by whether the cell runs the native workload in the owner (`native`) or
-through lanes (`automatic`). The `settled-separate` record is a new run of the separate-request
-arrangement with the driver's 65 second wait after starting tail, which the older arrangements did
-not have in the same form.
+The earlier run overlapped other local work. This repeat runs the same three arms on the 21 fixed
+corpus initializers, 15 paired rounds each: conventional initialization, a fresh instance followed
+by `applyImage`, and a whole-memory application cache.
 
 ## Results
 
-| Arrangement | Failed operations | In native cells | In automatic cells | Later operations in a new module | On a different object |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Separate external requests | 42 | 33 | 9 | 14 of 121 | 0 |
-| One entry request per cell | 41 | 33 | 8 | 15 of 120 | 0 |
-| Self-RPC | 13 | 10 | 3 | 45 of 149 | 0 |
-| Separate requests after a settle wait | 12 | 12 | 0 | 4 of 41 | 0 |
-| Direct calls in one invocation | 0 | 0 | 0 | 0 of 56 | 0 |
+Paired median speedup over conventional initialization on the Ryzen machine:
 
-Every failure reports that the owner's state is absent and setup is required. What the records show:
+| Arm | Isolated repeat | Earlier run |
+| --- | ---: | ---: |
+| Image restore | 1.08x to 1.40x | 1.00x to 2.05x |
+| Application cache | 0.52x to 0.94x | 0.69x to 1.20x |
 
-- **Routing is excluded.** The object identifier never differs from setup's in any later operation.
-- **The owner's state is replaced.** Some later operations report a new module identifier, and
-  every failure finds the state gone. Module identifiers are not isolate identities, so the record
-  does not name the platform event.
-- **The tail wait removes the automatic-cell failures and not the native-cell ones.** Across the
-  three older arrangements, 20 of 96 failures are in automatic cells. After the wait, 0 of 4
-  automatic cells lose state and all 4 native cells do, after 1 to 3 successful operations. Four
-  cells is a small sample, but the direction matches Cloudflare's documentation that starting tail
-  can replace instances.
-- **Native cells lose state with or without the wait.** There the owner runs the 64-region workload
-  itself, 0.3 s to 0.6 s of CPU per operation. The records correlate the loss with that work and do
-  not establish why. Memory size does not explain it, since 128 KiB cells lose state as well.
-- **Direct calls in one invocation lose nothing**, in 32 operations across 8 cells.
+Restoring an image after instantiation is modestly faster than running these initializers. The
+application cache is slower than initializing on every kernel. The earlier run overstated both, so
+use these figures for the corpus. They say nothing about the PHP image, whose
+[lifecycle](../lifecycle/README.md) saving comes from a much larger initialization.
 
-A reusable session on this backend cannot assume the owner's state survives between requests, and
-should either rebuild its state from a request that carries it or run every operation inside one
-invocation. The backend does not provide durable recovery of an owner. Whether a longer wait, a
-smaller per-operation CPU cost or a different arrangement keeps native cells alive is untested.
+All 945 samples match: complete memory and returns equal across arms. All 21 bake attempts refuse
+the module's start section, so `applyImage` after a fresh instantiation is the route measured.
 
 ## Reproduction
 
 ```sh
-node scripts/research/derive.ts state-loss state-loss.json separate.json held.json reentrant.json settled-separate.json complete.json
+node scripts/research/boot-eligibility.ts build/research/initializer 15
+node scripts/research/analyze.ts build/research/initializer/raw.jsonl summary.json
 ```
 
-with the records from the phase study. The settled run is
-`FOLIO_PHASE_ENTRY=separate FOLIO_PHASE_PAGES=2,128 FOLIO_PHASE_WIDTHS=2,4 node experiments/managed/phases/drive.ts`
-on a Free account, followed by the analyzer with the role `settled-separate`. It made 61 external
-requests, no SQL calls, and restored the account baseline.
+The record ran through `scripts/research/matched.sh` on Linux with Node 26.10.0, `nice -n 19`,
+cores 4 to 11 and a shared timing lock.
 
 ## Artifacts
 
-- `state-loss.json`: counts per arrangement and the SHA256 of each input record.
+- `ryzen.jsonl`: raw records, 945 samples.
+- `ryzen.summary.json`: paired summary.
 - `manifest.json`: byte lengths and SHA256 digests.
+
+The source archive is in [reset-policies](../../corpus/reset-policies/source.tar.gz).

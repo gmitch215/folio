@@ -1,50 +1,45 @@
-# Forced Admission Complete
+# Corpus Denominators
 
-Question: when the admission threshold is set to zero, which corpus entries receive regions, and
-does running those regions in parallel pay?
+Question: how many of the corpus programs reach each stage, from build to a measured speedup, and
+what does the corpus not represent?
 
-This completes the [interrupted diagnostic](../forced-admission/README.md), which stopped at 16 of
-21 cases. Each case runs in its own process with `minimumRegionWork` set to 0, native and Folio at
-widths 1, 2, 4 and 8, 3 paired rounds and a 60 second cap per case. Production defaults are
-unchanged; this is a diagnostic of what the default threshold declines.
+The table counts distinct things. A project is an upstream source tree, a kernel is one exported
+entry of a library, and a full application would be a program that a user runs. The corpus has
+nine projects and 21 kernels. It has no full application and no database workload.
 
-## Results
+| Stage | Count | Source |
+| --- | ---: | --- |
+| Projects | 9 | [upstream](../upstream/README.md) |
+| Kernels selected and built | 21 of 21 | [upstream](../upstream/README.md) |
+| Kernels whose Folio and native runs match in all 8 MiB, returns and effects | 21 of 21 | [upstream](../upstream/README.md) |
+| Kernels with an automatic plan under default admission | 0 of 21 | [upstream](../upstream/README.md) |
+| Kernels that dispatch workers under default admission | 0 of 21 | [default entry repeat](../default-entry-repeat/README.md) |
+| Kernels that receive regions at threshold 0 | 11 of 21 | [forced admission](../forced-admission-complete/README.md) |
+| Of those, kernels faster than native | 0 of 11 | [forced admission](../forced-admission-complete/README.md) |
+| Input profiles exact against a fresh native instance | 210 of 210 | [varied inputs](../varied-inputs/README.md) |
 
-Twenty cases completed inside the cap. `m6502` reached the cap in the first run (0 samples, SIGTERM,
-retained in `m6502-capped.jsonl`), and a separate run with a 900 second cap completed it.
+Explicit independent operations are a different route with its own denominator. Kernels of 21 with
+a paired median speedup of at least the bar at eight batched `TaskPool` workers:
 
-| Outcome | Cases |
-| --- | ---: |
-| Dispatch workers and run speculatively | 11 |
-| Stay on the serial original-module route | 10 |
-| Replay or fall back to native | 0 fallbacks, replays in 4 |
-| Speculative cases faster than native at any width | 0 of 11 |
+| Machine and reset policy | At least 1x | At least 2x | At least 3x |
+| --- | ---: | ---: | ---: |
+| Ryzen, whole arena | 5 | 2 | 1 |
+| Ryzen, learned pages | 21 | 18 | 13 |
+| Ryzen, checkpoint | 21 | 8 | 3 |
+| M2 Pro, whole arena | 21 | 14 | 8 |
+| M2 Pro, learned pages | 21 | 17 | 15 |
+| M2 Pro, checkpoint | 21 | 20 | 9 |
 
-The eleven speculative cases are AES-CBC decrypt, AES-CTR, LZ4 compress, MD5, miniz compress and
-decompress, QOI encode and decode, SHA-1, SHA-256 and the 6502 emulator. At width 8 their wall time
-is between 110 and 45,000 times native: 0.06 ms native against 2,899 ms for QOI decode, 0.2 ms
-against 6,987 ms for the 6502 emulator, 0.2 ms against 225 ms for SHA-256. They split work into
-thousands of regions (67,600 for SHA-256, 77,824 for AES-CTR, 170,390 for the 6502 emulator), each far smaller than the cost of
-dispatching it.
-
-All outputs match native in every sample. The diagnostic supports the default threshold of 200,000
-net work units: lowering it on this corpus produces regions and no speedup.
+The numbers are from [reset policies](../reset-policies/README.md). They need the caller to name
+the independent operations and reset private contexts. They do not come from automatic extraction.
 
 ## Reproduction
 
 ```sh
-node scripts/research/admission-diagnostic.ts build/research/forced 60
-FOLIO_CORPUS_ADMISSION=0 node scripts/research/corpus-serial.ts build/research/forced-m6502 3 m6502
+node scripts/research/denominators.ts results/corpus results/corpus/denominators/denominators.json
 ```
 
 ## Artifacts
 
-- `raw.jsonl`: environment, sample and closed records for the 20 completed cases plus the 900
-  second `m6502` run.
-- `summary.json`: paired summary generated from `raw.jsonl`.
-- `index.json`: the diagnostic's per-case completion table, including the capped `m6502` row.
-- `m6502-capped.jsonl`: the records the 60 second `m6502` process wrote before it was stopped.
+- `denominators.json`: every count in the tables, derived from the studies above.
 - `manifest.json`: byte lengths and SHA256 digests.
-
-Three paired rounds per arm is a small sample. The ratios are large enough that the sign and order
-of magnitude do not depend on it.

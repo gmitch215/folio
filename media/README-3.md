@@ -1,45 +1,59 @@
-# Corpus Denominators
+# Managed Phases
 
-Question: how many of the corpus programs reach each stage, from build to a measured speedup, and
-what does the corpus not represent?
+Instrument: [phases](../../../experiments/managed/phases/README.md).
+[METHOD.md](../../../experiments/managed/phases/METHOD.md) defines the comparison and clocks.
+All eight deployed studies restored their account baseline. Records preserve exact completed
+operations and state-loss failures; no memory or return mismatch occurred.
 
-The table counts distinct things. A project is an upstream source tree, a kernel is one exported
-entry of a library, and a full application would be a program that a user runs. The corpus has
-nine projects and 21 kernels. It has no full application and no database workload.
+| Record | Completed Operations | State-Loss Failures | Invocation Structure |
+| --- | ---: | ---: | --- |
+| [separate.json](separate.json) | 77 | 42 | Separate external requests |
+| [held.json](held.json) | 78 | 41 | One entry request per cell |
+| [reentrant-pilot.json](reentrant-pilot.json) | 8 | 2 | Two self-RPC pilot cells |
+| [reentrant.json](reentrant.json) | 77 | 13 | Self-RPC matrix |
+| [settled-separate.json](settled-separate.json) | 49 | 12 | Separate external requests after a 65 second tail settle wait |
+| [width-four.json](width-four.json) | 36 | 0 | Direct calls, width four, 128 KiB and 8 MiB |
+| [large-snapshots.json](large-snapshots.json) | 34 | 2 | Direct calls, width two, 16 MiB and 32 MiB |
+| [complete.json](complete.json) | 32 | 0 | Direct calls within an owner invocation |
 
-| Stage | Count | Source |
-| --- | ---: | --- |
-| Projects | 9 | [upstream](../upstream/README.md) |
-| Kernels selected and built | 21 of 21 | [upstream](../upstream/README.md) |
-| Kernels whose Folio and native runs match in all 8 MiB, returns and effects | 21 of 21 | [upstream](../upstream/README.md) |
-| Kernels with an automatic plan under default admission | 0 of 21 | [upstream](../upstream/README.md) |
-| Kernels that dispatch workers under default admission | 0 of 21 | [default entry repeat](../default-entry-repeat/README.md) |
-| Kernels that receive regions at threshold 0 | 11 of 21 | [forced admission](../forced-admission-complete/README.md) |
-| Of those, kernels faster than native | 0 of 11 | [forced admission](../forced-admission-complete/README.md) |
-| Input profiles exact against a fresh native instance | 210 of 210 | [varied inputs](../varied-inputs/README.md) |
+Each record has a matching `.summary.json`. `settled-separate.json` (61 external requests), `width-four.json` (4) and `large-snapshots.json` (4) are later runs with no SQL calls; the request totals below cover the first five. The settled run feeds the [state-loss analysis](../state-loss/README.md).
 
-Explicit independent operations are a different route with its own denominator. Kernels of 21 with
-a paired median speedup of at least the bar at eight batched `TaskPool` workers:
+At 16 MiB the four automatic operations complete through the lanes with no fallback and 67.1 MB sent per operation. At 32 MiB, the default snapshot limit, every lane call fails: the serialized frame is 33,554,540 bytes against the platform's 32 MiB limit for RPC arguments. The four operations still complete exact through native fallback (`transportFallbacks` 4), and the two diagnostic frame-copy phases fail with the same error. The usable snapshot is therefore below 32 MiB by the frame header. At width four the wire bytes per automatic operation equal the width-two figures (551,776 at 128 KiB, 33,581,920 at 8 MiB); CPU was not recovered for these runs. The final four-operation cells retain identical
+instance nonces, module UUIDs and object IDs. One cell has complete live-tail CPU; the others retain
+null tail aggregates. [stored.json](stored.json) joins 449 persisted log/event records by request
+identity and recovers all 192 expected invocation metrics, completing CPU for all eight final cells.
+Five studies made 245 measured external requests plus eight readiness requests,
+582 owner RPCs, 688 execution lane RPCs and 224 echo RPCs. Cleanup lane RPCs add at most 314:
+the total request upper bound is 2,061. Some state-loss cleanup calls find no pool, so that is
+not an exact total. Platform administrative API calls and deployment validation are separate.
+The initial refused deployment used global random initialization; its source/log and restored
+baseline remain in the ignored run directory.
 
-| Machine and reset policy | At least 1x | At least 2x | At least 3x |
+| Memory | Width | Instrumented Lifecycle Ratio | Snapshot Protocol Bytes / Automatic Operation |
 | --- | ---: | ---: | ---: |
-| Ryzen, whole arena | 5 | 2 | 1 |
-| Ryzen, learned pages | 21 | 18 | 13 |
-| Ryzen, checkpoint | 21 | 8 | 3 |
-| M2 Pro, whole arena | 21 | 14 | 8 |
-| M2 Pro, learned pages | 21 | 17 | 15 |
-| M2 Pro, checkpoint | 21 | 20 | 9 |
+| 128 KiB | 2 | 1.189x | 551,776 |
+| 128 KiB | 8 | 1.419x | 1,077,696 |
+| 8 MiB | 2 | 0.880x | 33,581,920 |
+| 8 MiB | 8 | 0.841x | 67,137,984 |
 
-The numbers are from [reset policies](../reset-policies/README.md). They need the caller to name
-the independent operations and reset private contexts. They do not come from automatic extraction.
+| Memory | Width | Native CPU ms / Completed Operation | Automatic CPU ms / Completed Operation |
+| --- | ---: | ---: | ---: |
+| 128 KiB | 2 | 300.25 | 398.50 |
+| 128 KiB | 8 | 300.25 | 383.75 |
+| 8 MiB | 2 | 622.75 | 690.00 |
+| 8 MiB | 8 | 635.75 | 871.25 |
 
-## Reproduction
+CPU uses complete stored invocation telemetry for the entire instrumented lifecycle. It includes
+the oracle and diagnostics; it does not isolate region compute, validation or transfer CPU.
 
-```sh
-node scripts/research/denominators.ts results/corpus results/corpus/denominators/denominators.json
-```
+Ratios compare one native and one automatic instrumented lifecycle per cell, including oracle,
+four operations, diagnostic frame copies, echo fanout and close. They are not warm application
+speedups. Larger unused canonical heaps increase wire traffic and reverse the small-arena gain.
+First-use/warm automatic latency and every individual report remain in the raw records. The
+current implementation still requires the canonical heap to fit its owner.
 
-## Artifacts
-
-- `denominators.json`: every count in the tables, derived from the studies above.
-- `manifest.json`: byte lengths and SHA256 digests.
+Public records replace instance/module/object identities with consistent references. Original
+tail and inventories include deployment metadata and remain ignored. Source hashes, environment,
+raw-file digests and before/after baseline equality are in each public record. Analysis uses the
+command in the instrument README; historical source archives remain in the corresponding ignored
+run directory. Paid rate equivalents are models; no attributable paid bill was observed.

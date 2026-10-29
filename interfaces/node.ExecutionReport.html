@@ -16,7 +16,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ExecutionReport</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#extraction">extraction</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">&quot;control-flow&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#fallbacks">fallbacks</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#memorymode">memoryMode</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">&quot;shared&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;snapshot&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#mode">mode</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;serial&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;native-shared&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;speculative&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#profile">profile</a><span class="tsd-signature-symbol">?:</span> <a href="node.ExecutionProfile.html" class="tsd-signature-type tsd-kind-interface">ExecutionProfile</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#reason">reason</a><span class="tsd-signature-symbol">?:</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;requested&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;opaque-input&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;no-parallel-plan&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;single-region&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;small-workload&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;guard-failed&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;unsupported-module&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;dependency&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;snapshot-unavailable&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;previous-conflicts&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#regions">regions</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#replayed">replayed</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#snapshotbytes">snapshotBytes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#values">values</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#workers">workers</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L45">src/node.ts:45</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L45">src/node.ts:45</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -45,77 +45,77 @@
 <div class="tsd-comment tsd-typography"><p>Set when the generalized control-flow extractor produced the regions.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L59">src/node.ts:59</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L59">src/node.ts:59</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="fallbacks"><span>fallbacks</span><a href="#fallbacks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fallbacks</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Regions or batches that fell back to native execution at the owner.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L55">src/node.ts:55</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L55">src/node.ts:55</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="memorymode"><code class="tsd-tag">Optional</code><span>memory<wbr/>Mode</span><a href="#memorymode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">memoryMode</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">&quot;shared&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;snapshot&quot;</span></div>
 <div class="tsd-comment tsd-typography"><p><code>shared</code> regions read the physical allocation; <code>snapshot</code> ran on a copied arena.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L61">src/node.ts:61</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L61">src/node.ts:61</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="mode"><span>mode</span><a href="#mode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">mode</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;serial&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;native-shared&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;speculative&quot;</span></div>
 <div class="tsd-comment tsd-typography"><p><code>native-shared</code> ran proved kernels on the shared allocation without tracking.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L57">src/node.ts:57</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L57">src/node.ts:57</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="profile"><code class="tsd-tag">Optional</code><span>profile</span><a href="#profile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">profile</span><span class="tsd-signature-symbol">?:</span> <a href="node.ExecutionProfile.html" class="tsd-signature-type tsd-kind-interface">ExecutionProfile</a></div>
 <div class="tsd-comment tsd-typography"><p>Present when <code>FolioOptions.profile</code> is set.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L78">src/node.ts:78</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L78">src/node.ts:78</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="reason"><code class="tsd-tag">Optional</code><span>reason</span><a href="#reason" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">reason</span><span class="tsd-signature-symbol">?:</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;requested&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;opaque-input&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;no-parallel-plan&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;single-region&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;small-workload&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;guard-failed&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;unsupported-module&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;dependency&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;snapshot-unavailable&quot;</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;previous-conflicts&quot;</span></div>
 <div class="tsd-comment tsd-typography"><p>Why a run stayed serial or left the fast path.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L65">src/node.ts:65</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L65">src/node.ts:65</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="regions"><span>regions</span><a href="#regions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">regions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Regions discovered and dispatched.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L51">src/node.ts:51</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L51">src/node.ts:51</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="replayed"><span>replayed</span><a href="#replayed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">replayed</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Regions that conflicted and replayed against committed state.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L53">src/node.ts:53</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L53">src/node.ts:53</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="snapshotbytes"><code class="tsd-tag">Optional</code><span>snapshot<wbr/>Bytes</span><a href="#snapshotbytes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">snapshotBytes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Bytes copied into the worker group for snapshot execution.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L63">src/node.ts:63</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L63">src/node.ts:63</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="values"><span>values</span><a href="#values" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">values</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Return values of the call, or of each call in a batch.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L47">src/node.ts:47</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L47">src/node.ts:47</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="workers"><span>workers</span><a href="#workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">workers</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Workers that executed regions; zero for a serial run.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/e7f7f6b317242080dbf33e67e6a2839bd2b7a201/src/node.ts#L49">src/node.ts:49</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L49">src/node.ts:49</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
