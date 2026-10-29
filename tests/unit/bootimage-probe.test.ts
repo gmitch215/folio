@@ -20,9 +20,39 @@ import {
 	meterName,
 	requestBound,
 	sequence,
+	variantOf,
 	type Fetched
 } from '../../experiments/bootimage/plan.ts';
 import { importModule, ownModule } from '../../experiments/bootimage/prepare.ts';
+import { imageDecision, normalizeHtml } from '../../experiments/bootimage/research/policy.ts';
+
+test('config reset still refuses an incompatible module set', () => {
+	expect(
+		imageDecision('reset', 'site-two', 'site-one', 'same-modules', 'same-modules').useImage
+	).toBe(true);
+	expect(
+		imageDecision('guarded', 'site-two', 'site-one', 'same-modules', 'same-modules').useImage
+	).toBe(false);
+	expect(
+		imageDecision('reset', 'site-two', 'site-one', 'new-modules', 'same-modules').useImage
+	).toBe(false);
+	expect(imageDecision('plain', 'same', 'same', 'same', 'same').useImage).toBe(false);
+});
+
+test('form normalization keeps token freshness evidence and unrelated form values', () => {
+	const a = normalizeHtml(
+		'<input name="form_build_id" data-drupal-selector="form-a" value="random-a"><input name="password" value="one">'
+	);
+	const b = normalizeHtml(
+		'<input name="form_build_id" data-drupal-selector="form-b" value="random-b"><input name="password" value="one">'
+	);
+	expect(a.normalized).toBe(b.normalized);
+	expect(a.formBuildIds).not.toEqual(b.formBuildIds);
+	expect(a.normalized).toContain('name="password" value="one"');
+	expect(normalizeHtml('<input name="password" value="two">').normalized).not.toBe(
+		normalizeHtml('<input name="password" value="one">').normalized
+	);
+});
 
 test('checksum covers every check page and its position', () => {
 	const pages = Math.max(...checkPages) + 1;
@@ -53,6 +83,19 @@ test('each variant sends 21 uniquely indexed Durable Object requests within the 
 	expect(memory).toHaveLength(emptyMiB.length * 4);
 	expect(sequence('b').every((step) => step.path.startsWith('/inst?m=boot'))).toBe(true);
 	expect(sequence('c').every((step) => step.path.startsWith('/inst?m=render'))).toBe(true);
+});
+
+test('semantic boot variant names preserve the recorded request sequences', () => {
+	for (const [name, legacy] of [
+		['original', 'a'],
+		['boot', 'b'],
+		['render', 'c']
+	] as const) {
+		expect(variantOf(name)).toBe(legacy);
+		expect(variantOf(legacy)).toBe(legacy);
+		expect(sequence(variantOf(name)!)).toEqual(sequence(legacy));
+	}
+	expect(variantOf('missing')).toBeUndefined();
 });
 
 test('the generated empty-memory modules validate and size their memory', () => {
