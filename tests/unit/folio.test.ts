@@ -67,6 +67,51 @@ test('loop-carried memory dependencies replay and match sequential prefix output
 	}
 });
 
+test('repeated conflicting call shapes use native execution and periodically probe for changed dependencies', async () => {
+	const shared = memory(),
+		pool = await Folio.open(program, {
+			minimumRegionWork: 0,
+			memory: shared,
+			workers: 4,
+			adaptiveRouting: true
+		});
+	try {
+		new Uint32Array(shared.buffer)[255] = 100;
+		for (let index = 0; index < 2; index++)
+			assert.equal((await pool.run('dependent_program', [1024, 37])).replayed, 3);
+		const forced = await pool.run('dependent_program', [1024, 37], { parallel: 'speculate' });
+		assert.equal(forced.replayed, 3);
+		for (let index = 0; index < 16; index++) {
+			const report = await pool.run('dependent_program', [1024, 37]);
+			assert.equal(report.mode, 'serial');
+			assert.equal(report.reason, 'previous-conflicts');
+			assert.deepEqual(
+				[...new Uint32Array(shared.buffer, 1024, 37)],
+				Array.from({ length: 37 }, (_, item) => item + 101)
+			);
+		}
+		assert.equal((await pool.run('dependent_program', [1024, 37])).mode, 'speculative');
+		assert.equal((await pool.run('dependent_program', [1024, 38])).mode, 'speculative');
+	} finally {
+		await pool.close();
+	}
+});
+
+test('call shapes that conflicted keep running speculatively unless adaptive routing is enabled', async () => {
+	const shared = memory(),
+		pool = await Folio.open(program, { minimumRegionWork: 0, memory: shared, workers: 4 });
+	try {
+		new Uint32Array(shared.buffer)[255] = 100;
+		for (let index = 0; index < 20; index++) {
+			const report = await pool.run('dependent_program', [1024, 37]);
+			assert.equal(report.mode, 'speculative');
+			assert.notEqual(report.reason, 'previous-conflicts');
+		}
+	} finally {
+		await pool.close();
+	}
+});
+
 test('dynamic conflicts, blind writes, overlapping bytes and ordered traps', async () => {
 	const shared = memory();
 	const words = new Uint32Array(shared.buffer);

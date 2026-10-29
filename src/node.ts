@@ -71,7 +71,9 @@ export interface ExecutionReport {
 		| 'dependency'
 		| 'guard-failed'
 		| 'snapshot-unavailable'
+		| 'previous-conflicts'
 		| 'opaque-input';
+
 	/** Present when `FolioOptions.profile` is set. */
 	profile?: ExecutionProfile;
 }
@@ -118,6 +120,12 @@ export interface FolioOptions {
 	minimumRegionWork?: number;
 	/** Iterations assumed for loops with no constant bound when `open` prepares raw bytes. */
 	assumedTripCount?: number;
+	/**
+	 * Run a call shape natively for 16 calls after two runs that mostly replayed or fell back, then
+	 * probe again. A shape is the entry, width, memory size and numeric arguments. Off by default.
+	 * @since 1.0.1
+	 */
+	adaptiveRouting?: boolean;
 }
 
 interface Pending {
@@ -231,6 +239,8 @@ export class Folio {
 	readonly #maxBytes: number;
 	readonly #minimumWork: number;
 	readonly #profile: boolean;
+	readonly #adaptive: boolean;
+	readonly #routing = new Map<string, { failures: number; remaining: number }>();
 	#nextId = 0;
 	#busy = false;
 	#closed = false;
@@ -243,6 +253,7 @@ export class Folio {
 		this.#maxBytes = options.maxTransactionBytes ?? 262_144;
 		this.#minimumWork = options.minimumParallelWork ?? 100_000;
 		this.#profile = options.profile ?? false;
+		this.#adaptive = options.adaptiveRouting ?? false;
 		if (!Number.isInteger(this.#fuel) || this.#fuel < 2 || this.#fuel > 2_147_483_647)
 			throw new RangeError('invalid fuel');
 		if (!Number.isInteger(this.#maxBytes) || this.#maxBytes < 1)
@@ -530,7 +541,7 @@ export class Folio {
 		const entry = this.#instance.exports[call.export];
 		if (typeof entry !== 'function')
 			throw new TypeError(`unknown function export: ${call.export}`);
-		const wrapped = this.#promising.get(call.export);
+		const wrapped = this.#promising.get(call.export) ?? this.#controlled.get(call.export);
 		if (!wrapped) return { value: entry(...call.args) };
 		const pending = wrapped(...call.args);
 		this.#nativePending.add(pending);
@@ -609,6 +620,27 @@ export class Folio {
 				: undefined;
 		const numeric = args.every((arg) => typeof arg === 'number');
 		const control = this.#controlled.get(entry);
+		const routeKey =
+			this.#adaptive &&
+			options.parallel !== 'off' &&
+			options.parallel !== 'speculate' &&
+			width >= 2 &&
+			(plan || control) &&
+			args.every((arg) => typeof arg === 'number' || typeof arg === 'bigint')
+				? JSON.stringify([
+						entry,
+						width,
+						this.#memory?.buffer.byteLength,
+						args.map((arg) => (typeof arg === 'bigint' ? `${arg}n` : arg))
+					])
+				: undefined;
+		const history = routeKey ? this.#routing.get(routeKey) : undefined;
+		if (history && history.remaining > 0) {
+			history.remaining--;
+			const report = await this.runAll([{ export: entry, args }], { parallel: 'off' });
+			report.reason = 'previous-conflicts';
+			return report;
+		}
 		if (
 			!plan &&
 			control &&
@@ -616,7 +648,9 @@ export class Folio {
 			options.parallel !== 'off' &&
 			args.every((arg) => typeof arg === 'number' || typeof arg === 'bigint')
 		) {
-			return this.#runControlled(control, args, width);
+			const report = await this.#runControlled(control, args, width);
+			this.#observeRouting(routeKey, report);
+			return report;
 		}
 		const count =
 			numeric && plan && typeof args[plan.countParameter] === 'number'
@@ -668,7 +702,24 @@ export class Folio {
 			: await this.runAll(calls, options);
 		if (proved && !disjoint && options.parallel !== 'speculate' && !report.reason)
 			report.reason = 'guard-failed';
+		this.#observeRouting(routeKey, report);
 		return { ...report, values: [undefined] };
+	}
+
+	#observeRouting(key: string | undefined, report: ExecutionReport): void {
+		if (!key) return;
+		const expensive =
+			report.mode === 'speculative' &&
+			(report.fallbacks > 0 ||
+				(report.regions > 1 && report.replayed / (report.regions - 1) >= 0.5));
+		if (!expensive) {
+			this.#routing.delete(key);
+			return;
+		}
+		const failures = Math.min(2, (this.#routing.get(key)?.failures ?? 0) + 1);
+		if (!this.#routing.has(key) && this.#routing.size >= 256)
+			this.#routing.delete(this.#routing.keys().next().value!);
+		this.#routing.set(key, { failures, remaining: failures >= 2 ? 16 : 0 });
 	}
 
 	async #runControlled(
