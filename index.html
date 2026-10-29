@@ -1,5 +1,5 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@gmitch215/folio - v1.0.0</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
-<div class="tsd-toolbar-contents container"><a href="index.html" class="title">@gmitch215/folio - v1.0.0</a>
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@gmitch215/folio - v1.0.1</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="index.html" class="title">@gmitch215/folio - v1.0.1</a>
 <div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
 <ul role="listbox" id="tsd-search-results"></ul>
 <div id="tsd-search-status" aria-live="polite" aria-atomic="true">
@@ -7,7 +7,7 @@
 <div class="container container-main">
 <div class="col-content">
 <div class="tsd-page-title">
-<h1>@gmitch215/folio - v1.0.0</h1></div>
+<h1>@gmitch215/folio - v1.0.1</h1></div>
 <div class="tsd-panel tsd-typography"><h1 id="🚋-folio" class="tsd-anchor-link">🚋 Folio<a href="#🚋-folio" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
 <blockquote>
 <p>⚡ Shared WebAssembly memory and ordered speculative execution across isolates</p>
@@ -28,11 +28,13 @@ the same engine.</p>
 <li><a href="#-managed-workers">Managed Workers</a></li>
 <li><a href="#-browser-execution-and-page-leases">Browser Execution and Page Leases</a></li>
 <li><a href="#-task-pool">Task Pool</a></li>
+<li><a href="#-context-checkpoints">Context Checkpoints</a></li>
 <li><a href="#-baked-boot-images">Baked Boot Images</a></li>
 <li><a href="#-execution-and-memory">Execution and Memory</a></li>
 <li><a href="#-api-reference">API Reference</a></li>
 <li><a href="#-consumer-harness">Consumer Harness</a></li>
 <li><a href="#-measured-results">Measured Results</a></li>
+<li><a href="#-examples">Examples</a></li>
 <li><a href="#-development">Development</a></li>
 <li><a href="#-contributing">Contributing</a></li>
 <li><a href="#-license">License</a></li>
@@ -126,7 +128,8 @@ whose <code>execute(frame)</code> returns a binary response, and <code>FolioLane
 The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
 ordered byte validation connect independent lanes. A transport failure falls back to native owner
 execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
-must fit the owner runtime. See <a href="media/METHOD.md">the managed procedure</a>.</p>
+must fit the owner runtime. Frames carry the whole snapshot. <code>snapshotEncoding: 'auto'</code> omits pages
+that are all zero, which saves traffic for sparse arenas and requires lanes from this version. See <a href="media/METHOD.md">the managed procedure</a>.</p>
 <h2 id="🔗-browser-execution-and-page-leases" class="tsd-anchor-link">🔗 Browser Execution and Page Leases<a href="#🔗-browser-execution-and-page-leases" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/browser</code> exports <code>BrowserFolio</code> for Chromium and other hosts without JSPI. It
 takes a precompiled original module and the <code>loops</code>, <code>native</code>, <code>reasons</code> and <code>memories</code> metadata
@@ -167,6 +170,24 @@ start and end time, thread CPU time and byte counts, and <code>peakConcurrency(r
 tasks ran at the same time.</p>
 <p>The pool does not discover independent work. Region discovery and ordered validation stay in the
 core engine, and the task pool covers programs that can say which calls are independent.</p>
+<h2 id="🔄-context-checkpoints" class="tsd-anchor-link">🔄 Context Checkpoints<a href="#🔄-context-checkpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@gmitch215/folio/context</code> resets a private Wasm instance between independent jobs.
+<code>prepareContext(bytes)</code> from <code>@gmitch215/folio/compiler</code> adds exports for every memory, mutable
+numeric global and table, and leaves function bodies and start sections as they are. An
+<code>InstanceCheckpoint</code> copies that state once after initialization. <code>restore()</code> compares each 64 KiB
+page with the copy, rewrites the pages that differ, and puts back globals and table references.
+<code>restore('full')</code> copies every byte instead. Different inputs may dirty different pages, so the
+checkpoint learns no page set from an earlier run.</p>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">prepareContext</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/compiler&#39;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">InstanceCheckpoint</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/context&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">plan</span><span class="hl-1"> = </span><span class="hl-0">prepareContext</span><span class="hl-1">(</span><span class="hl-5">bytes</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">instance</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Instance</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Module</span><span class="hl-1">(</span><span class="hl-5">plan</span><span class="hl-1">.</span><span class="hl-5">bytes</span><span class="hl-1">), </span><span class="hl-5">imports</span><span class="hl-1">);</span><br/><span class="hl-0">initialize</span><span class="hl-1">(</span><span class="hl-5">instance</span><span class="hl-1">);</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">checkpoint</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">InstanceCheckpoint</span><span class="hl-1">(</span><span class="hl-5">instance</span><span class="hl-1">, </span><span class="hl-5">plan</span><span class="hl-1">);</span><br/><br/><span class="hl-4">for</span><span class="hl-1"> (</span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">job</span><span class="hl-1"> </span><span class="hl-6">of</span><span class="hl-1"> </span><span class="hl-5">jobs</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-5">instance</span><span class="hl-1">, </span><span class="hl-5">job</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-5">checkpoint</span><span class="hl-1">.</span><span class="hl-0">restore</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>A module that drops a passive data or element segment, uses Wasm GC objects, or holds a reference or
+<code>v128</code> global cannot be restored through exports. <code>prepareContext</code> then keeps the original bytes and
+lists the causes in <code>plan.reasons</code>, and <code>InstanceCheckpoint</code> throws so the caller creates a fresh
+instance for each job. Memory or table growth throws <code>ContextResetError</code> before anything is
+written, and the caller instantiates a new context. Host resources and the objects behind
+<code>externref</code> values stay with the caller. <code>restore()</code> reads every page, so its cost follows the memory
+size and not the number of changed pages.</p>
 <h2 id="🧊-baked-boot-images" class="tsd-anchor-link">🧊 Baked Boot Images<a href="#🧊-baked-boot-images" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/bake</code> moves a booted memory into the module. <code>captureImage(booted, fresh)</code> compares
 a booted memory with a fresh instance of the same module and keeps the 64 KiB pages that differ.
@@ -179,11 +200,11 @@ writes memory 0.</p>
 <p>The caller creates an imported memory with at least <code>memoryPages</code> pages. A defined memory that
 starts smaller has its initial pages raised to the image size, and its maximum, shared and memory64
 flags stay as they are. A page that boot zeroed but the module's own data had set is stored as
-zeros, and pages that are zero in both are left out. Pass the global values and the function table
-of both instances to <code>captureImage</code> as <code>globals</code> and <code>table</code> and the image records what boot
+zeros, and pages that are zero in both are left out. Pass the global values and a pre-boot copy of
+the same instance's table references to <code>captureImage</code> as <code>globals</code> and <code>table</code>; it records what boot
 changed. <code>bakeModule</code> writes changed i32, i64, f32 and f64 globals into their initial values and
 refuses changed table slots unless <code>allowTableChanges</code> is set. It throws <code>ImageMismatchError</code>, which
-has a <code>code</code>, for a wrong module digest, no memory, an image over the memory maximum and a global it
+has a <code>code</code>, for a wrong module digest, a start function, no memory, an image over the memory maximum and a global it
 cannot rewrite. Adjacent pages become one segment of at most <code>maxSegmentBytes</code> (64 MiB).</p>
 <p><code>applyImage(memory, image)</code> copies the pages into a fresh instance's memory without baking. It
 cannot set a module's globals or table slots, so an image that records changed ones is refused with
@@ -304,7 +325,9 @@ contention or leaves CPU for other jobs.</li>
 <p>Pool options are <code>workers</code> (up to four by default), <code>memory</code>, <code>imports</code>, <code>minimumParallelWork</code>
 (100,000 estimated iterations for proved kernels), <code>minimumRegionWork</code> and <code>assumedTripCount</code> (both
 apply when <code>open</code> prepares raw bytes), <code>fuel</code> (100,000,000), <code>maxTransactionBytes</code> (262,144),
-<code>promising</code> and <code>profile</code>. A one-worker pool uses its native entry and creates no idle
+<code>promising</code>, <code>profile</code> and <code>adaptiveRouting</code>. With <code>adaptiveRouting</code>, a call shape (entry, width,
+memory size and numeric arguments) whose last two runs mostly replayed or fell back runs natively
+for the next 16 calls and is then probed again. It is off by default. A one-worker pool uses its native entry and creates no idle
 worker.</p>
 <p>Profiling is opt-in. <code>report.profile</code> holds elapsed time, worker observations, validation, commit
 and replay time, and tracked read and write bytes. On generalized batches <code>workerWallMs</code> and
@@ -321,7 +344,7 @@ return value before it records a sample. A mismatch stops the run.</p>
 </code><button type="button">Copy</button></pre>
 
 <p><code>FOLIO_OLD_BUILD=1</code> adds an <code>old-N</code> arm per worker count that runs the archived source from before
-static admission (<code>results/20261020-regress/old-build-src.tar.gz</code>), alternating with the current
+static admission (<code>results/execution/admission/old-build-src.tar.gz</code>), alternating with the current
 build in the same rounds. The summary then reports <code>versusOld</code>, the old build's wall time divided by
 the current one.</p>
 <p>Every row carries wall time, process CPU and what Folio dispatched: workers, regions, replays,
@@ -386,6 +409,21 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 <td>PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm</td>
 <td>first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime</td>
 </tr>
+<tr>
+<td>Independent corpus</td>
+<td>21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro</td>
+<td>default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native</td>
+</tr>
+<tr>
+<td>Explicit tasks on private contexts</td>
+<td>the same 21 kernels, eight batched <code>TaskPool</code> workers</td>
+<td>18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs</td>
+</tr>
+<tr>
+<td>Baked Drupal lifecycle</td>
+<td>Apple M2 Pro, 15 paired rounds, compile through first render</td>
+<td>830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image</td>
+</tr>
 </tbody>
 </table>
 <p>A streaming workload stops improving near four workers, and <code>maximumWorkers</code> caps the pool per run.
@@ -393,6 +431,8 @@ Managed Workers cannot share physical memory across isolates, so that backend co
 <a href="documents/TECHNICAL_REPORT.html">technical report</a> lists every figure with its instrument, the raw samples
 live in <a href="media/results">results/</a>, and the Cloudflare probes are described in
 <a href="media/README.md">experiments/</a>.</p>
+<h2 id="🧩-examples" class="tsd-anchor-link">🧩 Examples<a href="#🧩-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, and <code>boot-image</code> bakes captured memory into a module.</p>
 <h2 id="🔧-development" class="tsd-anchor-link">🔧 Development<a href="#🔧-development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build:c</span><span class="hl-1"> </span><span class="hl-3"># compile the C fixtures in tests/c with LLVM</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">typecheck</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test</span><span class="hl-1">             </span><span class="hl-3"># unit gate</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test:integration</span><span class="hl-1"> </span><span class="hl-3"># local workerd probes and the managed lanes</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">example</span>
 </code><button type="button">Copy</button></pre>
@@ -436,16 +476,18 @@ samples.</p>
 <li><a href="#📡-managed-workers"><span>📡 <wbr/>Managed <wbr/>Workers</span></a></li>
 <li><a href="#🔗-browser-execution-and-page-leases"><span>🔗 <wbr/>Browser <wbr/>Execution and <wbr/>Page <wbr/>Leases</span></a></li>
 <li><a href="#🧰-task-pool"><span>🧰 <wbr/>Task <wbr/>Pool</span></a></li>
+<li><a href="#🔄-context-checkpoints"><span>🔄 <wbr/>Context <wbr/>Checkpoints</span></a></li>
 <li><a href="#🧊-baked-boot-images"><span>🧊 <wbr/>Baked <wbr/>Boot <wbr/>Images</span></a></li>
 <li><a href="#🧱-execution-and-memory"><span>🧱 <wbr/>Execution and <wbr/>Memory</span></a></li>
 <li><a href="#📖-api-reference"><span>📖 <wbr/>API <wbr/>Reference</span></a></li>
 <li><a href="#🧪-consumer-harness"><span>🧪 <wbr/>Consumer <wbr/>Harness</span></a></li>
 <li><a href="#📈-measured-results"><span>📈 <wbr/>Measured <wbr/>Results</span></a></li>
+<li><a href="#🧩-examples"><span>🧩 <wbr/>Examples</span></a></li>
 <li><a href="#🔧-development"><span>🔧 <wbr/>Development</span></a></li>
 <li><a href="#🤝-contributing"><span>🤝 <wbr/>Contributing</span></a></li>
 <li><a href="#📄-license"><span>📄 <wbr/>License</span></a></li></ul></div></details></div>
 <div class="site-menu">
-<nav class="tsd-navigation"><a href="modules.html">@gmitch215/folio - v1.0.0</a>
+<nav class="tsd-navigation"><a href="modules.html">@gmitch215/folio - v1.0.1</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
 <li>Loading...</li></ul></nav></div></div></div><footer>
 <p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>

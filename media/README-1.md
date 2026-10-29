@@ -1,12 +1,12 @@
 # `tests/`
 
-| where                | what                                                                                                    | runs                                            |
-| -------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`                                      | compiled to `build/*.wasm` by `bun run build:c` |
-| `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, boot image baking, host, remote, managed, probes | `bun run test`, under 5 seconds                 |
-| `tests/helpers/`     | worker entry points the unit tests spawn: the browser bridge and the task pool                          | imported by `tests/unit/`                       |
-| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                      | `bun run test:integration`, about 25 seconds    |
-| `tests/e2e/`         | live deploys to a Cloudflare account                                                                    | `bun run test:e2e`, skipped without credentials |
+| where                | what                                                                                                                                           | runs                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`                                                                             | compiled to `build/*.wasm` by `bun run build:c` |
+| `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, boot image baking, context checkpoints, host, remote, managed, probes, research tooling | `bun run test`, under 5 seconds                 |
+| `tests/helpers/`     | worker entry points the unit tests spawn: the browser bridge and the task pool                                                                 | imported by `tests/unit/`                       |
+| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                                                             | `bun run test:integration`, about 25 seconds    |
+| `tests/e2e/`         | live deploys to a Cloudflare account                                                                                                           | `bun run test:e2e`, skipped without credentials |
 
 `tests/setup.ts` rebuilds the C fixtures when a source file is newer than its output, so a fresh
 checkout runs the gate after installing `clang` and `lld`.

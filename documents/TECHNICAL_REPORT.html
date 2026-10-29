@@ -1,5 +1,5 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>TECHNICAL_REPORT | @gmitch215/folio - v1.0.0</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
-<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@gmitch215/folio - v1.0.0</a>
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>TECHNICAL_REPORT | @gmitch215/folio - v1.0.1</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@gmitch215/folio - v1.0.1</a>
 <div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
 <ul role="listbox" id="tsd-search-results"></ul>
 <div id="tsd-search-status" aria-live="polite" aria-atomic="true">
@@ -67,17 +67,17 @@ tail event are not interchangeable.</p>
 <tr>
 <td>Physical sharing across isolates</td>
 <td>additional RSS <strong>3.871 MiB</strong> for four isolates on a touched 64 MiB backing, against <strong>259.930 MiB</strong> for copied buffers</td>
-<td>Node 26.10.0, <code>results/20261019/</code></td>
+<td>Node 26.10.0, <code>results/memory/sharing/</code></td>
 </tr>
 <tr>
 <td>One unannotated entry on several CPUs</td>
 <td><strong>7.619x</strong> at eight workers on a compute kernel, CPU ratio 1.037, 207 byte-exact samples</td>
-<td>Ryzen rig, <code>results/20261019-d/</code></td>
+<td>Ryzen rig, <code>results/execution/scaling/</code></td>
 </tr>
 <tr>
 <td>Normally inlined C, automatic region discovery</td>
 <td><strong>7.519x</strong> median at eight pinned workers; <strong>5.636x</strong> unpinned</td>
-<td>Ryzen rig, <code>results/20261020-affinity-final/</code></td>
+<td>Ryzen rig, <code>results/execution/placement/</code></td>
 </tr>
 <tr>
 <td>Streaming workload</td>
@@ -107,13 +107,19 @@ tail event are not interchangeable.</p>
 <tr>
 <td>Real consumer artifacts</td>
 <td>tinyimg (809,683 bytes) and machine core (4,303 bytes) match native returns and every memory byte</td>
-<td><code>results/integration-generalized-final.json</code></td>
+<td><code>results/compatibility/integration/admitted.json</code></td>
 </tr>
 </tbody>
 </table>
-<p>| Independent PHP and Drupal tasks | <strong>7.65x</strong> median regenerating 31 pages on ten private contexts (n=20), process CPU 1.087x; <strong>7.06x</strong> for eight concurrent renders; <strong>7.58x</strong> for eight named tasks inside one request | Ryzen rig, <code>results/20261022-phpregen/</code>, <code>20261020-phpparallel/</code>, <code>20261020-phpintra/</code> |
-| Cold start of a booted Wasm PHP interpreter | a baked after-render image cuts open plus first render from 1,247 ms to 373 ms (70%) locally, renders equal to a booted context in 80 of 80; deployed as static assets it cuts the first request of a fresh site that matches the pack by 60 to 72% of cpuTime (n=5 per run, two runs) and, on PHP 8.5.12, 72% again (n=5); the <code>/bootphase</code> re-boot rows (8.5.2: 19% to 33% less cpuTime; 8.5.12: 9% more cpuTime and 40% more wall time) measure an instrument that rebuilds a second kernel; the serve path after a drop, which is what a host runs after an eviction, takes 555 ms of cpuTime baked against 989 ms plain on PHP 8.5.12 (44% less, n=4 per arm, paid account) and a cold boot after a real eviction 682 and 799 ms against 1,751 and 2,035 ms (n=2 per arm); as data segments it exceeds the upload limit; a site with edited config boots plain | Mac, <code>results/20261022-bootimage/</code>; FREE account, <code>experiments/bootimage/</code> |
-| One uncached Drupal render, automatic extraction | no speedup: 0.87x to 1.02x, zero workers dispatched; no independent sibling work found (best 1.004) | M2 Pro, <code>results/20261020-php/</code>, <code>20261020-worksp2/</code> |</p>
+<p>| Independent PHP and Drupal tasks | <strong>7.65x</strong> median regenerating 31 pages on ten private contexts (n=20), process CPU 1.087x; <strong>7.06x</strong> for eight concurrent renders; <strong>7.58x</strong> for eight named tasks inside one request | Ryzen rig, <code>results/php/regeneration/</code>, <code>php/requests/</code>, <code>php/intra-request/</code> |
+| Cold start of a booted Wasm PHP interpreter | a baked after-render image cuts open plus first render from 1,247 ms to 373 ms (70%) locally, renders equal to a booted context in 80 of 80; deployed as static assets it cuts the first request of a fresh site that matches the pack by 60 to 72% of cpuTime (n=5 per run, two runs) and, on PHP 8.5.12, 72% again (n=5); the <code>/bootphase</code> re-boot rows (8.5.2: 19% to 33% less cpuTime; 8.5.12: 9% more cpuTime and 40% more wall time) measure an instrument that rebuilds a second kernel; the serve path after a drop, which is what a host runs after an eviction, takes 555 ms of cpuTime baked against 989 ms plain on PHP 8.5.12 (44% less, n=4 per arm, paid account) and a cold boot after a real eviction 682 and 799 ms against 1,751 and 2,035 ms (n=2 per arm); as data segments it exceeds the upload limit; a site with edited config boots plain | Mac, <code>results/boot/php-852/</code>; FREE account, <code>experiments/bootimage/</code> |
+| One uncached Drupal render, automatic extraction | no speedup: 0.87x to 1.02x, zero workers dispatched; no independent sibling work found (best 1.004) | M2 Pro, <code>results/php/serial/</code>, <code>analysis/span-validation/</code> |</p>
+<p><strong>v1.0.1.</strong> On 21 kernels from nine independent projects, default admission dispatches no worker,
+and forced admission makes every kernel that receives a region slower than native. Explicit
+independent operations on private contexts reach 2x or more on 18 of 21 kernels with a learned-page
+reset and on 8 with a generalized checkpoint reset (eight workers, Ryzen). The corpus holds library
+kernels and no full application. A baked Drupal boot image cuts a local lifecycle from 830.5 ms to
+444.7 ms (1.90x). See <a href="#-v101-research-results">v1.0.1 Research Results</a>.</p>
 <h3 id="what-decides-the-design" class="tsd-anchor-link">What Decides the Design<a href="#what-decides-the-design" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p><strong>Sharing is a host property.</strong> V8 can attach several wrappers to one backing store. Ordinary
 Worker RPC drops the backing-store table before delivery, <code>MessageChannel</code> refuses it, and managed
@@ -381,7 +387,7 @@ message and the snapshot.</p>
 <hr>
 <h2 id="📏-measurements-physical-sharing" class="tsd-anchor-link">📏 Measurements: Physical Sharing<a href="#📏-measurements-physical-sharing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Ryzen 9 9900X, Node 26.10.0 with V8 14.6, <code>nice 19</code>. Raw sets and exact source
-snapshots are in <code>results/20261019/</code>, <code>results/20261019-b/</code> and <code>results/20261019-c/</code>.</p>
+snapshots are in <code>results/memory/sharing/</code>, <code>results/memory/large-arena/</code> and <code>results/memory/large-repeat/</code>.</p>
 <table>
 <thead>
 <tr>
@@ -684,11 +690,11 @@ a verification copy and 14 worker wrappers across pools. Source artifact SHA256 
 <code>control.jsonl</code> is <code>ba815a8e1b60d2febe695061fc04cc1c4ce5dec30ccb907db5c4b0a68d10becf</code>.
 <code>scripts/analyze/control.ts</code> regenerates the summary. This is a different workload from the
 207-sample sweep, so the speedups are not a matched before and after.</p>
-<p>The initial <code>results/20261020-control/</code> run stays on record separately. Its eight-worker median was
+<p>The initial <code>results/execution/control-pilot/</code> run stays on record separately. Its eight-worker median was
 7.437x with a 4.979 to 7.575x range, but it predates the final lane-budget, allocation-fallback and
 idle-lifetime fixes and is not substituted for the final implementation.</p>
 <h3 id="worker-placement" class="tsd-anchor-link">Worker Placement<a href="#worker-placement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p><code>results/20261020-affinity-final/</code> tests the final production source and the same C artifact. Each
+<p><code>results/execution/placement/</code> tests the final production source and the same C artifact. Each
 width reuses one pool for both placement arms. Linux worker TIDs are found before and after pool
 creation, checked to belong to this process and verified after every affinity change. Unpinned
 workers may use CPUs 4 to 11; pinned workers each use a distinct physical core in that mask.
@@ -760,7 +766,7 @@ rotating measured rounds give 72 exact executions (56 measured), and every retur
 <p>Pinning improves the eight-worker paired result by 1.215x median [1.188 to 2.032]. The largest
 per-lane gap between wall time and thread CPU falls from 3.543 ms to 0.871 ms. Worker CPU and total
 process CPU stay similar, so placement recovers elapsed concurrency without reducing arithmetic
-work. The earlier <code>results/20261020-affinity/</code> run stays intact (eight-worker paired median
+work. The earlier <code>results/execution/placement-pilot/</code> run stays intact (eight-worker paired median
 improvement 1.291x, with a slower paired sample in the 0.739 to 1.552 range). The final run has no
 slower eight-worker pair, but seven pairs do not establish a universal improvement. Per-core procfs
 counters use 10 ms ticks, so no scheduler or hardware-stall attribution is claimed.</p>
@@ -771,7 +777,7 @@ Worker caps, batching, singleton routing and shared arenas do not depend on affi
 archive SHA256 is <code>7390d5558f8c2b39d58152a52b2a8b33a31cdbfe545eecd1b4f394413cfbc634</code> and the raw
 <code>affinity.jsonl</code> is <code>def380244cf05c12866462c091a1f8276980dcfa3b57575b8afa947d657521a8</code>. All 12
 production source files and their built output matched that archive byte for byte when the run
-was recorded (<code>results/source-manifest.json</code>). The repository was formatted with Prettier and
+was recorded (<code>results/execution/source/manifest.json</code>). The repository was formatted with Prettier and
 documented with TSDoc afterwards, which changed whitespace, import order and comments only. The
 measured sources remain in each set's source archive, and the full gate passes on the formatted
 tree.</p>
@@ -838,8 +844,8 @@ synchronous JS, so a lane's own <code>Date.now</code> delta is not CPU telemetry
 platform CPU inside 31 ms of coordinator wall time (4.097 CPU over wall, 3.719 after subtracting one
 millisecond per lane for resolution). Missing events are never invented. This shows CPU overlap and
 says nothing about memory sharing.</p>
-<p>The sanitized summary is <code>experiments/cloud/results-managed.json</code> and the local workerd control is
-<code>experiments/cloud/results-local.json</code>. Raw tails, baselines and logs live in the ignored
+<p>The sanitized summary is <code>results/portability/capabilities/deployed.json</code> and the local workerd control is
+<code>results/portability/capabilities/local.json</code>. Raw tails, baselines and logs live in the ignored
 <code>experiments/cloud/runs/</code>. Both successful runs restored the one pre-existing Worker and namespace
 exactly.</p>
 <h3 id="what-blocks-sharing-on-managed-workers" class="tsd-anchor-link">What Blocks Sharing on Managed Workers<a href="#what-blocks-sharing-on-managed-workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
@@ -1010,10 +1016,10 @@ allocations.</p>
 service binding to the authenticated Node host. Four distinct Folio threads execute the C entry,
 all 131072 bytes match an untouched oracle, i64 and void results match, and eight host requests
 create and dispose two groups with zero active groups at the end. Evidence:
-<code>experiments/cloud/results-host-20261020.json</code> (workerd 1.20260815.1, Miniflare 5.20260815.0-alpha,
-compatibility date 2026-08-22, Node 26.8.2), with the earlier <code>results-host-local.json</code>,
-<code>results-host-local-v2.json</code> and <code>results-host-final.json</code> kept. The probe passes again on workerd
-1.20261019.1 and Miniflare 5.20261019.0-beta (<code>results-host-consolidated.json</code>). This route is
+<code>results/portability/host/repeated.json</code> (workerd 1.20260815.1, Miniflare 5.20260815.0-alpha,
+compatibility date 2026-08-22, Node 26.8.2), with the earlier <code>results/portability/host/first.json</code>,
+<code>second.json</code> and <code>checked.json</code> kept. The probe passes again on workerd
+1.20261019.1 and Miniflare 5.20261019.0-beta (<code>results/portability/host/current-runtime.json</code>). This route is
 tested in local stock workerd. A publicly deployed Worker to host endpoint and its network latency
 are not measured.</p>
 <hr>
@@ -1060,7 +1066,7 @@ bytes, compiled modules and shared memory keep their native brands.</p>
 </tbody>
 </table>
 <p>The generalized implementation repeats the comparisons in
-<code>results/integration-generalized-final.json</code>. tinyimg image creation runs three regions on two
+<code>results/compatibility/integration/admitted.json</code>. tinyimg image creation runs three regions on two
 workers; fill finds 24576 singleton regions that stay local after the singleton routing fix; invert
 stays native. No image speedup is claimed. The machine core queue stays serial through <code>runAll</code> with its
 imported global and table state. This is artifact compatibility and observed extraction, not a full
@@ -1159,7 +1165,7 @@ The unchanged <code>program(address, 67, rounds)</code> call automatically used 
 all 20 warmup/measured calls; growth to <strong>268,500,992 bytes</strong> also passed. All four pools closed.
 The browser session took 22.008 seconds; the account returned to its baseline of zero Workers and
 zero Durable Object namespaces. Raw run files remain ignored under <code>experiments/browser/runs/</code>;
-the sanitized evidence is <code>experiments/browser/results-free-extraction-20261020.json</code>, generated
+the sanitized evidence is <code>results/browser/extraction/deployed.json</code>, generated
 by <code>experiments/browser/analyze-extraction.ts</code> from the retained run.</p>
 <p>Three retained samples per arm give exploratory medians of 62.915 ms for the native owner,
 61.650 ms for automatic one, 32.620 ms for two, 20.540 ms for four and 18.240 ms for eight:
@@ -1167,7 +1173,7 @@ by <code>experiments/browser/analyze-extraction.ts</code> from the retained run.
 98.035 ms sample, retained in full. These are wall-time measurements on one synthetic kernel;
 they establish neither aggregate CPU reduction, energy savings nor consumer application speedup.
 The local Chromium control independently passed with both JSPI entry points explicitly removed
-before library load (<code>results/browser-extraction-local-no-jspi.json</code>).</p>
+before library load (<code>results/browser/extraction/without-jspi.json</code>).</p>
 <p>This closes counted-loop extraction without JSPI. Arbitrary CFG regions still need explicit
 continuation lowering or a suspending coordinator. A worker failure after native direct writes
 joins the other workers and invalidates the pool; recovery needs a checkpoint. It must not silently
@@ -1236,11 +1242,11 @@ a timing result. <code>compiler.ts</code> now indexes exports once by function, 
 prototype-like name. Corrected instrumented preparation completes in <strong>116.242 seconds</strong> in one
 local Node 26.8.2 run. All three generated binaries validate in V8. This is a completion observation,
 not a measured preparation speedup. The legacy path still reports host/non-memory imports, while
-the generalized control plan is present. Evidence: <code>results/php-preparation-before-20261020.json</code>,
-<code>results/php-preparation-20261020.json</code> and <code>scripts/probe/php-preparation.ts</code>. Binary validation
+the generalized control plan is present. Evidence: <code>results/compiler/php/before.json</code>,
+<code>results/compiler/php/prepared.json</code> and <code>scripts/probe/php-preparation.ts</code>. Binary validation
 alone does not establish boot or render.</p>
 <h3 id="php-boot-and-uncached-drupal-render" class="tsd-anchor-link">PHP Boot and Uncached Drupal Render<a href="#php-boot-and-uncached-drupal-render" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p><code>results/php-render-20261020.json</code> records a local differential using a Drupal-on-Wasm consumer's
+<p><code>results/compatibility/php-render/result.json</code> records a local differential using a Drupal-on-Wasm consumer's
 existing interpreter factory seam, tuned PHP glue, interpreter memory settings, lazy Drupal and
 driver mounts, SQLite bridge, boundary codec, ten boot shim fragments, kernel boot and page render. Its encoded SQL asset chunks seed Node SQLite through
 the existing bridge. The owner keeps initialization and synchronous callbacks on raw exports;
@@ -1385,7 +1391,7 @@ ten-workload set, because other runs on the same machine overlapped it. Every fi
 rounds in one process (or, for the Drupal render, one process per sample), so each speedup is a
 native time divided by the Folio time of the same round. Wall time is <code>performance.now()</code> around the
 call, and CPU is <code>process.cpuUsage()</code> over all threads. Raw rows and summaries are in
-<code>results/20261020-php/</code> and <code>results/20261020-consumers/</code>; the harness is <code>scripts/probe/consumer.ts</code>.</p>
+<code>results/php/serial/</code> and <code>results/compatibility/consumers/</code>; the harness is <code>scripts/probe/consumer.ts</code>.</p>
 <p><strong>PHP userland, shipping artifact.</strong> Ten workloads run through <code>pib_run</code> on an artifact whose
 SHA256 is <code>95447d3d...ba6e4</code>, in a native instance and in Folio pools of 1, 2, 4 and 8 workers.
 Twenty paired rounds each, after two warmups; every output digest equals the native one.</p>
@@ -1473,7 +1479,7 @@ CPU between two stages, so it includes V8's background compilation of the 31 MB 
 split between compilation and execution is not measured. <strong>No PHP speedup is shown.</strong></p>
 <p><strong>Where the time goes.</strong> A V8 CPU profile of the native render (one run, 1700.5 ms sampled, 802.8 ms
 in wasm) is flat: <code>lex_scan</code> 7.5% of wasm time, <code>zendparse</code> 5.4%, <code>execute_ex</code> 3.4%, and 28
-functions cover half of it. <code>results/20261020-php/census-php.json</code> gives each of the 12,378 defined
+functions cover half of it. <code>results/php/serial/census-php.json</code> gives each of the 12,378 defined
 functions the first rule that keeps it out of a worker region:</p>
 <table>
 <thead>
@@ -1661,16 +1667,16 @@ is computation on the coordinator thread and not waiting.</p>
 <p><strong>Lone-region heuristic.</strong> A streak heuristic (<code>Coordinator.bypass()</code> and <code>own()</code>) once moved lone
 regions to the owner after the fact. It is removed. Static admission leaves such regions at the owner before the run starts,
 and a paired run of the heuristic against its absence on a lone-region workload (n=20, 2 and 8
-workers, <code>results/20261020-regress/bypass-decision.summary.json</code>) showed the same 1.003 median speedup
+workers, <code>results/execution/admission/bypass-decision.summary.json</code>) showed the same 1.003 median speedup
 and zero workers dispatched either way.</p>
 <h3 id="static-admission-and-the-native-fallback" class="tsd-anchor-link">Static Admission and the Native Fallback<a href="#static-admission-and-the-native-fallback" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Recorded 2026-10-20 on the same Apple M2 Pro (12 hardware threads, Node 26.8.2), not the rig.
 The machine carried background load: the median load average of each main set was 2.9 to 4.7, and 5.6 and 8.5 in
 the two reruns, whose 8-worker arms raise the average themselves. Every row below is
 an alternating round in one process of the native instance, the archived build from before this change
-(<code>results/20261020-regress/old-build-src.tar.gz</code>, arms <code>old-N</code>) and the current build (arms
+(<code>results/execution/admission/old-build-src.tar.gz</code>, arms <code>old-N</code>) and the current build (arms
 <code>folio-N</code>), with the whole memory and every return compared in every round. Raw samples and
-summaries are in <code>results/20261020-regress/</code>; the harness is <code>scripts/probe/consumer.ts</code> with
+summaries are in <code>results/execution/admission/</code>; the harness is <code>scripts/probe/consumer.ts</code> with
 <code>FOLIO_OLD_BUILD=1</code>.</p>
 <p><strong>Two mechanisms, measured on the old build.</strong> The tinyimg <code>opacity</code> call made 4,194,822 barrier
 crossings and 524,289 poll crossings with an empty queue. Replacing the barrier and poll imports in the
@@ -1879,7 +1885,7 @@ native CPU. <code>Folio.runAll</code> over the same calls reads 0.17x. No other 
 <p>Recorded 2026-10-20 on a Ryzen 9 9900X (Node 26.10.0, governor <code>powersave</code>, cpus 2 to 11
 under <code>nice 19</code>, ten physical cores for up to eight worker threads plus the main thread and V8's
 compile threads), plus one Mac set that is labeled as the Mac. Raw rows, summaries and the machine
-state are in <code>results/20261020-phpparallel/</code>; the instruments are <code>scripts/probe/php-contexts.ts</code>,
+state are in <code>results/php/requests/</code>; the instruments are <code>scripts/probe/php-contexts.ts</code>,
 <code>php-concurrent.ts</code> and <code>drupal-breakdown.ts</code>. This covers concurrent
 requests (level A) and the breakdown of one render (level C). Level B, parallel work inside one
 request, is a separate section below.</p>
@@ -2125,7 +2131,7 @@ or the guest bytecode would have to be visible to a scheduler. Level C (a faster
 unchanged Drupal render) is not shown.</p>
 <h3 id="work-inside-one-php-request" class="tsd-anchor-link">Work Inside One PHP Request<a href="#work-inside-one-php-request" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Recorded 2026-10-20 on the Ryzen rig (cpus 2 to 11, <code>nice 19</code>, powersave governor, Node 26.10.0) unless a
-row says Mac. Raw samples, summaries and the rig records are in <code>results/20261020-phpintra/</code>; the
+row says Mac. Raw samples, summaries and the rig records are in <code>results/php/intra-request/</code>; the
 instruments are <code>scripts/probe/php-intra.ts</code> (with <code>php-tasks.ts</code> and
 <code>php-task-bridge.ts</code>), <code>indirect-sites.ts</code> and <code>php-snapshot.ts</code>, summarized by
 <code>scripts/analyze/intra.ts</code>. Nothing here is Folio region extraction: the Folio compiler is not
@@ -2234,7 +2240,7 @@ Wasm memory each); a Drupal context opens in 480 ms (nine in 1.33 s). API overhe
 tasks of about 1 ms each reach 4.47x at eight workers, with 32% more aggregate CPU.</p>
 <p><strong>Library path.</strong> The transport now lives in <code>src/tasks.ts</code> (<code>TaskPool</code>, <code>serveTasks</code>,
 <code>createTaskLinks</code>), exported as <code>@gmitch215/folio/tasks</code>, and <code>php-task-bridge.ts</code> only adds the PHP shim
-shapes and the per-task log. Two rig runs of the same instrument (<code>20261020-phptasks-lib</code> and <code>-lib-b</code>,
+shapes and the per-task log. Two rig runs of the same instrument (<code>tasks/library</code> and <code>-lib-b</code>,
 n=20 each, cpus 2 to 11) reproduce the harness at one, two and four workers (the sha256 chains reach 1.99x
 and 3.89x against 1.99x and 3.95x). At eight workers the medians across the two library runs are 5.34x and
 6.77x for the sha256 chains, 5.56x and 6.62x for serialize and 6.52x and 7.71x for gzcompress, against
@@ -2248,7 +2254,7 @@ execution per checked task, and it is not a read and write set validator.</p>
 <p><strong>Past eight workers.</strong> The same pool at 4, 8, 10, 12 and 16 workers on a 48 job request (so every width
 splits the work nearly evenly), n=20 per cell on the rig, with outputs equal to the plain run in all 840
 samples. Two affinity masks: cpus 2 to 11, which is 10 physical cores, and cpus 2 to 11 plus their SMT
-siblings 14 to 23 (<code>20261020-phpwidth-nosmt</code> and <code>-smt</code>). Paired medians over the plain request:</p>
+siblings 14 to 23 (<code>tasks/physical-cores</code> and <code>-smt</code>). Paired medians over the plain request:</p>
 <table>
 <thead>
 <tr>
@@ -2520,7 +2526,7 @@ were added the Twig control read 1.67 because two single words, the cycle collec
 object store, chained every render. Those extents are an assumption about what a private context owns,
 not an inference from values. The refcount matcher is still absent (0 verified tags), so refcount words
 stay in the heap class.</p>
-<p>Evidence: <code>results/20261020-worksp2/</code>.</p>
+<p>Evidence: <code>results/analysis/span-validation/</code>.</p>
 <h3 id="free-account-consumer-harness-and-php-platform-limits" class="tsd-anchor-link">Free-Account Consumer Harness and PHP Platform Limits<a href="#free-account-consumer-harness-and-php-platform-limits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Limits were read from the live Cloudflare pages on 2026-10-20 (<code>/workers/platform/limits/</code>,
 <code>/workers/platform/pricing/</code>, <code>/durable-objects/platform/limits/</code>,
@@ -2597,12 +2603,12 @@ speeds them up.</p>
 <p>The kernel control shows a deployed backend can win: 3.6x at four lanes, with eight lanes on four
 threads slower than four. The serial consumers show the Folio route adds no measurable wall time on
 Browser Run, with single-round extremes of 0.48x to 3.0x from a four-thread Chromium shared with
-other tenants. The summary is <code>experiments/consumer/results-free-consumer-20261020.json</code>.</p>
+other tenants. The summary is <code>results/browser/consumers/deployed.json</code>.</p>
 <p>PHP on the same account was measured with <code>experiments/consumer/php/</code>: a Worker and a SQLite-backed
 Durable Object that boot the original <code>php8.5.tuned.wasm</code> through the consumer's own glue. CPU comes
 from <code>wrangler tail</code> (<code>cpuTime</code>), startup from the upload response, and every PHP output equals the
-SHA-256 chain Node computes. The summaries are <code>results-free-php-20261020.json</code>,
-<code>results-free-prepared-combined-20261020.json</code> and <code>results-free-prepared-parts-20261020.json</code>.</p>
+SHA-256 chain Node computes. The summaries are <code>results/php/deployment/original.json</code>,
+<code>results/php/deployment/combined.json</code> and <code>results/php/deployment/parts.json</code>.</p>
 <table>
 <thead>
 <tr>
@@ -2676,7 +2682,7 @@ workerd processes gave 3.84x to 3.90x at 16. The first run had a threefold base 
 of unknown cause, so the second run is the reported one, and the machine load was near its core
 count. This is a result about request concurrency. It does not involve Folio.</p>
 <p>The same holds for a real Drupal payload (<code>scripts/probe/site-concurrency.ts</code>,
-<code>results/20261022-site-concurrency/</code>, Apple M2 Pro at load 3.4 to 8.3 with other jobs running, n=48
+<code>results/portability/site-concurrency/</code>, Apple M2 Pro at load 3.4 to 8.3 with other jobs running, n=48
 batches per arm over two runs). A site is one Durable Object running Wasm PHP, and a batch is 31
 distinct pages, each forced to a full render. One workerd process served 23.6 requests per second
 at 1 request in flight and 25.2 at 8, and the payload's own queue-depth header reads exactly the
@@ -2711,7 +2717,7 @@ arguments, but <code>renderInIsolation</code> and <code>fragments.php</code> ret
 contexts, max-age, attachments, <code>seenIds</code> or messages, so a parallel path needs that return
 contract widened. The sibling profile (1.004) and the 5.7% block build plus 7.3% placeholder share
 on the cold stock fixture bound a gain near 1.15x there.</p>
-<p>A warm profile (<code>scripts/probe/php-blocks.ts</code>, <code>results/20261022-blocks/</code>, one context on an Apple
+<p>A warm profile (<code>scripts/probe/php-blocks.ts</code>, <code>results/php/render-blocks/</code>, one context on an Apple
 M2 Pro at load 6.7, n=20 renders per row, caches emptied before each render) places N clones of five
 core block plugins (branding, main menu, breadcrumb, messages, local tasks) on the stock theme.
 Render wall time is 25.8, 51.6, 71.1 and 112.0 ms at N = 0, 10, 20 and 40, which is 2.2 to 2.6 ms
@@ -2779,7 +2785,7 @@ rewritten module as active data segments with binaryen, and instantiating the mo
 memory from them with no database read and no inflate. Everything below is the PHP 8.5.2 module
 (13,401,751 bytes, sha256 <code>95447d3d...ba6e4</code>) with a stock Drupal site, on the Mac (Apple M2 Pro,
 Node 26.8.2, load 4 to 7 from other jobs) unless it says deployed. Raw rows and the summary are in
-<code>results/20261022-bootimage/</code>, the deployed probe in <code>experiments/bootimage/</code>.</p>
+<code>results/boot/php-852/</code>, the deployed probe in <code>experiments/bootimage/</code>.</p>
 <p><strong>Image anatomy.</strong> After boot the memory is 67,108,864 bytes with 174 nonzero pages (11.4 MB); 111 of
 them (7.27 MB) differ from the module's own initial memory. After the first render it is 86,638,592
 bytes with 790 nonzero pages (51.8 MB), 727 of them (47.6 MB) a delta. Deflated at 200,000-byte rows
@@ -3221,7 +3227,7 @@ module is a published file, so anything in the image is public, and freed memory
 scrubbing after the fact does not remove the bytes. The baked copy of the key is the one read
 until something resets it. A safe image is built from a state that never held a real secret
 (throwaway values pre-seeded before the bake render), and the real values are put in on replay.
-<code>results/20261022-bakesecrets/</code> tests this on the PHP 8.5.2 module. The real key and salt, a test
+<code>results/boot/replay-852/</code> tests this on the PHP 8.5.2 module. The real key and salt, a test
 user's name, mail and password hash and a planted session cookie are absent from the image and
 the baked module in raw, base64 and hex form, and a control bake that read real values contains
 all of them, so the scanner (<code>findInImage</code>) detects. After replay, a rekey step (set the salt in
@@ -3279,7 +3285,7 @@ modified local view cannot mutate published owner versions. Escaped caller views
 physically revoked and lie outside admission accounting. Credits are not RSS measurements.</p>
 <p>Ten failure tests cover publication, conflicts, expiry across awaits, late staging, response loss,
 owner failure, cleanup bounds, growth, missing pages and stale scopes. The actual native Wasm probe
-(<code>scripts/probe/pages-probe.ts</code>, <code>results/page-leases-20261020.json</code>) compares an 8 MiB logical arena
+(<code>scripts/probe/pages-probe.ts</code>, <code>results/memory/page-leases/result.json</code>) compares an 8 MiB logical arena
 with an untouched native oracle: 6 MiB materialized over four owners with 2 MiB credit each,
 512 KiB charged residence including commit snapshots, 256 KiB native region memory and 24 span
 executions. Every byte and the scalar result agree. Final leases, resident bytes and garbage are
@@ -3437,7 +3443,7 @@ open work, a reporting rule, or a claim this report does not make.</p>
 </tr>
 <tr>
 <td>Independent PHP requests: do they scale, and does Folio add to that?</td>
-<td>Shown for the request level (A), not for work inside one request. Ryzen rig, n=20 (CPU endpoints) and n=10 (Drupal render): 7.06x median at eight instances for the Drupal render (min 6.69), 5.1x to 7.7x for the CPU endpoints, tail latency 14% above single-request at eight. Folio arms run the original module (the admit plan has no region) and match native at 1.00 median. Not shown: any gain from Folio, any parallel work inside one request, energy. Instruments <code>php-contexts.ts</code>, <code>php-concurrent.ts</code>; results <code>20261020-phpparallel/</code>.</td>
+<td>Shown for the request level (A), not for work inside one request. Ryzen rig, n=20 (CPU endpoints) and n=10 (Drupal render): 7.06x median at eight instances for the Drupal render (min 6.69), 5.1x to 7.7x for the CPU endpoints, tail latency 14% above single-request at eight. Folio arms run the original module (the admit plan has no region) and match native at 1.00 median. Not shown: any gain from Folio, any parallel work inside one request, energy. Instruments <code>php-contexts.ts</code>, <code>php-concurrent.ts</code>; results <code>php/requests/</code>.</td>
 </tr>
 <tr>
 <td>Does the uncached Drupal render contain independent sibling work for a parallel mechanism?</td>
@@ -3487,6 +3493,13 @@ open work, a reporting rule, or a claim this report does not make.</p>
 </table>
 <p>Free and Paid show no measured difference in memory semantics, and nothing here argues that
 upgrading changes the cross-isolate barrier.</p>
+<p>The v1.0.1 results update these rows. The managed phase study adds warm and cold phases and a
+state-loss analysis, and the isolated kernel timing and snapshot curve toward the 32 MiB limit stay
+open. The baked image question now has a local lifecycle cohort and a delivery study on the Free plan.
+The question about secrets in an image has a configuration matrix and a replay-safety contract, with
+the session identifier still open. The consumer harness rows keep their figures and gain a
+corpus of 21 independent kernels, on which default admission dispatches nothing. See
+<a href="#-v101-research-results">v1.0.1 Research Results</a>.</p>
 <hr>
 <h2 id="✅-reproduction-and-verification" class="tsd-anchor-link">✅ Reproduction and Verification<a href="#✅-reproduction-and-verification" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>From the repository root, with Node 26 on <code>PATH</code>, Bun, and an LLVM toolchain with <code>wasm-ld</code>:</p>
@@ -3513,12 +3526,12 @@ Consumer harness: <code>node scripts/probe/consumer.ts scripts/probe/consumers/t
 Admission: <code>node scripts/probe/admission-calibration.ts OUT.jsonl</code>, <code>node scripts/probe/admission-sites.ts OUT.jsonl CONSUMER.ts...</code>
 and <code>bun scripts/analyze/admission.ts SET</code>. PHP: <code>FOLIO_CONSUMER=... node scripts/probe/php-workloads.ts OUT.jsonl 20</code>,
 <code>php-render-pairs.ts</code> and <code>purity-census.ts MODULE.wasm OUT.json</code>. Regeneration, runtime and SQL checks: <code>FOLIO_CONSUMER=... node scripts/probe/php-regen.ts OUT.jsonl PAIRS WIDTHS NODES</code> (on the rig through <code>scripts/rig/php-regen.sh SET NAME</code>), <code>tasks-runtime.ts</code>, <code>workerd-concurrency.ts DIR PAIRS</code> and <code>php-sql-census.ts OUT.jsonl UNITS</code>; <code>bun scripts/analyze/run.ts</code> writes their summaries. Concurrent PHP: <code>FOLIO_CONSUMER=... node scripts/probe/php-concurrent.ts cpu|drupal OUT.jsonl</code>, <code>php-concurrent.ts memory OUT.jsonl cpu|drupal native|folio COUNT</code> and <code>drupal-breakdown.ts OUT.jsonl</code>, on the rig through <code>scripts/rig/php-concurrent.sh SET</code> and <code>drupal-breakdown.sh SET</code>, then <code>bun scripts/analyze/run.ts</code>. Work inside one request: <code>FOLIO_CONSUMER=... node scripts/probe/php-compile.ts OUT.jsonl 20 5</code>, <code>php-intra.ts OUT.jsonl 20 1,2,4,8 [WORKLOADS]</code>, <code>indirect-sites.ts OUT.jsonl 3</code> and <code>php-snapshot.ts OUT.jsonl 20</code>, on the rig through <code>scripts/rig/php-intra.sh SET</code> (steps <code>compile intra intra-drupal snapshot</code>).
-The scaling record is <code>results/20261019-d/</code>: 207 raw samples, a deterministic summary, the runner
+The scaling record is <code>results/execution/scaling/</code>: 207 raw samples, a deterministic summary, the runner
 log and the exact measured <code>source.tar.gz</code>. The final placement run keeps 56 measured samples and
-16 warmups in <code>results/20261020-affinity-final/</code>. <code>results/verification.json</code> and
-<code>results/managed-bridge-verification.json</code> index the earlier gates, with their logs beside them.
+16 warmups in <code>results/execution/placement/</code>. <code>results/verification/core/result.json</code> and
+<code>results/verification/managed/result.json</code> index the earlier gates, with their logs beside them.
 The summaries in <code>results/*/summary.json</code> regenerate byte for byte from the raw samples with
-<code>scripts/analyze/</code>, apart from the row order of <code>results/20261019/summary.json</code>, which now sorts
+<code>scripts/analyze/</code>, apart from the row order of <code>results/memory/sharing/summary.json</code>, which now sorts
 its input files.</p>
 <p>Current gate on Node 26.8.2 (run 2026-10-23): typecheck passes for the library and the experiment
 projects; <strong>370 unit tests pass</strong> in 36 files, with no failures or skips; the three integration
@@ -3531,7 +3544,7 @@ probe, the capability probe and all 39 managed rows in local workerd (1.20261019
 The dedicated FREE browser extraction deployment passed and restored its baseline; the general
 e2e workflow itself was not dispatched during this work. The real PHP/Drupal probe is additional
 consumer evidence outside these tests. The compiler, runtime, probes and the pre-fix
-extractor are retained in <code>results/folio-v1-proof-sources-20261020.tar.gz</code>, which also holds the
+extractor are retained in <code>results/compatibility/sources/source.tar.gz</code>, which also holds the
 first copy of the Drupal harness that <code>scripts/probe/php-render.ts</code> now replaces.</p>
 <p>Rig footprints on the Ryzen rig stayed small (control 752 KiB, placement 1020 KiB, the earlier rigs
 200 to 264 KiB), with 133 GiB free on <code>/</code> and over 25 GiB of available RAM afterwards. No server
@@ -3559,6 +3572,320 @@ setting, package installation, unrelated service restart or protected mount acce
 <p>[18] K. Li and P. Hudak, &quot;Memory Coherence in Shared Virtual Memory Systems&quot;: <a href="https://css.csail.mit.edu/6.824/2014/papers/li-dsm.pdf">https://css.csail.mit.edu/6.824/2014/papers/li-dsm.pdf</a></p>
 <p>[19] M. Burrows, &quot;The Chubby Lock Service for Loosely-Coupled Distributed Systems,&quot; OSDI 2006, section 2.4: <a href="https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/chubby-osdi06.pdf">https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/chubby-osdi06.pdf</a></p>
 <p>[20] Cloudflare, Durable Objects in-memory state, including co-tenancy and eviction: <a href="https://developers.cloudflare.com/durable-objects/reference/in-memory-state/">https://developers.cloudflare.com/durable-objects/reference/in-memory-state/</a></p>
+<h2 id="🔬-v101-research-results" class="tsd-anchor-link">🔬 v1.0.1 Research Results<a href="#🔬-v101-research-results" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>This section records the v1.0.1 evaluation of automatic execution and boot images against an
+independent corpus. The published v1.0.0 package resolves to
+<code>b2b67f8f9656ee50c22f44941a6b831a39a77123</code>. The <a href="../media/index.json">evidence index</a> preserves 315
+historical artifacts (21,297,535 bytes) unchanged and all 62 historical summaries regenerate byte for
+byte. The 11 studies added in this release carry a manifest and a README each, and
+<code>node scripts/research/evidence.ts</code> verifies the manifests of all 21 studies (83 artifacts, 38,600,659
+bytes).
+Timing comes from two machines: a Ryzen 9 9900X on Linux with eight pinned cores, and an Apple M2
+Pro. Neither is a third-party replication, and bootstrap intervals cover paired rounds inside one
+run only.</p>
+<h3 id="automatic-execution-research-question-and-contribution" class="tsd-anchor-link">Automatic Execution: Research Question and Contribution<a href="#automatic-execution-research-question-and-contribution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Question.</strong> Which independently developed programs admit useful extraction, and what alternative
+work boundary accelerates the ones that do not? Build, acceptance, extraction and acceleration are
+counted separately in the <a href="../media/README-3.md">denominator table</a>.</p>
+<p>The corpus has nine upstream projects and 21 kernels (LZ4, miniz, jsmn, KissFFT, tiny-AES-c,
+xxHash, QOI, crypto-algorithms and a 6502 emulator). All 21 build and match native returns, effects
+and all 8 MiB of memory. They are library kernels. The corpus has no full application and no
+database workload, and nothing here says how Folio behaves on those.</p>
+<p><strong>Default extraction dispatches nothing on this corpus.</strong> 0 of 21 kernels have an automatic plan
+and 0 of 21 dispatch a worker under default admission, on either machine. The
+<a href="../media/README-4.md">repeat of the single-entry timings</a> with nothing else
+running gives 0.42x to 0.99x of native on the Ryzen machine (0.47x to 1.05x on the M2 Pro). Entries
+of 0.15 ms and longer sit between 0.95x and 1.0x, and the slowest ratios are entries under 20
+microseconds where the wrapper cost dominates.</p>
+<p><strong>The blockers are many, and removing one does not admit a kernel.</strong> The
+<a href="../media/README-5.md">blocker histogram</a> counts, per reason, the kernels it
+affects: start function 19, shared memory required 19, unsupported expression 18, global state 14,
+data segments requiring initialization isolation 11, host imports 2, and no region reaching the
+200,000-unit admission floor 21. Importing the memory as shared removes 19 of the reasons and leaves
+the rest.</p>
+<p><strong>Forced admission finds regions and no speedup.</strong> With the threshold at zero,
+<a href="../media/README-6.md">11 of 21 kernels</a> receive regions and run
+speculatively. All 11 are slower than native, by 110 to 45,000 times at width 8. Each split work
+into thousands of regions (67,600 for SHA-256, 170,390 for the 6502 emulator), each far smaller than
+the cost of dispatching it. The other 10 stay serial. This completes the diagnostic the checkpoint
+stopped at 16 of 21 and supports the 200,000-unit default. No compiler extension is justified by
+this corpus: widening the extractor would admit more entries, and the regions would still cost more
+than they save. Closing this mechanism does not close the objective of finding profitable
+independent work in programs like these, which the explicit boundary below addresses.</p>
+<p><strong>An explicit boundary accelerates most kernels, and the reset policy decides how much.</strong> The
+alternative reuses the independent-context method from the Drupal experiments: private contexts
+initialized once, reset between operations, joined in order. The
+<a href="../media/README-7.md">reset study</a> runs three policies in one session per
+machine with the same arms. Paired median speedup at eight batched <code>TaskPool</code> workers (CPU ratio in
+parentheses):</p>
+<table>
+<thead>
+<tr>
+<th>Kernel</th>
+<th>Machine</th>
+<th style="text-align:right">whole arena</th>
+<th style="text-align:right">learned pages</th>
+<th style="text-align:right">checkpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AES-CBC decrypt</td>
+<td>Ryzen</td>
+<td style="text-align:right">3.19x (1.97)</td>
+<td style="text-align:right">4.80x (1.05)</td>
+<td style="text-align:right">4.52x (1.30)</td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td>Ryzen</td>
+<td style="text-align:right">0.92x (5.93)</td>
+<td style="text-align:right">3.79x (1.10)</td>
+<td style="text-align:right">2.52x (2.35)</td>
+</tr>
+<tr>
+<td>LZ4 compress</td>
+<td>Ryzen</td>
+<td style="text-align:right">0.44x (12.67)</td>
+<td style="text-align:right">3.11x (1.52)</td>
+<td style="text-align:right">1.14x (4.59)</td>
+</tr>
+<tr>
+<td>AES-CBC decrypt</td>
+<td>M2 Pro</td>
+<td style="text-align:right">5.22x (1.30)</td>
+<td style="text-align:right">4.85x (1.12)</td>
+<td style="text-align:right">5.21x (1.40)</td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td>M2 Pro</td>
+<td style="text-align:right">3.69x (1.66)</td>
+<td style="text-align:right">5.15x (1.11)</td>
+<td style="text-align:right">3.93x (1.81)</td>
+</tr>
+</tbody>
+</table>
+<p>Of 21 kernels, 21 reach at least 1x with learned pages or the checkpoint on both machines, and
+whole-arena reset reaches it for 5 on the Ryzen machine. At 2x or more the counts are 18 (learned
+pages), 8 (checkpoint) and 2 (whole arena) on the Ryzen machine. The learned-page policy is valid
+only for unchanged code, input and host state. The checkpoint compares every page, learns nothing
+from an earlier run and restores globals and table references, so it applies to varied inputs: 210
+of 210 comparisons on five input profiles match a fresh native instance
+(<a href="../media/README-8.md">varied inputs</a>). It gives up most of the gain on small
+kernels because it reads the whole arena on every restore. These are explicit independent
+operations. The caller names them, and nothing here discovers them.</p>
+<p>The committed <a href="../media/README-9.md">changed-page study</a> reports 7.42x for AES-CBC
+decrypt under the learned-page policy. The repeat on the same machine with identical parameters
+reports 4.80x. Native and one-worker arms agree within 1% (69.9 ms against 69.5 ms) and the
+eight-worker arm does not (9.44 ms against 14.55 ms), with a load average of 0.1 at the start of
+one run and 1.41 at the other. The eight-worker figure is a range of 4.8x to 7.4x on that machine,
+and the earlier table is a best case. The M2 Pro gives 4.85x.</p>
+<p><strong>Conflict rate and region size set the crossover.</strong> The
+<a href="../media/README-10.md">graded study</a> varies the share of conflicting calls
+(0 to all of 64) and the work per call (about 0.1, 1.2 and 76 microseconds). At 76 microseconds,
+eight-worker forced speculation falls from 3.50x with no conflicts to 2.81x at 1/16, 2.09x at 1/8,
+1.65x at 1/4, 1.11x at 1/2 and 0.74x with all calls conflicting. The M2 Pro agrees to within about
+11%. At 1.2 microseconds the best cell is 0.26x. Validation is at most 0.3% of wall time in the
+productive cells and at most 2.1% in any cell, so ordered validation is not the limiting cost.
+Dispatch and tracking are. Admission defaults are unchanged. With the call boundary held equal, shared and copied backing differ by up to about 20% in
+either direction and neither is consistently faster (<a href="../media/README-11.md">backing ablation</a>),
+so the earlier gap between those arms came from the changed boundary.</p>
+<p><strong>Repeated conflicting shapes can be routed natively.</strong> With the new
+<a href="../media/README-12.md"><code>adaptiveRouting</code> option</a>, a call shape whose last
+two runs mostly replayed runs natively for 16 calls and is then probed. On a repeated aliasing
+entry it moves the default route from 0.62x to 0.99x of native on the Ryzen machine (0.61x to 0.99x
+on the M2 Pro) and served 337 of 360 calls natively. The result covers two synthetic entries with a
+repeating shape. The option is off by default and needs a consumer whose shapes repeat before it
+should be on.</p>
+<p><strong>Generated differential execution agrees with native.</strong> Two seeds of 128 programs each, at widths 1,
+2, 4 and 8, give <a href="../media/README-13.md">12,456 comparisons</a> with equal
+memory, returns, ordered effects and trap or host exception identity. The campaign now includes
+counted loops whose stores overlap at region boundaries, so the disjointness guard refuses them: 12
+refusals per seed fall back to speculation with the native result. The grammar covers seven
+scalar and bulk shapes and does not generate <code>memory.fill</code>, <code>memory.init</code>, atomics or SIMD. This is
+finite evidence, not a proof.</p>
+<p><strong>Contribution.</strong> On independently built programs, default automatic extraction does not help and
+forcing it makes every extracted kernel slower. A caller-named boundary with private contexts speeds
+up all 21 kernels at least slightly and 18 of 21 by 2x or more with learned pages on the Ryzen
+machine, with a reset cost that depends on the policy. The evidence does not show automatic
+discovery of those boundaries or any result on a full application. Repeats of the widest arm differ
+by up to a factor of about 1.5.</p>
+<h3 id="boot-images-research-question-and-contribution" class="tsd-anchor-link">Boot Images: Research Question and Contribution<a href="#boot-images-research-question-and-contribution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Question.</strong> When does initialized state replay preserve behavior, and which state must the host
+renew, rebind or invalidate? This is about initialization and delivery, not parallel extraction.</p>
+<p>The <a href="../media/README-14.md">isolated initializer repeat</a> of the 21 fixed
+corpus initializers replaces the earlier contaminated timings. Restoring an image after instantiation
+runs at 1.08x to 1.40x of conventional initialization (earlier run 1.0x to 2.05x), and a
+whole-memory application cache at 0.52x to 0.94x. All 21 bake attempts refuse the module's start
+section, so a fresh instance followed by <code>applyImage</code> is the route measured.</p>
+<p>On a real Drupal host the <a href="../media/README-15.md">configuration study</a> runs 13
+selected configurations in four arms (52 executions). A strict configuration key admits 7 of 13 and
+a module key plus the consumer's configuration and entity reset admits 12 of 13. Enabling a module
+falls back to a fresh boot. All 39 safe-arm first responses match native status and normalized HTML,
+and the deliberately unguarded arm serves stale site-name and theme-color output. These are selected
+cases and not a production eligibility rate. The <a href="../media/README-16.md">lifecycle study</a>
+measures 45 Drupal executions in 15 paired rounds on the M2 Pro:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align:right">native</th>
+<th style="text-align:right">image in the module</th>
+<th style="text-align:right">copied image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total elapsed, median</td>
+<td style="text-align:right">830.5 ms</td>
+<td style="text-align:right">444.7 ms</td>
+<td style="text-align:right">460.6 ms</td>
+</tr>
+<tr>
+<td>Process CPU, median</td>
+<td style="text-align:right">1,412.8 ms</td>
+<td style="text-align:right">806.5 ms</td>
+<td style="text-align:right">814.7 ms</td>
+</tr>
+<tr>
+<td>Paired speedup</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">1.90x [1.82, 1.97]</td>
+<td style="text-align:right">1.88x [1.79, 1.91]</td>
+</tr>
+<tr>
+<td>Warm second render</td>
+<td style="text-align:right">66.0 ms</td>
+<td style="text-align:right">62.9 ms</td>
+<td style="text-align:right">64.3 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Generating the image costs 10.4 s elapsed and 11.4 s CPU. Taking the difference of the medians, the
+image pays for itself after 27 boots in elapsed time and 19 in CPU, excluding shipping, storage and
+retention. That is a model and not measured fleet amortization. The current image uploads and
+instantiates on the Free plan (60,406.52 KiB uncompressed, 2 ms reported startup) with stubbed
+imports: Durable Object CPU is 14 ms for the original module, 49 ms baked into the module and 92 to 98.5 ms
+when the image is copied from assets, which also takes 432 to 543 ms of wall time. This delivery study renders
+nothing. The existing deployed serving results above remain the evidence for a rendered page.</p>
+<h4 id="replay-safety-contract" class="tsd-anchor-link">Replay-Safety Contract<a href="#replay-safety-contract" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4>
+<p>An image replay is correct only for the state it captures, and the host owns the rest. The contract,
+as tested:</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>State</th>
+<th>Treatment</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Captured</td>
+<td>linear memory, mutable numeric globals</td>
+<td>stored in the image and restored</td>
+<td>all 52 configuration executions and 45 lifecycle executions match native</td>
+</tr>
+<tr>
+<td>Renewed</td>
+<td>key and salt, random state, settings, memory caches and cache collectors, configuration and entity state</td>
+<td>rewritten by the consumer's renewal code before the first request</td>
+<td>key and salt hashes match independent boots; 32 of 32 random triples and 4 of 4 login form IDs are distinct</td>
+</tr>
+<tr>
+<td>Rebound</td>
+<td>streams and named handles</td>
+<td>recreated by name; unnamed handles are refused</td>
+<td>one stream and four named, sealed handles replay; zero unnamable handles</td>
+</tr>
+<tr>
+<td>Invalidated</td>
+<td>module set, host driver, pack, fragments, module and glue digests</td>
+<td>any change forces a fresh boot</td>
+<td>enabling a module falls back in 1 of 13 cases</td>
+</tr>
+<tr>
+<td>Refused</td>
+<td>start function, passive segment drops, Wasm GC objects, reference or vector globals, table slot changes</td>
+<td>the library keeps the original bytes or refuses</td>
+<td>refused in tests; 21 of 21 corpus modules refuse baking</td>
+</tr>
+</tbody>
+</table>
+<p>Copied memory retains sentinel secrets, random state and stale external handles even when
+<code>checkBaked</code> reports equal segments, and explicit renewal and rebinding repair each. Configuration,
+assets, driver, module set and cache generation belong in a caller-owned fingerprint, and comparing a
+fingerprint does not discover those dependencies. The bake request's PHP session identifier stays in
+the image, so a host that does not set a new identifier at the start of each request hands every
+replay the same public identifier. Arbitrary live host handles, changed tables, sockets,
+transactions, extension credentials and changes to the driver or fragments are outside this
+evidence and need a consumer contract or a fresh boot.</p>
+<h3 id="managed-costs-and-state-loss" class="tsd-anchor-link">Managed Costs and State Loss<a href="#managed-costs-and-state-loss" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><a href="../media/README-17.md">The managed phase study</a> preserves failed retention mechanisms
+and a final direct-invocation cohort: 32 of 32 operations exact at 128 KiB and 8 MiB, widths 2 and 8. Instrumented lifecycle wall ratios run from 0.841x to 1.419x and include setup, an oracle,
+diagnostics, four operations and close. Larger snapshots use tens of MiB of wire traffic per
+operation. Stored event recovery supplies deduplicated CPU, which includes the oracle and
+diagnostics and does not isolate region compute, validation or transfer. An account-wide, lagged
+duration increment does not establish an attributable bill, so no price is stated.</p>
+<p>Later runs cover width four and larger snapshots. At width four, 128 KiB and 8 MiB complete 16 of 16
+operations exact, and the bytes sent per automatic operation equal the width-two figures. At 16 MiB
+the automatic operations complete through the lanes with no fallback and 67.1 MB sent per operation.
+At 32 MiB, which is the default snapshot limit, every lane call fails: the serialized frame is
+33,554,540 bytes against the platform's 32 MiB limit for RPC arguments, so all four operations
+complete exact through native fallback. The usable snapshot on this backend is below 32 MiB by the
+frame header, and the default limit is not reachable. CPU for these runs was not recovered.</p>
+<p>The <a href="../media/README-18.md">state-loss analysis</a> asks why the owner lost state in the
+earlier arrangements. Routing is excluded: the object identifier never differs from setup's in any
+later operation. The owner's in-memory state is replaced, and the module identifier changes in 14, 15
+and 45 later operations of three arrangements and in none of 56 direct calls inside one
+invocation. A new run of the separate-request arrangement with a 65 second wait after starting tail
+still loses state in all 4 native cells (the owner runs the workload itself) and in none of 4
+automatic cells, where the older arrangements lost 20 of 96 failures in automatic cells. That fits
+tail-induced replacement for the automatic cells and leaves the native-cell loss unexplained: it
+correlates with 0.3 s to 0.6 s of owner CPU per operation and does not depend on memory size. A
+reusable session on this backend cannot assume the owner's state survives between requests, and
+should rebuild it from the request or run every operation in one invocation. Module identifiers are
+not isolate identities.</p>
+<p>The sparse snapshot encoding (<code>snapshotEncoding: 'auto'</code>) omits all-zero pages. It is exact in unit
+tests and has no deployed measurement, so it is opt-in.</p>
+<h3 id="changes-in-101" class="tsd-anchor-link">Changes in 1.0.1<a href="#changes-in-101" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Added.</strong> <code>@gmitch215/folio/context</code> with <code>InstanceCheckpoint</code> and <code>prepareContext</code> (from
+<code>./compiler</code>) for private-context reset; the <code>adaptiveRouting</code> option; the <code>snapshotEncoding</code> option
+for managed lanes; <code>ImageMismatchError</code> code <code>start</code>. The research harnesses (<code>scripts/research/</code>),
+the manifest verifier, the study exporter and the derived summaries are tooling and are not part of
+the package.</p>
+<p><strong>Fixed.</strong> <code>bakeModule</code> accepted a module with a start function, which then ran again over the
+restored heap: a module whose start function increments a word captured the value 2 and read 3
+after instantiation. It now refuses such a module. A <code>TaskPool</code> audit compared a changed caller buffer against the submitted copy and
+raised a false <code>TaskConflictError</code>; it now keeps its own copy, and a <code>SharedArrayBuffer</code>-backed input
+is copied before posting because <code>postMessage</code> shares it. The research analyzer divided by a zero
+native CPU reading for very short runs and now skips those pairs.</p>
+<p><strong>Changed.</strong> <code>captureImage</code> compares table slots by function identity and no longer by name, so the
+caller copies the table references before boot on the same instance, and a table from another
+instance reports every slot changed. The new reset code refuses modules whose state its exports
+cannot restore (passive segment drops, Wasm GC objects, reference and vector globals) and the caller
+creates a fresh instance for them.</p>
+<p><strong>Defaults.</strong> Execution routing, admission thresholds (<code>minimumRegionWork</code> 200,000), snapshot
+encoding, worker counts and transaction budgets are unchanged. Two defaults of the <code>./bake</code> subpath
+change: modules with a start function are refused, and table capture uses identity. <code>adaptiveRouting</code>
+and <code>snapshotEncoding: 'auto'</code> are off by default.</p>
+<h3 id="remaining-work" class="tsd-anchor-link">Remaining Work<a href="#remaining-work" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Open in v1.0.1 and needing their own releases or deployments:</p>
+<ul>
+<li>Live managed measurements still open: first-use against warm phases with each phase separated, CPU
+for the width-four and large-snapshot runs, the sparse encoding on a deployed lane (it could make
+arenas near the RPC limit fit), and cost per completed operation. They need deployments on the
+shared Free-plan allowance.</li>
+<li>Automatic discovery of independent task boundaries, any result on a full application or a
+database workload, and a third machine for replication.</li>
+<li>Real host state beyond Drupal's renewal code: extension credentials, sockets, transactions and
+changed drivers.</li>
+<li>General browser extraction without JSPI, transparent distributed paging with durable recovery,
+automatic parallelism inside an ordinary PHP request, and complete consumer process and effects
+integration. The task and reset results do not close these.</li>
+</ul>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -3630,9 +3957,20 @@ setting, package installation, unrelated service restart or protected mount acce
 <li><a href="#📜-historical-copied-memory-results"><span>📜 <wbr/>Historical <wbr/>Copied-<wbr/>Memory <wbr/>Results</span></a></li>
 <li><a href="#⚠️-limits-and-open-questions"><span>⚠️ <wbr/>Limits and <wbr/>Open <wbr/>Questions</span></a></li>
 <li><a href="#✅-reproduction-and-verification"><span>✅ <wbr/>Reproduction and <wbr/>Verification</span></a></li>
-<li><a href="#📚-references"><span>📚 <wbr/>References</span></a></li></ul></div></details></div>
+<li><a href="#📚-references"><span>📚 <wbr/>References</span></a></li>
+<li><a href="#🔬-v101-research-results"><span>🔬 v1.0.1 <wbr/>Research <wbr/>Results</span></a></li>
+<li>
+<ul>
+<li><a href="#automatic-execution-research-question-and-contribution"><span>Automatic <wbr/>Execution: <wbr/>Research <wbr/>Question and <wbr/>Contribution</span></a></li>
+<li><a href="#boot-images-research-question-and-contribution"><span>Boot <wbr/>Images: <wbr/>Research <wbr/>Question and <wbr/>Contribution</span></a></li>
+<li>
+<ul>
+<li><a href="#replay-safety-contract"><span>Replay-<wbr/>Safety <wbr/>Contract</span></a></li></ul></li>
+<li><a href="#managed-costs-and-state-loss"><span>Managed <wbr/>Costs and <wbr/>State <wbr/>Loss</span></a></li>
+<li><a href="#changes-in-101"><span>Changes in 1.0.1</span></a></li>
+<li><a href="#remaining-work"><span>Remaining <wbr/>Work</span></a></li></ul></li></ul></div></details></div>
 <div class="site-menu">
-<nav class="tsd-navigation"><a href="../modules.html">@gmitch215/folio - v1.0.0</a>
+<nav class="tsd-navigation"><a href="../modules.html">@gmitch215/folio - v1.0.1</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
 <li>Loading...</li></ul></nav></div></div></div><footer>
 <p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>

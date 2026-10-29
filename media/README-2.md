@@ -2,12 +2,13 @@
 
 The folder decides the runtime.
 
-| where              | what                                                            | runtime                   |
-| ------------------ | --------------------------------------------------------------- | ------------------------- |
-| `scripts/build/`   | C fixture compilation and prepared-plan generation              | Bun, also runs under Node |
-| `scripts/analyze/` | deterministic summaries of the raw samples in `results/`        | Bun, also runs under Node |
-| `scripts/probe/`   | measurement instruments that need real `worker_threads` and V8  | Node 26                   |
-| `scripts/rig/`     | the timing rig on the Ryzen machine (`taskset`, `nice`, a lock) | Bash                      |
+| where               | what                                                                                                       | runtime                   |
+| ------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------- |
+| `scripts/build/`    | C fixture compilation and prepared-plan generation                                                         | Bun, also runs under Node |
+| `scripts/analyze/`  | deterministic summaries of the raw samples in `results/`                                                   | Bun, also runs under Node |
+| `scripts/probe/`    | measurement instruments that need real `worker_threads` and V8                                             | Node 26                   |
+| `scripts/rig/`      | the timing rig on the Ryzen machine (`taskset`, `nice`, a lock)                                            | Bash                      |
+| `scripts/research/` | the v1.0.1 corpus, reset, crossover and differential studies, and the tools that summarize and verify them | Node 26, Bash             |
 
 Everything outside `probe/` and `rig/` is TypeScript and uses `import.meta.main`, so
 `bun scripts/build/fixtures.ts` and `node scripts/build/fixtures.ts` both work.
@@ -27,10 +28,38 @@ evidence names.
 ## Analyze
 
 `bun scripts/analyze/run.ts` regenerates every `results/*/summary.json` from its raw `.jsonl`.
-Each analyzer also takes a set name: `bun scripts/analyze/control.ts 20261020-control-b`. The
+Each analyzer also takes a set name: `bun scripts/analyze/control.ts execution/control`. The
 outputs match the summaries recorded on the Ryzen rig byte for byte, with one exception:
-`results/20261019/summary.json` lists its input files in sorted order now, because directory
+`results/memory/sharing/summary.json` lists its input files in sorted order now, because directory
 listing order differed between the two machines.
+
+## Research
+
+`scripts/research/` holds the studies behind the v1.0.1 section of `TECHNICAL_REPORT.md`. Every
+harness writes a new `raw.jsonl` and refuses to overwrite an existing one. Each raw file starts with
+an environment record that names the runtime, hardware and a SHA256 of every source file it ran.
+
+| file                                          | what it does                                                                                                     |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `corpus.ts`, `cases/`                         | builds the 21 pinned upstream kernels and checks them against native                                             |
+| `corpus-serial.ts`, `admission-diagnostic.ts` | single-entry native against Folio; the threshold-zero diagnostic, one process per case                           |
+| `corpus-mechanisms.ts`                        | explicit tasks against conventional workers with a `whole`, `pages` or `checkpoint` reset (`FOLIO_CORPUS_RESET`) |
+| `inputs.ts`                                   | five input profiles per kernel on persistent contexts against fresh native instances                             |
+| `boot-eligibility.ts`                         | initialization, image restore and an application cache on the corpus initializers                                |
+| `crossover.ts`, `graded.ts`                   | synthetic compute, stream and conflict cells; graded conflict rates and adaptive routing                         |
+| `differential.ts`                             | generated programs and guard-refusal loops against native at widths 1, 2, 4 and 8                                |
+| `matched.sh`, `backing.sh`, `completion.sh`   | run the studies in sequence on the Linux rig under a timing lock                                                 |
+| `analyze.ts`                                  | paired summaries with bootstrap intervals from a raw file                                                        |
+| `derive.ts`, `denominators.ts`                | blocker histogram, state-loss counts and the corpus denominator table                                            |
+| `export.ts`, `evidence.ts`                    | copy a run into `results/` with summaries and a manifest; verify every manifest and the historical index         |
+
+```sh
+node scripts/research/export.ts results/topic/study run.jsonl:raw.jsonl
+node scripts/research/evidence.ts --summaries
+```
+
+The study README must exist before `export.ts` writes the manifest. Timing studies need a quiet
+host: record the load average in the data and discard a run that overlapped other work.
 
 ## Probes
 
@@ -102,7 +131,7 @@ dispatched, replays and fallbacks.
 
 `FOLIO_OLD_BUILD=1` makes `consumer.ts`, `php-workloads.ts` and `php-render-pairs.ts` add old-build
 arms (`old-N`) to every round, using `old-build.ts` and a separate prepared PHP plan. The archive
-lives in `results/20261020-regress/`, so no git history is needed to rerun the comparison.
+lives in `results/execution/admission/`, so no git history is needed to rerun the comparison.
 `consumers/small-trips.ts` runs a compute loop whose bound is a parameter, at a count below the
 admission threshold and at one just above it, to show what the per-call check does.
 
