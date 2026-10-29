@@ -65,6 +65,9 @@ type ExecuteRequest = FrameIdentity & {
 	snapshot?: SnapshotPages;
 };
 
+// workers rpc rejects serialized arguments over 32 MiB; the margin covers the other arguments and serializer tags
+const rpcFrameLimit = 32 * 1048576 - 4096;
+
 function integer(value: number, minimum: number, maximum: number, label: string): number {
 	if (!Number.isSafeInteger(value) || value < minimum || value > maximum)
 		throw new RangeError(`invalid ${label}`);
@@ -233,7 +236,9 @@ export class ManagedFolio {
 			memory?: WebAssembly.Memory;
 			fuel?: number;
 			maxTransactionBytes?: number;
+			/** Largest arena a run may snapshot; the default is 31 MiB. */
 			maximumSnapshotBytes?: number;
+			/** Largest request frame a lane transport accepts. A larger frame is not sent and the call falls back to the owner. The default is the snapshot limit plus 1 MiB, capped below the 32 MiB Workers RPC argument limit. */
 			maximumFrameBytes?: number;
 			promising?: readonly string[];
 			/** `dense` (default) sends the whole snapshot; `auto` elides zero pages, which lanes from 1.0.0 reject. */
@@ -247,13 +252,14 @@ export class ManagedFolio {
 		this.#lanes = options.lanes;
 		integer(this.#lanes.length, 1, 64, 'lane count');
 		this.#maximumSnapshotBytes = integer(
-			options.maximumSnapshotBytes ?? 32 * 1048576,
+			options.maximumSnapshotBytes ?? 31 * 1048576,
 			65536,
 			0x100000000,
 			'snapshot limit'
 		);
 		this.#maximumFrameBytes = integer(
-			options.maximumFrameBytes ?? this.#maximumSnapshotBytes + 1048576,
+			options.maximumFrameBytes ??
+				Math.min(this.#maximumSnapshotBytes + 1048576, rpcFrameLimit),
 			65536,
 			0x100100000,
 			'frame limit'
@@ -490,7 +496,9 @@ export class ManagedFolio {
 			dispatch: async (lane, calls, generation) => {
 				try {
 					if (this.memory.buffer.byteLength > this.#maximumSnapshotBytes)
-						throw new RangeError('snapshot exceeds limit');
+						throw new RangeError(
+							`snapshot of ${this.memory.buffer.byteLength} bytes exceeds the limit of ${this.#maximumSnapshotBytes} bytes`
+						);
 					const identity = { session: this.#session, epoch, sequence: ++this.#sequence };
 					if (snapshotGeneration !== generation) {
 						const memory = new Uint8Array(this.memory.buffer);

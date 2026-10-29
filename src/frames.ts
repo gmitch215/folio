@@ -82,7 +82,7 @@ export function encodeFrame(
 	if (metadata.length > 65536) throw new RangeError('frame header exceeds limit');
 	const length = 12 + metadata.length + payload.length;
 	if (payload.length > 0xffffffff || length > maximum)
-		throw new RangeError('frame exceeds limit');
+		throw new RangeError(`frame of ${length} bytes exceeds the limit of ${maximum} bytes`);
 	const bytes = new Uint8Array(length);
 	const view = new DataView(bytes.buffer);
 	view.setUint32(0, magic, true);

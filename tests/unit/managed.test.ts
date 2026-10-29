@@ -595,3 +595,75 @@ test('lane retries instance allocation after a failed first construction', () =>
 		executor.close();
 	}
 });
+
+const framed = (memory: string, stores = 2) =>
+	artifact(
+		wasm(`(module (memory (export "memory") ${memory} shared) ${put}
+		(func (export "main") (result i32)
+			${Array.from({ length: stores }, (_, index) => `(call $put (i32.const ${index * 4}) (i32.const ${index === 1 ? 11 : index + 20}))`).join(' ')}
+			(i32.load (i32.const 4))))`)
+	);
+async function sent(
+	program: ManagedArtifact,
+	options: { snapshotEncoding?: 'auto' | 'dense'; maximumFrameBytes?: number } = {}
+) {
+	const frames: number[] = [];
+	const pool = new ManagedFolio(program, {
+		lanes: lanes(program, 2).map((lane) => ({
+			execute: async (frame: Uint8Array) => {
+				frames.push(frame.length);
+				return lane.execute(frame);
+			},
+			close: lane.close
+		})),
+		...options
+	});
+	try {
+		const report = await pool.run('main');
+		assert.deepEqual(report.values, [11]);
+		return { frames, fallbacks: report.transportFallbacks, diagnostics: [...pool.diagnostics] };
+	} finally {
+		await pool.close();
+	}
+}
+
+test('a frame over the transport limit is not sent and the fallback names both sizes', async () => {
+	const largestFrames: number[] = [];
+	for (const stores of [2, 6]) {
+		const program = framed('8 8', stores);
+		const largest = Math.max(...(await sent(program)).frames);
+		largestFrames.push(largest);
+		const exact = await sent(program, { maximumFrameBytes: largest });
+		assert.equal(exact.fallbacks, 0);
+		const over = await sent(program, { maximumFrameBytes: largest - 1 });
+		assert.ok(over.fallbacks >= 1);
+		assert.ok(over.frames.every((length) => length < largest));
+		assert.match(
+			over.diagnostics.join('\n'),
+			new RegExp(`frame of ${largest} bytes exceeds the limit of ${largest - 1} bytes`)
+		);
+	}
+	assert.ok(largestFrames[0]! < largestFrames[1]!);
+});
+
+test('sparse frames fit under a limit that rejects the dense frame of the same arena', async () => {
+	const program = framed('8 8');
+	const dense = Math.max(...(await sent(program)).frames);
+	const sparse = Math.max(...(await sent(program, { snapshotEncoding: 'auto' })).frames);
+	assert.ok(sparse < dense / 4);
+	const limit = { maximumFrameBytes: Math.max(sparse, 65536) };
+	assert.equal((await sent(program, { ...limit, snapshotEncoding: 'auto' })).fallbacks, 0);
+	assert.ok((await sent(program, limit)).fallbacks >= 1);
+});
+
+test('the default limits keep a dense frame under the 32 MiB RPC argument limit', async () => {
+	const full = await sent(framed('512 512'));
+	assert.deepEqual(full.frames, []);
+	assert.match(
+		full.diagnostics.join('\n'),
+		/snapshot of 33554432 bytes exceeds the limit of 32505856 bytes/
+	);
+	const largest = await sent(framed('496 496'));
+	assert.equal(largest.fallbacks, 0);
+	assert.ok(Math.max(...largest.frames) < 32 * 1048576 - 4096);
+});
