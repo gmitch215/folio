@@ -1,0 +1,419 @@
+{
+  "baselineRestored": true,
+  "completed": 25,
+  "failures": 12,
+  "telemetryEvents": 119,
+  "uniqueTelemetryEvents": 119,
+  "completeCpuCohorts": 0,
+  "completeCpuOperations": 10,
+  "summary": [
+    {
+      "memoryBytes": 131072,
+      "width": 1,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 131072,
+      "width": 2,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 4,
+          "completed": 3,
+          "firstUseWallMs": 381.6292500000127,
+          "warmMedianWallMs": 367.7110834999985,
+          "warmMedianOwnerAwaitMs": 295.5,
+          "warmMedianCpuMs": 277.5,
+          "warmCpuSamples": 2,
+          "warmRequestsPerOperation": 2,
+          "warmBytesPerOperation": 0,
+          "warmRequestRateEquivalentUsd": 4.5e-7
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 621.8931250000023,
+          "warmMedianWallMs": 264.9109579999931,
+          "warmMedianOwnerAwaitMs": 214,
+          "warmMedianCpuMs": 286,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 551776,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": 1.3880553914270624,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 131072,
+      "width": 4,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 4,
+          "completed": 3,
+          "firstUseWallMs": 536.880541999999,
+          "warmMedianWallMs": 328.52856249999604,
+          "warmMedianOwnerAwaitMs": 285.5,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": 2,
+          "warmBytesPerOperation": 0,
+          "warmRequestRateEquivalentUsd": 4.5e-7
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 384.8050409999996,
+          "warmMedianWallMs": 193.41075000001,
+          "warmMedianOwnerAwaitMs": 160,
+          "warmMedianCpuMs": 363,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 551776,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": 1.6986054937483002,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 131072,
+      "width": 8,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 1,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 2,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 4,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 8,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 1,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 2,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 3,
+          "completed": 2,
+          "firstUseWallMs": 544.7808749999967,
+          "warmMedianWallMs": 727.1962500000081,
+          "warmMedianOwnerAwaitMs": 694,
+          "warmMedianCpuMs": 669,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 2,
+          "warmBytesPerOperation": 0,
+          "warmRequestRateEquivalentUsd": 4.5e-7
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 951.2509580000042,
+          "warmMedianWallMs": 790.3289579999982,
+          "warmMedianOwnerAwaitMs": 711,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 33581920,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": 0.9201184426295687,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 4,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 2,
+          "completed": 1,
+          "firstUseWallMs": 831.6899159999884,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 1062.0101250000007,
+          "warmMedianWallMs": 624.6044170000096,
+          "warmMedianOwnerAwaitMs": 584,
+          "warmMedianCpuMs": 708,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 33581920,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 8,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    }
+  ]
+}

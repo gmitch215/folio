@@ -1,0 +1,71 @@
+{
+  "schema": "folio.state-loss.v1",
+  "scope": "Module identifiers are not isolate identities; object identifiers are routing identities.",
+  "studies": {
+    "separate": {
+      "cells": 24,
+      "failures": 42,
+      "failuresInNativeCells": 33,
+      "failuresInAutomaticCells": 9,
+      "failureMessages": {
+        "Error: owner was evicted; setup is required": 42
+      },
+      "laterOperationsSameModule": 107,
+      "laterOperationsOtherModule": 14,
+      "laterOperationsOtherObject": 0
+    },
+    "held": {
+      "cells": 24,
+      "failures": 41,
+      "failuresInNativeCells": 33,
+      "failuresInAutomaticCells": 8,
+      "failureMessages": {
+        "Error: owner was evicted; setup is required": 41
+      },
+      "laterOperationsSameModule": 105,
+      "laterOperationsOtherModule": 15,
+      "laterOperationsOtherObject": 0
+    },
+    "reentrant": {
+      "cells": 24,
+      "failures": 13,
+      "failuresInNativeCells": 10,
+      "failuresInAutomaticCells": 3,
+      "failureMessages": {
+        "Error: owner was evicted; setup is required": 13
+      },
+      "laterOperationsSameModule": 104,
+      "laterOperationsOtherModule": 45,
+      "laterOperationsOtherObject": 0
+    },
+    "settled-separate": {
+      "cells": 8,
+      "failures": 12,
+      "failuresInNativeCells": 12,
+      "failuresInAutomaticCells": 0,
+      "failureMessages": {
+        "Error: owner state is absent; setup is required": 12
+      },
+      "laterOperationsSameModule": 37,
+      "laterOperationsOtherModule": 4,
+      "laterOperationsOtherObject": 0
+    },
+    "complete": {
+      "cells": 8,
+      "failures": 0,
+      "failuresInNativeCells": 0,
+      "failuresInAutomaticCells": 0,
+      "failureMessages": {},
+      "laterOperationsSameModule": 56,
+      "laterOperationsOtherModule": 0,
+      "laterOperationsOtherObject": 0
+    }
+  },
+  "inputSha256": [
+    "f26b5d93f133f5af559610ee5171c1cf772ecd8397b12620cc1e2c3db58e5286",
+    "6b94ce4c3d84ff150b0eda2a1902a2fac6888aff93896dde3c4a72a9b512ee6d",
+    "5070f70c8fa978d4801cb2b974ca3dab77efa93d7bdb1de31e5db71728aef900",
+    "b9c5c7481f93de27f57af1b5eec08046a0d9067ef230a015d73bd9c85955ac69",
+    "71627fc3a17012044f955ab66913eb10d9fd9bc7d16fc7a26d556fdd4aa6b3a1"
+  ]
+}

@@ -2,7 +2,7 @@
 
 Instrument: [phases](../../../experiments/managed/phases/README.md).
 [METHOD.md](../../../experiments/managed/phases/METHOD.md) defines the comparison and clocks.
-All five deployed studies restored their account baseline. Records preserve exact completed
+All eight deployed studies restored their account baseline. Records preserve exact completed
 operations and state-loss failures; no memory or return mismatch occurred.
 
 | Record | Completed Operations | State-Loss Failures | Invocation Structure |
@@ -11,9 +11,14 @@ operations and state-loss failures; no memory or return mismatch occurred.
 | [held.json](held.json) | 78 | 41 | One entry request per cell |
 | [reentrant-pilot.json](reentrant-pilot.json) | 8 | 2 | Two self-RPC pilot cells |
 | [reentrant.json](reentrant.json) | 77 | 13 | Self-RPC matrix |
+| [settled-separate.json](settled-separate.json) | 49 | 12 | Separate external requests after a 65 second tail settle wait |
+| [width-four.json](width-four.json) | 36 | 0 | Direct calls, width four, 128 KiB and 8 MiB |
+| [large-snapshots.json](large-snapshots.json) | 34 | 2 | Direct calls, width two, 16 MiB and 32 MiB |
 | [complete.json](complete.json) | 32 | 0 | Direct calls within an owner invocation |
 
-Each record has a matching `.summary.json`. The final four-operation cells retain identical
+Each record has a matching `.summary.json`. `settled-separate.json` (61 external requests), `width-four.json` (4) and `large-snapshots.json` (4) are later runs with no SQL calls; the request totals below cover the first five. The settled run feeds the [state-loss analysis](../state-loss/README.md).
+
+At 16 MiB the four automatic operations complete through the lanes with no fallback and 67.1 MB sent per operation. At 32 MiB, the default snapshot limit, every lane call fails: the serialized frame is 33,554,540 bytes against the platform's 32 MiB limit for RPC arguments. The four operations still complete exact through native fallback (`transportFallbacks` 4), and the two diagnostic frame-copy phases fail with the same error. The usable snapshot is therefore below 32 MiB by the frame header. At width four the wire bytes per automatic operation equal the width-two figures (551,776 at 128 KiB, 33,581,920 at 8 MiB); CPU was not recovered for these runs. The final four-operation cells retain identical
 instance nonces, module UUIDs and object IDs. One cell has complete live-tail CPU; the others retain
 null tail aggregates. [stored.json](stored.json) joins 449 persisted log/event records by request
 identity and recovers all 192 expected invocation metrics, completing CPU for all eight final cells.

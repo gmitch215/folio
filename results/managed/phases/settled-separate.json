@@ -1,0 +1,5097 @@
+{
+  "schema": "folio.managed-phases.v1",
+  "entryMode": "separate",
+  "capturedAt": "2026-10-29T19:35:21.782Z",
+  "environment": {
+    "environment": {
+      "kind": "environment",
+      "schema": "folio.research.v1",
+      "observedAt": "2026-10-29T19:33:12.144Z",
+      "revision": "160f2685b669a8a598e52dbc16e16b1877552485",
+      "node": "v26.8.2",
+      "v8": "14.6.202.34-node.28",
+      "os": "darwin",
+      "release": "25.5.0",
+      "cpu": "Apple M2 Pro",
+      "hardwareThreads": 12,
+      "load": [
+        3.98583984375,
+        4.88134765625,
+        4.8876953125
+      ],
+      "configuration": {
+        "study": "managed-phases"
+      },
+      "sources": {
+        "src/bake.ts": "e6ef4e996680d3b5451b7e43526746e2f80934255a08ed478d03540d8fd04b11",
+        "src/browser-worker.ts": "90786fe738fd92e5d628465cb187d41790668d3fcf6fb0c71d92e761a3c78a3e",
+        "src/browser.ts": "242aa96ecbcdbd3839e647c5fda2537456bcfcad8113415f00d056a703c2dbd4",
+        "src/compiler.ts": "ecbf5fbb57cbba465e9c615716c5a104351eb8df19129a5e9201f3795e339614",
+        "src/context.ts": "fed8524229fb621be631e1377a9e35a28a06a7ff0a09ff92932069243ba049ba",
+        "src/coordinator.ts": "4b9c5cc0f72d73c588ed3bffb17e40d8fd2d3fb2bb0cd5646e24ab967bc70ce8",
+        "src/extract.ts": "90f8d7c7ad3ae7c532436d7763f876081315e83cb13f0d31af8c2ee53de7c323",
+        "src/frames.ts": "cf4b135aabfcc5bb733254cc232b25fd2edb2919a4ff489003939547416f58ca",
+        "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
+        "src/host.ts": "8b0fafb6ef8991778598cc78fd7e10415f49875c30b79c75e4e7eac901c80fed",
+        "src/import-order.ts": "0b725a68bd59f9c0e0a5bc63fcc4c31f08b5f718438e67d271a44f4d7e575905",
+        "src/index.ts": "a8c9f3dfbefa3170329c7950cb58f5e3c20e0f7264affb0ffd3bd1b3c1ba364b",
+        "src/managed.ts": "b6713caec874043186c9c1490da1b6672e8659360286c2b1da40118eb1ef0f25",
+        "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+        "src/node.ts": "126b6b650ac4c3469d14d6239f90f84657ab7385a9fcb54d7235a4033d559263",
+        "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
+        "src/remote.ts": "16dbba9b681966a2b4040c82fe3ca98c5a171eee25fd8d7ce43edf0bb5222e8d",
+        "src/tasks.ts": "7decb7a48c7a3aef2781b92bb3179a6bde434843996293ea8e90a947ca39c1fc",
+        "src/transaction.ts": "c4ae45c13c8e980ecb9811f69aedc243561d73d39a6eb855bfeeb51bf600c4f4",
+        "src/values.ts": "56b4c8777a3856441480eee0cb585a2b40e6b03966c3efc245e17a2536196374",
+        "src/worker.ts": "f1ab49593f1ce9bbb39a7adb4727c2cb4c303d74ceccc674474ef1d991ee82e5",
+        "scripts/research/admission-diagnostic.ts": "8dd8ea2b580f5765b699615045801df1296eb89e95b0eb71c34498551d035f34",
+        "scripts/research/analyze.ts": "f7896821d1ca9bc3b132d6f5f2da6723e9e3016c9e90cbd154a763a1cac5691b",
+        "scripts/research/boot-eligibility.ts": "32717c8da20fcf23210b814592ae1584a0da4284cd51c5e43ee629c74a60327d",
+        "scripts/research/cases/include/assert.h": "2e0b7e0adab1df0793e150b60890843771f584e8094b3e74fdbd1a6d0d3f4508",
+        "scripts/research/cases/include/int_lib.h": "cf4f25bd15803ccfc1774ccab9ed5228132758cc546e180f9f37f31f65e90931",
+        "scripts/research/cases/include/math.h": "6f6751b2957db0e6615f14371cc3132d0decf54b175e2670be6e8e6de08dfb3b",
+        "scripts/research/cases/include/memory.h": "3234d45b96216a3c36f25932364b800eeadf703964e85fdf25cabacf9aeedc2e",
+        "scripts/research/cases/include/miniz_export.h": "195259dc89fb3f83a96426a90ee03dc45acef113150cd3475ea9cfbf1f7784f3",
+        "scripts/research/cases/include/stdio.h": "0bd8c3e9e8a873b890704afcd45369c8e7d79991be6d2de55ec058264219ae77",
+        "scripts/research/cases/include/stdlib.h": "c328dcb08baa26c16bc8b768b4c0ca32e2b32e94772c419dda8f9fb25e3695bb",
+        "scripts/research/cases/include/string.h": "3db545ced6638221254c50e3d022269170442967dc330f081f9f996d9c4e228a",
+        "scripts/research/cases/kernel.c": "ed306b90b0e9e4e2479379f12b4cdf9f9ef7f1f220a12bf5c878d5fb7986035b",
+        "scripts/research/cases/support.c": "e7274295036f111a09f4728b0c821728c2403d36f3195b1db4a1d174014d8630",
+        "scripts/research/cases/upstream.ts": "74ef77e2bdc5a9bb32ad4057227d34f3ca562df31749dfeba5fdb27d8c6d30ac",
+        "scripts/research/corpus-manifest.json": "8ba08eaab61702d48e80cca5ffa1930c95aa727d9ed8174926305be512b86ce4",
+        "scripts/research/corpus-mechanisms.ts": "24ba33e586bdc64ad586bbb17972ca13784565d3fb5baee6150645194dc57045",
+        "scripts/research/corpus-serial.ts": "af524472b68bb6b10c58d814825bbb5038f96b387cad7f6ce603726e1d78bcab",
+        "scripts/research/corpus-worker.ts": "a13a2b033c394d1bd7c6f84716d365d8376be36c57b8a8840935c85abd25fc2f",
+        "scripts/research/corpus.ts": "51f63c69882721e4f35857cb8d7444105b1847a4cbf62401b02e2ab42e1f4b04",
+        "scripts/research/crossover-worker.ts": "ce3a36ab1695c973c9a69ad0eb52bcc4802fb3e8fb840c6c49a382d1fe7f960f",
+        "scripts/research/crossover.ts": "f0958198a63172852201a6746bc88211ed209f57f43881951da8c0dbd12a8b18",
+        "scripts/research/denominators.ts": "82e24c9c5123aa31fe91dd00de7967235eedc990fead83753a2cc73bed6d863b",
+        "scripts/research/derive.ts": "edf0e67c73fb56f0628907216ed45c16452893460db27777b6ba185b045d13f9",
+        "scripts/research/differential.ts": "5e1fe21f16b47a4809c2ec2b838fcbdbb7f9c09b68955df06719b96b5ff221c7",
+        "scripts/research/environment.ts": "35eed05e53ff27f686dd2d18a4fb8a3390c084738aef4fb5c2b30c00d027ce75",
+        "scripts/research/evidence.ts": "0a2dc0defcba2a45e24961a3a86acdab192e67a77026a5229b9f45c611d6defe",
+        "scripts/research/export.ts": "a1eb54d4c78bc334b77f12b9b90e9080d78a0f72c77166ead704b2b7743399df",
+        "scripts/research/graded.ts": "19283154e848255b79bc5eb5b709afa5be58a3065e44c6f356915b8195b8a1d7",
+        "scripts/research/inputs.ts": "ec5e1a0075f05ba27cbd7af376b907086d483c633e67c894729232f840af758e"
+      },
+      "sourceDigest": "2f03f0e412c4c2bdb231e39d79f2946739acbb3d5cd9475ab9a6d30f482ac7ab"
+    },
+    "sources": [
+      {
+        "path": "experiments/managed/phases/wrangler.jsonc",
+        "bytes": 454,
+        "sha256": "99075c0071df627a13b0a197fc794429ab2787f7cc2db146ac12fdee51eba71a"
+      },
+      {
+        "path": "experiments/managed/phases/worker.ts",
+        "bytes": 11699,
+        "sha256": "472031f5beba335104f77ec71485feceea4c3c2ecbb0be97f3b64802dbf08a99"
+      },
+      {
+        "path": "experiments/managed/phases/drive.ts",
+        "bytes": 7863,
+        "sha256": "815305b837b9248640ebe4bbd71e5bacde2a759220c09a291ef95217a291092a"
+      },
+      {
+        "path": "experiments/managed/artifact.ts",
+        "bytes": 1043,
+        "sha256": "9580fa840695ec335356e7976510102b7e051b86b2102f761f49e8c11980313d"
+      },
+      {
+        "path": "experiments/managed/build/original.wasm",
+        "bytes": 511,
+        "sha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19"
+      },
+      {
+        "path": "experiments/managed/build/coordinator.wasm",
+        "bytes": 1305,
+        "sha256": "d141a89919649b91e274e352e7bda1d000aa7d656c1dcd322b131e1965b04d7f"
+      },
+      {
+        "path": "experiments/managed/build/transactional.wasm",
+        "bytes": 622,
+        "sha256": "c2cbd34cba15ee2bfdabf6d442aea966a4078ba6b26b5ccead7f55146bc3b366"
+      }
+    ]
+  },
+  "sourceAfter": {
+    "kind": "environment",
+    "schema": "folio.research.v1",
+    "observedAt": "2026-10-29T19:34:57.502Z",
+    "revision": "160f2685b669a8a598e52dbc16e16b1877552485",
+    "node": "v26.8.2",
+    "v8": "14.6.202.34-node.28",
+    "os": "darwin",
+    "release": "25.5.0",
+    "cpu": "Apple M2 Pro",
+    "hardwareThreads": 12,
+    "load": [
+      6.0869140625,
+      5.32666015625,
+      5.0576171875
+    ],
+    "configuration": {
+      "study": "managed-phases"
+    },
+    "sources": {
+      "src/bake.ts": "e6ef4e996680d3b5451b7e43526746e2f80934255a08ed478d03540d8fd04b11",
+      "src/browser-worker.ts": "90786fe738fd92e5d628465cb187d41790668d3fcf6fb0c71d92e761a3c78a3e",
+      "src/browser.ts": "242aa96ecbcdbd3839e647c5fda2537456bcfcad8113415f00d056a703c2dbd4",
+      "src/compiler.ts": "ecbf5fbb57cbba465e9c615716c5a104351eb8df19129a5e9201f3795e339614",
+      "src/context.ts": "fed8524229fb621be631e1377a9e35a28a06a7ff0a09ff92932069243ba049ba",
+      "src/coordinator.ts": "4b9c5cc0f72d73c588ed3bffb17e40d8fd2d3fb2bb0cd5646e24ab967bc70ce8",
+      "src/extract.ts": "90f8d7c7ad3ae7c532436d7763f876081315e83cb13f0d31af8c2ee53de7c323",
+      "src/frames.ts": "cf4b135aabfcc5bb733254cc232b25fd2edb2919a4ff489003939547416f58ca",
+      "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
+      "src/host.ts": "8b0fafb6ef8991778598cc78fd7e10415f49875c30b79c75e4e7eac901c80fed",
+      "src/import-order.ts": "0b725a68bd59f9c0e0a5bc63fcc4c31f08b5f718438e67d271a44f4d7e575905",
+      "src/index.ts": "a8c9f3dfbefa3170329c7950cb58f5e3c20e0f7264affb0ffd3bd1b3c1ba364b",
+      "src/managed.ts": "b6713caec874043186c9c1490da1b6672e8659360286c2b1da40118eb1ef0f25",
+      "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+      "src/node.ts": "126b6b650ac4c3469d14d6239f90f84657ab7385a9fcb54d7235a4033d559263",
+      "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
+      "src/remote.ts": "16dbba9b681966a2b4040c82fe3ca98c5a171eee25fd8d7ce43edf0bb5222e8d",
+      "src/tasks.ts": "7decb7a48c7a3aef2781b92bb3179a6bde434843996293ea8e90a947ca39c1fc",
+      "src/transaction.ts": "c4ae45c13c8e980ecb9811f69aedc243561d73d39a6eb855bfeeb51bf600c4f4",
+      "src/values.ts": "56b4c8777a3856441480eee0cb585a2b40e6b03966c3efc245e17a2536196374",
+      "src/worker.ts": "f1ab49593f1ce9bbb39a7adb4727c2cb4c303d74ceccc674474ef1d991ee82e5",
+      "scripts/research/admission-diagnostic.ts": "8dd8ea2b580f5765b699615045801df1296eb89e95b0eb71c34498551d035f34",
+      "scripts/research/analyze.ts": "f7896821d1ca9bc3b132d6f5f2da6723e9e3016c9e90cbd154a763a1cac5691b",
+      "scripts/research/boot-eligibility.ts": "32717c8da20fcf23210b814592ae1584a0da4284cd51c5e43ee629c74a60327d",
+      "scripts/research/cases/include/assert.h": "2e0b7e0adab1df0793e150b60890843771f584e8094b3e74fdbd1a6d0d3f4508",
+      "scripts/research/cases/include/int_lib.h": "cf4f25bd15803ccfc1774ccab9ed5228132758cc546e180f9f37f31f65e90931",
+      "scripts/research/cases/include/math.h": "6f6751b2957db0e6615f14371cc3132d0decf54b175e2670be6e8e6de08dfb3b",
+      "scripts/research/cases/include/memory.h": "3234d45b96216a3c36f25932364b800eeadf703964e85fdf25cabacf9aeedc2e",
+      "scripts/research/cases/include/miniz_export.h": "195259dc89fb3f83a96426a90ee03dc45acef113150cd3475ea9cfbf1f7784f3",
+      "scripts/research/cases/include/stdio.h": "0bd8c3e9e8a873b890704afcd45369c8e7d79991be6d2de55ec058264219ae77",
+      "scripts/research/cases/include/stdlib.h": "c328dcb08baa26c16bc8b768b4c0ca32e2b32e94772c419dda8f9fb25e3695bb",
+      "scripts/research/cases/include/string.h": "3db545ced6638221254c50e3d022269170442967dc330f081f9f996d9c4e228a",
+      "scripts/research/cases/kernel.c": "ed306b90b0e9e4e2479379f12b4cdf9f9ef7f1f220a12bf5c878d5fb7986035b",
+      "scripts/research/cases/support.c": "e7274295036f111a09f4728b0c821728c2403d36f3195b1db4a1d174014d8630",
+      "scripts/research/cases/upstream.ts": "74ef77e2bdc5a9bb32ad4057227d34f3ca562df31749dfeba5fdb27d8c6d30ac",
+      "scripts/research/corpus-manifest.json": "8ba08eaab61702d48e80cca5ffa1930c95aa727d9ed8174926305be512b86ce4",
+      "scripts/research/corpus-mechanisms.ts": "24ba33e586bdc64ad586bbb17972ca13784565d3fb5baee6150645194dc57045",
+      "scripts/research/corpus-serial.ts": "af524472b68bb6b10c58d814825bbb5038f96b387cad7f6ce603726e1d78bcab",
+      "scripts/research/corpus-worker.ts": "a13a2b033c394d1bd7c6f84716d365d8376be36c57b8a8840935c85abd25fc2f",
+      "scripts/research/corpus.ts": "51f63c69882721e4f35857cb8d7444105b1847a4cbf62401b02e2ab42e1f4b04",
+      "scripts/research/crossover-worker.ts": "ce3a36ab1695c973c9a69ad0eb52bcc4802fb3e8fb840c6c49a382d1fe7f960f",
+      "scripts/research/crossover.ts": "f0958198a63172852201a6746bc88211ed209f57f43881951da8c0dbd12a8b18",
+      "scripts/research/denominators.ts": "82e24c9c5123aa31fe91dd00de7967235eedc990fead83753a2cc73bed6d863b",
+      "scripts/research/derive.ts": "edf0e67c73fb56f0628907216ed45c16452893460db27777b6ba185b045d13f9",
+      "scripts/research/differential.ts": "5e1fe21f16b47a4809c2ec2b838fcbdbb7f9c09b68955df06719b96b5ff221c7",
+      "scripts/research/environment.ts": "35eed05e53ff27f686dd2d18a4fb8a3390c084738aef4fb5c2b30c00d027ce75",
+      "scripts/research/evidence.ts": "0a2dc0defcba2a45e24961a3a86acdab192e67a77026a5229b9f45c611d6defe",
+      "scripts/research/export.ts": "a1eb54d4c78bc334b77f12b9b90e9080d78a0f72c77166ead704b2b7743399df",
+      "scripts/research/graded.ts": "19283154e848255b79bc5eb5b709afa5be58a3065e44c6f356915b8195b8a1d7",
+      "scripts/research/inputs.ts": "ec5e1a0075f05ba27cbd7af376b907086d483c633e67c894729232f840af758e"
+    },
+    "sourceDigest": "2f03f0e412c4c2bdb231e39d79f2946739acbb3d5cd9475ab9a6d30f482ac7ab"
+  },
+  "baselineRestored": true,
+  "sourceFiles": [
+    {
+      "role": "source.json",
+      "sha256": "48bfb9fd0341bcadcb1ade80cc3c66575db429899a36ac6361c65e1e3e3f5beb"
+    },
+    {
+      "role": "result.json",
+      "sha256": "d9e3ace7d781e6256ae90d68e4f9a004d4f97d636d54410070e2189c53fed57e"
+    },
+    {
+      "role": "tail.jsonl",
+      "sha256": "f6b8513608ce55002af7490a0bea7b57efd7e430c9c0dfce1af812cb9b509829"
+    },
+    {
+      "role": "meter-before.json",
+      "sha256": "214769841aa262515b3b9f7519e0cbf01b65e6b3f05dd0949d5bbce832ebd819"
+    },
+    {
+      "role": "meter-after.json",
+      "sha256": "7e386719e39e0abc14ff775c7a811e1c7d0f538fe7d9a7f6bbcad6244a6d8a9c"
+    }
+  ],
+  "rows": [
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "setup",
+      "tag": "cell-0-59bce103-setup",
+      "config": {
+        "key": "cell-0-59bce103",
+        "pages": 2,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 689.895915999994,
+      "passed": true,
+      "result": {
+        "instance": "identity-3",
+        "module": "identity-1",
+        "object": "identity-2",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 506,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 278,
+        "laneCpuMs": null,
+        "entryCpuMs": 2,
+        "totalCpuMs": 280
+      }
+    },
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-0-59bce103-op-0",
+      "status": 200,
+      "wallMs": 381.6292500000127,
+      "passed": true,
+      "result": {
+        "instance": "identity-3",
+        "module": "identity-1",
+        "object": "identity-2",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 294,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": 2,
+        "complete": true,
+        "ownerCpuMs": 274,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 275
+      }
+    },
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-0-59bce103-op-1",
+      "status": 200,
+      "wallMs": 390.10112500000105,
+      "passed": true,
+      "result": {
+        "instance": "identity-3",
+        "module": "identity-1",
+        "object": "identity-2",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 296,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": 2,
+        "complete": true,
+        "ownerCpuMs": 274,
+        "laneCpuMs": null,
+        "entryCpuMs": 2,
+        "totalCpuMs": 276
+      }
+    },
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "operation",
+      "iteration": 2,
+      "tag": "cell-0-59bce103-op-2",
+      "status": 200,
+      "wallMs": 345.32104199999594,
+      "passed": true,
+      "result": {
+        "instance": "identity-3",
+        "module": "identity-1",
+        "object": "identity-2",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 295,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": 2,
+        "complete": true,
+        "ownerCpuMs": 278,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 279
+      }
+    },
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "operation",
+      "iteration": 3,
+      "tag": "cell-0-59bce103-op-3",
+      "status": 502,
+      "wallMs": 160.3176669999957,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": 0,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 0
+      }
+    },
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-0-59bce103-copy",
+      "status": 502,
+      "wallMs": 91.3432090000133,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-0-59bce103-transport",
+      "status": 502,
+      "wallMs": 62.01983299999847,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-0-59bce103",
+      "pages": 2,
+      "width": 2,
+      "serial": true,
+      "action": "close",
+      "tag": "cell-0-59bce103-close",
+      "status": 200,
+      "wallMs": 57.45962500000314,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-5",
+        "object": "identity-2"
+      },
+      "ownerAwaitMs": 21,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 0,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 1
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "setup",
+      "tag": "cell-1-411e84f2-setup",
+      "config": {
+        "key": "cell-1-411e84f2",
+        "pages": 2,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 479.8231659999874,
+      "passed": true,
+      "result": {
+        "instance": "identity-9",
+        "module": "identity-7",
+        "object": "identity-8",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 443,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 249,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 250
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-1-411e84f2-op-0",
+      "status": 200,
+      "wallMs": 621.8931250000023,
+      "passed": true,
+      "result": {
+        "instance": "identity-9",
+        "module": "identity-7",
+        "object": "identity-8",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 986,
+        "runAwaitMs": 606,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 551,
+      "telemetry": {
+        "observedEvents": 6,
+        "expectedEvents": 6,
+        "complete": true,
+        "ownerCpuMs": 24,
+        "laneCpuMs": 273,
+        "entryCpuMs": 1,
+        "totalCpuMs": 298
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-1-411e84f2-op-1",
+      "status": 200,
+      "wallMs": 264.9109579999931,
+      "passed": true,
+      "result": {
+        "instance": "identity-9",
+        "module": "identity-7",
+        "object": "identity-8",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 352,
+        "runAwaitMs": 184,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 192,
+      "telemetry": {
+        "observedEvents": 6,
+        "expectedEvents": 6,
+        "complete": true,
+        "ownerCpuMs": 18,
+        "laneCpuMs": 267,
+        "entryCpuMs": 1,
+        "totalCpuMs": 286
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 2,
+      "tag": "cell-1-411e84f2-op-2",
+      "status": 200,
+      "wallMs": 293.8292500000098,
+      "passed": true,
+      "result": {
+        "instance": "identity-9",
+        "module": "identity-7",
+        "object": "identity-8",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 414,
+        "runAwaitMs": 242,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 256,
+      "telemetry": {
+        "observedEvents": 4,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": 322,
+        "entryCpuMs": null,
+        "totalCpuMs": 322
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 3,
+      "tag": "cell-1-411e84f2-op-3",
+      "status": 200,
+      "wallMs": 251.0817090000055,
+      "passed": true,
+      "result": {
+        "instance": "identity-9",
+        "module": "identity-7",
+        "object": "identity-8",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 386,
+        "runAwaitMs": 210,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 214,
+      "telemetry": {
+        "observedEvents": 4,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": 301,
+        "entryCpuMs": null,
+        "totalCpuMs": 301
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-1-411e84f2-copy",
+      "status": 200,
+      "wallMs": 56.91750000001048,
+      "passed": true,
+      "result": {
+        "module": "identity-7",
+        "object": "identity-8",
+        "detail": {
+          "copies": 16,
+          "payloadBytes": 2097152,
+          "checksum": 2097152
+        }
+      },
+      "ownerAwaitMs": 20,
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-1-411e84f2-transport",
+      "status": 200,
+      "wallMs": 97.24241599999368,
+      "passed": true,
+      "result": {
+        "module": "identity-7",
+        "object": "identity-8",
+        "detail": {
+          "responses": [
+            {
+              "bytes": 131133,
+              "first": 0,
+              "last": 0,
+              "module": "identity-10",
+              "object": "identity-11"
+            },
+            {
+              "bytes": 131133,
+              "first": 0,
+              "last": 0,
+              "module": "identity-13",
+              "object": "identity-14"
+            }
+          ],
+          "awaitMs": 39,
+          "frames": 2,
+          "bytes": 262266
+        }
+      },
+      "ownerAwaitMs": 55,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 1
+      }
+    },
+    {
+      "key": "cell-1-411e84f2",
+      "pages": 2,
+      "width": 2,
+      "serial": false,
+      "action": "close",
+      "tag": "cell-1-411e84f2-close",
+      "status": 200,
+      "wallMs": 70.58016599999974,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-7",
+        "object": "identity-8"
+      },
+      "ownerAwaitMs": 23,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 0
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "setup",
+      "tag": "cell-2-ee39ec17-setup",
+      "config": {
+        "key": "cell-2-ee39ec17",
+        "pages": 2,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 465.59649999999965,
+      "passed": true,
+      "result": {
+        "instance": "identity-18",
+        "module": "identity-16",
+        "object": "identity-17",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 432,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 265,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 265
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-2-ee39ec17-op-0",
+      "status": 200,
+      "wallMs": 536.880541999999,
+      "passed": true,
+      "result": {
+        "instance": "identity-18",
+        "module": "identity-16",
+        "object": "identity-17",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 419,
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-2-ee39ec17-op-1",
+      "status": 200,
+      "wallMs": 328.50104199998896,
+      "passed": true,
+      "result": {
+        "instance": "identity-18",
+        "module": "identity-16",
+        "object": "identity-17",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 287,
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "operation",
+      "iteration": 2,
+      "tag": "cell-2-ee39ec17-op-2",
+      "status": 200,
+      "wallMs": 328.5560830000031,
+      "passed": true,
+      "result": {
+        "instance": "identity-18",
+        "module": "identity-16",
+        "object": "identity-17",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 284,
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "operation",
+      "iteration": 3,
+      "tag": "cell-2-ee39ec17-op-3",
+      "status": 502,
+      "wallMs": 131.23549999999523,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-2-ee39ec17-copy",
+      "status": 502,
+      "wallMs": 50.85579200000211,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-2-ee39ec17-transport",
+      "status": 502,
+      "wallMs": 100.79666700000234,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-2-ee39ec17",
+      "pages": 2,
+      "width": 4,
+      "serial": true,
+      "action": "close",
+      "tag": "cell-2-ee39ec17-close",
+      "status": 200,
+      "wallMs": 89.43345799999952,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-66",
+        "object": "identity-17"
+      },
+      "ownerAwaitMs": 18,
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "setup",
+      "tag": "cell-3-cfbb8cff-setup",
+      "config": {
+        "key": "cell-3-cfbb8cff",
+        "pages": 2,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 589.7611670000042,
+      "passed": true,
+      "result": {
+        "instance": "identity-21",
+        "module": "identity-19",
+        "object": "identity-20",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 514,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 257,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 258
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-3-cfbb8cff-op-0",
+      "status": 200,
+      "wallMs": 384.8050409999996,
+      "passed": true,
+      "result": {
+        "instance": "identity-21",
+        "module": "identity-19",
+        "object": "identity-20",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 1298,
+        "runAwaitMs": 337,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 347,
+      "telemetry": {
+        "observedEvents": 5,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 47,
+        "laneCpuMs": 297,
+        "entryCpuMs": null,
+        "totalCpuMs": 344
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-3-cfbb8cff-op-1",
+      "status": 200,
+      "wallMs": 193.41075000001,
+      "passed": true,
+      "result": {
+        "instance": "identity-21",
+        "module": "identity-19",
+        "object": "identity-20",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 462,
+        "runAwaitMs": 138,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 160,
+      "telemetry": {
+        "observedEvents": 6,
+        "expectedEvents": 6,
+        "complete": true,
+        "ownerCpuMs": 25,
+        "laneCpuMs": 337,
+        "entryCpuMs": 1,
+        "totalCpuMs": 363
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 2,
+      "tag": "cell-3-cfbb8cff-op-2",
+      "status": 200,
+      "wallMs": 203.91658299999835,
+      "passed": true,
+      "result": {
+        "instance": "identity-21",
+        "module": "identity-19",
+        "object": "identity-20",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 522,
+        "runAwaitMs": 143,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 166,
+      "telemetry": {
+        "observedEvents": 5,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 19,
+        "laneCpuMs": 392,
+        "entryCpuMs": null,
+        "totalCpuMs": 411
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 3,
+      "tag": "cell-3-cfbb8cff-op-3",
+      "status": 200,
+      "wallMs": 191.7424580000079,
+      "passed": true,
+      "result": {
+        "instance": "identity-21",
+        "module": "identity-19",
+        "object": "identity-20",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 524288,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 541948,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 454,
+        "runAwaitMs": 135,
+        "exact": true,
+        "checkedBytes": 131072,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 155,
+      "telemetry": {
+        "observedEvents": 4,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 15,
+        "laneCpuMs": 239,
+        "entryCpuMs": null,
+        "totalCpuMs": 254
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-3-cfbb8cff-copy",
+      "status": 200,
+      "wallMs": 70.32708300001104,
+      "passed": true,
+      "result": {
+        "module": "identity-19",
+        "object": "identity-20",
+        "detail": {
+          "copies": 16,
+          "payloadBytes": 2097152,
+          "checksum": 2097152
+        }
+      },
+      "ownerAwaitMs": 28,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 4,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 4
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-3-cfbb8cff-transport",
+      "status": 200,
+      "wallMs": 124.32050000000163,
+      "passed": true,
+      "result": {
+        "module": "identity-19",
+        "object": "identity-20",
+        "detail": {
+          "responses": [
+            {
+              "bytes": 131133,
+              "first": 0,
+              "last": 0,
+              "module": "identity-28",
+              "object": "identity-29"
+            },
+            {
+              "bytes": 131133,
+              "first": 0,
+              "last": 0,
+              "module": "identity-31",
+              "object": "identity-32"
+            },
+            {
+              "bytes": 131133,
+              "first": 0,
+              "last": 0,
+              "module": "identity-25",
+              "object": "identity-26"
+            },
+            {
+              "bytes": 131133,
+              "first": 0,
+              "last": 0,
+              "module": "identity-22",
+              "object": "identity-23"
+            }
+          ],
+          "awaitMs": 24,
+          "frames": 4,
+          "bytes": 524532
+        }
+      },
+      "ownerAwaitMs": 48,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 1,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 1
+      }
+    },
+    {
+      "key": "cell-3-cfbb8cff",
+      "pages": 2,
+      "width": 4,
+      "serial": false,
+      "action": "close",
+      "tag": "cell-3-cfbb8cff-close",
+      "status": 200,
+      "wallMs": 62.74295899999561,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-19",
+        "object": "identity-20"
+      },
+      "ownerAwaitMs": 32,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 1,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 1
+      }
+    },
+    {
+      "key": "cell-4-92d4250b",
+      "pages": 128,
+      "width": 2,
+      "serial": true,
+      "action": "setup",
+      "tag": "cell-4-92d4250b-setup",
+      "config": {
+        "key": "cell-4-92d4250b",
+        "pages": 128,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 529.2544999999955,
+      "passed": true,
+      "result": {
+        "instance": "identity-36",
+        "module": "identity-34",
+        "object": "identity-35",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 456,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 255,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 256
+      }
+    },
+    {
+      "key": "cell-4-92d4250b",
+      "pages": 128,
+      "width": 2,
+      "serial": true,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-4-92d4250b-op-0",
+      "status": 200,
+      "wallMs": 544.7808749999967,
+      "passed": true,
+      "result": {
+        "instance": "identity-36",
+        "module": "identity-34",
+        "object": "identity-35",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 504,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": 478,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 478
+      }
+    },
+    {
+      "key": "cell-4-92d4250b",
+      "pages": 128,
+      "width": 2,
+      "serial": true,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-4-92d4250b-op-1",
+      "status": 200,
+      "wallMs": 727.1962500000081,
+      "passed": true,
+      "result": {
+        "instance": "identity-36",
+        "module": "identity-34",
+        "object": "identity-35",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 694,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": 2,
+        "complete": true,
+        "ownerCpuMs": 668,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 669
+      }
+    },
+    {
+      "key": "cell-4-92d4250b",
+      "pages": 128,
+      "width": 2,
+      "serial": true,
+      "action": "operation",
+      "iteration": 2,
+      "tag": "cell-4-92d4250b-op-2",
+      "status": 502,
+      "wallMs": 124.57499999999709,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": 0,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 0
+      }
+    },
+    {
+      "key": "cell-4-92d4250b",
+      "pages": 128,
+      "width": 2,
+      "serial": true,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-4-92d4250b-copy",
+      "status": 502,
+      "wallMs": 47.786249999990105,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-4-92d4250b",
+      "pages": 128,
+      "width": 2,
+      "serial": true,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-4-92d4250b-transport",
+      "status": 502,
+      "wallMs": 51.02887500000361,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-4-92d4250b",
+      "pages": 128,
+      "width": 2,
+      "serial": true,
+      "action": "close",
+      "tag": "cell-4-92d4250b-close",
+      "status": 200,
+      "wallMs": 74.348542000007,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-37",
+        "object": "identity-35"
+      },
+      "ownerAwaitMs": 21,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 0,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 0
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "setup",
+      "tag": "cell-5-18ee4c6c-setup",
+      "config": {
+        "key": "cell-5-18ee4c6c",
+        "pages": 128,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 665.9468330000091,
+      "passed": true,
+      "result": {
+        "instance": "identity-41",
+        "module": "identity-39",
+        "object": "identity-40",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 609,
+      "telemetry": {
+        "observedEvents": 2,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 255,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 256
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-5-18ee4c6c-op-0",
+      "status": 200,
+      "wallMs": 951.2509580000042,
+      "passed": true,
+      "result": {
+        "instance": "identity-41",
+        "module": "identity-39",
+        "object": "identity-40",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 1300,
+        "runAwaitMs": 700,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 907,
+      "telemetry": {
+        "observedEvents": 6,
+        "expectedEvents": 6,
+        "complete": true,
+        "ownerCpuMs": 310,
+        "laneCpuMs": 358,
+        "entryCpuMs": 3,
+        "totalCpuMs": 671
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-5-18ee4c6c-op-1",
+      "status": 200,
+      "wallMs": 792.0072079999954,
+      "passed": true,
+      "result": {
+        "instance": "identity-41",
+        "module": "identity-39",
+        "object": "identity-40",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 1008,
+        "runAwaitMs": 535,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 711,
+      "telemetry": {
+        "observedEvents": 4,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 293,
+        "laneCpuMs": 156,
+        "entryCpuMs": 1,
+        "totalCpuMs": 450
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 2,
+      "tag": "cell-5-18ee4c6c-op-2",
+      "status": 200,
+      "wallMs": 693.8272089999955,
+      "passed": true,
+      "result": {
+        "instance": "identity-41",
+        "module": "identity-39",
+        "object": "identity-40",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 990,
+        "runAwaitMs": 531,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 652,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 268,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 268
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "operation",
+      "iteration": 3,
+      "tag": "cell-5-18ee4c6c-op-3",
+      "status": 200,
+      "wallMs": 790.3289579999982,
+      "passed": true,
+      "result": {
+        "instance": "identity-41",
+        "module": "identity-39",
+        "object": "identity-40",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 2,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 1244,
+        "runAwaitMs": 686,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 745,
+      "telemetry": {
+        "observedEvents": 3,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 265,
+        "laneCpuMs": 85,
+        "entryCpuMs": 1,
+        "totalCpuMs": 351
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-5-18ee4c6c-copy",
+      "status": 200,
+      "wallMs": 168.81495899999572,
+      "passed": true,
+      "result": {
+        "module": "identity-39",
+        "object": "identity-40",
+        "detail": {
+          "copies": 16,
+          "payloadBytes": 134217728,
+          "checksum": 134217728
+        }
+      },
+      "ownerAwaitMs": 132,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 118,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 118
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-5-18ee4c6c-transport",
+      "status": 200,
+      "wallMs": 189.96624999999767,
+      "passed": true,
+      "result": {
+        "module": "identity-39",
+        "object": "identity-40",
+        "detail": {
+          "responses": [
+            {
+              "bytes": 8388669,
+              "first": 0,
+              "last": 0,
+              "module": "identity-45",
+              "object": "identity-46"
+            },
+            {
+              "bytes": 8388669,
+              "first": 0,
+              "last": 0,
+              "module": "identity-42",
+              "object": "identity-43"
+            }
+          ],
+          "awaitMs": 194,
+          "frames": 2,
+          "bytes": 16777338
+        }
+      },
+      "ownerAwaitMs": 153,
+      "telemetry": {
+        "observedEvents": 3,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 22,
+        "laneCpuMs": null,
+        "entryCpuMs": 1,
+        "totalCpuMs": 29
+      }
+    },
+    {
+      "key": "cell-5-18ee4c6c",
+      "pages": 128,
+      "width": 2,
+      "serial": false,
+      "action": "close",
+      "tag": "cell-5-18ee4c6c-close",
+      "status": 200,
+      "wallMs": 57.94741700000304,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-39",
+        "object": "identity-40"
+      },
+      "ownerAwaitMs": 22,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 0,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 0
+      }
+    },
+    {
+      "key": "cell-6-dbd9b5ff",
+      "pages": 128,
+      "width": 4,
+      "serial": true,
+      "action": "setup",
+      "tag": "cell-6-dbd9b5ff-setup",
+      "config": {
+        "key": "cell-6-dbd9b5ff",
+        "pages": 128,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 624.509917000003,
+      "passed": true,
+      "result": {
+        "instance": "identity-50",
+        "module": "identity-48",
+        "object": "identity-49",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 590,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 365,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 365
+      }
+    },
+    {
+      "key": "cell-6-dbd9b5ff",
+      "pages": 128,
+      "width": 4,
+      "serial": true,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-6-dbd9b5ff-op-0",
+      "status": 200,
+      "wallMs": 831.6899159999884,
+      "passed": true,
+      "result": {
+        "instance": "identity-50",
+        "module": "identity-48",
+        "object": "identity-49",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 0,
+          "regions": 1,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "serial",
+          "backend": "managed-coherent",
+          "memoryMode": "copied",
+          "transportBytes": {
+            "sent": 0,
+            "received": 0
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 0,
+        "summedLaneAwaitMs": 0,
+        "runAwaitMs": 0,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 794,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": 2,
+        "totalCpuMs": 2
+      }
+    },
+    {
+      "key": "cell-6-dbd9b5ff",
+      "pages": 128,
+      "width": 4,
+      "serial": true,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-6-dbd9b5ff-op-1",
+      "status": 502,
+      "wallMs": 120.5218329999916,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": 2,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-6-dbd9b5ff",
+      "pages": 128,
+      "width": 4,
+      "serial": true,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-6-dbd9b5ff-copy",
+      "status": 502,
+      "wallMs": 60.68466700000863,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-6-dbd9b5ff",
+      "pages": 128,
+      "width": 4,
+      "serial": true,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-6-dbd9b5ff-transport",
+      "status": 502,
+      "wallMs": 47.9476250000007,
+      "passed": false,
+      "error": "Error: owner state is absent; setup is required",
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-6-dbd9b5ff",
+      "pages": 128,
+      "width": 4,
+      "serial": true,
+      "action": "close",
+      "tag": "cell-6-dbd9b5ff-close",
+      "status": 200,
+      "wallMs": 52.94275000000198,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-67",
+        "object": "identity-49"
+      },
+      "ownerAwaitMs": 18,
+      "telemetry": {
+        "observedEvents": 0,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": null
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "setup",
+      "tag": "cell-7-0bbe688a-setup",
+      "config": {
+        "key": "cell-7-0bbe688a",
+        "pages": 128,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "status": 200,
+      "wallMs": 456.8059579999972,
+      "passed": true,
+      "result": {
+        "instance": "identity-53",
+        "module": "identity-51",
+        "object": "identity-52",
+        "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+        "jspi": true,
+        "configured": true
+      },
+      "ownerAwaitMs": 417,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 269,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 269
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 0,
+      "tag": "cell-7-0bbe688a-op-0",
+      "status": 200,
+      "wallMs": 1062.0101250000007,
+      "passed": true,
+      "result": {
+        "instance": "identity-53",
+        "module": "identity-51",
+        "object": "identity-52",
+        "firstPoolOperation": true,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 2221,
+        "runAwaitMs": 630,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 1025,
+      "telemetry": {
+        "observedEvents": 6,
+        "expectedEvents": 6,
+        "complete": true,
+        "ownerCpuMs": 499,
+        "laneCpuMs": 341,
+        "entryCpuMs": 1,
+        "totalCpuMs": 841
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 1,
+      "tag": "cell-7-0bbe688a-op-1",
+      "status": 200,
+      "wallMs": 621.7614579999936,
+      "passed": true,
+      "result": {
+        "instance": "identity-53",
+        "module": "identity-51",
+        "object": "identity-52",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 1479,
+        "runAwaitMs": 418,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 584,
+      "telemetry": {
+        "observedEvents": 4,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 288,
+        "laneCpuMs": 284,
+        "entryCpuMs": null,
+        "totalCpuMs": 572
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 2,
+      "tag": "cell-7-0bbe688a-op-2",
+      "status": 200,
+      "wallMs": 657.5025409999944,
+      "passed": true,
+      "result": {
+        "instance": "identity-53",
+        "module": "identity-51",
+        "object": "identity-52",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 1310,
+        "runAwaitMs": 353,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 623,
+      "telemetry": {
+        "observedEvents": 6,
+        "expectedEvents": 6,
+        "complete": true,
+        "ownerCpuMs": 387,
+        "laneCpuMs": 319,
+        "entryCpuMs": 2,
+        "totalCpuMs": 708
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "operation",
+      "iteration": 3,
+      "tag": "cell-7-0bbe688a-op-3",
+      "status": 200,
+      "wallMs": 624.6044170000096,
+      "passed": true,
+      "result": {
+        "instance": "identity-53",
+        "module": "identity-51",
+        "object": "identity-52",
+        "firstPoolOperation": false,
+        "report": {
+          "values": [
+            6055
+          ],
+          "workers": 4,
+          "regions": 64,
+          "replayed": 0,
+          "fallbacks": 0,
+          "mode": "speculative",
+          "extraction": "control-flow",
+          "memoryMode": "copied",
+          "snapshotBytes": 33554432,
+          "backend": "managed-coherent",
+          "transportBytes": {
+            "sent": 33572092,
+            "received": 9828
+          },
+          "transportFallbacks": 0
+        },
+        "frames": 4,
+        "summedLaneAwaitMs": 1497,
+        "runAwaitMs": 413,
+        "exact": true,
+        "checkedBytes": 8388608,
+        "diagnostics": []
+      },
+      "ownerAwaitMs": 557,
+      "telemetry": {
+        "observedEvents": 3,
+        "expectedEvents": 6,
+        "complete": false,
+        "ownerCpuMs": 315,
+        "laneCpuMs": 76,
+        "entryCpuMs": 1,
+        "totalCpuMs": 392
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "phase",
+      "phase": "copy",
+      "tag": "cell-7-0bbe688a-copy",
+      "status": 200,
+      "wallMs": 169.86474999999336,
+      "passed": true,
+      "result": {
+        "module": "identity-51",
+        "object": "identity-52",
+        "detail": {
+          "copies": 16,
+          "payloadBytes": 134217728,
+          "checksum": 134217728
+        }
+      },
+      "ownerAwaitMs": 123,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": 108,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 108
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "phase",
+      "phase": "transport",
+      "tag": "cell-7-0bbe688a-transport",
+      "status": 200,
+      "wallMs": 232.93974999999045,
+      "passed": true,
+      "result": {
+        "module": "identity-51",
+        "object": "identity-52",
+        "detail": {
+          "responses": [
+            {
+              "bytes": 8388669,
+              "first": 0,
+              "last": 0,
+              "module": "identity-54",
+              "object": "identity-55"
+            },
+            {
+              "bytes": 8388669,
+              "first": 0,
+              "last": 0,
+              "module": "identity-57",
+              "object": "identity-58"
+            },
+            {
+              "bytes": 8388669,
+              "first": 0,
+              "last": 0,
+              "module": "identity-63",
+              "object": "identity-64"
+            },
+            {
+              "bytes": 8388669,
+              "first": 0,
+              "last": 0,
+              "module": "identity-60",
+              "object": "identity-61"
+            }
+          ],
+          "awaitMs": 305,
+          "frames": 4,
+          "bytes": 33554676
+        }
+      },
+      "ownerAwaitMs": 197,
+      "telemetry": {
+        "observedEvents": 3,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 18
+      }
+    },
+    {
+      "key": "cell-7-0bbe688a",
+      "pages": 128,
+      "width": 4,
+      "serial": false,
+      "action": "close",
+      "tag": "cell-7-0bbe688a-close",
+      "status": 200,
+      "wallMs": 59.84604200000467,
+      "passed": true,
+      "result": {
+        "closed": true,
+        "module": "identity-51",
+        "object": "identity-52"
+      },
+      "ownerAwaitMs": 24,
+      "telemetry": {
+        "observedEvents": 1,
+        "expectedEvents": null,
+        "complete": false,
+        "ownerCpuMs": null,
+        "laneCpuMs": null,
+        "entryCpuMs": null,
+        "totalCpuMs": 0
+      }
+    }
+  ],
+  "telemetry": [
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-setup",
+      "phase": "setup",
+      "module": "identity-1",
+      "object": "identity-2",
+      "config": {
+        "key": "cell-0-59bce103",
+        "pages": 2,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-3",
+      "event": 0,
+      "cpuMs": 278,
+      "eventWallMs": 330,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-setup",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 1,
+      "cpuMs": 2,
+      "eventWallMs": 507,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-op-0",
+      "phase": "operation",
+      "module": "identity-1",
+      "object": "identity-2",
+      "serial": true,
+      "frames": 0,
+      "instance": "identity-3",
+      "event": 2,
+      "cpuMs": 274,
+      "eventWallMs": 288,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-op-0",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 3,
+      "cpuMs": 1,
+      "eventWallMs": 295,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-op-1",
+      "phase": "operation",
+      "module": "identity-1",
+      "object": "identity-2",
+      "serial": true,
+      "frames": 0,
+      "instance": "identity-3",
+      "event": 4,
+      "cpuMs": 274,
+      "eventWallMs": 285,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-op-1",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 5,
+      "cpuMs": 2,
+      "eventWallMs": 297,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-op-2",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 6,
+      "cpuMs": 1,
+      "eventWallMs": 296,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-op-2",
+      "phase": "operation",
+      "module": "identity-1",
+      "object": "identity-2",
+      "serial": true,
+      "frames": 0,
+      "instance": "identity-3",
+      "event": 7,
+      "cpuMs": 278,
+      "eventWallMs": 289,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-op-3",
+      "phase": "missing-owner",
+      "module": "identity-5",
+      "object": "identity-2",
+      "instance": "identity-6",
+      "event": 8,
+      "cpuMs": 0,
+      "eventWallMs": 12,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-close",
+      "phase": "close",
+      "module": "identity-5",
+      "object": "identity-2",
+      "event": 14,
+      "cpuMs": 0,
+      "eventWallMs": 9,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-0-59bce103-close",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 15,
+      "cpuMs": 1,
+      "eventWallMs": 23,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-setup",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 16,
+      "cpuMs": 1,
+      "eventWallMs": 443,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-setup",
+      "phase": "setup",
+      "module": "identity-7",
+      "object": "identity-8",
+      "config": {
+        "key": "cell-1-411e84f2",
+        "pages": 2,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-9",
+      "event": 17,
+      "cpuMs": 249,
+      "eventWallMs": 274,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-0",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 18,
+      "cpuMs": 68,
+      "eventWallMs": 151,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-0",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 19,
+      "cpuMs": 69,
+      "eventWallMs": 75,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-0",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 20,
+      "cpuMs": 1,
+      "eventWallMs": 553,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-0",
+      "phase": "operation",
+      "module": "identity-7",
+      "object": "identity-8",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-9",
+      "event": 21,
+      "cpuMs": 24,
+      "eventWallMs": 548,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-0",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 22,
+      "cpuMs": 71,
+      "eventWallMs": 87,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-0",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 23,
+      "cpuMs": 65,
+      "eventWallMs": 97,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-1",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 24,
+      "cpuMs": 66,
+      "eventWallMs": 73,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-1",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 25,
+      "cpuMs": 66,
+      "eventWallMs": 80,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-1",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": false,
+      "uses": 4,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 26,
+      "cpuMs": 66,
+      "eventWallMs": 71,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-1",
+      "phase": "operation",
+      "module": "identity-7",
+      "object": "identity-8",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-9",
+      "event": 27,
+      "cpuMs": 18,
+      "eventWallMs": 190,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-1",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 28,
+      "cpuMs": 1,
+      "eventWallMs": 194,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-1",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": false,
+      "uses": 4,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 29,
+      "cpuMs": 69,
+      "eventWallMs": 95,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-2",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": false,
+      "uses": 5,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 30,
+      "cpuMs": 69,
+      "eventWallMs": 75,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-2",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": false,
+      "uses": 6,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 31,
+      "cpuMs": 70,
+      "eventWallMs": 74,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-2",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": false,
+      "uses": 5,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 32,
+      "cpuMs": 71,
+      "eventWallMs": 91,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-2",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": false,
+      "uses": 6,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 33,
+      "cpuMs": 112,
+      "eventWallMs": 143,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-3",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": false,
+      "uses": 7,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 34,
+      "cpuMs": 65,
+      "eventWallMs": 71,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-3",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": false,
+      "uses": 7,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 35,
+      "cpuMs": 70,
+      "eventWallMs": 84,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-3",
+      "phase": "lane",
+      "module": "identity-13",
+      "object": "identity-14",
+      "instance": "identity-15",
+      "firstExecutor": false,
+      "uses": 8,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 36,
+      "cpuMs": 71,
+      "eventWallMs": 86,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-op-3",
+      "phase": "lane",
+      "module": "identity-10",
+      "object": "identity-11",
+      "instance": "identity-12",
+      "firstExecutor": false,
+      "uses": 8,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 37,
+      "cpuMs": 95,
+      "eventWallMs": 110,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-transport",
+      "phase": "echo",
+      "module": "identity-10",
+      "object": "identity-11",
+      "requestBytes": 131133,
+      "payloadBytes": 131072,
+      "event": 38,
+      "cpuMs": 0,
+      "eventWallMs": 4,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-transport",
+      "phase": "echo",
+      "module": "identity-13",
+      "object": "identity-14",
+      "requestBytes": 131133,
+      "payloadBytes": 131072,
+      "event": 39,
+      "cpuMs": 1,
+      "eventWallMs": 15,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-close",
+      "phase": "lane-close",
+      "module": "identity-10",
+      "object": "identity-11",
+      "event": 40,
+      "cpuMs": 0,
+      "eventWallMs": 4,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-1-411e84f2-close",
+      "phase": "lane-close",
+      "module": "identity-13",
+      "object": "identity-14",
+      "event": 41,
+      "cpuMs": 0,
+      "eventWallMs": 10,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-2-ee39ec17-setup",
+      "phase": "setup",
+      "module": "identity-16",
+      "object": "identity-17",
+      "config": {
+        "key": "cell-2-ee39ec17",
+        "pages": 2,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-18",
+      "event": 42,
+      "cpuMs": 265,
+      "eventWallMs": 318,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-setup",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 43,
+      "cpuMs": 1,
+      "eventWallMs": 514,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-setup",
+      "phase": "setup",
+      "module": "identity-19",
+      "object": "identity-20",
+      "config": {
+        "key": "cell-3-cfbb8cff",
+        "pages": 2,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-21",
+      "event": 44,
+      "cpuMs": 257,
+      "eventWallMs": 272,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-0",
+      "phase": "lane",
+      "module": "identity-22",
+      "object": "identity-23",
+      "instance": "identity-24",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 45,
+      "cpuMs": 76,
+      "eventWallMs": 115,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-0",
+      "phase": "lane",
+      "module": "identity-25",
+      "object": "identity-26",
+      "instance": "identity-27",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 46,
+      "cpuMs": 72,
+      "eventWallMs": 88,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-0",
+      "phase": "lane",
+      "module": "identity-28",
+      "object": "identity-29",
+      "instance": "identity-30",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 47,
+      "cpuMs": 77,
+      "eventWallMs": 99,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-0",
+      "phase": "lane",
+      "module": "identity-31",
+      "object": "identity-32",
+      "instance": "identity-33",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 48,
+      "cpuMs": 72,
+      "eventWallMs": 125,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-0",
+      "phase": "operation",
+      "module": "identity-19",
+      "object": "identity-20",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-21",
+      "event": 49,
+      "cpuMs": 47,
+      "eventWallMs": 336,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-1",
+      "phase": "lane",
+      "module": "identity-25",
+      "object": "identity-26",
+      "instance": "identity-27",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 50,
+      "cpuMs": 67,
+      "eventWallMs": 76,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-1",
+      "phase": "lane",
+      "module": "identity-28",
+      "object": "identity-29",
+      "instance": "identity-30",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 51,
+      "cpuMs": 70,
+      "eventWallMs": 77,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-1",
+      "phase": "lane",
+      "module": "identity-22",
+      "object": "identity-23",
+      "instance": "identity-24",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 52,
+      "cpuMs": 101,
+      "eventWallMs": 111,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-1",
+      "phase": "lane",
+      "module": "identity-31",
+      "object": "identity-32",
+      "instance": "identity-33",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 53,
+      "cpuMs": 99,
+      "eventWallMs": 136,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-1",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 54,
+      "cpuMs": 1,
+      "eventWallMs": 160,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-1",
+      "phase": "operation",
+      "module": "identity-19",
+      "object": "identity-20",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-21",
+      "event": 55,
+      "cpuMs": 25,
+      "eventWallMs": 153,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-2",
+      "phase": "lane",
+      "module": "identity-28",
+      "object": "identity-29",
+      "instance": "identity-30",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 56,
+      "cpuMs": 68,
+      "eventWallMs": 77,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-2",
+      "phase": "lane",
+      "module": "identity-31",
+      "object": "identity-32",
+      "instance": "identity-33",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 57,
+      "cpuMs": 104,
+      "eventWallMs": 120,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-2",
+      "phase": "lane",
+      "module": "identity-25",
+      "object": "identity-26",
+      "instance": "identity-27",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 58,
+      "cpuMs": 112,
+      "eventWallMs": 121,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-2",
+      "phase": "lane",
+      "module": "identity-22",
+      "object": "identity-23",
+      "instance": "identity-24",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 59,
+      "cpuMs": 108,
+      "eventWallMs": 133,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-2",
+      "phase": "operation",
+      "module": "identity-19",
+      "object": "identity-20",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-21",
+      "event": 60,
+      "cpuMs": 19,
+      "eventWallMs": 155,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-3",
+      "phase": "lane",
+      "module": "identity-25",
+      "object": "identity-26",
+      "instance": "identity-27",
+      "firstExecutor": false,
+      "uses": 4,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 61,
+      "cpuMs": 65,
+      "eventWallMs": 72,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-3",
+      "phase": "lane",
+      "module": "identity-28",
+      "object": "identity-29",
+      "instance": "identity-30",
+      "firstExecutor": false,
+      "uses": 4,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 62,
+      "cpuMs": 70,
+      "eventWallMs": 79,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-3",
+      "phase": "lane",
+      "module": "identity-22",
+      "object": "identity-23",
+      "instance": "identity-24",
+      "firstExecutor": false,
+      "uses": 4,
+      "requestBytes": 135487,
+      "responseBytes": 2457,
+      "event": 63,
+      "cpuMs": 104,
+      "eventWallMs": 113,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-op-3",
+      "phase": "operation",
+      "module": "identity-19",
+      "object": "identity-20",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-21",
+      "event": 64,
+      "cpuMs": 15,
+      "eventWallMs": 144,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-copy",
+      "phase": "copy",
+      "module": "identity-19",
+      "object": "identity-20",
+      "event": 65,
+      "cpuMs": 4,
+      "eventWallMs": 17,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-transport",
+      "phase": "echo",
+      "module": "identity-25",
+      "object": "identity-26",
+      "requestBytes": 131133,
+      "payloadBytes": 131072,
+      "event": 66,
+      "cpuMs": 0,
+      "eventWallMs": 4,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-transport",
+      "phase": "transport",
+      "module": "identity-19",
+      "object": "identity-20",
+      "event": 67,
+      "cpuMs": 1,
+      "eventWallMs": 33,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-3-cfbb8cff-close",
+      "phase": "close",
+      "module": "identity-19",
+      "object": "identity-20",
+      "event": 68,
+      "cpuMs": 1,
+      "eventWallMs": 24,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-4-92d4250b-setup",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 69,
+      "cpuMs": 1,
+      "eventWallMs": 457,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-4-92d4250b-setup",
+      "phase": "setup",
+      "module": "identity-34",
+      "object": "identity-35",
+      "config": {
+        "key": "cell-4-92d4250b",
+        "pages": 128,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-36",
+      "event": 70,
+      "cpuMs": 255,
+      "eventWallMs": 285,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-4-92d4250b-op-0",
+      "phase": "operation",
+      "module": "identity-34",
+      "object": "identity-35",
+      "serial": true,
+      "frames": 0,
+      "instance": "identity-36",
+      "event": 71,
+      "cpuMs": 478,
+      "eventWallMs": 491,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-4-92d4250b-op-1",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 72,
+      "cpuMs": 1,
+      "eventWallMs": 694,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-4-92d4250b-op-1",
+      "phase": "operation",
+      "module": "identity-34",
+      "object": "identity-35",
+      "serial": true,
+      "frames": 0,
+      "instance": "identity-36",
+      "event": 73,
+      "cpuMs": 668,
+      "eventWallMs": 685,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-4-92d4250b-op-2",
+      "phase": "missing-owner",
+      "module": "identity-37",
+      "object": "identity-35",
+      "instance": "identity-38",
+      "event": 74,
+      "cpuMs": 0,
+      "eventWallMs": 13,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-4-92d4250b-close",
+      "phase": "close",
+      "module": "identity-37",
+      "object": "identity-35",
+      "event": 77,
+      "cpuMs": 0,
+      "eventWallMs": 12,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-setup",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 78,
+      "cpuMs": 1,
+      "eventWallMs": 610,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-setup",
+      "phase": "setup",
+      "module": "identity-39",
+      "object": "identity-40",
+      "config": {
+        "key": "cell-5-18ee4c6c",
+        "pages": 128,
+        "width": 2,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-41",
+      "event": 79,
+      "cpuMs": 255,
+      "eventWallMs": 343,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-0",
+      "phase": "lane",
+      "module": "identity-42",
+      "object": "identity-43",
+      "instance": "identity-44",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 80,
+      "cpuMs": 84,
+      "eventWallMs": 163,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-0",
+      "phase": "lane",
+      "module": "identity-45",
+      "object": "identity-46",
+      "instance": "identity-47",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 81,
+      "cpuMs": 83,
+      "eventWallMs": 184,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-0",
+      "phase": "lane",
+      "module": "identity-45",
+      "object": "identity-46",
+      "instance": "identity-47",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 82,
+      "cpuMs": 74,
+      "eventWallMs": 143,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-0",
+      "phase": "lane",
+      "module": "identity-42",
+      "object": "identity-43",
+      "instance": "identity-44",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 83,
+      "cpuMs": 117,
+      "eventWallMs": 451,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-0",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 84,
+      "cpuMs": 3,
+      "eventWallMs": 908,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-0",
+      "phase": "operation",
+      "module": "identity-39",
+      "object": "identity-40",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-41",
+      "event": 85,
+      "cpuMs": 310,
+      "eventWallMs": 901,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-1",
+      "phase": "lane",
+      "module": "identity-45",
+      "object": "identity-46",
+      "instance": "identity-47",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 86,
+      "cpuMs": 77,
+      "eventWallMs": 170,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-1",
+      "phase": "lane",
+      "module": "identity-42",
+      "object": "identity-43",
+      "instance": "identity-44",
+      "firstExecutor": false,
+      "uses": 4,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 87,
+      "cpuMs": 79,
+      "eventWallMs": 426,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-1",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 88,
+      "cpuMs": 1,
+      "eventWallMs": 712,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-1",
+      "phase": "operation",
+      "module": "identity-39",
+      "object": "identity-40",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-41",
+      "event": 89,
+      "cpuMs": 293,
+      "eventWallMs": 698,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-2",
+      "phase": "operation",
+      "module": "identity-39",
+      "object": "identity-40",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-41",
+      "event": 90,
+      "cpuMs": 268,
+      "eventWallMs": 643,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-3",
+      "phase": "lane",
+      "module": "identity-45",
+      "object": "identity-46",
+      "instance": "identity-47",
+      "firstExecutor": false,
+      "uses": 7,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 91,
+      "cpuMs": 85,
+      "eventWallMs": 188,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-3",
+      "phase": "operation",
+      "module": "identity-39",
+      "object": "identity-40",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-41",
+      "event": 92,
+      "cpuMs": 265,
+      "eventWallMs": 738,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-op-3",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 93,
+      "cpuMs": 1,
+      "eventWallMs": 747,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-copy",
+      "phase": "copy",
+      "module": "identity-39",
+      "object": "identity-40",
+      "event": 94,
+      "cpuMs": 118,
+      "eventWallMs": 124,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-transport",
+      "phase": "transport",
+      "module": "identity-39",
+      "object": "identity-40",
+      "event": 95,
+      "cpuMs": 22,
+      "eventWallMs": 147,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-transport",
+      "phase": "echo",
+      "module": "identity-42",
+      "object": "identity-43",
+      "requestBytes": 8388669,
+      "payloadBytes": 8388608,
+      "event": 96,
+      "cpuMs": 6,
+      "eventWallMs": 101,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-transport",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 97,
+      "cpuMs": 1,
+      "eventWallMs": 153,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-5-18ee4c6c-close",
+      "phase": "close",
+      "module": "identity-39",
+      "object": "identity-40",
+      "event": 98,
+      "cpuMs": 0,
+      "eventWallMs": 14,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-6-dbd9b5ff-setup",
+      "phase": "setup",
+      "module": "identity-48",
+      "object": "identity-49",
+      "config": {
+        "key": "cell-6-dbd9b5ff",
+        "pages": 128,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-50",
+      "event": 99,
+      "cpuMs": 365,
+      "eventWallMs": 433,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-6-dbd9b5ff-op-0",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 100,
+      "cpuMs": 2,
+      "eventWallMs": 794,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-setup",
+      "phase": "setup",
+      "module": "identity-51",
+      "object": "identity-52",
+      "config": {
+        "key": "cell-7-0bbe688a",
+        "pages": 128,
+        "width": 4,
+        "count": 64,
+        "rounds": 2097152
+      },
+      "control": {
+        "namespace": "__folio_control",
+        "serialGlobal": "serial",
+        "pendingGlobal": "pending",
+        "memoryExport": "__folio_control_memory",
+        "shared": true,
+        "initial": 2,
+        "maximum": 8192,
+        "entries": [
+          "main"
+        ],
+        "regions": [
+          {
+            "importName": "region_0",
+            "exportName": "__folio_region_0",
+            "parameters": [
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32",
+              "i32"
+            ]
+          }
+        ],
+        "diagnostics": [
+          "region admission: 1 regions from 2 of 2 pure functions at 200000 net work; 1 instrumented"
+        ]
+      },
+      "memories": [
+        {
+          "module": "env",
+          "name": "memory",
+          "initial": 2,
+          "maximum": 8192,
+          "shared": true,
+          "memory64": false
+        }
+      ],
+      "sourceSha256": "9169ad33306925c9d9a890a8049a8c1e1670464bcff78e0be11da78054b0cc19",
+      "instance": "identity-53",
+      "event": 102,
+      "cpuMs": 269,
+      "eventWallMs": 331,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-0",
+      "phase": "lane",
+      "module": "identity-54",
+      "object": "identity-55",
+      "instance": "identity-56",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 103,
+      "cpuMs": 81,
+      "eventWallMs": 149,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-0",
+      "phase": "lane",
+      "module": "identity-57",
+      "object": "identity-58",
+      "instance": "identity-59",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 104,
+      "cpuMs": 85,
+      "eventWallMs": 150,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-0",
+      "phase": "lane",
+      "module": "identity-60",
+      "object": "identity-61",
+      "instance": "identity-62",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 105,
+      "cpuMs": 89,
+      "eventWallMs": 164,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-0",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 106,
+      "cpuMs": 1,
+      "eventWallMs": 1025,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-0",
+      "phase": "operation",
+      "module": "identity-51",
+      "object": "identity-52",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-53",
+      "event": 107,
+      "cpuMs": 499,
+      "eventWallMs": 1023,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-0",
+      "phase": "lane",
+      "module": "identity-63",
+      "object": "identity-64",
+      "instance": "identity-65",
+      "firstExecutor": true,
+      "uses": 1,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 108,
+      "cpuMs": 86,
+      "eventWallMs": 607,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-1",
+      "phase": "lane",
+      "module": "identity-57",
+      "object": "identity-58",
+      "instance": "identity-59",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 109,
+      "cpuMs": 97,
+      "eventWallMs": 210,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-1",
+      "phase": "lane",
+      "module": "identity-63",
+      "object": "identity-64",
+      "instance": "identity-65",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 110,
+      "cpuMs": 77,
+      "eventWallMs": 237,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-1",
+      "phase": "lane",
+      "module": "identity-60",
+      "object": "identity-61",
+      "instance": "identity-62",
+      "firstExecutor": false,
+      "uses": 2,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 111,
+      "cpuMs": 110,
+      "eventWallMs": 502,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-1",
+      "phase": "operation",
+      "module": "identity-51",
+      "object": "identity-52",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-53",
+      "event": 112,
+      "cpuMs": 288,
+      "eventWallMs": 570,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-2",
+      "phase": "lane",
+      "module": "identity-54",
+      "object": "identity-55",
+      "instance": "identity-56",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 113,
+      "cpuMs": 77,
+      "eventWallMs": 174,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-2",
+      "phase": "lane",
+      "module": "identity-57",
+      "object": "identity-58",
+      "instance": "identity-59",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 114,
+      "cpuMs": 77,
+      "eventWallMs": 178,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-2",
+      "phase": "lane",
+      "module": "identity-63",
+      "object": "identity-64",
+      "instance": "identity-65",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 115,
+      "cpuMs": 85,
+      "eventWallMs": 184,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-2",
+      "phase": "lane",
+      "module": "identity-60",
+      "object": "identity-61",
+      "instance": "identity-62",
+      "firstExecutor": false,
+      "uses": 3,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 116,
+      "cpuMs": 80,
+      "eventWallMs": 536,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-2",
+      "phase": "operation",
+      "module": "identity-51",
+      "object": "identity-52",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-53",
+      "event": 117,
+      "cpuMs": 387,
+      "eventWallMs": 609,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-2",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 118,
+      "cpuMs": 2,
+      "eventWallMs": 623,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-3",
+      "phase": "lane",
+      "module": "identity-63",
+      "object": "identity-64",
+      "instance": "identity-65",
+      "firstExecutor": false,
+      "uses": 4,
+      "requestBytes": 8393023,
+      "responseBytes": 2457,
+      "event": 119,
+      "cpuMs": 76,
+      "eventWallMs": 435,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-3",
+      "phase": "entry",
+      "module": "identity-4",
+      "object": "entry",
+      "event": 120,
+      "cpuMs": 1,
+      "eventWallMs": 557,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-op-3",
+      "phase": "operation",
+      "module": "identity-51",
+      "object": "identity-52",
+      "serial": false,
+      "frames": 4,
+      "instance": "identity-53",
+      "event": 121,
+      "cpuMs": 315,
+      "eventWallMs": 549,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-copy",
+      "phase": "copy",
+      "module": "identity-51",
+      "object": "identity-52",
+      "event": 122,
+      "cpuMs": 108,
+      "eventWallMs": 114,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-transport",
+      "phase": "echo",
+      "module": "identity-54",
+      "object": "identity-55",
+      "requestBytes": 8388669,
+      "payloadBytes": 8388608,
+      "event": 123,
+      "cpuMs": 6,
+      "eventWallMs": 87,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-transport",
+      "phase": "echo",
+      "module": "identity-57",
+      "object": "identity-58",
+      "requestBytes": 8388669,
+      "payloadBytes": 8388608,
+      "event": 124,
+      "cpuMs": 6,
+      "eventWallMs": 112,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-transport",
+      "phase": "echo",
+      "module": "identity-63",
+      "object": "identity-64",
+      "requestBytes": 8388669,
+      "payloadBytes": 8388608,
+      "event": 125,
+      "cpuMs": 6,
+      "eventWallMs": 144,
+      "outcome": "ok"
+    },
+    {
+      "probe": "folio-phases",
+      "tag": "cell-7-0bbe688a-close",
+      "phase": "lane-close",
+      "module": "identity-63",
+      "object": "identity-64",
+      "event": 126,
+      "cpuMs": 0,
+      "eventWallMs": 9,
+      "outcome": "ok"
+    }
+  ],
+  "cohorts": [],
+  "meter": {
+    "before": {
+      "workerRequests": 318,
+      "durableObjectRequests": 0,
+      "durableObjectDurationGbS": 0,
+      "rowsRead": 0,
+      "rowsWritten": 0
+    },
+    "after": {
+      "workerRequests": 319,
+      "durableObjectRequests": 0,
+      "durableObjectDurationGbS": 0,
+      "rowsRead": 0,
+      "rowsWritten": 0
+    },
+    "scope": "account-wide; no experiment attribution"
+  },
+  "summary": [
+    {
+      "memoryBytes": 131072,
+      "width": 1,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 131072,
+      "width": 2,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 4,
+          "completed": 3,
+          "firstUseWallMs": 381.6292500000127,
+          "warmMedianWallMs": 367.7110834999985,
+          "warmMedianOwnerAwaitMs": 295.5,
+          "warmMedianCpuMs": 277.5,
+          "warmCpuSamples": 2,
+          "warmRequestsPerOperation": 2,
+          "warmBytesPerOperation": 0,
+          "warmRequestRateEquivalentUsd": 4.5e-7
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 621.8931250000023,
+          "warmMedianWallMs": 264.9109579999931,
+          "warmMedianOwnerAwaitMs": 214,
+          "warmMedianCpuMs": 286,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 551776,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": 1.3880553914270624,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 131072,
+      "width": 4,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 4,
+          "completed": 3,
+          "firstUseWallMs": 536.880541999999,
+          "warmMedianWallMs": 328.52856249999604,
+          "warmMedianOwnerAwaitMs": 285.5,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": 2,
+          "warmBytesPerOperation": 0,
+          "warmRequestRateEquivalentUsd": 4.5e-7
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 384.8050409999996,
+          "warmMedianWallMs": 193.41075000001,
+          "warmMedianOwnerAwaitMs": 160,
+          "warmMedianCpuMs": 363,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 551776,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": 1.6986054937483002,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 131072,
+      "width": 8,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 1,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 2,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 4,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 2097152,
+      "width": 8,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 1,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 2,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 3,
+          "completed": 2,
+          "firstUseWallMs": 544.7808749999967,
+          "warmMedianWallMs": 727.1962500000081,
+          "warmMedianOwnerAwaitMs": 694,
+          "warmMedianCpuMs": 669,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 2,
+          "warmBytesPerOperation": 0,
+          "warmRequestRateEquivalentUsd": 4.5e-7
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 951.2509580000042,
+          "warmMedianWallMs": 790.3289579999982,
+          "warmMedianOwnerAwaitMs": 711,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 33581920,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": 0.9201184426295687,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 4,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 2,
+          "completed": 1,
+          "firstUseWallMs": 831.6899159999884,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 4,
+          "completed": 4,
+          "firstUseWallMs": 1062.0101250000007,
+          "warmMedianWallMs": 624.6044170000096,
+          "warmMedianOwnerAwaitMs": 584,
+          "warmMedianCpuMs": 708,
+          "warmCpuSamples": 1,
+          "warmRequestsPerOperation": 6,
+          "warmBytesPerOperation": 33581920,
+          "warmRequestRateEquivalentUsd": 0.0000010500000000000001
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    },
+    {
+      "memoryBytes": 8388608,
+      "width": 8,
+      "arms": [
+        {
+          "serial": true,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        },
+        {
+          "serial": false,
+          "attempts": 0,
+          "completed": 0,
+          "firstUseWallMs": null,
+          "warmMedianWallMs": null,
+          "warmMedianOwnerAwaitMs": null,
+          "warmMedianCpuMs": null,
+          "warmCpuSamples": 0,
+          "warmRequestsPerOperation": null,
+          "warmBytesPerOperation": null,
+          "warmRequestRateEquivalentUsd": null
+        }
+      ],
+      "warmSpeedup": null,
+      "instrumentedLifecycleSpeedup": null
+    }
+  ],
+  "semantics": {
+    "cpu": "platform tail; whole-millisecond resolution; event IDs deduplicated; null when incomplete",
+    "firstUse": "first pool operation after an observed setup; no eviction forced",
+    "warm": "operations 1-3; reuse must be confirmed by returned owner identity",
+    "await": "I/O elapsed time; synchronous work may not advance the managed clock",
+    "requests": "entry Worker plus owner RPC plus observed lane RPCs",
+    "directLifecycle": "setup including native oracle, four exact operations, diagnostic copy/echo phases and close",
+    "requestRateEquivalent": "hypothetical Paid overage rates before included allocation and unit rounding; not a bill",
+    "durationCost": null,
+    "accountPlan": "Free",
+    "requestDurationProxy": "observed DO request wall times times 0.128 GB; not billed duration",
+    "durationCostReason": "tail wall and CPU do not measure object active billing intervals"
+  }
+}
