@@ -1,0 +1,61 @@
+{
+  "schema": "folio.denominators.v1",
+  "scope": "library kernels, not full applications",
+  "projects": 9,
+  "kernels": 21,
+  "built": 21,
+  "nativeMatch": 21,
+  "defaultAdmission": {
+    "inspected": 21,
+    "withAutomaticPlan": 0,
+    "dispatchedWorkers": 0
+  },
+  "forcedAdmission": {
+    "completed": 21,
+    "speculative": 11,
+    "speculativeFasterThanNative": 0
+  },
+  "explicitTasksEightWorkersBatched": {
+    "ryzen-whole": {
+      "kernels": 21,
+      "atLeast1x": 5,
+      "atLeast2x": 2,
+      "atLeast3x": 1
+    },
+    "m2-whole": {
+      "kernels": 21,
+      "atLeast1x": 21,
+      "atLeast2x": 14,
+      "atLeast3x": 8
+    },
+    "ryzen-pages": {
+      "kernels": 21,
+      "atLeast1x": 21,
+      "atLeast2x": 18,
+      "atLeast3x": 13
+    },
+    "m2-pages": {
+      "kernels": 21,
+      "atLeast1x": 21,
+      "atLeast2x": 17,
+      "atLeast3x": 15
+    },
+    "ryzen-checkpoint": {
+      "kernels": 21,
+      "atLeast1x": 21,
+      "atLeast2x": 8,
+      "atLeast3x": 3
+    },
+    "m2-checkpoint": {
+      "kernels": 21,
+      "atLeast1x": 21,
+      "atLeast2x": 20,
+      "atLeast3x": 9
+    }
+  },
+  "variedInputs": {
+    "comparisons": 210,
+    "passed": 210
+  },
+  "fullApplications": 0
+}

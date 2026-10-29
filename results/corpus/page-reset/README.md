@@ -19,3 +19,5 @@ Analyze sample records with `node scripts/research/analyze.ts RAW.jsonl SUMMARY.
 - [summary.json](summary.json)
 
 `manifest.json` records byte lengths and SHA256 digests. Environment/source hashes, inputs,counts and routing observations are in raw records. Intervals are within-run paired-round bootstrap intervals, not independent-host replication.
+
+A repeat of this study on the same machine, with three reset policies in one session, is in [reset policies](../reset-policies/README.md). It reports 4.80x for AES-CBC decrypt at eight batched workers where this record reports 7.42x; native and one-worker arms agree between the runs.
