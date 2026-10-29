@@ -20,12 +20,17 @@ export class Coordinator {
 	readonly #memory: WebAssembly.Memory;
 	readonly #workerMemory: WebAssembly.Memory;
 	readonly #width: number;
-	readonly #dispatch: (worker: number, calls: RegionCall[]) => Promise<TransactionResult[]>;
+	readonly #dispatch: (
+		worker: number,
+		calls: RegionCall[],
+		generation: number
+	) => Promise<TransactionResult[]>;
 	readonly #native: (call: RegionCall) => void;
 	readonly #profile?: ExecutionProfile;
 	readonly #pending?: { value: unknown };
 	#armed = false;
 	#polls = 0;
+	#generation = 0;
 	#flushing?: Promise<void>;
 
 	constructor(options: {
@@ -35,7 +40,11 @@ export class Coordinator {
 		profile: boolean;
 		/** Wasm global the generated barriers read; raised while regions are queued or running. */
 		pending?: { value: unknown };
-		dispatch: (worker: number, calls: RegionCall[]) => Promise<TransactionResult[]>;
+		dispatch: (
+			worker: number,
+			calls: RegionCall[],
+			generation: number
+		) => Promise<TransactionResult[]>;
 		native: (call: RegionCall) => void;
 	}) {
 		this.#pending = options.pending;
@@ -139,8 +148,9 @@ export class Coordinator {
 		const lanes = Array.from({ length: width }, (_, lane) =>
 			batch.filter((_, index) => index % width === lane)
 		);
+		const generation = ++this.#generation;
 		const outcomes = await Promise.allSettled(
-			lanes.map((calls, i) => this.#dispatch(i, calls))
+			lanes.map((calls, i) => this.#dispatch(i, calls, generation))
 		);
 		const failure = outcomes.find((outcome) => outcome.status === 'rejected');
 		if (failure?.status === 'rejected') throw failure.reason;
@@ -178,7 +188,7 @@ export class Coordinator {
 				}
 				if (!result.exhausted) {
 					const replayStart = this.#profile ? performance.now() : 0;
-					result = (await this.#dispatch(0, [batch[i]!]))[0]!;
+					result = (await this.#dispatch(0, [batch[i]!], ++this.#generation))[0]!;
 					observe(result);
 					if (this.#profile) this.#profile.replayMs += performance.now() - replayStart;
 				}

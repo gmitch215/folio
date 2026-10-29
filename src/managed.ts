@@ -7,6 +7,10 @@ import {
 	decodeResults,
 	encodeFrame,
 	encodeResults,
+	encodeSnapshot,
+	restoreSnapshot,
+	snapshotLength,
+	type SnapshotPages,
 	validateIdentity
 } from './frames.ts';
 import type { MemoryImport } from './memory.ts';
@@ -38,6 +42,8 @@ export interface ManagedLaneTransport {
 
 /** An `ExecutionReport` for the managed backend, which always copies snapshots. */
 export interface ManagedReport extends Omit<ExecutionReport, 'memoryMode'> {
+	/** Logical snapshot bytes represented across lanes; encoded traffic is in transportBytes. */
+	snapshotBytes?: number;
 	/** Always `managed-coherent`. */
 	backend: 'managed-coherent';
 	/** Lanes read copied snapshots, never shared memory. */
@@ -56,6 +62,7 @@ type ExecuteRequest = FrameIdentity & {
 	calls: RegionCall[];
 	fuel: number;
 	maxBytes: number;
+	snapshot?: SnapshotPages;
 };
 
 function integer(value: number, minimum: number, maximum: number, label: string): number {
@@ -113,15 +120,16 @@ export class FolioLane {
 			)
 				throw new TypeError('invalid lane call');
 		}
-		const pages = payload.length / 65536;
+		const memoryBytes = snapshotLength(header.snapshot, payload);
+		const pages = memoryBytes / 65536;
 		if (
 			!Number.isInteger(pages) ||
 			pages < this.#initial ||
 			pages > this.#maximum ||
-			payload.length > this.#maximumMemoryBytes
+			memoryBytes > this.#maximumMemoryBytes
 		)
 			throw new RangeError('invalid lane snapshot');
-		if (!this.#memory || !this.#instance || this.#memory.buffer.byteLength !== payload.length) {
+		if (!this.#memory || !this.#instance || this.#memory.buffer.byteLength !== memoryBytes) {
 			const binding = WebAssembly.Module.imports(this.#module).filter(
 				(item) => item.kind === 'memory'
 			);
@@ -150,7 +158,7 @@ export class FolioLane {
 				}
 			});
 		}
-		new Uint8Array(this.#memory.buffer).set(payload);
+		restoreSnapshot(new Uint8Array(this.#memory.buffer), payload, header.snapshot);
 		let remaining = header.maxBytes;
 		const results: TransactionResult[] = [];
 		for (const call of header.calls) {
@@ -206,6 +214,7 @@ export class ManagedFolio {
 	readonly #maximumFrameBytes: number;
 	readonly #fuel: number;
 	readonly #maxBytes: number;
+	readonly #snapshotEncoding: 'auto' | 'dense';
 	readonly #session = crypto.randomUUID();
 	#memory?: WebAssembly.Memory;
 	#scheduler?: Coordinator;
@@ -227,9 +236,14 @@ export class ManagedFolio {
 			maximumSnapshotBytes?: number;
 			maximumFrameBytes?: number;
 			promising?: readonly string[];
+			/** `dense` (default) sends the whole snapshot; `auto` elides zero pages, which lanes from 1.0.0 reject. */
+			snapshotEncoding?: 'auto' | 'dense';
 		}
 	) {
 		this.#artifact = artifact;
+		this.#snapshotEncoding = options.snapshotEncoding ?? 'dense';
+		if (!['auto', 'dense'].includes(this.#snapshotEncoding))
+			throw new TypeError('invalid snapshot encoding');
 		this.#lanes = options.lanes;
 		integer(this.#lanes.length, 1, 64, 'lane count');
 		this.#maximumSnapshotBytes = integer(
@@ -456,6 +470,8 @@ export class ManagedFolio {
 			});
 		}
 		const epoch = ++this.#epoch;
+		let snapshotGeneration = -1,
+			snapshot: ReturnType<typeof encodeSnapshot>;
 		const scheduler = new Coordinator({
 			memory: this.memory,
 			workerMemory: this.memory,
@@ -471,14 +487,28 @@ export class ManagedFolio {
 					this.#serial.value = previous;
 				}
 			},
-			dispatch: async (lane, calls) => {
+			dispatch: async (lane, calls, generation) => {
 				try {
 					if (this.memory.buffer.byteLength > this.#maximumSnapshotBytes)
 						throw new RangeError('snapshot exceeds limit');
 					const identity = { session: this.#session, epoch, sequence: ++this.#sequence };
+					if (snapshotGeneration !== generation) {
+						const memory = new Uint8Array(this.memory.buffer);
+						snapshot =
+							this.#snapshotEncoding === 'dense'
+								? { payload: memory }
+								: encodeSnapshot(memory);
+						snapshotGeneration = generation;
+					}
 					const frame = encodeFrame(
-						{ ...identity, calls, fuel: this.#fuel, maxBytes: this.#maxBytes },
-						new Uint8Array(this.memory.buffer),
+						{
+							...identity,
+							calls,
+							fuel: this.#fuel,
+							maxBytes: this.#maxBytes,
+							...(snapshot!.snapshot ? { snapshot: snapshot!.snapshot } : {})
+						},
+						snapshot!.payload,
 						this.#maximumFrameBytes
 					);
 					snapshotBytes += this.memory.buffer.byteLength;

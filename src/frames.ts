@@ -5,9 +5,77 @@ const magic = 0x314f4c46;
 const encoder = new TextEncoder();
 const decoder = new TextDecoder('utf-8', { fatal: true });
 
+/** Lossless page encoding; omitted pages contain only zero bytes. */
+export interface SnapshotPages {
+	memoryBytes: number;
+	pages: number[];
+}
+
+/** Encodes sparse arenas. A dense payload borrows the input until encodeFrame copies it. */
+export function encodeSnapshot(bytes: Uint8Array): {
+	snapshot?: SnapshotPages;
+	payload: Uint8Array;
+} {
+	if (bytes.length % 65536) throw new RangeError('invalid snapshot page size');
+	const pages: number[] = [];
+	const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+	for (let offset = 0; offset < bytes.length; offset += 65536) {
+		for (let word = offset; word < offset + 65536; word += 4)
+			if (view.getUint32(word, true) !== 0) {
+				pages.push(offset / 65536);
+				break;
+			}
+	}
+	if (pages.length > 4096 || pages.length * 65536 + pages.length * 8 + 64 >= bytes.length)
+		return { payload: bytes };
+	const payload = new Uint8Array(pages.length * 65536);
+	pages.forEach((page, index) =>
+		payload.set(bytes.subarray(page * 65536, (page + 1) * 65536), index * 65536)
+	);
+	return { snapshot: { memoryBytes: bytes.length, pages }, payload };
+}
+
+/** Checks sparse metadata before allocation or writes; returns the complete logical byte length. */
+export function snapshotLength(snapshot: SnapshotPages | undefined, payload: Uint8Array): number {
+	if (snapshot === undefined) return payload.length;
+	if (
+		!Number.isSafeInteger(snapshot?.memoryBytes) ||
+		snapshot.memoryBytes < 0 ||
+		snapshot.memoryBytes % 65536 ||
+		!Array.isArray(snapshot.pages) ||
+		snapshot.pages.length * 65536 !== payload.length
+	)
+		throw new TypeError('invalid sparse snapshot');
+	let previous = -1;
+	for (const page of snapshot.pages) {
+		if (!Number.isSafeInteger(page) || page <= previous || page * 65536 >= snapshot.memoryBytes)
+			throw new TypeError('invalid sparse snapshot page');
+		previous = page;
+	}
+	return snapshot.memoryBytes;
+}
+
+/** Restores a complete snapshot, clearing pages omitted by the sparse representation. */
+export function restoreSnapshot(
+	target: Uint8Array,
+	payload: Uint8Array,
+	snapshot?: SnapshotPages
+): void {
+	if (snapshotLength(snapshot, payload) !== target.length)
+		throw new RangeError('snapshot size differs');
+	if (!snapshot) {
+		target.set(payload);
+		return;
+	}
+	target.fill(0);
+	snapshot.pages.forEach((page, index) =>
+		target.set(payload.subarray(index * 65536, (index + 1) * 65536), page * 65536)
+	);
+}
+
 export function encodeFrame(
 	header: unknown,
-	payload = new Uint8Array(),
+	payload: Uint8Array = new Uint8Array(),
 	maximum = 0x100100000
 ): Uint8Array {
 	const metadata = encoder.encode(JSON.stringify(encodeValue(header)));

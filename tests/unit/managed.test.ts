@@ -3,7 +3,15 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'vitest';
 import { prepare } from '../../src/compiler.ts';
-import { decodeFrame, decodeResults, encodeFrame, encodeResults } from '../../src/frames.ts';
+import {
+	decodeFrame,
+	decodeResults,
+	encodeFrame,
+	encodeResults,
+	encodeSnapshot,
+	restoreSnapshot,
+	snapshotLength
+} from '../../src/frames.ts';
 import type { ManagedArtifact, ManagedLaneTransport } from '../../src/managed.ts';
 import { FolioLane, ManagedFolio } from '../../src/managed.ts';
 import { memoryImports } from '../../src/memory.ts';
@@ -48,6 +56,115 @@ function lanes(program: ManagedArtifact, count = 4): ManagedLaneTransport[] {
 }
 const put = '(func $put (param i32 i32) (i32.store (local.get 0) (local.get 1)))';
 
+test('sparse snapshots preserve all bytes, clear omitted pages and reject malformed page maps before writes', () => {
+	const storage = new Uint8Array(5 * 65536 + 1),
+		source = storage.subarray(1);
+	source[0] = 17;
+	source[source.length - 1] = 99;
+	const encoded = encodeSnapshot(source);
+	assert.deepEqual(encoded.snapshot, { memoryBytes: source.length, pages: [0, 4] });
+	assert.equal(snapshotLength(encoded.snapshot, encoded.payload), source.length);
+	const restored = new Uint8Array(source.length).fill(255);
+	restoreSnapshot(restored, encoded.payload, encoded.snapshot);
+	assert.deepEqual(restored, source);
+	const zeros = encodeSnapshot(new Uint8Array(source.length));
+	restoreSnapshot(restored, zeros.payload, zeros.snapshot);
+	assert.ok(restored.every((byte) => byte === 0));
+	for (const pages of [
+		[4, 0],
+		[0, 0],
+		[-1, 4],
+		[0, 5],
+		[0, 1.5]
+	]) {
+		assert.throws(() =>
+			restoreSnapshot(restored, encoded.payload, { memoryBytes: source.length, pages })
+		);
+		assert.ok(restored.every((byte) => byte === 0));
+	}
+	const dense = new Uint8Array(65536).fill(1),
+		full = encodeSnapshot(dense);
+	assert.equal(full.snapshot, undefined);
+	assert.equal(full.payload, dense);
+	assert.throws(() => encodeSnapshot(Uint8Array.of(1)), /page size/);
+	assert.throws(() =>
+		restoreSnapshot(restored, encoded.payload, { memoryBytes: 1, pages: [0, 4] })
+	);
+});
+
+test('managed sparse snapshots invalidate the cached generation and clear previously nonzero pages', async () => {
+	const program = artifact(
+		readFileSync(new URL('../../build/generalized.wasm', import.meta.url))
+	);
+	const memory = new WebAssembly.Memory({ initial: 128, maximum: 8192, shared: true });
+	const pool = new ManagedFolio(program, {
+		memory,
+		lanes: lanes(program),
+		snapshotEncoding: 'auto'
+	});
+	const reference = new WebAssembly.Memory({ initial: 128, maximum: 8192, shared: true });
+	const native = new WebAssembly.Instance(program.original, { env: { memory: reference } });
+	try {
+		for (let iteration = 0; iteration < 2; iteration++) {
+			for (const arena of [memory, reference]) {
+				const bytes = new Uint8Array(arena.buffer);
+				bytes.fill(0);
+				if (!iteration) bytes[7 * 65536] = 19;
+				new Uint32Array(arena.buffer, 1024, 64).fill(17);
+			}
+			const value = (native.exports.main as CallableFunction)(1024, 64, 100);
+			const report = await pool.run('main', [1024, 64, 100]);
+			assert.deepEqual(report.values, [value]);
+			assert.equal(report.transportFallbacks, 0);
+			assert.ok(report.transportBytes.sent < report.snapshotBytes! / 4);
+			assert.deepEqual(new Uint8Array(memory.buffer), new Uint8Array(reference.buffer));
+		}
+	} finally {
+		await pool.close();
+	}
+});
+
+test('dense compatibility encoding retains parallel execution with legacy frame consumers', async () => {
+	const program = artifact(
+		readFileSync(new URL('../../build/generalized.wasm', import.meta.url))
+	);
+	const transports = lanes(program).map((lane) => ({
+		execute: async (frame: Uint8Array) => {
+			assert.equal(decodeFrame<any>(frame, 1048576).header.snapshot, undefined);
+			return lane.execute(frame);
+		},
+		close: lane.close
+	}));
+	const pool = new ManagedFolio(program, { lanes: transports, snapshotEncoding: 'dense' });
+	try {
+		new Uint32Array(pool.memory.buffer, 1024, 64).fill(17);
+		const report = await pool.run('main', [1024, 64, 100]);
+		assert.equal(report.workers, 4);
+		assert.equal(report.transportFallbacks, 0);
+		assert.ok(report.transportBytes.sent > report.snapshotBytes!);
+	} finally {
+		await pool.close();
+	}
+});
+
+test('a sparse frame cannot allocate a logical arena larger than the lane memory limit', () => {
+	const program = artifact(
+		readFileSync(new URL('../../build/generalized.wasm', import.meta.url))
+	);
+	const lane = new FolioLane(program.transactional!, { initial: 2, maximum: 8192 });
+	const frame = encodeFrame({
+		session: 'bounded',
+		epoch: 1,
+		sequence: 1,
+		fuel: 1000,
+		maxBytes: 256,
+		calls: [{ export: 'unused', args: [] }],
+		snapshot: { memoryBytes: 64 * 1048576, pages: [] }
+	});
+	assert.throws(() => lane.execute(frame), /lane snapshot/);
+	lane.close();
+});
+
 test('binary frames preserve numeric bits and reject malformed or stale results', () => {
 	const identity = { session: 'test', epoch: 1, sequence: 2 };
 	const bytes = encodeFrame({ ...identity, args: [3n, -0, NaN, Infinity] }, Uint8Array.of(1, 2));
@@ -81,7 +198,7 @@ test('binary frames preserve numeric bits and reject malformed or stale results'
 test('unannotated inlined C executes through copied binary lanes with native-exact memory', async () => {
 	const bytes = readFileSync(new URL('../../build/generalized.wasm', import.meta.url));
 	const program = artifact(bytes);
-	const pool = new ManagedFolio(program, { lanes: lanes(program) });
+	const pool = new ManagedFolio(program, { lanes: lanes(program), snapshotEncoding: 'auto' });
 	const memory = new WebAssembly.Memory({ initial: 2, maximum: 8192, shared: true });
 	const native = new WebAssembly.Instance(program.original, { env: { memory } });
 	try {
@@ -97,7 +214,7 @@ test('unannotated inlined C executes through copied binary lanes with native-exa
 		assert.equal(report.replayed, 0);
 		assert.equal(report.fallbacks, 0);
 		assert.equal(report.snapshotBytes, 4 * 131072);
-		assert.ok(report.transportBytes.sent > report.snapshotBytes!);
+		assert.ok(report.transportBytes.sent < report.snapshotBytes!);
 		assert.deepEqual(new Uint8Array(pool.memory.buffer), new Uint8Array(memory.buffer));
 	} finally {
 		await pool.close();
