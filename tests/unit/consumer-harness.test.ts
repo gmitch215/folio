@@ -1,11 +1,45 @@
 import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { expect, test } from 'vitest';
 import { summarizePaired } from '../../scripts/analyze/paired.ts';
 import { exportNames, summarizeProfile } from '../../scripts/analyze/profile.ts';
 import { measure, type Consumer } from '../../scripts/probe/consumer.ts';
 import { census } from '../../scripts/probe/purity-census.ts';
+import { validateSourcePath, verifySource } from '../../scripts/research/corpus.ts';
+import { digest } from '../../scripts/research/environment.ts';
+import { verifyEvidence } from '../../scripts/research/evidence.ts';
+
+test('evidence validation refuses traversal, duplicate records and corrupted bytes', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-evidence-test-'));
+	mkdirSync(join(root, 'results/study'), { recursive: true });
+	writeFileSync(join(root, 'results/study/README.md'), 'method');
+	writeFileSync(join(root, 'results/study/raw.json'), 'raw');
+	const record = {
+		path: 'results/study/raw.json',
+		origin: 'raw.json',
+		bytes: 3,
+		sha256: digest('raw')
+	};
+	expect(verifyEvidence(root, [record])).toEqual({ artifacts: 1, bytes: 3 });
+	expect(() => verifyEvidence(root, [{ ...record, path: '../outside' }])).toThrow(/escapes/);
+	expect(() => verifyEvidence(root, [record, record])).toThrow(/duplicate/);
+	writeFileSync(join(root, record.path), 'bad');
+	expect(() => verifyEvidence(root, [record])).toThrow(/hash/);
+});
+
+test('corpus extraction rejects escaping archive paths and altered source archives', () => {
+	for (const path of ['', '../source.c', '/source.c', 'a/../../source.c', 'a\\source.c']) {
+		expect(() => validateSourcePath(path)).toThrow();
+	}
+	expect(() => validateSourcePath('library/src/hash.c')).not.toThrow();
+	const bytes = Uint8Array.of(1, 2, 3);
+	expect(() => verifySource(bytes, digest(bytes))).not.toThrow();
+	expect(() => verifySource(Uint8Array.of(1, 2, 4), digest(bytes))).toThrow();
+});
 
 const compile = (text: string) => {
 	const module = binaryen.parseText(text);

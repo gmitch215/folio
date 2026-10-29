@@ -1,0 +1,279 @@
+{
+	"schema": 1,
+	"scope": "upstream library kernels; no full-application or automatic speedup claim",
+	"compilerRuntime": {
+		"repository": "llvm/llvm-project",
+		"commit": "ea7d852a70e8bdfaf601d6626a760f9771b2c4b4",
+		"path": "compiler-rt/lib/builtins/multi3.c",
+		"sha256": "b2e133764668e78119f7c76facbb11f0b4b7c0c6b279fb0b97a589da11d1d060",
+		"license": "Apache-2.0 WITH LLVM-exception",
+		"scope": "128-bit multiplication compiler builtin; adapter int_lib.h supplies wasm32 little-endian ABI types"
+	},
+	"abiVariants": {
+		"defined-unshared": "module-defined unshared memory; original smoke build metadata retains its exact linker flags",
+		"imported-unshared": "selected host ABI; unshared memory imported from env.memory and re-exported as memory"
+	},
+	"memory": {
+		"initialPages": 128,
+		"maximumPages": 1024,
+		"shared": false,
+		"adaptation": "freestanding wasm32 build with host-imported unshared memory; no shared-memory rewrite",
+		"allocator": "adapter arena: 4 MiB, 16-byte alignment, free deferred until reset",
+		"reset": "restore initial entire memory then initialize before each invocation"
+	},
+	"inputs": {
+		"bytes": "65536 bytes; input[i] = (i * 13 + (i >> 7)) & 255",
+		"compression": "64 KiB input; decompressors receive upstream compressor output during initialization",
+		"parsing": "JSON array of 256 objects, each with items:[1,2,3], valid:true, text:hello",
+		"numerical": "1024-point forward complex or real FFT; float[i] = ((i % 31) - 15) / 16",
+		"aes": "AES-128; key=input[64:80], IV=input[96:112], 64 KiB input; decrypt input initialized by upstream encryption",
+		"image": "128 by 128 RGBA, QOI sRGB; decoder input initialized by upstream encoder",
+		"emulator": "6502 reset vector 0x0200, INX then JMP 0x0200, 65536 serial bus cycles"
+	},
+	"projects": [
+		{
+			"id": "lz4",
+			"repository": "lz4/lz4",
+			"commit": "ebb370ca83af193212df4dcbadcc5d87bc0de2f0",
+			"sha256": "eb1a93e934d4fd29df6e2061ba0bf447568561764d758f4a5662c0e29370ffa9",
+			"license": "BSD-2-Clause",
+			"licensePath": "lib/LICENSE",
+			"include": "lib",
+			"sources": ["lib/lz4.c"]
+		},
+		{
+			"id": "miniz",
+			"repository": "richgel999/miniz",
+			"commit": "293d4db1b7d0ffee9756d035b9ac6f7431ef8492",
+			"sha256": "27d99216e9127d1678085639f3059f6907a02c044e8a38392a39f96163ddbbf0",
+			"license": "MIT",
+			"licensePath": "LICENSE",
+			"include": ".",
+			"sources": ["miniz.c", "miniz_tdef.c", "miniz_tinfl.c"],
+			"flags": ["-DMINIZ_NO_STDIO", "-DMINIZ_NO_TIME", "-DMINIZ_NO_ARCHIVE_APIS"]
+		},
+		{
+			"id": "jsmn",
+			"repository": "zserge/jsmn",
+			"commit": "25647e692c7906b96ffd2b05ca54c097948e879c",
+			"sha256": "02ac62537ea34ee33b55efa41a832b78086548715298a454b6f304e29a7c9d43",
+			"license": "MIT",
+			"licensePath": "LICENSE",
+			"include": ".",
+			"sources": []
+		},
+		{
+			"id": "kissfft",
+			"repository": "mborgerding/kissfft",
+			"commit": "8f47a67f595a6641c566087bf5277034be64f24d",
+			"sha256": "93cfa11a344ad552472f7d93c228d55969ac586275692d73d5e7ce73a69b047f",
+			"license": "BSD-3-Clause",
+			"licensePath": "COPYING",
+			"include": ".",
+			"sources": ["kiss_fft.c", "kiss_fftr.c"]
+		},
+		{
+			"id": "aes",
+			"repository": "kokke/tiny-AES-c",
+			"commit": "e72b6eff0884673997d0ca6385169bbd9b31936d",
+			"sha256": "ed9099a1e25880eaaaba1da98ff2ff68b21498f0bf35b38ef0ebf7223448d265",
+			"license": "Unlicense",
+			"licensePath": "unlicense.txt",
+			"include": ".",
+			"sources": ["aes.c"]
+		},
+		{
+			"id": "xxhash",
+			"repository": "Cyan4973/xxHash",
+			"commit": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+			"sha256": "34e71c085636fbc1726482996d92719d0a16e6a6097970ecf2990a27b3821162",
+			"license": "BSD-2-Clause",
+			"licensePath": "LICENSE",
+			"include": ".",
+			"sources": ["xxhash.c"]
+		},
+		{
+			"id": "qoi",
+			"repository": "phoboslab/qoi",
+			"commit": "ffb2d2cb74a1de60819b21b939f7209aa53e91c1",
+			"sha256": "3f1b2df41d4fecdc25a18c2f6a2add3182601a2182245d67da6aeb575e3a7724",
+			"license": "MIT",
+			"licensePath": "LICENSE",
+			"include": ".",
+			"sources": []
+		},
+		{
+			"id": "crypto",
+			"repository": "B-Con/crypto-algorithms",
+			"commit": "cfbde48414baacf51fc7c74f275190881f037d32",
+			"sha256": "525d7b38eb549e52b21f6fc5e21362b912d66912aa458a5e4819f9427fc8f477",
+			"license": "LicenseRef-Public-Domain",
+			"licensePath": "README.md",
+			"include": ".",
+			"sources": []
+		},
+		{
+			"id": "chips",
+			"repository": "floooh/chips",
+			"commit": "9e88298ce56319953ac7a43213a1120359f7a3a6",
+			"sha256": "fcae39995f61bfe461175047b11f16d147be0e7353c8a247ac503b5fd3a09b8d",
+			"license": "Zlib",
+			"licensePath": "LICENSE",
+			"include": "chips",
+			"sources": []
+		}
+	],
+	"cases": [
+		{
+			"id": "lz4-compress",
+			"project": "lz4",
+			"variant": 1,
+			"category": "compression",
+			"upstream": ["LZ4_compress_default"]
+		},
+		{
+			"id": "lz4-decompress",
+			"project": "lz4",
+			"variant": 2,
+			"category": "compression",
+			"upstream": ["LZ4_decompress_safe"]
+		},
+		{
+			"id": "miniz-compress",
+			"project": "miniz",
+			"variant": 1,
+			"category": "compression",
+			"upstream": ["mz_compress"]
+		},
+		{
+			"id": "miniz-decompress",
+			"project": "miniz",
+			"variant": 2,
+			"category": "compression",
+			"upstream": ["mz_uncompress"]
+		},
+		{
+			"id": "miniz-crc32",
+			"project": "miniz",
+			"variant": 3,
+			"category": "byte-transform",
+			"upstream": ["mz_crc32"]
+		},
+		{
+			"id": "miniz-adler32",
+			"project": "miniz",
+			"variant": 4,
+			"category": "byte-transform",
+			"upstream": ["mz_adler32"]
+		},
+		{
+			"id": "jsmn-parse",
+			"project": "jsmn",
+			"variant": 1,
+			"category": "parsing",
+			"upstream": ["jsmn_parse"]
+		},
+		{
+			"id": "kissfft-complex",
+			"project": "kissfft",
+			"variant": 1,
+			"category": "numerical",
+			"upstream": ["kiss_fft"]
+		},
+		{
+			"id": "kissfft-real",
+			"project": "kissfft",
+			"variant": 2,
+			"category": "numerical",
+			"upstream": ["kiss_fftr"]
+		},
+		{
+			"id": "aes-cbc-encrypt",
+			"project": "aes",
+			"variant": 1,
+			"category": "byte-transform",
+			"upstream": ["AES_CBC_encrypt_buffer"]
+		},
+		{
+			"id": "aes-cbc-decrypt",
+			"project": "aes",
+			"variant": 2,
+			"category": "byte-transform",
+			"upstream": ["AES_CBC_decrypt_buffer"]
+		},
+		{
+			"id": "aes-ctr",
+			"project": "aes",
+			"variant": 3,
+			"category": "byte-transform",
+			"upstream": ["AES_CTR_xcrypt_buffer"]
+		},
+		{
+			"id": "xxhash32",
+			"project": "xxhash",
+			"variant": 1,
+			"category": "byte-transform",
+			"upstream": ["XXH32"]
+		},
+		{
+			"id": "xxhash64",
+			"project": "xxhash",
+			"variant": 2,
+			"category": "byte-transform",
+			"upstream": ["XXH64"]
+		},
+		{
+			"id": "xxhash3",
+			"project": "xxhash",
+			"variant": 3,
+			"category": "byte-transform",
+			"upstream": ["XXH3_64bits"]
+		},
+		{
+			"id": "qoi-encode",
+			"project": "qoi",
+			"variant": 1,
+			"category": "image",
+			"upstream": ["qoi_encode"]
+		},
+		{
+			"id": "qoi-decode",
+			"project": "qoi",
+			"variant": 2,
+			"category": "image",
+			"upstream": ["qoi_decode"]
+		},
+		{
+			"id": "sha256",
+			"project": "crypto",
+			"variant": 1,
+			"category": "byte-transform",
+			"upstream": ["sha256_update", "sha256_final"],
+			"sources": ["sha256.c"]
+		},
+		{
+			"id": "sha1",
+			"project": "crypto",
+			"variant": 2,
+			"category": "byte-transform",
+			"upstream": ["sha1_update", "sha1_final"],
+			"sources": ["sha1.c"]
+		},
+		{
+			"id": "md5",
+			"project": "crypto",
+			"variant": 3,
+			"category": "byte-transform",
+			"upstream": ["md5_update", "md5_final"],
+			"sources": ["md5.c"]
+		},
+		{
+			"id": "m6502",
+			"project": "chips",
+			"variant": 1,
+			"category": "stateful-emulator",
+			"upstream": ["m6502_tick"],
+			"adapter": "serial pin bus for 65536 cycles of INX/JMP; no parallel loop added"
+		}
+	]
+}
