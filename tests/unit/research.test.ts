@@ -4,8 +4,13 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect, test } from 'vitest';
 import { distribution, summarizeResearch } from '../../scripts/research/analyze.ts';
-import { speedupCounts } from '../../scripts/research/denominators.ts';
-import { blockerHistogram, stateLoss } from '../../scripts/research/derive.ts';
+import { kernelResults, kernelTable, speedupCounts } from '../../scripts/research/denominators.ts';
+import {
+	blockerHistogram,
+	operationCosts,
+	sessionSpread,
+	stateLoss
+} from '../../scripts/research/derive.ts';
 import { generatedProgram, runDifferential } from '../../scripts/research/differential.ts';
 import { digest } from '../../scripts/research/environment.ts';
 import { verifyStudies } from '../../scripts/research/evidence.ts';
@@ -243,4 +248,101 @@ test('speedup counts compare each kernel median with every bar', () => {
 		atLeast2x: 2,
 		atLeast3x: 1
 	});
+});
+
+test('kernel results join the default, forced and reset summaries into one table', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-kernels-'));
+	try {
+		const write = (path: string, value: unknown) => {
+			mkdirSync(join(root, path, '..'), { recursive: true });
+			writeFileSync(join(root, path), JSON.stringify(value));
+		};
+		const arm = (speedup: number, extra: Record<string, unknown> = {}) => ({
+			pairedSpeedup: { median: speedup },
+			cpuRatio: { median: 1.5 },
+			modes: [],
+			...extra
+		});
+		const summary = (kernel: string, arms: Record<string, unknown>) => ({
+			groups: { [kernel]: { native: { wallMs: { median: 0.25 } }, ...arms } }
+		});
+		for (const machine of ['ryzen', 'm2']) {
+			write(
+				`default-entry-repeat/${machine}.summary.json`,
+				summary('sha256', { 'folio-8': arm(machine === 'ryzen' ? 0.97 : 0.98) })
+			);
+			for (const [policy, speedup] of [
+				['whole', 0.9],
+				['pages', 3.8],
+				['checkpoint', 2.5]
+			] as const)
+				write(
+					`reset-policies/${machine}-${policy}.summary.json`,
+					summary('sha256', { 'tasks-8-batched': arm(speedup) })
+				);
+		}
+		write(
+			'forced-admission-complete/summary.json',
+			summary('sha256', { 'folio-8': arm(0.001, { modes: ['speculative'] }) })
+		);
+		const result = kernelResults(root);
+		expect(result.kernels).toHaveLength(1);
+		expect(result.kernels[0]).toMatchObject({
+			label: 'SHA-256',
+			forcedAdmission: { route: 'speculative', speedup: 0.001 },
+			tasks: { 'ryzen-pages': { speedup: 3.8, cpuRatio: 1.5 } }
+		});
+		expect(kernelTable(result).split('\n')[2]).toBe(
+			'| SHA-256 | 0.25 | 0.97 / 0.98 | 1,000x slower | 0.90 / 0.90 | 3.80 / 3.80 | 2.50 / 2.50 |'
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('session spread reports each cell across sessions and the idle pool effect', () => {
+	const cell = (median: number) => ({ folio: { pairedSpeedup: { median } } });
+	const session = (clean: number, idle: number) => ({
+		groups: { 'k/whole/tasks-8': cell(clean), 'k/whole/tasks-8-idle': cell(idle) }
+	});
+	const result = sessionSpread([session(4, 3), session(6, 3), session(5, 3)]);
+	expect(result.sessions).toBe(3);
+	expect(result.cells['k/whole/tasks-8']).toMatchObject({
+		perSession: [4, 6, 5],
+		median: 5,
+		maxOverMin: 1.5
+	});
+	expect(result.idleEffect['k/whole/tasks-8']).toEqual({
+		cleanMedian: 5,
+		idleMedian: 3,
+		idleOverClean: 0.6
+	});
+});
+
+test('operation costs separate setup, the first operation and later ones by differencing counts', () => {
+	const op = { ownerAwaitMs: 10, sent: 100, received: 5, frames: 4 };
+	const cohort = (operations: number, cpuMs: number | null, wallMs: number) => ({
+		pages: 2,
+		serial: false,
+		operations,
+		cpuMs,
+		wallMs,
+		setupAwaitMs: 1,
+		ops: Array.from({ length: operations }, (_, index) => ({
+			...op,
+			ownerAwaitMs: index === 0 ? 30 : 10
+		}))
+	});
+	const costs = operationCosts([
+		cohort(0, 100, 500),
+		cohort(0, 120, 520),
+		cohort(1, 400, 800),
+		cohort(5, 1000, 1400),
+		cohort(5, null, 1500)
+	])['2/false']!;
+	expect(costs.cpuMs).toEqual({ setup: 110, firstUse: 290, steady: 150 });
+	expect(costs.wallMs.steady).toBe(162.5);
+	expect(costs.invocationsWithCpu).toBe(4);
+	expect(costs.ownerAwaitMs).toEqual({ firstOperation: 30, laterOperation: 10 });
+	expect(costs.bytesPerOperation).toEqual({ sent: 100, received: 5 });
 });

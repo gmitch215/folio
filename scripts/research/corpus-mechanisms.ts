@@ -65,7 +65,12 @@ const comparable = (rows: Result[]) => rows.map(({ value, sha256 }) => ({ value,
 const resetMode = (process.env.FOLIO_CORPUS_RESET ?? 'whole') as ResetMode;
 assert.ok(['whole', 'pages', 'checkpoint'].includes(resetMode), 'invalid reset mode');
 
-async function ordinary(module: WebAssembly.Module, width: number, layout?: PreparedContext) {
+export async function ordinary(
+	module: WebAssembly.Module,
+	width: number,
+	layout?: PreparedContext,
+	mode: ResetMode = resetMode
+) {
 	const workers: Worker[] = [],
 		pending = new Map<
 			number,
@@ -75,7 +80,7 @@ async function ordinary(module: WebAssembly.Module, width: number, layout?: Prep
 	await Promise.all(
 		Array.from({ length: width }, async () => {
 			const worker = new Worker(new URL('./corpus-worker.ts', import.meta.url), {
-				workerData: { researchKernel: true, module, resetMode, layout }
+				workerData: { researchKernel: true, module, resetMode: mode, layout }
 			});
 			workers.push(worker);
 			await new Promise<void>((resolve, reject) => {
@@ -113,14 +118,19 @@ async function ordinary(module: WebAssembly.Module, width: number, layout?: Prep
 	};
 }
 
-async function tasks(module: WebAssembly.Module, width: number, layout?: PreparedContext) {
+export async function tasks(
+	module: WebAssembly.Module,
+	width: number,
+	layout?: PreparedContext,
+	mode: ResetMode = resetMode
+) {
 	const pool = new TaskPool(width),
 		workers: Worker[] = [];
 	await Promise.all(
 		Array.from({ length: width }, async (_, index) => {
 			const link = pool.link(index),
 				worker = new Worker(new URL('./corpus-worker.ts', import.meta.url), {
-					workerData: { researchKernel: true, module, link, resetMode, layout },
+					workerData: { researchKernel: true, module, link, resetMode: mode, layout },
 					transferList: [link.port]
 				});
 			workers.push(worker);
