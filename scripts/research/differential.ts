@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { prepare } from '../../src/compiler.ts';
-import { Folio } from '../../src/node.ts';
+import { admissionSeam } from '../../src/iteration-admission.ts';
+import { Folio, type ExecutionReport } from '../../src/node.ts';
 import { digest, researchEnvironment } from './environment.ts';
 
 export function random(seed: number) {
@@ -294,7 +295,391 @@ export async function runDifferential(options: {
 	return totals;
 }
 
-if (import.meta.main) {
+// #region iteration family
+type Emit = (row: Record<string, unknown>) => void;
+
+// owner programs of the iteration route, one per shape; the seed picks the parameters
+const iterationPages = 32;
+const iterationMaximum = 128;
+const iterationTable = 0x10000;
+const srcCell = (i: number) => 0x20000 + 64 * i;
+const dstCell = (i: number) => 0x30000 + 64 * i;
+// the route's first batch holds 32 iterations, so a hazard inside it replays in that batch
+const firstBatch = 32;
+const page = 65536;
+
+export const iterationShapes = [
+	'disjoint',
+	'raw',
+	'war',
+	'waw',
+	'framed',
+	'frame-carried',
+	'trap',
+	'mixed'
+] as const;
+export type IterationShape = (typeof iterationShapes)[number];
+type Hazard = 'raw' | 'war' | 'waw';
+
+const plainBody =
+	'(i32.store (local.get $dst) (i32.add (i32.load (local.get $src)) (i32.const 3)))';
+const trapBody = '(if (i32.eq (i32.load (local.get $src)) (i32.const 777)) (then (unreachable)))';
+const divBody =
+	'(i32.store (local.get $dst) (i32.div_u (i32.const 1000) (i32.load (local.get $src))))';
+const framedBody = (depth: number) => `
+	(i32.store (local.get $f) (i32.load (local.get $src)))
+	(i32.store (local.get $dst) (call $visit (local.get $f) (i32.const ${depth})))`;
+const carriedBody = `
+	(i32.store (local.get $f) (i32.add (i32.load (local.get $f)) (i32.load (local.get $src))))
+	(i32.store (local.get $dst) (i32.load (local.get $f)))`;
+// adds the depth to the object in the owner frame at each level, then returns it
+const visitFunction = `(func $visit (param $f i32) (param $d i32) (result i32) (local $s i32) (local $r i32)
+		(local.set $s (i32.sub (global.get $sp) (i32.const 16)))
+		(global.set $sp (local.get $s))
+		(i32.store (local.get $s) (local.get $d))
+		(i32.store (local.get $f) (i32.add (i32.load (local.get $f)) (local.get $d)))
+		(local.set $r (if (result i32) (i32.eqz (local.get $d))
+			(then (i32.load (local.get $f)))
+			(else (call $visit (local.get $f) (i32.sub (local.get $d) (i32.const 1))))))
+		(global.set $sp (i32.add (local.get $s) (i32.const 16)))
+		(local.get $r))`;
+
+function iterationSource(item: string, extra = '') {
+	return `(module
+		(import "env" "memory" (memory ${iterationPages} ${iterationMaximum}))
+		(global $sp (mut i32) (i32.const 65536))
+		(func $item (param $t i32) (param $f i32) (local $src i32) (local $dst i32) (local $s i32)
+			(local.set $src (i32.load (local.get $t)))
+			(local.set $dst (i32.load offset=4 (local.get $t)))
+			${item})
+		(func $run (export "run") (param $t i32) (param $n i32) (result i32) (local $frame i32) (local $c i32)
+			(local.set $frame (i32.sub (global.get $sp) (i32.const 64)))
+			(global.set $sp (local.get $frame))
+			(i32.store (local.get $frame) (i32.const 0))
+			(block $done
+				(br_if $done (i32.eqz (local.get $n)))
+				(local.set $c (local.get $n))
+				(loop $each
+					(call $item (local.get $t) (local.get $frame))
+					(local.set $t (i32.add (local.get $t) (i32.const 8)))
+					(br_if $each (local.tee $c (i32.sub (local.get $c) (i32.const 1))))))
+			(global.set $sp (i32.add (local.get $frame) (i32.const 64)))
+			(i32.add (local.get $t) (local.get $c)))
+		${extra})`;
+}
+
+function compileOwner(wat: string): Uint8Array {
+	binaryen.setDebugInfo(true);
+	const module = binaryen.parseText(wat);
+	try {
+		const compact = (binaryen.Features as unknown as { CompactImports: number }).CompactImports;
+		module.setFeatures(binaryen.Features.All & ~compact);
+		assert.ok(module.validate(), 'invalid iteration program');
+		return module.emitBinary();
+	} finally {
+		module.dispose();
+		binaryen.setDebugInfo(false);
+	}
+}
+
+// one hazard at a seed-chosen place inside the first batch
+function placeHazard(
+	kind: Hazard,
+	src: number[],
+	dst: number[],
+	window: number,
+	next: () => number
+) {
+	if (kind === 'raw') {
+		const k = 1 + (next() % (window - 1));
+		src[k] = dstCell(k - 1);
+	} else if (kind === 'war') {
+		const j = next() % (window - 1);
+		const k = j + 1 + (next() % (window - 1 - j));
+		src[j] = dstCell(k);
+	} else {
+		const p = 1 + (next() % (window - 1));
+		dst[p] = dstCell(p - 1);
+	}
+}
+
+export interface IterationProgram {
+	seed: number;
+	shape: IterationShape;
+	trip: number;
+	wat: string;
+	bytes: Uint8Array;
+	image: Uint8Array;
+	args: number[];
+}
+
+export function iterationProgram(seed: number, shape: IterationShape): IterationProgram {
+	const next = random((Math.imul(seed, 8) + iterationShapes.indexOf(shape) + 1) >>> 0);
+	const trip = 4 + (next() % 37);
+	const window = Math.min(trip, firstBatch);
+	const src = Array.from({ length: trip }, (_, i) => srcCell(i));
+	const dst = Array.from({ length: trip }, (_, i) => dstCell(i));
+	const values = Array.from({ length: trip }, () => 1 + (next() % 500));
+	let body = plainBody;
+	let extra = '';
+	switch (shape) {
+		case 'disjoint':
+			break;
+		case 'raw':
+		case 'war':
+		case 'waw':
+			placeHazard(shape, src, dst, window, next);
+			break;
+		case 'framed':
+			body = framedBody(next() % 7);
+			extra = visitFunction;
+			break;
+		case 'frame-carried':
+			body = carriedBody;
+			break;
+		case 'trap': {
+			const at = next() % trip;
+			if (next() % 2) {
+				values[at] = 777;
+				body = trapBody + plainBody;
+			} else {
+				values[at] = 0;
+				body = divBody;
+			}
+			break;
+		}
+		case 'mixed': {
+			if (next() % 2) body = plainBody;
+			else {
+				body = framedBody(next() % 7);
+				extra = visitFunction;
+			}
+			const hazards: Hazard[] = ['raw', 'war', 'waw'];
+			const count = Math.min(1 + (next() % 4), Math.max(1, Math.floor(trip / 4)));
+			for (let n = 0; n < count; n++)
+				placeHazard(hazards[next() % 3]!, src, dst, window, next);
+			break;
+		}
+	}
+	const image = new Uint8Array(iterationPages * page);
+	for (let at = iterationTable; at < 0x40000; at++) image[at] = next() & 255;
+	const view = new DataView(image.buffer);
+	for (let i = 0; i < trip; i++) {
+		view.setUint32(iterationTable + 8 * i, src[i]!, true);
+		view.setUint32(iterationTable + 8 * i + 4, dst[i]!, true);
+		view.setUint32(srcCell(i), values[i]!, true);
+		view.setUint32(dstCell(i), 0xab000000 + i, true);
+	}
+	const wat = iterationSource(body, extra);
+	return {
+		seed,
+		shape,
+		trip,
+		wat,
+		bytes: compileOwner(wat),
+		image,
+		args: [iterationTable, trip]
+	};
+}
+
+// memory outside the stack zone [0, 65536); the arena sits above the declared pages
+const programPages = (memory: WebAssembly.Memory) =>
+	new Uint8Array(memory.buffer, page, (iterationPages - 1) * page);
+
+type Settled<T> = { value?: T; error?: unknown };
+async function settle<T>(call: () => T | Promise<T>): Promise<Settled<T>> {
+	try {
+		return { value: await call() };
+	} catch (error) {
+		return { error };
+	}
+}
+
+const sameFailure = (a: unknown, b: unknown) => {
+	if (a === undefined || b === undefined) return a === b;
+	const x = errorOf(a),
+		y = errorOf(b);
+	return x.name === y.name && x.message === y.message;
+};
+
+function propertyFailures(
+	shape: IterationShape,
+	report: ExecutionReport | undefined,
+	tag: string
+): string[] {
+	const replayed = report?.replayed ?? 0;
+	switch (shape) {
+		case 'disjoint':
+		case 'framed':
+			return replayed === 0 && report?.extraction === 'iteration'
+				? []
+				: [`${tag}: replayed ${replayed}, extraction ${report?.extraction}`];
+		case 'raw':
+		case 'war':
+		case 'waw':
+			return replayed > 0 ? [] : [`${tag}: no replay`];
+		case 'frame-carried':
+			return report?.reason === 'frame-carried dependence'
+				? []
+				: [`${tag}: reason ${report?.reason}`];
+		default:
+			return [];
+	}
+}
+
+// the serial program, then the same program through Folio.open and run at one width, dispatched
+// and with parallel off; returns one message per failed check
+async function checkIterationProgram(
+	program: IterationProgram,
+	widths: number[],
+	emit: Emit
+): Promise<string[]> {
+	const { seed, shape, bytes, image, args } = program;
+	const where = (extra: string) => `seed=${seed} shape=${shape} ${extra}`;
+	const found: string[] = [];
+	const reference = new WebAssembly.Memory({
+		initial: iterationPages,
+		maximum: iterationMaximum
+	});
+	new Uint8Array(reference.buffer).set(image);
+	const instance = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(bytes)), {
+		env: { memory: reference }
+	});
+	const want = await settle(() => (instance.exports.run as CallableFunction)(...args));
+	if (shape === 'trap' && want.error === undefined) found.push(where('native did not trap'));
+	for (const width of widths) {
+		const host = new WebAssembly.Memory({
+			initial: iterationPages,
+			maximum: iterationMaximum,
+			shared: true
+		});
+		const folio = await Folio.open(bytes, { memory: host, workers: width });
+		try {
+			for (const arm of ['dispatch', 'serial'] as const) {
+				new Uint8Array(host.buffer).set(image);
+				const got = await settle(() =>
+					folio.run('run', args, arm === 'serial' ? { parallel: 'off' } : {})
+				);
+				const report = got.value;
+				const tag = where(`width=${width} arm=${arm}`);
+				const armFound: string[] = [];
+				if (!sameFailure(want.error, got.error)) armFound.push(`${tag}: error differs`);
+				if (want.error === undefined && report?.values[0] !== want.value)
+					armFound.push(`${tag}: value differs`);
+				if (Buffer.compare(programPages(reference), programPages(host)) !== 0)
+					armFound.push(`${tag}: memory differs`);
+				if (arm === 'dispatch') armFound.push(...propertyFailures(shape, report, tag));
+				emit({
+					kind: 'comparison',
+					family: 'iteration',
+					seed,
+					shape,
+					width,
+					arm,
+					trip: program.trip,
+					value: report?.values[0],
+					trap: got.error === undefined ? undefined : errorOf(got.error),
+					replayed: report?.replayed,
+					extraction: report?.extraction,
+					reason: report?.reason,
+					mode: report?.mode,
+					passed: armFound.length === 0
+				});
+				found.push(...armFound);
+			}
+		} finally {
+			await folio.close();
+		}
+	}
+	return found;
+}
+
+export async function runIterationPrograms(
+	programs: { seed: number; shape: IterationShape }[],
+	options: { widths: number[]; emit: Emit }
+) {
+	const saved = { ...admissionSeam };
+	admissionSeam.force = true;
+	admissionSeam.scale = 1;
+	const shapes: Record<string, { programs: number; passed: number }> = {};
+	const failures: { seed: number; shape: IterationShape; message: string }[] = [];
+	const timings: number[] = [];
+	let passed = 0;
+	try {
+		for (const { seed, shape } of programs) {
+			const started = performance.now();
+			const program = iterationProgram(seed, shape);
+			options.emit({
+				kind: 'program',
+				family: 'iteration',
+				seed,
+				shape,
+				trip: program.trip,
+				wat: program.wat
+			});
+			let found: string[];
+			try {
+				found = await checkIterationProgram(program, options.widths, options.emit);
+			} catch (error) {
+				found = [`seed=${seed} shape=${shape}: threw ${String(error)}`];
+			}
+			const row = (shapes[shape] ??= { programs: 0, passed: 0 });
+			row.programs++;
+			if (found.length === 0) {
+				row.passed++;
+				passed++;
+			}
+			for (const message of found) {
+				failures.push({ seed, shape, message });
+				options.emit({ kind: 'failure', family: 'iteration', seed, shape, message });
+			}
+			timings.push(performance.now() - started);
+		}
+	} finally {
+		Object.assign(admissionSeam, saved);
+	}
+	return { programs: programs.length, passed, shapes, failures, timings };
+}
+// #endregion
+
+if (import.meta.main && process.argv[2] === 'iteration') {
+	const [directory, seedsArg = '200', baseArg = '12648430'] = process.argv.slice(3);
+	if (!directory)
+		throw new Error('usage: differential.ts iteration OUTPUT_DIRECTORY [SEEDS] [BASE_SEED]');
+	mkdirSync(directory, { recursive: true });
+	const output = join(directory, 'raw.jsonl');
+	writeFileSync(output, '', { flag: 'wx' });
+	const seeds = Number(seedsArg);
+	const base = Number(baseArg);
+	const widths = [2, 4, 8];
+	const emit: Emit = (row) => appendFileSync(output, JSON.stringify(row) + '\n');
+	emit(
+		researchEnvironment({ family: 'iteration', seeds, base, widths, shapes: iterationShapes })
+	);
+	const programs = iterationShapes.flatMap((shape) =>
+		Array.from({ length: seeds }, (_, i) => ({ seed: (base + i) >>> 0, shape }))
+	);
+	const { timings, ...summary } = await runIterationPrograms(programs, { widths, emit });
+	writeFileSync(
+		join(directory, 'summary.json'),
+		JSON.stringify(
+			{
+				...summary,
+				seeds,
+				base,
+				widths,
+				rawSha256: digest(readFileSync(output)),
+				formalProof: false
+			},
+			null,
+			2
+		) + '\n'
+	);
+	console.log(JSON.stringify(summary));
+	process.exitCode = summary.failures.length ? 1 : 0;
+}
+
+if (import.meta.main && process.argv[2] !== 'iteration') {
 	const [directory, programsArg = '128', seedArg = '12648430'] = process.argv.slice(2);
 	if (!directory) throw new Error('usage: differential.ts OUTPUT_DIRECTORY [PROGRAMS] [SEED]');
 	mkdirSync(directory, { recursive: true });

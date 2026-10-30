@@ -3,7 +3,12 @@ import { isArrayBuffer, isSharedArrayBuffer, isUint8Array } from 'node:util/type
 import { Worker } from 'node:worker_threads';
 import type { PreparedProgram } from './compiler.ts';
 import { Coordinator } from './coordinator.ts';
+import type { IterationRoute } from './extract.ts';
 import type { NativePlan } from './guards.ts';
+import { decideAdmission } from './iteration-admission.ts';
+import { iterationArguments, iterationFit } from './iteration-layout.ts';
+import type { IterationOwner, IterationReason } from './iteration-owner.ts';
+import type { IterationPool, IterationReport } from './iteration.ts';
 import { memoryImports } from './memory.ts';
 import type { TransactionResult } from './transaction.ts';
 import { numberBits, restoreNumbers } from './values.ts';
@@ -55,8 +60,8 @@ export interface ExecutionReport {
 	fallbacks: number;
 	/** `native-shared` ran proved kernels on the shared allocation without tracking. */
 	mode: 'serial' | 'speculative' | 'native-shared';
-	/** Set when the generalized control-flow extractor produced the regions. */
-	extraction?: 'control-flow';
+	/** Set when the control-flow extractor or the iteration route produced the regions. */
+	extraction?: 'control-flow' | 'iteration';
 	/** `shared` regions read the physical allocation; `snapshot` ran on a copied arena. */
 	memoryMode?: 'shared' | 'snapshot';
 	/** Bytes copied into the worker group for snapshot execution. */
@@ -72,7 +77,11 @@ export interface ExecutionReport {
 		| 'guard-failed'
 		| 'snapshot-unavailable'
 		| 'previous-conflicts'
-		| 'opaque-input';
+		| 'opaque-input'
+		| IterationReason;
+
+	/** The iteration executor's counts, summed over the owner calls of the run. */
+	iteration?: IterationReport;
 
 	/** Present when `FolioOptions.profile` is set. */
 	profile?: ExecutionProfile;
@@ -100,7 +109,11 @@ export interface ExecutionProfile {
 
 /** Pool construction options. */
 export interface FolioOptions {
-	/** Bind an existing single imported memory instead of allocating one from the module's limits. */
+	/**
+	 * Bind an existing single imported memory instead of allocating one from the module's limits.
+	 * The iteration route needs it shared and grows it by the arena it asks for; an unshared or
+	 * fixed-size memory keeps the program serial.
+	 */
 	memory?: WebAssembly.Memory;
 	/** Isolate count; defaults to up to four. One worker uses the native entry and creates no thread. */
 	workers?: number;
@@ -151,6 +164,107 @@ function isMemory(value: unknown): value is WebAssembly.Memory {
 	}
 }
 
+const PAGE = 65536;
+
+interface IterationState {
+	route: IterationRoute;
+	owner: IterationOwner;
+	memory: WebAssembly.Memory;
+	arenaBase: number;
+	size: number;
+	pool?: IterationPool;
+	opening?: Promise<void>;
+	disabled?: boolean;
+	plain?: { stack?: WebAssembly.Global; iterate: (...args: (number | bigint)[]) => void };
+	run?: {
+		pool?: IterationPool;
+		iteration?: IterationReport;
+		reason?: IterationReason;
+	};
+}
+
+type IterationChoice = IterationState | { reason: IterationReason; detail: string } | undefined;
+
+const probeRank = { off: 0, clear: 1, skipped: 2, carried: 3 } as const;
+
+function addCounts(total: IterationReport | undefined, part: IterationReport): IterationReport {
+	if (!total) return structuredClone(part);
+	for (const key of Object.keys(part) as (keyof IterationReport)[]) {
+		if (key === 'probe') {
+			if (probeRank[part.probe] > probeRank[total.probe]) total.probe = part.probe;
+		} else if (key === 'admission') total.admission = part.admission ?? total.admission;
+		else if (key === 'workers') total.workers = Math.max(total.workers, part.workers);
+		else if (key === 'conflicts') {
+			total.conflicts.raw += part.conflicts.raw;
+			total.conflicts.war += part.conflicts.war;
+			total.conflicts.waw += part.conflicts.waw;
+		} else (total as any)[key] += part[key];
+	}
+	return total;
+}
+
+// true when the host supplies the memory import through `imports`, or it cannot be told safely
+function suppliesMemory(imports: WebAssembly.Imports | undefined, module: string, name: string) {
+	if (!imports || !(module in imports)) return false;
+	const descriptor = Object.getOwnPropertyDescriptor(imports, module);
+	if (!descriptor || !('value' in descriptor)) return true;
+	const value = descriptor.value;
+	return value !== null && ['object', 'function'].includes(typeof value) && name in value;
+}
+
+/**
+ * Chooses the iteration route for a program no older route covers, and builds its owner module and
+ * shared memory. A refusal names its reason; a program that is not a candidate returns nothing.
+ */
+async function selectIteration(
+	program: PreparedProgram,
+	options: FolioOptions,
+	size: number
+): Promise<IterationChoice> {
+	const route = program.iterationRoute;
+	if (
+		!route?.eligible ||
+		size < 2 ||
+		program.control ||
+		program.compiled ||
+		Object.keys(program.loops).length ||
+		Object.keys(program.native ?? {}).length
+	)
+		return;
+	const refuse = (reason: IterationReason, detail: string) => ({ reason, detail });
+	const { iterationOwner } = await import('./iteration-owner.ts');
+	const built = iterationOwner(program.original, route, program.stackRoute?.stack?.name);
+	if (!('owner' in built)) return built;
+	const owner = built.owner;
+	if (suppliesMemory(options.imports, owner.memory.module, owner.memory.name))
+		return refuse('no-arena', 'the memory import is supplied through imports');
+	if (options.memory && !isMemory(options.memory)) return;
+	if (options.memory && !isSharedArrayBuffer(options.memory.buffer))
+		return refuse('no-arena', 'the host memory is not shared');
+	const start = options.memory ? options.memory.buffer.byteLength : owner.memory.initial * PAGE;
+	const fit = iterationFit(start);
+	if (!fit) return refuse('no-arena', 'the arena does not fit in 65536 pages');
+	if (owner.memory.maximum !== undefined && fit.pages > owner.memory.maximum)
+		return refuse(
+			'no-arena',
+			`the declared maximum of ${owner.memory.maximum} pages is below the ${fit.pages} the arena needs`
+		);
+	let memory = options.memory;
+	try {
+		if (memory) memory.grow(fit.pages - start / PAGE);
+		else
+			memory = new WebAssembly.Memory({
+				initial: fit.pages,
+				maximum: Math.max(owner.memory.maximum ?? fit.pages, fit.pages),
+				shared: true
+			});
+	} catch (error) {
+		if (!(error instanceof RangeError)) throw error;
+		return refuse('no-arena', `memory cannot hold an arena of ${fit.bytes} bytes`);
+	}
+	return { route, owner, memory, arenaBase: fit.base, size };
+}
+
 function throwTrap(result: TransactionResult): void {
 	if (!result.trap) return;
 	if (result.errorKind === 'TypeError') throw new TypeError(result.trap);
@@ -163,13 +277,21 @@ export class Folio {
 	/** Active sharing, extraction and validation mode; a one-worker pool reports none and serial. */
 	get capabilities() {
 		return Object.freeze({
-			physicalSharing: this.#workers.length ? ('same-process' as const) : ('none' as const),
-			automaticRegions: this.#workers.length
-				? this.#control
-					? ('control-flow' as const)
-					: ('counted-loops' as const)
-				: ('none' as const),
-			dependence: this.#workers.length ? ('ordered-validation' as const) : ('serial' as const)
+			physicalSharing:
+				this.#workers.length || this.#iteration
+					? ('same-process' as const)
+					: ('none' as const),
+			automaticRegions: this.#iteration
+				? ('iteration' as const)
+				: this.#workers.length
+					? this.#control
+						? ('control-flow' as const)
+						: ('counted-loops' as const)
+					: ('none' as const),
+			dependence:
+				this.#workers.length || this.#iteration
+					? ('ordered-validation' as const)
+					: ('serial' as const)
 		});
 	}
 	/** The original native exports, for trusted host integration. Raw calls bypass tracking. */
@@ -217,6 +339,9 @@ export class Folio {
 		});
 	}
 	#memory?: WebAssembly.Memory;
+	#iteration?: IterationState;
+	#ownerStack?: WebAssembly.Global;
+	#refusal?: { reason: IterationReason; detail: string };
 	#workerMemory?: WebAssembly.Memory;
 	#control?: NonNullable<PreparedProgram['control']>;
 	#serial?: WebAssembly.Global;
@@ -247,8 +372,19 @@ export class Folio {
 	#closing?: Promise<void>;
 	#failure?: Error;
 
-	private constructor(program: PreparedProgram, options: FolioOptions, size: number) {
+	private constructor(
+		program: PreparedProgram,
+		options: FolioOptions,
+		size: number,
+		choice?: IterationChoice
+	) {
 		this.#program = program;
+		if (choice && 'owner' in choice) this.#iteration = choice;
+		else if (choice) {
+			this.#refusal = choice;
+			this.#runtimeDiagnostics.push(`iteration route refused: ${choice.detail}`);
+		}
+		const iteration = this.#iteration;
 		this.#fuel = options.fuel ?? 100_000_000;
 		this.#maxBytes = options.maxTransactionBytes ?? 262_144;
 		this.#minimumWork = options.minimumParallelWork ?? 100_000;
@@ -282,6 +418,12 @@ export class Folio {
 					'control extraction retained native binding order: rewritten import sequence differs'
 				);
 		}
+		if (iteration) {
+			executable = new WebAssembly.Module(Uint8Array.from(iteration.owner.module));
+			this.#runtimeDiagnostics.push(
+				`iteration route: ${iteration.route.diagnostics.join('; ')}`
+			);
+		}
 		const imported = WebAssembly.Module.imports(native).filter(
 			(item) => item.kind === 'memory'
 		);
@@ -294,6 +436,7 @@ export class Folio {
 		const supplied = options.imports ?? Object.create(null);
 		const automatic = new Map<string, WebAssembly.Memory>();
 		let controlBindings: Record<string, WebAssembly.ImportValue> | undefined;
+		let iterationBindings: Record<string, WebAssembly.ImportValue> | undefined;
 		// Resolve bindings when the engine asks for them, in its original order.
 		// Enumerating/spreading caller namespaces would invoke accessors early or twice.
 		const imports: WebAssembly.Imports = new Proxy(Object.create(null), {
@@ -324,6 +467,10 @@ export class Folio {
 					}
 					return (controlBindings = bindings);
 				}
+				if (iteration && module === iteration.owner.namespace)
+					return (iterationBindings ??= {
+						iterate: (...values: (number | bigint)[]) => this.#iterate(values)
+					});
 				const namespace = Reflect.get(supplied, module, supplied);
 				const memories = imported.filter((item) => item.module === module);
 				if (
@@ -339,11 +486,12 @@ export class Folio {
 							return namespace === undefined
 								? undefined
 								: Reflect.get(namespace, name, namespace);
-						let bound =
-							options.memory ??
-							(namespace === undefined
-								? undefined
-								: Reflect.get(namespace, name, namespace));
+						let bound = iteration
+							? iteration.memory
+							: (options.memory ??
+								(namespace === undefined
+									? undefined
+									: Reflect.get(namespace, name, namespace)));
 						if (bound === undefined) {
 							const key = JSON.stringify([module, name]);
 							bound = automatic.get(key);
@@ -405,6 +553,19 @@ export class Folio {
 					runtime.promising!(this.#instance.exports[entry] as CallableFunction)
 				);
 			}
+		} else if (iteration) {
+			this.#exports = Object.create(null);
+			for (const item of WebAssembly.Module.exports(native)) {
+				Object.defineProperty(this.#exports, item.name, {
+					value: this.#instance.exports[item.name],
+					enumerable: true
+				});
+			}
+			Object.preventExtensions(this.#exports);
+			if (iteration.owner.stackExport)
+				this.#ownerStack = this.#instance.exports[
+					iteration.owner.stackExport
+				] as WebAssembly.Global;
 		} else this.#exports = this.#instance.exports;
 		for (const [name, value] of Object.entries(this.#exports)) {
 			if (isMemory(value)) this.#memories[`exports.${name}`] = value;
@@ -441,7 +602,12 @@ export class Folio {
 		const size = options.workers ?? Math.min(4, availableParallelism());
 		if (!Number.isInteger(size) || size < 1 || size > 64)
 			throw new RangeError('invalid worker count');
-		const pool = new Folio(program, options, size);
+		const pool = new Folio(
+			program,
+			options,
+			size,
+			await selectIteration(program, options, size)
+		);
 		const transactional = pool.#control?.transactional ?? program.transactional;
 		if (!transactional || size === 1) return pool;
 		if (pool.#control && !isSharedArrayBuffer(pool.memory.buffer)) {
@@ -652,6 +818,8 @@ export class Folio {
 			this.#observeRouting(routeKey, report);
 			return report;
 		}
+		if (!plan && this.#iteration && options.parallel !== 'off')
+			return this.#runIteration(entry, args, options);
 		const count =
 			numeric && plan && typeof args[plan.countParameter] === 'number'
 				? Number(args[plan.countParameter]) >>> 0
@@ -667,13 +835,15 @@ export class Folio {
 			report.reason =
 				options.parallel === 'off'
 					? 'requested'
-					: !numeric
-						? 'opaque-input'
-						: !this.#workers.length
-							? 'unsupported-module'
-							: !plan
-								? 'no-parallel-plan'
-								: 'single-region';
+					: !plan && this.#refusal
+						? this.#refusal.reason
+						: !numeric
+							? 'opaque-input'
+							: !this.#workers.length
+								? 'unsupported-module'
+								: !plan
+									? 'no-parallel-plan'
+									: 'single-region';
 			return report;
 		}
 		if (options.parallel !== 'speculate' && work !== undefined && work < this.#minimumWork) {
@@ -704,6 +874,150 @@ export class Folio {
 			report.reason = 'guard-failed';
 		this.#observeRouting(routeKey, report);
 		return { ...report, values: [undefined] };
+	}
+
+	// the workers of the iteration route start at the first call that may dispatch
+	#iterationPool(width: number): Promise<IterationPool | undefined> {
+		const it = this.#iteration!;
+		const opened = (it.opening ?? Promise.resolve()).then(async () => {
+			if (this.#closed || it.disabled || it.pool?.width === width) return;
+			await it.pool?.close();
+			it.pool = undefined;
+			try {
+				const { IterationPool } = await import('./iteration.ts');
+				it.pool = await IterationPool.open(it.route, it.memory, {
+					arenaBase: it.arenaBase,
+					width
+				});
+			} catch (error) {
+				it.disabled = true;
+				this.#runtimeDiagnostics.push(
+					`iteration workers unavailable: ${error instanceof Error ? error.message : String(error)}`
+				);
+			}
+		});
+		it.opening = opened.catch(() => {});
+		return opened.then(() => it.pool);
+	}
+
+	async #runIteration(
+		entry: string,
+		args: Call['args'],
+		options: RunOptions
+	): Promise<ExecutionReport> {
+		const it = this.#iteration!;
+		if (this.#closed) throw new Error('folio is closed');
+		if (this.#failure) throw this.#failure;
+		if (this.#busy) throw new Error('memory already has an active run');
+		const limit = options.maximumWorkers ?? it.size;
+		if (
+			options.maximumWorkers !== undefined &&
+			(!Number.isInteger(limit) || limit < 1 || limit > 64)
+		)
+			throw new RangeError('invalid maximumWorkers');
+		const width = Math.min(limit, it.size);
+		const call = [{ export: entry, args }];
+		if (width < 2) {
+			const report = await this.runAll(call, { parallel: 'off' });
+			report.reason = 'single-region';
+			return report;
+		}
+		const route = it.route;
+		const parameter = route.trip?.parameter;
+		const small =
+			entry === route.owner &&
+			parameter !== undefined &&
+			typeof args[parameter] === 'number' &&
+			Number(args[parameter]) >>> 0 < 2;
+		const pool = small ? undefined : await this.#iterationPool(width);
+		if (this.#closed) throw new Error('folio is closed');
+		if (this.#busy) throw new Error('memory already has an active run');
+		const run: NonNullable<IterationState['run']> = { pool };
+		if (small) run.reason = 'no-admission';
+		else if (!pool) run.reason = 'workers-unavailable';
+		it.run = run;
+		let report: ExecutionReport;
+		try {
+			report = await this.runAll(call, { parallel: 'off' });
+		} finally {
+			it.run = undefined;
+		}
+		const counts = run.iteration;
+		delete report.reason;
+		if (counts) report.iteration = counts;
+		if (counts && counts.regions > 0) {
+			report.mode = 'speculative';
+			report.extraction = 'iteration';
+			report.memoryMode = 'shared';
+			report.workers = counts.workers;
+			report.regions = counts.regions;
+			report.replayed = counts.replayed;
+			report.fallbacks = counts.fallbacks;
+			if (report.profile) {
+				report.profile.validationMs = counts.validationMs;
+				report.profile.replayMs = counts.replayMs;
+			}
+			if (run.reason) report.reason = run.reason;
+			else if (counts.replayed > 0) report.reason = 'dependency';
+		} else report.reason = run.reason ?? 'no-parallel-plan';
+		return report;
+	}
+
+	// the host function the owner's loop calls: 1 when every iteration ran, 0 to run the loop itself
+	#iterate(values: (number | bigint)[]): number {
+		const it = this.#iteration!;
+		const run = it.run;
+		if (!run?.pool) return 0;
+		const decline = (reason: IterationReason) => {
+			run.reason ??= reason;
+			return 0;
+		};
+		const route = it.route;
+		const pool = run.pool;
+		const entry: Record<number, number | bigint> = {};
+		it.owner.locals.forEach((local, index) => (entry[local] = values[index]!));
+		const trip = Number(entry[route.trip!.local]) >>> 0;
+		if (trip === 0) return decline('trip-zero');
+		if (trip < 2) return decline('no-admission');
+		if (it.memory.buffer.byteLength !== pool.arena.memoryBytes) return decline('no-arena');
+		const frameBase = route.frame ? Number(entry[route.frame.local]) >>> 0 : 0;
+		const plain = (it.plain ??= this.#plain(it));
+		const replay = (k: number) => {
+			if (plain.stack && this.#ownerStack) plain.stack.value = this.#ownerStack.value;
+			plain.iterate(...iterationArguments(route.locals, entry, k, frameBase));
+		};
+		try {
+			pool.run({
+				trip,
+				frameBase,
+				entry,
+				replay,
+				probe: true,
+				admit: (ms) => decideAdmission(ms, trip, pool.width)
+			});
+		} finally {
+			run.iteration = addCounts(run.iteration, pool.report);
+		}
+		if (pool.report.admission?.admitted === false) return decline('no-admission');
+		if (pool.report.probe === 'carried') run.reason = 'frame-carried dependence';
+		return 1;
+	}
+
+	// a plain instance of the worker module on the shared memory; replay runs iterations on it
+	#plain(it: IterationState) {
+		const route = it.route;
+		const instance = new WebAssembly.Instance(
+			new WebAssembly.Module(Uint8Array.from(route.module!)),
+			{
+				env: { memory: it.memory }
+			}
+		);
+		return {
+			stack: route.stackExport
+				? (instance.exports[route.stackExport] as WebAssembly.Global)
+				: undefined,
+			iterate: instance.exports[route.iterate!] as (...args: (number | bigint)[]) => void
+		};
 	}
 
 	#observeRouting(key: string | undefined, report: ExecutionReport): void {
@@ -1032,7 +1346,14 @@ export class Folio {
 		this.#pending.clear();
 		this.#closing = Promise.all([
 			...this.#workers.map((worker) => worker.terminate()),
-			...Array.from(this.#nativePending, (pending) => pending.catch(() => {}))
+			...Array.from(this.#nativePending, (pending) => pending.catch(() => {})),
+			...(this.#iteration
+				? [
+						(this.#iteration.opening ?? Promise.resolve()).then(() =>
+							this.#iteration!.pool?.close()
+						)
+					]
+				: [])
 		]).then(() => {});
 		return this.#closing;
 	}

@@ -20,6 +20,59 @@ const ACCESS_COST = 3600;
 const CALL_COST = 2;
 const SCALE_LIMIT = 2 ** 50;
 
+const supported = new Set([
+	binaryen.BlockId,
+	binaryen.IfId,
+	binaryen.LoopId,
+	binaryen.BreakId,
+	binaryen.SwitchId,
+	binaryen.CallId,
+	binaryen.CallIndirectId,
+	binaryen.LocalGetId,
+	binaryen.LocalSetId,
+	binaryen.GlobalGetId,
+	binaryen.GlobalSetId,
+	binaryen.LoadId,
+	binaryen.StoreId,
+	binaryen.MemoryCopyId,
+	binaryen.MemoryFillId,
+	binaryen.MemoryInitId,
+	binaryen.DataDropId,
+	binaryen.MemorySizeId,
+	binaryen.MemoryGrowId,
+	binaryen.TableSizeId,
+	binaryen.ConstId,
+	binaryen.UnaryId,
+	binaryen.BinaryId,
+	binaryen.SelectId,
+	binaryen.DropId,
+	binaryen.ReturnId,
+	binaryen.NopId,
+	binaryen.UnreachableId
+]);
+const pureNodes = new Set([
+	binaryen.BlockId,
+	binaryen.IfId,
+	binaryen.LoopId,
+	binaryen.BreakId,
+	binaryen.SwitchId,
+	binaryen.CallId,
+	binaryen.LocalGetId,
+	binaryen.LocalSetId,
+	binaryen.LoadId,
+	binaryen.StoreId,
+	binaryen.MemoryCopyId,
+	binaryen.MemoryFillId,
+	binaryen.ConstId,
+	binaryen.UnaryId,
+	binaryen.BinaryId,
+	binaryen.SelectId,
+	binaryen.DropId,
+	binaryen.ReturnId,
+	binaryen.NopId,
+	binaryen.UnreachableId
+]);
+
 export interface ControlPlan {
 	coordinator: Uint8Array;
 	workerOriginal: Uint8Array;
@@ -367,6 +420,217 @@ export function admission(options: AdmissionOptions) {
 	return { minimumWork, assumedTrips };
 }
 
+// every function on a call cycle, in discovery order
+function recursiveFunctions(calls: Map<string, Set<string>>): Set<string> {
+	const indexes = new Map<string, number>();
+	const lowlinks = new Map<string, number>();
+	const stack: string[] = [];
+	const active = new Set<string>();
+	const recursive = new Set<string>();
+	const components = (name: string): void => {
+		indexes.set(name, indexes.size);
+		lowlinks.set(name, indexes.get(name)!);
+		stack.push(name);
+		active.add(name);
+		for (const target of calls.get(name) ?? []) {
+			if (!calls.has(target)) continue;
+			if (!indexes.has(target)) {
+				components(target);
+				lowlinks.set(name, Math.min(lowlinks.get(name)!, lowlinks.get(target)!));
+			} else if (active.has(target))
+				lowlinks.set(name, Math.min(lowlinks.get(name)!, indexes.get(target)!));
+		}
+		if (lowlinks.get(name) !== indexes.get(name)) return;
+		const component: string[] = [];
+		let member: string;
+		do {
+			member = stack.pop()!;
+			active.delete(member);
+			component.push(member);
+		} while (member !== name);
+		if (component.length > 1 || calls.get(name)?.has(name))
+			for (const member of component) recursive.add(member);
+	};
+	for (const name of calls.keys()) if (!indexes.has(name)) components(name);
+	return recursive;
+}
+
+// memoized per-function work; a call cycle is cut at its back edge, so the estimate of a recursive
+// function counts one level of its own calls and always terminates
+function workModel(
+	functions: Map<string, FunctionInfo>,
+	included: (name: string) => boolean,
+	assumedTrips: number
+) {
+	const known = new Map<string, Term[]>();
+	const termsOf = (name: string): Term[] => {
+		let terms = known.get(name);
+		if (!terms) {
+			known.set(name, []);
+			const f = functions.get(name)!;
+			const written = new Set<number>();
+			const scan = (e: number): void => {
+				const v = info(e);
+				if (v.id === binaryen.LocalSetId) written.add(v.index);
+				for (const child of children(v)) scan(child);
+			};
+			scan(f.body);
+			const count = binaryen.expandType(f.params).length;
+			terms = estimateTerms(f.body, workOf, assumedTrips, {
+				input: (index) => index < count && !written.has(index),
+				counter: (index) => written.has(index)
+			});
+			known.set(name, terms);
+		}
+		return terms;
+	};
+	const workOf = (name: string): Work | undefined =>
+		included(name) ? settleWork(termsOf(name), assumedTrips) : undefined;
+	return { termsOf, workOf };
+}
+
+// a run of statements with the locals and effects the outliner needs to know about
+interface Span {
+	expression: number;
+	reads: Map<number, number>;
+	writes: Set<number>;
+	locals: Set<number>;
+	memoryWrite: boolean;
+	compute: boolean;
+}
+
+// what a span may contain beyond the pure nodes: calls into a known set, reads of named globals
+interface SpanAllowance {
+	call?: (target: string) => boolean;
+	global?: (name: string) => boolean;
+}
+
+// a span with every reason it cannot move into another function; none means it can
+function summarizeSpan(
+	expression: number,
+	allow: SpanAllowance = {}
+): { span: Span; refusals: Set<string> } {
+	const span: Span = {
+		expression,
+		reads: new Map(),
+		writes: new Set(),
+		locals: new Set(),
+		memoryWrite: false,
+		compute: false
+	};
+	const refusals = new Set<string>();
+	const labels = new Set<string>();
+	const targets: string[] = [];
+	if (info(expression).type !== binaryen.none) refusals.add('statement has a value');
+	const visit = (e: number): void => {
+		const v = info(e);
+		if (v.id === binaryen.CallId) {
+			if (!allow.call?.(v.target)) refusals.add('call outside the worker set');
+		} else if (v.id === binaryen.GlobalGetId) {
+			if (!allow.global?.(v.name)) refusals.add('global access');
+		} else if (v.id === binaryen.CallIndirectId) refusals.add('indirect call');
+		else if (v.id === binaryen.ReturnId) refusals.add('return in the body');
+		else if (!pureNodes.has(v.id)) refusals.add('impure expression');
+		if (v.isAtomic) refusals.add('atomic access');
+		if (![binaryen.none, binaryen.unreachable].includes(v.type) && !numeric.has(v.type))
+			refusals.add('non-numeric value');
+		if ((v.id === binaryen.BlockId || v.id === binaryen.LoopId) && v.name) labels.add(v.name);
+		if (v.id === binaryen.BreakId) targets.push(v.name);
+		if (v.id === binaryen.SwitchId) targets.push(...v.names, v.defaultName);
+		if (v.id === binaryen.LocalGetId) {
+			span.locals.add(v.index);
+			span.reads.set(v.index, (span.reads.get(v.index) ?? 0) + 1);
+		}
+		if (v.id === binaryen.LocalSetId) {
+			span.locals.add(v.index);
+			span.writes.add(v.index);
+		}
+		if ([binaryen.StoreId, binaryen.MemoryCopyId, binaryen.MemoryFillId].includes(v.id))
+			span.memoryWrite = true;
+		if ([binaryen.LoopId, binaryen.IfId, binaryen.BinaryId, binaryen.UnaryId].includes(v.id))
+			span.compute = true;
+		for (const child of children(v)) visit(child);
+	};
+	visit(expression);
+	if (!targets.every((target) => labels.has(target))) refusals.add('branch escapes the body');
+	return { span, refusals };
+}
+
+// locals the spans write that something else reads, or that they read before assigning
+function carriedLocals(spans: Span[], totalReads: Map<number, number>): Set<number> {
+	const reads = new Map<number, number>();
+	const writes = new Set<number>();
+	for (const span of spans) {
+		for (const [index, amount] of span.reads)
+			reads.set(index, (reads.get(index) ?? 0) + amount);
+		for (const index of span.writes) writes.add(index);
+	}
+	const carried = new Set(
+		[...writes].filter((index) => (totalReads.get(index) ?? 0) !== (reads.get(index) ?? 0))
+	);
+	const exits = new Map<string, Set<number>[]>();
+	const intersect = (paths: Set<number>[]): Set<number> | undefined =>
+		paths.length
+			? new Set([...paths[0]!].filter((index) => paths.every((path) => path.has(index))))
+			: undefined;
+	const flow = (expression: number, incoming: Set<number>): Set<number> | undefined => {
+		const v = info(expression);
+		let assigned: Set<number> | undefined = new Set(incoming);
+		if (v.id === binaryen.LocalGetId && writes.has(v.index) && !assigned.has(v.index))
+			carried.add(v.index);
+		if (v.id === binaryen.IfId) {
+			assigned = flow(v.condition, assigned);
+			if (!assigned) return;
+			return intersect(
+				[flow(v.ifTrue, assigned), v.ifFalse ? flow(v.ifFalse, assigned) : assigned].filter(
+					(path): path is Set<number> => path !== undefined
+				)
+			);
+		}
+		if (v.id === binaryen.BlockId || v.id === binaryen.LoopId) {
+			if (v.name) exits.set(v.name, []);
+			for (const child of children(v)) {
+				if (!assigned) break;
+				assigned = flow(child, assigned);
+			}
+			const branches = v.name ? exits.get(v.name)! : [];
+			if (v.name) exits.delete(v.name);
+			return intersect([
+				...(assigned ? [assigned] : []),
+				...(v.id === binaryen.BlockId ? branches : [])
+			]);
+		}
+		for (const child of children(v)) {
+			if (!assigned) return;
+			assigned = flow(child, assigned);
+		}
+		if (!assigned) return;
+		if (v.id === binaryen.LocalSetId) assigned.add(v.index);
+		if (v.id === binaryen.BreakId || v.id === binaryen.SwitchId) {
+			const targets = v.id === binaryen.SwitchId ? [...v.names, v.defaultName] : [v.name];
+			for (const target of targets) exits.get(target)?.push(new Set(assigned));
+			if (v.id === binaryen.SwitchId || !v.condition) return;
+		}
+		return v.id === binaryen.UnreachableId ? undefined : assigned;
+	};
+	let assigned: Set<number> | undefined = new Set();
+	for (const span of spans) {
+		if (!assigned) break;
+		assigned = flow(span.expression, assigned);
+	}
+	return carried;
+}
+
+// renumbers the locals of an expression in place
+function remapLocals(expression: number, positions: Map<number, number>): void {
+	const v = info(expression);
+	if (v.id === binaryen.LocalGetId)
+		raw._BinaryenLocalGetSetIndex(expression, positions.get(v.index)!);
+	if (v.id === binaryen.LocalSetId)
+		raw._BinaryenLocalSetSetIndex(expression, positions.get(v.index)!);
+	for (const child of children(v)) remapLocals(child, positions);
+}
+
 export function extract(
 	original: Uint8Array,
 	prepareTracked: (bytes: Uint8Array) => { transactional?: Uint8Array },
@@ -395,58 +659,6 @@ export function extract(
 		m.setFeatures(binaryen.Features.All & ~compactImports);
 		const internalMemory = memoryName(m);
 		const functions = new Map<string, FunctionInfo>();
-		const supported = new Set([
-			binaryen.BlockId,
-			binaryen.IfId,
-			binaryen.LoopId,
-			binaryen.BreakId,
-			binaryen.SwitchId,
-			binaryen.CallId,
-			binaryen.CallIndirectId,
-			binaryen.LocalGetId,
-			binaryen.LocalSetId,
-			binaryen.GlobalGetId,
-			binaryen.GlobalSetId,
-			binaryen.LoadId,
-			binaryen.StoreId,
-			binaryen.MemoryCopyId,
-			binaryen.MemoryFillId,
-			binaryen.MemoryInitId,
-			binaryen.DataDropId,
-			binaryen.MemorySizeId,
-			binaryen.MemoryGrowId,
-			binaryen.TableSizeId,
-			binaryen.ConstId,
-			binaryen.UnaryId,
-			binaryen.BinaryId,
-			binaryen.SelectId,
-			binaryen.DropId,
-			binaryen.ReturnId,
-			binaryen.NopId,
-			binaryen.UnreachableId
-		]);
-		const pureNodes = new Set([
-			binaryen.BlockId,
-			binaryen.IfId,
-			binaryen.LoopId,
-			binaryen.BreakId,
-			binaryen.SwitchId,
-			binaryen.CallId,
-			binaryen.LocalGetId,
-			binaryen.LocalSetId,
-			binaryen.LoadId,
-			binaryen.StoreId,
-			binaryen.MemoryCopyId,
-			binaryen.MemoryFillId,
-			binaryen.ConstId,
-			binaryen.UnaryId,
-			binaryen.BinaryId,
-			binaryen.SelectId,
-			binaryen.DropId,
-			binaryen.ReturnId,
-			binaryen.NopId,
-			binaryen.UnreachableId
-		]);
 		let outlineIndex = 0;
 		const originals = Array.from({ length: m.getNumFunctions() }, (_, index) =>
 			binaryen.getFunctionInfo(m.getFunctionByIndex(index))
@@ -473,148 +685,12 @@ export function extract(
 				traversable = false;
 			}
 			if (!traversable) continue;
-			type Span = {
-				expression: number;
-				reads: Map<number, number>;
-				writes: Set<number>;
-				locals: Set<number>;
-				memoryWrite: boolean;
-				compute: boolean;
-			};
 			const summarize = (expression: number): Span | undefined => {
-				const span: Span = {
-					expression,
-					reads: new Map(),
-					writes: new Set(),
-					locals: new Set(),
-					memoryWrite: false,
-					compute: false
-				};
-				const labels = new Set<string>();
-				const targets: string[] = [];
-				let eligible = info(expression).type === binaryen.none;
-				const visit = (e: number): void => {
-					const v = info(e);
-					if (
-						!pureNodes.has(v.id) ||
-						v.isAtomic ||
-						v.id === binaryen.CallId ||
-						v.id === binaryen.ReturnId
-					)
-						eligible = false;
-					if (
-						![binaryen.none, binaryen.unreachable].includes(v.type) &&
-						!numeric.has(v.type)
-					)
-						eligible = false;
-					if ((v.id === binaryen.BlockId || v.id === binaryen.LoopId) && v.name)
-						labels.add(v.name);
-					if (v.id === binaryen.BreakId) targets.push(v.name);
-					if (v.id === binaryen.SwitchId) targets.push(...v.names, v.defaultName);
-					if (v.id === binaryen.LocalGetId) {
-						span.locals.add(v.index);
-						span.reads.set(v.index, (span.reads.get(v.index) ?? 0) + 1);
-					}
-					if (v.id === binaryen.LocalSetId) {
-						span.locals.add(v.index);
-						span.writes.add(v.index);
-					}
-					if (
-						[binaryen.StoreId, binaryen.MemoryCopyId, binaryen.MemoryFillId].includes(
-							v.id
-						)
-					)
-						span.memoryWrite = true;
-					if (
-						[
-							binaryen.LoopId,
-							binaryen.IfId,
-							binaryen.BinaryId,
-							binaryen.UnaryId
-						].includes(v.id)
-					)
-						span.compute = true;
-					for (const child of children(v)) visit(child);
-				};
-				visit(expression);
-				return eligible && targets.every((target) => labels.has(target)) ? span : undefined;
+				const summary = summarizeSpan(expression);
+				return summary.refusals.size ? undefined : summary.span;
 			};
 			const outline = (spans: Span[]): number[] => {
-				const reads = new Map<number, number>();
-				const writes = new Set<number>();
-				for (const span of spans) {
-					for (const [index, amount] of span.reads)
-						reads.set(index, (reads.get(index) ?? 0) + amount);
-					for (const index of span.writes) writes.add(index);
-				}
-				const carried = new Set(
-					[...writes].filter(
-						(index) => (totalReads.get(index) ?? 0) !== (reads.get(index) ?? 0)
-					)
-				);
-				const exits = new Map<string, Set<number>[]>();
-				const intersect = (paths: Set<number>[]): Set<number> | undefined =>
-					paths.length
-						? new Set(
-								[...paths[0]!].filter((index) =>
-									paths.every((path) => path.has(index))
-								)
-							)
-						: undefined;
-				const flow = (
-					expression: number,
-					incoming: Set<number>
-				): Set<number> | undefined => {
-					const v = info(expression);
-					let assigned: Set<number> | undefined = new Set(incoming);
-					if (
-						v.id === binaryen.LocalGetId &&
-						writes.has(v.index) &&
-						!assigned.has(v.index)
-					)
-						carried.add(v.index);
-					if (v.id === binaryen.IfId) {
-						assigned = flow(v.condition, assigned);
-						if (!assigned) return;
-						return intersect(
-							[
-								flow(v.ifTrue, assigned),
-								v.ifFalse ? flow(v.ifFalse, assigned) : assigned
-							].filter((path): path is Set<number> => path !== undefined)
-						);
-					}
-					if (v.id === binaryen.BlockId || v.id === binaryen.LoopId) {
-						if (v.name) exits.set(v.name, []);
-						for (const child of children(v)) {
-							if (!assigned) break;
-							assigned = flow(child, assigned);
-						}
-						const branches = v.name ? exits.get(v.name)! : [];
-						if (v.name) exits.delete(v.name);
-						return intersect([
-							...(assigned ? [assigned] : []),
-							...(v.id === binaryen.BlockId ? branches : [])
-						]);
-					}
-					for (const child of children(v)) {
-						if (!assigned) return;
-						assigned = flow(child, assigned);
-					}
-					if (!assigned) return;
-					if (v.id === binaryen.LocalSetId) assigned.add(v.index);
-					if (v.id === binaryen.BreakId || v.id === binaryen.SwitchId) {
-						const targets =
-							v.id === binaryen.SwitchId ? [...v.names, v.defaultName] : [v.name];
-						for (const target of targets) exits.get(target)?.push(new Set(assigned));
-						if (v.id === binaryen.SwitchId || !v.condition) return;
-					}
-					return v.id === binaryen.UnreachableId ? undefined : assigned;
-				};
-				let assigned: Set<number> | undefined = new Set();
-				for (const span of spans) {
-					if (!assigned) break;
-					assigned = flow(span.expression, assigned);
-				}
+				const carried = carriedLocals(spans, totalReads);
 				if (carried.size) {
 					const result: number[] = [];
 					let pending: Span[] = [];
@@ -653,15 +729,7 @@ export function extract(
 					null,
 					spans.map((span) => m.copyExpression(span.expression))
 				);
-				const remap = (expression: number): void => {
-					const v = info(expression);
-					if (v.id === binaryen.LocalGetId)
-						raw._BinaryenLocalGetSetIndex(expression, positions.get(v.index)!);
-					if (v.id === binaryen.LocalSetId)
-						raw._BinaryenLocalSetSetIndex(expression, positions.get(v.index)!);
-					for (const child of children(v)) remap(child);
-				};
-				remap(body);
+				remapLocals(body, positions);
 				let name: string;
 				do {
 					name = `__folio_inline_${outlineIndex++}`;
@@ -751,37 +819,7 @@ export function extract(
 			else diagnostics.push(`ordered native function: ${f.name}`);
 			if (candidate && control) pure.add(f.name);
 		}
-		const indexes = new Map<string, number>();
-		const lowlinks = new Map<string, number>();
-		const stack: string[] = [];
-		const active = new Set<string>();
-		const recursive = new Set<string>();
-		const components = (name: string): void => {
-			indexes.set(name, indexes.size);
-			lowlinks.set(name, indexes.get(name)!);
-			stack.push(name);
-			active.add(name);
-			for (const target of calls.get(name) ?? []) {
-				if (!calls.has(target)) continue;
-				if (!indexes.has(target)) {
-					components(target);
-					lowlinks.set(name, Math.min(lowlinks.get(name)!, lowlinks.get(target)!));
-				} else if (active.has(target))
-					lowlinks.set(name, Math.min(lowlinks.get(name)!, indexes.get(target)!));
-			}
-			if (lowlinks.get(name) !== indexes.get(name)) return;
-			const component: string[] = [];
-			let member: string;
-			do {
-				member = stack.pop()!;
-				active.delete(member);
-				component.push(member);
-			} while (member !== name);
-			if (component.length > 1 || calls.get(name)?.has(name))
-				for (const member of component) recursive.add(member);
-		};
-		for (const name of calls.keys()) if (!indexes.has(name)) components(name);
-		for (const name of recursive) {
+		for (const name of recursiveFunctions(calls)) {
 			controllers.delete(name);
 			pure.delete(name);
 			diagnostics.push(`ordered native recursion: ${name}`);
@@ -799,29 +837,7 @@ export function extract(
 			options.refused?.('no pure function to run as a region');
 			return;
 		}
-		const known = new Map<string, Term[]>();
-		const termsOf = (name: string): Term[] => {
-			let terms = known.get(name);
-			if (!terms) {
-				const f = functions.get(name)!;
-				const written = new Set<number>();
-				const scan = (e: number): void => {
-					const v = info(e);
-					if (v.id === binaryen.LocalSetId) written.add(v.index);
-					for (const child of children(v)) scan(child);
-				};
-				scan(f.body);
-				const count = binaryen.expandType(f.params).length;
-				terms = estimateTerms(f.body, workOf, assumedTrips, {
-					input: (index) => index < count && !written.has(index),
-					counter: (index) => written.has(index)
-				});
-				known.set(name, terms);
-			}
-			return terms;
-		};
-		const workOf = (name: string): Work | undefined =>
-			pure.has(name) ? settleWork(termsOf(name), assumedTrips) : undefined;
+		const { termsOf } = workModel(functions, (name) => pure.has(name), assumedTrips);
 		const admitted = new Set<string>();
 		const guarded = new Map<string, Term[]>();
 		for (const name of pure) {
@@ -1389,5 +1405,639 @@ export function extract(
 	} finally {
 		worker?.dispose();
 		module?.dispose();
+	}
+}
+
+/**
+ * The stack route: functions a worker could run when it holds a private copy of one mutable i32
+ * global, the stack pointer, and calls may recurse. Nothing consumes it yet, and it never changes
+ * the control plan or the module-wide reasons.
+ */
+export interface StackRoute {
+	/** True when at least one function can run on a worker and no global is refused for the module. */
+	eligible: boolean;
+	/** The one admitted mutable global and its initial value, when a function reads it. */
+	stack?: { name: string; initial: number };
+	/** Immutable globals with a constant initializer that the set reads. */
+	constants: string[];
+	/** The worker set: closed under calls, in module order. */
+	functions: string[];
+	/** The members that sit on a call cycle. */
+	recursive: string[];
+	/** Static work per member; a recursive member counts one level of its own calls. */
+	work: Record<string, Work>;
+	/** Why the module is or is not eligible. */
+	diagnostics: string[];
+}
+
+/** Computes the stack route of a module. A failure is reported in `diagnostics`, never thrown. */
+export function stackRoute(original: Uint8Array, options: AdmissionOptions = {}): StackRoute {
+	const { assumedTrips } = admission(options);
+	const route: StackRoute = {
+		eligible: false,
+		constants: [],
+		functions: [],
+		recursive: [],
+		work: Object.create(null),
+		diagnostics: []
+	};
+	let module: binaryen.Module | undefined;
+	try {
+		if (memoryCount(original) !== 1) {
+			route.diagnostics.push('exactly one memory required');
+			return route;
+		}
+		module = binaryen.readBinary(original);
+		if (module.getMemoryInfo().is64) {
+			route.diagnostics.push('wasm64 memory');
+			return route;
+		}
+		const compactImports = (binaryen.Features as unknown as { CompactImports: number })
+			.CompactImports;
+		module.setFeatures(binaryen.Features.All & ~compactImports);
+		const globals = new Map<
+			string,
+			{ mutable: boolean; refusal?: string; initial?: number; constant: boolean }
+		>();
+		for (let i = 0; i < module.getNumGlobals(); i++) {
+			const g = binaryen.getGlobalInfo(module.getGlobalByIndex(i));
+			const init = g.module ? undefined : info(g.init);
+			const constant = init?.id === binaryen.ConstId;
+			globals.set(g.name, {
+				mutable: g.mutable,
+				constant,
+				initial: constant && g.type === binaryen.i32 ? Number(init!.value) : undefined,
+				refusal: g.module
+					? 'imported global'
+					: !numeric.has(g.type)
+						? 'reference-typed global'
+						: !constant
+							? 'initializer is not a constant'
+							: g.mutable && g.type !== binaryen.i32
+								? 'mutable global is not i32'
+								: undefined
+			});
+		}
+		type Body = {
+			info: FunctionInfo;
+			cause?: string;
+			targets: Set<string>;
+			refs: Set<string>;
+		};
+		const bodies: Body[] = [];
+		for (let i = 0; i < module.getNumFunctions(); i++) {
+			const f = binaryen.getFunctionInfo(module.getFunctionByIndex(i));
+			if (!f.body) continue;
+			const body: Body = { info: f, targets: new Set(), refs: new Set() };
+			if (
+				![...binaryen.expandType(f.params), ...f.vars].every((t) => numeric.has(t)) ||
+				!(f.results === binaryen.none || numeric.has(f.results))
+			)
+				body.cause = 'non-numeric signature';
+			const visit = (expression: number): void => {
+				const v = info(expression);
+				if (!supported.has(v.id)) body.cause ??= 'unsupported expression';
+				else if (v.id === binaryen.GlobalGetId || v.id === binaryen.GlobalSetId)
+					body.refs.add(v.name);
+				else if (!pureNodes.has(v.id)) body.cause ??= 'impure expression';
+				if (v.isAtomic) body.cause ??= 'atomic access';
+				if (![binaryen.none, binaryen.unreachable].includes(v.type) && !numeric.has(v.type))
+					body.cause ??= 'non-numeric value';
+				if (v.id === binaryen.CallId) body.targets.add(v.target);
+				for (const child of children(v)) visit(child);
+			};
+			try {
+				visit(f.body);
+			} catch {
+				body.cause ??= 'unreadable expression';
+			}
+			bodies.push(body);
+		}
+		const referenced = new Set(bodies.flatMap((body) => [...body.refs]));
+		const named = [...globals.keys()].filter((name) => referenced.has(name));
+		const mutable = named.filter((name) => globals.get(name)!.mutable);
+		if (mutable.length > 1) {
+			for (const name of mutable.slice(1))
+				route.diagnostics.push(
+					`refused global ${name}: second mutable global (stack candidate ${mutable[0]})`
+				);
+			return route;
+		}
+		const refused = new Set<string>();
+		for (const name of named) {
+			const g = globals.get(name)!;
+			if (g.refusal) {
+				refused.add(name);
+				route.diagnostics.push(`refused global ${name}: ${g.refusal}`);
+			} else if (g.mutable) route.stack = { name, initial: g.initial! };
+			else route.constants.push(name);
+		}
+		if (route.stack) route.diagnostics.push(`stack global ${route.stack.name}`);
+		for (const body of bodies)
+			if (!body.cause && [...body.refs].some((name) => refused.has(name)))
+				body.cause = 'refused global';
+		const members = new Set(bodies.filter((body) => !body.cause).map((b) => b.info.name));
+		for (let changed = true; changed;) {
+			changed = false;
+			for (const body of bodies) {
+				if (body.cause || ![...body.targets].some((name) => !members.has(name))) continue;
+				body.cause = 'call outside the set';
+				members.delete(body.info.name);
+				changed = true;
+			}
+		}
+		const inSet = bodies.filter((body) => members.has(body.info.name));
+		route.functions = inSet.map((body) => body.info.name);
+		const cyclic = recursiveFunctions(new Map(inSet.map((b) => [b.info.name, b.targets])));
+		route.recursive = route.functions.filter((name) => cyclic.has(name));
+		const model = workModel(
+			new Map(inSet.map((body) => [body.info.name, body.info])),
+			(name) => members.has(name),
+			assumedTrips
+		);
+		for (const name of route.functions) route.work[name] = model.workOf(name)!;
+		route.diagnostics.push(
+			`worker set: ${route.functions.length} of ${bodies.length} functions, ${route.recursive.length} recursive`
+		);
+		const causes = new Map<string, number>();
+		for (const body of bodies)
+			if (body.cause) causes.set(body.cause, (causes.get(body.cause) ?? 0) + 1);
+		if (causes.size)
+			route.diagnostics.push(
+				`excluded: ${[...causes]
+					.sort(([a], [b]) => (a < b ? -1 : 1))
+					.map(([cause, count]) => `${count} ${cause}`)
+					.join(', ')}`
+			);
+		route.eligible = route.functions.length > 0;
+		if (!route.eligible) route.diagnostics.push('no function can run on a worker');
+		return route;
+	} catch (error) {
+		return {
+			eligible: false,
+			constants: [],
+			functions: [],
+			recursive: [],
+			work: Object.create(null),
+			diagnostics: [
+				`stack route unavailable: ${error instanceof Error ? error.message : String(error)}`
+			]
+		};
+	} finally {
+		module?.dispose();
+	}
+}
+
+/** One local of the owner that the schedule or the outlined body needs. */
+export interface IterationLocal {
+	local: number;
+	/** `induction` is the trip counter; `stride` advances by a constant each iteration */
+	kind: 'induction' | 'stride' | 'invariant' | 'frame';
+	/** position in the `iterate` argument list; absent when the body never reads the local */
+	argument?: number;
+	/** where the value at loop entry comes from, when it is an owner parameter or a constant */
+	start?: { parameter: number } | { constant: number };
+	/** change per iteration, modulo 2^32; the value for iteration k is `start + k * stride` */
+	stride?: number;
+}
+
+/**
+ * The iteration route: one owner function whose single loop runs independent calls into the worker
+ * set. It reads the stack route and changes nothing; `Folio.open` consumes it when no older route
+ * covers the program. `module` holds the worker set, the stack global and the constants, with
+ * `iterate` doing one iteration of the body.
+ *
+ * The route proves a shape, not independence. A loop-carried dependence through the owner frame is
+ * not visible to validation, because each iteration starts from a copy of the loop-entry frame.
+ * `Folio.run` probes for it at run time: iteration 0 runs once on the owner thread with the frame
+ * image poisoned, and a different result than the real iteration 0 sends the whole loop through
+ * serial replay. That catches a first iteration that reads a frame byte it did not write, and it
+ * also flags a read of loop-invariant frame data. It does not catch a read that only happens on a
+ * later iteration, a read of stale callee stack below the frame, or a read whose value does not
+ * change what iteration 0 writes.
+ */
+export interface IterationRoute {
+	eligible: boolean;
+	owner?: string;
+	/** the loop label, when the owner names it */
+	loop?: string;
+	/** the loop runs the entry value of `local` times; an entry value of zero runs it 2^32 times */
+	trip?: { local: number; parameter?: number; constant?: number };
+	/** every local the body reads or the schedule advances; `iterate` takes them in `argument` order */
+	locals: IterationLocal[];
+	/**
+	 * the owner's frame: `local` holds `global - size` after the prologue and `iterate` takes it last.
+	 * The image at [global - size, global) is copied into each slot at enqueue; a body that reads a
+	 * frame byte an earlier iteration wrote is not detected here.
+	 */
+	frame?: { global: string; size: number; local: number; copy: true };
+	/** export names in `module` */
+	iterate?: string;
+	stackExport?: string;
+	module?: Uint8Array;
+	diagnostics: string[];
+}
+
+const emptyIteration = (diagnostics: string[]): IterationRoute => ({
+	eligible: false,
+	locals: [],
+	diagnostics
+});
+
+/**
+ * Finds an owner whose single loop is a countdown over independent calls into the stack route's
+ * worker set and outlines one iteration of it. A refusal is a named diagnostic, never an exception.
+ */
+export function iterationRoute(original: Uint8Array, route: StackRoute): IterationRoute {
+	if (!route.eligible)
+		return emptyIteration([
+			`stack route refused: ${route.diagnostics.join('; ') || 'empty set'}`
+		]);
+	let module: binaryen.Module | undefined;
+	try {
+		module = binaryen.readBinary(original);
+		const m = module;
+		const compactImports = (binaryen.Features as unknown as { CompactImports: number })
+			.CompactImports;
+		m.setFeatures(binaryen.Features.All & ~compactImports);
+		const members = new Set(route.functions);
+		const stack = route.stack?.name;
+		const constants = new Set(route.constants);
+		const refusals: string[] = [];
+		for (let i = 0; i < m.getNumFunctions(); i++) {
+			const f = binaryen.getFunctionInfo(m.getFunctionByIndex(i));
+			if (!f.body || !callsInLoop(f.body, members)) continue;
+			const plan = outlineOwner(m, f, { members, stack, constants, route });
+			if (plan.route) {
+				plan.route.diagnostics.unshift(...refusals);
+				return plan.route;
+			}
+			for (const reason of plan.refusals)
+				if (refusals.length < 16) refusals.push(`refused loop in ${f.name}: ${reason}`);
+		}
+		refusals.push('no loop calls into the worker set');
+		return emptyIteration(refusals);
+	} catch (error) {
+		return emptyIteration([
+			`iteration route unavailable: ${error instanceof Error ? error.message : String(error)}`
+		]);
+	} finally {
+		module?.dispose();
+	}
+}
+
+// does any loop in the body contain a call to a member of the set
+function callsInLoop(body: number, members: Set<string>): boolean {
+	const visit = (expression: number, inLoop: boolean): boolean => {
+		const v = info(expression);
+		if (inLoop && v.id === binaryen.CallId && members.has(v.target)) return true;
+		return children(v).some((child) => visit(child, inLoop || v.id === binaryen.LoopId));
+	};
+	try {
+		return visit(body, false);
+	} catch {
+		return false;
+	}
+}
+
+// `local = local + c` or `local - c` as a statement; the change per iteration
+function strideUpdate(statement: number): { local: number; stride: number } | undefined {
+	const set = info(statement);
+	if (set.id !== binaryen.LocalSetId || set.isTee) return;
+	const next = info(set.value);
+	if (next.id !== binaryen.BinaryId) return;
+	const [left, right] = [info(next.left), info(next.right)];
+	const isSelf = (v: Info) => v.id === binaryen.LocalGetId && v.index === set.index;
+	const constant = (v: Info) =>
+		v.id === binaryen.ConstId && typeof v.value === 'number' ? v : undefined;
+	if (next.op === binaryen.AddInt32) {
+		if (isSelf(left) && constant(right)) return { local: set.index, stride: right.value | 0 };
+		if (isSelf(right) && constant(left)) return { local: set.index, stride: left.value | 0 };
+	}
+	if (next.op === binaryen.SubInt32 && isSelf(left) && constant(right))
+		return { local: set.index, stride: -right.value | 0 };
+}
+
+function outlineOwner(
+	m: binaryen.Module,
+	f: FunctionInfo,
+	context: {
+		members: Set<string>;
+		stack: string | undefined;
+		constants: Set<string>;
+		route: StackRoute;
+	}
+): { route?: IterationRoute; refusals: string[] } {
+	const { members, stack, constants } = context;
+	const refuse = new Set<string>();
+	const localTypes = [...binaryen.expandType(f.params), ...f.vars];
+	const parameterCount = binaryen.expandType(f.params).length;
+	if (!localTypes.every((type) => numeric.has(type)))
+		return { refusals: ['non-numeric signature'] };
+
+	// one pass: loops, write and read counts, the loop's own writes
+	const loops: number[] = [];
+	const writes = new Map<number, number>();
+	const totalReads = new Map<number, number>();
+	const scan = (expression: number): void => {
+		const v = info(expression);
+		if (v.id === binaryen.LoopId) loops.push(expression);
+		if (v.id === binaryen.LocalSetId) writes.set(v.index, (writes.get(v.index) ?? 0) + 1);
+		if (v.id === binaryen.LocalGetId)
+			totalReads.set(v.index, (totalReads.get(v.index) ?? 0) + 1);
+		for (const child of children(v)) scan(child);
+	};
+	scan(f.body);
+	if (loops.length !== 1) return { refusals: [`${loops.length} loops, one required`] };
+	const loopExpression = loops[0]!;
+	const loop = info(loopExpression);
+
+	// the blocks that lead to the loop, outermost first
+	const levels: { children: number[]; index: number }[] = [];
+	const locate = (expression: number): boolean => {
+		if (expression === loopExpression) return true;
+		const v = info(expression);
+		if (v.id !== binaryen.BlockId) return false;
+		for (let i = 0; i < v.children.length; i++) {
+			if (!locate(v.children[i])) continue;
+			levels.unshift({ children: v.children, index: i });
+			return true;
+		}
+		return false;
+	};
+	if (!locate(f.body)) return { refusals: ['the loop is not reached through blocks'] };
+	const before = levels.flatMap((level) => level.children.slice(0, level.index));
+	const after = levels.flatMap((level) => level.children.slice(level.index + 1));
+
+	// the trip count: a countdown that ends on its own decrement
+	const counter = countdownLocal(loop);
+	if (counter === undefined || localTypes[counter] !== binaryen.i32)
+		return { refusals: ['trip count is not computable before the loop starts'] };
+	const loopWrites = new Map<number, number>();
+	const countLoopWrites = (expression: number): void => {
+		const v = info(expression);
+		if (v.id === binaryen.LocalSetId)
+			loopWrites.set(v.index, (loopWrites.get(v.index) ?? 0) + 1);
+		for (const child of children(v)) countLoopWrites(child);
+	};
+	countLoopWrites(loopExpression);
+	if ((loopWrites.get(counter) ?? 0) !== 1)
+		return { refusals: ['trip count is not computable before the loop starts'] };
+
+	// the loop body, the trailing constant-stride updates and the back edge
+	const body = info(loop.body);
+	const statements: number[] = body.id === binaryen.BlockId ? body.children : [loop.body];
+	const updates = new Map<number, number>([[counter, -1]]);
+	let end = statements.length - 1;
+	while (end > 0) {
+		const update = strideUpdate(statements[end - 1]!);
+		if (!update || updates.has(update.local) || localTypes[update.local] !== binaryen.i32)
+			break;
+		updates.set(update.local, update.stride);
+		end--;
+	}
+	const spans: Span[] = [];
+	for (const statement of statements.slice(0, end)) {
+		const summary = summarizeSpan(statement, {
+			call: (target) => members.has(target),
+			global: (name) => name === stack || constants.has(name)
+		});
+		for (const reason of summary.refusals) refuse.add(reason);
+		spans.push(summary.span);
+	}
+	if (!spans.length) refuse.add('empty loop body');
+
+	// the frame: `sp = global - size` in the owner's prologue
+	let frame: IterationRoute['frame'];
+	if (stack) {
+		const frameOf = (expression: number) => {
+			const sub = info(expression);
+			if (sub.id !== binaryen.BinaryId || sub.op !== binaryen.SubInt32) return;
+			const [from, size] = [info(sub.left), info(sub.right)];
+			if (
+				from.id === binaryen.GlobalGetId &&
+				from.name === stack &&
+				size.id === binaryen.ConstId
+			)
+				return size.value as number;
+		};
+		const top = levels[0] ? levels[0].children.slice(0, levels[0].index) : [];
+		for (const [i, statement] of top.entries()) {
+			const v = info(statement);
+			if (v.id === binaryen.GlobalSetId && v.name === stack) {
+				const tee = info(v.value);
+				const size =
+					tee.id === binaryen.LocalSetId && tee.isTee ? frameOf(tee.value) : undefined;
+				if (size !== undefined)
+					frame = { global: stack, size, local: tee.index, copy: true };
+			}
+			if (v.id === binaryen.LocalSetId && !v.isTee && frameOf(v.value) !== undefined) {
+				const next = top[i + 1] ? info(top[i + 1]!) : undefined;
+				const value = next?.id === binaryen.GlobalSetId ? info(next.value) : undefined;
+				if (
+					next?.name === stack &&
+					value?.id === binaryen.LocalGetId &&
+					value.index === v.index
+				)
+					frame = { global: stack, size: frameOf(v.value)!, local: v.index, copy: true };
+			}
+			if (frame) break;
+		}
+		if (frame && (writes.get(frame.local) ?? 0) !== 1) frame = undefined;
+	}
+
+	// locals that hold or derive from a frame address
+	const tainted = new Set<number>(frame ? [frame.local] : []);
+	const derives = (expression: number): boolean => {
+		const v = info(expression);
+		if (v.id === binaryen.LocalGetId && tainted.has(v.index)) return true;
+		if (v.id === binaryen.GlobalGetId && v.name === stack) return true;
+		return children(v).some(derives);
+	};
+	for (let changed = true; changed;) {
+		changed = false;
+		const grow = (expression: number): void => {
+			const v = info(expression);
+			if (v.id === binaryen.LocalSetId && !tainted.has(v.index) && derives(v.value)) {
+				tainted.add(v.index);
+				changed = true;
+			}
+			for (const child of children(v)) grow(child);
+		};
+		grow(f.body);
+	}
+
+	const callsMember = (expression: number): boolean => {
+		const v = info(expression);
+		return (v.id === binaryen.CallId && members.has(v.target)) || children(v).some(callsMember);
+	};
+	if (spans.length && !spans.some((span) => callsMember(span.expression)))
+		refuse.add('no call into the worker set in the loop body');
+	for (const span of spans) {
+		const check = (expression: number): void => {
+			const v = info(expression);
+			if (v.id === binaryen.StoreId && derives(v.value))
+				refuse.add('frame address stored to memory');
+			if (
+				(v.id === binaryen.CallIndirectId ||
+					(v.id === binaryen.CallId && !members.has(v.target))) &&
+				children(v).some(derives)
+			)
+				refuse.add('frame address passed outside the worker set');
+			if (v.id === binaryen.GlobalGetId && v.name === stack && !frame)
+				refuse.add('stack global read in the body without a frame');
+			for (const child of children(v)) check(child);
+		};
+		check(span.expression);
+	}
+
+	// what runs after the loop must not read the frame; the epilogue restore is the one allowed use
+	const afterReads = new Map<number, number>();
+	const inspect = (expression: number): void => {
+		const v = info(expression);
+		if (frame && v.id === binaryen.GlobalSetId && v.name === stack) {
+			const sum = info(v.value);
+			const [a, b] = sum.id === binaryen.BinaryId ? [info(sum.left), info(sum.right)] : [];
+			if (
+				sum.op === binaryen.AddInt32 &&
+				a?.id === binaryen.LocalGetId &&
+				a.index === frame.local &&
+				b?.id === binaryen.ConstId &&
+				b.value === frame.size
+			)
+				return;
+		}
+		if (v.id === binaryen.LocalGetId) {
+			afterReads.set(v.index, (afterReads.get(v.index) ?? 0) + 1);
+			if (tainted.has(v.index)) refuse.add('frame object read after the loop');
+		}
+		for (const child of children(v)) inspect(child);
+	};
+	for (const statement of after) inspect(statement);
+
+	const bodyWrites = new Set(spans.flatMap((span) => [...span.writes]));
+	const carried = carriedLocals(spans, totalReads);
+	for (const local of bodyWrites) {
+		if (afterReads.get(local))
+			refuse.add('loop body writes a local the code after the loop reads');
+		else if (carried.has(local)) refuse.add('carried local is not a constant stride');
+	}
+
+	// classify what the body reads
+	const bodyReads = new Set(spans.flatMap((span) => [...span.reads.keys()]));
+	const entry = (local: number): IterationLocal['start'] => {
+		const outside = (writes.get(local) ?? 0) - (loopWrites.get(local) ?? 0);
+		if (local < parameterCount && outside === 0) return { parameter: local };
+		if (outside !== 1) return;
+		for (const statement of [...before].reverse()) {
+			const v = info(statement);
+			if (v.id !== binaryen.LocalSetId || v.isTee || v.index !== local) continue;
+			const value = info(v.value);
+			if (value.id === binaryen.ConstId && typeof value.value === 'number')
+				return { constant: value.value >>> 0 };
+			if (
+				value.id === binaryen.LocalGetId &&
+				value.index < parameterCount &&
+				!writes.get(value.index)
+			)
+				return { parameter: value.index };
+			return;
+		}
+	};
+	const strided: IterationLocal[] = [];
+	const invariant: IterationLocal[] = [];
+	for (const [local, stride] of [...updates].sort(([a], [b]) => a - b))
+		strided.push({
+			local,
+			kind: local === counter ? 'induction' : 'stride',
+			start: entry(local),
+			stride
+		});
+	for (const local of [...bodyReads].sort((a, b) => a - b)) {
+		if (bodyWrites.has(local) || updates.has(local) || local === frame?.local) continue;
+		if ((loopWrites.get(local) ?? 0) > 0) refuse.add('carried local is not a constant stride');
+		invariant.push({ local, kind: 'invariant', start: entry(local) });
+	}
+	for (const item of [...strided, ...invariant])
+		if (bodyReads.has(item.local) && tainted.has(item.local))
+			refuse.add('frame address held in a local the body reads');
+	if (refuse.size) return { refusals: [...refuse] };
+
+	// `iterate`: strided and invariant locals in order, then the frame base, then the body's temporaries
+	const parameters = [...strided, ...invariant].filter((item) => bodyReads.has(item.local));
+	const order = [...parameters.map((item) => item.local), ...(frame ? [frame.local] : [])];
+	const temporaries = [...new Set(spans.flatMap((span) => [...span.locals]))]
+		.filter((local) => !order.includes(local))
+		.sort((a, b) => a - b);
+	const positions = new Map([...order, ...temporaries].map((local, index) => [local, index]));
+	parameters.forEach((item, index) => (item.argument = index));
+
+	const memory = m.getMemoryInfo();
+	const internalMemory = memoryName(m);
+	const w = new binaryen.Module();
+	try {
+		w.setFeatures(m.getFeatures() | binaryen.Features.Atomics);
+		w.setMemory(memory.initial, memory.max ?? 65536, null, [], true, false, internalMemory);
+		w.addMemoryImport(internalMemory, 'env', 'memory', true);
+		if (stack)
+			w.addGlobal(stack, binaryen.i32, true, w.i32.const(context.route.stack!.initial));
+		for (const name of constants) {
+			const g = binaryen.getGlobalInfo(m.getGlobal(name));
+			w.addGlobal(name, g.type, false, w.copyExpression(g.init));
+		}
+		for (const name of context.route.functions) {
+			const g = binaryen.getFunctionInfo(m.getFunction(name));
+			w.addFunction(name, g.params, g.results, g.vars, w.copyExpression(g.body));
+		}
+		let iterate = '__folio_iterate';
+		while (w.getFunction(iterate)) iterate += '_';
+		const block = w.block(
+			null,
+			spans.map((span) => w.copyExpression(span.expression))
+		);
+		remapLocals(block, positions);
+		w.addFunction(
+			iterate,
+			binaryen.createType(order.map((local) => localTypes[local]!)),
+			binaryen.none,
+			temporaries.map((local) => localTypes[local]!),
+			block
+		);
+		w.addFunctionExport(iterate, iterate);
+		const stackExport = '__folio_stack';
+		if (stack) w.addGlobalExport(stack, stackExport);
+		if (!w.validate()) throw new Error('invalid iteration module');
+		const bytes = w.emitBinary();
+		new WebAssembly.Module(Uint8Array.from(bytes));
+		const trip = entry(counter);
+		const locals: IterationLocal[] = [
+			...strided,
+			...invariant,
+			...(frame
+				? [{ local: frame.local, kind: 'frame' as const, argument: order.length - 1 }]
+				: [])
+		];
+		const diagnostics = [
+			`owner ${f.name}: countdown loop on local ${counter}, ${spans.length} body statements, ${order.length} arguments`
+		];
+		if (frame)
+			diagnostics.push(`frame ${frame.global} - ${frame.size} in local ${frame.local}`);
+		return {
+			refusals: [],
+			route: {
+				eligible: true,
+				owner: f.name,
+				loop: loop.name || undefined,
+				trip: { local: counter, ...(trip ?? {}) },
+				locals,
+				frame,
+				iterate,
+				stackExport: stack ? stackExport : undefined,
+				module: bytes,
+				diagnostics
+			}
+		};
+	} finally {
+		w.dispose();
 	}
 }

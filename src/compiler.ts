@@ -1,6 +1,6 @@
 import binaryen from 'binaryen';
-import type { AdmissionOptions, ControlPlan } from './extract.ts';
-import { admission, extract } from './extract.ts';
+import type { AdmissionOptions, ControlPlan, IterationRoute, StackRoute } from './extract.ts';
+import { admission, extract, iterationRoute, stackRoute } from './extract.ts';
 import type { NativePlan } from './guards.ts';
 import { nativePlan } from './guards.ts';
 
@@ -174,6 +174,19 @@ export interface PreparedProgram {
 	control?: ControlPlan;
 	/** Why control-flow extraction produced no plan; the counted-loop plans above are unaffected. */
 	controlReasons?: string[];
+	/**
+	 * The stack-pointer route: the worker-side function set when one mutable i32 global is private
+	 * and recursion is allowed. It ignores `reasons` and nothing consumes it yet.
+	 *
+	 * @internal
+	 */
+	stackRoute?: StackRoute;
+	/**
+	 * One loop of independent calls into the stack route's worker set; inert like `stackRoute`.
+	 *
+	 * @internal
+	 */
+	iterationRoute?: IterationRoute;
 }
 
 type Info = ReturnType<typeof binaryen.getExpressionInfo> & Record<string, any>;
@@ -730,6 +743,8 @@ export function prepare(bytes: Uint8Array, options: PrepareOptions = {}): Prepar
 				`control-flow extraction unavailable: ${error instanceof Error ? error.message : String(error)}`
 			);
 		}
+		prepared.stackRoute = stackRoute(prepared.original, options);
+		prepared.iterationRoute = iterationRoute(prepared.original, prepared.stackRoute);
 	}
 	return prepared;
 }
