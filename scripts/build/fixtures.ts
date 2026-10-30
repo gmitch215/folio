@@ -27,6 +27,7 @@ const link = [
 export const fixtures = [
 	{ source: 'fixture.c', output: 'fixture.wasm', flags: ['-fno-inline', '-fno-unroll-loops', '-fno-vectorize'] },
 	{ source: 'sharing.c', output: 'sharing.wasm', flags: [] },
+	{ source: 'records.c', output: 'records.wasm', flags: ['-fno-unroll-loops', '-fno-vectorize'] },
 	{ source: 'generalized.c', output: 'generalized.wasm', flags: ['-fno-unroll-loops', '-fno-vectorize'] }
 ];
 
