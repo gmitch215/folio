@@ -1769,11 +1769,11 @@ test('a batch that exhausts the undo log ends the dispatch with the named reason
 		assert.equal(report.reason, 'log-exhausted');
 		assert.equal(counts.stopped, 'log-exhausted');
 		assert.equal(counts.batches, 1);
-		// the iterations already running finish, the rest of the batch never starts
+		// every iteration fails, so each worker claims one and then stops; a late worker claims none
 		assert.ok(counts.exhausted >= 1 && counts.exhausted <= 32);
 		assert.equal(counts.exhausted, counts.regions);
 		assert.equal(counts.replayed, counts.regions);
-		assert.ok(counts.regions >= 4 && counts.regions < 32);
+		assert.ok(counts.regions >= 1 && counts.regions <= 4);
 		assert.equal(counts.replayed + counts.serial, 100);
 		assert.equal(new Uint8Array(run.got.memory.buffer)[0x40000], 5 + 99);
 	} finally {
