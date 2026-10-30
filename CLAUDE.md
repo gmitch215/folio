@@ -12,6 +12,8 @@ claiming anything about speed, isolates, accounts or consumers.
 
 - `src/` the library. `compiler.ts` and `extract.ts` find regions, `guards.ts` proves native
   kernels, `transaction.ts` and `coordinator.ts` run and validate them, `node.ts` is the Node pool,
+  `iteration.ts`, `iteration-admission.ts` and `inline.ts` run a loop of independent calls on workers
+  (private stack slots, inline marks, ordered validation, measured admission),
   `remote.ts` and `host.ts` are the portable client and the execution host, `managed.ts` and
   `frames.ts` are the Workers and Durable Object backend, `tasks.ts` is the Node task pool for
   work a program names itself (private contexts, copied values, optional differential audit), and

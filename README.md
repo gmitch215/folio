@@ -100,6 +100,10 @@ result of `prepare(bytes)`. A compiled module has no inspectable bytes and uses 
 Imported memory is allocated from the module's limits when omitted. Pass `memory` to bind an
 existing single imported memory, or bind several by their exact names in `imports`. Missing host
 functions, tables, globals, tags and memory64 bindings are supplied as with native instantiation.
+A loop of independent calls (a countdown loop in one function, as in a program that hashes several
+files) runs on workers only when the `memory` you pass is a shared `WebAssembly.Memory`; an unshared
+memory, or one the library cannot grow by the arena it needs, keeps the serial run and the report
+names why.
 `prepare(bytes, { parallel: 'off' })` disables optimization and leaves the program unchanged.
 Prepared plans are trusted build artifacts.
 
@@ -483,18 +487,19 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 
 ## 📈 Measured Results
 
-| Backend                            | Environment                                                            | Result                                                                                                                                                              |
-| ---------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Node, shared allocation            | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                     | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact                                                                  |
-| Node, compute kernel               | eight workers, 207 byte-exact samples                                  | 7.62x, with total CPU 1.037x of serial                                                                                                                              |
-| Node, Drupal regeneration          | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                    | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render                                                                            |
-| Managed Workers                    | deployed Durable Object lanes                                          | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes                                                                         |
-| Browser Run                        | deployed Chromium, eight workers on one 256 MiB allocation             | 3.87x with four workers on explicit partitions                                                                                                                      |
-| Browser automatic extraction       | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB     | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                     |
-| Baked boot image                   | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm        | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime                                                                         |
-| Independent corpus                 | 21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro | default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native             |
-| Explicit tasks on private contexts | the same 21 kernels, eight batched `TaskPool` workers                  | 18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs |
-| Baked Drupal lifecycle             | Apple M2 Pro, 15 paired rounds, compile through first render           | 830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image                                                  |
+| Backend                            | Environment                                                                     | Result                                                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Node, shared allocation            | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                              | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact                                                                  |
+| Node, compute kernel               | eight workers, 207 byte-exact samples                                           | 7.62x, with total CPU 1.037x of serial                                                                                                                              |
+| Node, Drupal regeneration          | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                             | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render                                                                            |
+| Managed Workers                    | deployed Durable Object lanes                                                   | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes                                                                         |
+| Browser Run                        | deployed Chromium, eight workers on one 256 MiB allocation                      | 3.87x with four workers on explicit partitions                                                                                                                      |
+| Browser automatic extraction       | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB              | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                     |
+| Baked boot image                   | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm                 | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime                                                                         |
+| Independent corpus                 | 21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro          | default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native             |
+| Explicit tasks on private contexts | the same 21 kernels, eight batched `TaskPool` workers                           | 18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs |
+| Iteration route, outside program   | BLAKE3 1.8.7 unmodified, 32 x 4 MiB and 128 x 256 KiB, Ryzen 9 9900X and M2 Pro | default admission through `Folio.run`: 2.7x and 2.2x on the Ryzen machine, 3.3x and 2.9x on the M2 Pro (warm calls, equal digests); 1.00x before                    |
+| Baked Drupal lifecycle             | Apple M2 Pro, 15 paired rounds, compile through first render                    | 830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image                                                  |
 
 A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The

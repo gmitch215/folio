@@ -39,20 +39,26 @@ listing order differed between the two machines.
 harness writes a new `raw.jsonl` and refuses to overwrite an existing one. Each raw file starts with
 an environment record that names the runtime, hardware and a SHA256 of every source file it ran.
 
-| file                                                      | what it does                                                                                                                 |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `corpus.ts`, `cases/`                                     | builds the 21 pinned upstream kernels and checks them against native                                                         |
-| `corpus-serial.ts`, `admission-diagnostic.ts`             | single-entry native against Folio; the threshold-zero diagnostic, one process per case                                       |
-| `corpus-mechanisms.ts`                                    | explicit tasks against conventional workers with a `whole`, `pages` or `checkpoint` reset (`FOLIO_CORPUS_RESET`)             |
-| `inputs.ts`                                               | five input profiles per kernel on persistent contexts against fresh native instances                                         |
-| `boot-eligibility.ts`                                     | initialization, image restore and an application cache on the corpus initializers                                            |
-| `focused.ts`                                              | eight-worker repeats with one active pool at a time, a paired serial control and an idle-pool condition                      |
-| `crossover.ts`, `graded.ts`                               | synthetic compute, stream and conflict cells; graded conflict rates and adaptive routing                                     |
-| `differential.ts`                                         | generated programs and guard-refusal loops against native at widths 1, 2, 4 and 8                                            |
-| `matched.sh`, `backing.sh`, `focused.sh`, `completion.sh` | run the studies in sequence on the Linux rig under a timing lock                                                             |
-| `analyze.ts`                                              | paired summaries with bootstrap intervals from a raw file                                                                    |
-| `derive.ts`, `denominators.ts`                            | blocker histogram, state-loss counts, session spread, operation costs, the corpus denominator table and the per-kernel table |
-| `export.ts`, `evidence.ts`                                | copy a run into `results/` with summaries and a manifest; verify every manifest and the historical index                     |
+| file                                                                                  | what it does                                                                                                                         |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `corpus.ts`, `cases/`                                                                 | builds the 21 pinned upstream kernels and checks them against native                                                                 |
+| `corpus-serial.ts`, `admission-diagnostic.ts`                                         | single-entry native against Folio; the threshold-zero diagnostic, one process per case                                               |
+| `corpus-mechanisms.ts`                                                                | explicit tasks against conventional workers with a `whole`, `pages` or `checkpoint` reset (`FOLIO_CORPUS_RESET`)                     |
+| `inputs.ts`                                                                           | five input profiles per kernel on persistent contexts against fresh native instances                                                 |
+| `boot-eligibility.ts`                                                                 | initialization, image restore and an application cache on the corpus initializers                                                    |
+| `grain-build.ts`, `grain-diff.ts`, `grain-bench.ts`, `grain-summarize.ts`, `grain.sh` | the single-call AES grain kernel (`cases/aes-grain.c`), its equality check and its paired timing on the explicit route               |
+| `blake3-build.ts`, `blake3-bench.ts`, `blake3-worker.ts`, `blake3.sh`                 | the pinned BLAKE3 consumer (`cases/blake3-hash-all.c`): build with the official vector check, then default, explicit and forced arms |
+| `plan-snapshot.ts`                                                                    | dumps the stable `prepare` plan fields of every fixture and corpus artifact for a root, with the route summaries beside it           |
+| `inline-diff.ts`                                                                      | the inline tracking lowering against native, the host-call footprint and binaryen's tracer; `cost` times the BLAKE3 consumer         |
+| `iteration-diff.ts`                                                                   | the iteration executor against the serial program: random programs, and the BLAKE3 consumer (`blake3`, with a `Folio.run` arm)       |
+| `iteration-admission.ts`, `iteration-admission.sh`                                    | the admission sweep on the BLAKE3 consumer; `summary` flags every wrong decision                                                     |
+| `focused.ts`                                                                          | eight-worker repeats with one active pool at a time, a paired serial control and an idle-pool condition                              |
+| `crossover.ts`, `graded.ts`                                                           | synthetic compute, stream and conflict cells; graded conflict rates and adaptive routing                                             |
+| `differential.ts`                                                                     | generated programs and guard-refusal loops against native at widths 1, 2, 4 and 8                                                    |
+| `matched.sh`, `backing.sh`, `focused.sh`, `completion.sh`                             | run the studies in sequence on the Linux rig under a timing lock                                                                     |
+| `analyze.ts`                                                                          | paired summaries with bootstrap intervals from a raw file                                                                            |
+| `derive.ts`, `denominators.ts`                                                        | blocker histogram, state-loss counts, session spread, operation costs, the corpus denominator table and the per-kernel table         |
+| `export.ts`, `evidence.ts`                                                            | copy a run into `results/` with summaries and a manifest; verify every manifest and the historical index                             |
 
 ```sh
 node scripts/research/export.ts results/topic/study run.jsonl:raw.jsonl

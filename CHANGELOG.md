@@ -12,6 +12,12 @@
   lanes older than 1.0.1 reject its frames.
 - `ImageMismatchError` code `start`.
 - Examples for routing, context reset, the task pool and boot images.
+- An iteration route for `Folio.run`: a function with one countdown loop whose iterations call into a
+  function set that may use one stack-pointer global and recursion now runs its iterations on workers
+  under default admission, on private stack slots, with ordered validation and serial replay. It needs
+  a shared `memory` option and decides from the measured time of the first iteration. `ExecutionReport`
+  gains `extraction: 'iteration'` and an `iteration` field, and `reason` gains `no-arena`,
+  `memory-size-observed`, `frame-carried dependence`, `no-admission` and `trip-zero`.
 
 ### Changed
 
@@ -31,8 +37,10 @@
 
 ### Unchanged defaults
 
-Execution routing, `minimumRegionWork` (200,000), the dense snapshot encoding, worker counts and
-transaction budgets.
+`minimumRegionWork` (200,000), the dense snapshot encoding, worker counts and transaction budgets.
+A program that already had a plan keeps it. A program with no plan, an eligible loop and a shared
+host `memory` can now dispatch under `parallel: 'auto'`; `parallel: 'off'` and a host memory that is
+not shared keep the serial run.
 
 The evaluation behind this release is in the [technical report](TECHNICAL_REPORT.md) and under
 [results/](results).
