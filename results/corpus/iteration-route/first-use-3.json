@@ -20,38 +20,38 @@
   "conflicts": {
    "raw": 0,
    "war": 0,
-   "waw": 0
+   "waw": 0,
+   "frame": 0
   },
-  "dispatchMs": 34.302039000000036,
-  "validationMs": 1.2963459999999714,
+  "dispatchMs": 39.08886499999994,
+  "validationMs": 1.2353010000000495,
   "rollbackMs": 0,
   "replayMs": 0,
-  "workerRunMs": 213.06678600000032,
-  "workerScanMs": 26.38592299999982,
-  "probe": "off",
-  "probeMs": 0
+  "workerRunMs": 254.77600699999994,
+  "workerScanMs": 19.61977699999977,
+  "serial": 0
  },
- "serialMs": 141.743967,
- "executorMs": 185.36157100000003,
+ "serialMs": 145.84747399999992,
+ "executorMs": 190.37911700000006,
  "folio": {
   "memoryEqual": true,
   "digestsEqual": true,
   "memoryBytes": 169934848,
-  "openMs": 98.78277600000001,
-  "firstRunMs": 102.892969,
-  "secondRunMs": 61.12144399999988,
+  "openMs": 100.72197100000017,
+  "firstRunMs": 113.8908429999999,
+  "secondRunMs": 58.73052899999993,
   "first": {
    "values": [
     32
    ],
    "workers": 8,
-   "regions": 32,
+   "regions": 31,
    "replayed": 0,
    "fallbacks": 0,
    "mode": "speculative",
    "iteration": {
     "workers": 8,
-    "regions": 32,
+    "regions": 31,
     "replayed": 0,
     "rolledBack": 0,
     "fallbacks": 0,
@@ -59,25 +59,27 @@
     "exhausted": 0,
     "batches": 1,
     "failedBatches": 0,
-    "undoEntries": 2816,
+    "undoEntries": 2728,
     "conflicts": {
      "raw": 0,
      "war": 0,
-     "waw": 0
+     "waw": 0,
+     "frame": 0
     },
-    "dispatchMs": 30.737380999999914,
-    "validationMs": 0.26039700000001176,
+    "dispatchMs": 36.46150299999999,
+    "validationMs": 0.2541069999999763,
     "rollbackMs": 0,
     "replayMs": 0,
-    "workerRunMs": 204.29325100000005,
-    "workerScanMs": 13.63395800000012,
-    "probe": "clear",
-    "probeMs": 5.7919939999999315,
+    "workerRunMs": 232.89101000000028,
+    "workerScanMs": 17.809665000000678,
+    "serial": 1,
     "admission": {
-     "predictedParallelMs": 37.03799680000084,
-     "predictedSerialMs": 125.13570285714586,
-     "firstIterationMs": 5.474687000000131,
-     "admitted": true
+     "plainIterationMs": 4.906056999999919,
+     "remainingSerialMs": 152.08776699999748,
+     "floorMs": 2.5,
+     "admitted": true,
+     "batchWallMs": 37.22230200000013,
+     "batchSerialMs": 152.08776699999748
     }
    },
    "extraction": "iteration",
@@ -88,13 +90,13 @@
     32
    ],
    "workers": 8,
-   "regions": 32,
+   "regions": 31,
    "replayed": 0,
    "fallbacks": 0,
    "mode": "speculative",
    "iteration": {
     "workers": 8,
-    "regions": 32,
+    "regions": 31,
     "replayed": 0,
     "rolledBack": 0,
     "fallbacks": 0,
@@ -102,30 +104,32 @@
     "exhausted": 0,
     "batches": 1,
     "failedBatches": 0,
-    "undoEntries": 2816,
+    "undoEntries": 2728,
     "conflicts": {
      "raw": 0,
      "war": 0,
-     "waw": 0
+     "waw": 0,
+     "frame": 0
     },
-    "dispatchMs": 29.56102400000009,
-    "validationMs": 0.2515370000000985,
+    "dispatchMs": 30.944835999999896,
+    "validationMs": 0.3971040000001267,
     "rollbackMs": 0,
     "replayMs": 0,
-    "workerRunMs": 192.6239860000003,
-    "workerScanMs": 8.031072000000222,
-    "probe": "clear",
-    "probeMs": 5.52908699999989,
+    "workerRunMs": 208.33317800000054,
+    "workerScanMs": 8.082368999999744,
+    "serial": 1,
     "admission": {
-     "predictedParallelMs": 36.259193599999705,
-     "predictedSerialMs": 122.35426285714182,
-     "firstIterationMs": 5.352998999999954,
-     "admitted": true
+     "plainIterationMs": 3.435478000000103,
+     "remainingSerialMs": 106.49981800000319,
+     "floorMs": 2.5,
+     "admitted": true,
+     "batchWallMs": 31.38001999999983,
+     "batchSerialMs": 106.49981800000319
     }
    },
    "extraction": "iteration",
    "memoryMode": "shared"
   }
  },
- "load": 0.15
+ "load": 1.27
 }

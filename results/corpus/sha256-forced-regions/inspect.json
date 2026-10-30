@@ -1,0 +1,576 @@
+{
+	"prepare": {
+		"reasons": [
+			"start function",
+			"data segments require initialization isolation",
+			"shared wasm32 memory required",
+			"unsupported expression 11",
+			"global state"
+		],
+		"controlReasons": [],
+		"loops": [],
+		"entries": [
+			"initialize",
+			"entry"
+		],
+		"diagnostics": [
+			"region admission: 17 regions from 20 of 20 pure functions at 0 net work; 7 instrumented"
+		],
+		"regions": 17
+	},
+	"dynamic": {
+		"afterInitialize": 2,
+		"entryDispatches": 67600,
+		"totalDispatches": 67602,
+		"folioValue": 32,
+		"nativeValue": 32,
+		"memoryMatches": true,
+		"nativeDigest": "15416e720d69dcfe97b1666f53b88e03cbc2f4dd6d7b1c9ba3d696fc652628fb",
+		"folioDigest": "15416e720d69dcfe97b1666f53b88e03cbc2f4dd6d7b1c9ba3d696fc652628fb",
+		"leftoverAfterInitialize": 2,
+		"leftoverAfterEntry": 1,
+		"width": 8,
+		"flushes": 66565,
+		"batchHistogram": {
+			"1": 65540,
+			"2": 1024,
+			"14": 1
+		},
+		"batchesAtInitialize": {
+			"2": 1
+		},
+		"singletonRegions": 65540,
+		"regionsInMultiRegionBatches": 2062
+	},
+	"functions": [
+		{
+			"name": "__wasm_init_memory",
+			"loads": 0,
+			"stores": 0,
+			"loops": 0,
+			"bulk": 1,
+			"calls": 0
+		},
+		{
+			"name": "memset",
+			"loads": 0,
+			"stores": 9,
+			"loops": 2,
+			"bulk": 0,
+			"calls": 0
+		},
+		{
+			"name": "corpus_reset",
+			"loads": 0,
+			"stores": 9,
+			"loops": 4,
+			"bulk": 0,
+			"calls": 0
+		},
+		{
+			"name": "corpus_output",
+			"loads": 0,
+			"stores": 0,
+			"loops": 0,
+			"bulk": 0,
+			"calls": 0
+		},
+		{
+			"name": "initialize",
+			"loads": 0,
+			"stores": 0,
+			"loops": 0,
+			"bulk": 0,
+			"calls": 2
+		},
+		{
+			"name": "entry",
+			"loads": 0,
+			"stores": 0,
+			"loops": 0,
+			"bulk": 0,
+			"calls": 2
+		},
+		{
+			"name": "sha256_transform",
+			"loads": 15,
+			"stores": 10,
+			"loops": 3,
+			"bulk": 0,
+			"calls": 0
+		},
+		{
+			"name": "sha256_init",
+			"loads": 0,
+			"stores": 6,
+			"loops": 0,
+			"bulk": 0,
+			"calls": 0
+		},
+		{
+			"name": "sha256_update",
+			"loads": 4,
+			"stores": 4,
+			"loops": 1,
+			"bulk": 0,
+			"calls": 1
+		},
+		{
+			"name": "sha256_final",
+			"loads": 35,
+			"stores": 46,
+			"loops": 4,
+			"bulk": 0,
+			"calls": 3
+		}
+	],
+	"regions": [
+		{
+			"region": 0,
+			"export": "__folio_region_0",
+			"target": "__folio_inline_0",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "memset",
+					"loops": [
+						"$label__folio"
+					],
+					"line": 266
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 14,
+			"trackedAccesses": 7,
+			"netUnits": -25186,
+			"staticLoads": 0,
+			"staticStores": 7,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 1,
+			"export": "__folio_region_1",
+			"target": "__folio_inline_1",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "corpus_reset",
+					"loops": [
+						"$label__folio"
+					],
+					"line": 505
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 2,
+			"trackedAccesses": 1,
+			"netUnits": -3598,
+			"staticLoads": 0,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 2,
+			"export": "__folio_region_2",
+			"target": "__folio_inline_2",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "corpus_reset",
+					"loops": [
+						"$label1__folio"
+					],
+					"line": 529
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 2,
+			"trackedAccesses": 1,
+			"netUnits": -3598,
+			"staticLoads": 0,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 3,
+			"export": "__folio_region_3",
+			"target": "__folio_inline_3",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "corpus_reset",
+					"loops": [
+						"$label2__folio"
+					],
+					"line": 553
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 2,
+			"trackedAccesses": 1,
+			"netUnits": -3598,
+			"staticLoads": 0,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 4,
+			"export": "__folio_region_4",
+			"target": "__folio_inline_4",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "corpus_reset",
+					"loops": [
+						"$label3__folio"
+					],
+					"line": 587
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 14,
+			"trackedAccesses": 4,
+			"netUnits": -14386,
+			"staticLoads": 0,
+			"staticStores": 4,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 5,
+			"export": "__folio_region_5",
+			"target": "corpus_reset",
+			"kind": "whole function",
+			"callers": [
+				{
+					"caller": "initialize",
+					"loops": [],
+					"line": 639
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 44008,
+			"trackedAccesses": 7002,
+			"netUnits": -25163192,
+			"staticLoads": 0,
+			"staticStores": 2,
+			"bodyLoops": 4,
+			"bodyBulk": 0,
+			"initializeInvocations": 1,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 1
+		},
+		{
+			"region": 6,
+			"export": "__folio_region_6",
+			"target": "sha256_init",
+			"kind": "whole function",
+			"callers": [
+				{
+					"caller": "initialize",
+					"loops": [],
+					"line": 640
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 6,
+			"trackedAccesses": 6,
+			"netUnits": -21594,
+			"staticLoads": 0,
+			"staticStores": 6,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 1,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 1
+		},
+		{
+			"region": 7,
+			"export": "__folio_region_7",
+			"target": "__folio_inline_5",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_transform",
+					"loops": [],
+					"line": 1468
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 16,
+			"trackedAccesses": 8,
+			"netUnits": -28784,
+			"staticLoads": 0,
+			"staticStores": 8,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 1025,
+			"singletonBatches": 1025,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 8,
+			"export": "__folio_region_8",
+			"target": "__folio_inline_7",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_update",
+					"loops": [
+						"$label__folio"
+					],
+					"line": 1631
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 3,
+			"trackedAccesses": 2,
+			"netUnits": -7197,
+			"staticLoads": 1,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 65536,
+			"singletonBatches": 64513,
+			"inMultiRegionBatches": 1023
+		},
+		{
+			"region": 9,
+			"export": "__folio_region_9",
+			"target": "__folio_inline_6",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_update",
+					"loops": [
+						"$label__folio"
+					],
+					"line": 1661
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 4,
+			"trackedAccesses": 3,
+			"netUnits": -10796,
+			"staticLoads": 1,
+			"staticStores": 2,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 1024,
+			"singletonBatches": 1,
+			"inMultiRegionBatches": 1023
+		},
+		{
+			"region": 10,
+			"export": "__folio_region_10",
+			"target": "__folio_inline_8",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_final",
+					"loops": [
+						"$label__folio"
+					],
+					"line": 2299
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 2,
+			"trackedAccesses": 1,
+			"netUnits": -3598,
+			"staticLoads": 0,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 7,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 7
+		},
+		{
+			"region": 11,
+			"export": "__folio_region_11",
+			"target": "__folio_inline_9",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_final",
+					"loops": [
+						"$label1__folio"
+					],
+					"line": 2349
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 3,
+			"trackedAccesses": 1,
+			"netUnits": -3597,
+			"staticLoads": 0,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 6,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 6
+		},
+		{
+			"region": 12,
+			"export": "__folio_region_12",
+			"target": "__folio_inline_10",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_final",
+					"loops": [
+						"$label2__folio"
+					],
+					"line": 2409
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 2,
+			"trackedAccesses": 1,
+			"netUnits": -3598,
+			"staticLoads": 0,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 13,
+			"export": "__folio_region_13",
+			"target": "__folio_inline_11",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_final",
+					"loops": [
+						"$label3__folio"
+					],
+					"line": 2465
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 2,
+			"trackedAccesses": 1,
+			"netUnits": -3598,
+			"staticLoads": 0,
+			"staticStores": 1,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 14,
+			"export": "__folio_region_14",
+			"target": "memset",
+			"kind": "whole function",
+			"callers": [
+				{
+					"caller": "sha256_final",
+					"loops": [],
+					"line": 2493
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 29014,
+			"trackedAccesses": 9000,
+			"netUnits": -32370986,
+			"staticLoads": 0,
+			"staticStores": 2,
+			"bodyLoops": 2,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 0,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 0
+		},
+		{
+			"region": 15,
+			"export": "__folio_region_15",
+			"target": "__folio_inline_12",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_final",
+					"loops": [],
+					"line": 2499
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 22,
+			"trackedAccesses": 11,
+			"netUnits": -39578,
+			"staticLoads": 2,
+			"staticStores": 9,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 1,
+			"singletonBatches": 0,
+			"inMultiRegionBatches": 1
+		},
+		{
+			"region": 16,
+			"export": "__folio_region_16",
+			"target": "__folio_inline_13",
+			"kind": "outlined span",
+			"callers": [
+				{
+					"caller": "sha256_final",
+					"loops": [],
+					"line": 2507
+				}
+			],
+			"estimateKind": "static",
+			"computeUnits": 72,
+			"trackedAccesses": 64,
+			"netUnits": -230328,
+			"staticLoads": 32,
+			"staticStores": 32,
+			"bodyLoops": 0,
+			"bodyBulk": 0,
+			"initializeInvocations": 0,
+			"entryInvocations": 1,
+			"singletonBatches": 1,
+			"inMultiRegionBatches": 0
+		}
+	]
+}

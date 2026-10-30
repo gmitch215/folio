@@ -1,0 +1,139 @@
+{
+ "loadavg": [
+  4.89404296875,
+  6.19287109375,
+  6.255859375
+ ],
+ "reps": 40,
+ "rows": [
+  {
+   "bytes": 65536,
+   "variant": "native",
+   "minMs": 0.086,
+   "medianMs": 0.086,
+   "digestEqual": true,
+   "overheadMedian": 1
+  },
+  {
+   "bytes": 65536,
+   "variant": "marks-only",
+   "minMs": 0.114,
+   "medianMs": 0.121,
+   "digestEqual": true,
+   "overheadMedian": 1.41
+  },
+  {
+   "bytes": 65536,
+   "variant": "marks+undo (wg 5)",
+   "minMs": 0.111,
+   "medianMs": 0.119,
+   "digestEqual": true,
+   "overheadMedian": 1.38,
+   "undoEntries": 53
+  },
+  {
+   "bytes": 65536,
+   "variant": "marks+undo (wg 6)",
+   "minMs": 0.112,
+   "medianMs": 0.123,
+   "digestEqual": true,
+   "overheadMedian": 1.43,
+   "undoEntries": 31
+  },
+  {
+   "bytes": 65536,
+   "variant": "ablation: no crossing marks (unsound)",
+   "minMs": 0.099,
+   "medianMs": 0.102,
+   "digestEqual": true,
+   "overheadMedian": 1.19,
+   "undoEntries": 53
+  },
+  {
+   "bytes": 1048576,
+   "variant": "native",
+   "minMs": 1.244,
+   "medianMs": 1.278,
+   "digestEqual": true,
+   "overheadMedian": 1
+  },
+  {
+   "bytes": 1048576,
+   "variant": "marks-only",
+   "minMs": 1.748,
+   "medianMs": 1.853,
+   "digestEqual": true,
+   "overheadMedian": 1.45
+  },
+  {
+   "bytes": 1048576,
+   "variant": "marks+undo (wg 5)",
+   "minMs": 1.745,
+   "medianMs": 1.844,
+   "digestEqual": true,
+   "overheadMedian": 1.44,
+   "undoEntries": 77
+  },
+  {
+   "bytes": 1048576,
+   "variant": "marks+undo (wg 6)",
+   "minMs": 1.75,
+   "medianMs": 1.851,
+   "digestEqual": true,
+   "overheadMedian": 1.45,
+   "undoEntries": 45
+  },
+  {
+   "bytes": 1048576,
+   "variant": "ablation: no crossing marks (unsound)",
+   "minMs": 1.511,
+   "medianMs": 1.584,
+   "digestEqual": true,
+   "overheadMedian": 1.24,
+   "undoEntries": 77
+  },
+  {
+   "bytes": 4194304,
+   "variant": "native",
+   "minMs": 4.971,
+   "medianMs": 5.194,
+   "digestEqual": true,
+   "overheadMedian": 1
+  },
+  {
+   "bytes": 4194304,
+   "variant": "marks-only",
+   "minMs": 7.075,
+   "medianMs": 7.343,
+   "digestEqual": true,
+   "overheadMedian": 1.41
+  },
+  {
+   "bytes": 4194304,
+   "variant": "marks+undo (wg 5)",
+   "minMs": 7.175,
+   "medianMs": 7.393,
+   "digestEqual": true,
+   "overheadMedian": 1.42,
+   "undoEntries": 89
+  },
+  {
+   "bytes": 4194304,
+   "variant": "marks+undo (wg 6)",
+   "minMs": 7.051,
+   "medianMs": 7.411,
+   "digestEqual": true,
+   "overheadMedian": 1.43,
+   "undoEntries": 52
+  },
+  {
+   "bytes": 4194304,
+   "variant": "ablation: no crossing marks (unsound)",
+   "minMs": 6.142,
+   "medianMs": 6.348,
+   "digestEqual": true,
+   "overheadMedian": 1.22,
+   "undoEntries": 89
+  }
+ ]
+}

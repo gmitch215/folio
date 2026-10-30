@@ -1,0 +1,18 @@
+## E1 baseline forced (shared build, MIN=0, workers 2)
+inputs 100 bytes 223053295 plan true
+{"mode":"speculative","reason":"dependency","regions":4240,"replayed":696,"fallbacks":0,"memoryEqual":true,"nativeMs":369.79125,"folioMs":404.6508749999998,"loadavg":[6.61328125,4.9677734375,4.5087890625]}
+## E2 stack slot per iteration (16 slots x 32 KiB)
+inputs 100 bytes 223053295 plan true
+{"mode":"speculative","reason":"dependency","regions":4240,"replayed":696,"fallbacks":0,"memoryEqual":true,"nativeMs":291.76695799999993,"folioMs":368.76104199999986,"loadavg":[6.48388671875,4.96826171875,4.51123046875]}
+## E3 iteration regions, private stack per worker (small subset <=70000)
+inputs 67 bytes 480315 plan true
+{"mode":"speculative","reason":"dependency","regions":67,"replayed":15,"fallbacks":0,"memoryEqual":true,"nativeMs":2.205791999999974,"folioMs":86.06804199999999,"loadavg":[6.48388671875,4.96826171875,4.51123046875]}
+## E3 iteration regions, private stack per region (small subset)
+inputs 67 bytes 480315 plan true
+{"mode":"speculative","regions":67,"replayed":0,"fallbacks":0,"memoryEqual":true,"nativeMs":2.203666999999996,"folioMs":63.24754199999995,"loadavg":[6.48388671875,4.96826171875,4.51123046875]}
+## E3 iteration regions, private stack per region (full 100 inputs, default limits)
+inputs 100 bytes 223053295 plan true
+{"mode":"speculative","regions":100,"replayed":0,"fallbacks":2,"memoryEqual":true,"nativeMs":419.62183300000015,"folioMs":445.28195800000003,"loadavg":[6.52490234375,5.001953125,4.525390625]}
+## default admission, unmodified consumer
+inputs 100 bytes 223053295 plan false
+{"mode":"serial","reason":"unsupported-module","regions":1,"replayed":0,"fallbacks":0,"memoryEqual":true,"nativeMs":289.37191699999994,"folioMs":290.64154099999996,"loadavg":[6.52490234375,5.001953125,4.525390625]}

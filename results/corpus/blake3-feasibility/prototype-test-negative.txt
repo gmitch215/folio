@@ -1,0 +1,47 @@
+[
+ {
+  "case": "war",
+  "rule": "raw only",
+  "replayed": 0,
+  "pairs": {
+   "raw": 0,
+   "war": 0,
+   "waw": 0
+  },
+  "memoryEqual": false
+ },
+ {
+  "case": "war",
+  "rule": "raw, war and waw",
+  "replayed": 27,
+  "pairs": {
+   "raw": 0,
+   "war": 2,
+   "waw": 0
+  },
+  "memoryEqual": true
+ },
+ {
+  "case": "waw",
+  "rule": "raw only",
+  "replayed": 0,
+  "pairs": {
+   "raw": 0,
+   "war": 0,
+   "waw": 0
+  },
+  "memoryEqual": false
+ },
+ {
+  "case": "waw",
+  "rule": "raw, war and waw",
+  "replayed": 32,
+  "pairs": {
+   "raw": 0,
+   "war": 0,
+   "waw": 46
+  },
+  "memoryEqual": true
+ }
+]
+negative control behaves: the raw-only rule diverges, the full rule equals serial

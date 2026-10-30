@@ -54,10 +54,10 @@ Width 8, medians per session.
   worker alone (0.2 ms at width 1).
 - **The lever is the size of the private context.** The reset is unchanged, and the stock layout
   carries a 4 MiB arena that this kernel never touches.
-- **Default admission still finds no plan** for either build: `prepare` reports a start function, data
+- **Default admission finds no plan** for either build: `prepare` reports a start function, data
   segments that need initialization isolation, a required shared memory and no region at the 200,000
-  unit floor, and `Folio.run` runs the original module serially with no worker. This is not an
-  automatic speedup.
+  unit floor, and `Folio.run` runs the original module serially with no worker. The iteration route
+  was not tried on this entry. This is not an automatic speedup.
 
 Limits: one kernel, one machine for the rig record, and a spread across sessions of 2.12x to 2.68x. An
 earlier run of the same code on a busy Apple M2 Pro (load 5 to 5.8, from other jobs) read 0.75x to

@@ -1,0 +1,62 @@
+{"plan":true,"diag":["ordered native recursion: blake3_compress_subtree_wide","region admission: 31 regions from 35 of 35 pure functions at 0 net work; 14 instrumented"],"regions":31}
+static   span in memcpy                           compute=12 accesses=6 net=-21588
+static   span in memset                           compute=14 accesses=7 net=-25186
+static   span in blake3_compress_subtree_wide     compute=5 accesses=3 net=-10795
+static   span in blake3_compress_subtree_wide     compute=6 accesses=3 net=-10794
+static   span in blake3_compress_subtree_wide     compute=10 accesses=4 net=-14390
+static   span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+static   span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+static   span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+static   span in blake3_hasher_update             compute=6 accesses=3 net=-10794
+static   span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+static   span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+static   span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+static   span in blake3_hasher_update             compute=6 accesses=3 net=-10794
+static   span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+static   span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+static   span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+static   span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+static   span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+static   span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+static   span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+static   span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+static   span in blake3_hasher_finalize_seek      compute=10 accesses=115 net=-413990
+static   span in blake3_hasher_finalize_seek      compute=7 accesses=115 net=-413993
+static   span in blake3_hasher_finalize_seek      compute=7 accesses=115 net=-413993
+static   span in blake3_compress_in_place_portable compute=16 accesses=4 net=-14384
+static   span in blake3_compress_xof_portable     compute=40 accesses=20 net=-71960
+static   memcpy                                   compute=33016 accesses=10000 net=-35966984
+static   memset                                   compute=29014 accesses=9000 net=-32370986
+static   blake3_hasher_init                       compute=95058 accesses=29004 net=-104319342
+static   blake3_compress_in_place                 compute=1295 accesses=32 net=-113905
+static   blake3_compress_xof                      compute=1319 accesses=48 net=-171481
+static   blake3_xof_many                          compute=1327004 accesses=48000 net=-171472996
+static   blake3_simd_degree                       compute=0 accesses=0 net=0
+static   blake3_compress_in_place_portable        compute=1293 accesses=32 net=-113907
+static   blake3_compress_xof_portable             compute=1317 accesses=48 net=-171483
+static   __folio_inline_0                         compute=12 accesses=6 net=-21588
+static   __folio_inline_1                         compute=14 accesses=7 net=-25186
+static   __folio_inline_2                         compute=5 accesses=3 net=-10795
+static   __folio_inline_3                         compute=6 accesses=3 net=-10794
+static   __folio_inline_4                         compute=10 accesses=4 net=-14390
+static   __folio_inline_5                         compute=3 accesses=2 net=-7197
+static   __folio_inline_6                         compute=4 accesses=3 net=-10796
+static   __folio_inline_7                         compute=4 accesses=3 net=-10796
+static   __folio_inline_8                         compute=6 accesses=3 net=-10794
+static   __folio_inline_9                         compute=3 accesses=2 net=-7197
+static   __folio_inline_10                        compute=3 accesses=2 net=-7197
+static   __folio_inline_11                        compute=4 accesses=3 net=-10796
+static   __folio_inline_12                        compute=6 accesses=3 net=-10794
+static   __folio_inline_13                        compute=3 accesses=2 net=-7197
+static   __folio_inline_14                        compute=4 accesses=3 net=-10796
+static   __folio_inline_15                        compute=4 accesses=3 net=-10796
+static   __folio_inline_16                        compute=3 accesses=2 net=-7197
+static   __folio_inline_17                        compute=3 accesses=2 net=-7197
+static   __folio_inline_18                        compute=4 accesses=3 net=-10796
+static   __folio_inline_19                        compute=4 accesses=3 net=-10796
+static   __folio_inline_20                        compute=3 accesses=2 net=-7197
+static   __folio_inline_21                        compute=10 accesses=115 net=-413990
+static   __folio_inline_22                        compute=7 accesses=115 net=-413993
+static   __folio_inline_23                        compute=7 accesses=115 net=-413993
+static   __folio_inline_24                        compute=16 accesses=4 net=-14384
+static   __folio_inline_25                        compute=40 accesses=20 net=-71960

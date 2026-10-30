@@ -1,0 +1,339 @@
+{
+ "masked": {
+  "stack": [
+   0,
+   65536
+  ],
+  "arena": "from hostEnd to the end of memory: control words, stack slots, undo logs, bitmaps"
+ },
+ "loadavg": [
+  4.97216796875,
+  6.22998046875,
+  6.26953125
+ ],
+ "failed": 0,
+ "rows": [
+  {
+   "case": "independent",
+   "run": 0,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 0,
+   "rolledBack": 0,
+   "failedBatches": 0,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 1436,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "zero",
+   "ok": true
+  },
+  {
+   "case": "independent",
+   "run": 1,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 0,
+   "rolledBack": 0,
+   "failedBatches": 0,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 1436,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "zero",
+   "ok": true
+  },
+  {
+   "case": "raw-chain",
+   "run": 0,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 29,
+   "rolledBack": 29,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 8,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 1176,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "raw-chain",
+   "run": 1,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 29,
+   "rolledBack": 29,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 8,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 1176,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "raw-chain-late",
+   "run": 0,
+   "width": 8,
+   "regions": 72,
+   "batches": 3,
+   "replayed": 31,
+   "rolledBack": 31,
+   "failedBatches": 2,
+   "traps": 0,
+   "pairs": {
+    "raw": 11,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 3007,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "raw-chain-late",
+   "run": 1,
+   "width": 8,
+   "regions": 72,
+   "batches": 3,
+   "replayed": 31,
+   "rolledBack": 31,
+   "failedBatches": 2,
+   "traps": 0,
+   "pairs": {
+    "raw": 11,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 3007,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "war",
+   "run": 0,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 27,
+   "rolledBack": 27,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 2,
+    "waw": 0
+   },
+   "undoEntries": 1403,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "war",
+   "run": 1,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 27,
+   "rolledBack": 27,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 2,
+    "waw": 0
+   },
+   "undoEntries": 1403,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "waw",
+   "run": 0,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 32,
+   "rolledBack": 32,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 46
+   },
+   "undoEntries": 1452,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "waw",
+   "run": 1,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 32,
+   "rolledBack": 32,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 46
+   },
+   "undoEntries": 1452,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "false-sharing-wg6",
+   "run": 0,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 32,
+   "rolledBack": 32,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 16
+   },
+   "undoEntries": 844,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "false-sharing-wg6",
+   "run": 1,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 32,
+   "rolledBack": 32,
+   "failedBatches": 1,
+   "traps": 0,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 16
+   },
+   "undoEntries": 844,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "undo-overflow",
+   "run": 0,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 32,
+   "rolledBack": 32,
+   "failedBatches": 1,
+   "traps": 32,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 256,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  },
+  {
+   "case": "undo-overflow",
+   "run": 1,
+   "width": 4,
+   "regions": 32,
+   "batches": 1,
+   "replayed": 32,
+   "rolledBack": 32,
+   "failedBatches": 1,
+   "traps": 32,
+   "pairs": {
+    "raw": 0,
+    "war": 0,
+    "waw": 0
+   },
+   "undoEntries": 256,
+   "memoryEqual": true,
+   "outEqual": true,
+   "denseAgrees": true,
+   "denseSameW": true,
+   "expect": "nonzero",
+   "ok": true
+  }
+ ]
+}

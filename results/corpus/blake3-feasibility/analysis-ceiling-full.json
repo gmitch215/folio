@@ -1,0 +1,124 @@
+{
+ "inputs": 100,
+ "totalBytes": 223053295,
+ "largestBytes": 67108864,
+ "hardwareThreads": 12,
+ "loadavgStart": [
+  4.6806640625,
+  4.21044921875,
+  4.2236328125
+ ],
+ "serialMainThreadMs": [
+  289.9,
+  268.8,
+  269.6,
+  295.4,
+  270.2
+ ],
+ "results": [
+  {
+   "workers": 1,
+   "split": "even-count",
+   "wallMsMedian": 270.58737500000007,
+   "walls": [
+    288.5,
+    270.3,
+    274.7,
+    270.6,
+    268.5
+   ],
+   "digestsEqual": true
+  },
+  {
+   "workers": 1,
+   "split": "lpt",
+   "wallMsMedian": 272.0106249999999,
+   "walls": [
+    322.5,
+    272,
+    270.5,
+    269.1,
+    273.7
+   ],
+   "digestsEqual": true
+  },
+  {
+   "workers": 2,
+   "split": "even-count",
+   "wallMsMedian": 273.9665420000001,
+   "walls": [
+    409.4,
+    268.7,
+    274,
+    279.2,
+    271.1
+   ],
+   "digestsEqual": true
+  },
+  {
+   "workers": 2,
+   "split": "lpt",
+   "wallMsMedian": 138.92224999999962,
+   "walls": [
+    154.7,
+    138.9,
+    137.8,
+    139.7,
+    138.3
+   ],
+   "digestsEqual": true
+  },
+  {
+   "workers": 4,
+   "split": "even-count",
+   "wallMsMedian": 266.7612079999999,
+   "walls": [
+    286.1,
+    264.6,
+    269.1,
+    266.8,
+    265.3
+   ],
+   "digestsEqual": true
+  },
+  {
+   "workers": 4,
+   "split": "lpt",
+   "wallMsMedian": 82.78220800000054,
+   "walls": [
+    88.6,
+    83.2,
+    82.8,
+    82.1,
+    82.8
+   ],
+   "digestsEqual": true
+  },
+  {
+   "workers": 8,
+   "split": "even-count",
+   "wallMsMedian": 262.20008400000006,
+   "walls": [
+    288,
+    261.2,
+    261.8,
+    263.9,
+    262.2
+   ],
+   "digestsEqual": true
+  },
+  {
+   "workers": 8,
+   "split": "lpt",
+   "wallMsMedian": 88.8075000000008,
+   "walls": [
+    88.8,
+    83.8,
+    84.4,
+    93.4,
+    88.9
+   ],
+   "digestsEqual": true
+  }
+ ]
+}

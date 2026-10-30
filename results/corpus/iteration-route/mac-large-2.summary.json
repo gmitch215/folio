@@ -1,13 +1,13 @@
 {
   "schema": "folio.research-summary.v1",
-  "rawSha256": "b4307c4722f0056aa230bfb7c1b9dbefa0b8e411fcbe79b032518c3b42bcb4b8",
+  "rawSha256": "23aa0f59ab6f1484c6077edb3f44f9da1f7a189a29abab428173c08b8013576d",
   "samples": 54,
   "environments": [
     {
       "kind": "environment",
       "schema": "folio.research.v1",
-      "observedAt": "2026-10-30T02:30:10.397Z",
-      "revision": "fb0bddc-worktree-iteration-final",
+      "observedAt": "2026-10-30T04:43:54.290Z",
+      "revision": "7ca4815-worktree-v101-final-mac",
       "node": "v26.8.2",
       "v8": "14.6.202.34-node.28",
       "os": "darwin",
@@ -15,9 +15,9 @@
       "cpu": "Apple M2 Pro",
       "hardwareThreads": 12,
       "load": [
-        4.43408203125,
-        6.2958984375,
-        6.11474609375
+        5.97998046875,
+        4.51953125,
+        4.05908203125
       ],
       "configuration": {
         "rounds": 9,
@@ -33,21 +33,21 @@
         "src/compiler.ts": "41886254a87fc02c312faf9f8625c3eaf49f3dacfdded59cfc37334731984f9c",
         "src/context.ts": "fed8524229fb621be631e1377a9e35a28a06a7ff0a09ff92932069243ba049ba",
         "src/coordinator.ts": "4b9c5cc0f72d73c588ed3bffb17e40d8fd2d3fb2bb0cd5646e24ab967bc70ce8",
-        "src/extract.ts": "f4b68bb15da1593ab1463d234d7036a9664199c9e8e2334731f16b1ccd10651c",
+        "src/extract.ts": "0f4b5a1dfe5654c3e856a8dcd424c05d462fa0b2cbcbb21a4a7f08605a96aff5",
         "src/frames.ts": "228ed521b29a79d046a67b1f8a166f63cfcb77e281500e003ef5d3c2a6986239",
         "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
         "src/host.ts": "8b0fafb6ef8991778598cc78fd7e10415f49875c30b79c75e4e7eac901c80fed",
         "src/import-order.ts": "0b725a68bd59f9c0e0a5bc63fcc4c31f08b5f718438e67d271a44f4d7e575905",
         "src/index.ts": "a8c9f3dfbefa3170329c7950cb58f5e3c20e0f7264affb0ffd3bd1b3c1ba364b",
-        "src/inline.ts": "04304d147f7c19a2de6dd08508e7489316d9e3e07a14497f0bcfd92a28f8b53f",
-        "src/iteration-admission.ts": "f00445cb4b189540d8f79335dce34dffd30368e692a03bf9755d182239eeb2aa",
-        "src/iteration-layout.ts": "8f82c66da1e1af98a2deabb3d9ff54926af058140237ad7c56b665099ab81bfb",
-        "src/iteration-owner.ts": "6f088f68744802169ee072aea9def31984b00b7addf3b2a7d4a34a9c33b34bce",
-        "src/iteration-worker.ts": "2d0782284a2fdbde9886097c6e96a7233362377ce2129be8cce0e2ae0e8f7f39",
-        "src/iteration.ts": "33b1705781af8e3492a7f35938702a49d09f2ee22c163981f60a2edd43cd7dde",
+        "src/inline.ts": "fbbfd42280242c1ec76a49bb5a1a7a8f3655e6840477341b4e333f31e9c30471",
+        "src/iteration-admission.ts": "82186118f4ffadde243195a6f9ec497de19673b054c477c6310d92ce0bae8dd6",
+        "src/iteration-layout.ts": "ea2f3bf3de97fa416412a8be93261259e2427cd8ce94ed871e899b92558b2d40",
+        "src/iteration-owner.ts": "156d710be73864991a645d12cad1db89b5edb38b7a0e10e52e2e780658b845df",
+        "src/iteration-worker.ts": "666ec6bdb3389149be52f922c46f262ea207b60062cadd4eee34adc55157305c",
+        "src/iteration.ts": "fbf716eb1239a13db4419d2816d03e3cc4e6c5079866c4a73acf96f7da13480a",
         "src/managed.ts": "56120d3a80eff454472e5db019da78bcc816fc8dc72268d4b0ce72c73387a9eb",
         "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
-        "src/node.ts": "65691b8d0b5755c7f6981862ed139939c68e6192786ce182f0681330b021a4a2",
+        "src/node.ts": "120cc69f191f8b77506e5fbd675789279aa7b58c2e63d71064b5f94c0e17f078",
         "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
         "src/remote.ts": "16dbba9b681966a2b4040c82fe3ca98c5a171eee25fd8d7ce43edf0bb5222e8d",
         "src/tasks.ts": "7decb7a48c7a3aef2781b92bb3179a6bde434843996293ea8e90a947ca39c1fc",
@@ -57,7 +57,7 @@
         "scripts/research/admission-diagnostic.ts": "8dd8ea2b580f5765b699615045801df1296eb89e95b0eb71c34498551d035f34",
         "scripts/research/analyze.ts": "f7896821d1ca9bc3b132d6f5f2da6723e9e3016c9e90cbd154a763a1cac5691b",
         "scripts/research/backing.ts": "115240c2b2f00d54b117053b329973997c91ac1ca42d80ac302031ef72de055b",
-        "scripts/research/blake3-bench.ts": "5a28a2d4010491983f3170ff3256f55af894f8b80ac504444c6fe1f3d00ef7b8",
+        "scripts/research/blake3-bench.ts": "9a45911f7d5db95e68df1f50379100408dc2914317d3b086ad513448f90d72b3",
         "scripts/research/blake3-build.ts": "7c8dc4ac1a0e7ba2e79c943dffe89d9790ced7251da551b99ef1a976e1efe131",
         "scripts/research/blake3-worker.ts": "3fcd7d9613f865cbafcbdba230d905dd305ccb4f3cdb892af0c89415d77d2c5a",
         "scripts/research/boot-eligibility.ts": "32717c8da20fcf23210b814592ae1584a0da4284cd51c5e43ee629c74a60327d",
@@ -72,6 +72,8 @@
         "scripts/research/cases/include/stdlib.h": "c328dcb08baa26c16bc8b768b4c0ca32e2b32e94772c419dda8f9fb25e3695bb",
         "scripts/research/cases/include/string.h": "3db545ced6638221254c50e3d022269170442967dc330f081f9f996d9c4e228a",
         "scripts/research/cases/kernel.c": "ed306b90b0e9e4e2479379f12b4cdf9f9ef7f1f220a12bf5c878d5fb7986035b",
+        "scripts/research/cases/lz4-compress-all.c": "4763bf3a0400318052f2b6ea2742547023a8fd2688c2de8cc049398481fc55f0",
+        "scripts/research/cases/sha256-hash-all.c": "0b663bb80d2032f492ff6aa6fbd3041a096421dbc38ab5d45feaa8783944dcf3",
         "scripts/research/cases/support-min.c": "0b7af772feb2d11f4e59648b455bd0ab6af11113209f65366caf3e134631285b",
         "scripts/research/cases/support.c": "dd3ec886f0ffa3e1adbc7beb9d29d1b6387c8ec715c0514141028f4c0e15c154",
         "scripts/research/cases/upstream.ts": "74ef77e2bdc5a9bb32ad4057227d34f3ca562df31749dfeba5fdb27d8c6d30ac",
@@ -84,7 +86,7 @@
         "scripts/research/crossover.ts": "f0958198a63172852201a6746bc88211ed209f57f43881951da8c0dbd12a8b18",
         "scripts/research/denominators.ts": "f11d47f1a9cb7b694be181c3604cd681c5848eafcbf5ee72e2bb90ed24a8f52d",
         "scripts/research/derive.ts": "00533bfe5846654236895d41a1ac649cbaf995639a876a55684a755812853224",
-        "scripts/research/differential.ts": "e0c6b1b26ce56786241b5748d7facde7c672a94cb3f502abbce11ccea3358001",
+        "scripts/research/differential.ts": "dc38d28edc7318f395386dafc18eaf8c08bc722c0d93770cb9eb5d031de61abd",
         "scripts/research/environment.ts": "35eed05e53ff27f686dd2d18a4fb8a3390c084738aef4fb5c2b30c00d027ce75",
         "scripts/research/evidence.ts": "0a2dc0defcba2a45e24961a3a86acdab192e67a77026a5229b9f45c611d6defe",
         "scripts/research/export.ts": "a1eb54d4c78bc334b77f12b9b90e9080d78a0f72c77166ead704b2b7743399df",
@@ -95,13 +97,17 @@
         "scripts/research/grain-diff.ts": "4c9bdeca949b5fddee5b43d79002ca9ed826c45f91251d8dfb6e37961ba0861d",
         "scripts/research/grain-summarize.ts": "a8804bc2f98d64b77590147ea00efd08eda58b9da7fd725a0733a6936e963463",
         "scripts/research/grain-worker.ts": "4ac18461ca0d300c4d598dbbe283aefdf18ac235ad568aaa4f67cd040e3b4466",
-        "scripts/research/inline-diff.ts": "1ae9998178f6f5268f1834f129035295b18828e55d09d5bddcca4def2ad1e864",
+        "scripts/research/inline-diff.ts": "15fb5d71209e4f2545b1a98caf125e23724a61124c26f5b65829fabb684903cb",
         "scripts/research/inputs.ts": "ec5e1a0075f05ba27cbd7af376b907086d483c633e67c894729232f840af758e",
-        "scripts/research/iteration-admission.ts": "5f4aa63110267c61c2b81341ccf233c72e69e81dced56999d3d010b44cfc7ec7",
-        "scripts/research/iteration-diff.ts": "baddde37681ca3afb996e615cc84f409aa7e23be365c830512878d390e49f26a",
-        "scripts/research/plan-snapshot.ts": "cb4f7fd23cd626a760300e9634dcd132501f8c50042c73c06dbff881331d1c24"
+        "scripts/research/iteration-admission.ts": "f5532678c936fde810f2c1f8745652d2c687ee9eb4b6fa9f73f0fce9d7952b1f",
+        "scripts/research/iteration-diff.ts": "c7c35fec92163d871c0b0e50104457b30f091d094eff90965e7f853cd446866b",
+        "scripts/research/lz4-bench.ts": "2420a29a0006e9257046e7b33a07da2667fcfa091794ae192af8e18be2c5d540",
+        "scripts/research/lz4-build.ts": "bd2824cf9af5f8a3538354be969c9971d3ba65b36464a9dfb8adaaa5237364ed",
+        "scripts/research/plan-snapshot.ts": "cb4f7fd23cd626a760300e9634dcd132501f8c50042c73c06dbff881331d1c24",
+        "scripts/research/sha256-bench.ts": "193edb7669ffbf27057b21fa090ee2e97d2cad331bf29059ff901ae4e5b6cd83",
+        "scripts/research/sha256-build.ts": "a97432d870cc795032f530f6b7063be33bf7ee5e43c0c159b782dbffa552e872"
       },
-      "sourceDigest": "90ba5984ac599337226e6b8d0487b180700665fc3de4eecd1566eb20509d90d1",
+      "sourceDigest": "27ff26856829033fcde56bb86fe7c74e59af3ef09a28d06007e90c5c4fcf4dea",
       "wasmSha256": "cc0ad0f1d28e279f6d84b082d1b4c54c611d94f5cd184645d645fb808bb9b457",
       "digestsSha256": "6b5fbafcf1aa11ee584ac512f7e007f900d5e0ff529ee018653234462946c0d6"
     }
@@ -117,22 +123,22 @@
       "native": {
         "wallMs": {
           "n": 9,
-          "median": 163.45829200000026,
-          "min": 161.86458399999992,
-          "max": 179.02095800000006,
+          "median": 162.8727090000002,
+          "min": 161.67758300000014,
+          "max": 208.72570799999994,
           "medianCi95": [
-            162.07016599999997,
-            176.6111249999999
+            162.27608400000008,
+            170.31545899999992
           ]
         },
         "cpuMs": {
           "n": 9,
-          "median": 163.458,
-          "min": 161.879,
-          "max": 166.145,
+          "median": 162.909,
+          "min": 161.684,
+          "max": 170.811,
           "medianCi95": [
-            162.107,
-            166.001
+            162.34,
+            168.272
           ]
         },
         "pairedSpeedup": {
@@ -158,12 +164,12 @@
         "cpuRatioPairs": 9,
         "averageBusyCpus": {
           "n": 9,
-          "median": 1.0000316789019585,
-          "min": 0.9272713198194367,
-          "max": 1.001335728195078,
+          "median": 1.0000143420126095,
+          "min": 0.818351518060248,
+          "max": 1.0003938719645213,
           "medianCi95": [
-            0.9277161900191739,
-            1.000227271933565
+            0.9880019170778859,
+            1.0002228181763697
           ]
         },
         "modes": [],
@@ -174,53 +180,53 @@
       "default": {
         "wallMs": {
           "n": 9,
-          "median": 163.26474999999982,
-          "min": 161.72012500000028,
-          "max": 168.5506250000003,
+          "median": 162.674125,
+          "min": 160.62658299999975,
+          "max": 169.37262499999997,
           "medianCi95": [
-            162.15504199999987,
-            164.95612499999993
+            161.2160829999998,
+            166.74950000000013
           ]
         },
         "cpuMs": {
           "n": 9,
-          "median": 163.379,
-          "min": 161.574,
-          "max": 166.742,
+          "median": 162.963,
+          "min": 160.632,
+          "max": 168.263,
           "medianCi95": [
-            162.207,
-            164.804
+            161.232,
+            166.676
           ]
         },
         "pairedSpeedup": {
           "n": 9,
-          "median": 1.0011854487879377,
-          "min": 0.9603321494654774,
-          "max": 1.0997251500426954,
+          "median": 1.0055666256574813,
+          "min": 0.9889979836441006,
+          "max": 1.2713898115634001,
           "medianCi95": [
-            0.9901735885228923,
-            1.0920788306340945
+            0.9890964170807102,
+            1.0435409412595633
           ]
         },
         "cpuRatio": {
           "n": 9,
-          "median": 0.9995166954202303,
-          "min": 0.9805844543105161,
-          "max": 1.0300409565169046,
+          "median": 0.9945299987680177,
+          "min": 0.9610329545521072,
+          "max": 1.010665971367415,
           "medianCi95": [
-            0.9861393390094297,
-            1.0099093077588162
+            0.9641447604468151,
+            1.0089175343325072
           ]
         },
         "cpuRatioPairs": 9,
         "averageBusyCpus": {
           "n": 9,
-          "median": 1.0000172017895712,
-          "min": 0.9892695443876265,
-          "max": 1.0014991133071665,
+          "median": 1.0000337241812598,
+          "min": 0.9934486166226687,
+          "max": 1.0017757894809638,
           "medianCi95": [
-            0.9990777850776992,
-            1.000699783633639
+            0.9995592190681223,
+            1.0007122225674379
           ]
         },
         "modes": [
@@ -239,22 +245,22 @@
       "native": {
         "wallMs": {
           "n": 9,
-          "median": 164.59829200000058,
-          "min": 162.30283299999974,
-          "max": 181.20308300000033,
+          "median": 168.56737500000054,
+          "min": 162.30337500000041,
+          "max": 240.0839590000005,
           "medianCi95": [
-            162.39537500000006,
-            166.66141700000026
+            163.01016699999946,
+            204.23079100000086
           ]
         },
         "cpuMs": {
           "n": 9,
-          "median": 164.601,
-          "min": 162.344,
-          "max": 173.201,
+          "median": 167.739,
+          "min": 162.326,
+          "max": 184.362,
           "medianCi95": [
-            162.4,
-            165.64
+            163.297,
+            175.66
           ]
         },
         "pairedSpeedup": {
@@ -280,12 +286,12 @@
         "cpuRatioPairs": 9,
         "averageBusyCpus": {
           "n": 9,
-          "median": 0.9999933533665947,
-          "min": 0.955839145407916,
-          "max": 1.0002536431388123,
+          "median": 1.0000359232465434,
+          "min": 0.7124965812480609,
+          "max": 1.0420759058506988,
           "medianCi95": [
-            0.993871304958362,
-            1.0000284798751193
+            0.9027140280722862,
+            1.003509585363386
           ]
         },
         "modes": [],
@@ -296,53 +302,53 @@
       "automatic": {
         "wallMs": {
           "n": 9,
-          "median": 48.72583300000042,
-          "min": 47.66620899999998,
-          "max": 56.30204099999992,
+          "median": 48.056000000000495,
+          "min": 45.58679099999972,
+          "max": 52.865499999999884,
           "medianCi95": [
-            48.126124999999774,
-            49.492457999999715
+            46.24958400000014,
+            52.74029100000007
           ]
         },
         "cpuMs": {
           "n": 9,
-          "median": 266.993,
-          "min": 262.687,
-          "max": 302.551,
+          "median": 276.273,
+          "min": 264.605,
+          "max": 292.089,
           "medianCi95": [
-            264.644,
-            274.647
+            265.337,
+            285.668
           ]
         },
         "pairedSpeedup": {
           "n": 9,
-          "median": 3.391087858502301,
-          "min": 2.923487125448984,
-          "max": 3.7457194823834663,
+          "median": 3.524575853482249,
+          "min": 3.0935700031211377,
+          "max": 4.995920571832821,
           "medianCi95": [
-            3.297055586631,
-            3.463013425660201
+            3.305147026966518,
+            4.341137175428582
           ]
         },
         "cpuRatio": {
           "n": 9,
-          "median": 1.6289397581540639,
-          "min": 1.536734776358104,
-          "max": 1.8380872534188735,
+          "median": 1.6248736963936876,
+          "min": 1.4585109729770778,
+          "max": 1.7859418278314143,
           "medianCi95": [
-            1.585891089108911,
-            1.6911761083743841
+            1.5803825572127976,
+            1.703081032098059
           ]
         },
         "cpuRatioPairs": 9,
         "averageBusyCpus": {
           "n": 9,
-          "median": 5.501979678287874,
-          "min": 5.3737128286344085,
-          "max": 5.601305528618819,
+          "median": 5.73706781881539,
+          "min": 5.178981663184218,
+          "max": 5.9546977934563685,
           "medianCi95": [
-            5.431287341973152,
-            5.57606043707491
+            5.525134539539031,
+            5.840562665595244
           ]
         },
         "modes": [
@@ -359,22 +365,22 @@
       "native": {
         "wallMs": {
           "n": 9,
-          "median": 175.24795900000026,
-          "min": 162.4038330000003,
-          "max": 205.1578750000008,
+          "median": 165.0369159999991,
+          "min": 163.00045800000044,
+          "max": 169.80570799999987,
           "medianCi95": [
-            164.34054099999958,
-            193.54229099999975
+            163.3014579999999,
+            166.570334
           ]
         },
         "cpuMs": {
           "n": 9,
-          "median": 170.288,
-          "min": 162.407,
-          "max": 180.162,
+          "median": 165.091,
+          "min": 163.258,
+          "max": 168.036,
           "medianCi95": [
-            164.137,
-            179.76
+            163.755,
+            166.335
           ]
         },
         "pairedSpeedup": {
@@ -400,12 +406,12 @@
         "cpuRatioPairs": 9,
         "averageBusyCpus": {
           "n": 9,
-          "median": 0.9805104273326667,
-          "min": 0.8300339433716564,
-          "max": 1.0000195007712638,
+          "median": 0.9996325586053029,
+          "min": 0.9895780417463949,
+          "max": 1.0180707590404412,
           "medianCi95": [
-            0.9287892536107275,
-            0.9987614681151648
+            0.9985871793953418,
+            0.9997338786773116
           ]
         },
         "modes": [],
@@ -416,53 +422,53 @@
       "explicit": {
         "wallMs": {
           "n": 9,
-          "median": 39.543250000000626,
-          "min": 27.63920799999869,
-          "max": 63.02183299999888,
+          "median": 33.761750000001484,
+          "min": 26.397666999999274,
+          "max": 103.03533299999981,
           "medianCi95": [
-            35.184792000000016,
-            59.12804099999994
+            26.410874999999578,
+            47.3801250000015
           ]
         },
         "cpuMs": {
           "n": 9,
-          "median": 241.87,
-          "min": 204.081,
-          "max": 393.069,
+          "median": 212.572,
+          "min": 195.357,
+          "max": 339.899,
           "medianCi95": [
-            216.972,
-            366.519
+            201.795,
+            326.524
           ]
         },
         "pairedSpeedup": {
           "n": 9,
-          "median": 4.704341471937431,
-          "min": 2.9638722344953123,
-          "max": 5.945920773128064,
+          "median": 4.891304508800455,
+          "min": 1.648033767212653,
+          "max": 6.310039974366091,
           "medianCi95": [
-            3.255346048091055,
-            4.99122623983634
+            3.45733399816896,
+            6.240485284691681
           ]
         },
         "cpuRatio": {
           "n": 9,
-          "median": 1.4378708074238769,
-          "min": 1.2433576829112265,
-          "max": 2.2687310611526366,
+          "median": 1.2876050178386464,
+          "min": 1.1925901507243193,
+          "max": 2.0227748815729965,
           "medianCi95": [
-            1.3119761999782318,
-            2.152347787278023
+            1.222490756605645,
+            1.9676521278006098
           ]
         },
         "cpuRatioPairs": 9,
         "averageBusyCpus": {
           "n": 9,
-          "median": 6.166641542175379,
-          "min": 5.7239775105262565,
-          "max": 9.01898120725867,
+          "median": 7.166634800896945,
+          "min": 3.2988586546325873,
+          "max": 7.990659959932531,
           "medianCi95": [
-            5.815746425528539,
-            7.383749925106742
+            5.3208318444937195,
+            7.703067093012636
           ]
         },
         "modes": [],

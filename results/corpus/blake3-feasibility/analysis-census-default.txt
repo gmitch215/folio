@@ -1,0 +1,36 @@
+{"plan":false,"controlReasons":["no region reached 200000 net work (9 pure functions, none admitted)"]}
+refused  span in memcpy                           compute=12 accesses=6 net=-21588
+refused  span in memset                           compute=14 accesses=7 net=-25186
+refused  span in blake3_compress_subtree_wide     compute=5 accesses=3 net=-10795
+refused  span in blake3_compress_subtree_wide     compute=6 accesses=3 net=-10794
+refused  span in blake3_compress_subtree_wide     compute=10 accesses=4 net=-14390
+refused  span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+refused  span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+refused  span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+refused  span in blake3_hasher_update             compute=6 accesses=3 net=-10794
+refused  span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+refused  span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+refused  span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+refused  span in blake3_hasher_update             compute=6 accesses=3 net=-10794
+refused  span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+refused  span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+refused  span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+refused  span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+refused  span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+refused  span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+refused  span in blake3_hasher_update             compute=4 accesses=3 net=-10796
+refused  span in blake3_hasher_update             compute=3 accesses=2 net=-7197
+refused  span in blake3_hasher_finalize_seek      compute=10 accesses=115 net=-413990
+refused  span in blake3_hasher_finalize_seek      compute=7 accesses=115 net=-413993
+refused  span in blake3_hasher_finalize_seek      compute=7 accesses=115 net=-413993
+refused  span in blake3_compress_in_place_portable compute=16 accesses=4 net=-14384
+refused  span in blake3_compress_xof_portable     compute=40 accesses=20 net=-71960
+refused  memcpy                                   compute=31016 accesses=10000 net=-35968984
+refused  memset                                   compute=27014 accesses=9000 net=-32372986
+refused  blake3_hasher_init                       compute=89058 accesses=29004 net=-104325342
+refused  blake3_compress_in_place                 compute=1293 accesses=32 net=-113907
+refused  blake3_compress_xof                      compute=1317 accesses=48 net=-171483
+refused  blake3_xof_many                          compute=1325004 accesses=48000 net=-171474996
+refused  blake3_simd_degree                       compute=0 accesses=0 net=0
+refused  blake3_compress_in_place_portable        compute=1291 accesses=32 net=-113909
+refused  blake3_compress_xof_portable             compute=1315 accesses=48 net=-171485

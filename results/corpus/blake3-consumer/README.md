@@ -45,19 +45,23 @@ Paired median speedup over the serial run, with the range over rounds.
 | small | explicit | 2.79x (2.26 to 3.57) | 2.79x (2.08 to 3.69) | 2.54x (2.30 to 3.09) | 1.8 to 2.0 |
 | forced | forced | 0.40x | 0.47x | 0.51x | 2.1 to 2.7 |
 
-- **Default admission finds no plan.** `Folio.run` runs the original module serially with no worker
-  (mode `serial`, reason `unsupported-module`). The blockers are module-wide: a start function or a
+- **Default admission finds no plan in the library as measured here.** `Folio.run` runs the original
+  module serially with no worker (mode `serial`, reason `unsupported-module` as recorded; the current
+  build reports `no-arena` for the unshared memory this arm passes). The blockers are module-wide: a start function or a
   required shared memory, data segments that need initialization isolation, global state (the stack
   pointer) and a recursive call graph (`blake3_compress_subtree_wide`), and no region reaches the
   200,000-unit floor.
 - **The explicit route clears 2x on both workloads,** 2.5x to 3.1x at eight workers. The serial
   calling thread posts 128 MiB of input by copy before the workers can hash, which limits the
   speedup below the width.
+  The [iteration-route](../iteration-route/README.md) study ran the same arm in separate sessions and
+  measured 3.0x to 3.3x. The two session sets are not pooled, and the spread between them is within the
+  run-to-run variation of the explicit arm.
 - **Forced admission loses.** It forms regions, runs speculatively on three workers with 48 replays
   in each session, and is 0.40x to 0.51x of the serial run on the small diagnostic workload.
 - This is an explicit result: the caller names one task per input. It is not an automatic speedup.
-  The [iteration route](../iteration-route/README.md) later made the `default` arm dispatch this loop;
-  this study keeps the earlier record.
+  The [iteration route](../iteration-route/README.md) dispatches this loop under default admission when
+  the host memory is shared; this study records the result without it.
 
 Limits: one program, one machine, 3 sessions of 9 rounds, and a pool that holds each worker's inputs by
 copy. The `forced` cell has 3 rounds and a workload one eighth the size of `large`.

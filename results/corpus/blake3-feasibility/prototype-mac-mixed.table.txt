@@ -1,0 +1,86 @@
+wl    w   arm           s  speedup (min-max)    native ms  arm ms    cpu   replay  disp   valid  roll+rep scan/busy eq
+mixed 1   ceiling       0  0.89 (0.74-1.79)     341.9      368.2     1.12  0       0.76   0      0        0         true/true
+mixed 1   ceiling       1  1 (0.82-1.15)        308.9      310.8     1     0       0.886  0      0        0         true/true
+mixed 1   ceiling       2  0.99 (0.51-1.25)     310.9      324.7     1.03  0       0.853  0      0        0         true/true
+mixed 1   ceiling-lpt   0  0.99 (0.82-1.03)     315.6      313.8     1.03  0       0.883  0      0        0         true/true
+mixed 1   ceiling-lpt   1  1 (0.97-1.04)        310.1      311.6     1     0       0.888  0      0        0         true/true
+mixed 1   ceiling-lpt   2  0.98 (0.76-1.16)     310.5      323.3     1.02  0       0.859  0      0        0         true/true
+mixed 1   marks         0  0.7 (0.62-0.96)      310.2      431       1.41  0       0.911  0.0002 0        0.0552    true/true
+mixed 1   marks         1  0.72 (0.7-0.88)      308.8      431.1     1.41  0       0.914  0.0002 0        0.0543    true/true
+mixed 1   marks         2  0.75 (0.61-0.92)     338.7      445.2     1.35  0       0.901  0.0002 0        0.0559    true/true
+mixed 1   tracked       0  0.7 (0.58-0.89)      318        447.7     1.42  0       0.907  0.0018 0        0.0556    true/true
+mixed 1   tracked       1  0.87 (0.39-2.19)     768.2      853.8     1.27  0       0.516  0.0012 0        0.0767    true/true
+mixed 1   tracked       2  0.72 (0.63-0.81)     319.9      440       1.41  0       0.901  0.0018 0        0.0556    true/true
+mixed 1   tracked-lpt   0  0.87 (0.41-1.5)      627.3      773       1.37  0       0.546  0.0007 0        0.0767    true/true
+mixed 1   tracked-lpt   1  0.72 (0.69-0.85)     309.1      429.1     1.38  0       0.916  0.001  0        0.0549    true/true
+mixed 1   tracked-lpt   2  0.72 (0.71-0.75)     306.7      424       1.39  0       0.922  0.001  0        0.0548    true/true
+mixed 2   ceiling       0  1.58 (1.36-1.7)      320.7      212.2     1.03  0       0.731  0      0        0         true/true
+mixed 2   ceiling       1  1.68 (1.51-1.79)     311.2      186.2     1     0       0.812  0      0        0         true/true
+mixed 2   ceiling       2  1.51 (0.81-2.76)     485.9      202.5     1.01  0       0.767  0      0        0         true/true
+mixed 2   ceiling-lpt   0  1.78 (1.76-1.81)     301.1      169.7     1.01  0       0.812  0      0        0         true/true
+mixed 2   ceiling-lpt   1  1.76 (1.39-2)        329.1      183.6     1.01  0       0.769  0      0        0         true/true
+mixed 2   ceiling-lpt   2  1.8 (1.77-1.83)      309.9      171.3     1     0       0.809  0      0        0         true/true
+mixed 2   marks         0  1.23 (0.96-1.58)     309.6      252.8     1.39  0       0.857  0.0003 0        0.0548    true/true
+mixed 2   marks         1  1.24 (1.16-1.26)     310        251.6     1.39  0       0.866  0.0002 0        0.0545    true/true
+mixed 2   marks         2  1.23 (1.16-1.26)     311.3      250.8     1.41  0       0.863  0.0003 0        0.0547    true/true
+mixed 2   tracked       0  1.23 (1.04-1.37)     323.9      266.7     1.38  0       0.826  0.0017 0        0.0553    true/true
+mixed 2   tracked       1  1.23 (1.17-1.33)     316.6      261.3     1.38  0       0.837  0.0017 0        0.0545    true/true
+mixed 2   tracked       2  1.26 (0.68-1.98)     510.6      389.7     1.34  0       0.611  0.0012 0        0.0704    true/true
+mixed 2   tracked-lpt   0  1.24 (1.18-1.27)     301.2      243.7     1.4   0       0.843  0.0017 0        0.0549    true/true
+mixed 2   tracked-lpt   1  1.21 (0.8-2.04)      348.6      280.3     1.42  0       0.787  0.0016 0        0.058     true/true
+mixed 2   tracked-lpt   2  1.25 (1.16-1.34)     303.3      242.5     1.4   0       0.859  0.0018 0        0.055     true/true
+mixed 4   ceiling       0  2.26 (2.07-2.31)     297.4      130.9     1.03  0       0.762  0      0        0         true/true
+mixed 4   ceiling       1  2.16 (1.61-2.33)     326.3      151.1     1.05  0       0.694  0      0        0         true/true
+mixed 4   ceiling       2  2.3 (2.12-2.51)      312.5      135.1     1.02  0       0.744  0      0        0         true/true
+mixed 4   ceiling-lpt   0  2.67 (2.38-2.71)     310        116       1     0       0.719  0      0        0         true/true
+mixed 4   ceiling-lpt   1  2.52 (2.19-2.77)     311.2      121.2     1.05  0       0.719  0      0        0         true/true
+mixed 4   ceiling-lpt   2  2.63 (2.5-2.68)      308.3      117       1.02  0       0.716  0      0        0         true/true
+mixed 4   marks         0  1.66 (1.53-1.89)     315.8      190.9     1.44  0       0.761  0.0003 0        0.0551    true/true
+mixed 4   marks         1  1.76 (1.68-1.96)     314.8      179.6     1.4   0       0.794  0.0003 0        0.0549    true/true
+mixed 4   marks         2  1.72 (1.58-2.06)     310.3      186.4     1.4   0       0.789  0.0003 0        0.0611    true/true
+mixed 4   tracked       0  1.7 (1.55-1.81)      308.7      179.8     1.45  0       0.809  0.0024 0        0.0553    true/true
+mixed 4   tracked       1  1.7 (0.95-2.39)      322.4      193.1     1.4   0       0.746  0.0023 0        0.06      true/true
+mixed 4   tracked       2  1.29 (0.69-2.78)     490.4      405.8     1.46  0       0.376  0.0012 0        0.083     true/true
+mixed 4   tracked-lpt   0  1.82 (1.23-2.03)     312.8      173       1.39  0       0.797  0.0025 0        0.0559    true/true
+mixed 4   tracked-lpt   1  1.35 (1.04-3.49)     617.1      380.8     1.39  0       0.404  0.0012 0        0.0887    true/true
+mixed 4   tracked-lpt   2  1.7 (1.62-1.92)      310.2      181.8     1.45  0       0.751  0.0024 0        0.0554    true/true
+mixed 8   ceiling       0  2.52 (2.04-3.36)     315.4      122.1     1.02  0       0.725  0      0        0         true/true
+mixed 8   ceiling       1  2.27 (1.16-2.57)     320.3      150       1.11  0       0.662  0      0        0         true/true
+mixed 8   ceiling       2  2.52 (2.26-2.65)     310.2      123.5     1.03  0       0.722  0      0        0         true/true
+mixed 8   ceiling-lpt   0  2.26 (0.92-3.02)     335.3      148.1     1.09  0       0.602  0      0        0         true/true
+mixed 8   ceiling-lpt   1  2.57 (1.23-2.65)     317.7      122.1     1.06  0       0.722  0      0        0         true/true
+mixed 8   ceiling-lpt   2  2.6 (0.68-5.95)      306.9      118.2     1.06  0       0.73   0      0        0         true/true
+mixed 8   marks         0  1.61 (1.05-2.99)     510.6      251.6     1.57  0       0.612  0.0004 0        0.0765    true/true
+mixed 8   marks         1  1.81 (1.47-2.15)     325.6      172.7     1.46  0       0.797  0.0004 0        0.0719    true/true
+mixed 8   marks         2  1.82 (1.79-1.86)     302.2      166       1.44  0       0.805  0.0005 0        0.061     true/true
+mixed 8   tracked       0  1.8 (1.65-1.94)      310.9      171.6     1.47  0       0.792  0.0045 0        0.0682    true/true
+mixed 8   tracked       1  1.78 (1.53-1.91)     311.4      170.8     1.45  0       0.801  0.0025 0        0.0679    true/true
+mixed 8   tracked       2  1.79 (1.72-1.83)     308.3      173.4     1.47  0       0.791  0.0044 0        0.0692    true/true
+mixed 8   tracked-lpt   0  1.47 (0.63-2.37)     374.4      259       1.48  0       0.773  0.002  0        0.0686    true/true
+mixed 8   tracked-lpt   1  1.78 (1.17-1.89)     322.7      186.6     1.51  0       0.762  0.0025 0        0.0697    true/true
+mixed 8   tracked-lpt   2  1.43 (0.82-3.49)     480.4      358       1.33  0       0.404  0.0014 0        0.1369    true/true
+tracked over ceiling
+mixed 1   tracked       0  speedup ratio 1.27 wall ratio 1.22 undo share of wall 0.037
+mixed 1   tracked       1  speedup ratio 1.15 wall ratio 2.75 undo share of wall 0.495
+mixed 1   tracked       2  speedup ratio 1.38 wall ratio 1.36 undo share of wall -0.012
+mixed 1   tracked-lpt   0  speedup ratio 1.14 wall ratio 2.46 undo share of wall 
+mixed 1   tracked-lpt   1  speedup ratio 1.39 wall ratio 1.38 undo share of wall 
+mixed 1   tracked-lpt   2  speedup ratio 1.36 wall ratio 1.31 undo share of wall 
+mixed 2   tracked       0  speedup ratio 1.28 wall ratio 1.26 undo share of wall 0.052
+mixed 2   tracked       1  speedup ratio 1.37 wall ratio 1.4 undo share of wall 0.037
+mixed 2   tracked       2  speedup ratio 1.2 wall ratio 1.92 undo share of wall 0.356
+mixed 2   tracked-lpt   0  speedup ratio 1.44 wall ratio 1.44 undo share of wall 
+mixed 2   tracked-lpt   1  speedup ratio 1.45 wall ratio 1.53 undo share of wall 
+mixed 2   tracked-lpt   2  speedup ratio 1.44 wall ratio 1.42 undo share of wall 
+mixed 4   tracked       0  speedup ratio 1.33 wall ratio 1.37 undo share of wall -0.062
+mixed 4   tracked       1  speedup ratio 1.27 wall ratio 1.28 undo share of wall 0.07
+mixed 4   tracked       2  speedup ratio 1.78 wall ratio 3 undo share of wall 0.541
+mixed 4   tracked-lpt   0  speedup ratio 1.47 wall ratio 1.49 undo share of wall 
+mixed 4   tracked-lpt   1  speedup ratio 1.87 wall ratio 3.14 undo share of wall 
+mixed 4   tracked-lpt   2  speedup ratio 1.55 wall ratio 1.55 undo share of wall 
+mixed 8   tracked       0  speedup ratio 1.4 wall ratio 1.41 undo share of wall -0.466
+mixed 8   tracked       1  speedup ratio 1.28 wall ratio 1.14 undo share of wall -0.011
+mixed 8   tracked       2  speedup ratio 1.41 wall ratio 1.4 undo share of wall 0.043
+mixed 8   tracked-lpt   0  speedup ratio 1.54 wall ratio 1.75 undo share of wall 
+mixed 8   tracked-lpt   1  speedup ratio 1.44 wall ratio 1.53 undo share of wall 
+mixed 8   tracked-lpt   2  speedup ratio 1.82 wall ratio 3.03 undo share of wall 
