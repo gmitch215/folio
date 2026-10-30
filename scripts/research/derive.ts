@@ -4,14 +4,19 @@ import { digest } from './environment.ts';
 
 type Row = Record<string, any>;
 
-const count = (reasons: string[]) => {
+/** Counts the kernels each reason affects; a kernel that reports the same reason twice counts once. */
+const count = (perKernel: string[][]) => {
 	const counts: Record<string, number> = {};
-	for (const reason of reasons) {
-		const key = reason
-			.replace(/\(.*\)/, '')
-			.replace(/\d[\d,]*/g, 'N')
-			.trim();
-		counts[key] = (counts[key] ?? 0) + 1;
+	for (const reasons of perKernel) {
+		const keys = new Set(
+			reasons.map((reason) =>
+				reason
+					.replace(/\(.*\)/, '')
+					.replace(/\d[\d,]*/g, 'N')
+					.trim()
+			)
+		);
+		for (const key of keys) counts[key] = (counts[key] ?? 0) + 1;
 	}
 	return Object.fromEntries(
 		Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
@@ -25,10 +30,10 @@ export function blockerHistogram(rows: Row[]) {
 	return {
 		schema: 'folio.blockers.v1',
 		kernels: coverage.length,
-		originalModule: count(coverage.flatMap((row) => row.original.reasons)),
-		admission: count(coverage.flatMap((row) => row.original.controlReasons)),
-		sharedBitOnly: count(coverage.flatMap((row) => row.sharedDiagnostic.reasons)),
-		checkpointRefusals: count(coverage.flatMap((row) => row.checkpointRefusals))
+		originalModule: count(coverage.map((row) => row.original.reasons)),
+		admission: count(coverage.map((row) => row.original.controlReasons)),
+		sharedBitOnly: count(coverage.map((row) => row.sharedDiagnostic.reasons)),
+		checkpointRefusals: count(coverage.map((row) => row.checkpointRefusals ?? []))
 	};
 }
 

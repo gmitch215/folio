@@ -5,7 +5,7 @@ a single compiler extension change that?
 
 `blockers.json` counts the diagnostics `inspect` reports for each kernel, taken from the coverage
 records of the [reset study](../reset-policies/README.md). Reasons that differ only in a number are
-merged.
+merged, and a kernel counts once for each reason.
 
 ## Results
 
@@ -13,7 +13,7 @@ merged.
 | --- | ---: | ---: |
 | Start function | 19 | 19 |
 | Shared wasm32 memory required | 19 | 0 |
-| Unsupported expression | 18 | 18 |
+| Unsupported expression | 14 | 14 |
 | Global state | 14 | 14 |
 | Data segments require initialization isolation | 11 | 11 |
 | Host or non-memory imports | 2 | 2 |

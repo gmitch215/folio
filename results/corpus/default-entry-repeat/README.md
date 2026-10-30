@@ -14,7 +14,7 @@ machine and 0.47x to 1.05x on the M2 Pro. The slowest ratios belong to entries u
 microseconds, where the wrapper cost is a large share of a call. The largest per-kernel difference
 from the earlier run's eight-worker median is 0.25.
 
-Entries of 0.15 ms and longer (AES, miniz, SHA, MD5, the 6502 emulator) sit between 0.95x and 1.0x. This is a measurement of the route default admission chooses; it contains no speedup claim.
+Entries of 0.10 ms and longer (AES, miniz, SHA, MD5, the 6502 emulator) sit between 0.94x and 1.0x. This is a measurement of the route default admission chooses; it contains no speedup claim.
 
 ## Reproduction
 

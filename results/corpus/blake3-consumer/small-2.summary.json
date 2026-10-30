@@ -1,0 +1,347 @@
+{
+  "schema": "folio.research-summary.v1",
+  "rawSha256": "13ff62405a284dde9e86fdb53e351014bc78ec279768074348f9bda21c3fb7a9",
+  "samples": 36,
+  "environments": [
+    {
+      "kind": "environment",
+      "schema": "folio.research.v1",
+      "observedAt": "2026-10-29T23:21:24.570Z",
+      "revision": "fb0bddc128a3430146cba9e734366ca1afc91f47",
+      "node": "v26.10.0",
+      "v8": "14.6.202.34-node.34",
+      "os": "linux",
+      "release": "6.8.0-138-generic",
+      "cpu": "AMD Ryzen 9 9900X 12-Core Processor",
+      "hardwareThreads": 24,
+      "affinity": "4-11",
+      "governor": "powersave",
+      "load": [
+        0.84,
+        0.43,
+        0.63
+      ],
+      "configuration": {
+        "rounds": 9,
+        "files": 128,
+        "mebibytes": 0.25,
+        "width": 8,
+        "mode": "run"
+      },
+      "sources": {
+        "src/bake.ts": "e6ef4e996680d3b5451b7e43526746e2f80934255a08ed478d03540d8fd04b11",
+        "src/browser-worker.ts": "90786fe738fd92e5d628465cb187d41790668d3fcf6fb0c71d92e761a3c78a3e",
+        "src/browser.ts": "242aa96ecbcdbd3839e647c5fda2537456bcfcad8113415f00d056a703c2dbd4",
+        "src/compiler.ts": "ecbf5fbb57cbba465e9c615716c5a104351eb8df19129a5e9201f3795e339614",
+        "src/context.ts": "fed8524229fb621be631e1377a9e35a28a06a7ff0a09ff92932069243ba049ba",
+        "src/coordinator.ts": "4b9c5cc0f72d73c588ed3bffb17e40d8fd2d3fb2bb0cd5646e24ab967bc70ce8",
+        "src/extract.ts": "90f8d7c7ad3ae7c532436d7763f876081315e83cb13f0d31af8c2ee53de7c323",
+        "src/frames.ts": "228ed521b29a79d046a67b1f8a166f63cfcb77e281500e003ef5d3c2a6986239",
+        "src/guards.ts": "d8eeb6b8a3451d20aaed2e2fbcce0f89edd57efa82ae03f64ea968959b5bcfd5",
+        "src/host.ts": "8b0fafb6ef8991778598cc78fd7e10415f49875c30b79c75e4e7eac901c80fed",
+        "src/import-order.ts": "0b725a68bd59f9c0e0a5bc63fcc4c31f08b5f718438e67d271a44f4d7e575905",
+        "src/index.ts": "a8c9f3dfbefa3170329c7950cb58f5e3c20e0f7264affb0ffd3bd1b3c1ba364b",
+        "src/managed.ts": "56120d3a80eff454472e5db019da78bcc816fc8dc72268d4b0ce72c73387a9eb",
+        "src/memory.ts": "809fa86f5ae31eb908b4ced554aa69f008b39262cd38200c0a628140f15fd5da",
+        "src/node.ts": "126b6b650ac4c3469d14d6239f90f84657ab7385a9fcb54d7235a4033d559263",
+        "src/pages.ts": "a708df22273d81e1429c0050d31439c46fdec1e193688a91a3ee3576da296db4",
+        "src/remote.ts": "16dbba9b681966a2b4040c82fe3ca98c5a171eee25fd8d7ce43edf0bb5222e8d",
+        "src/tasks.ts": "7decb7a48c7a3aef2781b92bb3179a6bde434843996293ea8e90a947ca39c1fc",
+        "src/transaction.ts": "c4ae45c13c8e980ecb9811f69aedc243561d73d39a6eb855bfeeb51bf600c4f4",
+        "src/values.ts": "56b4c8777a3856441480eee0cb585a2b40e6b03966c3efc245e17a2536196374",
+        "src/worker.ts": "f1ab49593f1ce9bbb39a7adb4727c2cb4c303d74ceccc674474ef1d991ee82e5",
+        "scripts/research/admission-diagnostic.ts": "8dd8ea2b580f5765b699615045801df1296eb89e95b0eb71c34498551d035f34",
+        "scripts/research/analyze.ts": "f7896821d1ca9bc3b132d6f5f2da6723e9e3016c9e90cbd154a763a1cac5691b",
+        "scripts/research/backing.ts": "115240c2b2f00d54b117053b329973997c91ac1ca42d80ac302031ef72de055b",
+        "scripts/research/blake3-bench.ts": "2426551000ccb4aeb171f5450cf163d9dbd20c89b033ab525f6512006fe1c788",
+        "scripts/research/blake3-build.ts": "7c8dc4ac1a0e7ba2e79c943dffe89d9790ced7251da551b99ef1a976e1efe131",
+        "scripts/research/blake3-worker.ts": "3fcd7d9613f865cbafcbdba230d905dd305ccb4f3cdb892af0c89415d77d2c5a",
+        "scripts/research/boot-eligibility.ts": "32717c8da20fcf23210b814592ae1584a0da4284cd51c5e43ee629c74a60327d",
+        "scripts/research/cases/aes-grain.c": "abd8eaa15a6b73986144ef1dfc0a16362d5a4241f38d2528a5aaea3d30ddd397",
+        "scripts/research/cases/blake3-hash-all.c": "42c5bd969812b0c416c8522e02476247a1db8e3b48dc4380efeb11f0cdb4b7b8",
+        "scripts/research/cases/include/assert.h": "2e0b7e0adab1df0793e150b60890843771f584e8094b3e74fdbd1a6d0d3f4508",
+        "scripts/research/cases/include/int_lib.h": "cf4f25bd15803ccfc1774ccab9ed5228132758cc546e180f9f37f31f65e90931",
+        "scripts/research/cases/include/math.h": "6f6751b2957db0e6615f14371cc3132d0decf54b175e2670be6e8e6de08dfb3b",
+        "scripts/research/cases/include/memory.h": "3234d45b96216a3c36f25932364b800eeadf703964e85fdf25cabacf9aeedc2e",
+        "scripts/research/cases/include/miniz_export.h": "195259dc89fb3f83a96426a90ee03dc45acef113150cd3475ea9cfbf1f7784f3",
+        "scripts/research/cases/include/stdio.h": "0bd8c3e9e8a873b890704afcd45369c8e7d79991be6d2de55ec058264219ae77",
+        "scripts/research/cases/include/stdlib.h": "c328dcb08baa26c16bc8b768b4c0ca32e2b32e94772c419dda8f9fb25e3695bb",
+        "scripts/research/cases/include/string.h": "3db545ced6638221254c50e3d022269170442967dc330f081f9f996d9c4e228a",
+        "scripts/research/cases/kernel.c": "ed306b90b0e9e4e2479379f12b4cdf9f9ef7f1f220a12bf5c878d5fb7986035b",
+        "scripts/research/cases/support-min.c": "0b7af772feb2d11f4e59648b455bd0ab6af11113209f65366caf3e134631285b",
+        "scripts/research/cases/support.c": "dd3ec886f0ffa3e1adbc7beb9d29d1b6387c8ec715c0514141028f4c0e15c154",
+        "scripts/research/cases/upstream.ts": "74ef77e2bdc5a9bb32ad4057227d34f3ca562df31749dfeba5fdb27d8c6d30ac",
+        "scripts/research/corpus-manifest.json": "8ba08eaab61702d48e80cca5ffa1930c95aa727d9ed8174926305be512b86ce4",
+        "scripts/research/corpus-mechanisms.ts": "6e460ab41e9be60e5c17939e78a60df27f7d9d2abe997d2a2c64b59059478ab7",
+        "scripts/research/corpus-serial.ts": "af524472b68bb6b10c58d814825bbb5038f96b387cad7f6ce603726e1d78bcab",
+        "scripts/research/corpus-worker.ts": "a13a2b033c394d1bd7c6f84716d365d8376be36c57b8a8840935c85abd25fc2f",
+        "scripts/research/corpus.ts": "51f63c69882721e4f35857cb8d7444105b1847a4cbf62401b02e2ab42e1f4b04",
+        "scripts/research/crossover-worker.ts": "ce3a36ab1695c973c9a69ad0eb52bcc4802fb3e8fb840c6c49a382d1fe7f960f",
+        "scripts/research/crossover.ts": "f0958198a63172852201a6746bc88211ed209f57f43881951da8c0dbd12a8b18",
+        "scripts/research/denominators.ts": "f11d47f1a9cb7b694be181c3604cd681c5848eafcbf5ee72e2bb90ed24a8f52d",
+        "scripts/research/derive.ts": "00533bfe5846654236895d41a1ac649cbaf995639a876a55684a755812853224",
+        "scripts/research/differential.ts": "5e1fe21f16b47a4809c2ec2b838fcbdbb7f9c09b68955df06719b96b5ff221c7",
+        "scripts/research/environment.ts": "35eed05e53ff27f686dd2d18a4fb8a3390c084738aef4fb5c2b30c00d027ce75",
+        "scripts/research/evidence.ts": "0a2dc0defcba2a45e24961a3a86acdab192e67a77026a5229b9f45c611d6defe",
+        "scripts/research/export.ts": "a1eb54d4c78bc334b77f12b9b90e9080d78a0f72c77166ead704b2b7743399df",
+        "scripts/research/focused.ts": "aa7084efe818c31ca6772fb586de33e1bcf61a594780ae5c141dcc142e3f1fb3",
+        "scripts/research/graded.ts": "19283154e848255b79bc5eb5b709afa5be58a3065e44c6f356915b8195b8a1d7",
+        "scripts/research/grain-bench.ts": "6ec6a87ebe63130d1911ece7ad505d5c10b95706a5b41152f28806396160530a",
+        "scripts/research/grain-build.ts": "5308e5dc6d8cf5b1e5e5adcbf0630b101cab1fec93d830b15b3a82cd60385f7b",
+        "scripts/research/grain-diff.ts": "4c9bdeca949b5fddee5b43d79002ca9ed826c45f91251d8dfb6e37961ba0861d",
+        "scripts/research/grain-summarize.ts": "a8804bc2f98d64b77590147ea00efd08eda58b9da7fd725a0733a6936e963463",
+        "scripts/research/grain-worker.ts": "4ac18461ca0d300c4d598dbbe283aefdf18ac235ad568aaa4f67cd040e3b4466",
+        "scripts/research/inputs.ts": "ec5e1a0075f05ba27cbd7af376b907086d483c633e67c894729232f840af758e"
+      },
+      "sourceDigest": "c134612a8c6c6dad34cacb43460a2c09906ebd2e657b0acdc38c5490d60d7813",
+      "wasmSha256": "cc0ad0f1d28e279f6d84b082d1b4c54c611d94f5cd184645d645fb808bb9b457",
+      "digestsSha256": "360f4b9cced292f20b431e5aec86db88b1bf80749c93713c3876904722e055ad"
+    }
+  ],
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 305419896,
+    "unit": "paired round",
+    "independentReplication": false
+  },
+  "groups": {
+    "default": {
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 29.248383999999987,
+          "min": 29.016545000000065,
+          "max": 30.032910000000015,
+          "medianCi95": [
+            29.125624000000016,
+            29.98211100000003
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 29.571,
+          "min": 29.02,
+          "max": 30.536,
+          "medianCi95": [
+            29.176,
+            29.986
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatioPairs": 9,
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0001397721246212,
+          "min": 1.0000861027915817,
+          "max": 1.0167512905009866,
+          "medianCi95": [
+            1.0001190699995446,
+            1.014883865107172
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "reasons": {},
+        "replayed": 0
+      },
+      "default": {
+        "wallMs": {
+          "n": 9,
+          "median": 29.772730999999908,
+          "min": 29.000425000000064,
+          "max": 30.10335000000009,
+          "medianCi95": [
+            29.15654500000005,
+            29.88218100000006
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 29.827,
+          "min": 29.005,
+          "max": 31.205,
+          "medianCi95": [
+            29.44,
+            30.221
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 0.9807248584165821,
+          "min": 0.9675210234076914,
+          "max": 1.0312200597060215,
+          "medianCi95": [
+            0.9710316994599559,
+            1.0300360340492871
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.014869003062266,
+          "min": 0.9697425610163825,
+          "max": 1.0319617551647602,
+          "medianCi95": [
+            0.9817915027012606,
+            1.029841488628532
+          ]
+        },
+        "cpuRatioPairs": 9,
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.0002226996862404,
+          "min": 1.000076210677485,
+          "max": 1.0702351001787034,
+          "medianCi95": [
+            1.0001263779903673,
+            1.0097218308959428
+          ]
+        },
+        "modes": [
+          "serial"
+        ],
+        "workers": [
+          0
+        ],
+        "reasons": {
+          "unsupported-module": 9
+        },
+        "replayed": 0
+      }
+    },
+    "explicit": {
+      "native": {
+        "wallMs": {
+          "n": 9,
+          "median": 29.718801000000212,
+          "min": 28.88737500000002,
+          "max": 30.356508000000076,
+          "medianCi95": [
+            28.940866000000142,
+            30.076749000000063
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 29.724,
+          "min": 28.893,
+          "max": 30.589,
+          "medianCi95": [
+            28.943,
+            30.335
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1,
+          "min": 1,
+          "max": 1,
+          "medianCi95": [
+            1,
+            1
+          ]
+        },
+        "cpuRatioPairs": 9,
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 1.000194721742629,
+          "min": 1.0000737365633723,
+          "max": 1.016071582887793,
+          "medianCi95": [
+            1.000133832093758,
+            1.0076587201663618
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "reasons": {},
+        "replayed": 0
+      },
+      "explicit": {
+        "wallMs": {
+          "n": 9,
+          "median": 10.634596999999985,
+          "min": 8.158449000000019,
+          "max": 14.007939999999962,
+          "medianCi95": [
+            8.812216000000035,
+            12.43726700000002
+          ]
+        },
+        "cpuMs": {
+          "n": 9,
+          "median": 54.251,
+          "min": 47.279,
+          "max": 84.55,
+          "medianCi95": [
+            48.838,
+            67.871
+          ]
+        },
+        "pairedSpeedup": {
+          "n": 9,
+          "median": 2.793725347305377,
+          "min": 2.0781859431151295,
+          "max": 3.686576823609487,
+          "medianCi95": [
+            2.440769985881949,
+            3.2781056433478146
+          ]
+        },
+        "cpuRatio": {
+          "n": 9,
+          "median": 1.874408319800988,
+          "min": 1.5585627163342675,
+          "max": 2.764065513746772,
+          "medianCi95": [
+            1.689301047569981,
+            2.2833737047503697
+          ]
+        },
+        "cpuRatioPairs": 9,
+        "averageBusyCpus": {
+          "n": 9,
+          "median": 5.542079313534735,
+          "min": 3.5111515326307887,
+          "max": 6.865260996444491,
+          "medianCi95": [
+            4.984309590755748,
+            6.798117303423643
+          ]
+        },
+        "modes": [],
+        "workers": [],
+        "reasons": {},
+        "replayed": 0
+      }
+    }
+  }
+}

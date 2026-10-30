@@ -46,7 +46,7 @@ Ryzen 9 9900X first and Apple M2 Pro second.
 The same table is in `kernels.md`, and `kernels.json` adds the process CPU ratio of each task cell.
 
 - Default entry stays at 0.87x to 1.00x for the 12 kernels whose call takes 0.04 ms or longer. The
-  nine shorter calls run at 0.42x to 1.05x, where the wrapper is a large share of the call.
+  nine shorter calls run at 0.42x to 0.85x on the Ryzen machine and 0.47x to 1.05x on the M2 Pro, where the wrapper is a large share of the call.
 - Forced admission extracted regions from 11 kernels, and every one of them ran 108 to 45,645 times
   slower than native. The 10 others stayed serial.
 - Learned pages reach 1.47x to 4.80x on the Ryzen machine and 1.69x to 5.76x on the M2 Pro. The

@@ -1,0 +1,40 @@
+[
+ {
+  "width": 8,
+  "n": 25,
+  "poolMedianMs": 0.41,
+  "controlResetMedianMs": 1.086,
+  "controlHotMedianMs": 1.056,
+  "speedupVsControlReset": 2.675,
+  "speedupVsHot": 2.618,
+  "minMaxVsReset": [
+   1.497,
+   4.935
+  ],
+  "poolCpuMs": 1.868,
+  "workerResetMs": 0.049,
+  "workerComputeMs": 0.234,
+  "dispatchMs": 0.175,
+  "workerWallMs": 0.295,
+  "loadMax": 0.28
+ },
+ {
+  "width": 1,
+  "n": 25,
+  "poolMedianMs": 1.337,
+  "controlResetMedianMs": 1.083,
+  "controlHotMedianMs": 1.045,
+  "speedupVsControlReset": 0.805,
+  "speedupVsHot": 0.782,
+  "minMaxVsReset": [
+   0.632,
+   1.293
+  ],
+  "poolCpuMs": 1.327,
+  "workerResetMs": 0.032,
+  "workerComputeMs": 1.208,
+  "dispatchMs": 0.026,
+  "workerWallMs": 1.259,
+  "loadMax": 0.26
+ }
+]

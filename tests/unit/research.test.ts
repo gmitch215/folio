@@ -177,7 +177,11 @@ test('blocker counts merge numbers and state-loss counts compare setup identitie
 		checkpointRefusals: []
 	});
 	const blockers = blockerHistogram([
-		coverage(['shared wasm32 memory required', 'unsupported expression 11']),
+		coverage([
+			'shared wasm32 memory required',
+			'unsupported expression 11',
+			'unsupported expression 7'
+		]),
 		coverage(['shared wasm32 memory required', 'unsupported expression 7'])
 	]);
 	expect(blockers.originalModule).toEqual({

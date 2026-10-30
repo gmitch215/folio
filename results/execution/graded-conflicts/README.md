@@ -32,8 +32,8 @@ per call, dispatch and tracking cost more than the work they distribute, whether
 conflict.
 
 Ordered validation is not the limiting cost. Its share of wall time is at most 0.3% in the
-65,536 round cells and at most 2.1% in any cell. The default route at width 8 gives similar results
-to forced speculation in every cell. The two machines agree to within about 11% in every 65,536
+65,536 round cells and at most 2.2% in any cell. The default route at width 8 gives similar results
+to forced speculation in every cell. The two machines agree to within about 13% in every 65,536
 round cell.
 
 Admission defaults are unchanged. The measured crossover is consistent with the existing floor of

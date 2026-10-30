@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-static unsigned char arena[4 * 1024 * 1024] __attribute__((aligned(16)));
+#ifndef CORPUS_ARENA_BYTES
+#define CORPUS_ARENA_BYTES (4 * 1024 * 1024)
+#endif
+static unsigned char arena[CORPUS_ARENA_BYTES] __attribute__((aligned(16)));
 static size_t cursor;
 unsigned char input[65536];
 unsigned char output[262144];
