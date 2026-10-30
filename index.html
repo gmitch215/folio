@@ -89,6 +89,10 @@ result of <code>prepare(bytes)</code>. A compiled module has no inspectable byte
 Imported memory is allocated from the module's limits when omitted. Pass <code>memory</code> to bind an
 existing single imported memory, or bind several by their exact names in <code>imports</code>. Missing host
 functions, tables, globals, tags and memory64 bindings are supplied as with native instantiation.
+A loop of independent calls (a countdown loop in one function, as in a program that hashes several
+files) runs on workers only when the <code>memory</code> you pass is a shared <code>WebAssembly.Memory</code>; an unshared
+memory, or one the library cannot grow by the arena it needs, keeps the serial run and the report
+names why.
 <code>prepare(bytes, { parallel: 'off' })</code> disables optimization and leaves the program unchanged.
 Prepared plans are trusted build artifacts.</p>
 <p>A region runs on a worker only when its estimated work pays for dispatch, joining and validation.
@@ -425,6 +429,11 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 <td>Explicit tasks on private contexts</td>
 <td>the same 21 kernels, eight batched <code>TaskPool</code> workers</td>
 <td>18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs</td>
+</tr>
+<tr>
+<td>Iteration route, outside program</td>
+<td>BLAKE3 1.8.7 unmodified, 32 x 4 MiB and 128 x 256 KiB, Ryzen 9 9900X and M2 Pro</td>
+<td>default admission through <code>Folio.run</code>: 2.7x and 2.2x on the Ryzen machine, 3.3x and 2.9x on the M2 Pro (warm calls, equal digests); 1.00x before</td>
 </tr>
 <tr>
 <td>Baked Drupal lifecycle</td>

@@ -1,36 +1,45 @@
-# Default Entry Repeat
+# Corpus Denominators
 
-Question: do the single-entry timings of the [default-admission study](../serial/README.md)
-reproduce when nothing else runs on the host?
+Question: how many of the corpus programs reach each stage, from build to a measured speedup, and
+what does the corpus not represent?
 
-The earlier run overlapped other local work. This repeat runs the same 21 upstream entries with
-the same arms, native and Folio at widths 1, 2, 4 and 8, 9 paired rounds, on two machines.
+The table counts distinct things. A project is an upstream source tree, a kernel is one exported
+entry of a library, and a full application would be a program that a user runs. The corpus has
+nine projects and 21 kernels. It has no full application and no database workload.
 
-## Results
+| Stage | Count | Source |
+| --- | ---: | --- |
+| Projects | 9 | [upstream](../upstream/README.md) |
+| Kernels selected and built | 21 of 21 | [upstream](../upstream/README.md) |
+| Kernels whose Folio and native runs match in all 8 MiB, returns and effects | 21 of 21 | [upstream](../upstream/README.md) |
+| Kernels with an automatic plan under default admission | 0 of 21 | [upstream](../upstream/README.md) |
+| Kernels that dispatch workers under default admission | 0 of 21 | [default entry repeat](../default-entry-repeat/README.md) |
+| Kernels that receive regions at threshold 0 | 11 of 21 | [forced admission](../forced-admission-complete/README.md) |
+| Of those, kernels faster than native | 0 of 11 | [forced admission](../forced-admission-complete/README.md) |
+| Input profiles exact against a fresh native instance | 210 of 210 | [varied inputs](../varied-inputs/README.md) |
 
-All 21 entries take the serial original-module route on both machines: `mode` is `serial` and no
-worker is dispatched. The eight-worker Folio arm runs at 0.42x to 0.99x of native on the Ryzen
-machine and 0.47x to 1.05x on the M2 Pro. The slowest ratios belong to entries under 20
-microseconds, where the wrapper cost is a large share of a call. The largest per-kernel difference
-from the earlier run's eight-worker median is 0.25.
+Explicit independent operations are a different route with its own denominator. Kernels of 21 with
+a paired median speedup of at least the bar at eight batched `TaskPool` workers:
 
-Entries of 0.15 ms and longer (AES, miniz, SHA, MD5, the 6502 emulator) sit between 0.95x and 1.0x. This is a measurement of the route default admission chooses; it contains no speedup claim.
+| Machine and reset policy | At least 1x | At least 2x | At least 3x |
+| --- | ---: | ---: | ---: |
+| Ryzen, whole arena | 5 | 2 | 1 |
+| Ryzen, learned pages | 21 | 18 | 13 |
+| Ryzen, checkpoint | 21 | 8 | 3 |
+| M2 Pro, whole arena | 21 | 14 | 8 |
+| M2 Pro, learned pages | 21 | 17 | 15 |
+| M2 Pro, checkpoint | 21 | 20 | 9 |
+
+The numbers are from [reset policies](../reset-policies/README.md). They need the caller to name
+the independent operations and reset private contexts. They do not come from automatic extraction.
 
 ## Reproduction
 
 ```sh
-node scripts/research/corpus-serial.ts build/research/default-entry 9
-node scripts/research/analyze.ts build/research/default-entry/raw.jsonl summary.json
+node scripts/research/denominators.ts results/corpus results/corpus/denominators/denominators.json
 ```
-
-The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
-shared timing lock. The M2 Pro record ran unpinned on macOS.
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 945 samples each.
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries.
+- `denominators.json`: every count in the tables, derived from the studies above.
 - `manifest.json`: byte lengths and SHA256 digests.
-
-Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
-[reset-policies](../reset-policies/source.tar.gz).

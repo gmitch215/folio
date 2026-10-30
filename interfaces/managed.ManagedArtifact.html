@@ -16,7 +16,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ManagedArtifact</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#control">control</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><br/>        <span class="tsd-signature-type">ControlPlan</span><span class="tsd-signature-symbol">,</span><br/>        <span class="tsd-signature-type">&quot;coordinator&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;workerOriginal&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;transactional&quot;</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#coordinator">coordinator</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Module</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#memories">memories</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-keyword">readonly</span> <span class="tsd-signature-type">MemoryImport</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#original">original</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Module</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transactional">transactional</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Module</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/managed.ts#L22">src/managed.ts:22</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/managed.ts#L22">src/managed.ts:22</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -39,35 +39,35 @@
 <div class="tsd-comment tsd-typography"><p>The control plan from <code>prepare</code>, minus the module bytes carried above.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/managed.ts#L30">src/managed.ts:30</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/managed.ts#L30">src/managed.ts:30</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="coordinator"><code class="tsd-tag">Optional</code><span>coordinator</span><a href="#coordinator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">coordinator</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Module</span></div>
 <div class="tsd-comment tsd-typography"><p>The JSPI coordinator that discovers and joins regions.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/managed.ts#L26">src/managed.ts:26</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/managed.ts#L26">src/managed.ts:26</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="memories"><code class="tsd-tag">Optional</code><span>memories</span><a href="#memories" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">memories</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-keyword">readonly</span> <span class="tsd-signature-type">MemoryImport</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Imported memory limits of the source module, from <code>memoryImports</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/managed.ts#L32">src/managed.ts:32</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/managed.ts#L32">src/managed.ts:32</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="original"><span>original</span><a href="#original" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">original</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Module</span></div>
 <div class="tsd-comment tsd-typography"><p>The source program; serial and fallback execution use it unchanged.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/managed.ts#L24">src/managed.ts:24</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/managed.ts#L24">src/managed.ts:24</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="transactional"><code class="tsd-tag">Optional</code><span>transactional</span><a href="#transactional" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">transactional</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Module</span></div>
 <div class="tsd-comment tsd-typography"><p>The tracked region module each lane runs.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/managed.ts#L28">src/managed.ts:28</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/managed.ts#L28">src/managed.ts:28</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

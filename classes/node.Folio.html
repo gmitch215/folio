@@ -15,7 +15,7 @@
 <div class="tsd-comment tsd-typography"><p>A same-process isolate group; callers give it exclusive memory access during each run.</p>
 </div></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L162">src/node.ts:162</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L276">src/node.ts:276</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -51,7 +51,7 @@
 <div class="tsd-comment tsd-typography"><p>Thread ids of the worker isolates, in start order.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L233">src/node.ts:233</a></li></ul></aside></section></section></details>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L358">src/node.ts:358</a></li></ul></aside></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Accessors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="accessors-1">Accessors<a href="#accessors-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -59,13 +59,13 @@
 <h3 class="tsd-anchor-link" id="capabilities"><span>capabilities</span><a href="#capabilities" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
 <li>
-<div class="tsd-signature" id="capabilitiescapabilities"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">capabilities</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><br/>    <span class="tsd-signature-symbol">{</span><br/>        <span class="tsd-kind-property">automaticRegions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;control-flow&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;counted-loops&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">dependence</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;serial&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;ordered-validation&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">physicalSharing</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;same-process&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">&gt;</span></div>
+<div class="tsd-signature" id="capabilitiescapabilities"><span class="tsd-signature-keyword">get</span> <span class="tsd-kind-get-signature">capabilities</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><br/>    <span class="tsd-signature-symbol">{</span><br/>        <span class="tsd-kind-property">automaticRegions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;none&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;control-flow&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;iteration&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;counted-loops&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">dependence</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;serial&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;ordered-validation&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">physicalSharing</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;same-process&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Active sharing, extraction and validation mode; a one-worker pool reports none and serial.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><br/>    <span class="tsd-signature-symbol">{</span><br/>        <span class="tsd-kind-property">automaticRegions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;control-flow&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;counted-loops&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">dependence</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;serial&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;ordered-validation&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">physicalSharing</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;same-process&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><br/>    <span class="tsd-signature-symbol">{</span><br/>        <span class="tsd-kind-property">automaticRegions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;none&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;control-flow&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;iteration&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;counted-loops&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">dependence</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;serial&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;ordered-validation&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">physicalSharing</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;same-process&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L164">src/node.ts:164</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L278">src/node.ts:278</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="diagnostics"><span>diagnostics</span><a href="#diagnostics" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -76,7 +76,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-keyword">readonly</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L190">src/node.ts:190</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L312">src/node.ts:312</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="exports"><span>exports</span><a href="#exports" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -87,7 +87,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">WebAssembly.Exports</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L176">src/node.ts:176</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L298">src/node.ts:298</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="memories"><span>memories</span><a href="#memories" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -98,7 +98,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">WebAssembly.Memory</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L186">src/node.ts:186</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L308">src/node.ts:308</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="memory"><span>memory</span><a href="#memory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -109,7 +109,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Memory</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L180">src/node.ts:180</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L302">src/node.ts:302</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -123,7 +123,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L1041">src/node.ts:1041</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L1362">src/node.ts:1362</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="close"><span>close</span><a href="#close" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -134,7 +134,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L1028">src/node.ts:1028</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L1342">src/node.ts:1342</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="inspect"><span>inspect</span><a href="#inspect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -149,7 +149,7 @@
 <li><span><span class="tsd-kind-parameter">entry</span>: <span class="tsd-signature-type">string</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><br/>    <span class="tsd-signature-symbol">{</span><br/>        <span class="tsd-kind-property">automatic</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">diagnostics</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-keyword">readonly</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">mechanism</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;counted-loop&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;control-flow&quot;</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;native&quot;</span><span class="tsd-signature-symbol">;</span><br/>        <span class="tsd-kind-property">nativeGuard</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L199">src/node.ts:199</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L321">src/node.ts:321</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="run"><span>run</span><a href="#run" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -166,7 +166,7 @@
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/node.RunOptions.html" class="tsd-signature-type tsd-kind-interface">RunOptions</a><span class="tsd-signature-symbol"> = {}</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/node.ExecutionReport.html" class="tsd-signature-type tsd-kind-interface">ExecutionReport</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L608">src/node.ts:608</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L774">src/node.ts:774</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="runall"><span>run<wbr/>All</span><a href="#runall" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -182,7 +182,7 @@
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/node.RunOptions.html" class="tsd-signature-type tsd-kind-interface">RunOptions</a><span class="tsd-signature-symbol"> = {}</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/node.ExecutionReport.html" class="tsd-signature-type tsd-kind-interface">ExecutionReport</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L872">src/node.ts:872</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L1186">src/node.ts:1186</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="open"><code class="tsd-tag">Static</code><span>open</span><a href="#open" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -198,7 +198,7 @@
 <li><span><span class="tsd-kind-parameter">options</span>: <a href="../interfaces/node.FolioOptions.html" class="tsd-signature-type tsd-kind-interface">FolioOptions</a><span class="tsd-signature-symbol"> = {}</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="" class="tsd-signature-type tsd-kind-class">Folio</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/fb0bddc128a3430146cba9e734366ca1afc91f47/src/node.ts#L424">src/node.ts:424</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/7ca481518c81a70e520886cbbc7ab78e4433f6e0/src/node.ts#L585">src/node.ts:585</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

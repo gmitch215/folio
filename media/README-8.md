@@ -1,42 +1,36 @@
-# Extraction Blockers
+# Default Entry Repeat
 
-Question: which analysis results keep the 21 corpus entries out of automatic extraction, and would
-a single compiler extension change that?
+Question: do the single-entry timings of the [default-admission study](../serial/README.md)
+reproduce when nothing else runs on the host?
 
-`blockers.json` counts the diagnostics `inspect` reports for each kernel, taken from the coverage
-records of the [reset study](../reset-policies/README.md). Reasons that differ only in a number are
-merged.
+The earlier run overlapped other local work. This repeat runs the same 21 upstream entries with
+the same arms, native and Folio at widths 1, 2, 4 and 8, 9 paired rounds, on two machines.
 
 ## Results
 
-| Reason | Original module | Shared bit only |
-| --- | ---: | ---: |
-| Start function | 19 | 19 |
-| Shared wasm32 memory required | 19 | 0 |
-| Unsupported expression | 18 | 18 |
-| Global state | 14 | 14 |
-| Data segments require initialization isolation | 11 | 11 |
-| Host or non-memory imports | 2 | 2 |
-| No region reached the net-work threshold | 21 | 21 |
+All 21 entries take the serial original-module route on both machines: `mode` is `serial` and no
+worker is dispatched. The eight-worker Folio arm runs at 0.42x to 0.99x of native on the Ryzen
+machine and 0.47x to 1.05x on the M2 Pro. The slowest ratios belong to entries under 20
+microseconds, where the wrapper cost is a large share of a call. The largest per-kernel difference
+from the earlier run's eight-worker median is 0.25.
 
-Importing the memory as shared removes one reason and leaves the rest. Every kernel also fails the
-200,000-unit admission floor. The [forced admission study](../forced-admission-complete/README.md)
-shows what the floor declines: regions of a few microseconds that are slower in parallel by two to
-four orders of magnitude. No checkpoint refusal occurred for any kernel.
-
-Extending the extractor to cover start functions, data initialization or global state would admit
-more entries and would not make their regions profitable. This corpus does not support building
-one.
+Entries of 0.10 ms and longer (AES, miniz, SHA, MD5, the 6502 emulator) sit between 0.94x and 1.0x. This is a measurement of the route default admission chooses; it contains no speedup claim.
 
 ## Reproduction
 
 ```sh
-node scripts/research/derive.ts blockers blockers.json raw.jsonl
+node scripts/research/corpus-serial.ts build/research/default-entry 9
+node scripts/research/analyze.ts build/research/default-entry/raw.jsonl summary.json
 ```
 
-with a reset record as `raw.jsonl`.
+The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
+shared timing lock. The M2 Pro record ran unpinned on macOS.
 
 ## Artifacts
 
-- `blockers.json`: the histogram and the SHA256 of its input.
+- `ryzen.jsonl`, `m2.jsonl`: raw records, 945 samples each.
+- `ryzen.summary.json`, `m2.summary.json`: paired summaries.
 - `manifest.json`: byte lengths and SHA256 digests.
+
+Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
+[reset-policies](../reset-policies/source.tar.gz).

@@ -135,6 +135,16 @@ tail event are not interchangeable.</p>
 <td>Ryzen 9 9900X, <code>results/corpus/reset-policies/</code></td>
 </tr>
 <tr>
+<td>Outside program, BLAKE3 1.8.7</td>
+<td>one task per input on the explicit route reaches 2.5x to 3.1x at eight workers; default admission now reaches 2.7x (32 x 4 MiB) and 2.2x (128 x 256 KiB) through the iteration route, 1.00x before, and forced admission is 0.40x to 0.51x</td>
+<td>Ryzen 9 9900X, <code>results/corpus/blake3-consumer/</code>, <code>results/corpus/iteration-route/</code></td>
+</tr>
+<tr>
+<td>One 64 KiB AES-CBC decrypt call, explicit grains</td>
+<td>2.1x to 2.7x at eight workers with a 1 MiB private context, 0.7x to 0.9x with the 8 MiB corpus layout</td>
+<td>Ryzen 9 9900X, <code>results/corpus/single-call-grain/</code></td>
+</tr>
+<tr>
 <td>Baked Drupal lifecycle</td>
 <td>830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, compile through first render</td>
 <td>M2 Pro, 15 paired rounds, <code>results/boot/lifecycle/</code></td>
@@ -155,8 +165,9 @@ effects keep their native semantics.</p>
 run on private overlays over a frozen base and commit in original order, with replay on conflict.</p>
 <p><strong>Copying is the managed cost.</strong> The managed route copies one frozen snapshot per lane batch and
 measured 1.618x end to end including setup, a serial oracle and close. With those removed, a later
-operation at width four is 1.72x faster than native on a 128 KiB arena and 0.71x on an 8 MiB arena
-(Costs, Snapshot Limits and State Loss), so fan-out pays for a small arena reused across operations.
+operation at width four reads about 1.7x faster than native on a 128 KiB arena, a margin within the
+measurement noise, and 0.71x on an 8 MiB arena (Costs, Snapshot Limits and State Loss). Fan-out may
+pay for a small arena reused across operations, and the data does not resolve it.
 Copying whole arenas will not scale past the owner's memory.</p>
 <hr>
 <h2 id="🎯-scope-and-acceptance" class="tsd-anchor-link">🎯 Scope and Acceptance<a href="#🎯-scope-and-acceptance" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
@@ -297,6 +308,30 @@ design follows established ordered speculative execution [5].</p>
 arithmetic for the kernels it admits. Runtime checks reject bounds violations, pointer wrap and
 every cross-region read/write or write/write overlap before concurrent canonical writes. Guarded
 payload execution has no per-access translation, private overlay, byte log or commit copy.</p>
+<h3 id="related-mechanisms" class="tsd-anchor-link">Related Mechanisms<a href="#related-mechanisms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Hardware thread-level speculation detects violations and buffers speculative state in the memory
+system. Steffan and Mowry extend cache coherence to detect dependence violations and keep
+speculative state in the primary data caches [21] (first two pages read). Multiscalar
+assigns tasks to a ring of processing units, forwards register values around the ring and tracks
+memory in a shared structure [22] (first two pages read). Folio needs no hardware
+change. Its unit is a Wasm region run by an isolate, its speculative state is a private byte overlay
+over a frozen base, and validation runs in original order at the owner. LLVM's vectorizer versions a
+loop with a runtime pointer-overlap check and runs the scalar loop on overlap [13]. Folio's native
+route does the equivalent with a dispatch-time disjointness check after the guard has proved the
+shape (see Region Extraction), and its speculative route runs with no proof and validates
+afterwards. Hydra [5] is the closest hardware precedent. Its hardware forwards writes from earlier threads to later
+ones, records each processor's reads to find true dependence violations, and discards speculative
+data and restarts the thread on a violation (sections 3 and 4, read in full). Folio forwards nothing
+between regions. A region reads a frozen base and writes a private byte overlay, and the owner
+validates results in original order and replays a region whose reads touch a byte that an earlier
+committed result wrote. Software systems use forwarding as well. Rundberg and Stenstrom [23] have
+each thread write a local copy of shared data, forward a value from a lower-numbered thread, and flag
+a violation when a thread writes a variable that a higher-numbered thread has already read (first five
+pages read). Software multi-threaded transactions [24] have each sub-transaction replay the buffered
+stores of earlier sub-transactions and check conflicts with a value-based trace at commit time (first
+five pages read). Rundberg checks each access as it happens, the transaction system checks at commit,
+and Folio checks each region once, in order, when its result reaches the owner. No source on
+speculation specific to WebAssembly was found.</p>
 <h3 id="resource-limits-and-recursion" class="tsd-anchor-link">Resource Limits and Recursion<a href="#resource-limits-and-recursion" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>The equivalence argument covers admitted deterministic instructions and their instruction-defined
 traps. Engine resource exhaustion is a separate boundary: native stack capacity, allocation failure
@@ -1004,14 +1039,15 @@ limit, every lane call fails: the serialized frame is 33,554,540 bytes against t
 limit for RPC arguments, so all four operations complete exact through native fallback. The usable
 snapshot on this backend is below 32 MiB by the frame header, so a 32 MiB default could not be
 used. The default is now 31 MiB, the encoded frame size is checked before a frame is sent, and unit
-tests cover a frame at the limit and one byte over it for two header sizes and for sparse encoding.
+tests cover a frame at the limit and one byte over it for two program shapes with different header sizes and for sparse encoding.
 A deployed run at the new default is not measured. CPU for the width-four and large-snapshot runs
 was not recovered.</p>
 <p><strong>Operation cost.</strong> The <a href="../media/README-4.md">operations study</a> removes the oracle,
 diagnostics and close from the timing. It runs invocations with 0, 1 and 5 operations after the same
 setup at width four and differences the counts, with stored invocation CPU for the entry, owner and
-lane events (35 of 36 invocations complete). At 128 KiB a later automatic operation takes 155 ms
-against 267 ms natively (1.72x) and 304 ms of CPU against 211 ms (1.44x), sending 0.54 MB. The
+lane events (35 of 36 invocations complete). At 128 KiB a later automatic operation uses 304 ms of CPU
+against 211 ms natively (1.44x) and sends 0.54 MB. Its wall time reads 155 ms against 267 ms (1.72x),
+but that margin is as large as the setup jitter and is indicative only. The
 owner waits 344 to 574 ms for the first automatic operation and 97 to 158 ms for later ones. At 8 MiB
 a later operation takes 599 ms against 425 ms natively (0.71x) with 676 ms of CPU against 405 ms and
 33.6 MB sent, so the measured window is a small arena reused for several operations. Three
@@ -1032,6 +1068,22 @@ identifiers are not isolate identities.</p>
 <p><strong>Sparse snapshots.</strong> <code>snapshotEncoding: 'auto'</code> omits all-zero pages from a frame. It is exact in
 unit tests and has no deployed measurement, so the default stays <code>dense</code>, and lanes from 1.0.0
 reject sparse frames.</p>
+<h3 id="ordinary-worker-lanes" class="tsd-anchor-link">Ordinary Worker Lanes<a href="#ordinary-worker-lanes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The <a href="../media/README-6.md">ordinary-worker-lanes study</a> asks two questions
+about lanes that are plain Workers joined by service bindings, with no Durable Objects. It is a
+feasibility probe with a known kernel, and no Folio code ran. Four concurrent lanes ran CPU work with a
+serialization index of 1.42 (1.0 is full overlap and 4.0 fully serialized), an effective overlap of about
+2.8x on a Free account, against the platform documentation's statement that service-bound Workers run on
+the same thread by default. The cause of the disagreement was not isolated. Four partitions of 16 KiB in
+an arena of 128 KiB, 1 MiB or 8 MiB then compared a full-arena copy per lane with a range-only copy and
+a retained copy. The full copy fell from 2.64x over one resident lane at 128 KiB to 1.03x at 1 MiB and
+0.22x at 8 MiB, while range-only and retained stayed at 2.6x to 3.1x with 0.2% and 0.05% of the payload,
+digests equal. Bytes sent are therefore the lever for the copy cost of the managed backend, and the
+overlap is there on this route. The ranges were declared by the kernel's construction. Folio knows a
+footprint before a call only for guard-proven kernels, so general programs still need a way to bound
+what a region touches, plus ordered validation, conflicts and replay, none of which this run exercised.
+The measurement is wall time on one account and location; seven of 168 requests returned 503, and CPU
+and price were not measured. This supports a scoped follow-up and is not a managed speedup.</p>
 <h3 id="browser-run" class="tsd-anchor-link">Browser Run<a href="#browser-run" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p><code>experiments/browser/</code> serves a cross-origin-isolated page from a deployed Worker and drives it
 through the Browser Run binding. Run <code>cfw-folio-browser-0e66d825</code> passes cross-origin
@@ -1263,7 +1315,7 @@ termination; it does not promise preemption of an arbitrary infinite program.</p
 from nine upstream projects (LZ4, miniz, jsmn, KissFFT, tiny-AES-c, xxHash, QOI, crypto-algorithms
 and a 6502 emulator): automatic extraction of one entry, and explicit independent operations that
 the caller names and runs on private contexts. The
-<a href="../media/README-6.md">denominator table</a> counts build, acceptance, extraction and
+<a href="../media/README-7.md">denominator table</a> counts build, acceptance, extraction and
 acceleration separately.</p>
 <p>All 21 kernels build and match native returns, effects and all 8 MiB of memory. They are library
 kernels. The corpus has no full application and no database workload, and nothing here says how
@@ -1486,15 +1538,15 @@ dispatch a worker, on either machine. With nothing else running, a single-entry 
 to 0.99x of native on the Ryzen machine and 0.47x to 1.05x on the M2 Pro. The 12 kernels whose call
 takes 0.04 ms or longer sit between 0.87x and 1.00x, and the slowest ratios belong to calls of about
 20 microseconds or less, where the wrapper cost dominates
-(<a href="../media/README-7.md">default entry repeat</a>).</p>
+(<a href="../media/README-8.md">default entry repeat</a>).</p>
 <p><strong>The blockers are many, and removing one does not admit a kernel.</strong> The
-<a href="../media/README-8.md">blocker histogram</a> counts, per reason, the kernels it
-affects: start function 19, shared memory required 19, unsupported expression 18, global state 14,
+<a href="../media/README-9.md">blocker histogram</a> counts, per reason, the kernels it
+affects: start function 19, shared memory required 19, unsupported expression 14, global state 14,
 data segments requiring initialization isolation 11, host imports 2, and no region reaching the
-200,000-unit admission floor 21. Importing the memory as shared removes 19 of the reasons and leaves
-the rest.</p>
+200,000-unit admission floor 21. Importing the memory as shared removes one reason, for 19 kernels, and
+leaves the rest.</p>
 <p><strong>Forced admission finds regions and no speedup.</strong> With the threshold at zero,
-<a href="../media/README-9.md">11 of 21 kernels</a> receive regions and run
+<a href="../media/README-10.md">11 of 21 kernels</a> receive regions and run
 speculatively. All 11 are slower than native, by 108 to 45,645 times at width 8. Each splits work
 into thousands of regions (67,600 for SHA-256, 170,390 for the 6502 emulator), and each is far
 smaller than the cost of dispatching it. The other 10 stay serial. This supports the 200,000-unit
@@ -1502,10 +1554,39 @@ default. No compiler extension is justified by this corpus: widening the extract
 entries, and the regions would still cost more than they save. That closes this mechanism and not
 the objective of finding profitable independent work in programs like these, which the explicit
 boundary below addresses.</p>
+<p>The block ciphers show why larger regions would not help. AES-CBC decrypt and AES-CTR split into
+16,384 and 77,824 regions with 4,096 and 8,128 replays at widths 2, 4 and 8 alike. A replay count
+that does not change with the worker count is a dependency the ordered validator found, not a timing
+collision. tiny-AES-c keeps its chaining value in the context structure, and every 16-byte block
+reads and rewrites it, so each region depends on its predecessor even though the cipher itself, run
+as independent calls, does not. Coarser regions would carry the same dependency at each boundary, and
+the graded study's all-conflicting cell (0.74x at 76 microseconds) bounds what coarsening could
+reach. That is an inference from the graded cells and not a measurement on the kernel. SHA-256
+forced admission makes 67,600 region dispatches per call: one per input byte (65,536), one per
+completed 64-byte block that resets the buffer (1,024), one per transform (1,025) and 15 in
+finalization. A model of the coordinator, replayed over its generated code, shows almost all of them
+run alone: the controller reads the buffer length on every byte, and while a region is queued each
+controller memory access first joins it, so 65,540 regions run at their owner after one join each and
+only 2,062 run in 1,023 pairs and one batch of fourteen, none of which conflicts. That is why the
+replays are zero. Each region costs 3.3 microseconds of wall time for 3.2 nanoseconds of native work,
+which is the 1,054x slowdown, and the mean estimated net work is negative for every region.
+<code>sha256_transform</code> is not a region at all: its body reads the stack pointer global, and the purity
+check (<code>pureNodes</code> in <code>src/extract.ts</code>) does not admit a global read, so its 64-round loop runs in the
+coordinator through memory helpers. The same rule keeps out any function that has a stack frame. The
+data does not split the 225 ms between the joins and that copy of the transform, and the model does
+not trace read and write sets. The native guard
+planner (<code>nativePlan</code>) accepts none of the 32 defined functions of the AES-CBC decrypt, AES-CTR and
+SHA-256 artifacts, for reasons such as computed addresses, 64-bit accesses, stack-pointer globals and
+calls. That closes coarsening and the unmodified prover as mechanisms for these kernels. The
+objective stays open, and the <a href="../media/README-11.md">single-call grain study</a>
+takes the next step on the explicit route: with the chaining value passed per grain, one 64 KiB call
+of AES-CBC decrypt reaches 2.1x to 2.7x at eight workers when the private context is 1 MiB, and
+0.7x to 0.9x with the corpus layout of 8 MiB, because the checkpoint compares every page of the
+context on every call. Default admission still finds no plan for either build.</p>
 <h3 id="explicit-boundaries-and-reset-policies" class="tsd-anchor-link">Explicit Boundaries and Reset Policies<a href="#explicit-boundaries-and-reset-policies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>The alternative reuses the independent-context method from the Drupal experiments: private contexts
 initialized once, reset between operations and joined in order. The
-<a href="../media/README-10.md">reset study</a> runs three policies in one session per
+<a href="../media/README-12.md">reset study</a> runs three policies in one session per
 machine with the same arms. <code>whole</code> copies the whole 8 MiB arena. <code>pages</code> restores the pages that
 the first run of a fixed input changed. <code>checkpoint</code> compares every page with the initial copy,
 rewrites the pages that differ and restores globals and table references. Kernels of 21 with a
@@ -1561,17 +1642,17 @@ paired median speedup at or above each bar, at eight batched <code>TaskPool</cod
 <p>The learned-page policy is valid only for unchanged code, input and host state. The checkpoint
 learns nothing from an earlier run, so it applies to varied inputs: 210 of 210 comparisons on five
 input profiles match a fresh native instance
-(<a href="../media/README-11.md">varied inputs</a>). It gives up most of the gain on small
+(<a href="../media/README-13.md">varied inputs</a>). It gives up most of the gain on small
 kernels because it reads the whole arena on every restore. Process CPU as a ratio of native is 1.05
 to 2.77 under learned pages on the Ryzen machine (1.11 to 2.60 on the M2 Pro), 1.30 to 4.80 under
 the checkpoint (1.40 to 3.44) and 1.97 to 13.60 under whole-arena reset (1.30 to 4.36). These are
 explicit independent operations. The caller names them, and nothing here discovers them.</p>
-<p>The eight-worker arm varies between runs. The <a href="../media/README-12.md">changed-page study</a>
+<p>The eight-worker arm varies between runs. The <a href="../media/README-14.md">changed-page study</a>
 reports 7.42x for AES-CBC decrypt under learned pages, and a repeat on the same machine with
 identical parameters reports 4.80x. Native and one-worker arms agree within 1% (69.9 ms against
 69.5 ms) and the eight-worker arm does not (9.44 ms against 14.55 ms), with a load average of 0.1 at
 the start of one run and 1.41 at the other. The table shows the repeat.</p>
-<p>The <a href="../media/README-13.md">focused repeat</a> tests whether the 30 idle worker
+<p>The <a href="../media/README-15.md">focused repeat</a> tests whether the 30 idle worker
 threads of the matrix harness cause this. It times one active pool at a time with the serial control
 paired in each round, over five independent sessions of four kernels, three reset policies and both
 pool types. The idle pools are not the cause: width-8 cells with and without them differ by 0.945x
@@ -1583,27 +1664,81 @@ AES decrypt). The evidence fits run-to-run variation of short eight-thread burst
 A defect specific to the learned-page policy is not ruled out, because that policy varies most
 (session medians differ by up to 2.04x for the shortest kernel). For AES-CBC decrypt, quote 4x to 5x
 under learned pages on this machine, with occasional readings near 7x.</p>
+<h3 id="an-outside-program-blake3" class="tsd-anchor-link">An Outside Program: BLAKE3<a href="#an-outside-program-blake3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The corpus kernels are library entries, so the <a href="../media/README-16.md">BLAKE3 consumer</a>
+tests a program that Folio did not shape: BLAKE3 1.8.7 (pinned archive, unmodified C on its portable
+path, official test vectors pass) behind one entry that hashes several inputs, as a <code>b3sum</code> run does.
+Hashing is independent across inputs and across 1,024-byte chunks. At width 8 on the Ryzen machine,
+default admission finds no plan and runs the original module serially (1.00x), forced admission is
+0.40x to 0.51x, and the explicit route with one task per input reaches 2.8x to 3.1x on 32 inputs of
+4 MiB and 2.5x to 2.8x on 128 inputs of 256 KiB. The explicit route is limited by the calling thread
+posting 128 MiB of input by copy. It is an explicit result.</p>
+<p>A feasibility study ran on the Apple M2 Pro while other work was running, so its timings are diagnostic
+and not final, and it edited a copy of the library. It found why default admission refuses the input
+loop. The extractor does form regions (31 at threshold 0), and no region clears the floor: the best
+has an estimated net work of 0 and the compress function, the largest leaf, is at -113,909, because
+the estimate charges 3,600 units per tracked access and BLAKE3 does at most about 40 units of work per
+access. The estimate is not the error. Host-call tracking runs the whole program 92x slower than native on
+a 1 MiB input (774,712 hooked accesses), and the default transaction budget of 262,144 bytes is
+exhausted by 26 of 100 inputs, which hold 99.4% of the bytes. The 696 replays of the forced run are
+all on the shadow stack, between regions of the same iteration (a callee frame written by one region
+and read by the next); none touch the table, the output or the inputs. With the loop body outlined
+by hand and a private stack slot per region, replays fell to zero. Untracked workers on private stacks
+reach 3.3x on that input set, which two 64 MiB inputs (30% each) bound at 3.3x. Any automatic route
+needs a private stack per region, rebased frame pointers, cheap tracking and a size-aware admission
+estimate, since the work per iteration depends on an input length that the static estimate cannot
+see. This closes tracked execution at the host-call price as the route for this loop. The next
+subsection builds the route that the study asked for.</p>
+<h3 id="the-iteration-route" class="tsd-anchor-link">The Iteration Route<a href="#the-iteration-route" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The <a href="../media/README-17.md">iteration route</a> makes default admission dispatch the
+BLAKE3 file loop with no change to the program. <code>Folio.open(bytes, { memory, workers })</code> finds the loop
+in <code>hash_all</code>: one countdown loop whose body calls into a function set that may use one stack-pointer
+global and recursion. The owner module is rewritten so the loop is one host call. The host runs
+iteration 0 once on a lowered copy of the module to time it and to probe for a dependence through the
+owner frame, decides from the measured time whether dispatch beats the serial wall (the
+<a href="../media/README-18.md">admission study</a>), and runs the iterations on private
+stack slots with inline read and write marks and an undo record. Validation is ordered over batches of
+up to 32 iterations and checks read-after-write, write-after-read and write-after-write; the first
+iteration that fails and every later one in its batch is rolled back and replayed serially. A first
+prototype showed that the usual read-after-write check alone is unsound with in-place writes, and that a
+64-byte write granule makes BLAKE3's 32-byte outputs conflict falsely. The marks cost 1.4x to 1.8x on one
+thread, above the 1.2x of an earlier version that marked only the first granule of an access.</p>
+<p>Under default admission on the Ryzen machine at width 8 (warm calls, three sessions), <code>run('hash_all')</code>
+reaches 2.73x on 32 inputs of 4 MiB (session medians 2.73, 3.23, 2.72) and 2.23x on 128 inputs of
+256 KiB (2.37, 2.18, 2.23), process CPU 1.63 to 1.70 and 2.06 to 2.17, with equal digests in every
+sample and no replay. The same call was 1.00x before. The M2 Pro gives 3.27x to 3.39x and 2.80x to
+3.06x. The explicit route is still faster (3.2x to 3.6x) because the iteration route pays for marks, a
+serial probe iteration and validation. A cold first call takes 103 to 109 ms against a serial run of
+142 to 143 ms, after a 100 ms <code>Folio.open</code>. The route is exact on 1,600 generated programs (disjoint,
+conflicting, framed, frame-carried and trapping shapes at widths 2, 4 and 8) and leaves the 58 plans of
+the existing corpus and fixtures byte-identical.</p>
+<p>Its limits matter. The route accepts one loop shape. A loop-carried dependence through the owner frame
+is caught only if the first iteration reads frame bytes it did not write, so a read that happens only on
+a later iteration is not caught, and no cheap sound check exists. The route needs a shared host memory
+and refuses a module that executes <code>memory.size</code> or <code>memory.grow</code>. It was measured on one program, equal
+iteration sizes and Node only, and the 100-input set with two 64 MiB inputs was not run on it. The warm
+medians exclude pool start.</p>
 <h3 id="conflict-rate-region-size-and-routing" class="tsd-anchor-link">Conflict Rate, Region Size and Routing<a href="#conflict-rate-region-size-and-routing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>The <a href="../media/README-14.md">graded study</a> varies the share of conflicting
+<p>The <a href="../media/README-19.md">graded study</a> varies the share of conflicting
 calls (0 to all of 64) and the work per call (about 0.1, 1.2 and 76 microseconds). At 76
 microseconds, eight-worker forced speculation falls from 3.50x with no conflicts to 2.81x at 1/16,
 2.09x at 1/8, 1.65x at 1/4, 1.11x at 1/2 and 0.74x with all calls conflicting. The M2 Pro agrees to
-within about 11%. At 1.2 microseconds the best cell is 0.26x. Validation is at most 0.3% of wall
-time in the productive cells and at most 2.1% in any cell, so ordered validation is not the limiting
+within about 13%. At 1.2 microseconds the best cell is 0.26x. Validation is at most 0.3% of wall
+time in the productive cells and at most 2.2% in any cell, so ordered validation is not the limiting
 cost. Dispatch and tracking are. With the call boundary held equal, shared and copied backing differ
 by up to about 20% in either direction and neither is consistently faster
-(<a href="../media/README-15.md">backing ablation</a>), so the gap between those arms in
+(<a href="../media/README-20.md">backing ablation</a>), so the gap between those arms in
 the crossover sweep came from the changed call boundary.</p>
 <p><strong>Repeated conflicting shapes can be routed natively.</strong> With the <code>adaptiveRouting</code> option, a call
 shape whose last two runs mostly replayed runs natively for 16 calls and is then probed again. On a
 repeated aliasing entry it moves the default route from 0.62x to 0.99x of native on the Ryzen
 machine (0.61x to 0.99x on the M2 Pro) and served 337 of 360 calls natively
-(<a href="../media/README-16.md">adaptive routing</a>). The result covers two synthetic
+(<a href="../media/README-21.md">adaptive routing</a>). The result covers two synthetic
 entries with a repeating shape. The option is off by default, and it needs a consumer whose shapes
 repeat before it should be on.</p>
 <h3 id="differential-execution" class="tsd-anchor-link">Differential Execution<a href="#differential-execution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>Two seeds of 128 generated programs each, at widths 1, 2, 4 and 8, give
-<a href="../media/README-17.md">12,456 comparisons</a> with equal memory, returns,
+<a href="../media/README-22.md">12,456 comparisons</a> with equal memory, returns,
 ordered effects and trap or host exception identity. The campaign includes counted loops whose
 stores overlap at region boundaries, so the disjointness guard refuses them: 12 refusals per seed
 fall back to speculation with the native result. The grammar covers seven scalar and bulk shapes and
@@ -1613,8 +1748,9 @@ proof.</p>
 <p>On independently built programs, default automatic extraction does not help, and forcing it makes
 every extracted kernel slower. A caller-named boundary with private contexts speeds up all 21
 kernels at least slightly and 18 of 21 by 2x or more with learned pages on the Ryzen machine, with a
-reset cost that depends on the policy. The evidence does not show automatic discovery of those
-boundaries or any result on a full application. Repeats of the widest arm differ by up to a factor
+reset cost that depends on the policy. The two routes answer different questions: the explicit route raises batched throughput over
+independent calls, and the automatic route would lower the latency of one call. The evidence does not
+show automatic discovery of those boundaries or any result on a full application. Repeats of the widest arm differ by up to a factor
 of about 1.5 for the long kernels and 2 for the shortest.</p>
 <hr>
 <h2 id="🧑💻-consumer-boundaries" class="tsd-anchor-link">🧑‍💻 Consumer Boundaries<a href="#🧑💻-consumer-boundaries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
@@ -3704,7 +3840,7 @@ a deterministic, pinned derivation and a recorded digest of its inputs.</li>
 to close, unless replay registers only the wrappers that the sealed bridge allows.</li>
 </ul>
 <h4 id="initializers-configurations-and-lifecycle" class="tsd-anchor-link">Initializers, Configurations and Lifecycle<a href="#initializers-configurations-and-lifecycle" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4>
-<p><strong>Corpus initializers.</strong> The <a href="../media/README-18.md">initializer repeat</a> times
+<p><strong>Corpus initializers.</strong> The <a href="../media/README-23.md">initializer repeat</a> times
 the 21 fixed corpus initializers on the Ryzen machine with nothing else running. Restoring an image
 after instantiation is 1.08x to 1.40x faster than conventional initialization, and a whole-memory
 application cache is slower on every kernel (0.52x to 0.94x). An earlier run that overlapped other
@@ -3712,13 +3848,13 @@ work read up to 2.05x and is superseded. All 21 bake attempts refuse the module'
 a fresh instance followed by <code>applyImage</code> is the route measured. Initializers this small say nothing
 about the PHP image, whose saving comes from a much larger initialization.</p>
 <p><strong>Configurations.</strong> On a real Drupal host, the
-<a href="../media/README-19.md">configuration study</a> runs 13 selected configurations in
+<a href="../media/README-24.md">configuration study</a> runs 13 selected configurations in
 four arms (52 executions). A strict configuration key admits 7 of 13, and a module key plus the
 consumer's configuration and entity reset admits 12 of 13. Enabling a module falls back to a fresh
 boot. All 39 safe-arm first responses match native status and normalized HTML, and the deliberately
 unguarded arm serves stale site-name and theme-color output. These are selected cases and not a
 production eligibility rate.</p>
-<p><strong>Lifecycle.</strong> The <a href="../media/README-20.md">lifecycle study</a> measures 45 Drupal
+<p><strong>Lifecycle.</strong> The <a href="../media/README-25.md">lifecycle study</a> measures 45 Drupal
 executions in 15 paired rounds on the M2 Pro, from compile through first render:</p>
 <table>
 <thead>
@@ -4052,7 +4188,11 @@ make.</p>
 </tr>
 <tr>
 <td>Does automatic extraction help on independently built programs?</td>
-<td>No on 21 library kernels from nine projects. Default admission dispatches no worker, and forced admission makes all 11 kernels that receive regions 108 to 45,645 times slower than native. That closes the extraction mechanism on this corpus. Open: any full application or database workload, and automatic discovery of independent task boundaries.</td>
+<td>No on 21 library kernels from nine projects. Default admission dispatches no worker, and forced admission makes all 11 kernels that receive regions 108 to 45,645 times slower than native. That closes the extraction mechanism on this corpus. Open: any full application or database workload, and automatic discovery of independent task boundaries. On an outside program (BLAKE3 over several inputs) default admission found no plan, because tracking at the host-call price runs the loop 92x slower than native. The iteration route (private stack slots, inline marks, ordered validation and size-aware admission) now dispatches that loop under default admission at 2.2x to 2.7x on the Ryzen machine and 2.8x to 3.4x on the M2 Pro. That is one loop shape in one program, and the explicit route reaches 2.5x to 3.1x without it.</td>
+</tr>
+<tr>
+<td>Can managed Workers carry the Node iteration result?</td>
+<td>Not as built: the Node route needs one shared allocation, <code>Atomics</code> and threads, which managed Workers lack. A probe of ordinary service-bound Workers showed about 2.8x wall overlap at four lanes and range-only transfer holding 2.6x to 3.1x from 128 KiB to 8 MiB while a full copy fell to 0.22x. Open: bounding a general region's footprint before it runs, ordered validation and replay across lanes, CPU and price, and more than one account and location.</td>
 </tr>
 <tr>
 <td>Do explicit independent operations on private contexts speed up the same kernels?</td>
@@ -4116,9 +4256,9 @@ The summaries in <code>results/*/summary.json</code> regenerate byte for byte fr
 <code>scripts/analyze/</code>, apart from the row order of <code>results/memory/sharing/summary.json</code>, which now sorts
 its input files.</p>
 <p>Current gate on Node 26.8.2 (run 2026-10-29): typecheck passes for the library and the experiment
-projects and <code>prettier --check .</code> is clean. The unit project passes <strong>409 tests</strong> in 39 files, and the
-unit and integration projects together pass 412 in 40 files with no failures or skips. Coverage is
-90.97% of statements, 85.7% of branches, 92.73% of functions and 93.54% of lines. The library builds,
+projects and <code>prettier --check .</code> is clean. The unit project passes <strong>482 tests</strong> in 40 files, and the
+unit and integration projects together pass 485 in 41 files with no failures or skips. Coverage is
+89.63% of statements, 84.47% of branches, 92.86% of functions and 92.03% of lines. The library builds,
 and the five examples in <code>examples/</code> run. <code>examples/basic.ts</code> reports four workers and four
 native-shared regions with zero replays and fallbacks. The generated documentation builds with
 nonfatal documentation warnings. The integration project runs the host probe, the capability probe
@@ -4130,10 +4270,10 @@ consumer evidence outside these tests. The compiler, runtime, probes and the pre
 extractor are retained in <code>results/compatibility/sources/source.tar.gz</code>, which also holds the
 first copy of the Drupal harness that <code>scripts/probe/php-render.ts</code> now replaces.</p>
 <p>Evidence accounting comes from <code>node scripts/research/evidence.ts</code>. The index in <code>results/index.json</code>
-preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 25 studies and
-108 artifacts (43,883,997 bytes): 23 <code>manifest.json</code> records and the 2 <code>artifacts.json</code> records of the
+preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 30 studies and
+204 artifacts (46,480,530 bytes): 28 <code>manifest.json</code> records and the 2 <code>artifacts.json</code> records of the
 boot configuration and lifecycle studies. <code>results/execution/source/manifest.json</code> lists sources
-under another schema and is not a study. <code>--summaries</code> regenerates the 102 <code>summary.json</code> files from
+under another schema and is not a study. <code>--summaries</code> regenerates the 133 <code>summary.json</code> files from
 their raw samples and finds all equal. The published v1.0.0 package resolves to
 <code>b2b67f8f9656ee50c22f44941a6b831a39a77123</code>. The studies of the Independent Corpus section run through
 <code>scripts/research/</code> (see its README), most of them on the Ryzen rig through <code>matched.sh</code>,
@@ -4148,7 +4288,7 @@ setting, package installation, unrelated service restart or protected mount acce
 <p>[2] Node.js, <code>node_messaging.cc</code> receiver, v26.10.0: <a href="https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L196">https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L196</a></p>
 <p>[3] V8, backing-store lifetime contract, as vendored in Node.js v26.10.0: <a href="https://github.com/nodejs/node/blob/v26.10.0/deps/v8/include/v8-array-buffer.h#L556">https://github.com/nodejs/node/blob/v26.10.0/deps/v8/include/v8-array-buffer.h#L556</a></p>
 <p>[4] V8, &quot;WebAssembly JavaScript Promise Integration&quot;: <a href="https://v8.dev/blog/jspi">https://v8.dev/blog/jspi</a></p>
-<p>[5] Hammond et al., &quot;The Stanford Hydra CMP,&quot; sections 3 and 4: <a href="https://ppl.stanford.edu/papers/hydra_ASPLOS98.pdf">https://ppl.stanford.edu/papers/hydra_ASPLOS98.pdf</a></p>
+<p>[5] L. Hammond, M. Willey and K. Olukotun, &quot;Data Speculation Support for a Chip Multiprocessor&quot; (the file name says ASPLOS 1998; sections 3 and 4 read in full): <a href="https://ppl.stanford.edu/papers/hydra_ASPLOS98.pdf">https://ppl.stanford.edu/papers/hydra_ASPLOS98.pdf</a></p>
 <p>[6] Cloudflare, Durable Objects pricing: <a href="https://developers.cloudflare.com/durable-objects/platform/pricing/">https://developers.cloudflare.com/durable-objects/platform/pricing/</a></p>
 <p>[7] Cloudflare, Workers timing behavior: <a href="https://developers.cloudflare.com/workers/runtime-apis/performance/">https://developers.cloudflare.com/workers/runtime-apis/performance/</a></p>
 <p>[8] workerd, <code>jsg/ser.c++</code>, commit 781048b: <a href="https://github.com/cloudflare/workerd/blob/781048bc05cb205c92e503c1062ef3266ab959b5/src/workerd/jsg/ser.c%2B%2B">https://github.com/cloudflare/workerd/blob/781048bc05cb205c92e503c1062ef3266ab959b5/src/workerd/jsg/ser.c%2B%2B</a></p>
@@ -4164,6 +4304,10 @@ setting, package installation, unrelated service restart or protected mount acce
 <p>[18] K. Li and P. Hudak, &quot;Memory Coherence in Shared Virtual Memory Systems&quot;: <a href="https://css.csail.mit.edu/6.824/2014/papers/li-dsm.pdf">https://css.csail.mit.edu/6.824/2014/papers/li-dsm.pdf</a></p>
 <p>[19] M. Burrows, &quot;The Chubby Lock Service for Loosely-Coupled Distributed Systems,&quot; OSDI 2006, section 2.4: <a href="https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/chubby-osdi06.pdf">https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/chubby-osdi06.pdf</a></p>
 <p>[20] Cloudflare, Durable Objects in-memory state, including co-tenancy and eviction: <a href="https://developers.cloudflare.com/durable-objects/reference/in-memory-state/">https://developers.cloudflare.com/durable-objects/reference/in-memory-state/</a></p>
+<p>[21] J. G. Steffan and T. C. Mowry, thread-level data speculation, HPCA 1998 (first two pages read): <a href="https://users.cs.utah.edu/~rajeev/cs7810/papers/steffan98.pdf">https://users.cs.utah.edu/~rajeev/cs7810/papers/steffan98.pdf</a></p>
+<p>[22] G. S. Sohi, S. E. Breach and T. N. Vijaykumar, &quot;Multiscalar Processors,&quot; ISCA 1995 (first two pages read): <a href="https://ftp1.cs.wisc.edu/sohi/papers/1995/isca.multiscalar.pdf">https://ftp1.cs.wisc.edu/sohi/papers/1995/isca.multiscalar.pdf</a></p>
+<p>[23] P. Rundberg and P. Stenstrom, &quot;An All-Software Thread-Level Data Dependence Speculation System for Multiprocessors,&quot; Journal of Instruction-Level Parallelism 3 (the journal index says October 2001, the paper is dated January 2002; first five pages read): <a href="http://www.jilp.org/vol3/rundberg-jilp.pdf">http://www.jilp.org/vol3/rundberg-jilp.pdf</a></p>
+<p>[24] A. Raman, H. Kim, T. R. Mason, T. B. Jablin and D. I. August, &quot;Speculative Parallelization Using Software Multi-threaded Transactions,&quot; ASPLOS 2010 (first five pages read): <a href="https://www-new.llvm.org/pubs/2010-03-ASPLOS-SpeculativeParallelization.pdf">https://www-new.llvm.org/pubs/2010-03-ASPLOS-SpeculativeParallelization.pdf</a></p>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -4192,6 +4336,7 @@ setting, package installation, unrelated service restart or protected mount acce
 <li><a href="#physical-sharing"><span>Physical <wbr/>Sharing</span></a></li>
 <li><a href="#region-extraction"><span>Region <wbr/>Extraction</span></a></li>
 <li><a href="#ordered-speculation"><span>Ordered <wbr/>Speculation</span></a></li>
+<li><a href="#related-mechanisms"><span>Related <wbr/>Mechanisms</span></a></li>
 <li><a href="#resource-limits-and-recursion"><span>Resource <wbr/>Limits and <wbr/>Recursion</span></a></li>
 <li><a href="#contract-with-the-host"><span>Contract <wbr/>With the <wbr/>Host</span></a></li></ul></li>
 <li><a href="#🧱-memory-and-program-state"><span>🧱 <wbr/>Memory and <wbr/>Program <wbr/>State</span></a></li>
@@ -4208,6 +4353,7 @@ setting, package installation, unrelated service restart or protected mount acce
 <li><a href="#what-blocks-sharing-on-managed-workers"><span>What <wbr/>Blocks <wbr/>Sharing on <wbr/>Managed <wbr/>Workers</span></a></li>
 <li><a href="#managed-coherent-backend"><span>Managed <wbr/>Coherent <wbr/>Backend</span></a></li>
 <li><a href="#costs-snapshot-limits-and-state-loss"><span>Costs, <wbr/>Snapshot <wbr/>Limits and <wbr/>State <wbr/>Loss</span></a></li>
+<li><a href="#ordinary-worker-lanes"><span>Ordinary <wbr/>Worker <wbr/>Lanes</span></a></li>
 <li><a href="#browser-run"><span>Browser <wbr/>Run</span></a></li></ul></li>
 <li><a href="#🌉-execution-host-and-portable-client"><span>🌉 <wbr/>Execution <wbr/>Host and <wbr/>Portable <wbr/>Client</span></a></li>
 <li><a href="#🧩-api-and-compatibility-evidence"><span>🧩 <wbr/>API and <wbr/>Compatibility <wbr/>Evidence</span></a></li>
@@ -4221,6 +4367,8 @@ setting, package installation, unrelated service restart or protected mount acce
 <li><a href="#results-by-kernel"><span>Results by <wbr/>Kernel</span></a></li>
 <li><a href="#automatic-extraction"><span>Automatic <wbr/>Extraction</span></a></li>
 <li><a href="#explicit-boundaries-and-reset-policies"><span>Explicit <wbr/>Boundaries and <wbr/>Reset <wbr/>Policies</span></a></li>
+<li><a href="#an-outside-program-blake3"><span>An <wbr/>Outside <wbr/>Program: <wbr/>BLAKE3</span></a></li>
+<li><a href="#the-iteration-route"><span>The <wbr/>Iteration <wbr/>Route</span></a></li>
 <li><a href="#conflict-rate-region-size-and-routing"><span>Conflict <wbr/>Rate, <wbr/>Region <wbr/>Size and <wbr/>Routing</span></a></li>
 <li><a href="#differential-execution"><span>Differential <wbr/>Execution</span></a></li>
 <li><a href="#what-the-corpus-shows"><span>What the <wbr/>Corpus <wbr/>Shows</span></a></li></ul></li>

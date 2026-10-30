@@ -1,60 +1,23 @@
-# Graded Conflicts
+# Changed-Page Reset
 
-Question: how does speculative execution change as the share of conflicting regions and the work
-per region vary?
-
-A batch of 64 `mix` calls from the fixture module runs as one ordered sequence. In each cell a
-fraction of the calls updates one shared word, so each of them reads what the previous one wrote
-and must replay; the rest update distinct words. The fraction takes six values (0, 1/16, 1/8, 1/4,
-1/2, 1) and the work per call takes three (16, 1024 and 65,536 rounds, about 0.1, 1.2 and 76
-microseconds on the Ryzen machine). Arms are native, forced speculation at widths 2, 4 and 8, and
-the default route at width 8, in 9 paired rounds after 2 warmups. Every sample compares complete
-memory with the native result. The study replaces the two fixed conflict cells of the
-[crossover sweep](../crossover/README.md) with a graded set.
-
-## Results
-
-Eight-worker forced speculation, paired median speedup over native, 65,536 rounds per call:
-
-| Conflicting calls | Ryzen | M2 Pro |
-| ---: | ---: | ---: |
-| 0 | 3.50x | 3.54x |
-| 1/16 | 2.81x | 3.05x |
-| 1/8 | 2.09x | 2.31x |
-| 1/4 | 1.65x | 1.77x |
-| 1/2 | 1.11x | 1.24x |
-| all | 0.74x | 0.77x |
-
-Break-even lies between half and all of the calls conflicting at this region size. At 1,024 rounds
-the best cell is 0.26x on the Ryzen machine (0.23x on the M2 Pro) with no conflicts, falling to
-0.09x with all conflicting. At 16 rounds every cell is 0.02x or lower. Below about 76 microseconds
-per call, dispatch and tracking cost more than the work they distribute, whether or not the calls
-conflict.
-
-Ordered validation is not the limiting cost. Its share of wall time is at most 0.3% in the
-65,536 round cells and at most 2.1% in any cell. The default route at width 8 gives similar results
-to forced speculation in every cell. The two machines agree to within about 11% in every 65,536
-round cell.
-
-Admission defaults are unchanged. The measured crossover is consistent with the existing floor of
-200,000 estimated work units, and the data does not support lowering it.
+Same independent operations and timing method as contexts. The fixed deterministic entry is run once to identify changed64KiB pages, then initialized state is restored. Only those pages are reset per operation. Every verification operation still compares all8MiB and returns. This is a corpus-specific specialization for unchanged code/input/host state, not a generic dirty-memory tracker or automatic extraction. Each run has its own matched native baseline.
 
 ## Reproduction
 
+Run from the repository root with Node26 and the existing LLVM toolchain. Build the corpus first with `node scripts/research/corpus.ts build build/research/corpus/build.jsonl`. Use a new output path; recorded runs are not overwritten.
+
 ```sh
-node scripts/research/graded.ts build/research/graded 9
-node scripts/research/analyze.ts build/research/graded/raw.jsonl summary.json
+FOLIO_CORPUS_RESET=pages node scripts/research/corpus-mechanisms.ts build/research/pages-repeat 7 4
 ```
 
-The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
-shared timing lock. The M2 Pro record ran unpinned on macOS. The raw files here hold the graded
-rows only; the routing rows of the same run are in [adaptive routing](../adaptive-routing/README.md).
+Analyze sample records with `node scripts/research/analyze.ts RAW.jsonl SUMMARY.json`; differential/upstream records have their own schemas. Timing requires an otherwise quiet host. The retained source archives in [contexts](../../corpus/contexts/README.md) and [page-reset](../../corpus/page-reset/README.md) preserve the measured source; install pinned dependencies from package.json and use the artifact digests in the upstream records. Source revisions can precede later safety fixes and formatting.
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 810 samples each (18 cells, 5 arms, 9 rounds).
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries, including validation and commit time.
-- `manifest.json`: byte lengths and SHA256 digests.
+- [raw.jsonl](raw.jsonl)
+- [source.tar.gz](source.tar.gz)
+- [summary.json](summary.json)
 
-Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
-[reset-policies](../../corpus/reset-policies/source.tar.gz).
+`manifest.json` records byte lengths and SHA256 digests. Environment/source hashes, inputs,counts and routing observations are in raw records. Intervals are within-run paired-round bootstrap intervals, not independent-host replication.
+
+A repeat of this study on the same machine, with three reset policies in one session, is in [reset policies](../reset-policies/README.md). It reports 4.80x for AES-CBC decrypt at eight batched workers where this record reports 7.42x; native and one-worker arms agree between the runs.

@@ -36,9 +36,12 @@ Medians of three invocations per count, in milliseconds unless stated.
 Each automatic operation sends four lane requests and receives 9,828 bytes. Every automatic
 operation ran speculatively with no replay, no fallback and no transport fallback.
 
-- **At 128 KiB a later operation is faster in wall time and costs more CPU.** The automatic arm
-  finishes a later operation in 155 ms against 267 ms natively (1.72x), and uses 304 ms of CPU
-  against 211 ms (1.44x), spread over the owner and four lanes.
+- **At 128 KiB a later operation costs more CPU, and its wall time is probably lower.** The
+  automatic arm uses 304 ms of CPU against 211 ms natively (1.44x), spread over the owner and four
+  lanes. Its wall time per operation is 155 ms against 267 ms (1.72x), from invocations of five and
+  one operations that differ by 622 ms and 1,068 ms. That gap of about 450 ms is as large as the spread
+  of setup wall time (671 to 1,112 ms) and rests on three invocations per count, so treat the wall
+  advantage as indicative and not resolved.
 - **The first operation is slower than later ones.** In the automatic arm the owner waits 344 to
   574 ms for the first operation and 97 to 158 ms for later ones at 128 KiB, and 601 to 661 ms
   against 334 to 501 ms at 8 MiB. The native arm pays a first-operation CPU premium as well (468
@@ -48,11 +51,12 @@ operation ran speculatively with no replay, no fallback and no transport fallbac
 - **Setup costs the same in every cell,** 258 to 285 ms of CPU, because the oracle runs serially at
   the owner.
 
-So the measured window on this backend is a small arena reused for several operations. Three
+So the only window the data points to is a small arena reused for several operations, and the wall-time half of it is not resolved. Three
 repeats per count is a small sample: CPU for one count varies by up to about 200 ms between
 invocations (the native 128 KiB arm reads 541 to 746 ms for one operation), and setup wall time
 alone varies from 671 to 1,112 ms, so wall differences below a few hundred milliseconds are not
-resolved and a first-operation wall figure from differencing is not reported. Not measured: any
+resolved, and the first-operation wall value stored in `operations.json` (21.55 ms for 128 KiB
+automatic) is noise and not a result. Not measured: any
 price, a deployed run at the 31 MiB default, widths other than four, and a different kernel.
 
 ## Reproduction

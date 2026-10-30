@@ -1,49 +1,49 @@
-# Initialized Drupal lifecycle
+# Backing Ablation
 
-Fifteen paired rounds compare actual Drupal boot plus first render in fresh Node
-processes. All 45 outputs equal native status and normalized HTML. Embedded images
-and copied initialized memory save boot work; this is serial-work elimination,
-with a separate heap per execution.
+Question: with the call boundary held equal, does a shared base memory run faster than a copied one?
 
-| Path              | Wall median | Aggregate CPU median | Paired speedup, 95% interval | CPU/native ratio |
-| ----------------- | ----------- | -------------------- | ---------------------------- | ---------------- |
-| Native            | 830.53 ms   | 1,412.78 ms          | 1.00×                        | 1.00             |
-| Embedded image    | 444.73 ms   | 806.49 ms            | 1.903× [1.821, 1.972]        | 0.558            |
-| Memory-image copy | 460.55 ms   | 814.66 ms            | 1.876× [1.786, 1.908]        | 0.578            |
+The [crossover sweep](../crossover/README.md) compared a shared-memory arm with a copied-snapshot arm
+through different entry points, so the comparison changed the boundary as well as the backing. Here
+both backings run the same `runAll` call list with forced speculation. The two modules have the same
+instructions and memory size; only the import's shared flag differs. Cells use 64 `mix` calls at
+1,024 and 65,536 rounds, with none and a quarter of the calls updating one shared word. Arms are
+native and both backings at widths 2, 4 and 8, in 9 paired rounds after 2 warmups. Every sample
+compares complete memory with the native result.
 
-Intervals bootstrap paired rounds in this one execution. They do not establish
-independent replication or managed-platform render latency. The warm second render
-medians are 66.02, 62.94 and 64.31 ms respectively: retaining an already initialized
-application remains cheaper than restoring it. The copied-image path spends a
-median 10.82 ms applying pages/globals. Renewal is included in total elapsed/CPU but
-is not separately timed. Native rendering finishes with 69,992,448 heap bytes;
-restored rendering uses 87,687,168, so this speedup carries a larger heap.
+## Results
 
-A separate image generation observation costs 10,366.68 ms elapsed and 11,362.81 ms
-CPU, including boot/render, capture, bake, gzip, files and database backup. Baking
-alone costs 3,947.95 ms. It produces a 61,852,825-byte Wasm module and 47,844,350-byte
-encoded image. A model using these costs and cohort median savings breaks even at
-27 embedded-image or 29 memory-copy boots by elapsed time, 19 by CPU. Distribution,
-deployment, storage and retention are excluded; these are calculated thresholds,
-not observed fleet outcomes. The generated heap is not safe to publish as raw data.
+Paired median speedup over native, shared against copied:
 
-The capture restores four mutable globals, one filesystem stream, four named/sealed
-host handles and initialization replay. All 30 restored RNG triples are unique;
-key/salt hashes match native, and replay/renewal report no errors. This does not
-serialize arbitrary JavaScript, changed function tables or external resources.
+| Cell | Width | Ryzen | M2 Pro |
+| --- | ---: | --- | --- |
+| 65,536 rounds, no conflicts | 4 | 1.22x, 1.21x | 2.74x, 2.67x |
+| 65,536 rounds, no conflicts | 8 | 2.24x, 2.12x | 3.40x, 3.04x |
+| 65,536 rounds, a quarter conflicting | 4 | 1.56x, 1.75x | 1.71x, 1.65x |
+| 65,536 rounds, a quarter conflicting | 8 | 1.48x, 1.67x | 1.87x, 1.86x |
 
-Current [deployed delivery](delivery/README.md) proves this embedded module can be
-uploaded and instantiated on Free, alongside the asset-copy alternative. That
-instrument uses stub imports and measures no Drupal rendering. Prior actual
-managed host render evidence remains in [deployed-serve](../deployed-serve/README.md).
+At 1,024 rounds every cell is 0.22x or lower with either backing. Across the 24 cells of each machine
+the two backings differ by up to about 20% in either direction, and neither is consistently faster.
+With the boundary equal, backing is not the limiting cost of speculation. The overlays, dispatch and
+validation are the same work in both.
 
-| Artifact                           | Contents                                                       |
-| ---------------------------------- | -------------------------------------------------------------- |
-| [raw.jsonl](raw.jsonl)             | 45 samples, exact environment, inputs and phase observations   |
-| [summary.json](summary.json)       | Equality, safety, paired statistics and raw digest             |
-| [phases.json](phases.json)         | Compilation, instantiation, first/warm render and heap medians |
-| [generation.json](generation.json) | Separate generation observation and scoped amortization model  |
-| [source.tar.gz](source.tar.gz)     | Public harness and measured library/helper sources             |
+The Ryzen speedups here are lower than in [graded conflicts](../graded-conflicts/README.md) for the
+same cell (2.24x against 3.50x at width 8 with no conflicts). This run keeps six pools and 28 worker
+threads open and rotates seven arms, which the graded run does not. Compare the two backings inside
+this run and not against the graded figures.
 
-See [method](../../../experiments/bootimage/research/METHOD.md) and
-[reproduction](../../../experiments/bootimage/research/README.md).
+## Reproduction
+
+```sh
+node scripts/research/backing.ts build/research/backing 9
+node scripts/research/analyze.ts build/research/backing/raw.jsonl summary.json
+```
+
+`scripts/research/backing.sh` runs it on the Linux rig under a timing lock with `nice -n 19` and cores 4
+to 11. The M2 Pro record ran unpinned on macOS.
+
+## Artifacts
+
+- `ryzen.jsonl`, `m2.jsonl`: raw records, 252 samples each (4 cells, 7 arms, 9 rounds).
+- `ryzen.summary.json`, `m2.summary.json`: paired summaries.
+- `source.tar.gz`: the source the Ryzen run used.
+- `manifest.json`: byte lengths and SHA256 digests.
