@@ -6,13 +6,13 @@ Dates, runtime versions, sample counts and routing observations are in the recor
 
 | File | Bytes | Original Record |
 | --- | ---: | --- |
-| [a.log](a.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/a.log |
-| [b.log](b.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/b.log |
-| [c.log](c.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/c.log |
-| [d0.log](d0.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d0.log |
-| [d1.log](d1.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d1.log |
-| [d2.log](d2.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d2.log |
-| [d3.log](d3.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d3.log |
+| [single.log](single.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/a.log |
+| [front.log](front.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/b.log |
+| [sockets.log](sockets.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/c.log |
+| [processes-0.log](processes-0.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d0.log |
+| [processes-1.log](processes-1.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d1.log |
+| [processes-2.log](processes-2.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d2.log |
+| [processes-3.log](processes-3.log) | 0 | results/20261022-workerd-concurrency/run-2/logs/d3.log |
 
 ## Reproduction
 

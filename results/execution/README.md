@@ -12,4 +12,5 @@
 - [backing-ablation](backing-ablation/README.md)
 - [differential](differential/README.md)
 - [differential-guards](differential-guards/README.md)
+- [differential-release](differential-release/README.md)
 - [source](source/README.md)

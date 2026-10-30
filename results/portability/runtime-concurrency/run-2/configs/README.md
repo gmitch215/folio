@@ -6,13 +6,13 @@ Dates, runtime versions, sample counts and routing observations are in the recor
 
 | File | Bytes | Original Record |
 | --- | ---: | --- |
-| [a.capnp](a.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/a.capnp |
-| [b.capnp](b.capnp) | 2426 | results/20261022-workerd-concurrency/run-2/configs/b.capnp |
-| [c.capnp](c.capnp) | 2161 | results/20261022-workerd-concurrency/run-2/configs/c.capnp |
-| [d0.capnp](d0.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d0.capnp |
-| [d1.capnp](d1.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d1.capnp |
-| [d2.capnp](d2.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d2.capnp |
-| [d3.capnp](d3.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d3.capnp |
+| [single.capnp](single.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/a.capnp |
+| [front.capnp](front.capnp) | 2426 | results/20261022-workerd-concurrency/run-2/configs/b.capnp |
+| [sockets.capnp](sockets.capnp) | 2161 | results/20261022-workerd-concurrency/run-2/configs/c.capnp |
+| [processes-0.capnp](processes-0.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d0.capnp |
+| [processes-1.capnp](processes-1.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d1.capnp |
+| [processes-2.capnp](processes-2.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d2.capnp |
+| [processes-3.capnp](processes-3.capnp) | 641 | results/20261022-workerd-concurrency/run-2/configs/d3.capnp |
 
 ## Reproduction
 

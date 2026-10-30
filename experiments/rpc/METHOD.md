@@ -3,7 +3,7 @@
 Question: can ordinary Workers (no Durable Objects) joined by service bindings serve as parallel
 execution lanes, and does sending only a region's bytes recover the speed that a full snapshot copy loses?
 
-## Stage A: overlap
+## Overlap
 
 One coordinator Worker and four lane Workers, five scripts on the Free account, bound by service
 bindings. A lane runs a CPU loop and returns a checksum. The coordinator awaits `k` lanes at once,
@@ -19,15 +19,15 @@ shape (TECHNICAL_REPORT, "One workerd process runs CPU-bound requests one at a t
 The `public` arm fetches the lanes through their workers.dev URLs from inside the coordinator. It is a
 reachability cell only.
 
-## Stage B: transfer
+## Transfer
 
-Set `FOLIO_RPC_STAGE=xfer`. A Wasm kernel (`prepare.ts`) rewrites a 16 KiB partition in place. Four
+Set `FOLIO_RPC_MODE=transfer`. A Wasm kernel (`prepare.ts`) rewrites a 16 KiB partition in place. Four
 partitions sit in an arena of 128 KiB, 1 MiB or 8 MiB. Each cell runs four waves, and each wave
 transforms every partition once, feeding the previous wave's output forward. Modes:
 
 - `serial`: one lane runs the four partitions one after another and keeps them resident, so it
   transfers each partition once. This is the control.
-- `full`: four lanes, and every wave sends each lane the whole arena. This is today's managed shape.
+- `full`: four lanes, and every wave sends each lane the whole arena. This is the managed backend's shape.
 - `range`: four lanes, and every wave sends each lane its 16 KiB partition.
 - `retained`: four lanes, the partition is sent once and each lane keeps it between waves.
 

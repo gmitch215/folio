@@ -4,15 +4,15 @@ Executable probes for runtime capabilities, native sharing, managed execution an
 Sanitized records live under [results](../results/README.md). Each harness keeps its METHOD.md;
 raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup and recovery.
 
-| Harness                            | Question                                                                      | Environment                   |
-| ---------------------------------- | ----------------------------------------------------------------------------- | ----------------------------- |
-| [Cloud](cloud/README.md)           | Which runtime capabilities and host transports are available?                 | workerd and deployed isolates |
-| [Managed](managed/README.md)       | What do copied snapshots and ordered validation cost?                         | Durable Objects               |
-| [Browser](browser/README.md)       | Can agents share an arena and extract counted loops without JSPI?             | Chromium and Browser Run      |
-| [Consumer](consumer/README.md)     | How do unchanged applications route and compare with native execution?        | Chromium, isolates and Node   |
-| [Boot Images](bootimage/README.md) | How do captured images behave during delivery, startup and replay?            | workerd and Durable Objects   |
-| [Ordinary Lanes](rpc/README.md)    | Do service-bound Workers overlap CPU work, and what does range transfer save? | Deployed Workers (Free)       |
-| [Shared Tools](lib/README.md)      | Account access, metering, bundling and lifecycle helpers                      | Node 26                       |
+| Harness                                | Question                                                                      | Environment                   |
+| -------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------- |
+| [Cloud](cloud/README.md)               | Which runtime capabilities and host transports are available?                 | workerd and deployed isolates |
+| [Managed](managed/README.md)           | What do copied snapshots and ordered validation cost?                         | Durable Objects               |
+| [Browser](browser/README.md)           | Can agents share an arena and extract counted loops without JSPI?             | Chromium and Browser Run      |
+| [Consumer](consumer/README.md)         | How do unchanged applications route and compare with native execution?        | Chromium, isolates and Node   |
+| [Boot Images](bootimage/README.md)     | How do captured images behave during delivery, startup and replay?            | workerd and Durable Objects   |
+| [Ordinary Worker Lanes](rpc/README.md) | Do service-bound Workers overlap CPU work, and what does range transfer save? | Deployed Workers (Free)       |
+| [Shared Tools](lib/README.md)          | Account access, metering, bundling and lifecycle helpers                      | Node 26                       |
 
 ## Local Runs
 

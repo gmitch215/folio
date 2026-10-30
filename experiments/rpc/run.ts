@@ -84,7 +84,7 @@ async function call(base: string, path: string) {
 const fan = (arm: string, k: number, units: number, wave = waves) =>
 	call(coordinatorUrl, `/fan?arm=${arm}&k=${k}&units=${units}&waves=${wave}`);
 
-const stage = process.env.FOLIO_RPC_STAGE ?? 'overlap';
+const phase = process.env.FOLIO_RPC_MODE ?? 'overlap';
 const xferWaves = 4;
 const xfer = (mode: string, arena: number, kernelRounds: number) =>
 	call(
@@ -232,7 +232,7 @@ try {
 		'routes not ready'
 	);
 	log('ready');
-	if (stage === 'xfer') {
+	if (phase === 'transfer') {
 		await transfer();
 	} else {
 		// calibrate: the smallest units whose k=1 binding wall over all waves exceeds the empty call by 18 ms

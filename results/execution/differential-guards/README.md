@@ -39,14 +39,14 @@ the transformation.
 ## Reproduction
 
 ```sh
-node scripts/research/differential.ts build/research/seed-a 128 12648430
-node scripts/research/differential.ts build/research/seed-b 128 464367618
+node scripts/research/differential.ts build/research/seed-12648430 128 12648430
+node scripts/research/differential.ts build/research/seed-464367618 128 464367618
 ```
 
 The records ran on an Apple M2 Pro with Node 26.8.2.
 
 ## Artifacts
 
-- `seed-a.jsonl`, `seed-b.jsonl`: raw records.
-- `seed-a.summary.json`, `seed-b.summary.json`: totals as the campaign wrote them.
+- `seed-12648430.jsonl`, `seed-464367618.jsonl`: raw records.
+- `seed-12648430.summary.json`, `seed-464367618.summary.json`: totals as the campaign wrote them.
 - `manifest.json`: byte lengths and SHA256 digests.
