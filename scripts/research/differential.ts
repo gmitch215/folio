@@ -304,7 +304,8 @@ const iterationMaximum = 128;
 const iterationTable = 0x10000;
 const srcCell = (i: number) => 0x20000 + 64 * i;
 const dstCell = (i: number) => 0x30000 + 64 * i;
-// the route's first batch holds 32 iterations, so a hazard inside it replays in that batch
+// iteration 0 runs serially and the first batch holds iterations 1 to 32, so a hazard between
+// two of them replays in that batch
 const firstBatch = 32;
 const page = 65536;
 
@@ -382,7 +383,7 @@ function compileOwner(wat: string): Uint8Array {
 	}
 }
 
-// one hazard at a seed-chosen place inside the first batch
+// one hazard at a seed-chosen place among iterations 1 to `window`, the first batch
 function placeHazard(
 	kind: Hazard,
 	src: number[],
@@ -391,14 +392,14 @@ function placeHazard(
 	next: () => number
 ) {
 	if (kind === 'raw') {
-		const k = 1 + (next() % (window - 1));
+		const k = 2 + (next() % (window - 1));
 		src[k] = dstCell(k - 1);
 	} else if (kind === 'war') {
-		const j = next() % (window - 1);
-		const k = j + 1 + (next() % (window - 1 - j));
+		const j = 1 + (next() % (window - 1));
+		const k = j + 1 + (next() % (window - j));
 		src[j] = dstCell(k);
 	} else {
-		const p = 1 + (next() % (window - 1));
+		const p = 2 + (next() % (window - 1));
 		dst[p] = dstCell(p - 1);
 	}
 }
@@ -416,7 +417,7 @@ export interface IterationProgram {
 export function iterationProgram(seed: number, shape: IterationShape): IterationProgram {
 	const next = random((Math.imul(seed, 8) + iterationShapes.indexOf(shape) + 1) >>> 0);
 	const trip = 4 + (next() % 37);
-	const window = Math.min(trip, firstBatch);
+	const window = Math.min(trip - 1, firstBatch);
 	const src = Array.from({ length: trip }, (_, i) => srcCell(i));
 	const dst = Array.from({ length: trip }, (_, i) => dstCell(i));
 	const values = Array.from({ length: trip }, () => 1 + (next() % 500));

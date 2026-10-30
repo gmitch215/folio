@@ -346,7 +346,6 @@ export function fixtureSubjects(): Subject[] {
 			['trap_after_write', 0x2000]
 		]),
 		of('generalized', [['main', 0x2000, 512, 3]]),
-		of('generalized-inline', [['main', 0x2000, 512, 3]]),
 		of('sharing', [
 			['read', 0x2000],
 			['write', 0x2000, 5],

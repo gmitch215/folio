@@ -157,8 +157,9 @@ if (mode === 'forced') {
 					replayed: report?.replayed,
 					fallbacks: report?.fallbacks,
 					reason: report?.reason,
-					probe: report?.iteration?.probe,
-					probeMs: report?.iteration?.probeMs,
+					serial: report?.iteration?.serial,
+					stopped: report?.iteration?.stopped,
+					admission: report?.iteration?.admission,
 					dispatchMs: report?.iteration?.dispatchMs,
 					validationMs: report?.iteration?.validationMs,
 					workerRunMs: report?.iteration?.workerRunMs

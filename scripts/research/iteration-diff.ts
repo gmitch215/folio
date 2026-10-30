@@ -125,7 +125,7 @@ export function iterationRun(
 	width: number,
 	image: Uint8Array,
 	args: readonly number[],
-	extra: Pick<IterationJob, 'schedule' | 'skip' | 'probe' | 'admit'> = {}
+	extra: Pick<IterationJob, 'schedule' | 'skip' | 'admit' | 'loses' | 'collapses'> = {}
 ): Run {
 	const { route } = rig;
 	const view = new Uint8Array(rig.memory.buffer);
@@ -248,12 +248,18 @@ export function watModule(): Uint8Array {
 export const srcCell = (i: number) => wat.src + wat.cell * i;
 export const dstCell = (i: number) => wat.dst + wat.cell * i;
 
-export async function watRig(widths: number[], options: IterationArenaOptions = {}) {
-	const bytes = watModule();
+export async function watRig(
+	widths: number[],
+	options: IterationArenaOptions = {},
+	bytes: Uint8Array = watModule()
+) {
 	const route = prepare(bytes, { minimumRegionWork: 0 }).iterationRoute!;
 	if (!route.eligible) throw new Error(route.diagnostics.join('; '));
 	const settings = { batch: 32, logCapacity: 64, slotBytes: 4096, ...options };
-	const arena = iterationArena(wat.arena, wat.pages * PAGE, settings);
+	const arena = iterationArena(wat.arena, wat.pages * PAGE, {
+		...settings,
+		frameBytes: route.frame?.size
+	});
 	const memory = {
 		pages: wat.pages,
 		maximum: wat.pages,
@@ -375,7 +381,10 @@ export async function blake3Rig(sizes: number[], widths: number[], options: Iter
 		at = align(at + size, 64) + 64;
 		return offset;
 	});
-	const { pages, arenaBase, arenaEnd } = fit(at, options);
+	const { pages, arenaBase, arenaEnd } = fit(at, {
+		...options,
+		frameBytes: route.frame?.size
+	});
 	const rig = await openRig(
 		bytes,
 		route,

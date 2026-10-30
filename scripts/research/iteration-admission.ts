@@ -10,7 +10,7 @@ import { researchEnvironment } from './environment.ts';
 // (`automatic`) and a pool that always dispatches (`forced`) with a serial native run in the same
 // round. timings cover the call only; copying the inputs in is outside them, as it is for a
 // program whose memory already holds its data. `summary` flags every cell where the decision was
-// wrong and prints the numbers the constants of src/iteration-admission.ts are fitted to.
+// wrong and prints the numbers the two constants of src/iteration-admission.ts are fitted to.
 
 const root = new URL('../../', import.meta.url).pathname;
 const BASE = 1 << 20;
@@ -166,15 +166,16 @@ interface Sample {
 		regions?: number;
 		replayed?: number;
 		iteration?: {
-			probeMs: number;
 			dispatchMs: number;
 			validationMs: number;
 			workerRunMs: number;
+			stopped?: string;
 			admission?: {
-				predictedParallelMs: number;
-				predictedSerialMs: number;
-				firstIterationMs: number;
+				plainIterationMs: number;
+				remainingSerialMs: number;
 				admitted: boolean;
+				batchWallMs?: number;
+				batchSerialMs?: number;
 			};
 		};
 	};
@@ -217,6 +218,8 @@ function summarize(files: string[], jsonOutput?: string) {
 		const auto = of('automatic');
 		const forced = of('forced');
 		const dispatched = auto.filter((s) => s.report?.extraction === 'iteration').length;
+		const stopped = auto.filter((s) => s.report?.iteration?.stopped).length;
+		const stopReason = auto.map((s) => s.report?.iteration?.stopped).find(Boolean);
 		const admission = auto.flatMap((s) => s.report?.iteration?.admission ?? []);
 		const nativeMs = median(of('native').map((s) => s.wallMs));
 		const forcedSpeedup = median(speedups('forced'));
@@ -228,15 +231,17 @@ function summarize(files: string[], jsonOutput?: string) {
 		const fixed = median(
 			forced.map((s) => {
 				const i = s.report?.iteration;
-				return i ? s.wallMs - i.probeMs - i.dispatchMs : NaN;
+				return i?.admission ? s.wallMs - i.admission.plainIterationMs - i.dispatchMs : NaN;
 			})
 		);
 		const tracked = median(forced.map(per));
-		const rounds = Math.ceil(trip / Math.min(width, trip));
+		const rounds = Math.ceil((trip - 1) / Math.min(width, trip - 1));
 		const imbalance = median(
 			forced.map((s) => (s.report?.iteration?.dispatchMs ?? NaN) / (rounds * per(s)))
 		);
-		const first = median(admission.map((a) => a.firstIterationMs));
+		const first = median(admission.map((a) => a.plainIterationMs));
+		const batchWall = median(admission.map((a) => a.batchWallMs ?? NaN));
+		const batchSerial = median(admission.map((a) => a.batchSerialMs ?? NaN));
 		const wrong =
 			dispatched * 2 > auto.length
 				? autoSpeedup < 1
@@ -254,12 +259,15 @@ function summarize(files: string[], jsonOutput?: string) {
 			autoSpeedup,
 			dispatched,
 			rounds: auto.length,
-			firstIterationMs: first,
-			predictedParallelMs: median(admission.map((a) => a.predictedParallelMs)),
-			predictedSerialMs: median(admission.map((a) => a.predictedSerialMs)),
+			stopped,
+			stopReason,
+			plainIterationMs: first,
+			remainingSerialMs: median(admission.map((a) => a.remainingSerialMs)),
+			batchWallMs: batchWall,
+			batchSerialMs: batchSerial,
 			trackedPerIterationMs: tracked,
-			trackingFactor: tracked / (nativeMs / trip),
-			firstOverTracked: first / tracked,
+			realizedTracking: tracked / (nativeMs / trip),
+			plainOverTracked: first / tracked,
 			fixedMs: fixed,
 			imbalance,
 			wrong
@@ -275,12 +283,14 @@ function summarize(files: string[], jsonOutput?: string) {
 			'forced x',
 			'auto x',
 			'disp',
-			't0 ms',
-			'pred par',
-			'pred ser',
+			'stop',
+			'plain ms',
+			'rem ser',
+			'batch wall',
+			'batch ser',
 			'trk/it',
 			'trk fac',
-			't0/trk',
+			'plain/trk',
 			'fixed',
 			'imbal',
 			'verdict'
@@ -295,12 +305,14 @@ function summarize(files: string[], jsonOutput?: string) {
 				f(r.forcedSpeedup),
 				f(r.autoSpeedup),
 				`${r.dispatched}/${r.rounds}`,
-				f(r.firstIterationMs, 3),
-				f(r.predictedParallelMs, 1),
-				f(r.predictedSerialMs, 1),
+				r.stopped ? `${r.stopped}/${r.rounds} ${r.stopReason}` : '-',
+				f(r.plainIterationMs, 3),
+				f(r.remainingSerialMs, 1),
+				f(r.batchWallMs, 1),
+				f(r.batchSerialMs, 1),
 				f(r.trackedPerIterationMs, 3),
-				f(r.trackingFactor),
-				f(r.firstOverTracked),
+				f(r.realizedTracking),
+				f(r.plainOverTracked),
 				f(r.fixedMs, 1),
 				f(r.imbalance),
 				r.wrong || 'ok'
