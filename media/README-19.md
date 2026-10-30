@@ -1,60 +1,52 @@
-# Graded Conflicts
+# Differential Guards
 
-Question: how does speculative execution change as the share of conflicting regions and the work
-per region vary?
+Question: do generated programs and guard-refusal fixtures stay equal to native execution on a
+second seed, and does a guard ever refuse?
 
-A batch of 64 `mix` calls from the fixture module runs as one ordered sequence. In each cell a
-fraction of the calls updates one shared word, so each of them reads what the previous one wrote
-and must replay; the rest update distinct words. The fraction takes six values (0, 1/16, 1/8, 1/4,
-1/2, 1) and the work per call takes three (16, 1024 and 65,536 rounds, about 0.1, 1.2 and 76
-microseconds on the Ryzen machine). Arms are native, forced speculation at widths 2, 4 and 8, and
-the default route at width 8, in 9 paired rounds after 2 warmups. Every sample compares complete
-memory with the native result. The study replaces the two fixed conflict cells of the
-[crossover sweep](../crossover/README.md) with a graded set.
+This extends the [differential campaign](../differential/README.md). It runs two seeds with the
+same generator and adds a family of counted loops whose 4-byte stores use a stride of 1, 2 and 4
+bytes. Strides 1 and 2 overlap at region boundaries, so the disjointness guard refuses them.
+Stride 4 does not overlap. Each loop also runs one out-of-range input that traps natively.
 
 ## Results
 
-Eight-worker forced speculation, paired median speedup over native, 65,536 rounds per call:
+| | Seed 12648430 | Seed 464367618 |
+| --- | ---: | ---: |
+| Programs | 128 | 128 |
+| Comparisons | 6,228 | 6,228 |
+| Trapping comparisons | 2,976 | 3,008 |
+| Host exceptions | 1,024 | 1,024 |
+| Replayed regions | 3,668 | 3,701 |
+| Dispatched comparisons | 1,923 | 1,893 |
+| Native shared route | 12 | 12 |
+| Guard refusals (`guard-failed`) | 12 | 12 |
 
-| Conflicting calls | Ryzen | M2 Pro |
-| ---: | ---: | ---: |
-| 0 | 3.50x | 3.54x |
-| 1/16 | 2.81x | 3.05x |
-| 1/8 | 2.09x | 2.31x |
-| 1/4 | 1.65x | 1.77x |
-| 1/2 | 1.11x | 1.24x |
-| all | 0.74x | 0.77x |
+All 12,456 comparisons match native in complete memory, return value, ordered host effects and
+trap or host exception identity, at widths 1, 2, 4 and 8. The earlier campaign reported zero guard
+refusals; the overlap family produces 12 per seed and each falls back to speculation with the
+native result.
 
-Break-even lies between half and all of the calls conflicting at this region size. At 1,024 rounds
-the best cell is 0.26x on the Ryzen machine (0.23x on the M2 Pro) with no conflicts, falling to
-0.09x with all conflicting. At 16 rounds every cell is 0.02x or lower. Below about 76 microseconds
-per call, dispatch and tracking cost more than the work they distribute, whether or not the calls
-conflict.
+Each seed draws each of the seven grammar shapes between 13 and 30 times. The shapes cover scalar 32-bit load,
+rotate, xor and store; 64-bit load, add and store; `memory.copy`; 32-bit and 64-bit float
+load and store; saturating float-to-integer conversion; and 16-bit store with a sign-extended byte
+load and `clz`. Four input modes cross each shape: a shared destination, an aliased source, a
+destination at the page boundary and a trap. The grammar does not generate `memory.fill`,
+`memory.init`, atomic operations or SIMD, so those transformations have no generated coverage.
 
-Ordered validation is not the limiting cost. Its share of wall time is at most 0.3% in the
-65,536 round cells and at most 2.2% in any cell. The default route at width 8 gives similar results
-to forced speculation in every cell. The two machines agree to within about 13% in every 65,536
-round cell.
-
-Admission defaults are unchanged. The measured crossover is consistent with the existing floor of
-200,000 estimated work units, and the data does not support lowering it.
+The campaign is finite evidence of equality on these shapes. It is not a proof of correctness for
+the transformation.
 
 ## Reproduction
 
 ```sh
-node scripts/research/graded.ts build/research/graded 9
-node scripts/research/analyze.ts build/research/graded/raw.jsonl summary.json
+node scripts/research/differential.ts build/research/seed-12648430 128 12648430
+node scripts/research/differential.ts build/research/seed-464367618 128 464367618
 ```
 
-The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
-shared timing lock. The M2 Pro record ran unpinned on macOS. The raw files here hold the graded
-rows only; the routing rows of the same run are in [adaptive routing](../adaptive-routing/README.md).
+The records ran on an Apple M2 Pro with Node 26.8.2.
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 810 samples each (18 cells, 5 arms, 9 rounds).
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries, including validation and commit time.
+- `seed-12648430.jsonl`, `seed-464367618.jsonl`: raw records.
+- `seed-12648430.summary.json`, `seed-464367618.summary.json`: totals as the campaign wrote them.
 - `manifest.json`: byte lengths and SHA256 digests.
-
-Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
-[reset-policies](../../corpus/reset-policies/source.tar.gz).

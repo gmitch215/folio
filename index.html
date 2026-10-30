@@ -89,10 +89,6 @@ result of <code>prepare(bytes)</code>. A compiled module has no inspectable byte
 Imported memory is allocated from the module's limits when omitted. Pass <code>memory</code> to bind an
 existing single imported memory, or bind several by their exact names in <code>imports</code>. Missing host
 functions, tables, globals, tags and memory64 bindings are supplied as with native instantiation.
-A loop of independent calls (a countdown loop in one function, as in a program that hashes several
-files) runs on workers only when the <code>memory</code> you pass is a shared <code>WebAssembly.Memory</code>; an unshared
-memory, or one the library cannot grow by the arena it needs, keeps the serial run and the report
-names why.
 <code>prepare(bytes, { parallel: 'off' })</code> disables optimization and leaves the program unchanged.
 Prepared plans are trusted build artifacts.</p>
 <p>A region runs on a worker only when its estimated work pays for dispatch, joining and validation.
@@ -101,11 +97,18 @@ or store, and keeps the region at its owner below <code>minimumRegionWork</code>
 39 microseconds of native work on an Apple M2 Pro). A loop bounded by a constant uses that count, a
 loop bounded by an untouched parameter or a countdown from one is checked against the arguments at
 each call, and any other loop is assumed to run <code>assumedTripCount</code> times (1,000). A module with no
-region above the threshold gets no control plan and runs as the original Wasm, so a small kernel, a
-memory-bound loop or a serial recurrence stays at native speed. <code>minimumRegionWork: 0</code> admits every
-pure region. <code>folio.diagnostics</code> says why a plan was refused.</p>
+region above the threshold and no eligible loop gets no control plan and runs as the original Wasm, so
+a small kernel, a memory-bound loop or a serial recurrence stays at native speed.
+<code>minimumRegionWork: 0</code> admits every pure region. <code>folio.diagnostics</code> says why a plan was refused.</p>
+<p>A function with one countdown loop whose iterations are calls, such as a program that hashes several
+files, runs its iterations on workers when <code>memory</code> is a shared <code>WebAssembly.Memory</code>. Iterations write
+in place on private stack slots, validate in order and replay serially on a conflict. The first iteration
+runs on the owner, and its measured time and the time of each batch decide whether dispatch continues. A
+loop that writes more per iteration than the undo log holds, or whose batches lose to the serial time,
+finishes serially. With an unshared memory, or one the library cannot grow by the arena it needs, the run
+stays serial and the report names the reason.</p>
 <h2 id="🧩-examples" class="tsd-anchor-link">🧩 Examples<a href="#🧩-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, and <code>boot-image</code> bakes captured memory into a module.</p>
+<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>iteration</code> runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, and <code>boot-image</code> bakes captured memory into a module.</p>
 <h2 id="⏳-asynchronous-host-effects" class="tsd-anchor-link">⏳ Asynchronous Host Effects<a href="#⏳-asynchronous-host-effects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Folio</span><span class="hl-1">, </span><span class="hl-5">suspending</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">folio</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Folio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-9">module</span><span class="hl-1">, {</span><br/><span class="hl-1">  </span><span class="hl-5">imports:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">host:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-5">read:</span><span class="hl-1"> </span><span class="hl-0">suspending</span><span class="hl-1">(</span><span class="hl-6">async</span><span class="hl-1"> (</span><span class="hl-5">key</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> (</span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">URL</span><span class="hl-1">(</span><span class="hl-0">String</span><span class="hl-1">(</span><span class="hl-5">key</span><span class="hl-1">), </span><span class="hl-5">storageUrl</span><span class="hl-1">))).</span><span class="hl-5">status</span><span class="hl-1">)</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">promising:</span><span class="hl-1"> [</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">]</span><br/><span class="hl-1">});</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">, [</span><span class="hl-8">42</span><span class="hl-1">]);</span><br/><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span>
 </code><button type="button">Copy</button></pre>
@@ -433,7 +436,7 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 <tr>
 <td>Iteration route, outside program</td>
 <td>BLAKE3 1.8.7 unmodified, 32 x 4 MiB and 128 x 256 KiB, Ryzen 9 9900X and M2 Pro</td>
-<td>default admission through <code>Folio.run</code>: 2.7x and 2.2x on the Ryzen machine, 3.3x and 2.9x on the M2 Pro (warm calls, equal digests); 1.00x before</td>
+<td>default admission through <code>Folio.run</code>: 2.4x to 3.1x and 2.0x on the Ryzen machine, 3.2x to 3.5x and 2.8x to 2.9x on the M2 Pro (warm calls, equal digests); 1.00x before. SHA-256 with a helper per input 1.7x to 2.1x, LZ4 no gain</td>
 </tr>
 <tr>
 <td>Baked Drupal lifecycle</td>

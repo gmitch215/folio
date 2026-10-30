@@ -2,7 +2,7 @@
 
 | where                | what                                                                                                                                           | runs                                            |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`                                                                             | compiled to `build/*.wasm` by `bun run build:c` |
+| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`                                                                | compiled to `build/*.wasm` by `bun run build:c` |
 | `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, boot image baking, context checkpoints, host, remote, managed, probes, research tooling | `bun run test`, under 5 seconds                 |
 | `tests/helpers/`     | worker entry points the unit tests spawn: the browser bridge and the task pool                                                                 | imported by `tests/unit/`                       |
 | `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                                                             | `bun run test:integration`, about 25 seconds    |
@@ -16,6 +16,8 @@ checkout runs the gate after installing `clang` and `lld`.
 Each C file is a separate artifact and a separate claim. `fixture.c` builds with inlining off and
 holds the counted-loop kernels. `generalized.c` builds with ordinary inlining and holds the branchy
 entry with a scalar carried across iterations. `sharing.c` holds the atomic and aliasing controls.
+`records.c` holds one loop that calls a function per record, the shape the iteration route runs on
+workers, and backs `examples/iteration.ts`.
 Fixture bytes must not depend on the machine's `PATH`; `tests/unit/fixtures.test.ts` checks that.
 
 ## Conventions

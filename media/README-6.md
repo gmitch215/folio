@@ -11,18 +11,18 @@ known kernel, and no program, plan or validation of Folio's was involved. The
 
 Five scripts on the Free account (a coordinator and four lanes, bound by service bindings), deployed,
 measured and deleted per run. The account's Workers, Durable Object namespaces, KV, R2 and D1 ids were
-the same afterward. In the stage B run the R2 listing was unavailable at the start (read as `null`) and
+the same afterward. In the transfer run the R2 listing was unavailable at the start (read as `null`) and
 empty at the end, which tripped the driver's equality assertion after all data was written; scripts,
 namespaces, KV and D1 were identical. Wall time is read by the coordinator around awaited calls, because a
 Worker's clock advances only on I/O. CPU time was not measured. One coordinator location, 14 paired
 rounds after 2 warmups, cell order rotating every round.
 
-Stage A (`stage-a-*`): each lane runs a CPU loop of calibrated length (about 4 ms per call, under the 10 ms
+Overlap (`overlap-*`): each lane runs a CPU loop of calibrated length (about 4 ms per call, under the 10 ms
 Free CPU cap). The coordinator awaits `k` lanes at once, six times in a row, and a cell's compute time is
 its wall minus the wall of the same cell with an empty loop. An earlier run with a loop of about 1 ms
 could not separate overlap from jitter and is not reported.
 
-Stage B (`stage-b-*`): a Wasm kernel rewrites a 16 KiB partition in place. Four partitions sit in an arena
+Transfer (`transfer-*`): a Wasm kernel rewrites a 16 KiB partition in place. Four partitions sit in an arena
 of 128 KiB, 1 MiB or 8 MiB (zero-filled outside the partitions). Four waves per cell, each feeding the
 previous wave's output forward. `serial` runs the four partitions on one lane that keeps them resident,
 `full` sends every lane the whole arena each wave, `range` sends each lane its partition each wave, and
@@ -30,7 +30,7 @@ previous wave's output forward. `serial` runs the four partitions on one lane th
 
 ## Results
 
-**Stage A, overlap.** Wall in ms, median with the range over 14 rounds.
+**Overlap.** Wall in ms, median with the range over 14 rounds.
 
 | Lanes at once | With the loop | Empty loop | Compute |
 | --- | --- | --- | --- |
@@ -40,11 +40,11 @@ previous wave's output forward. `serial` runs the four partitions on one lane th
 
 The serialization index (compute with four lanes over compute with one) is 1.42, against 4.0 for fully
 serialized lanes. The rule fixed before the run called overlap established at 1.5 or less, so the margin is
-thin. Four distinct lane instances answered, every call returned 200, and the effective overlap is about
-2.8x. Fetching a lane's workers.dev URL from inside a Worker returned 404 in every sample, so that route
+thin. Four distinct lane instances answered, every call returned 200, and the observed wall overlap is about
+2.8x, which is not a guarantee of parallel CPU execution. Fetching a lane's workers.dev URL from inside a Worker returned 404 in every sample, so that route
 is unavailable here.
 
-**Stage B, transfer.** Wall in ms, median; speedup is the paired median over the same round's `serial`
+**Transfer.** Wall in ms, median; speedup is the paired median over the same round's `serial`
 run, with the range over rounds. Bytes are what the coordinator sent per request, and every mode returned
 262,144 bytes.
 
@@ -67,9 +67,9 @@ run, with the range over rounds. Bytes are what the coordinator sent per request
   than `serial`, every ok row's digest equals the serial run's of the same round, the payload is 0.2% and
   0.05% of `full`, and `full` is slower than `range`.
 - **Bytes are the lever.** `full` falls from 2.64x at 128 KiB to 1.03x at 1 MiB and 0.22x at 8 MiB, which
-  matches the managed backend's later-operation cost in the
+  points the same way as the managed backend's later-operation cost at 8 MiB (0.71x) in the
   [operations study](../operations/README.md). `range` and `retained` stay at 2.6x to 3.1x at every size,
-  close to the 2.8x of stage A.
+  close to the 2.8x of the overlap run.
 - **Seven of 168 requests returned 503**, three of them in `full` at 8 MiB and the rest one each in four
   other cells. The cause was not isolated. A failed request is not in the medians; no digest differed.
 
@@ -95,14 +95,15 @@ run, with the range over rounds. Bytes are what the coordinator sent per request
 ```sh
 node experiments/rpc/prepare.ts
 node experiments/rpc/run.ts
-FOLIO_RPC_STAGE=xfer node experiments/rpc/run.ts
+FOLIO_RPC_MODE=transfer node experiments/rpc/run.ts
 ```
 
 ## Artifacts
 
-- `stage-a-run.json`, `stage-a-calibration.json`, `stage-a-samples.json`, `stage-a-summary.json`: the
+- `overlap-run.json`, `overlap-calibration.json`, `overlap-samples.json`, `overlap-summary.json`: the
   overlap run.
-- `stage-b-run.json`, `stage-b-calibration.json`, `stage-b-samples.json`, `stage-b-summary.json`: the
+- `transfer-run.json`, `transfer-calibration.json`, `transfer-samples.json`, `transfer-summary.json`: the
   transfer run.
-- `source.tar.gz`: `experiments/rpc` as run.
+- `source.tar.gz`: `experiments/rpc` as run. It predates the `FOLIO_RPC_MODE` name and reads
+  `FOLIO_RPC_STAGE=xfer` for the transfer run.
 - `manifest.json`: byte lengths and SHA256 digests.

@@ -1,49 +1,89 @@
-# Backing Ablation
+# BLAKE3 Consumer
 
-Question: with the call boundary held equal, does a shared base memory run faster than a copied one?
+Question: on a program that Folio did not shape and the corpus does not contain, what do default
+admission, forced admission and the explicit task route do?
 
-The [crossover sweep](../crossover/README.md) compared a shared-memory arm with a copied-snapshot arm
-through different entry points, so the comparison changed the boundary as well as the backing. Here
-both backings run the same `runAll` call list with forced speculation. The two modules have the same
-instructions and memory size; only the import's shared flag differs. Cells use 64 `mix` calls at
-1,024 and 65,536 rounds, with none and a quarter of the calls updating one shared word. Arms are
-native and both backings at widths 2, 4 and 8, in 9 paired rounds after 2 warmups. Every sample
-compares complete memory with the native result.
+The program is the C implementation of BLAKE3 1.8.7 (tag commit `f3149ec5bb54`, archive SHA256
+`c6782a28...6a3c`), built freestanding to wasm32 on its portable path with the SIMD paths disabled, and
+unmodified. `scripts/research/cases/blake3-hash-all.c` adds one entry in the shape of a `b3sum` run over
+several files: `hash_all(table, n, out)` calls `blake3_hasher_init`, `blake3_hasher_update` and
+`blake3_hasher_finalize` for each of `n` inputs placed in memory by the host. It carries no grain and no
+hint. The upstream licence files are `LICENSE_CC0`, `LICENSE_A2` and `LICENSE_A2LLVM`; this record does not
+interpret them.
+
+Chunks are 1,024 bytes and a hash is a binary tree of chunks, so the work inside one input and across
+inputs is independent. Inputs here are pseudo-random buffers held by the host, as if read from files.
+
+## Method
+
+Equality. `scripts/research/blake3-build.ts` verifies the archive digest and the commit recorded in its
+header, builds, and checks the module against the 35 official test vectors (input byte `i` is `i % 251`).
+Every timed sample also asserts that every digest equals the serial result.
+
+Timing. Three independent sessions on the Ryzen machine (Node 26.10.0, cores 4 to 11, `nice -n 19`,
+`powersave` governor), one pool alive at a time, the serial run paired in each round and alternating
+which goes first, 9 rounds after 2 warmups, width 8. Arms:
+
+- `default`: `Folio.open` and `run('hash_all')` under default admission.
+- `explicit`: one task per input on `TaskPool` workers, each with a private context sized to one input
+  and an `InstanceCheckpoint` restore before every task. The input crosses to the worker by copy and is
+  written into the worker's memory inside the timing. The serial arm also places its inputs inside the
+  timing.
+- `forced`: `minimumRegionWork` 0, a smaller workload (8 inputs of 1 MiB, 3 rounds), as a diagnostic.
+
+Workloads: `large` is 32 inputs of 4 MiB (128 MiB), and `small` is 128 inputs of 256 KiB (32 MiB).
 
 ## Results
 
-Paired median speedup over native, shared against copied:
+Paired median speedup over the serial run, with the range over rounds.
 
-| Cell | Width | Ryzen | M2 Pro |
-| --- | ---: | --- | --- |
-| 65,536 rounds, no conflicts | 4 | 1.22x, 1.21x | 2.74x, 2.67x |
-| 65,536 rounds, no conflicts | 8 | 2.24x, 2.12x | 3.40x, 3.04x |
-| 65,536 rounds, a quarter conflicting | 4 | 1.56x, 1.75x | 1.71x, 1.65x |
-| 65,536 rounds, a quarter conflicting | 8 | 1.48x, 1.67x | 1.87x, 1.86x |
+| Workload | Arm | Session 1 | Session 2 | Session 3 | Process CPU ratio |
+| --- | --- | --- | --- | --- | --- |
+| large | default | 1.00x | 1.00x | 1.00x | 1.00 |
+| large | explicit | 2.97x (2.53 to 3.28) | 3.12x (2.62 to 3.40) | 2.80x (2.43 to 3.89) | 1.8 to 2.0 |
+| small | default | 0.97x | 0.98x | 0.98x | 1.01 to 1.02 |
+| small | explicit | 2.79x (2.26 to 3.57) | 2.79x (2.08 to 3.69) | 2.54x (2.30 to 3.09) | 1.8 to 2.0 |
+| forced | forced | 0.40x | 0.47x | 0.51x | 2.1 to 2.7 |
 
-At 1,024 rounds every cell is 0.22x or lower with either backing. Across the 24 cells of each machine
-the two backings differ by up to about 20% in either direction, and neither is consistently faster.
-With the boundary equal, backing is not the limiting cost of speculation. The overlays, dispatch and
-validation are the same work in both.
+- **Default admission finds no plan in the library as measured here.** `Folio.run` runs the original
+  module serially with no worker (mode `serial`, reason `unsupported-module` as recorded; the current
+  build reports `no-arena` for the unshared memory this arm passes). The blockers are module-wide: a start function or a
+  required shared memory, data segments that need initialization isolation, global state (the stack
+  pointer) and a recursive call graph (`blake3_compress_subtree_wide`), and no region reaches the
+  200,000-unit floor.
+- **The explicit route clears 2x on both workloads,** 2.5x to 3.1x at eight workers. The serial
+  calling thread posts 128 MiB of input by copy before the workers can hash, which limits the
+  speedup below the width.
+  The [iteration-route](../iteration-route/README.md) study ran the same arm in separate sessions and
+  measured 3.0x to 3.3x. The two session sets are not pooled, and the spread between them is within the
+  run-to-run variation of the explicit arm.
+- **Forced admission loses.** It forms regions, runs speculatively on three workers with 48 replays
+  in each session, and is 0.40x to 0.51x of the serial run on the small diagnostic workload.
+- This is an explicit result: the caller names one task per input. It is not an automatic speedup.
+  The [iteration route](../iteration-route/README.md) dispatches this loop under default admission when
+  the host memory is shared; this study records the result without it.
 
-The Ryzen speedups here are lower than in [graded conflicts](../graded-conflicts/README.md) for the
-same cell (2.24x against 3.50x at width 8 with no conflicts). This run keeps six pools and 28 worker
-threads open and rotates seven arms, which the graded run does not. Compare the two backings inside
-this run and not against the graded figures.
+Limits: one program, one machine, 3 sessions of 9 rounds, and a pool that holds each worker's inputs by
+copy. The `forced` cell has 3 rounds and a workload one eighth the size of `large`.
 
 ## Reproduction
 
 ```sh
-node scripts/research/backing.ts build/research/backing 9
-node scripts/research/analyze.ts build/research/backing/raw.jsonl summary.json
+node scripts/research/blake3-build.ts
+node scripts/research/blake3-bench.ts out.jsonl 9 32 4 run
+node scripts/research/blake3-bench.ts forced.jsonl 3 8 1 forced
+node scripts/research/analyze.ts out.jsonl summary.json
 ```
 
-`scripts/research/backing.sh` runs it on the Linux rig under a timing lock with `nice -n 19` and cores 4
-to 11. The M2 Pro record ran unpinned on macOS.
+`scripts/research/blake3.sh SESSIONS ROUNDS [OUTPUT_DIRECTORY]` runs the three cells for each session
+under the timing lock with `nice -n 19` and cores 4 to 11. The build downloads the pinned archive from
+the upstream repository and refuses a digest or commit that differs.
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 252 samples each (4 cells, 7 arms, 9 rounds).
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries.
-- `source.tar.gz`: the source the Ryzen run used.
+- `large-N.jsonl`, `small-N.jsonl`, `forced-N.jsonl` (N from 1 to 3): raw records.
+- `*.summary.json`: paired summaries from `analyze.ts`.
+- `blake3-hash-all.wasm`: the module the sessions ran.
+- `before.log`: memory, load and governor at the start.
+- `source.tar.gz`: `src/`, `scripts/research/` and `package.json` as run.
 - `manifest.json`: byte lengths and SHA256 digests.
