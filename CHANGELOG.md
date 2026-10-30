@@ -11,13 +11,18 @@
 - `snapshotEncoding: 'auto'` for managed lanes, which omits all-zero pages. Off by default, and
   lanes older than 1.0.1 reject its frames.
 - `ImageMismatchError` code `start`.
-- Examples for routing, context reset, the task pool and boot images.
+- Examples for routing, context reset, the task pool, boot images and the iteration route.
 - An iteration route for `Folio.run`: a function with one countdown loop whose iterations call into a
-  function set that may use one stack-pointer global and recursion now runs its iterations on workers
-  under default admission, on private stack slots, with ordered validation and serial replay. It needs
-  a shared `memory` option and decides from the measured time of the first iteration. `ExecutionReport`
-  gains `extraction: 'iteration'` and an `iteration` field, and `reason` gains `no-arena`,
-  `memory-size-observed`, `frame-carried dependence`, `no-admission` and `trip-zero`.
+  function set that may use one stack-pointer global and recursion runs its iterations on workers, on
+  private stack slots, with ordered validation and serial replay. It needs a shared `memory` option. The
+  first iteration runs on the owner and its measured time, and then the time of each batch, decide whether
+  dispatch continues. Pointer and counter updates may sit anywhere at the top level of the loop body, with a
+  constant step or a step held in a local that the loop does not write. `ExecutionReport` gains
+  `extraction: 'iteration'` and an `iteration` field, and `reason` gains `no-arena`,
+  `memory-size-observed`, `import-order`, `workers-unavailable`, `trip-zero`, `no-admission`,
+  `log-exhausted` and `frame-carried dependence`. Dispatch ends, and the rest of the loop runs serially,
+  when an iteration exhausts its undo log (2,048 write granules), a frame conflict occurs, a batch
+  replays more than half of its iterations, or the batches lose to the serial time.
 
 ### Changed
 
@@ -25,7 +30,8 @@
   snapshot limit plus 1 MiB, capped below the 32 MiB Workers RPC argument limit. A frame over the
   limit is not sent, the call runs at the owner, and the fallback diagnostic names the frame size and
   the limit. At 32 MiB every lane call used to fail after the frame was built.
-- `bakeModule` refuses a module with a start function.
+- A program with no plan, an eligible loop and a shared host `memory` dispatches under
+  `parallel: 'auto'`. `parallel: 'off'` and a host memory that is not shared keep the serial run.
 - `captureImage` compares table slots by function identity, so the table references are copied
   before boot on the same instance.
 
@@ -38,9 +44,7 @@
 ### Unchanged defaults
 
 `minimumRegionWork` (200,000), the dense snapshot encoding, worker counts and transaction budgets.
-A program that already had a plan keeps it. A program with no plan, an eligible loop and a shared
-host `memory` can now dispatch under `parallel: 'auto'`; `parallel: 'off'` and a host memory that is
-not shared keep the serial run.
+A program that already had a plan keeps it.
 
 The evaluation behind this release is in the [technical report](TECHNICAL_REPORT.md) and under
 [results/](results).

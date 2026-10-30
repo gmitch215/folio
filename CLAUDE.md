@@ -12,8 +12,9 @@ claiming anything about speed, isolates, accounts or consumers.
 
 - `src/` the library. `compiler.ts` and `extract.ts` find regions, `guards.ts` proves native
   kernels, `transaction.ts` and `coordinator.ts` run and validate them, `node.ts` is the Node pool,
-  `iteration.ts`, `iteration-admission.ts` and `inline.ts` run a loop of independent calls on workers
-  (private stack slots, inline marks, ordered validation, measured admission),
+  `iteration.ts`, `iteration-owner.ts`, `iteration-layout.ts`, `iteration-worker.ts`,
+  `iteration-admission.ts` and `inline.ts` run the iterations of a loop of calls on workers (private
+  stack slots, inline marks, ordered validation, measured admission),
   `remote.ts` and `host.ts` are the portable client and the execution host, `managed.ts` and
   `frames.ts` are the Workers and Durable Object backend, `tasks.ts` is the Node task pool for
   work a program names itself (private contexts, copied values, optional differential audit), and
@@ -22,14 +23,14 @@ claiming anything about speed, isolates, accounts or consumers.
   `tests/e2e/` live deploys. See `tests/README.md`.
 - `scripts/` build, analysis, probes and the timing rig. The folder decides the runtime. See
   `scripts/README.md`.
-- `experiments/` the Cloudflare probes (`cloud`, `managed`, `browser`). See `experiments/README.md`.
+- `experiments/` the Cloudflare probes (`cloud`, `managed`, `browser`, `consumer`, `bootimage`, `rpc`). See `experiments/README.md`.
 - `results/` raw samples, source snapshots and summaries. Never edit a summary by hand.
 
 ## Commands
 
 ```sh
 bun run build:c          # compile tests/c/*.c to build/*.wasm
-bun run typecheck        # root plus the three worker projects
+bun run typecheck        # root plus the five experiment projects
 bun run test             # unit gate
 bun run test:integration # local workerd, about 25 s
 bun run test:coverage
