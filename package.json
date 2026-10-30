@@ -77,7 +77,7 @@
 		"build:c": "bun scripts/build/fixtures.ts",
 		"build:prepared": "bun scripts/build/prepare.ts",
 		"build:experiments": "node experiments/managed/prepare.ts && node experiments/browser/prepare.ts && node experiments/browser/extraction/prepare.ts && node experiments/consumer/prepare.ts kernel-control",
-		"typecheck": "bun run build:c && bun run build:experiments && tsc --noEmit -p tsconfig.json && tsc --noEmit -p experiments/cloud/tsconfig.json && tsc --noEmit -p experiments/managed/tsconfig.json && tsc --noEmit -p experiments/browser/tsconfig.json && tsc --noEmit -p experiments/consumer/tsconfig.json",
+		"typecheck": "bun run build:c && bun run build:experiments && tsc --noEmit -p tsconfig.json && tsc --noEmit -p experiments/cloud/tsconfig.json && tsc --noEmit -p experiments/managed/tsconfig.json && tsc --noEmit -p experiments/browser/tsconfig.json && tsc --noEmit -p experiments/consumer/tsconfig.json && tsc --noEmit -p experiments/rpc/tsconfig.json",
 		"typecheck:php": "node experiments/consumer/php/prepare.ts && tsc --noEmit -p experiments/consumer/php/tsconfig.json",
 		"typecheck:bootimage": "node experiments/bootimage/prepare.ts && tsc --noEmit -p experiments/bootimage/tsconfig.json",
 		"test": "vitest run --project unit",

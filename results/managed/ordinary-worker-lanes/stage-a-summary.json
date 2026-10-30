@@ -1,0 +1,53 @@
+{
+  "summary": [
+    {
+      "arm": "binding",
+      "units": 32,
+      "heavy": [
+        {
+          "k": 1,
+          "rows": 14,
+          "ok": 14,
+          "wallMs": 35.5
+        },
+        {
+          "k": 2,
+          "rows": 14,
+          "ok": 14,
+          "wallMs": 39.5
+        },
+        {
+          "k": 4,
+          "rows": 14,
+          "ok": 14,
+          "wallMs": 51.5
+        }
+      ],
+      "empty": [
+        {
+          "k": 1,
+          "rows": 14,
+          "ok": 14,
+          "wallMs": 13
+        },
+        {
+          "k": 4,
+          "rows": 14,
+          "ok": 14,
+          "wallMs": 19.5
+        }
+      ],
+      "computeMs": {
+        "k1": 22.5,
+        "k4": 32
+      },
+      "serializationIndexK4": 1.4222222222222223,
+      "laneInstances": 4
+    }
+  ],
+  "publicStatuses": [
+    404
+  ],
+  "units": 32,
+  "waves": 6
+}
