@@ -5,7 +5,7 @@ import type { PreparedProgram } from './compiler.ts';
 import { Coordinator } from './coordinator.ts';
 import type { IterationRoute } from './extract.ts';
 import type { NativePlan } from './guards.ts';
-import { decideAdmission } from './iteration-admission.ts';
+import { decideAdmission, decideBatch, decideCollapse } from './iteration-admission.ts';
 import { iterationArguments, iterationFit } from './iteration-layout.ts';
 import type { IterationOwner, IterationReason } from './iteration-owner.ts';
 import type { IterationPool, IterationReport } from './iteration.ts';
@@ -179,25 +179,23 @@ interface IterationState {
 	run?: {
 		pool?: IterationPool;
 		iteration?: IterationReport;
-		reason?: IterationReason;
+		reason?: IterationReason | 'dependency';
 	};
 }
 
 type IterationChoice = IterationState | { reason: IterationReason; detail: string } | undefined;
 
-const probeRank = { off: 0, clear: 1, skipped: 2, carried: 3 } as const;
-
 function addCounts(total: IterationReport | undefined, part: IterationReport): IterationReport {
 	if (!total) return structuredClone(part);
 	for (const key of Object.keys(part) as (keyof IterationReport)[]) {
-		if (key === 'probe') {
-			if (probeRank[part.probe] > probeRank[total.probe]) total.probe = part.probe;
-		} else if (key === 'admission') total.admission = part.admission ?? total.admission;
+		if (key === 'stopped') total.stopped ??= part.stopped;
+		else if (key === 'admission') total.admission = part.admission ?? total.admission;
 		else if (key === 'workers') total.workers = Math.max(total.workers, part.workers);
 		else if (key === 'conflicts') {
 			total.conflicts.raw += part.conflicts.raw;
 			total.conflicts.war += part.conflicts.war;
 			total.conflicts.waw += part.conflicts.waw;
+			total.conflicts.frame += part.conflicts.frame;
 		} else (total as any)[key] += part[key];
 	}
 	return total;
@@ -242,7 +240,7 @@ async function selectIteration(
 	if (options.memory && !isSharedArrayBuffer(options.memory.buffer))
 		return refuse('no-arena', 'the host memory is not shared');
 	const start = options.memory ? options.memory.buffer.byteLength : owner.memory.initial * PAGE;
-	const fit = iterationFit(start);
+	const fit = iterationFit(start, { frameBytes: route.frame?.size });
 	if (!fit) return refuse('no-arena', 'the arena does not fit in 65536 pages');
 	if (owner.memory.maximum !== undefined && fit.pages > owner.memory.maximum)
 		return refuse(
@@ -992,14 +990,14 @@ export class Folio {
 				frameBase,
 				entry,
 				replay,
-				probe: true,
-				admit: (ms) => decideAdmission(ms, trip, pool.width)
+				admit: (ms) => decideAdmission(ms, trip, pool.width),
+				loses: decideBatch,
+				collapses: decideCollapse
 			});
 		} finally {
 			run.iteration = addCounts(run.iteration, pool.report);
 		}
-		if (pool.report.admission?.admitted === false) return decline('no-admission');
-		if (pool.report.probe === 'carried') run.reason = 'frame-carried dependence';
+		if (pool.report.stopped) run.reason ??= pool.report.stopped;
 		return 1;
 	}
 

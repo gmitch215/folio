@@ -51,6 +51,13 @@ function runOne(job: any, s: number) {
 	const top = L.slots + (s + 1) * L.slotBytes;
 	const frame = top - frameSize;
 	if (frameSize) u8.copyWithin(frame, job.frameBase, job.frameBase + frameSize);
+	const shadow = L.frameShadow + s * L.frameSlotBytes;
+	if (frameSize) {
+		u8.fill(0, shadow, shadow + L.frameSlotBytes);
+		exportsOf[globals.frameLow].value = frame;
+		exportsOf[globals.frameSize].value = frameSize;
+		exportsOf[globals.frameShadow].value = shadow;
+	}
 	const rbase = L.rmaps + s * L.rsize;
 	const wbase = L.wmaps + s * L.wsize;
 	const lbase = L.logs + s * L.logBytes;
@@ -83,10 +90,30 @@ function runOne(job: any, s: number) {
 	for (let e = 0; e < entries; e++) written[e] = u32[(lbase + e * ENTRY) / 4]! >>> 5;
 	written.sort();
 	const reads = scan(rbase, L.rsize);
+	let frameWritten = new Uint32Array(0);
+	let frameExposed = new Uint32Array(0);
+	if (frameSize) {
+		const granules = Math.ceil(frameSize / 32);
+		const words = (at: number) => u32.slice(at / 4, at / 4 + granules);
+		const copy = (at: number) => {
+			const found = words(at);
+			return found.some(Boolean) ? found : new Uint32Array(0);
+		};
+		frameWritten = copy(shadow);
+		frameExposed = copy(shadow + 4 * granules + 4);
+	}
 	if (status) u8.fill(0, wbase, wbase + L.wsize);
 	else for (let e = 0; e < entries; e++) u8[wbase + (written[e]! >>> 3)] = 0;
 	stats.scan += now() - t2;
-	return { index, status, entries, written, reads };
+	return {
+		index,
+		status,
+		entries,
+		written,
+		reads,
+		frameWritten,
+		frameExposed
+	};
 }
 
 port.on('message', (job: any) => {
@@ -98,7 +125,10 @@ port.on('message', (job: any) => {
 		for (;;) {
 			const k = Atomics.add(counter, 0, 1);
 			if (k >= job.count) break;
-			results.push(runOne(job, job.reverse ? job.count - 1 - k : k));
+			const outcome = runOne(job, job.reverse ? job.count - 1 - k : k);
+			results.push(outcome);
+			// every later iteration is rolled back and replayed anyway, so leave them unstarted
+			if (outcome.status && !job.reverse) Atomics.store(counter, 0, 1 << 30);
 		}
 		reply = { done: results, runMs: stats.run, scanMs: stats.scan };
 	} catch (error) {

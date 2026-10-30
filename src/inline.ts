@@ -20,7 +20,10 @@ export const inlineGlobals = {
 	logPointer: '__folio_lp',
 	logLimit: '__folio_ll',
 	stampAddress: '__folio_sa',
-	stackPointer: '__folio_sp'
+	stackPointer: '__folio_sp',
+	frameLow: '__folio_fl',
+	frameSize: '__folio_fn',
+	frameShadow: '__folio_fs'
 } as const;
 
 /** Bytes of one undo entry: the granule address, the stamp, then the prior bytes of the granule. */
@@ -36,6 +39,8 @@ export interface InlineOptions {
 	requireShared?: boolean;
 	/** The mutable i32 global exported as `__folio_sp`. Default: the one `stackRoute` names, if any. */
 	stack?: string;
+	/** Track exposed reads of one frame region (see `lowerInline`). Default off. */
+	frame?: boolean;
 }
 
 const inlineHelpers = [
@@ -44,7 +49,11 @@ const inlineHelpers = [
 	'__folio_w_set',
 	'__folio_undo',
 	'__folio_r_range',
-	'__folio_w_range'
+	'__folio_w_range',
+	'__folio_f_r',
+	'__folio_f_w',
+	'__folio_f_rr',
+	'__folio_f_rw'
 ];
 const inlineLeaves = new Set([
 	binaryen.ConstId,
@@ -197,6 +206,20 @@ function memoryCount(bytes: Uint8Array, native: WebAssembly.Module): number {
  * `__folio_lp` then advances by `inlineEntryBytes(writeGranule)`; an entry that would pass
  * `__folio_ll` traps with `unreachable`. The start function is not lowered.
  *
+ * With `frame: true` the module also tracks one frame region, for a stack frame whose bytes an
+ * iteration may read after an earlier iteration wrote them. The owner sets `__folio_fl` (low
+ * address), `__folio_fn` (size in bytes) and `__folio_fs` (shadow base) before a region; with
+ * `__folio_fn` at 0 nothing is tracked. An access that overlaps the region is checked against a
+ * shadow of one written bit per frame byte, `4 * ceil(size / 32)` bytes with the bits of frame
+ * granule `g` (32 bytes) in the i32 at `__folio_fs + 4 * g`, then 4 pad bytes, then the exposed
+ * bits laid out the same way, then 4 more pad bytes. A store sets written bits after its value is
+ * computed; a load sets the exposed bit of each byte it reads whose written bit is clear, so a
+ * region reports exactly the frame bytes it read before it wrote them.
+ * `memory.copy`, `memory.fill` and `memory.init` set or check the exact byte range, an atomic
+ * read-modify-write checks then sets, and any other atomic access or SIMD load checks. The owner
+ * zeroes the shadow before each region. Accesses outside the region pay one compare. Stack below
+ * the region is not tracked.
+ *
  * Throws for a module without exactly one memory, a 64-bit memory, an unshared memory when
  * `requireShared` is set, a start function that calls, a reserved name or an expression it does
  * not know. An imported host function that touches memory is not seen.
@@ -227,11 +250,15 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 			if (!shape || !shape.mutable || shape.type !== binaryen.i32 || shape.module)
 				throw new Error(`stack global ${stack} is not a defined mutable i32`);
 		}
+		const frame = Boolean(options.frame);
 		const rb = inlineGlobals.readBitmap,
 			wb = inlineGlobals.writeBitmap,
 			lp = inlineGlobals.logPointer,
 			ll = inlineGlobals.logLimit,
-			sa = inlineGlobals.stampAddress;
+			sa = inlineGlobals.stampAddress,
+			fl = inlineGlobals.frameLow,
+			fn = inlineGlobals.frameSize,
+			fs = inlineGlobals.frameShadow;
 		const i32 = binaryen.i32,
 			none = binaryen.none;
 		const c = (value: number) => m.i32.const(value | 0);
@@ -251,6 +278,16 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 			);
 		const unmarked = (address: () => number) =>
 			m.i32.eqz(m.i32.and(m.i32.load8_u(0, 1, byteOf(wb, address, wg)), bitOf(address, wg)));
+		// does an access of `width` bytes at the address overlap the frame region
+		const inFrame = (address: () => number, width: number) =>
+			width === 1
+				? m.i32.lt_u(m.i32.sub(address(), g(fl)), g(fn))
+				: m.i32.lt_u(
+						m.i32.add(m.i32.sub(address(), g(fl)), c(width - 1)),
+						m.i32.add(g(fn), c(width - 1))
+					);
+		const frameCall = (name: string, address: () => number, width: number) =>
+			m.if(inFrame(address, width), call(name, address(), c(width)));
 		const hold = (local: number, value: number) =>
 			m.block(null, [m.local.set(local, value), l(local)], i32);
 		const startRef = m.getStart();
@@ -271,13 +308,35 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 				Array.from({ length: n }, () => capi._BinaryenFunctionAddVar(f, i32));
 			let pointer = -1,
 				effective = -1;
+			const temps = new Map<number, number>();
+			// a frame store marks its written bits after its value is computed, from a saved address
+			const afterValue = (value: number, saved: number, width: number, reads: boolean) => {
+				const type = binaryen.getExpressionType(value);
+				if (type === binaryen.unreachable) return value;
+				if (!temps.has(type))
+					temps.set(type, capi._BinaryenFunctionAddVar(f, type) as number);
+				const t = temps.get(type)!;
+				return m.block(
+					null,
+					[
+						m.local.set(t, value),
+						...(reads ? [frameCall('__folio_f_r', () => l(saved), width)] : []),
+						frameCall('__folio_f_w', () => l(saved), width),
+						m.local.get(t, type)
+					],
+					type
+				);
+			};
+			const saver = () => (frame ? (vars(1)[0] as number) : undefined);
 			// the pointer operand becomes a block that marks the granules and yields the pointer
 			const access = (
 				ptr: number,
 				offset: number,
 				width: number,
 				read: boolean,
-				write: boolean
+				write: boolean,
+				checks = false,
+				saved?: number
 			) => {
 				if (pointer < 0) [pointer, effective] = vars(2) as [number, number];
 				const t = pointer,
@@ -304,6 +363,8 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 					);
 					if (width > 1) steps.push(crosses(wg, '__folio_w_mark'));
 				}
+				if (frame && checks) steps.push(frameCall('__folio_f_r', () => l(u), width));
+				if (saved !== undefined) steps.push(m.local.set(saved, l(u)));
 				steps.push(l(t));
 				return m.block(null, steps, i32);
 			};
@@ -314,54 +375,100 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 					case binaryen.LoadId:
 						capi._BinaryenLoadSetPtr(
 							e,
-							access(v.ptr, v.offset, v.bytes, true, Boolean(v.isAtomic))
+							access(v.ptr, v.offset, v.bytes, true, Boolean(v.isAtomic), true)
 						);
 						break;
-					case binaryen.StoreId:
+					case binaryen.StoreId: {
+						const saved = saver();
 						capi._BinaryenStoreSetPtr(
 							e,
-							access(v.ptr, v.offset, v.bytes, Boolean(v.isAtomic), true)
+							access(
+								v.ptr,
+								v.offset,
+								v.bytes,
+								Boolean(v.isAtomic),
+								true,
+								false,
+								saved
+							)
 						);
+						if (saved !== undefined)
+							capi._BinaryenStoreSetValue(
+								e,
+								afterValue(v.value, saved, v.bytes, false)
+							);
 						break;
-					case binaryen.AtomicRMWId:
+					}
+					case binaryen.AtomicRMWId: {
+						const saved = saver();
 						capi._BinaryenAtomicRMWSetPtr(
 							e,
-							access(v.ptr, v.offset, v.bytes, true, true)
+							access(v.ptr, v.offset, v.bytes, true, true, false, saved)
 						);
+						if (saved !== undefined)
+							capi._BinaryenAtomicRMWSetValue(
+								e,
+								afterValue(v.value, saved, v.bytes, true)
+							);
 						break;
-					case binaryen.AtomicCmpxchgId:
+					}
+					case binaryen.AtomicCmpxchgId: {
+						const saved = saver();
 						capi._BinaryenAtomicCmpxchgSetPtr(
 							e,
-							access(v.ptr, v.offset, v.bytes, true, true)
+							access(v.ptr, v.offset, v.bytes, true, true, false, saved)
 						);
+						if (saved !== undefined)
+							capi._BinaryenAtomicCmpxchgSetReplacement(
+								e,
+								afterValue(v.replacement, saved, v.bytes, true)
+							);
 						break;
+					}
 					case binaryen.AtomicWaitId:
 						capi._BinaryenAtomicWaitSetPtr(
 							e,
-							access(v.ptr, 0, v.expectedType === binaryen.i64 ? 8 : 4, true, true)
+							access(
+								v.ptr,
+								0,
+								v.expectedType === binaryen.i64 ? 8 : 4,
+								true,
+								true,
+								true
+							)
 						);
 						break;
 					case binaryen.AtomicNotifyId:
-						capi._BinaryenAtomicNotifySetPtr(e, access(v.ptr, 0, 4, true, true));
+						capi._BinaryenAtomicNotifySetPtr(e, access(v.ptr, 0, 4, true, true, true));
 						break;
 					case binaryen.SIMDLoadId:
 						capi._BinaryenSIMDLoadSetPtr(
 							e,
-							access(v.ptr, v.offset, simdLoadBytes.get(v.op)!, true, false)
+							access(v.ptr, v.offset, simdLoadBytes.get(v.op)!, true, false, true)
 						);
 						break;
-					case binaryen.SIMDLoadStoreLaneId:
+					case binaryen.SIMDLoadStoreLaneId: {
+						const bytes = simdLaneBytes.get(v.op)!;
+						const saved = v.isStore ? saver() : undefined;
 						capi._BinaryenSIMDLoadStoreLaneSetPtr(
 							e,
 							access(
 								v.ptr,
 								v.offset,
-								simdLaneBytes.get(v.op)!,
+								bytes,
 								!v.isStore,
-								Boolean(v.isStore)
+								Boolean(v.isStore),
+								!v.isStore,
+								saved
 							)
 						);
+						if (saved !== undefined)
+							capi._BinaryenSIMDLoadStoreLaneSetVec(
+								e,
+								afterValue(v.vec, saved, bytes, false)
+							);
 						break;
+					}
 					case binaryen.MemoryCopyId: {
 						const [td, ts, tn] = vars(3) as [number, number, number];
 						capi._BinaryenMemoryCopySetDest(e, hold(td, v.dest));
@@ -374,6 +481,12 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 									m.local.set(tn, v.size),
 									call('__folio_r_range', l(ts), l(tn)),
 									call('__folio_w_range', l(td), l(tn)),
+									...(frame
+										? [
+												call('__folio_f_rr', l(ts), l(tn)),
+												call('__folio_f_rw', l(td), l(tn))
+											]
+										: []),
 									l(tn)
 								],
 								i32
@@ -396,6 +509,7 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 								[
 									m.local.set(tn, v.size),
 									call('__folio_w_range', l(td), l(tn)),
+									...(frame ? [call('__folio_f_rw', l(td), l(tn))] : []),
 									l(tn)
 								],
 								i32
@@ -411,8 +525,185 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 			m.addGlobal(name, i32, true, c(0));
 			m.addGlobalExport(name, name);
 		}
+		if (frame)
+			for (const name of [fl, fn, fs]) {
+				m.addGlobal(name, i32, true, c(0));
+				m.addGlobalExport(name, name);
+			}
 		if (stack !== undefined) m.addGlobalExport(stack, inlineGlobals.stackPointer);
 		const pair = binaryen.createType([i32, i32]);
+		const addFrameHelpers = () => {
+			const v = l;
+			const max = (a: () => number, b: () => number) =>
+				m.select(m.i32.gt_u(a(), b()), a(), b());
+			const exposedBase = () =>
+				m.i32.add(
+					g(fs),
+					m.i32.add(m.i32.shl(m.i32.shr_u(m.i32.add(g(fn), c(31)), c(5)), c(2)), c(4))
+				);
+			// scalar access: params a, w; vars 2 lo, 3 hi, 4 end, 5 i, 6 n, 7 p, 8 miss, 9 q
+			const scalar = (name: string, read: boolean) => {
+				const mask = () =>
+					m.i32.shl(m.i32.sub(m.i32.shl(c(1), v(6)), c(1)), m.i32.and(v(5), c(7)));
+				const body = [
+					m.local.set(
+						2,
+						max(
+							() => v(0),
+							() => g(fl)
+						)
+					),
+					m.local.set(3, m.i32.add(v(0), v(1))),
+					m.local.set(4, m.i32.add(g(fl), g(fn))),
+					m.if(m.i32.gt_u(v(3), v(4)), m.local.set(3, v(4))),
+					m.if(m.i32.le_u(v(3), v(2)), m.return()),
+					m.local.set(5, m.i32.sub(v(2), g(fl))),
+					m.local.set(6, m.i32.sub(v(3), v(2))),
+					m.local.set(7, m.i32.add(g(fs), m.i32.shr_u(v(5), c(3)))),
+					...(read
+						? [
+								m.local.set(
+									8,
+									m.i32.and(mask(), m.i32.xor(m.i32.load(0, 1, v(7)), c(-1)))
+								),
+								m.if(
+									v(8),
+									m.block(
+										null,
+										[
+											m.local.set(
+												9,
+												m.i32.add(exposedBase(), m.i32.shr_u(v(5), c(3)))
+											),
+											m.i32.store(
+												0,
+												1,
+												v(9),
+												m.i32.or(m.i32.load(0, 1, v(9)), v(8))
+											)
+										],
+										none
+									)
+								)
+							]
+						: [m.i32.store(0, 1, v(7), m.i32.or(m.i32.load(0, 1, v(7)), mask()))])
+				];
+				m.addFunction(name, pair, none, Array(8).fill(i32), m.block(null, body, none));
+			};
+			scalar('__folio_f_r', true);
+			scalar('__folio_f_w', false);
+			// range access: params a, n; vars 2 lo, 3 hi, 4 end, 5 i, 6 j, 7 g, 8 last, 9 ms, 10 len,
+			// 11 mask, 12 p, 13 miss
+			const bulk = (name: string, read: boolean) => {
+				const body = [
+					m.if(m.i32.eqz(v(1)), m.return()),
+					m.local.set(
+						2,
+						max(
+							() => v(0),
+							() => g(fl)
+						)
+					),
+					m.local.set(3, m.i32.add(v(0), v(1))),
+					m.if(m.i32.lt_u(v(3), v(0)), m.local.set(3, c(-1))),
+					m.local.set(4, m.i32.add(g(fl), g(fn))),
+					m.if(m.i32.gt_u(v(3), v(4)), m.local.set(3, v(4))),
+					m.if(m.i32.le_u(v(3), v(2)), m.return()),
+					m.local.set(5, m.i32.sub(v(2), g(fl))),
+					m.local.set(6, m.i32.sub(v(3), g(fl))),
+					m.local.set(7, m.i32.shr_u(v(5), c(5))),
+					m.local.set(8, m.i32.shr_u(m.i32.sub(v(6), c(1)), c(5))),
+					m.loop(
+						'again',
+						m.block(
+							null,
+							[
+								// ms: first byte of the range inside granule g; len: bytes of it inside
+								m.local.set(
+									9,
+									m.i32.sub(
+										max(
+											() => v(5),
+											() => m.i32.shl(v(7), c(5))
+										),
+										m.i32.shl(v(7), c(5))
+									)
+								),
+								m.local.set(
+									10,
+									m.i32.sub(
+										m.select(
+											m.i32.lt_u(
+												v(6),
+												m.i32.add(m.i32.shl(v(7), c(5)), c(32))
+											),
+											v(6),
+											m.i32.add(m.i32.shl(v(7), c(5)), c(32))
+										),
+										m.i32.add(m.i32.shl(v(7), c(5)), v(9))
+									)
+								),
+								m.local.set(
+									11,
+									m.select(
+										m.i32.eq(v(10), c(32)),
+										c(-1),
+										m.i32.shl(m.i32.sub(m.i32.shl(c(1), v(10)), c(1)), v(9))
+									)
+								),
+								m.local.set(12, m.i32.add(g(fs), m.i32.shl(v(7), c(2)))),
+								...(read
+									? [
+											m.local.set(
+												13,
+												m.i32.and(
+													v(11),
+													m.i32.xor(m.i32.load(0, 4, v(12)), c(-1))
+												)
+											),
+											m.if(
+												v(13),
+												m.i32.store(
+													0,
+													4,
+													m.i32.add(
+														v(12),
+														m.i32.sub(exposedBase(), g(fs))
+													),
+													m.i32.or(
+														m.i32.load(
+															0,
+															4,
+															m.i32.add(
+																v(12),
+																m.i32.sub(exposedBase(), g(fs))
+															)
+														),
+														v(13)
+													)
+												)
+											)
+										]
+									: [
+											m.i32.store(
+												0,
+												4,
+												v(12),
+												m.i32.or(m.i32.load(0, 4, v(12)), v(11))
+											)
+										]),
+								m.local.set(7, m.i32.add(v(7), c(1))),
+								m.br('again', m.i32.le_u(v(7), v(8)))
+							],
+							none
+						)
+					)
+				];
+				m.addFunction(name, pair, none, Array(12).fill(i32), m.block(null, body, none));
+			};
+			bulk('__folio_f_rr', true);
+			bulk('__folio_f_rw', false);
+		};
 		m.addFunction(
 			'__folio_r_mark',
 			i32,
@@ -497,6 +788,7 @@ export function lowerInline(bytes: Uint8Array, options: InlineOptions = {}): Uin
 			);
 		range('__folio_r_range', rg, '__folio_r_mark');
 		range('__folio_w_range', wg, '__folio_w_mark');
+		if (frame) addFrameHelpers();
 		if (!m.validate()) throw new Error('invalid inline lowering');
 		return m.emitBinary();
 	} finally {

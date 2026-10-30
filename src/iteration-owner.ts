@@ -10,6 +10,7 @@ export type IterationReason =
 	| 'workers-unavailable'
 	| 'trip-zero'
 	| 'no-admission'
+	| 'log-exhausted'
 	| 'frame-carried dependence';
 
 /** The owner module with its loop handed to `iterate`, and what the host needs to bind it. */

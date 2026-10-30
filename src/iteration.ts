@@ -8,12 +8,11 @@ import {
 } from 'node:worker_threads';
 import type { IterationRoute } from './extract.ts';
 import { inlineGlobals, lowerInline } from './inline.ts';
-import type { IterationAdmission } from './iteration-admission.ts';
+import type { IterationAdmission, IterationStop } from './iteration-admission.ts';
 import {
 	type IterationArena,
 	type IterationArenaOptions,
 	iterationArena,
-	iterationArguments,
 	iterationEntryBytes,
 	iterationGranules
 } from './iteration-layout.ts';
@@ -24,6 +23,7 @@ export {
 	iterationArguments,
 	iterationEntryBytes,
 	iterationFit,
+	iterationFrameShadow,
 	iterationGranules
 } from './iteration-layout.ts';
 export type { IterationArena, IterationArenaOptions } from './iteration-layout.ts';
@@ -49,24 +49,23 @@ export interface IterationJob {
 	/** Test hook: `reverse` makes one worker run a batch last to first. Default `forward`. */
 	schedule?: 'forward' | 'reverse';
 	/** Test hook, unsound: validation checks to leave out. */
-	skip?: readonly ('raw' | 'war' | 'waw')[];
+	skip?: readonly ('raw' | 'war' | 'waw' | 'frame')[];
 	/**
-	 * Probe for a loop-carried dependence through the owner frame. Iteration 0 runs once on the
-	 * calling thread with the frame image poisoned and its writes are recorded and undone. After the
-	 * first batch validates with iteration 0 intact, a difference in the granules or bytes iteration
-	 * 0 wrote outside its slot rolls the batch back and replays the whole loop. It catches a first
-	 * iteration that reads a frame byte it did not write. It does not catch a read that only
-	 * happens on a later iteration, a read of stale callee stack below the frame, or a read whose
-	 * value does not change what iteration 0 writes. When iteration 0 itself replays, the probe
-	 * cannot be checked and the rest of the loop replays serially.
+	 * Runs iteration 0 through `replay` on the owner thread first and times it. That is the serial
+	 * program's first iteration, so its writes stay and the batches cover iterations 1 to `trip - 1`
+	 * from the owner frame it leaves. Called once with the time of that iteration, before anything
+	 * is dispatched. A refusal runs the other iterations through `replay` and dispatches nothing.
+	 * Without `admit` every iteration is dispatched.
 	 */
-	probe?: boolean;
+	admit?: (plainIterationMs: number) => IterationAdmission;
 	/**
-	 * Called once after the probe with the tracked time of iteration 0, before anything is
-	 * dispatched. A refusal returns a report with no iterations run; the probe is already undone.
-	 * Not called without `probe`.
+	 * Called after each batch that leaves iterations behind, with its wall (dispatch, validation,
+	 * rollback and replay) and the serial time of its iterations at the time of iteration 0. True
+	 * ends the dispatch and runs the rest through `replay`. Only used with `admit`.
 	 */
-	admit?: (firstIterationMs: number) => IterationAdmission;
+	loses?: (batchWallMs: number, batchSerialMs: number) => boolean;
+	/** Like `loses`, for a batch slow enough that a second batch is not needed to confirm it. */
+	collapses?: (batchWallMs: number, batchSerialMs: number) => boolean;
 }
 
 /** What a run did. `regions`, `replayed`, `fallbacks` and `workers` parallel `ExecutionReport`. */
@@ -75,7 +74,7 @@ export interface IterationReport {
 	workers: number;
 	/** Iterations run on workers, the regions of this mode. */
 	regions: number;
-	/** Iterations rerun serially at the owner. */
+	/** Dispatched iterations that were rolled back and rerun serially at the owner. */
 	replayed: number;
 	/** Iterations whose writes were undone before the rerun. */
 	rolledBack: number;
@@ -89,7 +88,7 @@ export interface IterationReport {
 	failedBatches: number;
 	undoEntries: number;
 	/** Ordered iteration pairs by hazard. */
-	conflicts: { raw: number; war: number; waw: number };
+	conflicts: { raw: number; war: number; waw: number; frame: number };
 	/** From posting a batch to the last worker reply. */
 	dispatchMs: number;
 	validationMs: number;
@@ -100,13 +99,13 @@ export interface IterationReport {
 	/** Bitmap scan and clear time inside workers, summed. */
 	workerScanMs: number;
 	/**
-	 * `clear` the probe matched, `carried` it differed, `skipped` iteration 0 replayed, `off` no
-	 * probe or admission refused the loop after it.
+	 * Iterations the owner ran as the serial program without dispatching them: iteration 0, the
+	 * rest of a loop after a stop, or all of them when admission refused the loop.
 	 */
-	probe: 'off' | 'clear' | 'carried' | 'skipped';
-	/** Time of the probe run on the calling thread. */
-	probeMs: number;
-	/** What the admission callback saw and chose; set when the job had one and the probe ran. */
+	serial: number;
+	/** What ended the dispatch early, or why admission refused the loop. */
+	stopped?: IterationStop;
+	/** What the admission callback saw and chose; set when the job had one. */
 	admission?: IterationAdmission;
 }
 
@@ -120,6 +119,10 @@ export interface IterationOutcome {
 	written: Int32Array;
 	/** [start, length] runs of read granules (64 bytes) */
 	reads: Int32Array;
+	/** written bit per frame byte, one i32 per 32-byte frame granule; empty when nothing was written */
+	frameWritten: Uint32Array;
+	/** bit per frame byte the iteration read before writing it, same layout; empty when none */
+	frameExposed: Uint32Array;
 }
 
 const newReport = (workers: number): IterationReport => ({
@@ -133,15 +136,14 @@ const newReport = (workers: number): IterationReport => ({
 	batches: 0,
 	failedBatches: 0,
 	undoEntries: 0,
-	conflicts: { raw: 0, war: 0, waw: 0 },
+	conflicts: { raw: 0, war: 0, waw: 0, frame: 0 },
 	dispatchMs: 0,
 	validationMs: 0,
 	rollbackMs: 0,
 	replayMs: 0,
 	workerRunMs: 0,
 	workerScanMs: 0,
-	probe: 'off',
-	probeMs: 0
+	serial: 0
 });
 
 const shift = Math.log2(iterationGranules.read / iterationGranules.write);
@@ -172,17 +174,22 @@ function hitsWrites(a: Int32Array, b: Int32Array): boolean {
 /**
  * Index of the first outcome that cannot keep its writes, or -1. Writes land in place, so every
  * ordered pair is checked three ways: RAW marks the reader, WAR the earlier reader, WAW the earlier
- * writer. Works on the returned lists, never on dense bitmaps.
+ * writer. A fourth check covers the frame, which each iteration owns as a private copy: an
+ * iteration fails when it read a frame byte before writing it that an earlier iteration wrote, and
+ * counts once. Works on the returned lists, never on dense bitmaps.
  */
 export function iterationVerdict(
-	outcomes: readonly Pick<IterationOutcome, 'status' | 'written' | 'reads'>[],
-	skip: readonly ('raw' | 'war' | 'waw')[] = []
+	outcomes: readonly (Pick<IterationOutcome, 'status' | 'written' | 'reads'> &
+		Partial<Pick<IterationOutcome, 'frameWritten' | 'frameExposed'>>)[],
+	skip: readonly ('raw' | 'war' | 'waw' | 'frame')[] = []
 ): {
 	first: number;
 	firstFailure: number;
-	conflicts: { raw: number; war: number; waw: number };
+	frameFirst: number;
+	conflicts: { raw: number; war: number; waw: number; frame: number };
 } {
-	const conflicts = { raw: 0, war: 0, waw: 0 };
+	const conflicts = { raw: 0, war: 0, waw: 0, frame: 0 };
+	let frameFirst = outcomes.length;
 	let firstFailure = outcomes.length;
 	outcomes.forEach((o, k) => {
 		if (o.status) firstFailure = Math.min(firstFailure, k);
@@ -206,10 +213,27 @@ export function iterationVerdict(
 			}
 		}
 	}
+	if (!skip.includes('frame')) {
+		// the frame bytes written by the iterations before k, against the bytes k read unwritten
+		let union: Uint32Array | undefined;
+		outcomes.forEach((o, k) => {
+			const exposed = o.frameExposed;
+			if (union && exposed?.length && exposed.some((word, w) => word & (union![w] ?? 0))) {
+				conflicts.frame++;
+				first = Math.min(first, k);
+				frameFirst = Math.min(frameFirst, k);
+			}
+			const written = o.frameWritten;
+			if (!written?.length) return;
+			union ??= new Uint32Array(written.length);
+			written.forEach((word, w) => (union![w]! |= word));
+		});
+	}
 	const none = outcomes.length;
 	return {
 		first: first === none ? -1 : first,
 		firstFailure: firstFailure === none ? -1 : firstFailure,
+		frameFirst: frameFirst === none ? -1 : frameFirst,
 		conflicts
 	};
 }
@@ -224,9 +248,28 @@ interface Link {
  * Runs the loop of one owner call on worker threads. Each iteration gets a private stack slot and
  * tracks its reads and writes inline. The owner validates a batch in order, rolls back the first
  * failing iteration and every later one from the undo logs, and replays them through `replay`.
- * The arena belongs to the pool until `close`. The frame image is copied at the start of each
- * iteration, so a body that reads a frame byte an earlier iteration wrote is not detected by
- * validation; `IterationJob.probe` covers the first iteration only.
+ * The arena belongs to the pool until `close`.
+ *
+ * Each iteration runs on a private copy of the owner frame, taken from the owner frame when its
+ * batch is dispatched. The lowered module tracks the frame: a written bit per frame byte, and an
+ * exposed bit per 32-byte frame granule that the iteration read before it wrote the byte. An
+ * iteration fails validation, like a RAW pair, when it has an exposed granule that an earlier
+ * iteration of the same batch wrote (`conflicts.frame`); it and every later one in the batch roll
+ * back and replay. After a batch validates, each kept
+ * iteration's written frame bytes are copied into the owner frame in order, so the next batch
+ * starts from the serial frame and a replay runs on it. The guarantee: a read of an owner frame
+ * byte that the same iteration has not written yet, with a write by an earlier iteration of the
+ * batch to that byte, is detected, and an earlier batch's writes are seen through the copy.
+ * Excluded: a read of stack below the frame (callee frames, indeterminate before the callee writes
+ * them) is not tracked, and imported host functions that touch memory are not seen. The shadow
+ * is byte-exact for scalar accesses and ranges; a conservative read would only add reports.
+ *
+ * With `admit`, iteration 0 runs first on the owner and the batches cover the rest. Dispatch
+ * stops after a batch that exhausted an undo log, had a frame conflict, replayed more than half of
+ * its iterations, or (with `loses` and `collapses`) two batches in a row did not beat the serial
+ * time of their iterations or one took far longer than it; the rest of the loop runs through
+ * `replay` and `report.stopped` names the reason. Once an iteration fails, the workers start no
+ * further iteration of that batch, because it and every later one replay anyway.
  */
 export class IterationPool {
 	readonly arena: IterationArena;
@@ -237,9 +280,6 @@ export class IterationPool {
 	readonly #control = new Int32Array(new SharedArrayBuffer(4));
 	readonly #u8: Uint8Array;
 	readonly #u32: Uint32Array;
-	#module?: WebAssembly.Module;
-	#route?: IterationRoute;
-	#probing?: WebAssembly.Instance;
 	#closed = false;
 
 	private constructor(memory: WebAssembly.Memory, arena: IterationArena, width: number) {
@@ -270,19 +310,21 @@ export class IterationPool {
 		const width = options.width ?? Math.min(4, availableParallelism());
 		if (!Number.isInteger(width) || width < 1 || width > 64)
 			throw new RangeError('invalid worker count');
-		const arena = iterationArena(options.arenaBase, memoryBytes, options);
+		const frameSize = route.frame?.size ?? 0;
+		const arena = iterationArena(options.arenaBase, memoryBytes, {
+			...options,
+			frameBytes: frameSize
+		});
 		if (arena.base + arena.bytes > arena.memoryBytes)
 			throw new RangeError('arena does not fit in memory');
-		const frameSize = route.frame?.size ?? 0;
 		if (frameSize >= arena.slotBytes) throw new RangeError('slot is smaller than the frame');
 		const lowered = lowerInline(route.module, {
 			readGranule: iterationGranules.read,
-			writeGranule: iterationGranules.write
+			writeGranule: iterationGranules.write,
+			frame: frameSize > 0
 		});
 		const module = new WebAssembly.Module(Uint8Array.from(lowered));
 		const pool = new IterationPool(memory, arena, width);
-		pool.#module = module;
-		pool.#route = route;
 		pool.#u8.fill(0, arena.stamp, arena.stamp + 64);
 		pool.#u8.fill(0, arena.rmaps, arena.wmaps + arena.batch * arena.wsize);
 		const extension = import.meta.url.endsWith('.ts') ? 'ts' : 'js';
@@ -351,28 +393,34 @@ export class IterationPool {
 			throw new RangeError('invalid trip count');
 		const A = this.arena;
 		const report = (this.#report = newReport(Math.min(this.width, Math.max(job.trip, 0))));
-		let probe: ReturnType<IterationPool['probe']> | undefined;
-		if (job.probe && job.trip > 0) {
+		let plainMs = 0;
+		let from = 0;
+		if (job.admit && job.trip > 0) {
+			// iteration 0 is the serial program's own first iteration, so its writes stay
 			const t = performance.now();
-			probe = this.probe(job);
-			report.probeMs = performance.now() - t;
-			report.probe = 'clear';
-			if (job.admit) {
-				report.admission = job.admit(probe.iterationMs);
-				if (!report.admission.admitted) {
-					report.probe = 'off';
-					return report;
+			report.serial = 1;
+			job.replay(0);
+			plainMs = performance.now() - t;
+			from = 1;
+			report.admission = job.admit(plainMs);
+			if (!report.admission.admitted) {
+				report.stopped = 'no-admission';
+				for (let k = 1; k < job.trip; k++) {
+					report.serial++;
+					job.replay(k);
 				}
+				return report;
 			}
 		}
-		let serial = false;
-		for (let first = 0; first < job.trip; first += A.batch) {
+		let stopped = false;
+		let slow = 0;
+		for (let first = from; first < job.trip; first += A.batch) {
 			const count = Math.min(A.batch, job.trip - first);
-			if (serial) {
+			if (stopped) {
 				const t = performance.now();
 				try {
 					for (let k = 0; k < count; k++) {
-						report.replayed++;
+						report.serial++;
 						job.replay(first + k);
 					}
 				} finally {
@@ -381,9 +429,9 @@ export class IterationPool {
 				continue;
 			}
 			report.batches++;
-			report.regions += count;
 			const t0 = performance.now();
 			const outcomes = this.#dispatch(first, count, job, report);
+			report.regions += outcomes.length;
 			const t1 = performance.now();
 			report.dispatchMs += t1 - t0;
 			for (const o of outcomes) {
@@ -395,136 +443,55 @@ export class IterationPool {
 			report.conflicts.raw += v.conflicts.raw;
 			report.conflicts.war += v.conflicts.war;
 			report.conflicts.waw += v.conflicts.waw;
+			report.conflicts.frame += v.conflicts.frame;
 			const t2 = performance.now();
 			report.validationMs += t2 - t1;
-			if (probe && first === 0) {
-				if (v.first === 0) {
-					report.probe = 'skipped';
-					serial = true;
-				} else if (probe.status !== 0 || this.#differs(probe, outcomes[0]!)) {
-					report.probe = 'carried';
-					report.failedBatches++;
-					report.fallbacks++;
-					this.#rollback(first, outcomes, 0);
-					report.rolledBack += count;
-					const t3 = performance.now();
-					report.rollbackMs += t3 - t2;
-					try {
-						for (let k = 0; k < job.trip; k++) {
-							report.replayed++;
-							job.replay(k);
-						}
-					} finally {
-						report.replayMs += performance.now() - t3;
+			let replays = 0;
+			if (v.first < 0) this.#commitFrame(job, outcomes, count);
+			else {
+				replays = count - v.first;
+				report.failedBatches++;
+				if (v.firstFailure === v.first) report.fallbacks++;
+				this.#rollback(first, outcomes, v.first);
+				report.rolledBack += outcomes.length - v.first;
+				this.#commitFrame(job, outcomes, v.first);
+				const t3 = performance.now();
+				report.rollbackMs += t3 - t2;
+				try {
+					for (let k = v.first; k < count; k++) {
+						if (k < outcomes.length) report.replayed++;
+						else report.serial++;
+						job.replay(first + k);
 					}
-					return report;
+				} finally {
+					report.replayMs += performance.now() - t3;
 				}
 			}
-			if (v.first < 0) continue;
-			report.failedBatches++;
-			if (v.firstFailure === v.first) report.fallbacks++;
-			this.#rollback(first, outcomes, v.first);
-			report.rolledBack += count - v.first;
-			const t3 = performance.now();
-			report.rollbackMs += t3 - t2;
-			try {
-				for (let k = v.first; k < count; k++) {
-					report.replayed++;
-					job.replay(first + k);
-				}
-			} finally {
-				report.replayMs += performance.now() - t3;
+			const wallMs = performance.now() - t0;
+			const serialMs = count * plainMs;
+			if (report.admission) {
+				report.admission.batchWallMs = wallMs;
+				report.admission.batchSerialMs = serialMs;
+			}
+			// the first batch also pays for waking the workers, so a batch that is merely slow is not a
+			// verdict until a second one confirms it
+			slow = job.admit && job.loses?.(wallMs, serialMs) ? slow + 1 : 0;
+			const collapsed = job.admit && job.collapses?.(wallMs, serialMs);
+			const stop = outcomes.some((o) => o.status === 2)
+				? 'log-exhausted'
+				: v.frameFirst >= 0
+					? 'frame-carried dependence'
+					: replays * 2 > count
+						? 'dependency'
+						: (slow >= 2 || collapsed) && first + count < job.trip
+							? 'no-admission'
+							: undefined;
+			if (stop) {
+				report.stopped ??= stop;
+				stopped = true;
 			}
 		}
 		return report;
-	}
-
-	/**
-	 * Runs iteration 0 on slot 0 of the calling thread with the frame image poisoned, records the
-	 * granules it wrote outside the slot with their final bytes, and undoes every write.
-	 */
-	probe(job: Pick<IterationJob, 'entry' | 'frameBase'>) {
-		const A = this.arena;
-		const route = this.#route!;
-		const frameSize = route.frame?.size ?? 0;
-		const exportsOf = (this.#probing ??= new WebAssembly.Instance(this.#module!, {
-			env: { memory: this.#memory }
-		})).exports as any;
-		const top = A.slots + A.slotBytes;
-		const frame = top - frameSize;
-		if (frameSize) this.#u8.fill(0xa5, frame, top);
-		const rbase = A.rmaps;
-		const wbase = A.wmaps;
-		const lbase = A.logs;
-		const limit = lbase + A.logCapacity * iterationEntryBytes;
-		exportsOf[inlineGlobals.readBitmap].value = rbase;
-		exportsOf[inlineGlobals.writeBitmap].value = wbase;
-		exportsOf[inlineGlobals.logPointer].value = lbase;
-		exportsOf[inlineGlobals.logLimit].value = limit;
-		exportsOf[inlineGlobals.stampAddress].value = A.stamp;
-		Atomics.store(this.#u32, A.stamp / 4, 0);
-		const stack = exportsOf[inlineGlobals.stackPointer];
-		if (stack) stack.value = frameSize ? frame : top;
-		let status = 0;
-		const began = performance.now();
-		try {
-			exportsOf[route.iterate!](...iterationArguments(route.locals, job.entry, 0, frame));
-		} catch {
-			status = 1;
-		}
-		const iterationMs = performance.now() - began;
-		const entries =
-			((exportsOf[inlineGlobals.logPointer].value >>> 0) - lbase) / iterationEntryBytes;
-		const logged: { address: number; stamp: number; data: number }[] = [];
-		for (let e = 0; e < entries; e++) {
-			const at = lbase + e * iterationEntryBytes;
-			logged.push({
-				address: this.#u32[at / 4]!,
-				stamp: this.#u32[at / 4 + 1]!,
-				data: at + 8
-			});
-		}
-		const outside = logged
-			.filter((e) => e.address < A.slots || e.address >= top)
-			.sort((a, b) => a.address - b.address);
-		const bytes = new Uint8Array(outside.length * iterationGranules.write);
-		outside.forEach((e, i) =>
-			bytes.set(
-				this.#u8.subarray(e.address, e.address + iterationGranules.write),
-				i * iterationGranules.write
-			)
-		);
-		logged.sort((a, b) => b.stamp - a.stamp);
-		for (const e of logged)
-			this.#u8.copyWithin(e.address, e.data, e.data + iterationGranules.write);
-		this.#u8.fill(0, rbase, rbase + A.rsize);
-		this.#u8.fill(0, wbase, wbase + A.wsize);
-		return {
-			status,
-			iterationMs,
-			granules: Int32Array.from(outside, (e) => e.address >>> 5),
-			bytes
-		};
-	}
-
-	// does iteration 0 of the batch differ from the probe in what it wrote outside its slot
-	#differs(
-		probe: { granules: Int32Array; bytes: Uint8Array },
-		outcome: IterationOutcome
-	): boolean {
-		const A = this.arena;
-		const g = iterationGranules.write;
-		const written = outcome.written.filter(
-			(v) => v * g < A.slots || v * g >= A.slots + A.slotBytes
-		);
-		if (written.length !== probe.granules.length) return true;
-		for (let i = 0; i < written.length; i++) {
-			if (written[i] !== probe.granules[i]) return true;
-			const at = written[i]! * g;
-			for (let b = 0; b < g; b++)
-				if (this.#u8[at + b] !== probe.bytes[i * g + b]) return true;
-		}
-		return false;
 	}
 
 	#dispatch(
@@ -557,6 +524,24 @@ export class IterationPool {
 		}
 		if (failure !== undefined) throw new Error(`iteration worker failed: ${failure}`);
 		return outcomes.sort((a, b) => a.index - b.index);
+	}
+
+	// the written frame bytes of the first `kept` iterations of a batch, in order, into the owner frame
+	#commitFrame(job: IterationJob, outcomes: IterationOutcome[], kept: number): void {
+		const A = this.arena;
+		if (!A.frameBytes) return;
+		for (let k = 0; k < kept; k++) {
+			const o = outcomes[k]!;
+			const slot = o.index - outcomes[0]!.index;
+			const frame = A.slots + (slot + 1) * A.slotBytes - A.frameBytes;
+			o.frameWritten.forEach((word, g) => {
+				for (let b = 0; b < 32; b++)
+					if ((word >>> b) & 1) {
+						const at = 32 * g + b;
+						this.#u8[job.frameBase + at] = this.#u8[frame + at]!;
+					}
+			});
+		}
 	}
 
 	// newest stamp first across every iteration being rolled back

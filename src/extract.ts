@@ -1599,6 +1599,11 @@ export interface IterationLocal {
 	start?: { parameter: number } | { constant: number };
 	/** change per iteration, modulo 2^32; the value for iteration k is `start + k * stride` */
 	stride?: number;
+	/**
+	 * a stride held in an owner local the loop never writes: the step is `stride * entry[strideLocal]`
+	 * with `stride` 1 or -1, read at loop entry, and the value for iteration k is `start + k * step`
+	 */
+	strideLocal?: number;
 }
 
 /**
@@ -1607,14 +1612,11 @@ export interface IterationLocal {
  * covers the program. `module` holds the worker set, the stack global and the constants, with
  * `iterate` doing one iteration of the body.
  *
- * The route proves a shape, not independence. A loop-carried dependence through the owner frame is
- * not visible to validation, because each iteration starts from a copy of the loop-entry frame.
- * `Folio.run` probes for it at run time: iteration 0 runs once on the owner thread with the frame
- * image poisoned, and a different result than the real iteration 0 sends the whole loop through
- * serial replay. That catches a first iteration that reads a frame byte it did not write, and it
- * also flags a read of loop-invariant frame data. It does not catch a read that only happens on a
- * later iteration, a read of stale callee stack below the frame, or a read whose value does not
- * change what iteration 0 writes.
+ * The route proves a shape, not independence. A loop-carried dependence through the owner frame
+ * is caught at run time: the lowered worker module tracks the frame bytes each iteration reads
+ * before it writes them, and validation fails an iteration that read a byte an earlier iteration
+ * of its batch wrote. Reads of stale callee stack below the frame and imported host functions that
+ * touch memory are not tracked.
  */
 export interface IterationRoute {
 	eligible: boolean;
@@ -1700,8 +1702,15 @@ function callsInLoop(body: number, members: Set<string>): boolean {
 	}
 }
 
-// `local = local + c` or `local - c` as a statement; the change per iteration
-function strideUpdate(statement: number): { local: number; stride: number } | undefined {
+interface StrideUpdate {
+	local: number;
+	/** the constant change per iteration, or 1 or -1 when `strideLocal` holds the step */
+	stride: number;
+	strideLocal?: number;
+}
+
+// `local = local + c`, `local - c`, `local + other` or `local - other` as a statement
+function strideUpdate(statement: number): StrideUpdate | undefined {
 	const set = info(statement);
 	if (set.id !== binaryen.LocalSetId || set.isTee) return;
 	const next = info(set.value);
@@ -1710,12 +1719,21 @@ function strideUpdate(statement: number): { local: number; stride: number } | un
 	const isSelf = (v: Info) => v.id === binaryen.LocalGetId && v.index === set.index;
 	const constant = (v: Info) =>
 		v.id === binaryen.ConstId && typeof v.value === 'number' ? v : undefined;
+	const other = (v: Info) =>
+		v.id === binaryen.LocalGetId && v.index !== set.index ? v.index : undefined;
 	if (next.op === binaryen.AddInt32) {
 		if (isSelf(left) && constant(right)) return { local: set.index, stride: right.value | 0 };
 		if (isSelf(right) && constant(left)) return { local: set.index, stride: left.value | 0 };
+		if (isSelf(left) && other(right) !== undefined)
+			return { local: set.index, stride: 1, strideLocal: other(right) };
+		if (isSelf(right) && other(left) !== undefined)
+			return { local: set.index, stride: 1, strideLocal: other(left) };
 	}
-	if (next.op === binaryen.SubInt32 && isSelf(left) && constant(right))
-		return { local: set.index, stride: -right.value | 0 };
+	if (next.op === binaryen.SubInt32 && isSelf(left)) {
+		if (constant(right)) return { local: set.index, stride: -right.value | 0 };
+		if (other(right) !== undefined)
+			return { local: set.index, stride: -1, strideLocal: other(right) };
+	}
 }
 
 function outlineOwner(
@@ -1784,18 +1802,55 @@ function outlineOwner(
 	if ((loopWrites.get(counter) ?? 0) !== 1)
 		return { refusals: ['trip count is not computable before the loop starts'] };
 
-	// the loop body, the trailing constant-stride updates and the back edge
+	// the loop body, the trailing stride updates and the back edge; a step is a constant or an i32
+	// local the loop never writes
 	const body = info(loop.body);
 	const statements: number[] = body.id === binaryen.BlockId ? body.children : [loop.body];
-	const updates = new Map<number, number>([[counter, -1]]);
+	const stepIsInvariant = (update: StrideUpdate) =>
+		update.strideLocal === undefined ||
+		(localTypes[update.strideLocal] === binaryen.i32 && !loopWrites.get(update.strideLocal));
+	const updates = new Map<number, StrideUpdate>([[counter, { local: counter, stride: -1 }]]);
 	let end = statements.length - 1;
 	while (end > 0) {
 		const update = strideUpdate(statements[end - 1]!);
-		if (!update || updates.has(update.local) || localTypes[update.local] !== binaryen.i32)
+		if (
+			!update ||
+			updates.has(update.local) ||
+			localTypes[update.local] !== binaryen.i32 ||
+			loopWrites.get(update.local) !== 1 ||
+			!stepIsInvariant(update)
+		)
 			break;
-		updates.set(update.local, update.stride);
+		updates.set(update.local, update);
 		end--;
 	}
+
+	// top-level updates that stay in the body: iterate runs them, so later statements see the new
+	// value; a stride-shaped statement that cannot stay names why, used if its local is carried
+	const midUpdates = new Map<number, StrideUpdate>();
+	const shaped = new Map<number, string>();
+	const scanUpdates = (expression: number, top: boolean, conditional: boolean): void => {
+		const v = info(expression);
+		const update = v.id === binaryen.LocalSetId ? strideUpdate(expression) : undefined;
+		if (update && update.local !== counter && localTypes[update.local] === binaryen.i32) {
+			if (!top)
+				shaped.set(
+					update.local,
+					conditional
+						? 'stride update is conditional'
+						: 'stride update is not at the top level of the body'
+				);
+			else if (loopWrites.get(update.local) !== 1)
+				shaped.set(update.local, 'stride update of a local the loop also writes elsewhere');
+			else if (!stepIsInvariant(update))
+				shaped.set(update.local, 'stride is written in the loop');
+			else midUpdates.set(update.local, update);
+		}
+		for (const child of children(v))
+			scanUpdates(child, false, conditional || v.id === binaryen.IfId);
+	};
+	for (const statement of statements.slice(0, end)) scanUpdates(statement, true, false);
+	for (const [local, update] of midUpdates) updates.set(local, update);
 	const spans: Span[] = [];
 	for (const statement of statements.slice(0, end)) {
 		const summary = summarizeSpan(statement, {
@@ -1918,10 +1973,20 @@ function outlineOwner(
 	const bodyWrites = new Set(spans.flatMap((span) => [...span.writes]));
 	const carried = carriedLocals(spans, totalReads);
 	for (const local of bodyWrites) {
+		if (midUpdates.has(local)) continue;
 		if (afterReads.get(local))
 			refuse.add('loop body writes a local the code after the loop reads');
-		else if (carried.has(local)) refuse.add('carried local is not a constant stride');
+		else if (carried.has(local)) {
+			refuse.add('carried local is not a constant stride');
+			const why = shaped.get(local);
+			if (why) refuse.add(why);
+		}
 	}
+	// the owner sets a constant-stride local to its loop-exit value, and has no way to do that for a
+	// step that is held in a local
+	for (const [local, update] of updates)
+		if (update.strideLocal !== undefined && afterReads.get(local))
+			refuse.add('local advanced by a run-time stride is read after the loop');
 
 	// classify what the body reads
 	const bodyReads = new Set(spans.flatMap((span) => [...span.reads.keys()]));
@@ -1946,25 +2011,41 @@ function outlineOwner(
 	};
 	const strided: IterationLocal[] = [];
 	const invariant: IterationLocal[] = [];
-	for (const [local, stride] of [...updates].sort(([a], [b]) => a - b))
+	for (const [local, update] of [...updates].sort(([a], [b]) => a - b))
 		strided.push({
 			local,
 			kind: local === counter ? 'induction' : 'stride',
 			start: entry(local),
-			stride
+			stride: update.stride,
+			...(update.strideLocal === undefined ? {} : { strideLocal: update.strideLocal })
 		});
 	for (const local of [...bodyReads].sort((a, b) => a - b)) {
 		if (bodyWrites.has(local) || updates.has(local) || local === frame?.local) continue;
 		if ((loopWrites.get(local) ?? 0) > 0) refuse.add('carried local is not a constant stride');
 		invariant.push({ local, kind: 'invariant', start: entry(local) });
 	}
-	for (const item of [...strided, ...invariant])
+	// a step local the body does not read still needs its loop-entry value, so `iterate` takes it too
+	const steps = new Set(
+		[...updates.values()].flatMap((update) =>
+			update.strideLocal === undefined ? [] : [update.strideLocal]
+		)
+	);
+	for (const local of [...steps].sort((a, b) => a - b))
+		if (!invariant.some((item) => item.local === local))
+			invariant.push({ local, kind: 'invariant', start: entry(local) });
+	invariant.sort((a, b) => a.local - b.local);
+	for (const item of [...strided, ...invariant]) {
 		if (bodyReads.has(item.local) && tainted.has(item.local))
 			refuse.add('frame address held in a local the body reads');
+		if (steps.has(item.local) && tainted.has(item.local))
+			refuse.add('frame address used as a run-time stride');
+	}
 	if (refuse.size) return { refusals: [...refuse] };
 
 	// `iterate`: strided and invariant locals in order, then the frame base, then the body's temporaries
-	const parameters = [...strided, ...invariant].filter((item) => bodyReads.has(item.local));
+	const parameters = [...strided, ...invariant].filter(
+		(item) => bodyReads.has(item.local) || steps.has(item.local)
+	);
 	const order = [...parameters.map((item) => item.local), ...(frame ? [frame.local] : [])];
 	const temporaries = [...new Set(spans.flatMap((span) => [...span.locals]))]
 		.filter((local) => !order.includes(local))

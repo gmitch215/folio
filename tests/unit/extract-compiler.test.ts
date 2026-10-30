@@ -13,6 +13,7 @@ import type { AdmissionOptions, IterationRoute } from '../../src/extract.ts';
 import { extract, iterationRoute, stackRoute } from '../../src/extract.ts';
 import type { InlineOptions } from '../../src/inline.ts';
 import { inlineEntryBytes, lowerInline } from '../../src/inline.ts';
+import { iterationArguments } from '../../src/iteration-layout.ts';
 
 function compile(wat: string): Uint8Array {
 	const module = binaryen.parseText(wat);
@@ -852,9 +853,12 @@ test('the BLAKE3 consumer is eligible with its stack pointer and one recursive f
 const ownerWat = (
 	parts: {
 		globals?: string;
+		params?: string;
 		funcs?: string;
 		pre?: string;
+		call?: string;
 		body?: string;
+		updates?: string;
 		tail?: string;
 		post?: string;
 	} = {}
@@ -881,7 +885,7 @@ const ownerWat = (
 		(i32.store (local.get $out) (i32.mul (i32.load offset=4 (local.get $scale)) (i32.load (local.get $scale))))
 		(global.set $sp (i32.add (local.get $s) (i32.const 16))))
 	${parts.funcs ?? ''}
-	(func $run (export "run") (param $in i32) (param $out i32) (param $n i32)
+	(func $run (export "run") (param $in i32) (param $out i32) (param $n i32) ${parts.params ?? ''}
 		(local $frame i32) (local $c i32) (local $x i32) (local $q i32)
 		(local.set $frame (i32.sub (global.get $sp) (i32.const 64)))
 		(global.set $sp (local.get $frame))
@@ -891,10 +895,13 @@ const ownerWat = (
 			(br_if $done (i32.eqz (local.get $n)))
 			(local.set $c (local.get $n))
 			(loop $each
-				(call $item (local.get $in) (local.get $out) (local.get $frame))
+				${parts.call ?? '(call $item (local.get $in) (local.get $out) (local.get $frame))'}
 				${parts.body ?? ''}
-				(local.set $in (i32.add (local.get $in) (i32.const 4)))
-				(local.set $out (i32.add (local.get $out) (i32.const 4)))
+				${
+					parts.updates ??
+					`(local.set $in (i32.add (local.get $in) (i32.const 4)))
+				(local.set $out (i32.add (local.get $out) (i32.const 4)))`
+				}
 				${parts.tail ?? '(br_if $each (local.tee $c (i32.sub (local.get $c) (i32.const 1))))'}))
 		${parts.post ?? ''}
 		(global.set $sp (i32.add (local.get $frame) (i32.const 64)))))`;
@@ -910,6 +917,8 @@ interface Replay {
 	setup: (memory: Uint8Array) => void;
 	entry: string;
 	args: number[];
+	/** loop-entry values of locals the route reads at entry instead of from a parameter */
+	entryValues?: Record<number, number>;
 	arena: { base: number; slot: number };
 	/** `private` is the route: own slot and frame image; the others are mutations of it */
 	mode?: 'private' | 'owner' | 'no-copy' | 'poison' | 'unrebased';
@@ -957,28 +966,26 @@ function replay(bytes: Uint8Array, route: IterationRoute, options: Replay) {
 	const ks = [...Array(count).keys()];
 	if (options.order === 'reverse') ks.reverse();
 	const taken = route.locals.filter((local) => local.argument !== undefined);
+	const entries: Record<number, number> = {};
+	for (const local of taken) {
+		const start = local.start;
+		if (local.kind === 'frame') continue;
+		entries[local.local] =
+			options.entryValues?.[local.local] ??
+			(!start
+				? Number.NaN
+				: 'parameter' in start
+					? options.args[start.parameter]!
+					: start.constant);
+	}
 	for (const k of ks) {
 		const base =
 			mode === 'owner' ? owner : options.arena.base + (k + 1) * options.arena.slot - size;
 		stack.value = base;
 		if (mode === 'private' || mode === 'unrebased') view.set(frameImage, base);
 		if (mode === 'poison') view.fill(0xa5, base, base + size);
-		const values: number[] = [];
-		for (const local of taken) {
-			const start = local.start;
-			const from = !start
-				? Number.NaN
-				: 'parameter' in start
-					? options.args[start.parameter]!
-					: start.constant;
-			values[local.argument!] =
-				local.kind === 'frame'
-					? mode === 'unrebased'
-						? owner
-						: base
-					: (from + k * (local.stride ?? 0)) | 0;
-		}
-		iterate(...values);
+		const frame = mode === 'unrebased' ? owner : base;
+		iterate(...(iterationArguments(route.locals, entries, k, frame) as number[]));
 	}
 	const actual = view.slice();
 	const arena = [options.arena.base, options.arena.base + count * options.arena.slot] as const;
@@ -1096,6 +1103,16 @@ test('a carried local that is not a constant stride is refused', () => {
 	);
 });
 
+test('a stack global read in the body without a frame local is refused', () => {
+	refusal(
+		{
+			pre: '(local.set $frame (i32.const 0))',
+			body: '(i32.store (local.get $out) (global.get $sp))'
+		},
+		'stack global read in the body without a frame'
+	);
+});
+
 test('a branch that leaves the loop body is refused', () => {
 	refusal({ body: '(br_if $done (i32.load (local.get $in)))' }, 'branch escapes the body');
 });
@@ -1169,6 +1186,64 @@ test('an owner with a second loop is refused', () => {
 	refusal({ pre: '(loop $again (br_if $again (i32.const 0)))' }, '2 loops, one required');
 });
 
+const strided = (body: string, pre = '') => {
+	const { route } = routeOf(ownerWat({ pre, body }));
+	assert.ok(route.eligible, route.diagnostics.join('; '));
+	return route.locals.find((item) => item.kind === 'stride' && item.stride !== 4)!;
+};
+
+test('a stride update takes the constant on either side and subtraction as a negative stride', () => {
+	const read = '(i32.store offset=8 (local.get $out) (local.get $x))';
+	assert.equal(
+		strided(`${read} (local.set $x (i32.add (i32.const 3) (local.get $x)))`).stride,
+		3
+	);
+	assert.equal(
+		strided(`${read} (local.set $x (i32.add (local.get $x) (i32.const 5)))`).stride,
+		5
+	);
+	assert.equal(
+		strided(`${read} (local.set $x (i32.sub (local.get $x) (i32.const 2)))`).stride,
+		-2
+	);
+});
+
+test('a strided local starts from the constant the owner stored before the loop', () => {
+	const item = strided(
+		'(i32.store offset=8 (local.get $out) (local.get $x)) (local.set $x (i32.add (local.get $x) (i32.const 6)))',
+		'(local.set $x (i32.const 5))'
+	);
+	assert.deepEqual(item.start, { constant: 5 });
+	assert.equal(item.stride, 6);
+});
+
+test('a constant global and a local the body writes before it reads are admitted', () => {
+	const { bytes, route } = routeOf(
+		ownerWat({
+			globals: '(global $k i32 (i32.const 7))',
+			body: `(local.set $x (i32.load (local.get $in)))
+				(i32.store offset=8 (local.get $out) (i32.add (local.get $x) (global.get $k)))`
+		})
+	);
+	assert.ok(route.eligible, route.diagnostics.join('; '));
+	// the temporary is a local of the worker module, so the replay equals the native run
+	const run = replay(bytes, route, watReplay);
+	assert.equal(firstDifference(run.expected, run.actual, [[0, run.top], run.arena]), -1);
+	assert.equal(new Uint32Array(run.actual.buffer, 0x15018, 1)[0], 15 + 7);
+});
+
+test('a loop counter written inside the body, and a reference-typed local, are refused', () => {
+	refusal(
+		{ body: '(local.set $c (i32.add (local.get $c) (i32.const 0)))' },
+		'trip count is not computable before the loop starts'
+	);
+	const { route } = routeOf(
+		ownerWat().replace('(local $q i32)', '(local $q i32) (local $ref externref)')
+	);
+	assert.equal(route.eligible, false);
+	assert.ok(route.diagnostics.some((line) => line.includes('non-numeric signature')));
+});
+
 test('a trip count read from memory is computed at the loop entry and has no owner parameter', () => {
 	const { route } = routeOf(
 		ownerWat({ pre: '(local.set $n (i32.load (i32.const 1024)))' }).replace(
@@ -1179,6 +1254,241 @@ test('a trip count read from memory is computed at the loop entry and has no own
 	assert.ok(route.eligible, route.diagnostics.join('; '));
 	assert.deepEqual(route.trip, { local: 4 });
 });
+
+// #region stride updates anywhere in the body and run-time strides
+const bump = (local: string, by: number) =>
+	`(local.set ${local} (i32.add (local.get ${local}) (i32.const ${by})))`;
+const cells = (memory: Uint8Array, at: number, count: number) => [
+	...new Uint32Array(memory.buffer, at, count)
+];
+const tripled = [18, 63, 135, 234, 360];
+const shifted = [63, 135, 234, 360, 0];
+const intact = (run: ReturnType<typeof replay>) =>
+	firstDifference(run.expected, run.actual, [[0, run.top], run.arena]);
+
+test('a stride update before the call stays in the body and the call sees the updated value', () => {
+	const { bytes, route } = routeOf(
+		ownerWat({
+			call: `${bump('$in', 4)} (call $item (local.get $in) (local.get $out) (local.get $frame))`,
+			updates: bump('$out', 4)
+		})
+	);
+	assert.ok(route.eligible, route.diagnostics.join('; '));
+	assert.deepEqual(
+		route.locals.map(({ local, kind, stride, argument }) => ({
+			local,
+			kind,
+			stride,
+			argument
+		})),
+		[
+			{ local: 0, kind: 'stride', stride: 4, argument: 0 },
+			{ local: 1, kind: 'stride', stride: 4, argument: 1 },
+			{ local: 4, kind: 'induction', stride: -1, argument: undefined },
+			{ local: 3, kind: 'frame', stride: undefined, argument: 2 }
+		]
+	);
+	const run = replay(bytes, route, watReplay);
+	assert.equal(intact(run), -1);
+	assert.deepEqual(cells(run.actual, 0x15000, 5), shifted);
+});
+
+test('a stride update between two calls gives the first the entry value and the second the update', () => {
+	const { bytes, route } = routeOf(
+		ownerWat({
+			body: `(i32.store (i32.add (local.get $out) (i32.const 0x800)) (i32.load (local.get $out)))
+				${bump('$in', 4)}
+				(call $item (local.get $in) (local.get $out) (local.get $frame))`,
+			updates: bump('$out', 4)
+		})
+	);
+	assert.ok(route.eligible, route.diagnostics.join('; '));
+	const run = replay(bytes, route, watReplay);
+	assert.equal(intact(run), -1);
+	assert.deepEqual(cells(run.actual, 0x15800, 5), tripled);
+	assert.deepEqual(cells(run.actual, 0x15000, 5), shifted);
+});
+
+test('updates of two locals at different positions each take effect where the program put them', () => {
+	const { bytes, route } = routeOf(
+		ownerWat({
+			body: `${bump('$in', 4)}
+				(i32.store (i32.add (local.get $out) (i32.const 0x800)) (local.get $in))
+				${bump('$out', 4)}
+				(i32.store (i32.add (local.get $out) (i32.const 0xc00)) (i32.add (local.get $in) (local.get $out)))`,
+			updates: ''
+		})
+	);
+	assert.ok(route.eligible, route.diagnostics.join('; '));
+	const run = replay(bytes, route, watReplay);
+	assert.equal(intact(run), -1);
+	assert.deepEqual(cells(run.actual, 0x15000, 5), tripled);
+	const next = [1, 2, 3, 4, 5];
+	assert.deepEqual(
+		cells(run.actual, 0x15800, 5),
+		next.map((k) => 0x14000 + 4 * k)
+	);
+	assert.deepEqual(
+		cells(run.actual, 0x15c04, 5),
+		next.map((k) => 0x14000 + 4 * k + 0x15000 + 4 * k)
+	);
+});
+
+test('a mid-body stride local may be read after the loop', () => {
+	const { route } = routeOf(
+		ownerWat({
+			call: `${bump('$in', 4)} (call $item (local.get $in) (local.get $out) (local.get $frame))`,
+			updates: bump('$out', 4),
+			post: '(i32.store (i32.const 1024) (local.get $in))'
+		})
+	);
+	assert.ok(route.eligible, route.diagnostics.join('; '));
+});
+
+const stepper = (update: string, extra: Parameters<typeof ownerWat>[0] = {}) =>
+	routeOf(
+		ownerWat({ params: '(param $step i32)', updates: `${bump('$in', 4)} ${update}`, ...extra })
+	);
+const stepArgs = (out: number, step: number) => [0x14000, out, 5, step];
+const stepped = [
+	['added', '(local.set $out (i32.add (local.get $out) (local.get $step)))', 0x15000, 8, 1],
+	['subtracted', '(local.set $out (i32.sub (local.get $out) (local.get $step)))', 0x15010, 4, -1],
+	[
+		'added with a negative step',
+		'(local.set $out (i32.add (local.get $step) (local.get $out)))',
+		0x15010,
+		-4,
+		1
+	],
+	['zero', '(local.set $out (i32.add (local.get $out) (local.get $step)))', 0x15000, 0, 1]
+] as const;
+
+for (const [name, update, out, step, sign] of stepped) {
+	test(`a run-time stride that is ${name} is read at loop entry and replays to the native result`, () => {
+		const { bytes, route } = stepper(update);
+		assert.ok(route.eligible, route.diagnostics.join('; '));
+		const item = route.locals.find((local) => local.local === 1)!;
+		assert.deepEqual(
+			{
+				kind: item.kind,
+				stride: item.stride,
+				strideLocal: item.strideLocal,
+				start: item.start
+			},
+			{ kind: 'stride', stride: sign, strideLocal: 3, start: { parameter: 1 } }
+		);
+		const carrier = route.locals.find((local) => local.local === 3)!;
+		assert.deepEqual(
+			{ kind: carrier.kind, start: carrier.start, taken: carrier.argument !== undefined },
+			{ kind: 'invariant', start: { parameter: 3 }, taken: true }
+		);
+		const run = replay(bytes, route, { ...watReplay, args: stepArgs(out, step) });
+		assert.equal(intact(run), -1);
+		const at = (k: number) => out + k * (sign * step);
+		assert.equal(new DataView(run.actual.buffer).getUint32(at(4), true), tripled[4]);
+		if (step === 0) assert.equal(cells(run.actual, out, 1)[0], tripled[4]);
+	});
+}
+
+test('a run-time stride applied before the call, and held in a local loaded before the loop', () => {
+	const midway = stepper('', {
+		call: `(local.set $out (i32.add (local.get $out) (local.get $step)))
+			(call $item (local.get $in) (local.get $out) (local.get $frame))`
+	});
+	assert.ok(midway.route.eligible, midway.route.diagnostics.join('; '));
+	const first = replay(midway.bytes, midway.route, { ...watReplay, args: stepArgs(0x15000, 8) });
+	assert.equal(intact(first), -1);
+	assert.equal(new DataView(first.actual.buffer).getUint32(0x15000 + 8 * 5, true), tripled[4]);
+
+	const loaded = routeOf(
+		ownerWat({
+			pre: '(local.set $q (i32.load (i32.const 1024)))',
+			updates: `${bump('$in', 4)} (local.set $out (i32.add (local.get $out) (local.get $q)))`
+		})
+	);
+	assert.ok(loaded.route.eligible, loaded.route.diagnostics.join('; '));
+	const item = loaded.route.locals.find((local) => local.local === 6)!;
+	assert.equal(item.kind, 'invariant');
+	assert.equal(item.start, undefined);
+	const run = replay(loaded.bytes, loaded.route, {
+		...watReplay,
+		entryValues: { 6: 12 },
+		setup: (memory) => {
+			watReplay.setup(memory);
+			new DataView(memory.buffer).setUint32(1024, 12, true);
+		}
+	});
+	assert.equal(intact(run), -1);
+	assert.equal(new DataView(run.actual.buffer).getUint32(0x15000 + 12 * 4, true), tripled[4]);
+});
+
+test('a stride update that is nested, conditional or on a local written twice is refused with its name', () => {
+	const nested = bump('$in', 4);
+	refusal(
+		{
+			body: `(block $inner (br_if $inner (i32.load (local.get $out))) ${nested})`,
+			updates: bump('$out', 4)
+		},
+		'stride update is not at the top level of the body'
+	);
+	refusal(
+		{
+			body: `(if (i32.load (local.get $out)) (then ${nested}))`,
+			updates: bump('$out', 4)
+		},
+		'stride update is conditional'
+	);
+	refusal(
+		{ body: `${nested} ${bump('$in', 8)}`, updates: bump('$out', 4) },
+		'stride update of a local the loop also writes elsewhere'
+	);
+	refusal(
+		{ body: '(local.set $in (i32.load (local.get $in)))' },
+		'stride update of a local the loop also writes elsewhere'
+	);
+});
+
+test('a run-time stride the loop writes, reads after the loop or takes from the frame is refused', () => {
+	const step = '(local.set $out (i32.add (local.get $out) (local.get $step)))';
+	const refuseStep = (parts: Parameters<typeof ownerWat>[0], reason: string) => {
+		const { route } = stepper(step, parts);
+		assert.equal(route.eligible, false);
+		assert.ok(
+			route.diagnostics.some((line) => line.includes(reason)),
+			route.diagnostics.join('; ')
+		);
+	};
+	refuseStep(
+		{ body: '(local.set $step (i32.load (local.get $in)))' },
+		'stride is written in the loop'
+	);
+	refuseStep(
+		{ post: '(i32.store (local.get $in) (local.get $out))' },
+		'local advanced by a run-time stride is read after the loop'
+	);
+	refusal(
+		{
+			pre: '(local.set $q (local.get $frame))',
+			updates: `${bump('$in', 4)} (local.set $out (i32.add (local.get $out) (local.get $q)))`
+		},
+		'frame address used as a run-time stride'
+	);
+});
+
+test('a carried local without a stride shape and an accumulator the code after the loop reads stay refused', () => {
+	refusal(
+		{
+			body: '(local.set $x (i32.add (local.get $x) (i32.load (local.get $out))))',
+			post: '(i32.store (local.get $out) (local.get $x))'
+		},
+		'loop body writes a local the code after the loop reads'
+	);
+	refusal(
+		{ body: '(local.set $x (i32.add (i32.load (local.get $x)) (i32.load (local.get $out))))' },
+		'carried local is not a constant stride'
+	);
+});
+// #endregion
 
 test('the BLAKE3 consumer loop is outlined and replays to the native result on private frames', () => {
 	const bytes = new Uint8Array(
@@ -1699,6 +2009,27 @@ test('a start function that stores runs unlowered and the exports are lowered', 
 	assert.equal(u8[ARENA.rb + 16], 1);
 });
 
+test('the inline lowering leaves an imported host function alone and marks the caller', () => {
+	const bytes = lowerInline(
+		compile(
+			sharedModule(`(import "env" "touch" (func $touch (param i32)))
+			(func (export "run") (param i32) (call $touch (local.get 0)) (i32.store (local.get 0) (i32.const 5)))`)
+		)
+	);
+	const memory = new WebAssembly.Memory({ initial: 4, maximum: 4, shared: true });
+	const seen: number[] = [];
+	const x = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(bytes)), {
+		env: { memory, touch: (address: number) => seen.push(address) }
+	}).exports as Record<string, any>;
+	x.__folio_wb.value = ARENA.wb;
+	x.__folio_lp.value = ARENA.lp;
+	x.__folio_ll.value = ARENA.lp + 400;
+	x.__folio_sa.value = ARENA.sa;
+	x.run(0x2000);
+	assert.deepEqual(seen, [0x2000]);
+	assert.equal(new Uint8Array(memory.buffer)[ARENA.wb + 32], 1);
+});
+
 test('the inline lowering works on an unshared memory only when asked', () => {
 	const bytes = compile(`(module (import "env" "memory" (memory 4 4))
 		(func (export "store") (param i32) (i32.store (local.get 0) (i32.const 1))))`);
@@ -1770,8 +2101,8 @@ test('inline lowering equals native on the fixtures and its marks cover the host
 			calls++;
 		}
 	}
-	assert.equal(calls, 13);
-	assert.equal(compared, 10);
+	assert.equal(calls, 12);
+	assert.equal(compared, 9);
 });
 
 test('the BLAKE3 consumer lowered inline hashes to the native digests and marks memory', () => {
@@ -1783,5 +2114,198 @@ test('the BLAKE3 consumer lowered inline hashes to the native digests and marks 
 	assert.equal(report!.undoEntries, report!.writeGranules);
 	assert.equal(report!.changedUnmarked, 0);
 	assert.deepEqual([report!.oracle!.readsMissed, report!.oracle!.writesMissed], [0, 0]);
+});
+
+// #region frame tracking in the inline lowering
+const FRAME = { low: 0x2000, size: 100, shadow: 0x20000 };
+const frameModule = sharedModule(`
+	(func (export "store32") (param i32 i32) (i32.store (local.get 0) (local.get 1)))
+	(func (export "store8") (param i32 i32) (i32.store8 (local.get 0) (local.get 1)))
+	(func (export "load32") (param i32) (result i32) (i32.load (local.get 0)))
+	(func (export "load8") (param i32) (result i32) (i32.load8_u (local.get 0)))
+	(func (export "inc") (param i32) (i32.store (local.get 0) (i32.add (i32.load (local.get 0)) (i32.const 1))))
+	(func (export "copy") (param i32 i32 i32) (memory.copy (local.get 0) (local.get 1) (local.get 2)))
+	(func (export "fill") (param i32 i32 i32) (memory.fill (local.get 0) (local.get 1) (local.get 2)))
+	(func (export "rmw") (param i32 i32) (result i32) (i32.atomic.rmw.add (local.get 0) (local.get 1)))
+	(func (export "vstore") (param i32) (v128.store (local.get 0) (v128.const i32x4 1 2 3 4)))
+	(func (export "vload") (param i32) (result i32) (i32x4.extract_lane 0 (v128.load (local.get 0))))
+	(type $v (func (result i32)))
+	(table 1 funcref)
+	(elem (i32.const 0) $seven)
+	(func $seven (result i32) (i32.const 7))
+	(func (export "indirect") (result i32) (call_indirect (type $v) (i32.const 0)))
+	(func (export "grow") (result i32) (memory.grow (i32.const 0)))
+	(func (export "early") (param i32) (result i32) (return (i32.load (local.get 0))))
+	(func (export "cmpxchg") (param i32 i32 i32) (result i32)
+		(i32.atomic.rmw.cmpxchg (local.get 0) (local.get 1) (local.get 2)))
+	(func (export "lanestore") (param i32) (v128.store32_lane 1 (local.get 0) (v128.const i32x4 1 2 3 4)))
+	(func (export "laneload") (param i32) (result i32)
+		(i32x4.extract_lane 1 (v128.load32_lane 1 (local.get 0) (v128.const i32x4 1 2 3 4))))
+	(func (export "replace") (param i32) (result i32)
+		(i32x4.extract_lane 1 (i32x4.replace_lane 1 (v128.const i32x4 1 2 3 4) (i32.load (local.get 0)))))
+	(func (export "simd") (param i32) (result i32)
+		(i32x4.extract_lane 0 (i32x4.shl
+			(v128.bitselect (v128.const i32x4 1 2 3 4) (v128.const i32x4 5 6 7 8) (v128.const i32x4 -1 0 -1 0))
+			(local.get 0))))
+	(func (export "partial") (param i32) (result i32)
+		(i32.store8 (i32.add (local.get 0) (i32.const 1)) (i32.const 7))
+		(i32.load (local.get 0)))
+	(func (export "twice") (param i32) (result i32)
+		(i32.store (local.get 0) (i32.const 5))
+		(i32.add (i32.load (local.get 0)) (i32.load offset=4 (local.get 0))))`);
+
+// the written and the exposed bytes as [start, end) runs, frame relative
+function frameRig(options: { low?: number; size?: number } = {}) {
+	const low = options.low ?? FRAME.low;
+	const size = options.size ?? FRAME.size;
+	const rig = inlineRig(frameModule, { frame: true });
+	const x = rig.lowered.exports;
+	const u8 = rig.lowered.u8;
+	const exposedAt = FRAME.shadow + 4 * Math.ceil(size / 32) + 4;
+	return {
+		rig,
+		run(name: string, ...args: number[]) {
+			u8.fill(0, FRAME.shadow, FRAME.shadow + 128);
+			x.__folio_fl.value = low;
+			x.__folio_fn.value = size;
+			x.__folio_fs.value = FRAME.shadow;
+			rig.reset();
+			assert.deepEqual(
+				x[name]!(...args),
+				rig.native.exports[name]!(...args),
+				`${name} result`
+			);
+			assert.ok(rig.same(), `${name} memory`);
+			const runs = (base: number) => {
+				const out: [number, number][] = [];
+				for (let i = 0; i < size; i++) {
+					if (!((u8[base + (i >> 3)]! >> (i & 7)) & 1)) continue;
+					if (out.length && out.at(-1)![1] === i) out.at(-1)![1]++;
+					else out.push([i, i + 1]);
+				}
+				return out;
+			};
+			return { written: runs(FRAME.shadow), exposed: runs(exposedAt) };
+		}
+	};
+}
+
+test('a frame load of a byte the region has not written exposes those bytes', () => {
+	const { run } = frameRig();
+	assert.deepEqual(run('load32', 0x2004), { written: [], exposed: [[4, 8]] });
+	assert.deepEqual(run('load32', 0x201e), { written: [], exposed: [[30, 34]] });
+	assert.deepEqual(run('load8', 0x2063), { written: [], exposed: [[99, 100]] });
+	assert.deepEqual(run('load8', 0x2064), { written: [], exposed: [] });
+	assert.deepEqual(run('load32', 0x2000 + 98), { written: [], exposed: [[98, 100]] });
+	assert.deepEqual(run('load32', 0x1ffe), { written: [], exposed: [[0, 2]] });
+	// a byte the region wrote first is not exposed, its neighbours are
+	assert.deepEqual(run('partial', 0x2004), {
+		written: [[5, 6]],
+		exposed: [
+			[4, 5],
+			[6, 8]
+		]
+	});
+});
+
+test('a frame store sets written bits only for the bytes inside the region', () => {
+	const { run } = frameRig();
+	assert.deepEqual(run('store32', 0x2000, 7), { written: [[0, 4]], exposed: [] });
+	assert.deepEqual(run('store8', 0x2005, 7), { written: [[5, 6]], exposed: [] });
+	assert.deepEqual(run('store32', 0x2000 + 98, 7), { written: [[98, 100]], exposed: [] });
+	assert.deepEqual(run('store32', 0x2000 - 2, 7), { written: [[0, 2]], exposed: [] });
+	assert.deepEqual(run('vstore', 0x2000 + 90), { written: [[90, 100]], exposed: [] });
+	assert.deepEqual(run('vstore', 0x2000 + 24), { written: [[24, 40]], exposed: [] });
+});
+
+test('accesses outside the region and a region of size zero leave the shadow clear', () => {
+	const { run } = frameRig();
+	for (const name of ['load32', 'load8', 'vload'])
+		assert.deepEqual(run(name, 0x1ff0), { written: [], exposed: [] });
+	assert.deepEqual(run('store32', 0x2000 + 100, 7), { written: [], exposed: [] });
+	assert.deepEqual(run('store32', 0x2400, 7), { written: [], exposed: [] });
+	const off = frameRig({ size: 0 });
+	assert.deepEqual(off.run('store32', 0x2000, 7), { written: [], exposed: [] });
+	assert.deepEqual(off.run('load32', 0x1ffe), { written: [], exposed: [] });
+});
+
+test('a read before the same access writes is exposed, a read after is not', () => {
+	const { run } = frameRig();
+	// the store value reads the cell first, so the store cannot hide the read
+	assert.deepEqual(run('inc', 0x2008), { written: [[8, 12]], exposed: [[8, 12]] });
+	// store then load of the same bytes reads nothing exposed; the neighbour load is exposed
+	assert.deepEqual(run('twice', 0x2008), { written: [[8, 12]], exposed: [[12, 16]] });
+	assert.deepEqual(run('twice', 0x2000 + 28), { written: [[28, 32]], exposed: [[32, 36]] });
+});
+
+test('memory.fill, memory.copy and atomic updates track exact ranges', () => {
+	const { run } = frameRig();
+	assert.deepEqual(run('fill', 0x2000, 7, 70), { written: [[0, 70]], exposed: [] });
+	assert.deepEqual(run('fill', 0x2000 - 8, 7, 12), { written: [[0, 4]], exposed: [] });
+	assert.deepEqual(run('fill', 0x2000, 7, 0), { written: [], exposed: [] });
+	// the source is read before the destination is written; a range outside the region is free
+	assert.deepEqual(run('copy', 0x2200, 0x2000, 40), { written: [], exposed: [[0, 40]] });
+	assert.deepEqual(run('copy', 0x2000 + 64, 0x2400, 36), { written: [[64, 100]], exposed: [] });
+	assert.deepEqual(run('copy', 0x2000, 0x2000 + 32, 32), {
+		written: [[0, 32]],
+		exposed: [[32, 64]]
+	});
+	assert.deepEqual(run('copy', 0x2400, 0x2800, 64), { written: [], exposed: [] });
+	assert.deepEqual(run('rmw', 0x2010, 3), { written: [[16, 20]], exposed: [[16, 20]] });
+	assert.deepEqual(run('vload', 0x2000 + 24), { written: [], exposed: [[24, 40]] });
+});
+
+test('compare-exchange, lane accesses and a returned load track the bytes they touch', () => {
+	const { run } = frameRig();
+	const word = { written: [[16, 20]], exposed: [[16, 20]] };
+	assert.deepEqual(run('cmpxchg', 0x2010, 0, 9), word);
+	assert.deepEqual(run('lanestore', 0x2010), { written: [[16, 20]], exposed: [] });
+	assert.deepEqual(run('laneload', 0x2010), { written: [], exposed: [[16, 20]] });
+	assert.deepEqual(run('replace', 0x2010), { written: [], exposed: [[16, 20]] });
+	assert.deepEqual(run('early', 0x2010), { written: [], exposed: [[16, 20]] });
+	for (const name of ['simd']) assert.deepEqual(run(name, 3), { written: [], exposed: [] });
+	for (const name of ['indirect', 'grow'])
+		assert.deepEqual(run(name), { written: [], exposed: [] });
+});
+
+test('a fill then a copy out of it reads only written bytes', () => {
+	const rig = inlineRig(
+		sharedModule(`(func (export "go") (param i32)
+			(memory.fill (i32.const 0x2000) (i32.const 1) (i32.const 70))
+			(memory.copy (local.get 0) (i32.const 0x2000) (i32.const 70))
+			(drop (i32.load8_u (i32.const 0x2045))))`),
+		{ frame: true }
+	);
+	const x = rig.lowered.exports;
+	rig.reset();
+	x.__folio_fl.value = FRAME.low;
+	x.__folio_fn.value = FRAME.size;
+	x.__folio_fs.value = FRAME.shadow;
+	rig.lowered.u8.fill(0, FRAME.shadow, FRAME.shadow + 64);
+	x['go']!(0x2800);
+	const exposedAt = FRAME.shadow + 4 * Math.ceil(FRAME.size / 32) + 4;
+	assert.ok(rig.lowered.u8.subarray(exposedAt, exposedAt + 16).every((byte) => byte === 0));
+});
+
+test('the frame option adds its globals only when asked and reserves their names', () => {
+	const plain = new WebAssembly.Module(Uint8Array.from(lowerInline(compile(frameModule), {})));
+	const names = (module: WebAssembly.Module) =>
+		WebAssembly.Module.exports(module).map((e) => e.name);
+	assert.ok(!names(plain).includes('__folio_fl'));
+	const framed = new WebAssembly.Module(
+		Uint8Array.from(lowerInline(compile(frameModule), { frame: true }))
+	);
+	for (const name of ['__folio_fl', '__folio_fn', '__folio_fs'])
+		assert.ok(names(framed).includes(name));
+	assert.throws(
+		() =>
+			lowerInline(
+				compile(
+					'(module (memory 1 1 shared) (global $x (export "__folio_fn") (mut i32) (i32.const 0)))'
+				),
+				{ frame: true }
+			),
+		/reserved/
+	);
 });
 // #endregion

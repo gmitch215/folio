@@ -14,6 +14,8 @@ export interface IterationArenaOptions {
 	logCapacity?: number;
 	/** Bytes of one private stack slot, a multiple of 64. Default 32768. */
 	slotBytes?: number;
+	/** Size of the owner frame whose reads the executor tracks, for the per-slot shadow. Default 0. */
+	frameBytes?: number;
 }
 
 /** Absolute addresses of the arena parts. Slot 0 sits above one unused guard slot. */
@@ -32,9 +34,27 @@ export interface IterationArena {
 	rsize: number;
 	wmaps: number;
 	wsize: number;
+	/** Start of the frame shadows, one per slot, after the write bitmaps. */
+	frameShadow: number;
+	/** Bytes of one slot's frame shadow; 0 without a tracked frame. */
+	frameSlotBytes: number;
+	/** The tracked frame size. */
+	frameBytes: number;
 }
 
 const align = (value: number, to: number) => Math.ceil(value / to) * to;
+
+/**
+ * Shadow of one tracked frame: `4 * ceil(size / 32)` bytes of written bits, one per frame byte
+ * (the bits of frame granule `g`, 32 bytes, are the i32 at `4 * g`), 4 pad bytes, the exposed bits
+ * in the same layout, and 4 pad bytes.
+ */
+export function iterationFrameShadow(frameBytes: number): { exposed: number; bytes: number } {
+	if (!frameBytes) return { exposed: 0, bytes: 0 };
+	const granules = Math.ceil(frameBytes / 32);
+	const exposed = 4 * granules + 4;
+	return { exposed, bytes: align(exposed + 4 * granules + 4, 64) };
+}
 
 /**
  * Lays out slots, the stamp word, undo logs and bitmaps from `base`. The bitmaps cover the whole
@@ -48,6 +68,8 @@ export function iterationArena(
 	const batch = options.batch ?? 32;
 	const logCapacity = options.logCapacity ?? 2048;
 	const slotBytes = options.slotBytes ?? 32768;
+	const frameBytes = options.frameBytes ?? 0;
+	if (!Number.isSafeInteger(frameBytes) || frameBytes < 0) throw new RangeError('invalid frame');
 	if (!Number.isSafeInteger(base) || base < 0 || base % 64) throw new RangeError('invalid base');
 	if (!Number.isSafeInteger(memoryBytes) || memoryBytes <= 0)
 		throw new RangeError('invalid memory size');
@@ -65,7 +87,9 @@ export function iterationArena(
 	const rsize = align(Math.ceil(memoryBytes / (iterationGranules.read * 8)), 64);
 	const wmaps = rmaps + batch * rsize;
 	const wsize = align(Math.ceil(memoryBytes / (iterationGranules.write * 8)), 64);
-	const end = wmaps + batch * wsize;
+	const frameShadow = wmaps + batch * wsize;
+	const frameSlotBytes = iterationFrameShadow(frameBytes).bytes;
+	const end = frameShadow + batch * frameSlotBytes;
 	return {
 		base,
 		bytes: end - base,
@@ -80,7 +104,10 @@ export function iterationArena(
 		rmaps,
 		rsize,
 		wmaps,
-		wsize
+		wsize,
+		frameShadow,
+		frameSlotBytes,
+		frameBytes
 	};
 }
 
@@ -109,11 +136,15 @@ export function iterationFit(startBytes: number, options: IterationArenaOptions 
 }
 
 /**
- * Arguments of `iterate` for iteration `k`. A strided local is `entry + k * stride` modulo 2^32, an
- * invariant local keeps its entry value, and the frame local takes `frame`.
+ * Arguments of `iterate` for iteration `k`. A strided local is `entry + k * stride` modulo 2^32, or
+ * `entry + k * stride * entry[strideLocal]` when its step is held in a local, an invariant local
+ * keeps its entry value, and the frame local takes `frame`.
  */
 export function iterationArguments(
-	locals: readonly Pick<IterationLocal, 'local' | 'kind' | 'argument' | 'stride'>[],
+	locals: readonly Pick<
+		IterationLocal,
+		'local' | 'kind' | 'argument' | 'stride' | 'strideLocal'
+	>[],
 	entry: Readonly<Record<number, number | bigint>>,
 	k: number,
 	frame: number
@@ -127,7 +158,13 @@ export function iterationArguments(
 		}
 		const from = entry[item.local];
 		if (from === undefined) throw new RangeError(`no loop-entry value for local ${item.local}`);
-		values[item.argument] = item.stride ? (Number(from) + k * item.stride) | 0 : from;
+		if (item.strideLocal !== undefined) {
+			const step = entry[item.strideLocal];
+			if (step === undefined)
+				throw new RangeError(`no loop-entry value for local ${item.strideLocal}`);
+			const advance = Math.imul(k, Number(step));
+			values[item.argument] = (Number(from) + (item.stride! < 0 ? -advance : advance)) | 0;
+		} else values[item.argument] = item.stride ? (Number(from) + k * item.stride) | 0 : from;
 	}
 	return values;
 }
