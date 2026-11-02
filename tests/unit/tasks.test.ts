@@ -104,14 +104,14 @@ test('two tasks on two workers overlap in time and the records show it', async (
 	const pool = await start(2);
 	pool.drain();
 	await pool.run([
-		['sleep', '150'],
-		['sleep', '150']
+		['sleep', '400'],
+		['sleep', '400']
 	]);
 	const records = pool.drain();
 	assert.equal(records.length, 2);
 	assert.equal(peakConcurrency(records), 2);
 	for (const record of records) {
-		assert.ok(record.endMs - record.startMs >= 140);
+		assert.ok(record.endMs - record.startMs >= 390);
 		assert.ok(record.startMs >= record.submitMs);
 		assert.equal(record.inputBytes, 3);
 	}
