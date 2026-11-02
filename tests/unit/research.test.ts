@@ -14,7 +14,7 @@ import {
 import { generatedProgram, runDifferential } from '../../scripts/research/differential.ts';
 import { digest } from '../../scripts/research/environment.ts';
 import { verifyStudies } from '../../scripts/research/evidence.ts';
-import { exportStudy } from '../../scripts/research/export.ts';
+import { exportStudy, writeManifest } from '../../scripts/research/export.ts';
 import { addresses } from '../../scripts/research/graded.ts';
 
 const sample = (
@@ -238,6 +238,30 @@ test('exporting a study summarizes every sampled record and writes a verifiable 
 		expect(() => exportStudy(study, [`${source}:raw.jsonl`])).toThrow(/refusing to overwrite/);
 		const summary = JSON.parse(readFileSync(join(study, 'second.summary.json'), 'utf8'));
 		expect(summary.groups.cell.folio.pairedSpeedup.median).toBe(2);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('a manifest lists subdirectories only when asked and the verifier catches a changed file', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-manifest-'));
+	try {
+		const study = join(root, 'results', 'topic', 'study');
+		mkdirSync(join(study, 'run'), { recursive: true });
+		writeFileSync(join(study, 'README.md'), '# Study\n');
+		writeFileSync(join(study, 'run', 'raw.jsonl'), '{"kind":"environment"}\n');
+		expect(writeManifest(study)).toBe(1);
+		expect(writeManifest(study, true)).toBe(2);
+		const manifest = JSON.parse(readFileSync(join(study, 'manifest.json'), 'utf8'));
+		expect(manifest.artifacts.map((item: { path: string }) => item.path)).toEqual([
+			'README.md',
+			'run/raw.jsonl'
+		]);
+		expect(verifyStudies(root)).toEqual({ studies: 1, artifacts: 2, bytes: 8 + 23 });
+		writeFileSync(join(study, 'run', 'raw.jsonl'), '{"kind":"environmenT"}\n');
+		expect(() => verifyStudies(root)).toThrow(/artifact hash/);
+		rmSync(join(study, 'README.md'));
+		expect(() => writeManifest(study, true)).toThrow(/write the study README/);
 	} finally {
 		rmSync(root, { recursive: true, force: true });
 	}

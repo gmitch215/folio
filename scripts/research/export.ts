@@ -39,13 +39,24 @@ export function exportStudy(directory: string, inputs: string[]) {
 				JSON.stringify(summarizeResearch(rows, digest(bytes)), null, 2) + '\n'
 			);
 	}
+	return writeManifest(directory);
+}
+
+/** Lists the files of a study directory with bytes and hashes and writes `manifest.json`. Subdirectories are listed with a relative path when `recursive` is set. */
+export function writeManifest(directory: string, recursive = false) {
 	assert.ok(existsSync(join(directory, 'README.md')), 'write the study README before exporting');
-	const artifacts = readdirSync(directory)
-		.filter((name) => name !== 'manifest.json' && statSync(join(directory, name)).isFile())
+	const list = (relative: string): string[] =>
+		readdirSync(join(directory, relative)).flatMap((name) => {
+			const path = relative ? `${relative}/${name}` : name;
+			const directoryEntry = statSync(join(directory, path)).isDirectory();
+			if (directoryEntry) return recursive ? list(path) : [];
+			return path === 'manifest.json' ? [] : [path];
+		});
+	const artifacts = list('')
 		.sort()
-		.map((name) => {
-			const data = readFileSync(join(directory, name));
-			return { path: name, bytes: data.length, sha256: digest(data) };
+		.map((path) => {
+			const data = readFileSync(join(directory, path));
+			return { path, bytes: data.length, sha256: digest(data) };
 		});
 	writeFileSync(
 		join(directory, 'manifest.json'),
@@ -55,7 +66,16 @@ export function exportStudy(directory: string, inputs: string[]) {
 }
 
 if (import.meta.main) {
-	const [directory, ...inputs] = process.argv.slice(2);
-	if (!directory) throw new Error('usage: export.ts STUDY_DIRECTORY [SOURCE[:NAME]...]');
-	console.log(JSON.stringify({ artifacts: exportStudy(directory, inputs) }));
+	const [first, ...rest] = process.argv.slice(2);
+	if (first === '--manifest') {
+		const [directory, recursive] = rest;
+		if (!directory)
+			throw new Error('usage: export.ts --manifest STUDY_DIRECTORY [--recursive]');
+		console.log(
+			JSON.stringify({ artifacts: writeManifest(directory, recursive === '--recursive') })
+		);
+	} else {
+		if (!first) throw new Error('usage: export.ts STUDY_DIRECTORY [SOURCE[:NAME]...]');
+		console.log(JSON.stringify({ artifacts: exportStudy(first, rest) }));
+	}
 }
