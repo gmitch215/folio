@@ -5,6 +5,7 @@ import { Worker } from 'node:worker_threads';
 import { prepare, prepareContext } from '../../src/compiler.ts';
 import { admissionSeam } from '../../src/iteration-admission.ts';
 import { Folio } from '../../src/node.ts';
+import { SlicePool } from '../../src/slices.ts';
 import { TaskPool } from '../../src/tasks.ts';
 import {
 	clearOutput,
@@ -13,7 +14,6 @@ import {
 	moduleBytes,
 	outputOf,
 	recordsOf,
-	sharedMemoryImport,
 	specOf,
 	writeRecords
 } from './c21-common.ts';
@@ -143,6 +143,8 @@ const poolArm = (forced: boolean, shared: boolean) => async (): Promise<Open> =>
 			admissionSeam.force = forced;
 			admissionSeam.trace = process.env.C21_TRACE === '1';
 			admissionSeam.gate = process.env.C21_GATE !== '0';
+			admissionSeam.estimator =
+				(process.env.C21_ESTIMATOR as 'min' | 'median' | 'mean' | 'q75') ?? 'median';
 			const cpu = process.cpuUsage(),
 				start = performance.now();
 			const report = await pool.run('bulk', [layout.table, n, layout.out]);
@@ -232,69 +234,38 @@ const explicitArm = (chunk: number) => async (): Promise<Open> => {
 
 // no copy and no reset: one shared memory holds the records, each worker runs a slice of the bulk entry
 const inplaceArm = async (): Promise<Open> => {
-	assert.ok(!spec.config, 'the in-place arm needs a spec without a config');
-	// a module with one mutable global keeps its stack pointer there; give every worker its own 64 KiB stack past the layout
-	const plan = prepareContext(bytes);
-	assert.ok(
-		plan.globals.length <= 1,
-		'the in-place arm handles at most the stack pointer global'
-	);
-	const memory = new WebAssembly.Memory({
-		initial: layout.pages + width + 1,
-		maximum: 65536,
-		shared: true
+	const memory = new WebAssembly.Memory({ initial: layout.pages, maximum: 65536, shared: true });
+	const pool = await SlicePool.open(bytes, {
+		memory,
+		workers: width,
+		imports: spec.imports ? new URL('./c21-imports.ts', import.meta.url) : undefined
 	});
+	if (spec.config) await pool.run('setup', 1, () => setupArgs);
 	writeRecords(memory, spec, layout, records);
-	const module = new WebAssembly.Module(sharedMemoryImport(Uint8Array.from(plan.bytes)));
-	const pool = new TaskPool(width),
-		workers: Worker[] = [];
-	await Promise.all(
-		Array.from({ length: width }, async (_, index) => {
-			const link = pool.link(index);
-			const worker = new Worker(new URL('./c21-inplace-worker.ts', import.meta.url), {
-				workerData: {
-					c21Inplace: true,
-					spec: spec.id,
-					module,
-					memory,
-					link,
-					table: layout.table,
-					out: layout.out,
-					stack: plan.globals[0],
-					stackTop: (layout.pages + 1 + index) * 65536
-				},
-				transferList: [link.port]
-			});
-			workers.push(worker);
-			await new Promise<void>((resolve, reject) => {
-				worker.once('message', () => resolve());
-				worker.once('error', reject);
-			});
-		})
-	);
-	const step = Math.ceil(n / width);
-	const slices: [string, string][] = [];
-	for (let from = 0; from < n; from += step)
-		slices.push(['slice', `${from},${Math.min(from + step, n)}`]);
 	return {
 		run: async () => {
 			clearOutput(memory, spec, layout, n);
 			const cpu = process.cpuUsage(),
 				start = performance.now();
-			await pool.run(slices);
+			const report = await pool.run(
+				'bulk',
+				n,
+				(from, to) => [layout.table + 16 * from, to - from, layout.out + from * spec.slot],
+				{
+					grain: process.env.C21_GRAIN ? Number(process.env.C21_GRAIN) : undefined,
+					audit: process.env.C21_AUDIT === '1'
+				}
+			);
 			const wallMs = performance.now() - start,
 				used = cpuMs(cpu);
 			return {
 				wallMs,
 				cpuMs: used,
 				out: Uint8Array.from(outputOf(memory, spec, layout, n)),
-				report: { tasks: slices.length, inplace: true }
+				report: { tasks: report.slices, inplace: true }
 			};
 		},
-		close: async () => {
-			pool.close();
-			await Promise.all(workers.map((worker) => worker.terminate()));
-		}
+		close: () => pool.close()
 	};
 };
 

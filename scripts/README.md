@@ -53,6 +53,10 @@ an environment record that names the runtime, hardware and a SHA256 of every sou
 | `affine-build.ts`, `affine-bench.ts`, `affine-worker.ts`, `affine-summary.ts`, `cases/affine/`                                             | the kernels and controls for `src/affine.ts`: discovery cost, and serial, exact, audit and hand-derived combine timings                                                          |
 | `affine-state-build.ts`, `affine-state-bench.ts`, `affine-context-worker.ts`, `affine-state-summary.ts`, `cases/affine/context-subjects.c` | the context-struct subjects and corpus entries for `src/affine-state.ts` and `src/boundaries.ts`: state discovery, state-in-memory exact timings, recorded boundary verification |
 | `sweeps-*.ts`, `cases/sweeps/`                                                                                                             | fixed-point sweeps over explicit-state chunks: sweep and chunk-run counts, boundary state sets, and pooled wall against serial                                                   |
+| `admission-quality.mjs`                                                                                                                    | scores automatic admission against the measured modes of a record-level run: confusion matrix, regret, a gate fitted on a split, and a gate fixed beforehand (`AQ_GATE`)         |
+| `static-footprint.mjs`                                                                                                                     | counts constant-address stores, global writes, indirect calls and imported calls in each driver module                                                                           |
+| `size-change.ts`, `size-change-table.mjs`                                                                                                  | one pool, one program, calls whose record sizes change; the table gives the speedup and mode of each call                                                                        |
+| `native-bulk.c`, `native-bulk.sh`, `native-bulk-export.ts`, `native-bulk-arms.sh`, `native-bulk-table.mjs`                                 | the bulk drivers compiled natively with a parallel-for over the records (the source-level baseline), with a serial check of every output                                         |
 | `plan-snapshot.ts`                                                                                                                         | dumps the stable `prepare` plan fields of every fixture and corpus artifact for a root, with the route summaries beside it                                                       |
 | `inline-diff.ts`                                                                                                                           | the inline tracking lowering against native, the host-call footprint and binaryen's tracer; `cost` times the BLAKE3 consumer                                                     |
 | `iteration-diff.ts`                                                                                                                        | the iteration executor against the serial program: random programs, and the BLAKE3 consumer (`blake3`, with a `Folio.run` arm)                                                   |
@@ -76,13 +80,25 @@ host: record the load average in the data and discard a run that overlapped othe
 
 ## C21 bulk harness
 
-`c21-kernels.ts` builds one bulk driver per entry of its `specs` list (30 entries). A
+`c21-kernels.ts` builds one bulk driver per entry of its `specs` list (38 entries). A
 driver runs `n` independent records through the unmodified entry point of one corpus kernel.
 `c21-bench.ts` runs the automatic, forced, explicit and explicit-1 arms against the native serial
 run and asserts equal output in every run. `c21-worker.ts` is the worker entry for the explicit
 arms, `c21-common.ts` holds the shared record and memory helpers, and `cases/c21/` holds the C
 driver sources (`bulk.c`, `support-bulk.c`). `c21-routes.ts` prints the stack and iteration routes
 of built modules, and `c21-summary.mjs` pairs the timed rows of each arm against the native run.
+
+Eight drivers cover six more projects (brotli, wyhash, BLAKE2, QOA, yyjson, md4c). Their cases sit
+in `bulkCases` of `corpus-manifest.json`, not in `cases`, because `corpus.ts` builds every entry of
+`cases` through `cases/kernel.c`. These projects need libc declarations and helpers that
+`cases/c21/include/` and `cases/c21/support-libc.c` supply for them only. The bulk build fetches a
+project archive on first use. `c21-verify.ts` runs each of the eight serially twice and compares
+the output with Node's BLAKE2b, Node's Brotli decoder, a JSON parse, a wyhash port, a round trip
+and known Markdown output:
+
+```sh
+node scripts/research/c21-verify.ts blake2b wyhash brotli-compress brotli-decompress
+```
 
 The drivers compile from the corpus sources. Run the corpus build first:
 
