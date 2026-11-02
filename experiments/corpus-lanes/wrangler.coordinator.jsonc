@@ -1,0 +1,11 @@
+{
+	"name": "cfw-folio-corpus-coordinator",
+	"main": "coordinator.ts",
+	"compatibility_date": "2026-10-20",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": true,
+	"durable_objects": {
+		"bindings": [{ "name": "LANEOBJ", "class_name": "LaneObject" }]
+	},
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["LaneObject"] }]
+}
