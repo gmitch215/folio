@@ -60,9 +60,13 @@ and a small job loses to dispatch overhead.
 - ⏳ **Asynchronous host effects** through JSPI, executed once and in call order.
 - 🌐 **Execution host and portable client** for workerd, with sessions, quotas and joined cleanup.
 - ☁️ **Managed backend** that runs entirely in Workers and Durable Objects, with binary frames and
-  copied snapshots between lanes.
+  copied snapshots or learned byte ranges between lanes.
 - 🧰 **Task pool** that runs named functions in private contexts on other threads, with ordered
   joins and an optional differential audit.
+- 🧮 **Exact chunked recurrences** that split one CRC-32, Adler-32 or AES-CTR stream across the
+  task pool and join the chunk states into the serial result.
+- 🛑 **Stall guard** that stops an iteration batch that does not return and finishes the loop
+  serially, for programs whose iterations can loop on state another iteration is changing.
 - 🧊 **Baked boot images** that write a booted memory into the module as data segments.
 - 📊 **Opt-in profiling** of worker time, validation, commit and replay cost.
 
@@ -190,6 +194,23 @@ frames. The snapshot limit is 31 MiB by default. A frame over `maximumFrameBytes
 plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that call runs at the
 owner and `diagnostics` names the frame size and the limit. See [the managed procedure](experiments/managed/METHOD.md).
 
+Four options change what a call costs. `ranges` ships the byte ranges a region reads and writes,
+learned from earlier calls, instead of a snapshot: an 8 MiB arena sends about 0.2% of the bytes.
+`inline` on a `FolioLane` runs a module that tracks accesses in its own code, so a lane no longer
+calls back into JavaScript on every load and store. `runs: true` makes lanes answer in sorted byte
+runs that the owner validates and commits as intervals. `memo` reuses a recorded result when the
+bytes a region read are unchanged, through the same ordered validation. `fuel` bounds the
+speculative back-edges of one call (100,000,000 by default); a call that runs out finishes serially
+at the owner, so a long kernel needs a larger `fuel`.
+
+Lane placement decides whether lanes overlap. Service-bound Worker lanes share a thread with their
+caller, so four of them take as long as one lane run four times. Durable Object lanes run on their
+own isolates and overlap. A decomposition that fits a managed lane is a few large explicit units
+with a merge the caller declares, such as SQLite shards that each scan a row-id range; a loop of
+small records does not pay for a lane call. The
+[sharded SQLite probe](experiments/sqlite-lanes/README.md) runs 1,000,000-row queries 2.0x to 9.7x
+faster than one object at four and eight shards, with every result equal to the serial one.
+
 ## 🔗 Browser Execution and Page Leases
 
 `@gmitch215/folio/browser` exports `BrowserFolio` for Chromium and other hosts without JSPI. It
@@ -261,6 +282,15 @@ tasks ran at the same time.
 
 The pool does not discover independent work. Region discovery and ordered validation stay in the
 core engine, and the task pool covers programs that can say which calls are independent.
+
+`@gmitch215/folio/fold` covers one case where a single call is not independent but still splits
+exactly. A CRC-32, an Adler-32 or an AES-CTR stream over one input is a recurrence with an exact
+combine, so chunks run on separate tasks and join into the serial result. `chunkRanges(length,
+count, align)` cuts the input, `foldChunks(pool, input, { task, initial, combine })` runs one task
+per chunk and combines the results in order, and `crc32Combine`, `adler32Combine` and `ctrAdvance`
+supply the algebra. AES chunks must be multiples of 16 bytes except the last. Chunks are copied into
+their tasks, and 64 MiB of CRC-32 on eight workers ran 3.52x faster than serial with the result equal
+to `zlib.crc32`. A recurrence with no known combine, such as one SHA-256 message, stays serial.
 
 ## 🔄 Context Checkpoints
 
@@ -491,19 +521,23 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 
 ## 📈 Measured Results
 
-| Backend                            | Environment                                                                     | Result                                                                                                                                                                                                                              |
-| ---------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Node, shared allocation            | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                              | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact                                                                                                                                  |
-| Node, compute kernel               | eight workers, 207 byte-exact samples                                           | 7.62x, with total CPU 1.037x of serial                                                                                                                                                                                              |
-| Node, Drupal regeneration          | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                             | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render                                                                                                                                            |
-| Managed Workers                    | deployed Durable Object lanes                                                   | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes                                                                                                                                         |
-| Browser Run                        | deployed Chromium, eight workers on one 256 MiB allocation                      | 3.87x with four workers on explicit partitions                                                                                                                                                                                      |
-| Browser automatic extraction       | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB              | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                                                                                     |
-| Baked boot image                   | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm                 | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime                                                                                                                                         |
-| Independent corpus                 | 21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro          | default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native                                                                             |
-| Explicit tasks on private contexts | the same 21 kernels, eight batched `TaskPool` workers                           | 18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs                                                                 |
-| Iteration route, outside program   | BLAKE3 1.8.7 unmodified, 32 x 4 MiB and 128 x 256 KiB, Ryzen 9 9900X and M2 Pro | default admission through `Folio.run`: 2.4x to 3.1x and 2.0x on the Ryzen machine, 3.2x to 3.5x and 2.8x to 2.9x on the M2 Pro (warm calls, equal digests); 1.00x before. SHA-256 with a helper per input 1.7x to 2.1x, LZ4 no gain |
-| Baked Drupal lifecycle             | Apple M2 Pro, 15 paired rounds, compile through first render                    | 830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image                                                                                                                  |
+| Backend                            | Environment                                                                     | Result                                                                                                                                                                                                                               |
+| ---------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Node, shared allocation            | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                              | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact                                                                                                                                   |
+| Node, compute kernel               | eight workers, 207 byte-exact samples                                           | 7.62x, with total CPU 1.037x of serial                                                                                                                                                                                               |
+| Node, Drupal regeneration          | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                             | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render                                                                                                                                             |
+| Managed Workers                    | deployed Durable Object lanes                                                   | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes                                                                                                                                          |
+| Browser Run                        | deployed Chromium, eight workers on one 256 MiB allocation                      | 3.87x with four workers on explicit partitions                                                                                                                                                                                       |
+| Browser automatic extraction       | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB              | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                                                                                      |
+| Baked boot image                   | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm                 | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime                                                                                                                                          |
+| Independent corpus                 | 21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro          | default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native                                                                              |
+| Explicit tasks on private contexts | the same 21 kernels, eight batched `TaskPool` workers                           | 18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs                                                                  |
+| Iteration route, outside program   | BLAKE3 1.8.7 unmodified, 32 x 4 MiB and 128 x 256 KiB, Ryzen 9 9900X and M2 Pro | default admission through `Folio.run`: 2.4x to 3.1x and 2.0x on the Ryzen machine, 3.2x to 3.5x and 2.8x to 2.9x on the M2 Pro (warm calls, equal digests); 1.00x before. SHA-256 with a helper per input 1.7x to 2.1x, LZ4 no gain  |
+| Baked Drupal lifecycle             | Apple M2 Pro, 15 paired rounds, compile through first render                    | 830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image                                                                                                                   |
+| Managed range lanes                | deployed Durable Object lanes, 8 MiB arena, 65,536 rounds                       | 1.98x to 2.00x over serial with `fuel` raised to 1e9 and 0.2% of the snapshot bytes on the wire; 0.84x to 0.90x at the default fuel, where the owner finishes serially                                                               |
+| Managed SQLite shards              | deployed Durable Object lanes, 1,000,000 rows, 4 and 8 shards, declared merges  | 2.0x to 9.7x over one object across five queries, 178 samples equal to the serial result                                                                                                                                             |
+| Record-level corpus                | 30 bulk drivers, Ryzen 9 9900X, three sessions of five rounds                   | default admission wins on 7 drivers (SHA-256 2.01x, MD5 1.46x, SHA-1 1.55x, miniz CRC-32 1.52x, AES-CTR 1.21x, LZ4 compress 1.06x); explicit private contexts win on 26 (1.48x to 3.64x on 25); every output equal to the serial one |
+| Exact chunked recurrences          | one 64 MiB stream, eight task workers, Apple M2 Pro                             | CRC-32 4.25x, Adler-32 5.00x, AES-128-CTR 3.69x with shared input; CRC-32 3.52x with copied chunks; outputs equal to `zlib` and `node:crypto`                                                                                        |
 
 A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The
