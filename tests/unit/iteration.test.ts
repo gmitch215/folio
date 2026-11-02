@@ -24,28 +24,41 @@ import {
 	watRig
 } from '../../scripts/research/iteration-diff.ts';
 import { prepare } from '../../src/compiler.ts';
-import { inlineEntryBytes } from '../../src/inline.ts';
+import { inlineEntryBytes, lowerInline } from '../../src/inline.ts';
 import {
 	admissionSeam,
 	admitIteration,
+	batchBound,
 	batchCollapses,
 	batchLoses,
 	decideAdmission,
 	decideBatch,
+	decideBound,
 	decideCollapse,
-	iterationAdmissionConstants
+	decideProof,
+	decideRemaining,
+	iterationAdmissionConstants,
+	probeFraction,
+	projectBatch,
+	proofBound,
+	refineEstimate
 } from '../../src/iteration-admission.ts';
 import { iterationOwner } from '../../src/iteration-owner.ts';
-import type { IterationOutcome } from '../../src/iteration.ts';
+import type { IterationOutcome, IterationReport } from '../../src/iteration.ts';
 import {
 	IterationPool,
+	discoverWindow,
 	iterationArena,
 	iterationArenaBytes,
 	iterationArguments,
 	iterationEntryBytes,
 	iterationFit,
 	iterationFrameShadow,
-	iterationVerdict
+	iterationLogCeiling,
+	iterationVerdict,
+	iterationWindowCopy,
+	pairwiseConflicts,
+	tabledConflicts
 } from '../../src/iteration.ts';
 import type { ExecutionReport } from '../../src/node.ts';
 import { Folio } from '../../src/node.ts';
@@ -56,7 +69,11 @@ let small: Rig;
 
 beforeAll(async () => {
 	rig = await watRig(widths);
-	small = await watRig([2], { logCapacity: 5 });
+	small = await watRig(
+		[2],
+		{ logCapacity: 5 },
+		wasm(ownerSource(spillItem, { maximum: wat.pages }))
+	);
 });
 afterAll(async () => {
 	await rig?.close();
@@ -81,6 +98,21 @@ function compare(
 		report: got.report!
 	};
 }
+
+// writes (value and 7) 32-byte cells of private heap beside the dst store; the stack stays untracked
+const spillItem = `
+	(i32.store (local.get $dst) (i32.const 1))
+	(local.set $s (i32.and (i32.load (local.get $src)) (i32.const 7)))
+	(block $out (loop $each
+		(br_if $out (i32.eqz (local.get $s)))
+		(local.set $s (i32.sub (local.get $s) (i32.const 1)))
+		(i32.store
+			(i32.add
+				(i32.add (i32.const 0x40000)
+					(i32.shl (i32.sub (local.get $dst) (i32.const 0x30000)) (i32.const 3)))
+				(i32.shl (local.get $s) (i32.const 5)))
+			(i32.const 5))
+		(br $each)))`;
 
 const rawPlan = (n: number): Plan => {
 	const plan = disjoint(n);
@@ -180,6 +212,7 @@ test('the verdict applies RAW, WAR and WAW to the returned lists', () => {
 		index: 0,
 		status,
 		entries: written.length,
+		runMs: 0,
 		written: Int32Array.from(written),
 		reads: Int32Array.from(reads),
 		frameWritten: Uint32Array.from(frameWritten),
@@ -343,11 +376,139 @@ test('an exhausted undo log ends the dispatch even when few iterations replay', 
 	assert.equal(r.report.exhausted, 1);
 	assert.equal(r.report.stopped, 'log-exhausted');
 	assert.equal(r.report.batches, 1);
+	// the rig's memory is at its declared maximum, so there is no room for a grown log
+	assert.equal(r.report.logGrowths, 0);
+	assert.equal(r.report.retried, 0);
 	// iteration 30 replays, and 31 too when the other worker had claimed it before the abort; the rest
 	// of the batch never starts and 32 to 69 never dispatch
 	assert.ok(r.report.rolledBack >= 1 && r.report.rolledBack <= 2);
 	assert.equal(r.report.replayed, r.report.rolledBack);
 	assert.equal(r.report.replayed + r.report.serial, 40);
+});
+
+// a rig whose memory may grow, so a batch with an exhausted log can be retried with a larger one
+const growRig = (logCeiling: number, maximum = 2048) =>
+	watRig([2], { logCapacity: 5, logCeiling, maximum }, wasm(ownerSource(spillItem, { maximum })));
+const exhaustingPlan = (n: number, at: number) => {
+	const plan = disjoint(n);
+	plan.values = Array.from({ length: n }, (_, i) => (i === at ? 7 : 0));
+	return plan;
+};
+
+test('an exhausted undo log is retried once with a grown log and the result equals the serial run', async () => {
+	const grow = await growRig(64);
+	try {
+		const pool = grow.pools.get(2)!;
+		const before = grow.memory.buffer.byteLength;
+		assert.equal(pool.memoryBytes, before);
+		const r = compare(grow, 2, exhaustingPlan(16, 9));
+		assert.ok(r.equal);
+		assert.equal(r.report.logGrowths, 1);
+		assert.ok(r.report.exhausted >= 1);
+		// the other worker may have claimed some of 10 to 15 before the failure stopped the claims
+		assert.ok(r.report.retried >= 1 && r.report.retried <= 7);
+		assert.equal(r.report.stopped, undefined);
+		assert.equal(r.report.replayed, 0);
+		assert.equal(r.report.rolledBack, 0);
+		// the iterations before the failing one stay, the rest run again, so each runs once
+		assert.equal(r.report.regions, 16);
+		assert.equal(r.report.traps, 0);
+		assert.ok(r.report.maxLogEntries > 5 && r.report.maxLogEntries <= 64);
+		// the pages came from the memory and stay for the next call
+		const after = grow.memory.buffer.byteLength;
+		assert.ok(after > before);
+		assert.equal(pool.memoryBytes, after);
+		const again = compare(grow, 2, exhaustingPlan(16, 4));
+		assert.ok(again.equal);
+		assert.equal(again.report.logGrowths, 1);
+		assert.equal(again.report.stopped, undefined);
+		assert.equal(grow.memory.buffer.byteLength, after);
+		// a loop whose iterations fit the default log never asks for the pages
+		const quiet = compare(grow, 2, exhaustingPlan(16, 99));
+		assert.ok(quiet.equal);
+		assert.equal(quiet.report.logGrowths, 0);
+		assert.equal(quiet.report.retried, 0);
+	} finally {
+		await grow.close();
+	}
+});
+
+test('an iteration that overruns the ceiling stops the dispatch after the one retry', async () => {
+	// the same loop with a ceiling of 6 entries, which the failing iteration needs more than
+	const grow = await growRig(6);
+	try {
+		const r = compare(grow, 2, exhaustingPlan(16, 9));
+		assert.ok(r.equal);
+		assert.equal(r.report.logGrowths, 1);
+		assert.equal(r.report.stopped, 'log-exhausted');
+		assert.ok(r.report.exhausted >= 2);
+		assert.equal(r.report.failedBatches, 1);
+		// iterations 9 to 15 are left after the retry: replayed after the failing batch or serial
+		assert.equal(r.report.replayed + r.report.serial, 7);
+		assert.equal(r.report.regions - r.report.replayed, 9);
+	} finally {
+		await grow.close();
+	}
+	// a ceiling at the capacity, or a memory that cannot grow, leaves today's behavior
+	for (const [ceiling, maximum] of [
+		[5, 2048],
+		[64, wat.pages]
+	] as const) {
+		const off = await growRig(ceiling, maximum);
+		try {
+			const before = off.memory.buffer.byteLength;
+			const r = compare(off, 2, exhaustingPlan(16, 9));
+			assert.ok(r.equal);
+			assert.equal(r.report.logGrowths, 0);
+			assert.equal(r.report.stopped, 'log-exhausted');
+			assert.equal(off.memory.buffer.byteLength, before);
+		} finally {
+			await off.close();
+		}
+	}
+});
+
+test('a batch that shows a hazard is not retried on a grown log', async () => {
+	// iterations 1 and 3 and so on write what the one before wrote; the grown log would not help
+	const grow = await growRig(64);
+	try {
+		const plan = exhaustingPlan(16, 9);
+		for (let i = 1; i < 9; i += 2) plan.dst[i] = dstCell(i - 1);
+		const r = compare(grow, 2, plan);
+		assert.ok(r.equal);
+		assert.ok(r.report.conflicts.waw > 0);
+		assert.equal(r.report.logGrowths, 0);
+		assert.equal(r.report.retried, 0);
+		assert.equal(r.report.stopped, 'log-exhausted');
+		// without the hazard the same loop is retried and dispatched
+		const clean = compare(grow, 2, exhaustingPlan(16, 9));
+		assert.ok(clean.equal);
+		assert.equal(clean.report.logGrowths, 1);
+	} finally {
+		await grow.close();
+	}
+});
+
+test('the log ceiling defaults to 64 times the default capacity and must be a positive integer', async () => {
+	assert.equal(iterationLogCeiling, 64 * 2048);
+	const grow = await growRig(64);
+	try {
+		for (const logCeiling of [0, -1, 1.5, Number.NaN])
+			await assert.rejects(
+				IterationPool.open(
+					grow.route,
+					new WebAssembly.Memory({
+						initial: wat.pages,
+						maximum: wat.pages,
+						shared: true
+					}),
+					{ arenaBase: wat.arena, logCeiling }
+				),
+				RangeError
+			);
+	} finally {
+		await grow.close();
+	}
 });
 
 test('the overlap family replays at every width and the disjoint family never does', () => {
@@ -562,6 +723,96 @@ test('the batch callback ends the dispatch after two batches in a row that lose'
 	assert.equal(once.report.stopped, undefined);
 });
 
+test('a refused loop is timed in serial blocks and dispatched once the remaining iterations pay', () => {
+	const refuse = (plainIterationMs: number) => ({
+		...accepts(plainIterationMs),
+		admitted: false
+	});
+	// iteration 0, then blocks of 1, 2 and 4 iterations end at iterations 2, 4 and 8
+	const asked: number[][] = [];
+	let calls = 0;
+	const late = compare(rig, 4, disjoint(40), {
+		admit: refuse,
+		reconsider: (ms, remaining) => {
+			asked.push([ms, remaining]);
+			return ++calls === 3;
+		}
+	});
+	assert.ok(late.equal);
+	assert.deepEqual(
+		asked.map((a) => a[1]),
+		[38, 36, 32]
+	);
+	assert.ok(asked.every((a) => Number.isFinite(a[0]!) && a[0]! >= 0));
+	assert.equal(late.report.admission!.admitted, true);
+	assert.equal(late.report.admission!.readmittedAt, 8);
+	assert.equal(late.report.stopped, undefined);
+	assert.equal(late.report.serial, 8);
+	assert.equal(late.report.regions, 32);
+	assert.equal(late.report.batches, 1);
+	assert.equal(late.report.replayed, 0);
+	// never worth it: the blocks grow to a batch, every block asks, and the loop stays serial
+	const never: number[] = [];
+	const refused = compare(rig, 4, disjoint(40), {
+		admit: refuse,
+		reconsider: (_, remaining) => {
+			never.push(remaining);
+			return false;
+		}
+	});
+	assert.ok(refused.equal);
+	assert.deepEqual(never, [38, 36, 32, 24, 8]);
+	assert.equal(refused.report.stopped, 'no-admission');
+	assert.equal(refused.report.admission!.readmittedAt, undefined);
+	assert.equal(refused.report.serial, 40);
+	assert.equal(refused.report.batches, 0);
+	// without a reconsider callback a refusal is final, as before
+	const final = compare(rig, 4, disjoint(40), { admit: refuse });
+	assert.equal(final.report.serial, 40);
+	assert.equal(final.report.admission!.readmittedAt, undefined);
+});
+
+test('the estimate is asked before each later batch, and a no ends the dispatch', () => {
+	const asked: number[][] = [];
+	const stopped = compare(rig, 4, disjoint(100), {
+		admit: accepts,
+		reconsider: (ms, remaining) => {
+			asked.push([ms, remaining]);
+			return false;
+		}
+	});
+	assert.ok(stopped.equal);
+	// the first batch is dispatched without asking; the second is not dispatched
+	assert.equal(asked.length, 1);
+	assert.equal(asked[0]![1], 100 - 33);
+	assert.equal(stopped.report.batches, 1);
+	assert.equal(stopped.report.regions, 32);
+	assert.equal(stopped.report.stopped, 'no-admission');
+	assert.equal(stopped.report.serial, 1 + 67);
+	// what it was asked with is the estimate the report holds, and the batch rule saw its multiple
+	assert.equal(asked[0]![0], stopped.report.admission!.estimateMs);
+	assert.ok(asked[0]![0]! > 0);
+	const seen: number[][] = [];
+	const yes: number[] = [];
+	const kept = compare(rig, 4, disjoint(100), {
+		admit: accepts,
+		loses: (wall, serial) => {
+			seen.push([wall, serial]);
+			return false;
+		},
+		reconsider: (_, remaining) => {
+			yes.push(remaining);
+			return true;
+		}
+	});
+	assert.ok(kept.equal);
+	assert.deepEqual(yes, [67, 35, 3]);
+	assert.equal(kept.report.batches, 4);
+	assert.equal(kept.report.stopped, undefined);
+	assert.equal(seen.length, 4);
+	assert.equal(kept.report.admission!.batchSerialMs, seen[3]![1]);
+});
+
 test('the pool checks every iteration of the batch for a read of a byte an earlier one wrote', async () => {
 	const rigOf = (item: string) =>
 		watRig([4], {}, wasm(ownerSource(item, { maximum: wat.pages })));
@@ -702,7 +953,8 @@ async function both(
 	plan: Plan,
 	workers: number,
 	trips = plan.src.length,
-	entry = 'run'
+	entry = 'run',
+	options: { iterationLogCeiling?: number; iterationSecondChance?: boolean } = {}
 ) {
 	const { image, args } = planImage(plan);
 	args[1] = trips;
@@ -717,7 +969,7 @@ async function both(
 	} catch (error) {
 		want.error = error;
 	}
-	const folio = await Folio.open(source, { workers });
+	const folio = await Folio.open(source, { workers, ...options });
 	new Uint8Array(folio.memory.buffer).set(image);
 	const got: Outcome = { memory: folio.memory };
 	try {
@@ -1217,10 +1469,12 @@ test('an owner called twice in one run reports the sum of both calls', async () 
 	try {
 		const counts = carried.got.report!.iteration!;
 		assert.ok(carried.equal);
-		// both calls are carried, so the conflicts sum and the first stop is kept
+		// the first call is carried and records the verdict, so the second runs serially without a
+		// batch: the conflicts and replays of the first call only
 		assert.equal(counts.stopped, 'frame-carried dependence');
-		assert.ok(counts.conflicts.frame >= 2);
-		assert.equal(counts.replayed, 62);
+		assert.ok(counts.conflicts.frame >= 1);
+		assert.equal(counts.replayed, 31);
+		assert.equal(counts.batches, 1);
 		assert.equal(carried.got.report!.reason, 'frame-carried dependence');
 	} finally {
 		await carried.folio.close();
@@ -1678,6 +1932,57 @@ test('the admission seam scales the measured times and forces a loop with iterat
 	assert.equal(decideCollapse(1, 10), false);
 });
 
+test('the estimate follows the workers in both directions and caps its scale at one', () => {
+	const first = { estimateMs: 1 };
+	// iterations as dear as iteration 0 on the tracked module: the estimate stays at the plain time
+	const same = refineEstimate(first, Array(8).fill(1.4));
+	assert.equal(same.kappa, 1 / 1.4);
+	assert.ok(Math.abs(same.estimateMs - 1) < 1e-12);
+	// ten times cheaper than iteration 0: it falls, and a tracked time is never read as faster than
+	// plain, so the scale caps at 1 and the estimate is the tracked mean, an upper bound
+	const cheaper = refineEstimate(first, Array(8).fill(0.1));
+	assert.equal(cheaper.kappa, 1);
+	assert.ok(Math.abs(cheaper.estimateMs - 0.1) < 1e-12);
+	// one iteration of 140 among 31 of 1.4: the least time fixes the scale and the mean raises the estimate
+	const dearer = refineEstimate(first, [...Array(31).fill(1.4), 140]);
+	assert.equal(dearer.kappa, 1 / 1.4);
+	assert.ok(Math.abs(dearer.estimateMs - (31 * 1.4 + 140) / 32 / 1.4) < 1e-12);
+	assert.ok(dearer.estimateMs > 4 && dearer.estimateMs < 5);
+	// iteration 0 was the smallest of a batch that is half large: the median would read 140 ms as the
+	// tracking cost and put the estimate at 0.5 ms, the least time keeps it at the real mean
+	const step = refineEstimate(first, [...Array(16).fill(1.4), ...Array(16).fill(140)]);
+	assert.equal(step.kappa, 1 / 1.4);
+	assert.ok(Math.abs(step.estimateMs - (16 * 1.4 + 16 * 140) / 32 / 1.4) < 1e-12);
+	// later batches keep the scale, so a loop that gets dearer keeps raising the estimate
+	const later = refineEstimate(dearer, Array(8).fill(14));
+	assert.equal(later.kappa, dearer.kappa);
+	assert.ok(Math.abs(later.estimateMs - 10) < 1e-12);
+	const falling = refineEstimate(later, Array(8).fill(0.14));
+	assert.ok(Math.abs(falling.estimateMs - 0.1) < 1e-12);
+	// nothing completed, nothing learned
+	assert.equal(refineEstimate(first, []), first);
+	assert.equal(refineEstimate(first, [0, -1]), first);
+});
+
+test('the remaining-work decision is the admission rule on what is left, through the seam', () => {
+	admissionSeam.force = false;
+	admissionSeam.scale = 1;
+	const floor = iterationAdmissionConstants.fixedMs * iterationAdmissionConstants.margin;
+	assert.equal(decideRemaining(floor / 10 + 1e-9, 10, 4), true);
+	assert.equal(decideRemaining(floor / 10, 10, 4), false);
+	assert.equal(decideRemaining(1e6, 1, 4), false);
+	assert.equal(decideRemaining(1e6, 10, 1), false);
+	assert.equal(decideRemaining(Number.NaN, 10, 4), false);
+	admissionSeam.scale = 1e6;
+	assert.equal(decideRemaining(1e-3, 10, 4), true);
+	admissionSeam.scale = 1;
+	admissionSeam.force = true;
+	assert.equal(decideRemaining(1e-9, 10, 4), true);
+	// force admits one iteration left, as for iteration 0, and none left is nothing to dispatch
+	assert.equal(decideRemaining(1e-9, 1, 4), true);
+	assert.equal(decideRemaining(1e-9, 0, 4), false);
+});
+
 test('a loop of trivial iterations is refused with the numbers and equals the serial program', async () => {
 	admissionSeam.force = false;
 	admissionSeam.scale = 1e-6;
@@ -1776,6 +2081,54 @@ test('a batch that exhausts the undo log ends the dispatch with the named reason
 		assert.ok(counts.regions >= 1 && counts.regions <= 4);
 		assert.equal(counts.replayed + counts.serial, 100);
 		assert.equal(new Uint8Array(run.got.memory.buffer)[0x40000], 5 + 99);
+		// the memory is at its declared 128 pages, which leaves no room for a grown log
+		assert.equal(counts.logGrowths, 0);
+		assert.equal(counts.retried, 0);
+	} finally {
+		await run.folio.close();
+	}
+});
+
+test('a loop whose iterations overrun the undo log is retried on a grown log and stays dispatched', async () => {
+	// every iteration fills 2176 write granules in a region of its own; the memory may grow
+	const item = '(memory.fill (local.get $dst) (i32.load (local.get $src)) (i32.const 69632))';
+	const plan = distinct(8);
+	plan.dst = plan.dst.map((_, i) => 0x40000 + 0x11000 * i);
+	const run = await both(wasm(ownerSource(item, { maximum: 4096 })), plan, 4, undefined, 'run', {
+		iterationLogCeiling
+	});
+	try {
+		assert.ok(run.equal);
+		const report = run.got.report!;
+		const counts = report.iteration!;
+		assert.equal(report.extraction, 'iteration');
+		assert.equal(report.reason, undefined);
+		assert.equal(counts.stopped, undefined);
+		assert.equal(counts.logGrowths, 1);
+		assert.ok(counts.exhausted >= 1);
+		assert.ok(counts.retried >= 1);
+		assert.equal(counts.regions, 7);
+		assert.equal(counts.replayed, 0);
+		assert.ok(counts.maxLogEntries >= 2176);
+		// the owner's size check follows the pages the pool added, so a second call dispatches too
+		const size = run.folio.memory.buffer.byteLength;
+		const again = await run.folio.run('run', planImage(plan).args);
+		assert.equal(again.extraction, 'iteration');
+		assert.equal(again.iteration!.logGrowths, 1);
+		assert.equal(again.reason, undefined);
+		assert.equal(run.folio.memory.buffer.byteLength, size);
+		// a pool of another width opens over the grown memory, with the bitmaps sized to it
+		const narrower = await run.folio.run('run', planImage(plan).args, { maximumWorkers: 2 });
+		assert.equal(narrower.extraction, 'iteration');
+		assert.equal(narrower.workers, 2);
+		assert.equal(narrower.iteration!.logGrowths, 1);
+		assert.equal(
+			Buffer.compare(
+				programPages(run.want.memory, wat.pages),
+				programPages(run.got.memory, wat.pages)
+			),
+			0
+		);
 	} finally {
 		await run.folio.close();
 	}
@@ -1829,6 +2182,9 @@ test('a loop whose measured serial time is large is admitted, and the seam force
 		assert.equal(forced.reason, undefined);
 		assert.deepEqual(programPages(folio.memory, 16), programPages(want.memory, 16));
 	} finally {
+		admissionSeam.force = false;
+		admissionSeam.scale = 1;
+		admissionSeam.batchScale = 1;
 		await folio.close();
 	}
 });
@@ -1867,11 +2223,11 @@ const lz4Inputs = [0, 1, 17, 1000, 4096, 5000, 3333, 6001].map((size, index) => 
 		data[i] = i % 29 < 20 ? 97 + (i % 13) : 97 + ((i * 31 + index) % 26);
 	return data;
 });
-function lz4Image(memory: WebAssembly.Memory, inputs = lz4Inputs) {
+function lz4Image(memory: WebAssembly.Memory, inputs = lz4Inputs, slot = lz4Slot) {
 	const n = inputs.length;
 	const table = 1 << 20;
 	const out = table + PAGE;
-	const sizes = out + n * lz4Slot;
+	const sizes = out + n * slot;
 	const view = new Uint8Array(memory.buffer);
 	const words = new Uint32Array(memory.buffer, table, 2 * n);
 	let at = Math.ceil((sizes + 32 * n) / PAGE) * PAGE;
@@ -1905,7 +2261,7 @@ for (const [kind, stride, replays] of [
 		assert.ok(lz4Inputs.every((_, i) => words[i * stride]! > 0));
 		for (const workers of [2, 4]) {
 			const memory = new WebAssembly.Memory({ initial: pages, maximum: 4096, shared: true });
-			const folio = await Folio.open(bytes, { memory, workers });
+			const folio = await Folio.open(bytes, { memory, workers, iterationLogCeiling });
 			try {
 				lz4Image(folio.memory);
 				const report = await folio.run('compress_slots', image.args);
@@ -1929,7 +2285,7 @@ for (const [kind, stride, replays] of [
 	});
 }
 
-test('Folio.run on the fixed-slot LZ4 consumer stops on a log that its output overruns and equals the native run', async () => {
+test('Folio.run on the fixed-slot LZ4 consumer retries on a grown log and equals the native run', async () => {
 	// 256 KiB of random bytes compress to about the same size, past the 2048 granules the log holds
 	const inputs = Array.from({ length: 6 }, (_, i) => generate(i, 1 << 18));
 	const bytes = new Uint8Array(readFileSync(lz4File('lz4-compress-padded-256k')));
@@ -1942,17 +2298,20 @@ test('Folio.run on the fixed-slot LZ4 consumer stops on a log that its output ov
 	(instance.exports.compress_slots as CallableFunction)(...image.args);
 	for (const workers of [2, 4]) {
 		const memory = new WebAssembly.Memory({ initial: pages, maximum: 4096, shared: true });
-		const folio = await Folio.open(bytes, { memory, workers });
+		const folio = await Folio.open(bytes, { memory, workers, iterationLogCeiling });
 		try {
 			lz4Image(folio.memory, inputs);
 			const report = await folio.run('compress_slots', image.args);
 			assert.deepEqual(report.values, [inputs.length]);
-			assert.equal(report.reason, 'log-exhausted');
-			assert.equal(report.iteration!.stopped, 'log-exhausted');
-			assert.equal(report.iteration!.batches, 1);
+			assert.equal(report.reason, undefined);
+			assert.equal(report.iteration!.stopped, undefined);
+			assert.equal(report.iteration!.logGrowths, 1);
 			assert.ok(report.iteration!.exhausted >= 1);
-			assert.equal(report.iteration!.replayed, report.iteration!.regions);
-			assert.equal(report.iteration!.replayed + report.iteration!.serial, inputs.length);
+			assert.equal(report.iteration!.replayed, 0);
+			assert.equal(report.iteration!.regions, inputs.length - 1);
+			// 256 KiB of output is 8192 granules and the stream table adds more
+			assert.ok(report.iteration!.maxLogEntries > 8192);
+			assert.ok(report.iteration!.maxLogEntries <= iterationLogCeiling);
 			assert.equal(
 				Buffer.compare(
 					new Uint8Array(folio.memory.buffer, 1 << 20, image.end - (1 << 20)),
@@ -1963,6 +2322,45 @@ test('Folio.run on the fixed-slot LZ4 consumer stops on a log that its output ov
 		} finally {
 			await folio.close();
 		}
+	}
+});
+
+test('Folio.run on the fixed-slot LZ4 consumer stops when one output passes the log ceiling', async () => {
+	// 4 MiB of random bytes compress to more than 4 MiB, which is 131,072 granules and more
+	const inputs = Array.from({ length: 5 }, (_, i) => generate(i, 1 << 22));
+	const slot = 4214784;
+	const bytes = new Uint8Array(readFileSync(lz4File('lz4-compress-padded-4m')));
+	const pages = 760;
+	const reference = new WebAssembly.Memory({ initial: pages, maximum: pages });
+	const image = lz4Image(reference, inputs, slot);
+	const instance = new WebAssembly.Instance(new WebAssembly.Module(bytes), {
+		env: { memory: reference }
+	});
+	(instance.exports.compress_slots as CallableFunction)(...image.args);
+	const memory = new WebAssembly.Memory({ initial: pages, maximum: 4096, shared: true });
+	const folio = await Folio.open(bytes, { memory, workers: 2, iterationLogCeiling });
+	try {
+		lz4Image(folio.memory, inputs, slot);
+		const report = await folio.run('compress_slots', image.args);
+		assert.deepEqual(report.values, [inputs.length]);
+		assert.equal(report.reason, 'log-exhausted');
+		const counts = report.iteration!;
+		assert.equal(counts.stopped, 'log-exhausted');
+		assert.equal(counts.logGrowths, 1);
+		assert.ok(counts.exhausted >= 2);
+		assert.equal(
+			counts.replayed + counts.serial,
+			inputs.length - counts.regions + counts.replayed
+		);
+		assert.equal(
+			Buffer.compare(
+				new Uint8Array(folio.memory.buffer, 1 << 20, image.end - (1 << 20)),
+				new Uint8Array(reference.buffer, 1 << 20, image.end - (1 << 20))
+			),
+			0
+		);
+	} finally {
+		await folio.close();
 	}
 });
 
@@ -2068,5 +2466,1150 @@ test('the records example fixture dispatches its loop and matches the serial run
 	assert.equal(parallel.report.iteration!.replayed, 0);
 	assert.deepEqual(parallel.digests, serial.digests);
 	assert.notDeepEqual(parallel.digests, new Uint8Array(32 * records));
+});
+// #endregion
+
+// #region the private stack slot is not tracked
+const slotRigOf = (item: string, extra = '') =>
+	watRig([1, 2, 4], {}, wasm(ownerSource(item, { maximum: wat.pages, extra })));
+const calleeStack = (body: string, bytes = 16) => `
+	(local.set $s (i32.sub (global.get $sp) (i32.const ${bytes})))
+	(global.set $sp (local.get $s))
+	${body}
+	(global.set $sp (i32.add (local.get $s) (i32.const ${bytes})))`;
+const deepFunction = `(func $deep (param $n i32) (result i32) (local $s i32)
+	(local.set $s (i32.sub (global.get $sp) (i32.const 16)))
+	(global.set $sp (local.get $s))
+	(i32.store (local.get $s) (local.get $n))
+	(local.set $n (if (result i32) (i32.eqz (local.get $n))
+		(then (i32.const 0))
+		(else (i32.add (i32.load (local.get $s)) (call $deep (i32.sub (local.get $n) (i32.const 1)))))))
+	(global.set $sp (i32.add (local.get $s) (i32.const 16)))
+	(local.get $n))`;
+
+test('callee stack writes and reads leave no undo entry, only the heap store does', async () => {
+	const subject = await slotRigOf(
+		calleeStack(`
+			(i32.store (local.get $s) (i32.load (local.get $src)))
+			(i32.store offset=4 (local.get $s) (i32.const 5))
+			(i32.store (local.get $dst)
+				(i32.add (i32.load (local.get $s)) (i32.load offset=4 (local.get $s))))`)
+	);
+	try {
+		for (const width of [1, 2, 4]) {
+			for (const n of [1, 5, 32, 70]) {
+				const r = compare(subject, width, disjoint(n));
+				assert.ok(r.equal, `width ${width} n ${n}`);
+				assert.equal(r.report.undoEntries, n, `width ${width} n ${n}`);
+				assert.equal(r.report.replayed, 0);
+				assert.equal(r.report.violations, 0);
+			}
+		}
+	} finally {
+		await subject.close();
+	}
+});
+
+test('recursion in the callee stays in the slot and an overflow into the next slot replays', async () => {
+	const shallow = await slotRigOf(
+		`(i32.store (local.get $dst) (call $deep (i32.and (i32.load (local.get $src)) (i32.const 15))))`,
+		deepFunction
+	);
+	try {
+		for (const width of [1, 2, 4]) {
+			const plan = disjoint(40);
+			plan.values = Array.from({ length: 40 }, (_, i) => (i * 5) % 16);
+			const r = compare(shallow, width, plan);
+			assert.ok(r.equal, `width ${width}`);
+			assert.equal(r.report.undoEntries, 40, `width ${width}`);
+			assert.equal(r.report.replayed, 0);
+		}
+	} finally {
+		await shallow.close();
+	}
+	// 400 levels of 16 bytes pass the 4096-byte slot of iteration 5 and write into iteration 4's
+	const deep = await slotRigOf(
+		`(i32.store (local.get $dst) (call $deep (i32.load (local.get $src))))`,
+		deepFunction
+	);
+	try {
+		for (const width of [1, 2, 4]) {
+			const plan = disjoint(20);
+			plan.values = Array.from({ length: 20 }, (_, i) => (i === 5 ? 400 : 3));
+			const r = compare(deep, width, plan);
+			assert.ok(r.equal, `width ${width}`);
+			assert.ok(r.report.violations >= 1, `width ${width}`);
+			assert.ok(r.report.traps >= 1);
+			// iteration 4 owns the slot iteration 5 reached, so both replay
+			assert.ok(r.report.rolledBack >= 2, `width ${width}`);
+			assert.ok(r.report.replayed + r.report.serial >= 16, `width ${width}`);
+		}
+	} finally {
+		await deep.close();
+	}
+});
+
+test('a pointer into another slot is a violation and the run equals the serial program', async () => {
+	// the address one slot up: another iteration's stack in a worker, plain memory in the serial run
+	const subject = await slotRigOf(
+		calleeStack(
+			`(i32.store (local.get $dst) (i32.load (i32.add (local.get $s) (i32.const 4096))))`
+		)
+	);
+	try {
+		for (const width of [1, 2, 4]) {
+			for (const schedule of ['forward', 'reverse'] as const) {
+				const plan = disjoint(24);
+				plan.values = Array.from({ length: 24 }, (_, i) => 1000 + i);
+				const r = compare(subject, width, plan, { schedule });
+				assert.ok(r.equal, `width ${width} ${schedule}`);
+				assert.ok(r.report.violations >= 1, `width ${width} ${schedule}`);
+				assert.ok(r.report.traps >= 1);
+				assert.ok(r.report.replayed >= 1);
+				assert.equal(r.report.stopped, 'dependency');
+			}
+		}
+	} finally {
+		await subject.close();
+	}
+});
+
+test('the first and the last slot of the arena are guarded like the ones between', async () => {
+	const { slots } = iterationArena(wat.arena, wat.pages * PAGE, { batch: 32, slotBytes: 4096 });
+	for (const [name, slot] of [
+		['first', 0],
+		['last', 31]
+	] as const) {
+		const at = slots + slot * 4096 + 2048;
+		const subject = await slotRigOf(`
+			${plainItem}
+			(if (i32.eq (local.get $src) (i32.const ${srcCell(3)}))
+				(then (i32.store (i32.const ${at}) (i32.const 1))))`);
+		try {
+			const r = compare(subject, 2, disjoint(40));
+			assert.ok(r.equal, name);
+			assert.ok(r.report.violations >= 1, name);
+		} finally {
+			await subject.close();
+		}
+	}
+});
+
+test('a violation fails the iteration that owns the slot, and later ones, in the verdict', () => {
+	const o = (
+		status: number,
+		touched?: number
+	): Parameters<typeof iterationVerdict>[0][number] => ({
+		status,
+		written: new Int32Array(0),
+		reads: new Int32Array(0),
+		frameWritten: new Uint32Array(0),
+		frameExposed: new Uint32Array(0),
+		touched
+	});
+	const owner = iterationVerdict([o(0), o(0), o(0), o(1, 1), o(0)]);
+	assert.equal(owner.first, 1);
+	assert.equal(owner.firstFailure, 3);
+	// a slot past the iterations that ran, or a later one, changes nothing
+	assert.equal(iterationVerdict([o(0), o(1, 9), o(0)]).first, 1);
+	assert.equal(iterationVerdict([o(0), o(1, 2), o(0)]).first, 1);
+	assert.equal(iterationVerdict([o(0), o(0, 0), o(0)]).first, -1);
+	assert.equal(iterationVerdict([o(0), o(1, -1)]).first, 1);
+});
+
+test('stale slot bytes from earlier batches and rolled back iterations never reach the result', async () => {
+	const subject = await slotRigOf(
+		calleeStack(`
+			(i32.store (local.get $s) (i32.load (local.get $src)))
+			(i32.store offset=8 (local.get $s) (i32.const 0x01020304))
+			(i32.store (local.get $dst)
+				(i32.add (i32.load (local.get $s)) (i32.load offset=8 (local.get $s))))`)
+	);
+	try {
+		const { arena } = subject.pools.get(2)!;
+		const view = new Uint8Array(subject.memory.buffer);
+		for (const poison of [0xaa, 0x00, 0xff]) {
+			view.fill(poison, arena.slots, arena.stamp);
+			// 70 iterations are three batches over the same 32 slots; the RAW plan rolls some back
+			for (const plan of [disjoint(70), rawPlan(70)]) {
+				plan.values = Array.from({ length: 70 }, (_, i) => 0x10000000 + i * 977);
+				const r = compare(subject, 2, plan);
+				assert.ok(r.equal, `poison ${poison}`);
+			}
+		}
+	} finally {
+		await subject.close();
+	}
+});
+
+test('memory.fill and memory.copy inside the callee stack are untracked and equal the serial run', async () => {
+	const subject = await slotRigOf(
+		calleeStack(
+			`
+			(memory.fill (local.get $s) (i32.load (local.get $src)) (i32.const 32))
+			(memory.copy (i32.add (local.get $s) (i32.const 32)) (local.get $s) (i32.const 32))
+			(i32.store (local.get $dst) (i32.load offset=36 (local.get $s)))`,
+			64
+		)
+	);
+	try {
+		for (const width of [1, 2, 4]) {
+			const r = compare(subject, width, disjoint(40));
+			assert.ok(r.equal, `width ${width}`);
+			assert.equal(r.report.undoEntries, 40, `width ${width}`);
+			assert.equal(r.report.replayed, 0);
+		}
+	} finally {
+		await subject.close();
+	}
+});
+
+test('a fill that crosses from the callee stack into the owner frame is tracked and committed', async () => {
+	const subject = await slotRigOf(`
+		(memory.fill (i32.sub (local.get $f) (i32.const 8)) (i32.const 7) (i32.const 16))
+		(i32.store (local.get $dst) (i32.load (i32.sub (local.get $f) (i32.const 4))))`);
+	try {
+		for (const width of [1, 2, 4]) {
+			const r = compare(subject, width, disjoint(40));
+			assert.ok(r.equal, `width ${width}`);
+			const frame = (bytes: Uint8Array) =>
+				Buffer.from(bytes.subarray(PAGE - wat.frame, PAGE));
+			assert.ok(frame(r.want.bytes).equals(frame(r.got.bytes)), `frame at width ${width}`);
+			assert.equal(r.report.replayed, 0);
+			// the dst cell and the two write granules the fill spans
+			assert.equal(r.report.undoEntries, 40 * 3, `width ${width}`);
+		}
+	} finally {
+		await subject.close();
+	}
+});
+// #endregion
+
+// #region indirect calls
+// callbacks through a module-local table: one writes only its own stack frame and the output cell,
+// one also updates a shared word, one is a function of another type the table holds
+const callbacks = `
+	(type $cb (func (param i32) (param i32)))
+	(table $cbs 4 funcref)
+	(elem (i32.const 1) $private $shared $spare)
+	(func $private (type $cb) (param $dst i32) (param $src i32) (local $s i32)
+		(local.set $s (i32.sub (global.get $sp) (i32.const 16)))
+		(global.set $sp (local.get $s))
+		(i32.store (local.get $s) (i32.add (i32.load (local.get $src)) (i32.const 7)))
+		(i32.store (local.get $dst) (i32.load (local.get $s)))
+		(global.set $sp (i32.add (local.get $s) (i32.const 16))))
+	(func $shared (type $cb) (param $dst i32) (param $src i32)
+		(i32.store (i32.const 0x50000)
+			(i32.add (i32.load (i32.const 0x50000)) (i32.load (local.get $src))))
+		(i32.store (local.get $dst) (i32.load (i32.const 0x50000))))
+	(func $spare (result i32) (i32.atomic.rmw.add (i32.const 0x50010) (i32.const 1)))`;
+const through = (index: string) =>
+	`(call_indirect $cbs (type $cb) (local.get $dst) (local.get $src) ${index})`;
+const indirectSource = (index: string) => wasm(ownerSource(through(index), { extra: callbacks }));
+
+test('an indirect callee that writes a private slot runs on workers and equals the serial run', async () => {
+	const bytes = indirectSource('(i32.const 1)');
+	const route = prepare(bytes, { minimumRegionWork: 0 }).iterationRoute!;
+	assert.ok(route.eligible, route.diagnostics.join('; '));
+	assert.ok(route.diagnostics.some((line) => line.startsWith('owner run')));
+	const subject = await watRig([2, 4], {}, bytes);
+	try {
+		for (const width of [2, 4]) {
+			const r = compare(subject, width, distinct(40));
+			assert.ok(r.equal, `width ${width}`);
+			assert.equal(r.report.replayed, 0);
+			assert.equal(r.report.failedBatches, 0);
+			assert.equal(r.report.regions, 40);
+			assert.deepEqual(r.report.conflicts, { raw: 0, war: 0, waw: 0, frame: 0 });
+			assert.equal(new Uint32Array(r.got.bytes.buffer, dstCell(3), 1)[0], 5 + 3 + 7);
+		}
+	} finally {
+		await subject.close();
+	}
+});
+
+test('an indirect callee that writes shared state conflicts and replays to the serial result', async () => {
+	const subject = await watRig([2, 4], {}, indirectSource('(i32.const 2)'));
+	try {
+		for (const width of [2, 4]) {
+			const r = compare(subject, width, distinct(40));
+			assert.ok(r.equal, `width ${width}`);
+			assert.ok(r.report.replayed > 0, `width ${width}`);
+			assert.ok(r.report.conflicts.raw > 0 && r.report.conflicts.waw > 0, `width ${width}`);
+		}
+	} finally {
+		await subject.close();
+	}
+});
+
+test('an indirect call that picks the callee from the data keeps the serial result', async () => {
+	// even values take the private callee, odd values the shared one
+	const pick = '(i32.add (i32.const 1) (i32.and (i32.load (local.get $src)) (i32.const 1)))';
+	const subject = await watRig([4], {}, indirectSource(pick));
+	try {
+		const r = compare(subject, 4, distinct(40));
+		assert.ok(r.equal);
+		assert.ok(r.report.replayed > 0);
+		const private_ = compare(subject, 4, {
+			...disjoint(40),
+			values: Array.from({ length: 40 }, (_, i) => 2 * i)
+		});
+		assert.ok(private_.equal);
+		assert.equal(private_.report.replayed, 0);
+	} finally {
+		await subject.close();
+	}
+});
+
+test('Folio.run sends a loop of indirect calls to workers and matches the serial program', async () => {
+	for (const [index, replays] of [
+		['(i32.const 1)', false],
+		['(i32.const 2)', true]
+	] as const) {
+		const run = await both(indirectSource(index), distinct(40), 4);
+		try {
+			assert.ok(run.equal, index);
+			assert.equal(run.got.report!.extraction, 'iteration');
+			assert.equal(run.got.report!.mode, 'speculative');
+			assert.equal(run.got.report!.iteration!.replayed > 0, replays, index);
+		} finally {
+			await run.folio.close();
+		}
+	}
+});
+
+test('a table entry the loop cannot reach is a stub in the worker module', () => {
+	const route = prepare(indirectSource('(i32.const 1)'), {
+		minimumRegionWork: 0
+	}).iterationRoute!;
+	const module = binaryen.readBinary(Uint8Array.from(route.module!));
+	try {
+		const ids = Array.from({ length: module.getNumFunctions() }, (_, i) =>
+			binaryen.getExpressionId(binaryen.getFunctionInfo(module.getFunctionByIndex(i)).body)
+		);
+		assert.equal(ids.filter((id) => id === binaryen.UnreachableId).length, 1);
+		assert.equal(module.getNumTables(), 1);
+		const segment = binaryen.getElementSegmentInfo(module.getElementSegmentByIndex(0));
+		assert.equal(segment.data.length, 3);
+		assert.equal(new Set(segment.data).size, 3);
+		assert.equal((binaryen.getExpressionInfo(segment.offset) as { value?: number }).value, 1);
+	} finally {
+		module.dispose();
+	}
+});
+
+test('an unsafe table keeps the loop on the older path with the table named', () => {
+	const exported = callbacks.replace(
+		'(table $cbs 4 funcref)',
+		'(table $cbs (export "t") 4 funcref)'
+	);
+	const prepared = prepare(wasm(ownerSource(through('(i32.const 1)'), { extra: exported })), {
+		minimumRegionWork: 0
+	});
+	assert.equal(prepared.iterationRoute!.eligible, false);
+	assert.ok(prepared.stackRoute!.diagnostics.includes('refused table cbs: exported table'));
+});
+// #endregion
+
+// #region windows, the tabled validator and the verdict memory
+const lcg = (seed: number) => {
+	let s = seed >>> 0;
+	return (n: number) => {
+		s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+		return s % n;
+	};
+};
+
+test('the tabled validator counts the same pairs as the pairwise one', () => {
+	for (let seed = 1; seed <= 60; seed++) {
+		const next = lcg(seed);
+		const count = 2 + next(31);
+		const range = 6 + next(60);
+		const outcomes = Array.from({ length: count }, () => {
+			const written = [...new Set(Array.from({ length: next(14) }, () => next(range)))].sort(
+				(a, b) => a - b
+			);
+			const runs: number[] = [];
+			for (let at = next(8); at < range / 2; at += 1 + next(10)) {
+				const length = 1 + next(seed % 3 ? 3 : 40);
+				runs.push(at, length);
+				at += length;
+			}
+			return { status: 0, written: Int32Array.from(written), reads: Int32Array.from(runs) };
+		});
+		for (const skip of [[], ['raw'], ['war', 'waw']] as const) {
+			const a = tabledConflicts(outcomes, skip);
+			const b = pairwiseConflicts(outcomes, skip);
+			assert.deepEqual(a, b, `seed ${seed} skip ${skip.join()}`);
+		}
+	}
+	const many = Array.from({ length: 40 }, (_, k) => ({
+		status: 0,
+		written: Int32Array.of(k),
+		reads: Int32Array.of(k + 1, 1)
+	}));
+	assert.throws(() => tabledConflicts(many, []), RangeError);
+	const { first, ...pairs } = pairwiseConflicts(many, []);
+	assert.deepEqual(iterationVerdict(many).conflicts, { ...pairs, frame: 0 });
+	assert.equal(iterationVerdict(many).first, first);
+	assert.ok(pairs.raw + pairs.war > 0);
+});
+
+test('a verdict counts the frame conflicts that fall in the window words', () => {
+	const o = (frameWritten: number[], frameExposed: number[]) => ({
+		status: 0,
+		written: new Int32Array(0),
+		reads: new Int32Array(0),
+		frameWritten: Uint32Array.from(frameWritten),
+		frameExposed: Uint32Array.from(frameExposed)
+	});
+	const v = iterationVerdict([o([1, 0], []), o([], [1, 0]), o([0, 1], []), o([], [0, 1])], [], 1);
+	assert.equal(v.conflicts.frame, 2);
+	assert.equal(v.window, 1);
+	assert.equal('window' in iterationVerdict([o([1], []), o([], [1])]), false);
+});
+
+test('a window is the span of the granules half the iterations wrote, rounded to 64 bytes', () => {
+	const w = (...granules: number[]) => ({ written: Int32Array.from(granules) });
+	// granule 2050 is 0x10040; every iteration writes 2050 and 2051
+	const found = discoverWindow([w(2050, 2051), w(2050, 2051), w(2050, 2051, 9000)], 4096);
+	assert.deepEqual(found.window, { low: 0x10040, end: 0x10080 });
+	// a granule one iteration of three wrote is not shared by half
+	assert.equal(discoverWindow([w(5), w(6), w(7)], 4096).window, undefined);
+	assert.match(discoverWindow([w(5), w(6)], 4096).reason!, /no write granule is shared/);
+	// a span over the cap names its clusters and is refused
+	const far = discoverWindow([w(10, 5000), w(10, 5000)], 4096);
+	assert.equal(far.window, undefined);
+	assert.match(far.reason!, /over 4096: 0x140\+32 0x27100\+32/);
+});
+
+test('a window copy sits below the frame at the window offset modulo 64', () => {
+	for (const frame of [0, 64, 176]) {
+		for (const low of [0x10000, 0x10040, 0x105100]) {
+			const top = 0x548000;
+			const window = { low, end: low + 192 };
+			const c = iterationWindowCopy(top, frame, window);
+			assert.equal(c.copy % 64, low % 64);
+			assert.equal(c.delta, c.copy - low);
+			assert.ok(c.copy + 192 <= top - frame);
+			assert.ok(top - frame - (c.copy + 192) < 64);
+			assert.equal(c.region, top - c.copy);
+			assert.equal(c.frameOffset, c.copy === 0 ? 0 : top - frame - c.copy);
+		}
+	}
+	assert.throws(() => iterationArena(0, 1 << 20, { windowBytes: 100 }), RangeError);
+	assert.ok(
+		iterationArena(0, 1 << 20, { windowBytes: 1024 }).frameSlotBytes >
+			iterationArena(0, 1 << 20).frameSlotBytes
+	);
+});
+
+// the window items: every iteration writes the cell at 0x40000 first; the carried form reads it first
+const scratchItem = `
+	(i32.store (i32.const 0x40000) (i32.load (local.get $src)))
+	(i32.store offset=4 (i32.const 0x40000) (i32.add (i32.load (i32.const 0x40000)) (i32.const 1)))
+	(i32.store (local.get $dst) (i32.add (i32.load (i32.const 0x40000)) (i32.load offset=4 (i32.const 0x40000))))`;
+const carriedWindowItem = `
+	(i32.store (i32.const 0x40000) (i32.add (i32.load (i32.const 0x40000)) (i32.load (local.get $src))))
+	(i32.store (local.get $dst) (i32.load (i32.const 0x40000)))`;
+const edgeItem = `
+	${scratchItem}
+	(memory.copy (i32.add (local.get $dst) (i32.const 8)) (i32.const 0x40038) (i32.const 16))`;
+
+test('a scratch cell every iteration writes first moves to a window and the run equals serial', async () => {
+	const run = await both(wasm(ownerSource(scratchItem)), distinct(100), 4);
+	try {
+		assert.ok(run.equal);
+		const counts = run.got.report!.iteration!;
+		assert.deepEqual(counts.window, {
+			low: 0x40000,
+			end: 0x40040,
+			source: 'discovered',
+			batches: counts.window!.batches
+		});
+		assert.ok(counts.window!.batches >= 2);
+		// the failed first batch is rolled back, two probes and the windowed batches are kept
+		assert.equal(counts.replayed, 32);
+		assert.equal(counts.regions, 99);
+		assert.equal(counts.windowConflicts, 0);
+		assert.equal(counts.stopped, undefined);
+		// the second call starts on the window: no failed batch, no conflict
+		const { image, args } = planImage(distinct(100));
+		void image;
+		const again = await run.folio.run('run', args);
+		const second = again.iteration!;
+		assert.equal(second.window!.source, 'given');
+		assert.equal(second.replayed, 0);
+		assert.equal(second.conflicts.raw + second.conflicts.waw + second.conflicts.war, 0);
+	} finally {
+		await run.folio.close();
+	}
+});
+
+// the first iteration of the loop also fills 2176 write granules past the scratch cell, past the 2048
+// of a log; the others do not. The cell is the shared location, and the fill is what a race on it
+// can do to an iteration, here fixed by the iteration's position so no timing is involved
+const wildItem = `
+	${scratchItem}
+	(if (i32.eq (local.get $src) (i32.const ${srcCell(1)}))
+		(then (memory.fill (i32.const 0x50000) (i32.const 1) (i32.const 69632))))`;
+
+test('an exhausted log in a batch that shares a scratch cell is not final: the window is probed first', async () => {
+	const run = await both(wasm(ownerSource(wildItem)), distinct(100), 4);
+	try {
+		assert.ok(run.equal);
+		const counts = run.got.report!.iteration!;
+		assert.ok(counts.exhausted >= 1, 'the first batch exhausted a log');
+		assert.equal(counts.stopped, undefined, 'the loop was not stopped by it');
+		assert.deepEqual(counts.window && { ...counts.window, batches: 0 }, {
+			low: 0x40000,
+			end: 0x40040,
+			source: 'discovered',
+			batches: 0
+		});
+		assert.ok(counts.window!.batches >= 1);
+		assert.ok(counts.regions > 40, 'later batches ran on the workers');
+	} finally {
+		await run.folio.close();
+	}
+});
+
+test('an exhausted log with no scratch cell to blame still ends the dispatch', async () => {
+	// the same fill, one region per iteration and no shared write
+	const item = `(if (i32.lt_u (local.get $src) (i32.const ${srcCell(9)}))
+		(then (memory.fill (i32.add (i32.const 0x50000) (i32.mul (i32.load (local.get $src)) (i32.const 0x11000))) (i32.const 1) (i32.const 69632))))
+		(i32.store (local.get $dst) (i32.load (local.get $src)))`;
+	const run = await both(wasm(ownerSource(item, { maximum: 4096 })), distinct(100), 4);
+	try {
+		const counts = run.got.report!.iteration!;
+		assert.ok(counts.exhausted >= 1);
+		assert.equal(counts.window, undefined);
+		assert.equal(counts.stopped, 'log-exhausted');
+	} finally {
+		await run.folio.close();
+	}
+});
+
+test('a window the iterations read before they write is refused by validation', async () => {
+	const run = await both(wasm(ownerSource(carriedWindowItem)), distinct(60), 4);
+	try {
+		assert.ok(run.equal);
+		const counts = run.got.report!.iteration!;
+		assert.ok(counts.window);
+		assert.ok(counts.windowConflicts > 0);
+		assert.equal(counts.stopped, 'frame-carried dependence');
+		assert.equal(run.got.report!.reason, 'frame-carried dependence');
+	} finally {
+		await run.folio.close();
+	}
+});
+
+test('a range that crosses the window edge traps and the iteration replays serially', async () => {
+	const run = await both(wasm(ownerSource(edgeItem)), distinct(80), 4);
+	try {
+		assert.ok(run.equal);
+		const counts = run.got.report!.iteration!;
+		assert.ok(counts.window);
+		assert.ok(counts.traps > 0);
+		assert.ok(counts.replayed > 32);
+	} finally {
+		await run.folio.close();
+	}
+});
+
+test('a loop with no shared write names why it needs no window', async () => {
+	const run = await both(wasm(ownerSource(carriedItem)), distinct(40), 4);
+	try {
+		assert.ok(run.equal);
+		const counts = run.got.report!.iteration!;
+		assert.equal(counts.window, undefined);
+		assert.match(counts.windowRefused ?? 'none', /shared by half|none/);
+		assert.equal(counts.batches, 1);
+	} finally {
+		await run.folio.close();
+	}
+});
+
+test('the lowering with a window compiles with and without a stack and exports the window globals', () => {
+	for (const text of [
+		ownerSource(scratchItem),
+		ownerSource(scratchItem).replace(/\(global \$sp[^\n]*\n/, '')
+	]) {
+		if (!text.includes('$sp (mut')) continue;
+		const route = prepare(wasm(text), { minimumRegionWork: 0 }).iterationRoute!;
+		assert.ok(route.eligible);
+		const lowered = lowerInline(route.module!, { window: true });
+		const names = WebAssembly.Module.exports(
+			new WebAssembly.Module(Uint8Array.from(lowered))
+		).map((e) => e.name);
+		for (const name of ['__folio_wl', '__folio_we', '__folio_wd', '__folio_fl', '__folio_xl'])
+			assert.ok(names.includes(name), name);
+	}
+	const plain = lowerInline(
+		prepare(wasm(ownerSource(scratchItem)), { minimumRegionWork: 0 }).iterationRoute!.module!,
+		{ slot: true }
+	);
+	const names = WebAssembly.Module.exports(new WebAssembly.Module(Uint8Array.from(plain))).map(
+		(e) => e.name
+	);
+	assert.ok(!names.includes('__folio_wl'));
+});
+
+test('a given window the arena cannot hold is refused with the reason and the loop still equals serial', async () => {
+	const rigWithWindow = await watRig([2], { windowBytes: 256, slotBytes: 8192 });
+	try {
+		const { image, args } = planImage(disjoint(40));
+		const want = serialRun(rigWithWindow, image, args);
+		for (const [window, why] of [
+			[{ low: 0x40001, end: 0x40040 }, /not 64-byte aligned/],
+			[{ low: 0x40000, end: 0x40400 }, /over 256/],
+			[
+				{ low: rigWithWindow.arenaBase, end: rigWithWindow.arenaBase + 64 },
+				/overlaps the arena/
+			]
+		] as const) {
+			const got = iterationRun(rigWithWindow, 2, image, args, { window });
+			assert.equal(firstDifference(rigWithWindow, want.bytes, got.bytes), -1);
+			assert.match(got.report!.windowRefused!, why);
+			assert.equal(got.report!.window, undefined);
+		}
+		const ok = iterationRun(rigWithWindow, 2, image, args, {
+			window: { low: 0x40000, end: 0x40040 }
+		});
+		assert.equal(firstDifference(rigWithWindow, want.bytes, ok.bytes), -1);
+		assert.equal(ok.report!.window!.source, 'given');
+	} finally {
+		await rigWithWindow.close();
+	}
+});
+// #endregion
+
+test('a stop one call recorded skips the dispatch for sixteen calls and then probes again', async () => {
+	const source = wasm(ownerSource(carriedItem));
+	const { image, args } = planImage(distinct(40));
+	const memory = new WebAssembly.Memory({ initial: wat.pages, maximum: 128 });
+	new Uint8Array(memory.buffer).set(image);
+	const serial = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(source)), {
+		env: { memory }
+	}).exports.run as CallableFunction;
+	const folio = await Folio.open(source, { workers: 4 });
+	try {
+		new Uint8Array(folio.memory.buffer).set(image);
+		const batches: (number | undefined)[] = [];
+		for (let call = 0; call < 19; call++) {
+			serial(...args);
+			const report = await folio.run('run', args);
+			batches.push(report.iteration?.batches);
+			assert.equal(report.reason, 'frame-carried dependence', `call ${call}`);
+			assert.equal(
+				Buffer.compare(
+					programPages(memory, wat.pages),
+					programPages(folio.memory, wat.pages)
+				),
+				0,
+				`call ${call}`
+			);
+		}
+		// one batch on the first call, none on the sixteen that follow, one again on the probe
+		assert.equal(batches[0], 1);
+		assert.deepEqual(batches.slice(1, 17), Array(16).fill(undefined));
+		assert.equal(batches[17], 1);
+	} finally {
+		await folio.close();
+	}
+});
+
+// #region the stall guard
+// iteration 0 burns and then writes the shared cell; the others read it first and, on a stale 0,
+// log a write and spin on their copy, which serially never happens
+const staleCell = srcCell(0);
+const staleItem = `
+	(local.set $s (i32.load (local.get $src)))
+	(if (i32.eq (local.get $dst) (i32.const ${dstCell(0)}))
+		(then
+			(local.set $src (i32.const 0x6000000))
+			(loop $burn (br_if $burn (local.tee $src (i32.sub (local.get $src) (i32.const 1)))))
+			(i32.store (i32.const ${staleCell}) (i32.const 1)))
+		(else
+			(if (i32.eqz (local.get $s)) (then (i32.store (i32.const 0x50000) (i32.const 0xdead))))
+			(loop $spin (br_if $spin (i32.eqz (local.get $s))))))
+	(i32.store (local.get $dst) (i32.add (local.get $s) (i32.const 1)))`;
+const stalePlan = (n: number): Plan => {
+	const plan = disjoint(n);
+	plan.src = plan.src.map(() => staleCell);
+	plan.values = Array.from({ length: n }, () => 0);
+	return plan;
+};
+
+test('a worker that spins on a value another iteration changed is stopped and the result is serial', async () => {
+	const stale = await watRig(
+		[2],
+		{ stall: { floorMs: 300, factor: 0 } },
+		wasm(ownerSource(staleItem, { maximum: wat.pages }))
+	);
+	try {
+		for (const round of [1, 2]) {
+			const t = performance.now();
+			const r = compare(stale, 2, stalePlan(6));
+			assert.ok(performance.now() - t < 20000, `round ${round}`);
+			assert.equal(r.equal, true, `round ${round}`);
+			assert.equal(r.report.stopped, 'stalled');
+			assert.equal(r.report.stalls, 1);
+			assert.ok(r.report.stalledIterations >= 1);
+			// the ghost write of the stuck iteration was rolled back: serially the cell stays 0
+			assert.equal(new DataView(r.got.bytes.buffer).getUint32(0x50000, true), 0);
+			assert.equal(r.report.replayed + r.report.serial >= 5, true);
+		}
+	} finally {
+		await stale.close();
+	}
+});
+
+test('a pool without the stall option has no stop poll and a stall limit must be positive', async () => {
+	const bytes = wasm(ownerSource(plainItem, { shared: true }));
+	assert.ok(
+		lowerInline(bytes, { stop: true }).length > lowerInline(bytes, {}).length,
+		'the poll adds code to the loop'
+	);
+	const route = prepare(bytes, { minimumRegionWork: 0 }).iterationRoute!;
+	const memory = new WebAssembly.Memory({ initial: wat.pages, maximum: wat.pages, shared: true });
+	for (const stall of [{ floorMs: 0 }, { floorMs: -5 }, { factor: -1 }])
+		await assert.rejects(
+			IterationPool.open(route, memory, { arenaBase: wat.arena, width: 1, stall }),
+			RangeError
+		);
+});
+
+test('two hundred batches of sixteen with the guard armed never stall', async () => {
+	const armed = await watRig(
+		[8],
+		{ stall: true },
+		wasm(ownerSource(plainItem, { maximum: wat.pages }))
+	);
+	try {
+		for (let i = 0; i < 200; i++) {
+			const r = compare(armed, 8, disjoint(16));
+			assert.equal(r.equal, true, `run ${i}`);
+			assert.equal(r.report.stalls, 0, `run ${i}`);
+			assert.equal(r.report.stopped, undefined, `run ${i}`);
+		}
+	} finally {
+		await armed.close();
+	}
+});
+// #endregion
+
+// #region second chance
+const floorMs = iterationAdmissionConstants.fixedMs * iterationAdmissionConstants.margin;
+
+test('the second chance admits a loop between half the floor and the floor as a probe', () => {
+	const t = (fraction: number, trip = 101) => (fraction * floorMs) / (trip - 1);
+	const off = admitIteration({ plainIterationMs: t(0.75), trip: 101, width: 4 });
+	assert.equal(off.admitted, false);
+	assert.equal(off.probe, undefined);
+	const on = (plainIterationMs: number, trip = 101, width = 4) =>
+		admitIteration({ plainIterationMs, trip, width, secondChance: true });
+	const probe = on(t(0.75));
+	assert.equal(probe.admitted, true);
+	assert.equal(probe.probe, true);
+	assert.equal(probeFraction, 0.5);
+	assert.equal(on(t(0.49)).admitted, false, 'under half the floor');
+	assert.equal(on(t(0.25)).admitted, false);
+	// over the floor the loop is admitted outright, with no probe, as without the option
+	const above = on(t(1.5));
+	assert.equal(above.admitted, true);
+	assert.equal(above.probe, undefined);
+	assert.deepEqual(on(t(1.5)), admitIteration({ plainIterationMs: t(1.5), trip: 101, width: 4 }));
+	// the structural limits of admission still hold
+	assert.equal(on(t(0.75, 2), 2).admitted, false, 'one iteration left');
+	assert.equal(on(t(0.75), 101, 1).admitted, false, 'one worker');
+	assert.equal(on(Number.NaN).admitted, false);
+	// through the seam, and force still admits a loop of any size
+	admissionSeam.force = false;
+	admissionSeam.scale = 1;
+	assert.equal(decideAdmission(t(0.75), 101, 4, true).probe, true);
+	assert.equal(decideAdmission(t(0.75), 101, 4).admitted, false);
+	admissionSeam.force = true;
+	assert.equal(decideAdmission(1e-9, 101, 4).admitted, true);
+	admissionSeam.force = false;
+});
+
+test('the remaining-work decision trusts a timed batch for a loop under the floor', () => {
+	admissionSeam.force = false;
+	admissionSeam.scale = 1;
+	admissionSeam.batchScale = 1;
+	const perIteration = 0.02;
+	const remaining = 20;
+	assert.ok(remaining * perIteration < floorMs);
+	// without a batch to go on the floor decides, as before
+	assert.equal(decideRemaining(perIteration, remaining, 4), false);
+	// a batch of 32 that took 0.1 ms: 20 iterations cost one batch, 0.1 ms * 1.25, against 0.4 ms
+	assert.equal(decideRemaining(perIteration, remaining, 4, { wallMs: 0.1, count: 32 }), true);
+	// the same batch at 0.3 ms: 0.375 ms against 0.4 ms is still a win, 0.33 ms is not
+	assert.equal(decideRemaining(perIteration, remaining, 4, { wallMs: 0.3, count: 32 }), true);
+	assert.equal(decideRemaining(perIteration, remaining, 4, { wallMs: 0.33, count: 32 }), false);
+	// the batches that cover what is left are counted: 70 iterations are three batches
+	assert.equal(decideRemaining(0.02, 70, 4, { wallMs: 0.4, count: 32 }), false);
+	assert.equal(decideRemaining(0.02, 70, 4, { wallMs: 0.3, count: 32 }), true);
+	// over the floor the answer does not depend on the batch
+	assert.equal(decideRemaining(1, 20, 4), true);
+	assert.equal(decideRemaining(1, 20, 4, { wallMs: 1e9, count: 32 }), true);
+	// nothing to dispatch to or nothing left
+	assert.equal(decideRemaining(perIteration, remaining, 1, { wallMs: 0.1, count: 32 }), false);
+	assert.equal(decideRemaining(perIteration, 1, 4, { wallMs: 0.1, count: 32 }), false);
+	assert.equal(decideRemaining(Number.NaN, remaining, 4, { wallMs: 0.1, count: 32 }), false);
+	assert.equal(decideRemaining(perIteration, remaining, 4, { wallMs: 0.1, count: 0 }), false);
+	// the seam scales the batch wall, as it does for the batch rule
+	admissionSeam.batchScale = 100;
+	assert.equal(decideRemaining(perIteration, remaining, 4, { wallMs: 0.1, count: 32 }), false);
+	admissionSeam.batchScale = 1;
+});
+
+test('a batch on read windows has a scale of its own, fitted to the same reference', () => {
+	const first = { estimateMs: 1 };
+	// the learning batch tracks at 4.0 ms per iteration: the scale is 1 / 4
+	const plain = refineEstimate(first, Array(8).fill(4));
+	assert.equal(plain.kappa, 0.25);
+	assert.equal(plain.referenceMs, 1);
+	assert.equal(plain.kappaWindows, undefined);
+	// the first batch on windows tracks at 1.25 ms: with the old scale the estimate read 0.31 ms
+	const windowed = refineEstimate(plain, Array(32).fill(1.25), true);
+	assert.equal(windowed.kappa, 0.25, 'the unwindowed scale stays');
+	assert.equal(windowed.kappaWindows, 0.8);
+	assert.ok(Math.abs(windowed.estimateMs - 1) < 1e-12);
+	assert.equal(windowed.referenceMs, 1);
+	// later batches on windows keep it, later batches without windows use the first scale
+	const again = refineEstimate(windowed, Array(8).fill(2.5), true);
+	assert.equal(again.kappaWindows, 0.8);
+	assert.ok(Math.abs(again.estimateMs - 2) < 1e-12);
+	const back = refineEstimate(windowed, Array(8).fill(4));
+	assert.equal(back.kappa, 0.25);
+	assert.ok(Math.abs(back.estimateMs - 1) < 1e-12);
+	// a window that is no cheaper to track keeps the cap at one
+	assert.equal(refineEstimate(plain, Array(8).fill(0.5), true).kappaWindows, 1);
+	// a loop that never ran on windows has the same estimate as before
+	assert.deepEqual(
+		refineEstimate({ estimateMs: 1 }, Array(8).fill(1.4)).estimateMs,
+		refineEstimate({ estimateMs: 1 }, Array(8).fill(1.4), false).estimateMs
+	);
+});
+
+const probing = (plainIterationMs: number) => ({
+	plainIterationMs,
+	remainingSerialMs: 0,
+	floorMs: 0,
+	admitted: true,
+	probe: true
+});
+
+test('a probe is judged on its first timed batch and an ordinary admission on its second', () => {
+	const seen: (number | undefined)[] = [];
+	// the batch wins: every batch is dispatched and every later question carries the last batch
+	const won = compare(rig, 4, disjoint(100), {
+		admit: probing,
+		loses: () => false,
+		reconsider: (_, __, last) => {
+			seen.push(last?.count);
+			return true;
+		}
+	});
+	assert.ok(won.equal);
+	assert.equal(won.report.batches, 4);
+	assert.equal(won.report.stopped, undefined);
+	assert.equal(won.report.admission!.probeLost, undefined);
+	assert.deepEqual(seen, [32, 32, 32]);
+	// the batch loses: one batch, then the rest runs serially, and the probe is marked lost
+	const lost = compare(rig, 4, disjoint(100), { admit: probing, loses: () => true });
+	assert.ok(lost.equal);
+	assert.equal(lost.report.batches, 1);
+	assert.equal(lost.report.regions, 32);
+	assert.equal(lost.report.serial, 1 + 67);
+	assert.equal(lost.report.stopped, 'no-admission');
+	assert.equal(lost.report.admission!.probeLost, true);
+	assert.equal(lost.report.replayed, 0);
+	// an ordinary admission needs two slow batches and is never marked lost
+	const ordinary = compare(rig, 4, disjoint(100), { admit: accepts, loses: () => true });
+	assert.ok(ordinary.equal);
+	assert.equal(ordinary.report.batches, 2);
+	assert.equal(ordinary.report.stopped, 'no-admission');
+	assert.equal(ordinary.report.admission!.probeLost, undefined);
+	// a probe that collapses is lost on the one batch too
+	const collapsed = compare(rig, 4, disjoint(100), {
+		admit: probing,
+		loses: () => false,
+		collapses: () => true
+	});
+	assert.ok(collapsed.equal);
+	assert.equal(collapsed.report.batches, 1);
+	assert.equal(collapsed.report.admission!.probeLost, true);
+	// a probe whose first batch conflicts is a dependence, which is its own stop and not a lost probe
+	const raw = compare(rig, 4, rawPlan(100), { admit: probing, loses: () => false });
+	assert.ok(raw.equal);
+	assert.equal(raw.report.stopped, 'dependency');
+	assert.equal(raw.report.admission!.probeLost, undefined);
+});
+
+// opens a pool and reruns the loop until the seam puts its serial time between half the floor and
+// the floor, which is where the probe is admitted; the measured time of iteration 0 is noisy
+async function zoned(plan: Plan, batchScale: number, trips = plan.src.length) {
+	const source = wasm(ownerSource(plainItem));
+	let scale = 1e4;
+	for (let attempt = 0; attempt < 12; attempt++) {
+		admissionSeam.force = false;
+		admissionSeam.scale = scale;
+		admissionSeam.batchScale = batchScale;
+		const run = await both(source, plan, 4, trips, 'run', { iterationSecondChance: true });
+		const a = run.got.report?.iteration?.admission;
+		if (a?.probe) return run;
+		await run.folio.close();
+		scale *= a && a.remainingSerialMs > 0 ? (0.75 * a.floorMs) / a.remainingSerialMs : 2;
+	}
+	throw new Error('the seam never put the loop in the probe zone');
+}
+
+test('a probe whose batch wins is dispatched to the end, and the result is the serial one', async () => {
+	const run = await zoned(disjoint(100), 1e-9);
+	try {
+		assert.ok(run.equal);
+		const counts = run.got.report!.iteration!;
+		const a = counts.admission!;
+		assert.equal(a.admitted, true);
+		assert.equal(a.probe, true);
+		assert.ok(
+			a.remainingSerialMs <= a.floorMs && a.remainingSerialMs > a.floorMs * probeFraction
+		);
+		assert.equal(a.probeLost, undefined);
+		// iterations 0 and 1 run on the owner, which times the second for the probe
+		assert.equal(counts.regions, 98);
+		assert.equal(counts.serial, 2);
+		assert.equal(counts.batches, 4);
+		assert.equal(counts.stopped, undefined);
+		assert.equal(run.got.report!.reason, undefined);
+	} finally {
+		admissionSeam.scale = 1;
+		admissionSeam.batchScale = 1;
+		await run.folio.close();
+	}
+});
+
+test('a probe whose batch loses ends after one batch and the loop stays serial for 16 calls', async () => {
+	const plan = disjoint(100);
+	const run = await zoned(plan, 1e9);
+	try {
+		assert.ok(run.equal);
+		const first = run.got.report!;
+		assert.equal(first.iteration!.batches, 1);
+		assert.equal(first.iteration!.admission!.probeLost, true);
+		assert.equal(first.reason, 'no-admission');
+		const { image, args } = planImage(plan);
+		const batches: (number | undefined)[] = [];
+		for (let call = 0; call < 16; call++) {
+			new Uint8Array(run.folio.memory.buffer).set(image);
+			const report = await run.folio.run('run', args);
+			batches.push(report.iteration?.batches);
+			assert.equal(report.reason, 'no-admission', `call ${call}`);
+		}
+		assert.deepEqual(batches, Array(16).fill(undefined));
+	} finally {
+		admissionSeam.scale = 1;
+		admissionSeam.batchScale = 1;
+		await run.folio.close();
+	}
+});
+
+test('a probe whose first batch conflicts is not probed again for 16 calls', async () => {
+	const plan = rawPlan(100);
+	const run = await zoned(plan, 1);
+	try {
+		assert.ok(run.equal);
+		const first = run.got.report!;
+		assert.equal(first.reason, 'dependency');
+		assert.equal(first.iteration!.admission!.probe, true);
+		const { image, args } = planImage(plan);
+		for (let call = 0; call < 16; call++) {
+			new Uint8Array(run.folio.memory.buffer).set(image);
+			const report = await run.folio.run('run', args);
+			assert.equal(report.reason, 'dependency', `call ${call}`);
+			assert.equal(report.iteration?.batches, undefined, `call ${call}`);
+		}
+	} finally {
+		admissionSeam.scale = 1;
+		admissionSeam.batchScale = 1;
+		await run.folio.close();
+	}
+});
+
+test('the second chance is off unless asked for: a loop under the floor stays serial', async () => {
+	admissionSeam.force = false;
+	admissionSeam.batchScale = 1;
+	admissionSeam.scale = 1e4;
+	const source = wasm(ownerSource(plainItem));
+	let probes = 0;
+	for (let attempt = 0; attempt < 4; attempt++) {
+		const run = await both(source, disjoint(100), 4);
+		try {
+			assert.ok(run.equal);
+			if (run.got.report?.iteration?.admission?.probe) probes++;
+		} finally {
+			await run.folio.close();
+		}
+	}
+	admissionSeam.scale = 1;
+	assert.equal(probes, 0);
+});
+// #endregion
+
+// #region wrong-side admission
+test('the bound is the serial time over the workers share of the tracked time', () => {
+	// 8 iterations of 1 ms serial, tracked at 10 ms each, on 8 workers: one tracked iteration each
+	assert.equal(batchBound(1, Array(8).fill(10), 8), 0.8);
+	// the same on 4 workers: two tracked iterations each
+	assert.equal(batchBound(1, Array(8).fill(10), 4), 0.4);
+	// fewer iterations than workers still cost one tracked iteration
+	assert.equal(batchBound(1, Array(2).fill(2), 8), 1);
+	// times of zero or less are ignored, and nothing to go on is no bound
+	assert.equal(batchBound(1, [0, -1, 5, 5], 2), 0.4);
+	assert.equal(batchBound(1, [], 8), Infinity);
+	assert.equal(batchBound(0, [1], 8), Infinity);
+	assert.equal(batchBound(Number.NaN, [1], 8), Infinity);
+	assert.equal(batchBound(1, [1], 0), Infinity);
+	// a bound under one cannot pay; the seam turns the stop off with force
+	admissionSeam.force = false;
+	admissionSeam.batchScale = 1;
+	assert.equal(decideBound(0.99), true);
+	assert.equal(decideBound(1), false);
+	// a first batch bounded under `proofBound` gets a short batch on its read windows
+	assert.equal(decideProof(proofBound - 0.01), true);
+	assert.equal(decideProof(proofBound), false);
+	admissionSeam.force = true;
+	assert.equal(decideBound(0.01), false);
+	assert.equal(decideProof(0.01), false);
+	admissionSeam.force = false;
+});
+
+test('the next batch is priced from the cost that did not shrink in the last one', () => {
+	// 8 iterations tracked at 0.4 ms on 8 workers took 1 ms: 0.6 ms is wake, join and validation
+	const next = projectBatch(1, Array(8).fill(0.4), 0.1, 32, 8)!;
+	assert.ok(Math.abs(next.wallMs - 2.2) < 1e-12);
+	assert.ok(Math.abs(next.serialMs - 3.2) < 1e-12);
+	// a batch faster than its tracked time has no fixed cost to carry over
+	assert.ok(Math.abs(projectBatch(0.2, Array(8).fill(0.4), 0.1, 32, 8)!.wallMs - 1.6) < 1e-12);
+	assert.equal(projectBatch(1, [], 0.1, 32, 8), undefined);
+	assert.equal(projectBatch(1, [0.4], 0, 32, 8), undefined);
+	assert.equal(projectBatch(1, [0.4], 0.1, 0, 8), undefined);
+	assert.equal(projectBatch(1, [0.4], 0.1, 32, 0), undefined);
+	// the margin rule on the projection: 2.2 ms of wall for 3.2 ms of serial time passes, 3.2 does not
+	assert.equal(batchLoses(next.wallMs, next.serialMs), false);
+	assert.equal(batchLoses(3.2, next.serialMs), true);
+});
+
+test('a call after one that stopped on cost starts with one iteration per worker', () => {
+	const sizes = (report: IterationReport) => report.admission!.trace!.map((step) => step.count);
+	admissionSeam.trace = true;
+	try {
+		const keep = { admit: accepts, hopeless: () => false };
+		const stop = { admit: accepts, hopeless: () => true };
+		// a call that ran to the end leaves nothing behind, whatever came before
+		assert.ok(compare(rig, 4, disjoint(100), keep).equal);
+		const fresh = compare(rig, 4, disjoint(100), keep);
+		assert.ok(fresh.equal);
+		assert.deepEqual(sizes(fresh.report), [32, 32, 32, 3]);
+		// a full first batch stops on cost, and the next call prices a short one first
+		const lost = compare(rig, 4, disjoint(100), stop);
+		assert.ok(lost.equal);
+		assert.equal(lost.report.stopped, 'no-admission');
+		assert.deepEqual(sizes(lost.report), [32]);
+		const probed = compare(rig, 4, disjoint(100), keep);
+		assert.ok(probed.equal, 'the result is the serial one');
+		assert.deepEqual(sizes(probed.report), [4, 28, 32, 32, 3]);
+		assert.equal(probed.report.stopped, undefined);
+		assert.equal(probed.report.regions, 99);
+		assert.equal(probed.report.replayed, 0);
+		// a call that was not stopped clears it
+		const cleared = compare(rig, 4, disjoint(100), keep);
+		assert.deepEqual(sizes(cleared.report), [32, 32, 32, 3]);
+		// a loop that loses is still stopped, after one iteration per worker
+		compare(rig, 4, disjoint(100), stop);
+		const again = compare(rig, 4, disjoint(100), stop);
+		assert.ok(again.equal);
+		assert.deepEqual(sizes(again.report), [4]);
+		assert.equal(again.report.regions, 4);
+		assert.equal(again.report.serial, 96);
+		assert.equal(again.report.stopped, 'no-admission');
+		// the floor on the serial time that is left is not evidence about the code
+		const floor = compare(rig, 4, disjoint(100), { ...keep, reconsider: () => false });
+		assert.ok(floor.equal);
+		assert.equal(floor.report.stopped, 'no-admission');
+		assert.deepEqual(sizes(floor.report), [4]);
+		assert.deepEqual(sizes(compare(rig, 4, disjoint(100), keep).report), [32, 32, 32, 3]);
+		compare(rig, 4, disjoint(100), stop);
+		// a call that dispatched nothing says nothing about the code
+		const refused = compare(rig, 4, disjoint(100), {
+			admit: (ms) => ({ ...accepts(ms), admitted: false }),
+			reconsider: () => false
+		});
+		assert.ok(refused.equal);
+		assert.equal(refused.report.batches, 0);
+		const after = compare(rig, 4, disjoint(100), keep);
+		assert.deepEqual(sizes(after.report), [4, 28, 32, 32, 3]);
+		compare(rig, 4, disjoint(100), keep);
+	} finally {
+		admissionSeam.trace = false;
+	}
+});
+
+test('a batch that the tracking cost bounds under one ends the dispatch after one batch', () => {
+	const bounds: number[] = [];
+	const hopeless = (bound: number) => (bounds.push(bound), true);
+	const run = compare(rig, 4, disjoint(100), { admit: accepts, hopeless });
+	assert.ok(run.equal, 'the result is the serial one');
+	assert.equal(run.report.batches, 1);
+	assert.equal(run.report.regions, 32);
+	assert.equal(run.report.replayed, 0);
+	assert.equal(run.report.stopped, 'no-admission');
+	assert.equal(bounds.length, 1);
+	assert.ok(bounds[0]! > 0);
+	// a loop that is not bounded keeps dispatching, and nothing stops it
+	const kept = compare(rig, 4, disjoint(100), { admit: accepts, hopeless: () => false });
+	assert.ok(kept.equal);
+	// the call before stopped on cost, so this one starts with a short batch: 4, 28, 32, 32 and 3
+	assert.equal(kept.report.batches, 5);
+	assert.equal(kept.report.stopped, undefined);
+	// the last batch has nothing after it to stop
+	const whole = compare(rig, 4, disjoint(33), { admit: accepts, hopeless: () => true });
+	assert.ok(whole.equal);
+	assert.equal(whole.report.stopped, undefined);
+	// a probe that is bounded is a lost probe
+	const probe = compare(rig, 4, disjoint(100), {
+		admit: (ms) => ({ ...accepts(ms), probe: true }),
+		hopeless: () => true
+	});
+	assert.ok(probe.equal);
+	assert.equal(probe.report.admission!.probeLost, true);
+	// without `admit` there is no baseline and the callback is not asked
+	const unasked = compare(rig, 4, disjoint(70), { hopeless: () => assert.fail('asked') });
+	assert.equal(unasked.report.stopped, undefined);
+});
+
+test('a loop that wins is not stopped by the bound, and the real bound of a cheap loop is over one', async () => {
+	admissionSeam.force = false;
+	admissionSeam.scale = 1e4;
+	admissionSeam.batchScale = 1e-9;
+	const source = wasm(ownerSource(plainItem));
+	try {
+		const run = await both(source, disjoint(100), 4);
+		try {
+			assert.ok(run.equal);
+			const counts = run.got.report!.iteration!;
+			assert.equal(counts.stopped, undefined);
+			assert.equal(counts.batches, 4);
+			assert.equal(counts.regions, 99);
+		} finally {
+			await run.folio.close();
+		}
+	} finally {
+		admissionSeam.scale = 1;
+		admissionSeam.batchScale = 1;
+	}
 });
 // #endregion

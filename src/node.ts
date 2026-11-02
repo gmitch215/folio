@@ -5,10 +5,23 @@ import type { PreparedProgram } from './compiler.ts';
 import { Coordinator } from './coordinator.ts';
 import type { IterationRoute } from './extract.ts';
 import type { NativePlan } from './guards.ts';
-import { decideAdmission, decideBatch, decideCollapse } from './iteration-admission.ts';
-import { iterationArguments, iterationFit } from './iteration-layout.ts';
+import {
+	decideAdmission,
+	decideBatch,
+	decideBound,
+	decideCollapse,
+	decideProof,
+	decideRemaining,
+	type IterationStop
+} from './iteration-admission.ts';
+import {
+	iterationArguments,
+	iterationFit,
+	iterationWindowBytes,
+	type IterationWindow
+} from './iteration-layout.ts';
 import type { IterationOwner, IterationReason } from './iteration-owner.ts';
-import type { IterationPool, IterationReport } from './iteration.ts';
+import type { IterationPool, IterationReport, IterationStallOptions } from './iteration.ts';
 import { memoryImports } from './memory.ts';
 import type { TransactionResult } from './transaction.ts';
 import { numberBits, restoreNumbers } from './values.ts';
@@ -139,6 +152,48 @@ export interface FolioOptions {
 	 * @since 1.0.1
 	 */
 	adaptiveRouting?: boolean;
+	/**
+	 * Undo entries per iteration the iteration route may grow its logs to when a batch exhausts the
+	 * default capacity, retrying that batch once. Off unless set: on the padded LZ4 consumer the
+	 * retry costs more than the dispatch gains, because the ordered validator is quadratic in the
+	 * logged entries.
+	 * @since 1.1.0
+	 */
+	iterationLogCeiling?: number;
+	/**
+	 * Learn read windows from the first batch of an iteration loop that completes without a
+	 * conflict, so loads of the input the iterations stream through set no per-access mark. The next
+	 * batch counts the loads on the windows, and they stay armed only if they pay. Off by
+	 * default. A window can only cost a false conflict, never a different result.
+	 * @since 1.1.0
+	 */
+	iterationReadWindows?: boolean;
+	/**
+	 * Keep a summary of which 64-word blocks of each read bitmap a read touched, so the workers scan
+	 * those blocks and not the whole bitmap after every iteration. The conflicts found do not change.
+	 * Costs a few executed instructions on every tracked read. Off by default.
+	 * @since 1.1.0
+	 */
+	iterationReadSummary?: boolean;
+	/**
+	 * Stop an iteration batch that does not return. The worker module polls a stop word at every
+	 * loop start, which costs a few percent of worker time on tight loops, so it is off by
+	 * default. When a batch has run past its limit the
+	 * workers trap, the batch rolls back from the undo logs and the loop finishes serially with
+	 * `iteration.stopped` set to `stalled`. Needed for programs whose iterations can read state
+	 * another iteration is changing and then loop on it, such as a linked structure that two
+	 * iterations rewrite.
+	 * @since 1.1.0
+	 */
+	iterationStall?: boolean | IterationStallOptions;
+	/**
+	 * Judge an iteration loop that is a little under the dispatch floor on one timed batch, and let
+	 * the batches a running loop has shown decide whether what is left pays, instead of the floor
+	 * alone. A probe that loses ends the dispatch and the loop runs serially for the next 16 calls.
+	 * The result is the same either way; only the choice of route changes. Off by default.
+	 * @since 1.1.0
+	 */
+	iterationSecondChance?: boolean;
 }
 
 interface Pending {
@@ -166,8 +221,21 @@ function isMemory(value: unknown): value is WebAssembly.Memory {
 
 const PAGE = 65536;
 
+// what an earlier call of one entry at one width showed, so the next one starts there. A window
+// is a hint the pool checks again; a stop skips the dispatch for `iterationReprobe` calls, after
+// which the next call tries again
+interface IterationVerdict {
+	window?: IterationWindow;
+	stop?: IterationStop;
+	skipped: number;
+}
+
+/** Calls that skip dispatch after a stop that one call recorded, before one tries again. */
+const iterationReprobe = 16;
+
 interface IterationState {
 	route: IterationRoute;
+	verdicts: Map<string, IterationVerdict>;
 	owner: IterationOwner;
 	memory: WebAssembly.Memory;
 	arenaBase: number;
@@ -189,8 +257,20 @@ function addCounts(total: IterationReport | undefined, part: IterationReport): I
 	if (!total) return structuredClone(part);
 	for (const key of Object.keys(part) as (keyof IterationReport)[]) {
 		if (key === 'stopped') total.stopped ??= part.stopped;
-		else if (key === 'admission') total.admission = part.admission ?? total.admission;
+		else if (key === 'windowRefused') total.windowRefused ??= part.windowRefused;
+		else if (key === 'readWindowRefused') total.readWindowRefused ??= part.readWindowRefused;
+		else if (key === 'readWindowGate') total.readWindowGate ??= part.readWindowGate;
+		else if (key === 'readWindows') {
+			if (part.readWindows && total.readWindows)
+				total.readWindows.batches += part.readWindows.batches;
+			else total.readWindows ??= part.readWindows;
+		} else if (key === 'window') {
+			if (part.window && total.window) total.window.batches += part.window.batches;
+			else total.window ??= part.window;
+		} else if (key === 'admission') total.admission = part.admission ?? total.admission;
 		else if (key === 'workers') total.workers = Math.max(total.workers, part.workers);
+		else if (key === 'maxLogEntries')
+			total.maxLogEntries = Math.max(total.maxLogEntries, part.maxLogEntries);
 		else if (key === 'conflicts') {
 			total.conflicts.raw += part.conflicts.raw;
 			total.conflicts.war += part.conflicts.war;
@@ -240,7 +320,11 @@ async function selectIteration(
 	if (options.memory && !isSharedArrayBuffer(options.memory.buffer))
 		return refuse('no-arena', 'the host memory is not shared');
 	const start = options.memory ? options.memory.buffer.byteLength : owner.memory.initial * PAGE;
-	const fit = iterationFit(start, { frameBytes: route.frame?.size });
+	const fit = iterationFit(start, {
+		frameBytes: route.frame?.size,
+		windowBytes: iterationWindowBytes,
+		readSummary: Boolean(options.iterationReadSummary)
+	});
 	if (!fit) return refuse('no-arena', 'the arena does not fit in 65536 pages');
 	if (owner.memory.maximum !== undefined && fit.pages > owner.memory.maximum)
 		return refuse(
@@ -260,7 +344,7 @@ async function selectIteration(
 		if (!(error instanceof RangeError)) throw error;
 		return refuse('no-arena', `memory cannot hold an arena of ${fit.bytes} bytes`);
 	}
-	return { route, owner, memory, arenaBase: fit.base, size };
+	return { route, verdicts: new Map(), owner, memory, arenaBase: fit.base, size };
 }
 
 function throwTrap(result: TransactionResult): void {
@@ -363,6 +447,11 @@ export class Folio {
 	readonly #minimumWork: number;
 	readonly #profile: boolean;
 	readonly #adaptive: boolean;
+	readonly #logCeiling?: number;
+	readonly #readWindows: boolean;
+	readonly #readSummary: boolean;
+	readonly #stall?: boolean | IterationStallOptions;
+	readonly #secondChance: boolean;
 	readonly #routing = new Map<string, { failures: number; remaining: number }>();
 	#nextId = 0;
 	#busy = false;
@@ -388,6 +477,11 @@ export class Folio {
 		this.#minimumWork = options.minimumParallelWork ?? 100_000;
 		this.#profile = options.profile ?? false;
 		this.#adaptive = options.adaptiveRouting ?? false;
+		this.#logCeiling = options.iterationLogCeiling;
+		this.#readWindows = Boolean(options.iterationReadWindows);
+		this.#readSummary = Boolean(options.iterationReadSummary);
+		this.#stall = options.iterationStall;
+		this.#secondChance = Boolean(options.iterationSecondChance);
 		if (!Number.isInteger(this.#fuel) || this.#fuel < 2 || this.#fuel > 2_147_483_647)
 			throw new RangeError('invalid fuel');
 		if (!Number.isInteger(this.#maxBytes) || this.#maxBytes < 1)
@@ -533,7 +627,18 @@ export class Folio {
 				throw new TypeError(`unknown promising export: ${name}`);
 			if (!runtime.promising) throw new Error('this runtime does not support JSPI');
 		}
-		this.#instance = new WebAssembly.Instance(executable, imports);
+		try {
+			this.#instance = new WebAssembly.Instance(executable, imports);
+		} catch (error) {
+			if (
+				error instanceof WebAssembly.LinkError &&
+				/shared state of memory/.test(error.message)
+			)
+				throw new TypeError(
+					'the host memory and the program memory import differ in shared state; pass a shared memory only for a program the route can run on one'
+				);
+			throw error;
+		}
 		if (this.#control) {
 			this.#exports = Object.create(null);
 			for (const item of WebAssembly.Module.exports(native)) {
@@ -885,7 +990,12 @@ export class Folio {
 				const { IterationPool } = await import('./iteration.ts');
 				it.pool = await IterationPool.open(it.route, it.memory, {
 					arenaBase: it.arenaBase,
-					width
+					windowBytes: iterationWindowBytes,
+					width,
+					...(this.#logCeiling === undefined ? {} : { logCeiling: this.#logCeiling }),
+					...(this.#readWindows ? { readWindows: true } : {}),
+					...(this.#readSummary ? { readSummary: true } : {}),
+					...(this.#stall ? { stall: this.#stall } : {})
 				});
 			} catch (error) {
 				it.disabled = true;
@@ -966,18 +1076,25 @@ export class Folio {
 		const it = this.#iteration!;
 		const run = it.run;
 		if (!run?.pool) return 0;
-		const decline = (reason: IterationReason) => {
+		const decline = (reason: IterationReason | 'dependency') => {
 			run.reason ??= reason;
 			return 0;
 		};
 		const route = it.route;
 		const pool = run.pool;
+		const secondChance = this.#secondChance;
 		const entry: Record<number, number | bigint> = {};
 		it.owner.locals.forEach((local, index) => (entry[local] = values[index]!));
 		const trip = Number(entry[route.trip!.local]) >>> 0;
 		if (trip === 0) return decline('trip-zero');
 		if (trip < 2) return decline('no-admission');
-		if (it.memory.buffer.byteLength !== pool.arena.memoryBytes) return decline('no-arena');
+		if (it.memory.buffer.byteLength !== pool.memoryBytes) return decline('no-arena');
+		const key = `${route.owner}|${pool.width}|${this.#logCeiling ?? ''}`;
+		const known = it.verdicts.get(key);
+		if (known?.stop) {
+			if (known.skipped++ < iterationReprobe) return decline(known.stop);
+			it.verdicts.delete(key);
+		}
 		const frameBase = route.frame ? Number(entry[route.frame.local]) >>> 0 : 0;
 		const plain = (it.plain ??= this.#plain(it));
 		const replay = (k: number) => {
@@ -990,14 +1107,34 @@ export class Folio {
 				frameBase,
 				entry,
 				replay,
-				admit: (ms) => decideAdmission(ms, trip, pool.width),
+				window: known?.window,
+				admit: (ms) => decideAdmission(ms, trip, pool.width, secondChance),
 				loses: decideBatch,
-				collapses: decideCollapse
+				collapses: decideCollapse,
+				hopeless: decideBound,
+				unproven: decideProof,
+				reconsider: (ms, remaining, last) =>
+					decideRemaining(ms, remaining, pool.width, secondChance ? last : undefined)
 			});
 		} finally {
 			run.iteration = addCounts(run.iteration, pool.report);
 		}
-		if (pool.report.stopped) run.reason ??= pool.report.stopped;
+		const stopped = pool.report.stopped;
+		if (stopped) run.reason ??= stopped;
+		const structural =
+			stopped === 'dependency' ||
+			stopped === 'log-exhausted' ||
+			stopped === 'frame-carried dependence' ||
+			stopped === 'stalled';
+		if (structural) it.verdicts.set(key, { stop: stopped, skipped: 0 });
+		else if (pool.report.admission?.probeLost)
+			it.verdicts.set(key, { stop: 'no-admission', skipped: 0 });
+		else if (pool.report.window?.batches)
+			it.verdicts.set(key, {
+				window: { low: pool.report.window.low, end: pool.report.window.end },
+				skipped: 0
+			});
+		else if (known) it.verdicts.delete(key);
 		return 1;
 	}
 

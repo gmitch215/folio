@@ -11,7 +11,8 @@ export type IterationReason =
 	| 'trip-zero'
 	| 'no-admission'
 	| 'log-exhausted'
-	| 'frame-carried dependence';
+	| 'frame-carried dependence'
+	| 'stalled';
 
 /** The owner module with its loop handed to `iterate`, and what the host needs to bind it. */
 export interface IterationOwner {
@@ -40,7 +41,7 @@ function uleb(value: number): number[] {
 }
 
 /** Reads the one imported memory's limits from the import section. */
-function importedMemory(bytes: Uint8Array) {
+export function importedMemory(bytes: Uint8Array) {
 	let at = 8;
 	const uint = () => {
 		let value = 0,
@@ -123,7 +124,7 @@ function importedMemory(bytes: Uint8Array) {
 }
 
 /** Rewrites the memory import limits to shared with the largest maximum. */
-function shareMemory(bytes: Uint8Array, memory: ReturnType<typeof importedMemory>[number]) {
+export function shareMemory(bytes: Uint8Array, memory: ReturnType<typeof importedMemory>[number]) {
 	const { limits, header, body } = memory;
 	const content = [
 		...bytes.subarray(body[0], limits[0]),

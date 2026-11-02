@@ -3,6 +3,12 @@ import type { IterationLocal } from './extract.ts';
 /** Granule sizes of the inline lowering the iteration executor runs. */
 export const iterationGranules = { read: 64, write: 32 } as const;
 
+/**
+ * Undo entries per iteration of the grown log, 64 times the default capacity: 4 MiB of tracked
+ * writes. A batch whose log is exhausted is retried once at this size when the memory can grow.
+ */
+export const iterationLogCeiling = 131072;
+
 /** Bytes of one undo entry: granule address, stamp, then the prior bytes of the granule. */
 export const iterationEntryBytes = 8 + iterationGranules.write;
 
@@ -16,6 +22,16 @@ export interface IterationArenaOptions {
 	slotBytes?: number;
 	/** Size of the owner frame whose reads the executor tracks, for the per-slot shadow. Default 0. */
 	frameBytes?: number;
+	/**
+	 * Bytes the slot-private windows of one loop may hold, a multiple of 64, which the frame shadows
+	 * also cover. Default 0, which leaves windows off.
+	 */
+	windowBytes?: number;
+	/**
+	 * Reserve one summary byte per 64 words of every read bitmap, so the owner and the workers scan
+	 * only the blocks a read touched. Default false.
+	 */
+	readSummary?: boolean;
 }
 
 /** Absolute addresses of the arena parts. Slot 0 sits above one unused guard slot. */
@@ -40,7 +56,22 @@ export interface IterationArena {
 	frameSlotBytes: number;
 	/** The tracked frame size. */
 	frameBytes: number;
+	/** The window bytes the shadows reserve room for. */
+	windowBytes: number;
+	/** Start of the read summaries, one per slot, after the frame shadows; 0 without a summary. */
+	smaps: number;
+	/** Bytes of one slot's read summary, a power of two of at least 64; 0 without a summary. */
+	ssize: number;
 }
+
+/** Words of a read bitmap one summary byte covers. */
+export const iterationSummaryWords = 64;
+
+/** Log2 of the bytes of address space one summary byte covers: 64 words of 32 granules. */
+export const iterationSummaryShift = Math.log2(iterationGranules.read) + 11;
+
+/** Bytes of slot-private windows a Folio reserves room for in its arena. */
+export const iterationWindowBytes = 24576;
 
 const align = (value: number, to: number) => Math.ceil(value / to) * to;
 
@@ -69,7 +100,10 @@ export function iterationArena(
 	const logCapacity = options.logCapacity ?? 2048;
 	const slotBytes = options.slotBytes ?? 32768;
 	const frameBytes = options.frameBytes ?? 0;
+	const windowBytes = options.windowBytes ?? 0;
 	if (!Number.isSafeInteger(frameBytes) || frameBytes < 0) throw new RangeError('invalid frame');
+	if (!Number.isSafeInteger(windowBytes) || windowBytes < 0 || windowBytes % 64)
+		throw new RangeError('invalid window size');
 	if (!Number.isSafeInteger(base) || base < 0 || base % 64) throw new RangeError('invalid base');
 	if (!Number.isSafeInteger(memoryBytes) || memoryBytes <= 0)
 		throw new RangeError('invalid memory size');
@@ -88,8 +122,17 @@ export function iterationArena(
 	const wmaps = rmaps + batch * rsize;
 	const wsize = align(Math.ceil(memoryBytes / (iterationGranules.write * 8)), 64);
 	const frameShadow = wmaps + batch * wsize;
-	const frameSlotBytes = iterationFrameShadow(frameBytes).bytes;
-	const end = frameShadow + batch * frameSlotBytes;
+	// a window copy sits below the frame, up to 63 bytes of padding apart, and both are shadowed
+	const frameSlotBytes = iterationFrameShadow(
+		frameBytes + (windowBytes ? windowBytes + 64 : 0)
+	).bytes;
+	const frameEnd = frameShadow + batch * frameSlotBytes;
+	let ssize = 0;
+	if (options.readSummary) {
+		const blocks = Math.ceil(rsize / 4 / iterationSummaryWords);
+		ssize = Math.max(64, 2 ** Math.ceil(Math.log2(blocks)));
+	}
+	const end = frameEnd + batch * ssize;
 	return {
 		base,
 		bytes: end - base,
@@ -107,7 +150,10 @@ export function iterationArena(
 		wsize,
 		frameShadow,
 		frameSlotBytes,
-		frameBytes
+		frameBytes,
+		windowBytes,
+		smaps: ssize ? frameEnd : 0,
+		ssize
 	};
 }
 
@@ -167,4 +213,29 @@ export function iterationArguments(
 		} else values[item.argument] = item.stride ? (Number(from) + k * item.stride) | 0 : from;
 	}
 	return values;
+}
+
+/** An address window the iterations of a loop run on slot-private copies of. */
+export interface IterationWindow {
+	/** First byte, a multiple of 64. */
+	low: number;
+	/** One past the last byte, a multiple of 64. */
+	end: number;
+}
+
+/**
+ * Where one slot keeps its copy of a window: below the frame, so that the copy and the frame form
+ * one shadowed region from `copy` to the slot's top. The copy sits at the same offset modulo 64 as
+ * the window, so accesses keep their alignment. `frameOffset` is the frame's offset in the region.
+ */
+export function iterationWindowCopy(
+	top: number,
+	frameSize: number,
+	window: IterationWindow
+): { copy: number; delta: number; region: number; frameOffset: number } {
+	const bytes = window.end - window.low;
+	const frame = top - frameSize;
+	const base = frame - bytes;
+	const copy = base - ((((base - window.low) % 64) + 64) % 64);
+	return { copy, delta: copy - window.low, region: top - copy, frameOffset: frame - copy };
 }

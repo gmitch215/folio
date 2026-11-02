@@ -417,3 +417,19 @@ test('cancelling native execution joins all workers before the run settles', asy
 	await closing;
 	assert.deepEqual(new Uint8Array(shared.buffer), settled);
 });
+
+test('a shared host memory for a program that imports a plain memory is refused by name', async () => {
+	const module = binaryen.parseText(`(module
+		(import "env" "memory" (memory 1 8))
+		(func (export "noop")))`);
+	module.setFeatures(binaryen.Features.All);
+	const bytes = module.emitBinary();
+	module.dispose();
+	await assert.rejects(
+		Folio.open(bytes, {
+			memory: new WebAssembly.Memory({ initial: 1, maximum: 8, shared: true }),
+			workers: 2
+		}),
+		(error: Error) => error instanceof TypeError && /differ in shared state/.test(error.message)
+	);
+});
