@@ -156,6 +156,15 @@ FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
   bash scripts/research/c21-shared.sh 3 5 build/research/c21-runs/shared
 ```
 
+`affine-rig.sh` runs the affine, state-in-memory, sweep and shared-input timings in sequence on the
+rig. The rig has no `wasm-ld`, so build the modules on another machine, copy `build/research/` over
+with the sources and pass the Node binary:
+
+```sh
+FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
+  bash scripts/research/affine-rig.sh build/research/affine-runs/rig
+```
+
 ## Probes
 
 The probes are the instruments behind the figures in `TECHNICAL_REPORT.md`. They stay out of the
