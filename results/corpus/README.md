@@ -25,6 +25,10 @@
 - [Stall Guard Overhead](stall-guard-overhead/README.md)
 - [Boundary-State Rig Runs](boundary-state-rig/README.md)
 - [Explicit Route Copy Cost](explicit-route-copy-cost/README.md)
+- [Slice Pool Census](slice-pool-census/README.md)
+- [Admission Estimator](admission-estimator/README.md)
+- [Held-Out Workloads](held-out-workloads/README.md)
+- [Native Baseline](native-baseline/README.md)
 
 Explicit task-batch acceleration, automatic extraction of one entry and automatic dispatch of a loop of
 calls are separate results. See the

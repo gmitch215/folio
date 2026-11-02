@@ -1,0 +1,4 @@
+SlicePool run with audit: true (scripts/research/c21-bench.ts, C21_AUDIT=1, C21_ARMS=inplace), two rounds at eight workers on a Mac. Correctness only; no timing.
+passed (audit agrees with the serial run): xxhash32, sha256, aes-cbc-decrypt, lz4-compress
+SliceConflictError (memory differs from the serial run): miniz-compress, miniz-decompress, qoi-encode, qoi-decode, jsmn-parse-shared, aes-cbc-decrypt-shared, kissfft-real-shared
+worker trap (the run rejects with TaskError): sha256-shared
