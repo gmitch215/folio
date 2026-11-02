@@ -804,6 +804,7 @@ test('immutable globals with a constant initializer are admitted and others are 
 test('functions with indirect calls, atomics or memory growth stay out of the worker set', () => {
 	const route = stackRoute(
 		named(`(module (import "env" "memory" (memory 1 2 shared)) (table 1 funcref) (type $t (func))
+			(export "table" (table 0))
 			(func $indirect (call_indirect (type $t) (i32.const 0)))
 			(func $atomic (drop (i32.atomic.rmw.add (i32.const 0) (i32.const 1))))
 			(func $grow (drop (memory.grow (i32.const 1))))
@@ -813,9 +814,103 @@ test('functions with indirect calls, atomics or memory growth stay out of the wo
 	assert.deepEqual(route.functions, ['leaf']);
 	assert.ok(
 		route.diagnostics.includes(
-			'excluded: 1 call outside the set, 2 impure expression, 1 unsupported expression'
+			'excluded: 1 call outside the set, 1 impure expression, 1 indirect call, 1 unsupported expression'
 		)
 	);
+});
+
+// a table the module cannot change: the callers join the worker set with every function their call
+// could reach, and the worker module gets its own copy of the table
+const tabled = (extra: string, header = '(table $tab 4 funcref)', imports = '') => `(module
+	(import "env" "memory" (memory 1 2 shared))
+	${imports}
+	(type $cb (func (param i32)))
+	(type $other (func (result i32)))
+	${header}
+	(elem $e (i32.const 1) $a $b)
+	(func $a (type $cb) (i32.store (local.get 0) (i32.const 1)))
+	(func $b (type $cb) (i32.store (local.get 0) (i32.const 2)))
+	(func $user (param i32) (call_indirect $tab (type $cb) (local.get 0) (i32.const 1)))
+	${extra})`;
+
+test('an indirect call through a table the module never changes joins the worker set', () => {
+	const route = stackRoute(named(tabled('')));
+	assert.deepEqual(route.functions, ['a', 'b', 'user']);
+	assert.deepEqual(route.tables, ['tab']);
+	assert.ok(route.diagnostics.includes('worker set: 3 of 3 functions, 0 recursive'));
+	assert.ok(!route.diagnostics.some((line) => line.startsWith('refused table')));
+	assert.ok(Number.isFinite(route.work.user!.compute));
+});
+
+test('a function of the called type outside the set keeps the caller out, others stay stubs', () => {
+	const atomic = '(func $c (type $cb) (drop (i32.atomic.rmw.add (local.get 0) (i32.const 1))))';
+	const left = stackRoute(named(tabled(`${atomic} (elem $f (i32.const 3) $c)`)));
+	assert.deepEqual(left.functions, ['a', 'b']);
+	assert.deepEqual(left.tables, []);
+	assert.ok(left.diagnostics.some((line) => line.includes('1 call outside the set')));
+	// a different type is never a target of the $cb call, so the caller stays in
+	const other = '(func $d (type $other) (i32.atomic.rmw.add (i32.const 0) (i32.const 1)))';
+	const kept = stackRoute(named(tabled(`${other} (elem $f (i32.const 3) $d)`)));
+	assert.deepEqual(kept.functions, ['a', 'b', 'user']);
+	assert.deepEqual(kept.tables, ['tab']);
+	// an imported function in the table is a host call: out of the set like any other
+	const host = stackRoute(
+		named(
+			tabled(
+				'(elem $f (i32.const 3) $h)',
+				'(table $tab 4 funcref)',
+				'(import "env" "h" (func $h (param i32)))'
+			)
+		)
+	);
+	assert.deepEqual(host.functions, ['a', 'b']);
+});
+
+test('a table the module can change or share refuses the indirect call and names the table', () => {
+	const refused = (extra: string, header: string | undefined, reason: string, imports = '') => {
+		const route = stackRoute(named(tabled(extra, header, imports)));
+		assert.deepEqual(route.functions, ['a', 'b'], reason);
+		assert.deepEqual(route.tables, [], reason);
+		assert.ok(route.diagnostics.includes(`refused table tab: ${reason}`), reason);
+		assert.ok(
+			route.diagnostics.some((line) => /^excluded:.*\b1 indirect call/.test(line)),
+			reason
+		);
+	};
+	refused('', '(table $tab (export "t") 4 funcref)', 'exported table');
+	refused('', '(import "env" "t" (table $tab 4 funcref))', 'imported table');
+	refused(
+		'(func $w (table.set $tab (i32.const 0) (ref.func $a)))',
+		undefined,
+		'the module writes a table'
+	);
+	refused(
+		'(func $w (drop (table.grow $tab (ref.null func) (i32.const 1))))',
+		undefined,
+		'the module writes a table'
+	);
+	refused(
+		'(func $w (table.copy $tab $tab (i32.const 0) (i32.const 1) (i32.const 1)))',
+		undefined,
+		'the module writes a table'
+	);
+	refused(
+		'(func $w (table.fill $tab (i32.const 0) (ref.null func) (i32.const 1)))',
+		undefined,
+		'the module writes a table'
+	);
+	refused(
+		'(elem $g (global.get $base) $a)',
+		undefined,
+		'element segment offset is not a constant',
+		'(import "env" "base" (global $base i32))'
+	);
+});
+
+test('a function address taken in the worker set is refused', () => {
+	const route = stackRoute(named(tabled('(func $r (param i32) (drop (ref.func $a)))')));
+	assert.ok(!route.functions.includes('r'));
+	assert.ok(route.diagnostics.some((line) => line.includes('1 unsupported expression')));
 });
 
 test('a start function leaves the stack route eligible and keeps its module-wide reason', () => {
@@ -910,6 +1005,38 @@ const routeOf = (wat: string): { bytes: Uint8Array; route: IterationRoute } => {
 	const bytes = named(wat);
 	return { bytes, route: iterationRoute(bytes, stackRoute(bytes)) };
 };
+
+const refusedLoops = (count: number) =>
+	routeOf(
+		`(module (memory 1) (func $leaf (param $x i32) (result i32) (local.get $x)) ${Array.from(
+			{ length: count },
+			(_, i) => `(func $f${i} (param $n i32) (result i32) (local $acc i32) (local $c i32)
+				(local.set $c (local.get $n))
+				(loop $each
+					(local.set $acc (call $leaf (local.get $acc)))
+					(br_if $each (local.tee $c (i32.sub (local.get $c) (i32.const 1)))))
+				(local.get $acc))`
+		).join('\n')})`
+	).route;
+
+test('a refused loop beyond the sixteenth function is still named', () => {
+	const route = refusedLoops(17);
+	assert.ok(
+		route.diagnostics.includes(
+			'refused loop in f16: loop body writes a local the code after the loop reads'
+		),
+		route.diagnostics.join('\n')
+	);
+});
+
+test('refusals beyond the listing cap are counted', () => {
+	const route = refusedLoops(70);
+	assert.ok(
+		route.diagnostics.includes('6 more refused loops not listed'),
+		route.diagnostics.join('\n')
+	);
+	assert.ok(route.diagnostics.length <= 66);
+});
 
 interface Replay {
 	initial: number;
@@ -2304,6 +2431,155 @@ test('the frame option adds its globals only when asked and reserves their names
 					'(module (memory 1 1 shared) (global $x (export "__folio_fn") (mut i32) (i32.const 0)))'
 				),
 				{ frame: true }
+			),
+		/reserved/
+	);
+});
+// #endregion
+
+// #region slot window in the inline lowering
+// four slots of 0x400 bytes at 0x2000, the own slot is the second, its top 0x80 bytes are the frame
+const SLOT = { xl: 0x2400, xe: 0x2780, sl: 0x2400, se: 0x2800, al: 0x2000, ae: 0x3000 };
+const slotModule = sharedModule(`
+	(global $sp (mut i32) (i32.const 65536))
+	(data $d "abcdefgh")
+	(func (export "store32") (param i32 i32) (i32.store (local.get 0) (local.get 1)))
+	(func (export "store8") (param i32 i32) (i32.store8 (local.get 0) (local.get 1)))
+	(func (export "load32") (param i32) (result i32) (i32.load (local.get 0)))
+	(func (export "load8") (param i32) (result i32) (i32.load8_u (local.get 0)))
+	(func (export "vload") (param i32) (result i32) (i32x4.extract_lane 0 (v128.load (local.get 0))))
+	(func (export "rmw") (param i32 i32) (result i32) (i32.atomic.rmw.add (local.get 0) (local.get 1)))
+	(func (export "copy") (param i32 i32 i32) (memory.copy (local.get 0) (local.get 1) (local.get 2)))
+	(func (export "fill") (param i32 i32 i32) (memory.fill (local.get 0) (local.get 1) (local.get 2)))
+	(func (export "init") (param i32) (memory.init $d (local.get 0) (i32.const 0) (i32.const 8)))`);
+
+function slotRig() {
+	const rig = inlineRig(named(slotModule), { slot: true, stack: 'sp' });
+	const x = rig.lowered.exports;
+	x.__folio_xl.value = SLOT.xl;
+	x.__folio_xe.value = SLOT.xe;
+	x.__folio_sl.value = SLOT.sl;
+	x.__folio_se.value = SLOT.se;
+	x.__folio_al.value = SLOT.al;
+	x.__folio_ae.value = SLOT.ae;
+	return {
+		rig,
+		run: (name: string, ...args: number[]) => rig.run(name, ...args),
+		// the access traps before it touches memory and names the address it reached
+		trap(name: string, ...args: number[]) {
+			rig.reset();
+			x.__folio_xv.value = 0;
+			assert.throws(() => x[name]!(...args), /unreachable/, name);
+			assert.ok(rig.same(), `${name} memory`);
+			return x.__folio_xv.value >>> 0;
+		}
+	};
+}
+const none = { reads: [], writes: [], used: 0 };
+
+test('accesses inside the exempt window set no mark and log no undo entry', () => {
+	const { run } = slotRig();
+	assert.deepEqual(run('store32', 0x2500, 7), none);
+	assert.deepEqual(run('store8', 0x2400, 7), none);
+	assert.deepEqual(run('load32', 0x2500), none);
+	assert.deepEqual(run('load8', 0x277f), none);
+	assert.deepEqual(run('vload', 0x2770), none);
+	assert.deepEqual(run('rmw', 0x2500, 3), none);
+	// the same accesses are tracked when the option is off
+	const off = inlineRig(named(slotModule), { stack: 'sp' });
+	assert.deepEqual(off.run('store32', 0x2500, 7), { reads: [], writes: [296], used: 1 });
+	assert.deepEqual(off.run('load32', 0x2500), { reads: [148], writes: [], used: 0 });
+});
+
+test('an access outside the arena is tracked as before', () => {
+	const { run } = slotRig();
+	assert.deepEqual(run('store32', 0x3100, 7), { reads: [], writes: [392], used: 1 });
+	assert.deepEqual(run('load32', 0x1100), { reads: [68], writes: [], used: 0 });
+	// an access that ends at the arena start or starts at its end is outside it
+	assert.deepEqual(run('store32', 0x1ffc, 7), { reads: [], writes: [255], used: 1 });
+	assert.deepEqual(run('store32', 0x3000, 7), { reads: [], writes: [384], used: 1 });
+	assert.deepEqual(run('rmw', 0x3100, 3), { reads: [196], writes: [392], used: 1 });
+});
+
+test('an access that crosses the window edge or reaches the frame is tracked, not exempt', () => {
+	const { run } = slotRig();
+	// the last four bytes before the frame are inside the window
+	assert.deepEqual(run('store32', 0x277c, 7), none);
+	// two bytes in the window and two in the frame: both write granules are logged
+	assert.deepEqual(run('store32', 0x277e, 7), { reads: [], writes: [315, 316], used: 2 });
+	assert.deepEqual(run('store32', 0x2780, 7), { reads: [], writes: [316], used: 1 });
+	assert.deepEqual(run('load32', 0x277e), { reads: [157, 158], writes: [], used: 0 });
+	assert.deepEqual(run('vload', 0x2775), { reads: [157, 158], writes: [], used: 0 });
+	assert.deepEqual(run('store8', 0x2780, 7), { reads: [], writes: [316], used: 1 });
+	// the top of the own slot is outside the window and not another slot
+	assert.deepEqual(run('load32', 0x27fc), { reads: [159], writes: [], used: 0 });
+});
+
+test('an access that touches another slot traps and names the address', () => {
+	const { trap } = slotRig();
+	assert.equal(trap('load32', 0x2000), 0x2000);
+	assert.equal(trap('store32', 0x2800, 7), 0x2800);
+	assert.equal(trap('store8', 0x2fff, 7), 0x2fff);
+	assert.equal(trap('rmw', 0x2c10, 1), 0x2c10);
+	assert.equal(trap('vload', 0x2ff8), 0x2ff8);
+	// a straddle of the own slot edge on either side reaches the neighbour
+	assert.equal(trap('load32', 0x23fe), 0x23fe);
+	assert.equal(trap('store32', 0x27fe, 7), 0x27fe);
+	// a straddle of the arena edge reaches the first slot or the last
+	assert.equal(trap('load32', 0x1ffe), 0x1ffe);
+	assert.equal(trap('load32', 0x2ffe), 0x2ffe);
+});
+
+test('memory.copy, memory.fill and memory.init exempt a range only when every byte is inside', () => {
+	const { run, trap } = slotRig();
+	assert.deepEqual(run('fill', 0x2400, 7, 0x380), none);
+	assert.deepEqual(run('fill', 0x2500, 7, 0), none);
+	assert.deepEqual(run('copy', 0x2500, 0x2440, 64), none);
+	assert.deepEqual(run('init', 0x2500), none);
+	// one byte into the frame: the whole range is tracked, 288 to 316 inclusive
+	const edge = run('fill', 0x2400, 7, 0x381);
+	assert.deepEqual([edge.used, edge.writes[0], edge.writes.at(-1)], [29, 288, 316]);
+	assert.deepEqual(run('fill', 0x2780, 7, 0x40).writes, [316, 317]);
+	// heap on one side: only that side is tracked
+	assert.deepEqual(run('copy', 0x3100, 0x2500, 32), { reads: [], writes: [392], used: 1 });
+	assert.deepEqual(run('copy', 0x2500, 0x3100, 32), { reads: [196], writes: [], used: 0 });
+	assert.deepEqual(run('init', 0x3100), { reads: [], writes: [392], used: 1 });
+	assert.deepEqual(run('fill', 0x3000, 7, 64), { reads: [], writes: [384, 385], used: 2 });
+	// a range into another slot traps, also when it starts in the own window, and an empty one does not
+	assert.equal(trap('fill', 0x2700, 7, 0x200), 0x2700);
+	assert.equal(trap('fill', 0x2800, 7, 4), 0x2800);
+	assert.equal(trap('copy', 0x2500, 0x2900, 16), 0x2900);
+	assert.equal(trap('copy', 0x2c00, 0x2500, 16), 0x2c00);
+	assert.equal(trap('init', 0x2fff), 0x2fff);
+	assert.equal(trap('fill', 0x1ff0, 7, 0x20), 0x1ff0);
+	assert.deepEqual(run('fill', 0x2800, 7, 0), none);
+	assert.deepEqual(run('copy', 0x2800, 0x2c00, 0), none);
+});
+
+test('the slot option adds its globals only with a stack, and the default bytes do not change', () => {
+	const bytes = named(slotModule);
+	const names = (module: Uint8Array) =>
+		WebAssembly.Module.exports(new WebAssembly.Module(Uint8Array.from(module))).map(
+			(e) => e.name
+		);
+	const plain = lowerInline(bytes, { stack: 'sp' });
+	assert.deepEqual(lowerInline(bytes, { stack: 'sp', slot: false }), plain);
+	assert.ok(!names(plain).includes('__folio_xl'));
+	for (const name of ['__folio_xl', '__folio_xe', '__folio_sl', '__folio_se'])
+		assert.ok(names(lowerInline(bytes, { stack: 'sp', slot: true })).includes(name));
+	for (const name of ['__folio_al', '__folio_ae', '__folio_xv'])
+		assert.ok(names(lowerInline(bytes, { stack: 'sp', slot: true })).includes(name));
+	// without a stack global there is no slot to exempt
+	const flat = compile(
+		sharedModule('(func (export "s") (i32.store (i32.const 0x2000) (i32.const 1)))')
+	);
+	assert.deepEqual(lowerInline(flat, { slot: true }), lowerInline(flat));
+	assert.throws(
+		() =>
+			lowerInline(
+				compile(
+					'(module (memory 1 1 shared) (global $x (export "__folio_xv") (mut i32) (i32.const 0)))'
+				)
 			),
 		/reserved/
 	);

@@ -1424,10 +1424,72 @@ export interface StackRoute {
 	functions: string[];
 	/** The members that sit on a call cycle. */
 	recursive: string[];
+	/** Tables a member calls through; every worker holds its own copy, built from the segments. */
+	tables: string[];
 	/** Static work per member; a recursive member counts one level of its own calls. */
 	work: Record<string, Work>;
 	/** Why the module is or is not eligible. */
 	diagnostics: string[];
+}
+
+interface TableShape {
+	/** why a worker cannot hold its own copy of the table; absent when it can */
+	refusal?: string;
+	/** the function behind each filled slot, by element segment, with the slot of the first entry */
+	runs: { name: string; offset: number; names: string[] }[];
+	/** every function the table can hold */
+	functions: Set<string>;
+}
+
+// a table is the same in every worker when nothing can change it after instantiation: it is
+// defined here, not exported, no instruction writes it and every segment is a constant-offset list.
+// `written` reads the whole module as text, so it runs only when a call needs the answer
+function tableShapes(m: binaryen.Module) {
+	const shapes = new Map<string, TableShape>();
+	let text: boolean | undefined;
+	const written = () => (text ??= /\btable\.(set|grow|fill|copy|init)\b/.test(m.emitText()));
+	const count = m.getNumTables();
+	if (!count) return { shapes, written };
+	const exported = new Set<string>();
+	for (let i = 0; i < m.getNumExports(); i++) {
+		const e = binaryen.getExportInfo(m.getExportByIndex(i));
+		if (e.kind === binaryen.ExternalTable) exported.add(e.value);
+	}
+	for (let i = 0; i < count; i++) {
+		const t = binaryen.getTableInfo(m.getTableByIndex(i));
+		shapes.set(t.name, {
+			refusal: t.module
+				? 'imported table'
+				: exported.has(t.name)
+					? 'exported table'
+					: undefined,
+			runs: [],
+			functions: new Set()
+		});
+	}
+	for (let i = 0; i < m.getNumElementSegments(); i++) {
+		const s = binaryen.getElementSegmentInfo(m.getElementSegmentByIndex(i));
+		const shape = shapes.get(s.table);
+		if (!shape) continue;
+		const offset = info(s.offset);
+		if (offset.id !== binaryen.ConstId || typeof offset.value !== 'number') {
+			shape.refusal ??= 'element segment offset is not a constant';
+			continue;
+		}
+		let start = 0;
+		for (let k = 0; k <= s.data.length; k++) {
+			if (k < s.data.length && s.data[k]) continue;
+			if (k > start)
+				shape.runs.push({
+					name: `${s.name}_${shape.runs.length}`,
+					offset: (offset.value >>> 0) + start,
+					names: s.data.slice(start, k)
+				});
+			start = k + 1;
+		}
+		for (const name of s.data) if (name) shape.functions.add(name);
+	}
+	return { shapes, written };
 }
 
 /** Computes the stack route of a module. A failure is reported in `diagnostics`, never thrown. */
@@ -1438,6 +1500,7 @@ export function stackRoute(original: Uint8Array, options: AdmissionOptions = {})
 		constants: [],
 		functions: [],
 		recursive: [],
+		tables: [],
 		work: Object.create(null),
 		diagnostics: []
 	};
@@ -1478,17 +1541,20 @@ export function stackRoute(original: Uint8Array, options: AdmissionOptions = {})
 								: undefined
 			});
 		}
+		const { shapes: tables, written } = tableShapes(module);
+		const refusedTables = new Set<string>();
 		type Body = {
 			info: FunctionInfo;
 			cause?: string;
 			targets: Set<string>;
 			refs: Set<string>;
+			tables: Set<string>;
 		};
 		const bodies: Body[] = [];
 		for (let i = 0; i < module.getNumFunctions(); i++) {
 			const f = binaryen.getFunctionInfo(module.getFunctionByIndex(i));
 			if (!f.body) continue;
-			const body: Body = { info: f, targets: new Set(), refs: new Set() };
+			const body: Body = { info: f, targets: new Set(), refs: new Set(), tables: new Set() };
 			if (
 				![...binaryen.expandType(f.params), ...f.vars].every((t) => numeric.has(t)) ||
 				!(f.results === binaryen.none || numeric.has(f.results))
@@ -1499,7 +1565,24 @@ export function stackRoute(original: Uint8Array, options: AdmissionOptions = {})
 				if (!supported.has(v.id)) body.cause ??= 'unsupported expression';
 				else if (v.id === binaryen.GlobalGetId || v.id === binaryen.GlobalSetId)
 					body.refs.add(v.name);
-				else if (!pureNodes.has(v.id)) body.cause ??= 'impure expression';
+				else if (v.id === binaryen.CallIndirectId) {
+					const shape = tables.get(v.table);
+					const refusal = shape
+						? (shape.refusal ?? (written() ? 'the module writes a table' : undefined))
+						: 'no such table';
+					if (!shape || refusal) {
+						body.cause ??= 'indirect call';
+						refusedTables.add(`${v.table}: ${refusal}`);
+					} else {
+						body.tables.add(v.table);
+						// any function of the call's type in the table can run, so each must be a member
+						for (const name of shape.functions) {
+							const g = binaryen.getFunctionInfo(module!.getFunction(name));
+							if (g.params === v.params && g.results === v.results)
+								body.targets.add(name);
+						}
+					}
+				} else if (!pureNodes.has(v.id)) body.cause ??= 'impure expression';
 				if (v.isAtomic) body.cause ??= 'atomic access';
 				if (![binaryen.none, binaryen.unreachable].includes(v.type) && !numeric.has(v.type))
 					body.cause ??= 'non-numeric value';
@@ -1548,6 +1631,9 @@ export function stackRoute(original: Uint8Array, options: AdmissionOptions = {})
 		}
 		const inSet = bodies.filter((body) => members.has(body.info.name));
 		route.functions = inSet.map((body) => body.info.name);
+		route.tables = [...new Set(inSet.flatMap((body) => [...body.tables]))];
+		for (const refusal of [...refusedTables].sort())
+			route.diagnostics.push(`refused table ${refusal}`);
 		const cyclic = recursiveFunctions(new Map(inSet.map((b) => [b.info.name, b.targets])));
 		route.recursive = route.functions.filter((name) => cyclic.has(name));
 		const model = workModel(
@@ -1578,6 +1664,7 @@ export function stackRoute(original: Uint8Array, options: AdmissionOptions = {})
 			constants: [],
 			functions: [],
 			recursive: [],
+			tables: [],
 			work: Object.create(null),
 			diagnostics: [
 				`stack route unavailable: ${error instanceof Error ? error.message : String(error)}`
@@ -1666,6 +1753,7 @@ export function iterationRoute(original: Uint8Array, route: StackRoute): Iterati
 		const stack = route.stack?.name;
 		const constants = new Set(route.constants);
 		const refusals: string[] = [];
+		let omitted = 0;
 		for (let i = 0; i < m.getNumFunctions(); i++) {
 			const f = binaryen.getFunctionInfo(m.getFunctionByIndex(i));
 			if (!f.body || !callsInLoop(f.body, members)) continue;
@@ -1674,9 +1762,12 @@ export function iterationRoute(original: Uint8Array, route: StackRoute): Iterati
 				plan.route.diagnostics.unshift(...refusals);
 				return plan.route;
 			}
-			for (const reason of plan.refusals)
-				if (refusals.length < 16) refusals.push(`refused loop in ${f.name}: ${reason}`);
+			for (const reason of plan.refusals) {
+				if (refusals.length < 64) refusals.push(`refused loop in ${f.name}: ${reason}`);
+				else omitted++;
+			}
 		}
+		if (omitted) refusals.push(`${omitted} more refused loops not listed`);
 		refusals.push('no loop calls into the worker set');
 		return emptyIteration(refusals);
 	} catch (error) {
@@ -2069,6 +2160,23 @@ function outlineOwner(
 		for (const name of context.route.functions) {
 			const g = binaryen.getFunctionInfo(m.getFunction(name));
 			w.addFunction(name, g.params, g.results, g.vars, w.copyExpression(g.body));
+		}
+		// same slots as the owner's table; a function outside the set gets a stub that no member
+		// can reach, because the route took every function of a called type into the set
+		const shapes = context.route.tables.length
+			? tableShapes(m).shapes
+			: new Map<string, TableShape>();
+		for (const name of context.route.tables) {
+			const table = binaryen.getTableInfo(m.getTable(name));
+			w.addTable(name, table.initial, table.max ?? 0xffffffff);
+			for (const run of shapes.get(name)!.runs) {
+				for (const entry of run.names)
+					if (!w.getFunction(entry)) {
+						const g = binaryen.getFunctionInfo(m.getFunction(entry));
+						w.addFunction(entry, g.params, g.results, [], w.unreachable());
+					}
+				w.addActiveElementSegment(name, run.name, run.names, w.i32.const(run.offset));
+			}
 		}
 		let iterate = '__folio_iterate';
 		while (w.getFunction(iterate)) iterate += '_';
