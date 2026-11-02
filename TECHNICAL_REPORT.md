@@ -1381,7 +1381,8 @@ matters). The raw samples and both tables are in `results/corpus/record-level-ri
 | explicit private contexts | 26 of 30, 25 of them at 1.4 or more                  | 1.48 to 3.64; Adler-32 1.05; xxHash32 0.48, xxHash64 0.29, xxHash3 0.39, LZ4 decompress 0.68                      |
 
 The explicit arm is the ceiling of the record route: private contexts with a caller-named boundary
-reach 2x or more on 18 drivers, and four programs stay below 1.0 even there. Its medians do not
+reach 2x or more on 18 drivers, and four programs stay below 1.0 even there (these medians use the copied input; the cost-bound
+paragraph below gives the rerun with shared input). Its medians do not
 depend on arm order (AES-CBC decrypt 3.50 here and 3.51 in the shared process). Automatic admission
 reaches 0.3 to 0.6 of the explicit ceiling on its seven winners.
 Read windows with the summary lower SHA-1 from 1.67 to 1.32 and MD5 from 1.49 to 1.38 and raise
@@ -1495,25 +1496,28 @@ lies in chunk 3, exact mode recorded `mismatchAt` 3, fell back and returned the 
 timed rounds, and audit mode with two sampled chunks returned a wrong state in 6 of 7 seeds. In a unit
 test of 24 seeds at 256 KiB audit caught it in 4. Auditing all seven chunks caught it.
 
-On a loaded laptop (Apple M2 Pro, load 5.8 to 7.1 on 12 threads, three sessions of five rounds after
-two warmups, medians of the session medians) at eight workers:
+On the Linux rig (Ryzen 9 9900X, eight pinned cores, `nice 19`, one-minute load 0.2 to 1.4, governor
+`powersave`, three sessions of five rounds after two warmups, medians of the session medians) at
+eight workers:
 
 | subject             | input  | exact mode speedup | audit mode speedup | CPU ratio, exact | hand-derived combine |
 | ------------------- | ------ | ------------------ | ------------------ | ---------------- | -------------------- |
-| miniz CRC-32        | 64 MiB | 3.23x              | 3.01x              | 1.87             | 4.28x at CPU 1.16    |
-| miniz CRC-32        | 8 MiB  | 3.12x              | 3.09x              | 1.92             | 5.33x at CPU 1.23    |
-| CRC-32C             | 64 MiB | 3.10x              | 3.40x              | 1.86             |                      |
-| CRC-16              | 64 MiB | 2.96x              | 3.15x              | 1.95             |                      |
-| CRC-64              | 64 MiB | 2.91x              | 3.27x              | 1.94             |                      |
-| `h = h * 31 + byte` | 64 MiB | 2.03x              | 2.59x              | 2.34             |                      |
-| LCG checksum        | 64 MiB | 2.26x              | 2.69x              | 2.22             |                      |
+| miniz CRC-32        | 64 MiB | 2.11x              | 2.16x              | 2.24             | 3.45x at CPU 1.31    |
+| miniz CRC-32        | 8 MiB  | 1.79x              | 1.98x              | 2.41             | 2.97x at CPU 1.49    |
+| CRC-32C             | 64 MiB | 2.83x              | 2.70x              | 1.99             |                      |
+| CRC-16              | 64 MiB | 2.29x              | 2.25x              | 2.27             |                      |
+| CRC-64              | 64 MiB | 2.11x              | 2.24x              | 2.18             |                      |
+| `h = h * 31 + byte` | 64 MiB | 1.51x              | 1.58x              | 2.94             |                      |
+| LCG checksum        | 64 MiB | 1.45x              | 1.64x              | 2.84             |                      |
 
-Exact mode first beats serial near 64 KiB to 256 KiB at eight workers and near 256 KiB to 1 MiB at
-three or four workers, and never at two, because it does twice the work. The cost of exactness is
-therefore about a second pass: on the miniz CRC-32 exact mode reaches 3.1x to 3.2x where the
-hand-derived combine reaches 4.3x to 5.3x, with 1.9 times the CPU against 1.2 times. The two
+An earlier run on a loaded laptop (Apple M2 Pro, load 5.8 to 7.1 on 12 threads) gave 2.0x to 3.2x
+for exact mode at 64 MiB; the rig numbers above replace it. Every sample equalled the serial state.
+Exact mode first beat serial near 64 KiB to 256 KiB at eight workers and near 256 KiB to 1 MiB at
+three or four workers, and never at two, on the laptop size and width sweep; the rig did not repeat
+that sweep. The cost of exactness is about a second pass: on the miniz CRC-32 exact mode reaches
+2.1x where the hand-derived combine reaches 3.5x, with 2.2 times the CPU against 1.3 times. The two
 Z/2^32 subjects are faster serially per byte, so the fixed costs weigh more and exact mode reaches
-2.0x to 2.3x.
+1.5x.
 
 What the guarantee does not cover. Exact mode returns the state of the serial chain of calls over the
 same chunk boundaries, which equals one call over the whole input only if the function composes over a
@@ -1532,10 +1536,11 @@ claim of priority.
 ### Boundary-State Speculation Beyond Registers
 
 Three follow-up studies test whether the exact mode of the previous section, which runs chunks without
-access tracking and compares explicit boundary state, extends past a scalar state. Every number below
-comes from a Mac at a one-minute load of 14 to 56 on 12 threads, so speedups are directional and none
-is a rig result. Every timed sample equalled the serial state (1,635 of 1,635 for state in memory,
-6,075 of 6,075 for sweeps).
+access tracking and compares explicit boundary state, extends past a scalar state. Speedups come
+from the Linux rig at eight workers (one-minute load 0.0 to 3.6, governor `powersave`, three sessions
+of five rounds, medians of the session medians). The first runs were on a Mac at a load of 14 to 56
+and are not used. Every timed sample on the rig equalled the serial state, and so did every sample
+of the Mac runs (1,635 of 1,635 for state in memory, 6,075 of 6,075 for sweeps).
 
 State in memory (`src/affine-state.ts`, `probeState` and `foldState`). The entry is
 `(context, pointer, length)` and the state lives in a context struct that the call reads and writes in
@@ -1548,11 +1553,11 @@ tiny-AES `AES_CTR_xcrypt_buffer` (one 128-bit big-endian counter). It refused th
 MD5 and xxHash32 updates over their real contexts (they trap on random state, and a reachable-state
 additivity check fails), a CRC with a coupled counter, and a kernel with a counter outside the
 context. The adversarial CRC that flips one bit at a rare register value passes the probe, and exact
-mode recorded a mismatch at chunk 3 and returned the serial state. At 64 MiB on eight workers exact
-mode reached 1.28x for the CRC context, 1.62x for the polynomial hash and 1.24x for last-8, and lost
-on the CRC-plus-counter and Fletcher structs (0.95x and 0.62x). These are below the scalar form's 2.0x
-to 3.2x, and the runs were at a higher load, so how much of the gap is the in-memory path is not
-known. Limits found: a byte that changes only on rare inputs can be missed by trial discovery, and
+mode recorded a mismatch at chunk 3 and returned the serial state. At 64 MiB exact mode reached 1.96x
+for the CRC context, 1.84x for the CRC register beside a counter, 1.34x for last-8 and 1.25x for the
+polynomial hash, and lost on the Fletcher pair (0.52x, a kernel of about 0.5 ns per byte whose
+fixed costs dominate). The AES-CTR fold reached 2.74x at 8 MiB. The CRC rows sit near the scalar
+form's 2.1x on the same rig. Limits found: a byte that changes only on rare inputs can be missed by trial discovery, and
 output a call writes and never reads (a hash value, ciphertext) is not returned, so the AES-CTR fold
 returns the counter and not the ciphertext.
 
@@ -1561,21 +1566,23 @@ run records the state every `step` bytes; the caller keeps the log. A later run 
 in parallel from its recorded start and compares each end state with the next recorded start, so a
 chain that is not affine (SHA-256, SHA-1, MD5) becomes a parallel verification. By the same induction
 the result is serial for any log; eleven forged, stale or wrong-width logs per subject never changed a
-result. An identical rerun reached 2.77x to 3.67x at 8 MiB and 1.65x to 2.95x at 64 MiB with 16 chunks
-on eight workers (ideal 8x; CPU ratio 1.3 to 2.2, because each chunk is copied twice). An edit nine
-tenths in still won (1.34x to 1.92x at 64 MiB). An edit in the first half lost (0.38x to 1.19x at
-64 MiB), because the first mismatch forces the remainder to run serially after the wasted parallel
-pass. A chain that forgets (a nonlinear hash of the last 8 bytes) kept 1.3x to 3.1x through an edit
-that left a chunk's end state unchanged. The first run costs a serial run plus the copies.
+result. With 16 chunks on eight workers an identical rerun reached 3.2x to 3.7x at 8 MiB and 3.9x to
+4.6x at 64 MiB (SHA-256 4.58x, SHA-1 4.51x, MD5 3.92x; ideal 8x; CPU ratio 1.2 to 1.4). An edit nine
+tenths in kept 3.1x to 3.5x at 64 MiB and one half in kept 1.3x to 1.5x. An edit one tenth in lost
+(0.72x to 0.86x), because the first mismatch forces the remainder to run serially after the wasted
+parallel pass. A chain that forgets (a nonlinear hash of the last 8 bytes) kept 3.95x to 4.04x at
+64 MiB through an edit anywhere that left a chunk's end state unchanged, and fell to 1.42x when the
+edit changed the end state. The recording run costs a serial run (0.95x to 1.00x at 8 and 64 MiB, 0.8x
+to 0.9x at 1 MiB).
 
 Fixed-point sweeps (`scripts/research/sweeps-*.ts`, a harness with no library change). Chunks guess a
 start state, run untracked in parallel, and rerun when the assumed start differs from the previous
 chunk's end, until nothing changes. On 1 MiB of text at eight chunks a UTF-8 validating DFA converged
-in 1 sweep (8 chunk runs; 3.91x at 64 MiB, range 2.77x to 5.60x), and with a sticky error flag it also
-took 1 sweep, but needed 8 sweeps at 32 chunks on 64 KiB. A quote-aware CSV scanner, a CSV scanner
-with a row count, a Base64 validity DFA and a run-length decoder took 8 sweeps at eight chunks, as did
-the CRC-32 and SHA-256 controls, and speedup fell below 1.0x at 64 MiB because each pass copies the
-input. The boundary state sets agree: the UTF-8 DFA collapses to one end state within 64 bytes from
+in 1 sweep (8 chunk runs; 3.54x at 64 MiB at CPU ratio 1.29), and with a sticky error flag it also
+took 1 sweep (3.40x), but needed 8 sweeps at 32 chunks on 64 KiB. A quote-aware CSV scanner, a CSV
+scanner with a row count, a Base64 validity DFA and a run-length decoder took 8 sweeps at eight
+chunks, as did the CRC-32 and SHA-256 controls, and speedup fell to 0.24x to 0.64x at 64 MiB because
+each pass copies the input and reruns most chunks. The boundary state sets agree: the UTF-8 DFA collapses to one end state within 64 bytes from
 any of 256 start states, the counters do not collapse. The mechanism therefore holds for state that
 resynchronises and fails for state that carries a count. Whether resynchronising DFAs are already
 covered by published parallel DFA work (Mytkowicz et al. enumerate start states) was not checked
@@ -1585,7 +1592,8 @@ The common structure is a predictor of chunk start states (recovered algebra, a 
 guessed fixed point) and one validator that compares explicit end state with the next start, which
 keeps the result equal to serial without trusting the predictor. Whether that structure is
 a contribution or a repackaging of known speculation and checkpointing work is open: the literature
-reading behind it is incomplete, and the quiet-rig runs are not done.
+reading behind it is incomplete. The rig runs cover one machine at eight workers, one input stream
+per size, and no width or size sweep for state in memory or recorded boundaries.
 
 ### What the Corpus Shows
 
@@ -3027,8 +3035,17 @@ laptop (the rig measured 0.72 to 0.81 for the same configuration), and no progra
 automatic admission, because the loops are too short to pay for a probe.
 Coarsening several records into one unit did not help: it lowered the dispatch count and left the
 per-iteration tracking term unchanged. The explicit route with private contexts is also below 1.0
-for xxHash and LZ4 decompress at record sizes of 16 KiB, and this work did not isolate why. A caller that groups thousands of records into one task
-amortizes the dispatch cost, and nothing in the engine can do that grouping without knowing the
+for xxHash and LZ4 decompress, and part of that comes from the route and not from the programs.
+`TaskPool.submit` copied every `SharedArrayBuffer` input, and the opt-in `{ share: true }` posts the
+bytes as they are. On the rig (eight workers, three sessions of five rounds, fresh process per cell)
+sharing raised xxHash32 at 4,096 records from 0.22 to 0.54, at 512 from 0.30 to 0.76 and at 64 from
+0.53 to 1.03, xxHash3 at 64 from 0.45 to 0.79, xxHash64 at 4,096 from 0.12 to 0.29, and Adler-32 at
+4,096 from 0.56 to 1.34, at 512 from 0.74 to 1.58 and at 64 from 1.29 to 1.81. LZ4 decompress did
+not move (0.47 to 0.49 at 4,096, 0.76 to 0.74 at 64). The remaining gap is not isolated on the rig.
+The per-task checkpoint restore compares every page and `src/context.ts` has no touched-page reset,
+and a loaded-Mac split of worker time put the restore at 85 to 91 percent of busy time for xxHash and
+Adler-32 at 512 records per task; that split was not repeated on the rig. A caller that groups
+thousands of records into one task amortizes the dispatch cost, and nothing in the engine can do that grouping without knowing the
 records are independent, which is the fact the explicit route exists to receive.
 
 **Speculation on inconsistent state.** A worker reads memory that another iteration is changing,
@@ -3202,10 +3219,10 @@ extractor are retained in `results/compatibility/sources/source.tar.gz`, which a
 first copy of the Drupal harness that `scripts/probe/php-render.ts` replaces.
 
 Evidence accounting comes from `node scripts/research/evidence.ts`. The index in `results/index.json`
-preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 40 studies and
-390 artifacts (63,510,933 bytes): 38 `manifest.json` records and the 2 `artifacts.json` records of the
-boot configuration and lifecycle studies. The five v1.1 studies (lane concurrency, range lanes,
-sharded SQLite lanes, the record-level rig and the stall guard overhead) carry manifests written by
+preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 41 studies and
+396 artifacts (63,935,041 bytes): 39 `manifest.json` records and the 2 `artifacts.json` records of the
+boot configuration and lifecycle studies. The six v1.1 studies (lane concurrency, range lanes,
+sharded SQLite lanes, the record-level rig, the stall guard overhead and the boundary-state rig runs) carry manifests written by
 `scripts/research/export.ts --manifest`, so their bytes and hashes are inside the same gate.
 `results/execution/source/manifest.json` lists sources under another schema and is not a study.
 `--summaries` compares 179 summary files and finds all equal: 171 regenerate from their raw samples,
