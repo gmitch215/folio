@@ -71,6 +71,76 @@ node scripts/research/evidence.ts --summaries
 The study README must exist before `export.ts` writes the manifest. Timing studies need a quiet
 host: record the load average in the data and discard a run that overlapped other work.
 
+## C21 bulk harness
+
+`c21-kernels.ts` builds one bulk driver per entry of its `specs` list (30 entries). A
+driver runs `n` independent records through the unmodified entry point of one corpus kernel.
+`c21-bench.ts` runs the automatic, forced, explicit and explicit-1 arms against the native serial
+run and asserts equal output in every run. `c21-worker.ts` is the worker entry for the explicit
+arms, `c21-common.ts` holds the shared record and memory helpers, and `cases/c21/` holds the C
+driver sources (`bulk.c`, `support-bulk.c`). `c21-routes.ts` prints the stack and iteration routes
+of built modules, and `c21-summary.mjs` pairs the timed rows of each arm against the native run.
+
+The drivers compile from the corpus sources. Run the corpus build first:
+
+```sh
+node scripts/research/corpus.ts build build/research/corpus/build.jsonl
+```
+
+The build reads `build/research/corpus/` and downloads an archive only when it is missing. Every
+archive is checked against its pinned SHA-256. Clang comes from `LLVM` when set, otherwise from
+Homebrew's LLVM on macOS, otherwise from `PATH`. Drivers are built with `node_modules/.bin` removed
+from `PATH`, as `fixtures.ts` does.
+
+| variable                  | effect                                                                              |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| `C21_OUT`                 | module directory, relative to the repo root (default `build/research/c21`)          |
+| `C21_N`                   | records per run (default from the driver's spec)                                    |
+| `C21_ARMS`                | comma list of arms to run, for example `automatic,explicit`                         |
+| `C21_READWIN=1`           | iteration read windows on (default off)                                             |
+| `C21_GATE=0`              | keep read windows armed whatever the counted batch says (default: the gate decides) |
+| `C21_WARM=1`              | also write the warm-up rounds as samples, with a negative `round`                   |
+| `C21_LOGCEILING`          | iteration log ceiling, in entries                                                   |
+| `C21_FORCE_REFUSED=1`     | run the forced arm in timed mode even when the automatic route refuses              |
+| `FOLIO_RESEARCH_REVISION` | revision label in the environment record (falls back to `git rev-parse HEAD`)       |
+
+```sh
+node scripts/research/c21-kernels.ts                    # every driver
+node scripts/research/c21-kernels.ts sha256 miniz-crc32 # named drivers
+mkdir -p build/research/c21-runs
+node scripts/research/c21-bench.ts counters miniz-crc32 build/research/c21-runs/counters-miniz-crc32.jsonl 2 8
+node scripts/research/c21-bench.ts timed miniz-crc32 build/research/c21-runs/timed-miniz-crc32-1.jsonl 5 8
+node scripts/research/c21-summary.mjs build/research/c21-runs/timed-*-1.jsonl
+```
+
+Each bench command takes `ID OUTPUT.jsonl [ROUNDS] [WIDTH]`. The output file must not exist, and its
+directory must. Counters mode runs two rounds of the automatic and forced arms. Timed mode runs two
+warmups and then `ROUNDS` measured rounds of each arm.
+
+On the Linux rig, `c21-rig.sh` runs the full sequence under the timing lock `/tmp/folio-timing.lock`,
+pinned to CPUs 4 to 11 with `nice -n 19` and `taskset`:
+
+```sh
+FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
+  bash scripts/research/c21-rig.sh 3 5 build/research/c21-runs/rig
+```
+
+`FOLIO_WIDTH` sets the worker count (default 8). The script writes the module hashes, the counters
+and timed JSONL files, `summary.json` and `summary.txt` under the output directory, and `finished`
+when it completes.
+
+A timed run puts every arm in one process, in the order `automatic`, `forced`, `explicit`,
+`explicit-1`, and V8 shares the optimized code of a module between the pools that load the same
+bytes. An arm that runs second can therefore start warm, so a comparison between arms in that
+output depends on the order. `C21_ARMS` sets the order as well as the subset. `c21-arms.sh` runs
+each arm of each driver in its own process, with the same pinning and lock, and
+`c21-arms-table.mjs` prints the median speedup over sessions and the number of sessions above 1.0:
+
+```sh
+FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
+  bash scripts/research/c21-arms.sh 3 5 build/research/c21-runs/arms
+```
+
 ## Probes
 
 The probes are the instruments behind the figures in `TECHNICAL_REPORT.md`. They stay out of the

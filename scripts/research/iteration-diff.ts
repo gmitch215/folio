@@ -7,7 +7,12 @@ import { readFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
 import { prepare } from '../../src/compiler.ts';
 import type { IterationRoute } from '../../src/extract.ts';
-import type { IterationArenaOptions, IterationJob, IterationReport } from '../../src/iteration.ts';
+import type {
+	IterationArenaOptions,
+	IterationJob,
+	IterationPoolOptions,
+	IterationReport
+} from '../../src/iteration.ts';
 import { IterationPool, iterationArena, iterationArguments } from '../../src/iteration.ts';
 import { Folio } from '../../src/node.ts';
 
@@ -50,7 +55,7 @@ export async function openRig(
 	entry: string,
 	memory: { pages: number; maximum: number; arenaBase: number; arenaEnd: number },
 	widths: number[],
-	options: IterationArenaOptions = {}
+	options: IterationArenaOptions & Pick<IterationPoolOptions, 'logCeiling' | 'stall'> = {}
 ): Promise<Rig> {
 	const shared = new WebAssembly.Memory({
 		initial: memory.pages,
@@ -125,7 +130,19 @@ export function iterationRun(
 	width: number,
 	image: Uint8Array,
 	args: readonly number[],
-	extra: Pick<IterationJob, 'schedule' | 'skip' | 'admit' | 'loses' | 'collapses'> = {}
+	extra: Pick<
+		IterationJob,
+		| 'schedule'
+		| 'skip'
+		| 'admit'
+		| 'loses'
+		| 'collapses'
+		| 'hopeless'
+		| 'unproven'
+		| 'reconsider'
+		| 'window'
+		| 'discover'
+	> = {}
 ): Run {
 	const { route } = rig;
 	const view = new Uint8Array(rig.memory.buffer);
@@ -193,8 +210,8 @@ export const wat = {
 	frame: 64
 };
 
-const family = `(module
-	(import "env" "memory" (memory ${wat.pages} ${wat.pages}))
+const family = (maximum: number) => `(module
+	(import "env" "memory" (memory ${wat.pages} ${maximum}))
 	(global $sp (mut i32) (i32.const 65536))
 	(func $tri (param $n i32) (result i32) (local $f i32) (local $r i32)
 		(local.set $f (i32.sub (global.get $sp) (i32.const 16)))
@@ -230,9 +247,9 @@ const family = `(module
 		(global.set $sp (i32.add (local.get $frame) (i32.const ${wat.frame}))))
 )`;
 
-export function watModule(): Uint8Array {
+export function watModule(maximum = wat.pages): Uint8Array {
 	binaryen.setDebugInfo(true);
-	const module = binaryen.parseText(family);
+	const module = binaryen.parseText(family(maximum));
 	try {
 		const compactImports = (binaryen.Features as unknown as { CompactImports: number })
 			.CompactImports;
@@ -248,21 +265,29 @@ export function watModule(): Uint8Array {
 export const srcCell = (i: number) => wat.src + wat.cell * i;
 export const dstCell = (i: number) => wat.dst + wat.cell * i;
 
+/** Arena options plus the pool's log ceiling and the pages the rig's memory may grow to. */
+export interface WatRigOptions extends IterationArenaOptions {
+	logCeiling?: number;
+	stall?: IterationPoolOptions['stall'];
+	maximum?: number;
+}
+
 export async function watRig(
 	widths: number[],
-	options: IterationArenaOptions = {},
+	options: WatRigOptions = {},
 	bytes: Uint8Array = watModule()
 ) {
 	const route = prepare(bytes, { minimumRegionWork: 0 }).iterationRoute!;
 	if (!route.eligible) throw new Error(route.diagnostics.join('; '));
-	const settings = { batch: 32, logCapacity: 64, slotBytes: 4096, ...options };
+	const { maximum, ...rest } = options;
+	const settings = { batch: 32, logCapacity: 64, slotBytes: 4096, ...rest };
 	const arena = iterationArena(wat.arena, wat.pages * PAGE, {
 		...settings,
 		frameBytes: route.frame?.size
 	});
 	const memory = {
 		pages: wat.pages,
-		maximum: wat.pages,
+		maximum: maximum ?? wat.pages,
 		arenaBase: wat.arena,
 		arenaEnd: wat.arena + arena.bytes
 	};
@@ -418,7 +443,13 @@ export async function folioRun(
 	});
 	new Uint8Array(memory.buffer).set(image.subarray(0, rig.arenaBase));
 	const t0 = performance.now();
-	const folio = await Folio.open(bytes, { workers: width, memory });
+	const folio = await Folio.open(bytes, {
+		workers: width,
+		memory,
+		iterationReadWindows: process.env.IDIFF_READWIN === '1',
+		iterationReadSummary: process.env.IDIFF_SUMMARY === '1',
+		iterationSecondChance: process.env.IDIFF_SECOND === '1'
+	});
 	const t1 = performance.now();
 	const first = await folio.run('hash_all', args);
 	const t2 = performance.now();

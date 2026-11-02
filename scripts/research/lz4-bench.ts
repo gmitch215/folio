@@ -227,8 +227,15 @@ const folioArm = (armName: string, memoryOf: () => WebAssembly.Memory, shared: b
 				dispatchMs: report?.iteration?.dispatchMs,
 				validationMs: report?.iteration?.validationMs,
 				workerRunMs: report?.iteration?.workerRunMs,
+				workerScanMs: report?.iteration?.workerScanMs,
+				rollbackMs: report?.iteration?.rollbackMs,
+				replayMs: report?.iteration?.replayMs,
 				exhausted: report?.iteration?.exhausted,
 				undoEntries: report?.iteration?.undoEntries,
+				maxLogEntries: report?.iteration?.maxLogEntries,
+				logGrowths: report?.iteration?.logGrowths,
+				retried: report?.iteration?.retried,
+				batches: report?.iteration?.batches,
 				conflicts: report?.iteration?.conflicts
 			}),
 			close: () => pool.close()

@@ -4,6 +4,7 @@ import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path';
 import { prepare } from '../../src/compiler.ts';
 import { admissionSeam } from '../../src/iteration-admission.ts';
+import { iterationLogCeiling } from '../../src/iteration-layout.ts';
 import { Folio, type ExecutionReport } from '../../src/node.ts';
 import { digest, researchEnvironment } from './environment.ts';
 
@@ -317,7 +318,9 @@ export const iterationShapes = [
 	'framed',
 	'frame-carried',
 	'trap',
-	'mixed'
+	'mixed',
+	'unequal',
+	'unequal-log'
 ] as const;
 export type IterationShape = (typeof iterationShapes)[number];
 type Hazard = 'raw' | 'war' | 'waw';
@@ -345,9 +348,27 @@ const visitFunction = `(func $visit (param $f i32) (param $d i32) (result i32) (
 		(global.set $sp (i32.add (local.get $s) (i32.const 16)))
 		(local.get $r))`;
 
-function iterationSource(item: string, extra = '') {
+// work that depends on the value: up to 63 stores into a private 4 KiB region
+const unequalBody = `
+	(local.set $s (i32.and (i32.load (local.get $src)) (i32.const 63)))
+	(block $out (loop $l
+		(br_if $out (i32.eqz (local.get $s)))
+		(i32.store (i32.add (local.get $dst) (i32.shl (local.get $s) (i32.const 2))) (local.get $s))
+		(local.set $s (i32.sub (local.get $s) (i32.const 1)))
+		(br $l)))`;
+// a fill of 64 bytes or of 69,632 to 81,920, past the 2,048 granules the default log holds
+const logBody = `
+	(memory.fill (local.get $dst) (i32.load (local.get $src))
+		(select
+			(i32.const 64)
+			(i32.add (i32.const 69632) (i32.shl (i32.and (i32.shr_u (i32.load (local.get $src)) (i32.const 2)) (i32.const 3)) (i32.const 12)))
+			(i32.and (i32.load (local.get $src)) (i32.const 3))))`;
+const logStride = 0x14000;
+const logMaximum = 4096;
+
+function iterationSource(item: string, extra = '', maximum = iterationMaximum) {
 	return `(module
-		(import "env" "memory" (memory ${iterationPages} ${iterationMaximum}))
+		(import "env" "memory" (memory ${iterationPages} ${maximum}))
 		(global $sp (mut i32) (i32.const 65536))
 		(func $item (param $t i32) (param $f i32) (local $src i32) (local $dst i32) (local $s i32)
 			(local.set $src (i32.load (local.get $t)))
@@ -412,17 +433,20 @@ export interface IterationProgram {
 	bytes: Uint8Array;
 	image: Uint8Array;
 	args: number[];
+	/** Declared maximum pages of the program's memory. */
+	maximum: number;
 }
 
 export function iterationProgram(seed: number, shape: IterationShape): IterationProgram {
 	const next = random((Math.imul(seed, 8) + iterationShapes.indexOf(shape) + 1) >>> 0);
-	const trip = 4 + (next() % 37);
+	const trip = 4 + (next() % (shape === 'unequal-log' ? 17 : 37));
 	const window = Math.min(trip - 1, firstBatch);
 	const src = Array.from({ length: trip }, (_, i) => srcCell(i));
 	const dst = Array.from({ length: trip }, (_, i) => dstCell(i));
 	const values = Array.from({ length: trip }, () => 1 + (next() % 500));
 	let body = plainBody;
 	let extra = '';
+	let maximum = iterationMaximum;
 	switch (shape) {
 		case 'disjoint':
 			break;
@@ -449,6 +473,15 @@ export function iterationProgram(seed: number, shape: IterationShape): Iteration
 			}
 			break;
 		}
+		case 'unequal':
+			body = unequalBody;
+			for (let i = 0; i < trip; i++) dst[i] = 0x40000 + 4096 * i;
+			break;
+		case 'unequal-log':
+			body = logBody;
+			maximum = logMaximum;
+			for (let i = 0; i < trip; i++) dst[i] = 0x40000 + logStride * i;
+			break;
 		case 'mixed': {
 			if (next() % 2) body = plainBody;
 			else {
@@ -471,7 +504,7 @@ export function iterationProgram(seed: number, shape: IterationShape): Iteration
 		view.setUint32(srcCell(i), values[i]!, true);
 		view.setUint32(dstCell(i), 0xab000000 + i, true);
 	}
-	const wat = iterationSource(body, extra);
+	const wat = iterationSource(body, extra, maximum);
 	return {
 		seed,
 		shape,
@@ -479,7 +512,8 @@ export function iterationProgram(seed: number, shape: IterationShape): Iteration
 		wat,
 		bytes: compileOwner(wat),
 		image,
-		args: [iterationTable, trip]
+		args: [iterationTable, trip],
+		maximum
 	};
 }
 
@@ -512,6 +546,7 @@ function propertyFailures(
 	switch (shape) {
 		case 'disjoint':
 		case 'framed':
+		case 'unequal':
 			return replayed === 0 && report?.extraction === 'iteration'
 				? []
 				: [`${tag}: replayed ${replayed}, extraction ${report?.extraction}`];
@@ -523,6 +558,17 @@ function propertyFailures(
 			return report?.reason === 'frame-carried dependence'
 				? []
 				: [`${tag}: reason ${report?.reason}`];
+		case 'unequal-log': {
+			// the memory can grow, so an exhausted log is retried and the loop still dispatches
+			const counts = report?.iteration;
+			return replayed === 0 &&
+				report?.extraction === 'iteration' &&
+				(counts?.exhausted ? counts.logGrowths >= 1 && counts.stopped === undefined : true)
+				? []
+				: [
+						`${tag}: replayed ${replayed}, extraction ${report?.extraction}, log growths ${counts?.logGrowths}, stopped ${counts?.stopped}`
+					];
+		}
 		default:
 			return [];
 	}
@@ -535,12 +581,12 @@ async function checkIterationProgram(
 	widths: number[],
 	emit: Emit
 ): Promise<string[]> {
-	const { seed, shape, bytes, image, args } = program;
+	const { seed, shape, bytes, image, args, maximum } = program;
 	const where = (extra: string) => `seed=${seed} shape=${shape} ${extra}`;
 	const found: string[] = [];
 	const reference = new WebAssembly.Memory({
 		initial: iterationPages,
-		maximum: iterationMaximum
+		maximum
 	});
 	new Uint8Array(reference.buffer).set(image);
 	const instance = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(bytes)), {
@@ -551,10 +597,14 @@ async function checkIterationProgram(
 	for (const width of widths) {
 		const host = new WebAssembly.Memory({
 			initial: iterationPages,
-			maximum: iterationMaximum,
+			maximum,
 			shared: true
 		});
-		const folio = await Folio.open(bytes, { memory: host, workers: width });
+		const folio = await Folio.open(bytes, {
+			memory: host,
+			workers: width,
+			iterationLogCeiling
+		});
 		try {
 			for (const arm of ['dispatch', 'serial'] as const) {
 				new Uint8Array(host.buffer).set(image);
@@ -581,6 +631,9 @@ async function checkIterationProgram(
 					value: report?.values[0],
 					trap: got.error === undefined ? undefined : errorOf(got.error),
 					replayed: report?.replayed,
+					exhausted: report?.iteration?.exhausted,
+					logGrowths: report?.iteration?.logGrowths,
+					retried: report?.iteration?.retried,
 					extraction: report?.extraction,
 					reason: report?.reason,
 					mode: report?.mode,
