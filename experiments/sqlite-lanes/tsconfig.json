@@ -1,0 +1,15 @@
+{
+	"extends": "../../tsconfig.json",
+	"include": [
+		"coordinator.ts",
+		"queries.ts",
+		"sqlite.ts",
+		"prepare.ts",
+		"plan.ts",
+		"local.ts",
+		"run.ts",
+		"wasm.d.ts",
+		"workerd.d.ts"
+	],
+	"exclude": []
+}
