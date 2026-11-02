@@ -1,0 +1,13 @@
+{
+	"name": "cfw-folio-ranges-coordinator",
+	"main": "coordinator.ts",
+	"compatibility_date": "2026-10-20",
+	"compatibility_flags": ["nodejs_compat"],
+	"workers_dev": true,
+	"services": [
+		{ "binding": "LANE1", "service": "cfw-folio-ranges-lane" },
+		{ "binding": "LANE2", "service": "cfw-folio-ranges-lane" },
+		{ "binding": "LANE3", "service": "cfw-folio-ranges-lane" },
+		{ "binding": "LANE4", "service": "cfw-folio-ranges-lane" }
+	]
+}
