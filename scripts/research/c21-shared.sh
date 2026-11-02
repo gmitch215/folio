@@ -33,5 +33,5 @@ for session in $(seq 1 "$sessions"); do
 		done
 	done
 done
-node scripts/research/c21-shared-table.mjs "$out" > "$out/summary.md"
+"$node_bin" scripts/research/c21-shared-table.mjs "$out" > "$out/summary.md"
 printf '%s\n' complete > "$out/finished"
