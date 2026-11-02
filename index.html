@@ -29,6 +29,7 @@ the same engine.</p>
 <li><a href="#-managed-workers">Managed Workers</a></li>
 <li><a href="#-browser-execution-and-page-leases">Browser Execution and Page Leases</a></li>
 <li><a href="#-task-pool">Task Pool</a></li>
+<li><a href="#-slice-pool">Slice Pool</a></li>
 <li><a href="#-context-checkpoints">Context Checkpoints</a></li>
 <li><a href="#-baked-boot-images">Baked Boot Images</a></li>
 <li><a href="#-execution-and-memory">Execution and Memory</a></li>
@@ -43,12 +44,14 @@ the same engine.</p>
 <p>A Worker, a Linux machine in a Durable Object and a PHP interpreter all end up as one Wasm
 instance on one thread. Folio spreads the work of that instance across cores without asking the
 program to be rewritten. The caller passes one ordinary entry point. The compiler discovers the
-regions, so there are no access annotations and no caller-created chunks.</p>
+regions, so on the automatic route there are no access annotations and no caller-created chunks. The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report says which checks each route runs.</p>
 <ul>
 <li><strong>Native Sharing.</strong> Isolates map the same backing allocation, so a 256 MiB arena costs about 4 MiB
 to attach to another isolate instead of a copy.</li>
-<li><strong>Serial Semantics.</strong> Uncertain dependencies run on private overlays and commit in original
-order. A conflict replays against committed state, and a trap keeps its preceding writes.</li>
+<li><strong>Serial Semantics.</strong> On the automatic routes, uncertain dependencies run on private overlays and
+commit in original order. A conflict replays against committed state, and a trap keeps its
+preceding writes. Routes where the caller declares independence keep that contract and offer an
+audit.</li>
 <li><strong>Original Stack.</strong> JSPI suspends the program's own Wasm stack at joins, so branches, scalar
 carry and host effects behave as they do natively.</li>
 <li><strong>Portable.</strong> The client and the managed backend use fetch, WebSockets and Durable Objects, with
@@ -70,6 +73,8 @@ with imported memories, tables, globals and host functions bound as in native in
 copied snapshots or learned byte ranges between lanes.</li>
 <li>🧰 <strong>Task pool</strong> that runs named functions in private contexts on other threads, with ordered
 joins and an optional differential audit.</li>
+<li>🍰 <strong>Slice pool</strong> that runs slices of a call range in place on one shared memory, with a private
+stack per worker and an optional serial audit, for calls the caller declares independent.</li>
 <li>🧮 <strong>Exact chunked recurrences</strong> that split one CRC-32, Adler-32 or AES-CTR stream across the
 task pool and join the chunk states into the serial result.</li>
 <li>🛑 <strong>Stall guard</strong> that stops an iteration batch that does not return and finishes the loop
@@ -112,7 +117,7 @@ loop that writes more per iteration than the undo log holds, or whose batches lo
 finishes serially. With an unshared memory, or one the library cannot grow by the arena it needs, the run
 stays serial and the report names the reason.</p>
 <h2 id="🧩-examples" class="tsd-anchor-link">🧩 Examples<a href="#🧩-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>iteration</code> runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, and <code>boot-image</code> bakes captured memory into a module.</p>
+<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>iteration</code> runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, <code>slice-pool</code> fills one shared memory from several threads and audits the run against the serial one, and <code>boot-image</code> bakes captured memory into a module.</p>
 <h2 id="⏳-asynchronous-host-effects" class="tsd-anchor-link">⏳ Asynchronous Host Effects<a href="#⏳-asynchronous-host-effects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Folio</span><span class="hl-1">, </span><span class="hl-5">suspending</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">folio</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Folio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-9">module</span><span class="hl-1">, {</span><br/><span class="hl-1">  </span><span class="hl-5">imports:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">host:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-5">read:</span><span class="hl-1"> </span><span class="hl-0">suspending</span><span class="hl-1">(</span><span class="hl-6">async</span><span class="hl-1"> (</span><span class="hl-5">key</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> (</span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">URL</span><span class="hl-1">(</span><span class="hl-0">String</span><span class="hl-1">(</span><span class="hl-5">key</span><span class="hl-1">), </span><span class="hl-5">storageUrl</span><span class="hl-1">))).</span><span class="hl-5">status</span><span class="hl-1">)</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">promising:</span><span class="hl-1"> [</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">]</span><br/><span class="hl-1">});</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">, [</span><span class="hl-8">42</span><span class="hl-1">]);</span><br/><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span>
 </code><button type="button">Copy</button></pre>
@@ -185,7 +190,10 @@ then <code>join(handle)</code> blocks until the output arrives, or <code>joinAsy
 the event loop. <code>run(jobs)</code> submits a list and returns the results in submission order, and
 <code>runSync(jobs)</code> does the same where the caller cannot yield, such as inside a synchronous Wasm
 import. Input and output are strings or bytes, <code>submitJson</code> and <code>result.json()</code> cover structured
-values, and <code>pool.width</code> limits how many workers take tasks.</p>
+values, and <code>pool.width</code> limits how many workers take tasks. Input on a <code>SharedArrayBuffer</code> is copied
+at submit so a later write cannot reach the task. <code>submit</code>, <code>run</code> and <code>runSync</code> take <code>{ share: true }</code>
+to post such an input as it is, which removes the copy when the caller promises not to write those
+bytes until the task is joined.</p>
 <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Worker</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;node:worker_threads&#39;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">TaskPool</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/tasks&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">pool</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">TaskPool</span><span class="hl-1">(</span><span class="hl-8">4</span><span class="hl-1">);</span><br/><span class="hl-4">for</span><span class="hl-1"> (</span><span class="hl-6">let</span><span class="hl-1"> </span><span class="hl-5">index</span><span class="hl-1"> = </span><span class="hl-8">0</span><span class="hl-1">; </span><span class="hl-5">index</span><span class="hl-1"> &lt; </span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-5">size</span><span class="hl-1">; </span><span class="hl-5">index</span><span class="hl-1">++) {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">link</span><span class="hl-1"> = </span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-0">link</span><span class="hl-1">(</span><span class="hl-5">index</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Worker</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">URL</span><span class="hl-1">(</span><span class="hl-2">&#39;./task-worker.js&#39;</span><span class="hl-1">, </span><span class="hl-4">import</span><span class="hl-1">.</span><span class="hl-5">meta</span><span class="hl-1">.</span><span class="hl-5">url</span><span class="hl-1">), {</span><br/><span class="hl-1">    </span><span class="hl-5">workerData:</span><span class="hl-1"> { </span><span class="hl-5">link</span><span class="hl-1"> },</span><br/><span class="hl-1">    </span><span class="hl-5">transferList:</span><span class="hl-1"> [</span><span class="hl-5">link</span><span class="hl-1">.</span><span class="hl-5">port</span><span class="hl-1">]</span><br/><span class="hl-1">  });</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">results</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">([</span><br/><span class="hl-1">  [</span><span class="hl-2">&#39;render&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;page-1&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  [</span><span class="hl-2">&#39;render&#39;</span><span class="hl-1">, </span><span class="hl-2">&#39;page-2&#39;</span><span class="hl-1">]</span><br/><span class="hl-1">]);</span><br/><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">results</span><span class="hl-1">.</span><span class="hl-0">map</span><span class="hl-1">((</span><span class="hl-5">result</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> </span><span class="hl-5">result</span><span class="hl-1">.</span><span class="hl-0">text</span><span class="hl-1">()));</span>
 </code><button type="button">Copy</button></pre>
 
@@ -208,6 +216,30 @@ per chunk and combines the results in order, and <code>crc32Combine</code>, <cod
 supply the algebra. AES chunks must be multiples of 16 bytes except the last. Chunks are copied into
 their tasks, and 64 MiB of CRC-32 on eight workers ran 3.52x faster than serial with the result equal
 to <code>zlib.crc32</code>. A recurrence with no known combine, such as one SHA-256 message, stays serial.</p>
+<h2 id="🍰-slice-pool" class="tsd-anchor-link">🍰 Slice Pool<a href="#🍰-slice-pool" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@gmitch215/folio/slices</code> runs an exported function over a range of calls on several threads, on one
+shared memory, with no copy and no tracking. The caller declares that the calls are independent. A
+<code>SlicePool</code> compiles the module once, marks its imported memory shared, grows the memory by one
+private stack per worker when the module keeps a stack pointer global, and starts the workers.
+<code>run(entry, count, args)</code> splits <code>[0, count)</code> into slices, and <code>args(from, to)</code> returns the arguments
+of the call for a slice. The records go into <code>pool.memory</code> after <code>open</code>, because opening applies the
+module's data segments, and the results are read from it afterwards.</p>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">SlicePool</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/slices&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">memory</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Memory</span><span class="hl-1">({ </span><span class="hl-5">initial:</span><span class="hl-1"> </span><span class="hl-8">256</span><span class="hl-1">, </span><span class="hl-5">maximum:</span><span class="hl-1"> </span><span class="hl-8">4096</span><span class="hl-1">, </span><span class="hl-5">shared:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1"> });</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">pool</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">SlicePool</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-5">bytes</span><span class="hl-1">, { </span><span class="hl-5">memory</span><span class="hl-1">, </span><span class="hl-5">workers:</span><span class="hl-1"> </span><span class="hl-8">8</span><span class="hl-1"> });</span><br/><span class="hl-0">write</span><span class="hl-1">(</span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-5">memory</span><span class="hl-1">, </span><span class="hl-5">records</span><span class="hl-1">); </span><span class="hl-3">// table, input bytes and an output area</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;bulk&#39;</span><span class="hl-1">, </span><span class="hl-5">records</span><span class="hl-1">.</span><span class="hl-5">length</span><span class="hl-1">, (</span><span class="hl-5">from</span><span class="hl-1">, </span><span class="hl-5">to</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> [</span><br/><span class="hl-1">  </span><span class="hl-5">table</span><span class="hl-1"> + </span><span class="hl-8">16</span><span class="hl-1"> * </span><span class="hl-5">from</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">to</span><span class="hl-1"> - </span><span class="hl-5">from</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">out</span><span class="hl-1"> + </span><span class="hl-5">from</span><span class="hl-1"> * </span><span class="hl-5">slot</span><br/><span class="hl-1">]);</span><br/><span class="hl-0">read</span><span class="hl-1">(</span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-5">memory</span><span class="hl-1">, </span><span class="hl-5">out</span><span class="hl-1">, </span><span class="hl-5">records</span><span class="hl-1">.</span><span class="hl-5">length</span><span class="hl-1"> * </span><span class="hl-5">slot</span><span class="hl-1">);</span><br/><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The module must import its memory with a declared maximum that leaves room for the stacks, and keep
+at most one mutable global, which is taken to be the stack pointer. A start function, a dropped
+data segment or a second mutable global refuses the module. Arguments and results are i32 or i64
+(<code>bigint</code>). Imports other than the memory come from <code>imports</code>, a module specifier whose default export
+returns them, because functions do not cross threads.</p>
+<p>Nothing here checks independence. A program that writes state the serial program would share
+returns a different result. <code>run(..., { audit: true })</code> copies the memory before the run, runs the
+same slices serially on the copy and compares every returned value and every byte below the
+stacks, and throws <code>SliceConflictError</code> with the first difference. The audit costs a serial run and a
+memory copy and is meant for tests and canaries. A route that copies each task's records into a
+private context cannot win on a kernel whose speed is the copy's bandwidth; the slice pool has no
+copy, and on the quiet rig xxHash, Adler-32 and LZ4 decompress over thousands of records ran 1.7x
+to 4.9x faster than serial on eight workers (see the technical report).</p>
 <h2 id="🔄-context-checkpoints" class="tsd-anchor-link">🔄 Context Checkpoints<a href="#🔄-context-checkpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/context</code> resets a private Wasm instance between independent jobs.
 <code>prepareContext(bytes)</code> from <code>@gmitch215/folio/compiler</code> adds exports for every memory, mutable
@@ -226,6 +258,12 @@ instance for each job. Memory or table growth throws <code>ContextResetError</co
 written, and the caller instantiates a new context. Host resources and the objects behind
 <code>externref</code> values stay with the caller. <code>restore()</code> reads every page, so its cost follows the memory
 size and not the number of changed pages.</p>
+<p>A job that writes its whole input region before it runs can skip that region.
+<code>restore('changed', ranges)</code> takes <code>{ offset, length }</code> ranges (and a <code>memory</code> index when the plan has
+more than one) that it neither compares nor copies back, and <code>skippedBytes</code> in the report counts them.
+The caller must write every byte of a range before the program reads it, because those bytes keep the
+previous job's contents. Everything outside the ranges is restored as before, and an invalid range
+throws a <code>RangeError</code> before anything changes.</p>
 <h2 id="🧊-baked-boot-images" class="tsd-anchor-link">🧊 Baked Boot Images<a href="#🧊-baked-boot-images" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/bake</code> moves a booted memory into the module. <code>captureImage(booted, fresh)</code> compares
 a booted memory with a fresh instance of the same module and keeps the 64 KiB pages that differ.
@@ -540,6 +578,7 @@ samples.</p>
 <li><a href="#📡-managed-workers"><span>📡 <wbr/>Managed <wbr/>Workers</span></a></li>
 <li><a href="#🔗-browser-execution-and-page-leases"><span>🔗 <wbr/>Browser <wbr/>Execution and <wbr/>Page <wbr/>Leases</span></a></li>
 <li><a href="#🧰-task-pool"><span>🧰 <wbr/>Task <wbr/>Pool</span></a></li>
+<li><a href="#🍰-slice-pool"><span>🍰 <wbr/>Slice <wbr/>Pool</span></a></li>
 <li><a href="#🔄-context-checkpoints"><span>🔄 <wbr/>Context <wbr/>Checkpoints</span></a></li>
 <li><a href="#🧊-baked-boot-images"><span>🧊 <wbr/>Baked <wbr/>Boot <wbr/>Images</span></a></li>
 <li><a href="#🧱-execution-and-memory"><span>🧱 <wbr/>Execution and <wbr/>Memory</span></a></li>

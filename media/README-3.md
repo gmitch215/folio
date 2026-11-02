@@ -39,29 +39,36 @@ listing order differed between the two machines.
 harness writes a new `raw.jsonl` and refuses to overwrite an existing one. Each raw file starts with
 an environment record that names the runtime, hardware and a SHA256 of every source file it ran.
 
-| file                                                                                                    | what it does                                                                                                                                       |
-| ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `corpus.ts`, `cases/`                                                                                   | builds the 21 pinned upstream kernels and checks them against native                                                                               |
-| `corpus-serial.ts`, `admission-diagnostic.ts`                                                           | single-entry native against Folio; the threshold-zero diagnostic, one process per case                                                             |
-| `corpus-mechanisms.ts`                                                                                  | explicit tasks against conventional workers with a `whole`, `pages` or `checkpoint` reset (`FOLIO_CORPUS_RESET`)                                   |
-| `inputs.ts`                                                                                             | five input profiles per kernel on persistent contexts against fresh native instances                                                               |
-| `boot-eligibility.ts`                                                                                   | initialization, image restore and an application cache on the corpus initializers                                                                  |
-| `grain-build.ts`, `grain-diff.ts`, `grain-bench.ts`, `grain-summarize.ts`, `grain.sh`                   | the single-call AES grain kernel (`cases/aes-grain.c`), its equality check and its paired timing on the explicit route                             |
-| `blake3-build.ts`, `blake3-bench.ts`, `blake3-worker.ts`, `blake3.sh`                                   | the pinned BLAKE3 consumer (`cases/blake3-hash-all.c`): build with the official vector check, then default, explicit and forced arms               |
-| `lz4-build.ts`, `lz4-bench.ts`, `lz4.sh`                                                                | the pinned LZ4 consumer (`cases/lz4-compress-all.c`) in its spec shape and as fixed-slot variants, with the default and automatic arms             |
-| `sha256-build.ts`, `sha256-bench.ts`, `sha256.sh`                                                       | the pinned SHA-256 consumer (`cases/sha256-hash-all.c`) as a plain loop and with a helper per input, checked against Node's digests                |
-| `plan-snapshot.ts`                                                                                      | dumps the stable `prepare` plan fields of every fixture and corpus artifact for a root, with the route summaries beside it                         |
-| `inline-diff.ts`                                                                                        | the inline tracking lowering against native, the host-call footprint and binaryen's tracer; `cost` times the BLAKE3 consumer                       |
-| `iteration-diff.ts`                                                                                     | the iteration executor against the serial program: random programs, and the BLAKE3 consumer (`blake3`, with a `Folio.run` arm)                     |
-| `iteration-admission.ts`, `iteration-admission.sh`                                                      | the admission sweep on the BLAKE3 consumer; `summary` flags every wrong decision                                                                   |
-| `focused.ts`                                                                                            | eight-worker repeats with one active pool at a time, a paired serial control and an idle-pool condition                                            |
-| `crossover.ts`, `graded.ts`                                                                             | synthetic compute, stream and conflict cells; graded conflict rates and adaptive routing                                                           |
-| `differential.ts`                                                                                       | generated programs and guard-refusal loops against native at widths 1, 2, 4 and 8                                                                  |
-| `matched.sh`, `backing.sh`, `focused.sh`, `completion.sh`                                               | run the studies in sequence on the Linux rig under a timing lock                                                                                   |
-| `analyze.ts`                                                                                            | paired summaries with bootstrap intervals from a raw file                                                                                          |
-| `derive.ts`, `denominators.ts`                                                                          | blocker histogram, state-loss counts, session spread, operation costs, the corpus denominator table and the per-kernel table                       |
-| `export.ts`, `evidence.ts`                                                                              | copy a run into `results/` with summaries and a manifest; verify every manifest and the historical index                                           |
-| `environment.ts`, `backing.ts`, `corpus-worker.ts`, `crossover-worker.ts`, `grain-worker.ts`, `plot.py` | the environment record every harness writes; the backing ablation; worker entries of the harnesses above; standalone figures from frozen summaries |
+| file                                                                                                                                       | what it does                                                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `corpus.ts`, `cases/`                                                                                                                      | builds the 21 pinned upstream kernels and checks them against native                                                                                                             |
+| `corpus-serial.ts`, `admission-diagnostic.ts`                                                                                              | single-entry native against Folio; the threshold-zero diagnostic, one process per case                                                                                           |
+| `corpus-mechanisms.ts`                                                                                                                     | explicit tasks against conventional workers with a `whole`, `pages` or `checkpoint` reset (`FOLIO_CORPUS_RESET`)                                                                 |
+| `inputs.ts`                                                                                                                                | five input profiles per kernel on persistent contexts against fresh native instances                                                                                             |
+| `boot-eligibility.ts`                                                                                                                      | initialization, image restore and an application cache on the corpus initializers                                                                                                |
+| `grain-build.ts`, `grain-diff.ts`, `grain-bench.ts`, `grain-summarize.ts`, `grain.sh`                                                      | the single-call AES grain kernel (`cases/aes-grain.c`), its equality check and its paired timing on the explicit route                                                           |
+| `blake3-build.ts`, `blake3-bench.ts`, `blake3-worker.ts`, `blake3.sh`                                                                      | the pinned BLAKE3 consumer (`cases/blake3-hash-all.c`): build with the official vector check, then default, explicit and forced arms                                             |
+| `lz4-build.ts`, `lz4-bench.ts`, `lz4.sh`                                                                                                   | the pinned LZ4 consumer (`cases/lz4-compress-all.c`) in its spec shape and as fixed-slot variants, with the default and automatic arms                                           |
+| `sha256-build.ts`, `sha256-bench.ts`, `sha256.sh`                                                                                          | the pinned SHA-256 consumer (`cases/sha256-hash-all.c`) as a plain loop and with a helper per input, checked against Node's digests                                              |
+| `affine-build.ts`, `affine-bench.ts`, `affine-worker.ts`, `affine-summary.ts`, `cases/affine/`                                             | the kernels and controls for `src/affine.ts`: discovery cost, and serial, exact, audit and hand-derived combine timings                                                          |
+| `affine-state-build.ts`, `affine-state-bench.ts`, `affine-context-worker.ts`, `affine-state-summary.ts`, `cases/affine/context-subjects.c` | the context-struct subjects and corpus entries for `src/affine-state.ts` and `src/boundaries.ts`: state discovery, state-in-memory exact timings, recorded boundary verification |
+| `sweeps-*.ts`, `cases/sweeps/`                                                                                                             | fixed-point sweeps over explicit-state chunks: sweep and chunk-run counts, boundary state sets, and pooled wall against serial                                                   |
+| `admission-quality.mjs`                                                                                                                    | scores automatic admission against the measured modes of a record-level run: confusion matrix, regret, a gate fitted on a split, and a gate fixed beforehand (`AQ_GATE`)         |
+| `static-footprint.mjs`                                                                                                                     | counts constant-address stores, global writes, indirect calls and imported calls in each driver module                                                                           |
+| `size-change.ts`, `size-change-table.mjs`                                                                                                  | one pool, one program, calls whose record sizes change; the table gives the speedup and mode of each call                                                                        |
+| `native-bulk.c`, `native-bulk.sh`, `native-bulk-export.ts`, `native-bulk-arms.sh`, `native-bulk-table.mjs`                                 | the bulk drivers compiled natively with a parallel-for over the records (the source-level baseline), with a serial check of every output                                         |
+| `plan-snapshot.ts`                                                                                                                         | dumps the stable `prepare` plan fields of every fixture and corpus artifact for a root, with the route summaries beside it                                                       |
+| `inline-diff.ts`                                                                                                                           | the inline tracking lowering against native, the host-call footprint and binaryen's tracer; `cost` times the BLAKE3 consumer                                                     |
+| `iteration-diff.ts`                                                                                                                        | the iteration executor against the serial program: random programs, and the BLAKE3 consumer (`blake3`, with a `Folio.run` arm)                                                   |
+| `iteration-admission.ts`, `iteration-admission.sh`                                                                                         | the admission sweep on the BLAKE3 consumer; `summary` flags every wrong decision                                                                                                 |
+| `focused.ts`                                                                                                                               | eight-worker repeats with one active pool at a time, a paired serial control and an idle-pool condition                                                                          |
+| `crossover.ts`, `graded.ts`                                                                                                                | synthetic compute, stream and conflict cells; graded conflict rates and adaptive routing                                                                                         |
+| `differential.ts`                                                                                                                          | generated programs and guard-refusal loops against native at widths 1, 2, 4 and 8                                                                                                |
+| `matched.sh`, `backing.sh`, `focused.sh`, `completion.sh`                                                                                  | run the studies in sequence on the Linux rig under a timing lock                                                                                                                 |
+| `analyze.ts`                                                                                                                               | paired summaries with bootstrap intervals from a raw file                                                                                                                        |
+| `derive.ts`, `denominators.ts`                                                                                                             | blocker histogram, state-loss counts, session spread, operation costs, the corpus denominator table and the per-kernel table                                                     |
+| `export.ts`, `evidence.ts`                                                                                                                 | copy a run into `results/` with summaries and a manifest; verify every manifest and the historical index                                                                         |
+| `environment.ts`, `backing.ts`, `corpus-worker.ts`, `crossover-worker.ts`, `grain-worker.ts`, `plot.py`                                    | the environment record every harness writes; the backing ablation; worker entries of the harnesses above; standalone figures from frozen summaries                               |
 
 ```sh
 node scripts/research/export.ts results/topic/study run.jsonl:raw.jsonl
@@ -73,13 +80,25 @@ host: record the load average in the data and discard a run that overlapped othe
 
 ## C21 bulk harness
 
-`c21-kernels.ts` builds one bulk driver per entry of its `specs` list (30 entries). A
+`c21-kernels.ts` builds one bulk driver per entry of its `specs` list (38 entries). A
 driver runs `n` independent records through the unmodified entry point of one corpus kernel.
 `c21-bench.ts` runs the automatic, forced, explicit and explicit-1 arms against the native serial
 run and asserts equal output in every run. `c21-worker.ts` is the worker entry for the explicit
 arms, `c21-common.ts` holds the shared record and memory helpers, and `cases/c21/` holds the C
 driver sources (`bulk.c`, `support-bulk.c`). `c21-routes.ts` prints the stack and iteration routes
 of built modules, and `c21-summary.mjs` pairs the timed rows of each arm against the native run.
+
+Eight drivers cover six more projects (brotli, wyhash, BLAKE2, QOA, yyjson, md4c). Their cases sit
+in `bulkCases` of `corpus-manifest.json`, not in `cases`, because `corpus.ts` builds every entry of
+`cases` through `cases/kernel.c`. These projects need libc declarations and helpers that
+`cases/c21/include/` and `cases/c21/support-libc.c` supply for them only. The bulk build fetches a
+project archive on first use. `c21-verify.ts` runs each of the eight serially twice and compares
+the output with Node's BLAKE2b, Node's Brotli decoder, a JSON parse, a wyhash port, a round trip
+and known Markdown output:
+
+```sh
+node scripts/research/c21-verify.ts blake2b wyhash brotli-compress brotli-decompress
+```
 
 The drivers compile from the corpus sources. Run the corpus build first:
 
@@ -139,6 +158,29 @@ each arm of each driver in its own process, with the same pinning and lock, and
 ```sh
 FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
   bash scripts/research/c21-arms.sh 3 5 build/research/c21-runs/arms
+```
+
+`C21_OVERWRITE=1` makes the worker pass the ranges `writeRecords` sets to `restore()`, so the reset skips them. `C21_ARMS=inplace` runs the in-place arm: one shared memory holds the records and each worker runs a slice of the bulk entry on the unmodified module with its own stack (`c21-inplace-worker.ts`), for specs without a config block and with at most the stack pointer global. `copy-bandwidth.mjs` measures how fast 1, 2, 4 and 8 threads copy a shared buffer into a wasm memory.
+
+`C21_SHARED=1` makes the explicit arm encode each task into a `SharedArrayBuffer` and submit it with
+`{ share: true }`, so the pool posts the bytes without copying them. `c21-shared.sh` runs the
+explicit arm for five programs at n of 64, 512 and 4096 as copy, shared, skip and in-place variants, one fresh process per
+cell under the same lock and pinning. `C21_PROGRAMS`, `C21_SIZES` and `C21_VARIANTS` narrow the
+matrix, and `c21-shared-table.mjs` prints the median speedup per variant with the range over
+sessions:
+
+```sh
+FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
+  bash scripts/research/c21-shared.sh 3 5 build/research/c21-runs/shared
+```
+
+`affine-rig.sh` runs the affine, state-in-memory, sweep and shared-input timings in sequence on the
+rig. The rig has no `wasm-ld`, so build the modules on another machine, copy `build/research/` over
+with the sources and pass the Node binary:
+
+```sh
+FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
+  bash scripts/research/affine-rig.sh build/research/affine-runs/rig
 ```
 
 ## Probes

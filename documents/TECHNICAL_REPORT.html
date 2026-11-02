@@ -110,8 +110,13 @@ tail event are not interchangeable.</p>
 <td>deployed account, <code>results/managed/sqlite-lanes/</code></td>
 </tr>
 <tr>
+<td>Affine state recovery from a binary</td>
+<td>the operator of six streaming update functions (CRC-32, CRC-32C, CRC-16, CRC-64, a multiplicative hash, an LCG) recovered by probing in 525 to 585 calls and 7 to 42 ms, three refusals (FNV-1a, Adler-32, SHA-256 compression); exact mode 1.45x to 2.83x at eight workers on 64 MiB on the quiet rig (an earlier loaded-laptop run gave 2.0x to 3.2x) with the serial state in every sample, including a function that fools the probe</td>
+<td>Apple M2 Pro at load 5.8 to 7.1, directional (see Affine State Recovery)</td>
+</tr>
+<tr>
 <td>Exact chunked CRC-32, Adler-32 and AES-CTR</td>
-<td>one 64 MiB stream at eight workers: 4.25x, 5.00x and 3.69x, outputs equal to serial and to <code>zlib</code> and <code>node:crypto</code></td>
+<td>one 64 MiB stream at eight workers on a loaded laptop: 4.25x, 5.00x and 3.69x, outputs equal to serial and to <code>zlib</code> and <code>node:crypto</code>; the quiet rig gave 3.45x for the hand-derived CRC-32 combine over the same size (Affine State Recovery)</td>
 <td>Mac at load 8 to 13, directional (see Exact Chunked Recurrences)</td>
 </tr>
 <tr>
@@ -150,7 +155,22 @@ tail event are not interchangeable.</p>
 <td>M2 Pro, <code>results/php/serial/</code>, <code>analysis/span-validation/</code></td>
 </tr>
 <tr>
-<td>Independent corpus, automatic extraction</td>
+<td>Independent corpus, record level (30 drivers, quiet rig)</td>
+<td>automatic admission wins 7 and admits 17; explicit private contexts win 26; the slice pool, where the caller declares the records independent, runs 20 exact at 1.94x to 3.88x and fails the output check on 10 that share an allocator or statics; geometric mean 0.98, 1.89 and 2.10 over the 30</td>
+<td></td>
+</tr>
+<tr>
+<td>Independent corpus, native parallel-for baseline (38 drivers)</td>
+<td>the same drivers compiled natively with a parallel-for at eight threads: 3.46x geometric mean, output equal on 37; the best exact wasm mode per driver reaches 2.80x, 0.81 of native</td>
+<td></td>
+</tr>
+<tr>
+<td>Independent corpus, held out (8 drivers, six new projects)</td>
+<td>explicit private contexts win all 8 (1.94x to 3.96x); automatic admission wins 1 (BLAKE2, 1.84x) and the slice pool is exact on 2; a serial-work gate fitted on the 30 failed on them</td>
+<td></td>
+</tr>
+<tr>
+<td>Independent corpus, automatic extraction, single call</td>
 <td>on 21 kernels from nine projects, default admission dispatches no worker; forced admission makes all 11 kernels that receive regions 108 to 45,645 times slower</td>
 <td>Ryzen 9 9900X and M2 Pro, <code>results/corpus/</code></td>
 </tr>
@@ -197,8 +217,9 @@ Copying whole arenas will not scale past the owner's memory.</p>
 <hr>
 <h2 id="🎯-scope-and-acceptance" class="tsd-anchor-link">🎯 Scope and Acceptance<a href="#🎯-scope-and-acceptance" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>The acceptance answer is &quot;Arbitrary input; preserve serial dependencies.&quot; It means Folio accepts
-any valid program the host engine accepts, with its required host bindings, and keeps the serial
-result. It does not make an unknown dependency a proved serial one, and it does not promise that
+any valid program the host engine accepts, with its required host bindings, and on the routes that
+validate keeps the serial result. The routes that take a caller declaration (task pool, slice pool,
+chunked recurrences, declared merge) keep the contract in Correctness Boundary. It does not make an unknown dependency a proved serial one, and it does not promise that
 every program speeds up.</p>
 <p>The input domain is WebAssembly supported by the host engine. It is not arbitrary JavaScript, and
 it is not machine code without an adapter. A JS runtime compiled to Wasm can own its guest heap,
@@ -2164,15 +2185,16 @@ the batch loses to the serial time, 13% slower. A rule that decides from the fir
 for that batch.</p>
 <h3 id="record-level-corpus" class="tsd-anchor-link">Record-Level Corpus<a href="#record-level-corpus" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>The single-call result above ran each kernel as one entry. The iteration route works on a loop of
-calls over bulk input, so 27 bulk drivers call each of the 21 unmodified entries on <code>n</code> independent
-records (the 21 base drivers plus shared-state and 64-pixel QOI variants). Every output matched
+calls over bulk input, so 27 bulk drivers (30 in the quiet-machine rerun below, after later variants
+were added) call each of the 21 unmodified entries on <code>n</code> independent records (the 21 base drivers
+plus shared-state and 64-pixel QOI variants). Every output matched
 serial in every sample (1,060 timed, 216 counter). The runs are single sessions on a loaded laptop
 (load 5 to 8), so the timings are directional. The subsection after the four mechanisms repeats them
 on the quiet Ryzen rig with three sessions per cell, 30 drivers.</p>
 <table>
 <thead>
 <tr>
-<th>result at record level, default admission</th>
+<th>result at record level, default admission (laptop)</th>
 <th>kernels</th>
 </tr>
 </thead>
@@ -2191,6 +2213,7 @@ on the quiet Ryzen rig with three sessions per cell, 30 drivers.</p>
 </tr>
 </tbody>
 </table>
+<p>The laptop table is superseded where the quiet-rig subsection below differs: there automatic admission wins SHA-256, MD5, SHA-1, miniz CRC-32, AES-CTR and LZ4 compress, and the explicit private context wins 26 of 30.</p>
 <p>None of the 21 has a true dependence between records. Inside one call 18 of 21 carry a chain, and
 every single call is shorter than the 2.5 ms admission floor (the longest is 1.08 ms), which is why
 the single-call route dispatched nothing. The earlier blocker list changes as follows. All 21 modules
@@ -2217,10 +2240,12 @@ not dispatched for 16 calls before it is probed again.</p>
 compress (1.15x), AES-CBC decrypt (1.25x) and AES-CTR (1.34x). The other kernels still lose, and the
 binding term is the same one in every case: the tracked worker runs 4 to 43 times the native time per
 iteration even with zero conflicts. The windows removed the conflicts and left the per-access cost,
-so the windows alone do not reach the explicit ceiling, which an earlier design note expected they would.
+so the windows alone do not reach the explicit ceiling of the copying routes, which an earlier design note expected they would; the in-place slice pool below the corpus tables has no copy and exceeds it on 20 of 30 drivers.
 Coarsening (dispatching many records as one unit) did not help the five cost-bound programs: tracked
 time per iteration stays 4.1 to 4.5 times native for xxHash32 (about 75 us against 18 us), each batch
-adds about 1 ms of wake and join, and the read-mark scan costs about 12 to 19 us per iteration.</p>
+adds about 1 ms of wake and join (the measured thread handoff is 3.14 us, so the rest of that
+millisecond is in the batch protocol and was not isolated), and the read-mark scan costs 36 us per
+iteration, 14 to 19 us once records are coarsened.</p>
 <h4 id="quiet-machine-rerun" class="tsd-anchor-link">Quiet-Machine Rerun<a href="#quiet-machine-rerun" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4>
 <p>The 30 drivers ran on the Ryzen 9 9900X rig (Node 26.10.0, CPUs 4 to 11, <code>nice 19</code>, the timing lock,
 load 0.9 to 3.7), at width 8 with three sessions of five rounds after two warmups per cell. Every
@@ -2254,8 +2279,9 @@ matters). The raw samples and both tables are in <code>results/corpus/record-lev
 </tr>
 </tbody>
 </table>
-<p>The explicit arm is the ceiling of the record route: private contexts with a caller-named boundary
-reach 2x or more on 18 drivers, and four programs stay below 1.0 even there. Its medians do not
+<p>The explicit arm is the ceiling of the copying record routes: private contexts with a caller-named boundary
+reach 2x or more on 18 drivers, and four programs stay below 1.0 even there (these medians use the copied input; the cost-bound
+paragraph below gives the rerun with shared input). Its medians do not
 depend on arm order (AES-CBC decrypt 3.50 here and 3.51 in the shared process). Automatic admission
 reaches 0.3 to 0.6 of the explicit ceiling on its seven winners.
 Read windows with the summary lower SHA-1 from 1.67 to 1.32 and MD5 from 1.49 to 1.38 and raise
@@ -2347,6 +2373,251 @@ every call, and the helper refuses other boundaries.</p>
 change to its result. It is a different mechanism from the record-level wins: the chunks are not
 independent iterations, they are a monoid homomorphism over the input. A recurrence with no such
 structure stays serial under this route (Architectural Boundaries).</p>
+<h3 id="affine-state-recovery" class="tsd-anchor-link">Affine State Recovery<a href="#affine-state-recovery" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>src/affine.ts</code> removes the need to write a combine by hand for one class of update functions. The
+class is an exported function <code>f(state, pointer, length)</code> over a freestanding module that returns the
+new state and keeps no state outside its state parameter, the shape of <code>crc32(crc, buffer, length)</code>.
+<code>probeAffine</code> finds the roles of the three parameters by trial, then tests under a seeded PRNG
+whether the state transition is affine over GF(2) or over Z/2^w: additivity of the state part (32
+trials), recovery of the one-byte operator (w + 1 calls over GF(2), 2 over Z/2^w), independence of the
+state part from the data at equal lengths (32 trials), homogeneity of the operator at lengths 1, 2, 7,
+64, 1,000 and 65,537 (24 trials), additivity of the data part (32 trials) and streaming composition
+over random splits (32 trials). It returns a model or a refusal that names the check that failed. The
+operator for a long chunk comes from repeated squaring.</p>
+<table>
+<thead>
+<tr>
+<th>subject</th>
+<th>ring</th>
+<th>bits</th>
+<th>calls</th>
+<th>probe time (three sessions)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>miniz <code>mz_crc32</code>, unmodified, unwrapped</td>
+<td>GF(2)</td>
+<td>32</td>
+<td>552</td>
+<td>15.1 to 20.5 ms</td>
+</tr>
+<tr>
+<td>CRC-32C, bitwise</td>
+<td>GF(2)</td>
+<td>32</td>
+<td>552</td>
+<td>21.9 to 25.3 ms</td>
+</tr>
+<tr>
+<td>CRC-16, table driven</td>
+<td>GF(2)</td>
+<td>32</td>
+<td>552</td>
+<td>10.9 to 11.4 ms</td>
+</tr>
+<tr>
+<td>CRC-64, table driven, i64 state</td>
+<td>GF(2)</td>
+<td>64</td>
+<td>585</td>
+<td>31.3 to 42.5 ms</td>
+</tr>
+<tr>
+<td><code>h = h * 31 + byte</code></td>
+<td>Z/2^32</td>
+<td>32</td>
+<td>525</td>
+<td>7.0 to 7.4 ms</td>
+</tr>
+<tr>
+<td>LCG checksum</td>
+<td>Z/2^32</td>
+<td>32</td>
+<td>525</td>
+<td>6.7 to 7.4 ms</td>
+</tr>
+<tr>
+<td>FNV-1a, Adler-32, SHA-256 compression</td>
+<td>refused</td>
+<td></td>
+<td>31</td>
+<td>under 1 ms</td>
+</tr>
+</tbody>
+</table>
+<p>The recovered first column of the miniz operator is <code>0x77073096</code>, the CRC-32 table entry for 1, and
+the LCG multiplier is <code>0x19660d</code>, which is 1664525. FNV-1a, Adler-32 (modulus 65,521) and the SHA-256
+compression over a chaining word fail the additivity check at the first trial in both rings.</p>
+<p><code>foldAffine</code> runs the chunks on a <code>TaskPool</code> in one of two modes, and the modes give different
+guarantees. In exact mode pass 1 runs chunks from state zero and gives each chunk's affine offset, the
+model predicts each chunk's start state, pass 2 runs every chunk from its predicted start, and an
+ordered comparison checks each chunk's real end state against the next predicted start. Chunk 0 starts
+from the real initial state, so by induction every checked start is real and the last end state is the
+result without trusting the affine claim. The first mismatch makes the remaining bytes run serially
+from the last real state. In audit mode one pass runs and a seeded sample of chunks reruns from its
+predicted start; an error in an unsampled chunk goes undetected.</p>
+<p>A control function that is a table CRC-32 except for one trigger value that no probe reaches shows the
+difference. The probe accepts it with all five checks passing. On 8 MiB at eight workers the trigger
+lies in chunk 3, exact mode recorded <code>mismatchAt</code> 3, fell back and returned the serial state in all 15
+timed rounds, and audit mode with two sampled chunks returned a wrong state in 6 of 7 seeds. In a unit
+test of 24 seeds at 256 KiB audit caught it in 4. Auditing all seven chunks caught it.</p>
+<p>On the Linux rig (Ryzen 9 9900X, eight pinned cores, <code>nice 19</code>, one-minute load 0.2 to 1.4, governor
+<code>powersave</code>, three sessions of five rounds after two warmups, medians of the session medians) at
+eight workers:</p>
+<table>
+<thead>
+<tr>
+<th>subject</th>
+<th>input</th>
+<th>exact mode speedup</th>
+<th>audit mode speedup</th>
+<th>CPU ratio, exact</th>
+<th>hand-derived combine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>miniz CRC-32</td>
+<td>64 MiB</td>
+<td>2.11x</td>
+<td>2.16x</td>
+<td>2.24</td>
+<td>3.45x at CPU 1.31</td>
+</tr>
+<tr>
+<td>miniz CRC-32</td>
+<td>8 MiB</td>
+<td>1.79x</td>
+<td>1.98x</td>
+<td>2.41</td>
+<td>2.97x at CPU 1.49</td>
+</tr>
+<tr>
+<td>CRC-32C</td>
+<td>64 MiB</td>
+<td>2.83x</td>
+<td>2.70x</td>
+<td>1.99</td>
+<td></td>
+</tr>
+<tr>
+<td>CRC-16</td>
+<td>64 MiB</td>
+<td>2.29x</td>
+<td>2.25x</td>
+<td>2.27</td>
+<td></td>
+</tr>
+<tr>
+<td>CRC-64</td>
+<td>64 MiB</td>
+<td>2.11x</td>
+<td>2.24x</td>
+<td>2.18</td>
+<td></td>
+</tr>
+<tr>
+<td><code>h = h * 31 + byte</code></td>
+<td>64 MiB</td>
+<td>1.51x</td>
+<td>1.58x</td>
+<td>2.94</td>
+<td></td>
+</tr>
+<tr>
+<td>LCG checksum</td>
+<td>64 MiB</td>
+<td>1.45x</td>
+<td>1.64x</td>
+<td>2.84</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>An earlier run on a loaded laptop (Apple M2 Pro, load 5.8 to 7.1 on 12 threads) gave 2.0x to 3.2x
+for exact mode at 64 MiB; the rig numbers above replace it. Every sample equalled the serial state.
+Exact mode first beat serial near 64 KiB to 256 KiB at eight workers and near 256 KiB to 1 MiB at
+three or four workers, and never at two, on the laptop size and width sweep; the rig did not repeat
+that sweep. The cost of exactness is about a second pass: on the miniz CRC-32 exact mode reaches
+2.1x where the hand-derived combine reaches 3.5x, with 2.2 times the CPU against 1.3 times. The two
+Z/2^32 subjects are faster serially per byte, so the fixed costs weigh more and exact mode reaches
+1.5x.</p>
+<p>What the guarantee does not cover. Exact mode returns the state of the serial chain of calls over the
+same chunk boundaries, which equals one call over the whole input only if the function composes over a
+split. The probe checks composition on 32 random splits and nothing proves it, so a function whose
+result depends on the call length would break it. Both modes assume the kernel keeps no state outside
+the state parameter, because each worker keeps one instance across tasks. The probe sees lengths up to
+65,537 and states and data from a PRNG. Only freestanding modules with an exported memory and a
+three-parameter entry are probed. There is no rig run, no state wider than 64 bits and no block
+kernel with a positive result for the register form; the next section covers state in memory. The closest published work found by a literature search for this
+section takes source or a small finite state set as input (Farzan and Nicolet, Mytkowicz et al.), and
+zlib ships the CRC-32 and Adler-32 combines for known parameters. The search found no tool that
+recovers the operator of a compiled streaming function by probing and uses it for chunk combination.
+That is the result of about 25 queries, several papers could not be read in full, and it is not a
+claim of priority.</p>
+<h3 id="boundary-state-speculation-beyond-registers" class="tsd-anchor-link">Boundary-State Speculation Beyond Registers<a href="#boundary-state-speculation-beyond-registers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Three follow-up studies test whether the exact mode of the previous section, which runs chunks without
+access tracking and compares explicit boundary state, extends past a scalar state. Speedups come
+from the Linux rig at eight workers (one-minute load 0.0 to 3.6, governor <code>powersave</code>, three sessions
+of five rounds, medians of the session medians). The first runs were on a Mac at a load of 14 to 56
+and are not used. Every timed sample on the rig equalled the serial state, and so did every sample
+of the Mac runs (1,635 of 1,635 for state in memory, 6,075 of 6,075 for sweeps).</p>
+<p>State in memory (<code>src/affine-state.ts</code>, <code>probeState</code> and <code>foldState</code>). The entry is
+<code>(context, pointer, length)</code> and the state lives in a context struct that the call reads and writes in
+place. Discovery by trial splits up to 256 bytes into state, read-only parameters and scratch, groups
+state bytes that interact into factors, and tests each factor over GF(2), Z/2^32 words and one
+little or big endian integer with the five checks of the scalar probe. It recovered a CRC-32 context
+with a magic parameter, a CRC register beside a length counter (two factors), a Fletcher pair, a
+polynomial hash whose multiplier sits in the context, a last-8-bytes register, and the unmodified
+tiny-AES <code>AES_CTR_xcrypt_buffer</code> (one 128-bit big-endian counter). It refused the corpus SHA-256, SHA-1,
+MD5 and xxHash32 updates over their real contexts (they trap on random state, and a reachable-state
+additivity check fails), a CRC with a coupled counter, and a kernel with a counter outside the
+context. The adversarial CRC that flips one bit at a rare register value passes the probe, and exact
+mode recorded a mismatch at chunk 3 and returned the serial state. At 64 MiB exact mode reached 1.96x
+for the CRC context, 1.84x for the CRC register beside a counter, 1.34x for last-8 and 1.25x for the
+polynomial hash, and lost on the Fletcher pair (0.52x, a kernel of about 0.5 ns per byte whose
+fixed costs dominate). The AES-CTR fold reached 2.74x at 8 MiB. The CRC rows sit near the scalar
+form's 2.1x on the same rig. Limits found: a byte that changes only on rare inputs can be missed by trial discovery, and
+output a call writes and never reads (a hash value, ciphertext) is not returned, so the AES-CTR fold
+returns the counter and not the ciphertext.</p>
+<p>Recorded boundary states (<code>src/boundaries.ts</code>, <code>recordBoundaries</code> and <code>verifyBoundaries</code>). A serial
+run records the state every <code>step</code> bytes; the caller keeps the log. A later run executes every chunk
+in parallel from its recorded start and compares each end state with the next recorded start, so a
+chain that is not affine (SHA-256, SHA-1, MD5) becomes a parallel verification. By the same induction
+the result is serial for any log; eleven forged, stale or wrong-width logs per subject never changed a
+result. With 16 chunks on eight workers an identical rerun reached 3.2x to 3.7x at 8 MiB and 3.9x to
+4.6x at 64 MiB (SHA-256 4.58x, SHA-1 4.51x, MD5 3.92x; ideal 8x; CPU ratio 1.2 to 1.4). An edit nine
+tenths in kept 3.1x to 3.5x at 64 MiB and one half in kept 1.3x to 1.5x. An edit one tenth in lost
+(0.72x to 0.86x), because the first mismatch forces the remainder to run serially after the wasted
+parallel pass. A chain that forgets (a nonlinear hash of the last 8 bytes) kept 3.95x to 4.04x at
+64 MiB through an edit anywhere that left a chunk's end state unchanged, and fell to 1.42x when the
+edit changed the end state. The recording run costs a serial run (0.95x to 1.00x at 8 and 64 MiB, 0.8x
+to 0.9x at 1 MiB).</p>
+<p>Fixed-point sweeps (<code>scripts/research/sweeps-*.ts</code>, a harness with no library change). Chunks guess a
+start state, run untracked in parallel, and rerun when the assumed start differs from the previous
+chunk's end, until nothing changes. On 1 MiB of text at eight chunks a UTF-8 validating DFA converged
+in 1 sweep (8 chunk runs; 3.54x at 64 MiB at CPU ratio 1.29), and with a sticky error flag it also
+took 1 sweep (3.40x), but needed 8 sweeps at 32 chunks on 64 KiB. A quote-aware CSV scanner, a CSV
+scanner with a row count, a Base64 validity DFA and a run-length decoder took 8 sweeps at eight
+chunks, as did the CRC-32 and SHA-256 controls, and speedup fell to 0.24x to 0.64x at 64 MiB because
+each pass copies the input and reruns most chunks. The boundary state sets agree: the UTF-8 DFA collapses to one end state within 64 bytes from
+any of 256 start states, the counters do not collapse. The mechanism therefore holds for state that
+resynchronises and fails for state that carries a count. Whether resynchronising DFAs are already
+covered by published parallel DFA work (Mytkowicz et al. enumerate start states) was not checked
+against the original papers here, so this is not offered as new.</p>
+<p>The common structure is a predictor of chunk start states (recovered algebra, a recorded log, a
+guessed fixed point) and one validator that compares explicit end state with the next start, which
+keeps the result equal to serial without trusting the predictor. Whether that structure is
+a contribution or a repackaging of known speculation and checkpointing work is open: the literature
+reading behind it is incomplete. The rig runs cover one machine at eight workers, one input stream
+per size, and no width or size sweep for state in memory or recorded boundaries.</p>
+<h3 id="slice-pool-admission-quality-and-mixed-record-sizes" class="tsd-anchor-link">Slice Pool, Admission Quality and Mixed Record Sizes<a href="#slice-pool-admission-quality-and-mixed-record-sizes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The 30 drivers ran through <code>SlicePool</code> at their default record counts (<code>results/corpus/slice-pool-census/</code>, eight workers, three sessions of five rounds, fresh process per cell, quiet rig). Twenty run exact at 1.94x to 3.88x: all five hashes and checksums of independent messages (SHA-256 3.43x, SHA-1 3.56x, MD5 3.75x, CRC-32 3.34x, Adler-32 2.58x), the AES modes, LZ4 compress and decompress, JSMN, the KissFFT complex and real drivers, xxHash32, xxHash64, xxHash3, the 6502 emulator over independent images, and the slot variants of MD5, JSMN and AES-CBC encrypt. Ten fail the output check in at least one session: miniz compress and decompress, the four QOI drivers, and the <code>-shared</code> variants of JSMN, KissFFT real, AES-CBC decrypt and SHA-256, which are the file-scope statics and allocator cursors that earlier sections isolate. Four of the ten passed in some sessions and failed in others, which is what a race on shared state looks like. With <code>audit: true</code> the pool threw <code>SliceConflictError</code> on seven of eight failing drivers tried, agreed with the serial run on the four passing drivers tried, and trapped on the eighth (a Mac run for correctness only, <code>audit-check.txt</code>). Over all 30 loops, with a failed or inapplicable mode counted as serial, the geometric mean speedup is 0.98 for automatic admission, 0.56 for forced, 1.89 for the explicit private contexts, 2.10 for the slice pool and 2.72 for the best exact mode per loop. These are the baselines the route is judged against: the serial program, the tracked automatic and forced routes, the copying explicit route and the in-place declared route. The source-level baseline is the same driver compiled natively with a parallel-for over the records (<code>results/corpus/native-baseline/</code>, eight threads, same split as the slice pool): its output equals serial on 37 of 38 drivers (a KissFFT config that holds scratch is a race by design) at a geometric mean of 3.46x with 36 above 2x, against 2.80x and 31 above 2x for the best exact wasm mode per driver, which is 0.81 of native. Wasm is ahead only where records are tiny and thread hand-off dominates (wyhash 3.12x against 1.44x) and behind on digests of large records (xxHash64 1.94x against 6.39x, SHA-256 3.43x against 5.43x). The native code has no sandbox, bounds checks or linear memory, so it is an upper reference; no library's own threaded API was run.</p>
+<p>Admission quality was scored against the measured modes (<code>scripts/research/admission-quality.mjs</code>). A loop is labeled winnable when a tracked route beats serial in at least two thirds of sessions. Automatic admission admitted 17 of 30 loops and won on 7, refused all 13 loops where no tracked route wins and refused none that could win. It also admitted 10 loops where no tracked route wins, which is the wrong-admit cost. Regret is the extra time against the best measured tracked mode: 0.172 on average, 0.329 at the 90th percentile and 0.157 weighted by serial time, against 1.565 for always dispatching and 0.186 for never dispatching; with the median estimator now the default the equal-size figure is 0.186, the same as never dispatching, so automatic admission buys little on the 30 loops beyond avoiding the large losses of forcing. A fixed rule that admits when the serial work is at least 5 ms, fitted on 20 loops and tested on the other 10 (every third loop in sorted order), admitted 13 loops including all 7 winners, and its test regret was 0.070 against 0.124 for automatic admission, though its regret weighted by serial time on the train loops was 0.398 against 0.182. That accounting favored the rule: it was charged serial time for the loops it refused, while the loops automatic refused pay a refusal path (0.87x to 0.97x on xxHash64, JSMN and QOI encode). With the same refusal cost charged to the gate, and the protected route behind it, a gate of at least 4 ms of serial work and at least 50 us per record has test regret 0.103 against 0.124 and train regret 0.110 against 0.196; the gain comes from refusing five losing loops of 3.3 to 4.5 ms. The comparison is weaker than it looks. Every driver has 128 or 64 records, so serial work is a per-record cost cut at about 39 us; no loop has serial work between 4.5 and 6.5 ms, so every threshold in that gap makes identical decisions; and the 30 drivers are 12 families, with the seven winners from six. The first tracked batch does limit the loss of a wrong admit: on the 10 loops automatic admitted where no tracked route wins, it ran at 0.81x on average (worst 0.53x) against 0.59x (worst 0.17x) for forced, which has neither the batch nor the bound stop. The supported claim is therefore that the first batch and the bound stop cap the downside of a serial-work gate. The claim that the first batch selects winners the serial time cannot is not supported on these 30 loops, and the held-out drivers below give one case where it does. One pair carries information the serial time lacks: SHA-256 and its shared-state variant have 13.1 and 13.0 ms of serial work, and automatic admitted both and got 2.01x and 0.89x. A crude count of constant-address stores and global writes does not separate them (<code>results/corpus/slice-pool-census/static-footprint.md</code>). The gate parameters, and the rule for adopting them (it misses no loop that automatic wins by more than 1.05x and its mean regret is not above automatic's), were written down before the held-out drivers of the broader workload set ran; those drivers rejected the gate. The comparison uses the measured serial work, which Folio estimates from its first iteration, so it does not cover a rule that must work from static cost.</p>
+<p>Unequal record sizes were tested on the eight programs whose records can be cut to any length, with sizes of 1, 1/2, 1/4, 1/8 and 1/16 of the largest in a fixed pattern that makes the first record the smallest of its cycle. Automatic admission lost two of its seven winners: MD5 fell from 1.46x to 0.98x and CRC-32 from 1.52x to 0.98x. The admission record shows why. For MD5 iteration 0 took 0.0072 ms, the estimate of the remaining work was 0.92 ms against the 2.5 ms floor, and the loop ran all 128 iterations serially, while the forced route reached 1.21x. The serial probe that re-admits a refused loop takes the minimum of the recent per-iteration times, which a mix of sizes pulls low. The second-chance option did not recover them (0.98x and 0.99x) and cost SHA-256 (2.01x to 1.00x). The explicit route kept 2.5x to 3.2x on the hashes and checksums, and the slice pool kept 3.1x to 3.6x at the even grain; at a grain of four records it fell to 2.7x to 3.2x, and xxHash64 to 1.0x, because each slice is a task round trip. The probe now takes the median of its block means instead of the lower of the last two (<code>results/corpus/admission-estimator/</code>). On the same mixed sizes the median gives MD5 1.03x and CRC-32 1.10x (forced 1.21x and 1.56x), SHA-256 1.50x and SHA-1 1.23x, with no new loss. The mean and the 75th percentile do as well on MD5 and CRC-32 but admit Adler-32 and lose it (0.49x and 0.44x), so they were rejected. On the 30 equal-size drivers all four estimators admit 17 loops and win on the same 7, with regret inside the run-to-run noise (0.150 to 0.186). The median does not reach the forced route, because admission still waits for the probe blocks, and a refused loop still pays a call into the replay function per iteration, 3 to 13 percent on cheap records. The median was chosen on the same eight mixed-size programs it is scored on, with one size pattern and one machine, and sizes that change inside one running pool were tested only for MD5, SHA-256, SHA-1, miniz CRC-32 and xxHash32 with one alternation of two sizes: a call with larger records dispatches at once after calls with small ones, with no verdict carried over, and speedup rises over the next calls as the workers warm up.</p>
+<h3 id="held-out-workloads" class="tsd-anchor-link">Held-Out Workloads<a href="#held-out-workloads" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Six more projects were pinned and built as eight bulk drivers before anyone looked at how Folio treats them (<code>results/corpus/held-out-workloads/</code>): brotli compress and decompress, wyhash, BLAKE2, QOA encode and decode, yyjson read and md4c Markdown to HTML. Each was chosen by the written selection rule, pinned to a tag or commit with its license file read, built without editing the library, and checked against an independent reference. Record counts and sizes differ across the set (16 to 4096 records, 0.86 ms to 58.7 ms of serial work). On the rig, eight workers, three sessions of five rounds, explicit private contexts win on all eight (1.94x to 3.96x, every output equal to serial), automatic admission wins on one (BLAKE2, 1.84x) and refuses five at 0.98x to 1.00x, and it admitted two where no tracked route wins and ran at 0.82x and 0.80x against 0.13x and 0.10x forced. The in-place route is exact on BLAKE2 (3.46x) and wyhash (3.12x), the two programs without an allocator, and fails or flakes on the six that allocate, which is the class that fails in the census. The geometric mean over the eight is 1.02 for automatic admission, 2.66 for explicit private contexts and 1.35 for the slice pool. The gate fitted on the corpus (at least 4 ms of serial work and 50 us per record) fails both conditions written for it: it misses BLAKE2 at 42.4 us per record, which automatic admission wins at 1.84x, and its mean regret is 0.154 against 0.089. It is not adopted. Eight programs from six projects are a small held-out set, one winner carries the comparison, and three more projects that passed the license gate were not built.</p>
 <h3 id="what-the-corpus-shows" class="tsd-anchor-link">What the Corpus Shows<a href="#what-the-corpus-shows" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>On the 21 library kernels, default automatic extraction does not help, and forcing it makes every
 extracted kernel slower. A caller-named boundary with private contexts speeds up all 21 kernels at
@@ -4724,10 +4995,12 @@ What stays open is a program that exposes the independence, such as a batch API.
 <p><strong>A recurrence with an exact combine.</strong> CRC-32, Adler-32 and the AES-CTR counter look like chains
 and are not boundaries, because their update is linear or closed-form over the input. The chunked
 helper joins chunk states exactly (Exact Chunked Recurrences). AES-CBC decrypt carries an IV that is
-a copy of the previous ciphertext block, and renaming it removes the chain. The mechanism needs the
-algebra, and Folio finds none by itself. xxHash32 and xxHash64 are a rotate and multiply recurrence
-with no combine known to this work, so a long single xxHash stream stays serial. That is open, not
-closed.</p>
+a copy of the previous ciphertext block, and renaming it removes the chain. The hand-derived combines
+need the algebra written down. For a streaming update function whose state is affine over GF(2) or
+over Z/2^w, Folio now recovers the operator from the binary by probing (Affine State Recovery), and
+refuses Adler-32, FNV-1a and a SHA-256 compression because they are affine over neither ring. xxHash32
+and xxHash64 are a rotate and multiply recurrence with no combine known to this work, so a long single
+xxHash stream stays serial. That is open, not closed.</p>
 <p><strong>A choice that needs a measurement.</strong> No signal available before the first batch separates the
 loops that win from the loops that lose. With the tracked iteration timed alone on one worker the
 winners' tracked-to-native ratio ranges from 1.0 to 5.8 and the losers' from 3.4 to 6.5, and only
@@ -4750,10 +5023,39 @@ native depending on the program and put xxHash32 forced above 1.0 in 15 of 15 sa
 laptop (the rig measured 0.72 to 0.81 for the same configuration), and no program newly wins under
 automatic admission, because the loops are too short to pay for a probe.
 Coarsening several records into one unit did not help: it lowered the dispatch count and left the
-per-iteration tracking term unchanged. The explicit route with private contexts is also below 1.0
-for xxHash and LZ4 decompress at record sizes of 16 KiB, and this work did not isolate why. A caller that groups thousands of records into one task
-amortizes the dispatch cost, and nothing in the engine can do that grouping without knowing the
-records are independent, which is the fact the explicit route exists to receive.</p>
+per-iteration tracking term unchanged.</p>
+<p>The single-call corpus arm that reaches 2.48x on xxHash32 runs repeated calls of one input embedded in the module, so no input crosses a thread and it pays no copy. The explicit route with private contexts is also below 1.0 for xxHash and LZ4 decompress at the record level, and
+the reason is the route, not the programs. A private context needs every task's records copied into
+the worker's memory, and three terms stacked on that copy. <code>TaskPool.submit</code> copied each
+<code>SharedArrayBuffer</code> input, which <code>{ share: true }</code> removes. The checkpoint restore compared and then
+copied back the previous task's input pages, bytes the task rewrites anyway, which the <code>overwrite</code>
+ranges of <code>restore()</code> skip. What is left is the copy into the worker. Per-worker phase timers show
+it: at 4,096 records of 128 KiB the workers spend 219 ms summed in the write against 55 ms in the
+kernel, and a copy microbenchmark on the same machine moves about 17 GB/s with one thread and
+about 18 GB/s with eight, so the copy does not scale with workers. Native xxHash32 reads the same
+512 MiB at about 14 GB/s and xxHash64 at about 26 GB/s (the native wall of each rig cell), so a route that first copies the data cannot
+beat serial on these kernels: the copy does not scale with workers. The kernels themselves do scale
+when they read in place (the slice pool below reaches 3.6x on xxHash32 reading the same bytes), so
+the limit is the copy and not the read bandwidth of the kernels. On the rig (eight workers, three sessions of five rounds,
+fresh process per cell, every sample exact), going from the default copy to shared input to shared
+input with skipped restore moved xxHash32 at 4,096 records from 0.22 to 0.53 to 0.92, xxHash3 from
+0.17 to 0.42 to 0.72, xxHash64 from 0.11 to 0.29 to 0.50 and Adler-32 from 0.56 to 1.34 to 2.15.
+LZ4 decompress barely moved (0.48, 0.48, 0.55). Its inputs are small, and at 4,096 records the
+restore of the output side (63 ms summed) and the copy of the outputs back to the owner (69 ms) are
+the largest worker terms next to 53 ms of kernel.</p>
+<p>A route that keeps the records where the serial program put them has no copy and no reset. One
+shared memory holds the records, the caller declares them independent, each worker instantiates the
+unmodified module on that memory with its own 64 KiB stack (the one mutable global of these modules
+is the stack pointer), and each runs a slice of the bulk entry. That route reached 2.7x to 3.6x on
+xxHash32, 1.7x to 2.3x on xxHash64, 2.4x to 3.3x on xxHash3, 3.1x to 4.9x on Adler-32 and 2.1x to
+3.2x on LZ4 decompress at 64, 512 and 4,096 records, with outputs equal to the serial run in every
+sample. It first ran as a research harness arm (<code>C21_ARMS=inplace</code>) and is now <code>SlicePool</code> in
+<code>@gmitch215/folio/slices</code>; the independence is the caller's declaration with no tracking, and the
+optional audit replays the slices serially. Its own limits: it refuses a module with a mutable global
+other than the stack pointer, it runs a config block's setup once through the pool, and a program that
+writes shared statics would race and fail the output check (the audit finds it). The boundary is therefore in the private
+copy and in the cost of tracking, which a caller who declares independence and shares one memory
+does not pay.</p>
 <p><strong>Speculation on inconsistent state.</strong> A worker reads memory that another iteration is changing,
 so its view can be a state no serial run produces. A loop that walks a pointer chain can then
 never end: the SQLite page cache's hash-chain walk did this in 9 of 13 attempts on 16 records.
@@ -4788,6 +5090,71 @@ object inherits from an earlier instance, belongs to the host.</p>
 records, a declared merge or combine, a cheaper per-access track, and a host that lets a lane
 overlap. None of them is a measurement Folio can take away.</p>
 <hr>
+<h2 id="🛡️-correctness-boundary" class="tsd-anchor-link">🛡️ Correctness Boundary<a href="#🛡️-correctness-boundary" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Every route in this report is described by two lists: what the engine checks, and what it takes from the caller or from a model of the program. A wrong assumption in the second list costs time on the routes that validate and returns a wrong result on the routes that do not, and the table names which.</p>
+<table>
+<thead>
+<tr>
+<th>route</th>
+<th>the result equals</th>
+<th>the engine checks</th>
+<th>taken as given</th>
+<th>when the assumption is wrong</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iteration route, automatic and forced</td>
+<td>the serial run, byte for byte in program memory</td>
+<td>every iteration's reads and writes at 64 B and 32 B granules, in iteration order, with an undo log and serial replay of the conflicting iteration</td>
+<td>the module is deterministic given its memory and the values its imports return; speculative iterations end</td>
+<td>a conflict rolls back and replays, so time is lost and the result is not; a loop that does not return needs the opt-in stall guard</td>
+</tr>
+<tr>
+<td>task pool</td>
+<td>what the caller's tasks return</td>
+<td>nothing by default; <code>audit</code> reruns every nth task serially and compares the output bytes</td>
+<td>tasks are independent and keep no state the serial program would share</td>
+<td>a wrong result, caught only on audited tasks (<code>TaskConflictError</code>)</td>
+</tr>
+<tr>
+<td>slice pool</td>
+<td>the serial run of the same slices, if the calls are independent</td>
+<td>nothing by default; <code>audit: true</code> replays every slice serially on a copy and compares each returned value and every byte below the stacks</td>
+<td>the calls are independent, and the module keeps at most a stack pointer global</td>
+<td>a wrong result; the audit throws <code>SliceConflictError</code> on seven of eight failing corpus drivers tried and the eighth traps</td>
+</tr>
+<tr>
+<td>exact chunked recurrence, scalar and state in memory</td>
+<td>the serial chain of calls over the same chunk boundaries</td>
+<td>each chunk's real end state against the next chunk's predicted start, in order; a mismatch finishes serially</td>
+<td>the function composes over a split; no state outside the state parameter or the 256 byte window; every state byte changes on some probed input</td>
+<td>exact mode returns the serial result whatever the model says; audit mode samples chunks and misses an error in an unsampled one</td>
+</tr>
+<tr>
+<td>recorded boundary states</td>
+<td>the serial chain over the same boundaries, for any log</td>
+<td>each chunk's end state against the next recorded start</td>
+<td>the function is deterministic in its context window and data</td>
+<td>a forged, stale or wrong-width log shows as a mismatch and never changes the result</td>
+</tr>
+<tr>
+<td>declared merge (SQLite shards)</td>
+<td>the merge the caller declared, not the serial run</td>
+<td>a sampled differential audit</td>
+<td>the merge is correct and the shards are independent</td>
+<td>a wrong merge returns a wrong result on unsampled calls</td>
+</tr>
+<tr>
+<td>managed range lanes</td>
+<td>the serial run</td>
+<td>the owner is the only committer and recomputes escapes from the returned read set</td>
+<td>the lane runs the tracked module as shipped</td>
+<td>an escape widens the footprint and retries up to three rounds, then falls back to a snapshot or to serial execution; fuel exhaustion discards the overlay</td>
+</tr>
+</tbody>
+</table>
+<p>What &quot;equal to serial&quot; excludes. Equal means equal program memory and equal return values for a deterministic program. A dispatched iteration run also leaves stack-slot residue in the stack zone and in the arena after the program memory (Mechanism and Correctness), and that was checked on cold runs only. It does not cover a program whose result depends on thread identity, time or addresses of allocations (an allocator cursor changes heap addresses, which is why the allocator-heavy corpus drivers fail the slice pool's check and run at most with slot-private windows on the tracked route), on a host import whose effect is not repeatable, or on memory growth during the run, which the iteration route refuses. Host effects that cross an asynchronous import run once and in call order on the routes that support them, and that guarantee is separate from this table. The models differ in strength: the iteration route validates the actual bytes, the exact recurrences validate only the boundary state they predicted, and the slice pool validates nothing unless asked.</p>
 <h2 id="⚠️-limits-and-open-questions" class="tsd-anchor-link">⚠️ Limits and Open Questions<a href="#⚠️-limits-and-open-questions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Each row names its status: open work, a reporting rule, or a claim this report does not make.</p>
 <table>
@@ -4900,7 +5267,7 @@ overlap. None of them is a measurement Folio can take away.</p>
 </tr>
 <tr>
 <td>Do xxHash32, xxHash64, xxHash3, LZ4 decompress and Adler-32 speed up under any route?</td>
-<td>Adler-32 reaches 1.05 on the explicit route and 1.06 with all three options on automatic admission. xxHash32 forced with windows and the summary was above 1.0 in 15 of 15 samples on a loaded laptop and is 0.72 to 0.81 on the rig, where the forced arm ran after the automatic arm and so on warm code. No route reaches 1.0 for xxHash64, xxHash3 or LZ4 decompress (explicit 0.29 to 0.68). Coarsening, windows, the summary and second chance each closed as a mechanism. Open: a caller that groups many records into one task, and a combine for the xxHash recurrence.</td>
+<td>Yes, on a route that keeps the records in one shared memory: all five reach 1.7x to 4.9x on the rig (xxHash32 2.7 to 3.6, xxHash64 1.7 to 2.3, xxHash3 2.4 to 3.3, Adler-32 3.1 to 4.9, LZ4 decompress 2.1 to 3.2), exact in every sample, with the caller declaring the records independent and each worker given its own stack. The explicit route that copies each task's records into a private context reaches 0.1 to 1.2 with the default copy (the high end is Adler-32 at 64 records) and 0.5 to 2.2 once the input is posted without a copy and the restore skips the bytes the task rewrites (Architectural Boundaries). No automatic route wins on these five. Coarsening, windows, the summary and second chance each closed as a mechanism. The in-place route is <code>SlicePool</code>; open is a combine for the xxHash recurrence and admission that picks the in-place route without a caller declaration.</td>
 </tr>
 <tr>
 <td>Should the stall guard be on by default?</td>
@@ -4983,29 +5350,36 @@ The summaries in <code>results/*/summary.json</code> regenerate byte for byte fr
 its input files.</p>
 <p>Current gate on Node 26.8.2 (run 2026-11-02): typecheck passes for the library and eight experiment
 projects (<code>cloud</code>, <code>managed</code>, <code>browser</code>, <code>consumer</code>, <code>rpc</code>, <code>ranges</code>, <code>concurrency</code> and
-<code>sqlite-lanes</code>), <code>prettier --check .</code> is clean, and the library builds with <code>tsc -p tsconfig.build.json</code>, including the <code>folio/fold</code> subpath. The unit project passes <strong>796 tests</strong> in 52
-files and the integration project <strong>23 tests</strong> in 6 files, against the local workerd. The corpus
+<code>sqlite-lanes</code>), <code>prettier --check .</code> is clean, and the library builds with <code>tsc -p tsconfig.build.json</code>, including the <code>folio/fold</code> and <code>folio/slices</code> subpaths. The unit project passes <strong>869 tests</strong> in 55
+files and the integration project <strong>23 tests</strong> in 6 files, against the local workerd (892 in 61 files
+under <code>vitest run --project unit --project integration --coverage</code>). Coverage on the same run is
+91.89% of statements, 87.57% of branches, 94.83% of functions and 93.79% of lines; <code>slices-worker.ts</code>
+runs in a worker thread outside the coverage provider's realm, like the other worker files. The corpus
 lanes project (<code>experiments/corpus-lanes</code>) is not in the typecheck script because it imports a
-generated artifact that needs the corpus build. Coverage, the examples and the documentation build
-were last run on 2026-10-30, at 544 unit tests: coverage was
-91.00% of statements, 87.13% of branches, 93.30% of functions and 93.20% of lines. The library builds,
-and the six examples in <code>examples/</code> run. <code>examples/basic.ts</code> reports four workers and four
+generated artifact that needs the corpus build. The seven examples in <code>examples/</code> run on this tree, <code>examples/slice-pool.ts</code> among them.
+<code>examples/basic.ts</code> reports four workers and four
 native-shared regions with zero replays and fallbacks, and <code>examples/iteration.ts</code> reports 31 dispatched
 iterations, no replay and digests equal to the serial run. The generated documentation builds with
-nonfatal documentation warnings. The integration project runs the host probe, the capability probe
-and all 39 managed rows in local workerd (1.20261019.1). <code>worker.ts</code>, <code>browser-worker.ts</code> and
-<code>iteration-worker.ts</code> run outside the coverage provider's instrumented realm.
+0 errors and 137 nonfatal documentation warnings. The integration project runs the host probe, the capability probe
+and all 39 managed rows in local workerd (1.20261019.1). <code>worker.ts</code>, <code>browser-worker.ts</code>,
+<code>iteration-worker.ts</code> and <code>slices-worker.ts</code> run outside the coverage provider's instrumented realm.
 The dedicated FREE browser extraction deployment passed and restored its baseline; the general
 e2e workflow itself was not dispatched during this work. The real PHP/Drupal probe is additional
 consumer evidence outside these tests. The compiler, runtime, probes and the pre-fix
 extractor are retained in <code>results/compatibility/sources/source.tar.gz</code>, which also holds the
 first copy of the Drupal harness that <code>scripts/probe/php-render.ts</code> replaces.</p>
 <p>Evidence accounting comes from <code>node scripts/research/evidence.ts</code>. The index in <code>results/index.json</code>
-preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 35 studies and
-339 artifacts (57,883,840 bytes): 33 <code>manifest.json</code> records and the 2 <code>artifacts.json</code> records of the
-boot configuration and lifecycle studies. <code>results/execution/source/manifest.json</code> lists sources
-under another schema and is not a study. <code>--summaries</code> regenerates the 171 summary files from
-their raw samples and finds all equal. The published v1.0.0 package resolves to
+preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 46 studies and
+433 artifacts (64,804,831 bytes): 44 <code>manifest.json</code> records and the 2 <code>artifacts.json</code> records of the
+boot configuration and lifecycle studies. The eleven v1.1 studies (lane concurrency, range lanes,
+sharded SQLite lanes, the record-level rig, the stall guard overhead, the boundary-state rig runs,
+the explicit route copy cost, the slice pool census, the admission estimator, the held-out
+workloads and the native baseline) carry manifests written by
+<code>scripts/research/export.ts --manifest</code>, so their bytes and hashes are inside the same gate.
+<code>results/execution/source/manifest.json</code> lists sources under another schema and is not a study.
+<code>--summaries</code> compares 179 summary files and finds all equal: 171 regenerate from their raw samples,
+and the 8 of the lane studies are exporter output that the comparison copies unchanged, so for them
+it checks only that the file is intact. The published v1.0.0 package resolves to
 <code>b2b67f8f9656ee50c22f44941a6b831a39a77123</code>. The studies of the Independent Corpus section run through
 <code>scripts/research/</code> (see its README), most of them on the Ryzen rig through <code>matched.sh</code>,
 <code>backing.sh</code> and <code>focused.sh</code>.</p>
@@ -5013,6 +5387,73 @@ their raw samples and finds all equal. The published v1.0.0 package resolves to
 200 to 264 KiB), with 133 GiB free on <code>/</code> and over 25 GiB of available RAM afterwards. No server
 setting, package installation, unrelated service restart or protected mount access was involved.</p>
 <hr>
+<h2 id="🧬-related-work" class="tsd-anchor-link">🧬 Related Work<a href="#🧬-related-work" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Two surveys read the closest systems and one searched three of the mechanisms. The papers were read as page images or text copies unless a line says otherwise, and no figure below was cross-checked against a second copy. A negative search result means no match in the queries run, and it is not a claim of priority.</p>
+<table>
+<thead>
+<tr>
+<th>dimension</th>
+<th>Perspective [25]</th>
+<th>Privateer [26]</th>
+<th>Yusuf et al. [27]</th>
+<th>APOLLO [28]</th>
+<th>Folio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>input</td>
+<td>C and C++ source in LLVM</td>
+<td>C and C++ source plus a runtime</td>
+<td>native binary at run time</td>
+<td>LLVM IR of C source</td>
+<td>unmodified Wasm binary</td>
+</tr>
+<tr>
+<td>independence</td>
+<td>speculation-aware memory analysis and profile assertions</td>
+<td>object profile, separation by heap tag</td>
+<td>runtime binary analysis and profiling</td>
+<td>online profile builds a prediction model</td>
+<td>compiler finds regions and loops; a caller may declare calls independent</td>
+</tr>
+<tr>
+<td>validation</td>
+<td>heap checks and per-access logs for what the planner cannot remove</td>
+<td>shadow byte per private byte, separation check</td>
+<td>loop exit points, no memory check</td>
+<td>predicted address ranges and values</td>
+<td>byte-granular tracking, undo log, ordered validator</td>
+</tr>
+<tr>
+<td>rollback</td>
+<td>checkpoint</td>
+<td>checkpoint</td>
+<td>phase</td>
+<td>chunk backup</td>
+<td>undo log to the conflicting iteration, replay</td>
+</tr>
+<tr>
+<td>profitability</td>
+<td>compile time, fixed-cost planner</td>
+<td>compile time, from a profile</td>
+<td>predicted cost model</td>
+<td>model build and code generation succeed</td>
+<td>measured at run time from the first tracked batch</td>
+</tr>
+<tr>
+<td>reported headline</td>
+<td>23.0x geometric mean, 12 programs, 28 cores</td>
+<td>11.4x, 5 programs, 24 cores</td>
+<td>2x to 3x, three Polybench kernels</td>
+<td>up to 20x, two programs</td>
+<td>see the corpus sections</td>
+</tr>
+</tbody>
+</table>
+<p>Perspective is the direct pressure on the tracked route. It reports 23.0x on 28 cores against 11.5x for Privateer in the same run (the Privateer paper itself gives 11.4x on 24 cores) and attributes the gain to removing most monitoring by planning, not to cheaper checks. Folio tracks every access of an unmodified binary during the run and validates each region once, in order, at commit, so a planner that proves a loop private would remove most of what Folio pays. The slot-private windows and the in-place slice pool are small steps toward that, and the 7 of 30 automatic winners show how far the tracked route is from it. Privateer already used a shadow byte for every private byte, so the per-byte tracking is not new; what Folio adds is the binary input, the undo log with replay in iteration order, and the Wasm and V8 setting. Yusuf et al. speculate on binaries and validate by loop exit, with no memory check, so binary speculation is not new in kind; the surviving claim is unmodified Wasm over isolates with one shared memory and byte-exact validation. No public implementation of Perspective, Privateer or the binary work was found, so there is no head-to-head run against them here; the native parallel-for baseline is the only source-level comparator.</p>
+<p>APOLLO profiles its first chunk of iterations for addresses and trip counts, not time, and its next step is whether a model builds. Perspective and Privateer decide at compile time. The closest run-time decision that measures time is an Oracle patent [34] that compares measured parallel and serial times per iteration; it was read through a page summary only and appears to time whole invocations. No work found measures a first tracked batch and decides on the ratio. The admission-quality scoring in the corpus section shows that claim is weak on this corpus: a threshold on measured serial work picks the same winners.</p>
+<p>Janus [30] runs private per-thread storage on binaries with static analysis and run-time checks, so the private stack of the slice pool has a binary precedent. The slice pool drops the checks and leaves independence to the caller, with an optional serial audit; no work with that combination was found. Mytkowicz et al. [31] enumerate or speculate start states for finite-state machines and Qiu et al. [32] speculate with ordered validation and name serial validation as their bottleneck, which is the structure of Folio's ordered check. Self-adjusting computation [33] propagates changes through a recorded computation. The recorded-boundary route is a persisted, hash-chain version of those ideas with early cutoff on equal end state; no match was found for that form, and the validator's share of wall time at eight workers is not measured here.</p>
 <h2 id="📚-references" class="tsd-anchor-link">📚 References<a href="#📚-references" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Numbers appear in order of first use. Sources with a pinned commit or tag name it.</p>
 <p>[1] Node.js, <code>node_messaging.cc</code> sender, v26.10.0: <a href="https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L371">https://github.com/nodejs/node/blob/v26.10.0/src/node_messaging.cc#L371</a></p>
@@ -5039,6 +5480,16 @@ setting, package installation, unrelated service restart or protected mount acce
 <p>[22] G. S. Sohi, S. E. Breach and T. N. Vijaykumar, &quot;Multiscalar Processors,&quot; ISCA 1995 (first two pages read): <a href="https://ftp1.cs.wisc.edu/sohi/papers/1995/isca.multiscalar.pdf">https://ftp1.cs.wisc.edu/sohi/papers/1995/isca.multiscalar.pdf</a></p>
 <p>[23] P. Rundberg and P. Stenstrom, &quot;An All-Software Thread-Level Data Dependence Speculation System for Multiprocessors,&quot; Journal of Instruction-Level Parallelism 3 (the journal index says October 2001, the paper is dated January 2002; first five pages read): <a href="http://www.jilp.org/vol3/rundberg-jilp.pdf">http://www.jilp.org/vol3/rundberg-jilp.pdf</a></p>
 <p>[24] A. Raman, H. Kim, T. R. Mason, T. B. Jablin and D. I. August, &quot;Speculative Parallelization Using Software Multi-threaded Transactions,&quot; ASPLOS 2010 (first five pages read): <a href="https://www-new.llvm.org/pubs/2010-03-ASPLOS-SpeculativeParallelization.pdf">https://www-new.llvm.org/pubs/2010-03-ASPLOS-SpeculativeParallelization.pdf</a></p>
+<p>[25] N. Apostolakis, Z. Xu, G. Chan, S. Campanoni and D. I. August, &quot;Perspective: A Sensible Approach to Speculative Automatic Parallelization,&quot; ASPLOS 2020 (pages 1 to 12 read as images): <a href="https://liberty.princeton.edu/Publications/asplos20_perspective.pdf">https://liberty.princeton.edu/Publications/asplos20_perspective.pdf</a></p>
+<p>[26] N. P. Johnson, H. Kim, P. Prabhu, A. Zaks and D. I. August, &quot;Speculative Separation for Privatization and Reductions,&quot; PLDI 2012 (pages 1 to 4 read as images): <a href="https://liberty.princeton.edu/Publications/pldi12_privateer.pdf">https://liberty.princeton.edu/Publications/pldi12_privateer.pdf</a></p>
+<p>[27] M. Yusuf, M. El-Mahdy and E. Rohou, runtime speculative on-stack parallelization of for-loops in binary programs (IEEE Letters of the Computer Society 2018, doi 10.1109/LOCS.2018.2872454) and the 2019 loop de-parallelization manuscript (Information Processing Letters, accepted manuscript read): <a href="https://feng.stafpu.bu.edu.eg/Electrical%20Engineering/836/publications/Marwa%20Yusuf%20Abdelraouf%20Mohammed_LOCS2872454.pdf">https://feng.stafpu.bu.edu.eg/Electrical Engineering/836/publications/Marwa Yusuf Abdelraouf Mohammed_LOCS2872454.pdf</a></p>
+<p>[28] J. M. Martinez Caamaño, &quot;Fast and Flexible Compilation Techniques for Effective Speculative Polyhedral Parallelization,&quot; PhD thesis, Universite de Strasbourg, 2016 (pages 64 to 76 read as images; the peer-reviewed APOLLO paper was not found): <a href="https://publication-theses.unistra.fr/public/theses_doctorat/2016/MARTINEZ_FERNANDEZ_Juan_Manuel_2016_ED269.pdf">https://publication-theses.unistra.fr/public/theses_doctorat/2016/MARTINEZ_FERNANDEZ_Juan_Manuel_2016_ED269.pdf</a></p>
+<p>[29] T. Grosser et al., &quot;Polly - Polyhedral optimization in LLVM,&quot; IMPACT 2011 (read in full): <a href="https://polly.llvm.org/publications/grosser-impact-2011.pdf">https://polly.llvm.org/publications/grosser-impact-2011.pdf</a></p>
+<p>[30] L. Zhou and T. M. Jones, Janus, CGO 2019 (first three pages read): <a href="https://www.cl.cam.ac.uk/~tmj32/papers/docs/zhou19-cgo.pdf">https://www.cl.cam.ac.uk/~tmj32/papers/docs/zhou19-cgo.pdf</a></p>
+<p>[31] T. Mytkowicz, M. Musuvathi and W. Schulte, &quot;Data-Parallel Finite-State Machines,&quot; ASPLOS 2014 (first three pages read): <a href="https://microsoft.com/en-us/research/wp-content/uploads/2016/02/asplos302-mytkowicz.pdf">https://microsoft.com/en-us/research/wp-content/uploads/2016/02/asplos302-mytkowicz.pdf</a></p>
+<p>[32] J. Qiu, Z. Sun, A. H. Sabet and Z. Zhao, BoostFSM, ASPLOS 2021 (first two pages read): <a href="https://par.nsf.gov/servlets/purl/10222360">https://par.nsf.gov/servlets/purl/10222360</a></p>
+<p>[33] R. Ley-Wild, U. A. Acar and M. Fluet, &quot;A Cost Semantics for Self-Adjusting Computation,&quot; POPL 2009 (first two pages read): <a href="https://software.imdea.org/~rleywild/publications/popl09/popl09.pdf">https://software.imdea.org/~rleywild/publications/popl09/popl09.pdf</a></p>
+<p>[34] Oracle, &quot;Runtime profitability control for speculative automatic parallelization,&quot; US 8,359,587 B2 (read through a page summary only; check the claims before citing): <a href="https://patents.google.com/patent/US8359587">https://patents.google.com/patent/US8359587</a></p>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -5116,6 +5567,10 @@ setting, package installation, unrelated service restart or protected mount acce
 <ul>
 <li><a href="#quiet-machine-rerun"><span>Quiet-<wbr/>Machine <wbr/>Rerun</span></a></li></ul></li>
 <li><a href="#exact-chunked-recurrences"><span>Exact <wbr/>Chunked <wbr/>Recurrences</span></a></li>
+<li><a href="#affine-state-recovery"><span>Affine <wbr/>State <wbr/>Recovery</span></a></li>
+<li><a href="#boundary-state-speculation-beyond-registers"><span>Boundary-<wbr/>State <wbr/>Speculation <wbr/>Beyond <wbr/>Registers</span></a></li>
+<li><a href="#slice-pool-admission-quality-and-mixed-record-sizes"><span>Slice <wbr/>Pool, <wbr/>Admission <wbr/>Quality and <wbr/>Mixed <wbr/>Record <wbr/>Sizes</span></a></li>
+<li><a href="#held-out-workloads"><span>Held-<wbr/>Out <wbr/>Workloads</span></a></li>
 <li><a href="#what-the-corpus-shows"><span>What the <wbr/>Corpus <wbr/>Shows</span></a></li></ul></li>
 <li><a href="#🧑💻-consumer-boundaries"><span>🧑‍💻 <wbr/>Consumer <wbr/>Boundaries</span></a></li>
 <li>
@@ -5141,8 +5596,10 @@ setting, package installation, unrelated service restart or protected mount acce
 <li><a href="#distributed-page-ownership-and-writeback"><span>Distributed <wbr/>Page <wbr/>Ownership and <wbr/>Writeback</span></a></li></ul></li>
 <li><a href="#📜-historical-copied-memory-results"><span>📜 <wbr/>Historical <wbr/>Copied-<wbr/>Memory <wbr/>Results</span></a></li>
 <li><a href="#🚧-architectural-boundaries"><span>🚧 <wbr/>Architectural <wbr/>Boundaries</span></a></li>
+<li><a href="#🛡️-correctness-boundary"><span>🛡️ <wbr/>Correctness <wbr/>Boundary</span></a></li>
 <li><a href="#⚠️-limits-and-open-questions"><span>⚠️ <wbr/>Limits and <wbr/>Open <wbr/>Questions</span></a></li>
 <li><a href="#✅-reproduction-and-verification"><span>✅ <wbr/>Reproduction and <wbr/>Verification</span></a></li>
+<li><a href="#🧬-related-work"><span>🧬 <wbr/>Related <wbr/>Work</span></a></li>
 <li><a href="#📚-references"><span>📚 <wbr/>References</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html">@gmitch215/folio - v1.1.0</a>
