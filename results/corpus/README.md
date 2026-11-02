@@ -24,6 +24,7 @@
 - [Record-Level Rig](record-level-rig/README.md)
 - [Stall Guard Overhead](stall-guard-overhead/README.md)
 - [Boundary-State Rig Runs](boundary-state-rig/README.md)
+- [Explicit Route Copy Cost](explicit-route-copy-cost/README.md)
 
 Explicit task-batch acceleration, automatic extraction of one entry and automatic dispatch of a loop of
 calls are separate results. See the
