@@ -15,6 +15,20 @@ function spin(ms: number): void {
 }
 
 serveTasks(link, (name: string, input: TaskInput) => {
+	if (name === 'isShared')
+		return typeof input !== 'string' && input.buffer instanceof SharedArrayBuffer ? '1' : '0';
+	if (name === 'afterWrite') {
+		const bytes = input as Uint8Array;
+		const flags = new Int32Array(bytes.buffer, bytes.byteOffset, 2);
+		if (!(bytes.buffer instanceof SharedArrayBuffer)) {
+			sleep(100);
+			return String(flags[0]);
+		}
+		Atomics.store(flags, 1, 1);
+		Atomics.notify(flags, 1);
+		Atomics.wait(flags, 0, 1, 5000);
+		return String(Atomics.load(flags, 0));
+	}
 	const text = typeof input === 'string' ? input : new TextDecoder().decode(input);
 	switch (name) {
 		case 'upper':

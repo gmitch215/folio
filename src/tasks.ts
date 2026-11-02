@@ -3,6 +3,17 @@ import { MessageChannel, type MessagePort, receiveMessageOnPort } from 'node:wor
 /** Task input and output are copied between threads. Strings and bytes are both accepted. */
 export type TaskInput = string | Uint8Array;
 
+/** Options for one submitted task. */
+export interface SubmitOptions {
+	/**
+	 * Posts a `SharedArrayBuffer`-backed byte input without copying it. The caller promises not to
+	 * write to those bytes until the task is joined. The audit reads the same bytes at join. The
+	 * default copies, so a later write to the buffer never reaches the task. Strings and inputs
+	 * on other buffers are copied either way.
+	 */
+	share?: boolean;
+}
+
 /** The end of a pool link that a worker passes to `serveTasks`. */
 export interface TaskLink {
 	port: MessagePort;
@@ -211,17 +222,15 @@ export class TaskPool {
 	}
 
 	/** Starts a task and returns a handle for `join`. */
-	submit(name: string, input: TaskInput = ''): string {
+	submit(name: string, input: TaskInput = '', options: SubmitOptions = {}): string {
 		if (this.#closed) throw new Error('task pool is closed');
 		const worker = this.#next++ % this.#width;
 		const seq = this.#seq++;
 		const id = `${worker}:${seq}`;
 		const submitMs = now();
-		// postMessage shares a SharedArrayBuffer instead of copying it
-		const posted =
-			typeof input !== 'string' && input.buffer instanceof SharedArrayBuffer
-				? Uint8Array.from(input)
-				: input;
+		const shared = typeof input !== 'string' && input.buffer instanceof SharedArrayBuffer;
+		// postMessage shares a SharedArrayBuffer view as it is, so the default copies it first
+		const posted = shared && !options.share ? Uint8Array.from(input) : input;
 		this.#owner[worker]!.port.postMessage({
 			id,
 			name,
@@ -232,7 +241,9 @@ export class TaskPool {
 		const audited = sampled
 			? typeof input === 'string' || posted !== input
 				? posted
-				: Uint8Array.from(input)
+				: shared && options.share
+					? input
+					: Uint8Array.from(input)
 			: undefined;
 		this.#pending.set(id, {
 			id,
@@ -286,17 +297,20 @@ export class TaskPool {
 		return this.#finish(pending, reply, waitMs);
 	}
 
-	/** Submits every job, then joins them in submission order. */
-	async run(jobs: [name: string, input?: TaskInput][]): Promise<TaskResult[]> {
-		const handles = jobs.map(([name, input]) => this.submit(name, input));
+	/** Submits every job, then joins them in submission order. `options` applies to every job. */
+	async run(
+		jobs: [name: string, input?: TaskInput][],
+		options?: SubmitOptions
+	): Promise<TaskResult[]> {
+		const handles = jobs.map(([name, input]) => this.submit(name, input, options));
 		const results: TaskResult[] = [];
 		for (const handle of handles) results.push(await this.joinAsync(handle));
 		return results;
 	}
 
 	/** Blocking form of `run`. */
-	runSync(jobs: [name: string, input?: TaskInput][]): TaskResult[] {
-		const handles = jobs.map(([name, input]) => this.submit(name, input));
+	runSync(jobs: [name: string, input?: TaskInput][], options?: SubmitOptions): TaskResult[] {
+		const handles = jobs.map(([name, input]) => this.submit(name, input, options));
 		return handles.map((handle) => this.join(handle));
 	}
 

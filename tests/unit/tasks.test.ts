@@ -227,6 +227,61 @@ test('tasks and audits retain submitted bytes when the caller reuses a buffer', 
 	assert.deepEqual(seen, ['a', 'a', 'a']);
 });
 
+test('a shared input reaches the worker without a copy only when the caller opts in', async () => {
+	const pool = await start(1);
+	const input = new Uint8Array(new SharedArrayBuffer(8));
+	assert.equal(pool.join(pool.submit('isShared', input)).text(), '0');
+	assert.equal(pool.join(pool.submit('isShared', input, { share: true })).text(), '1');
+	assert.equal(pool.join(pool.submit('isShared', 'text', { share: true })).text(), '0');
+	assert.equal(pool.join(pool.submit('isShared', Uint8Array.of(1), { share: true })).text(), '0');
+	const [viaRun] = await pool.run([['isShared', input]], { share: true });
+	assert.equal(viaRun!.text(), '1');
+	const [viaSync] = pool.runSync([['isShared', input]], { share: true });
+	assert.equal(viaSync!.text(), '1');
+});
+
+test('a write after submit reaches a shared task and never a copied one', async () => {
+	const pool = await start(1);
+	const flags = new Int32Array(new SharedArrayBuffer(8));
+	Atomics.store(flags, 0, 1);
+	const handle = pool.submit('afterWrite', new Uint8Array(flags.buffer), { share: true });
+	while (Atomics.load(flags, 1) === 0) Atomics.wait(flags, 1, 0, 100);
+	Atomics.store(flags, 0, 42);
+	Atomics.notify(flags, 0);
+	assert.equal(pool.join(handle).text(), '42');
+	// the worker's copy of this input never sees the write, so its wait times out at the old value
+	const copied = new Int32Array(new SharedArrayBuffer(8));
+	Atomics.store(copied, 0, 1);
+	const copyHandle = pool.submit('afterWrite', new Uint8Array(copied.buffer));
+	Atomics.store(copied, 0, 42);
+	Atomics.notify(copied, 0);
+	assert.equal(pool.join(copyHandle).text(), '1');
+});
+
+test('the audit sees the submitted bytes with a shared input and a write after join is harmless', async () => {
+	const decoder = new TextDecoder();
+	const seen: string[] = [];
+	const pool = await start(1, {
+		audit: {
+			run: (_, input) => {
+				const text =
+					typeof input === 'string' ? input : decoder.decode(Uint8Array.from(input));
+				seen.push(text);
+				return text.toUpperCase();
+			}
+		}
+	});
+	const input = new Uint8Array(new SharedArrayBuffer(1));
+	for (const share of [true, false]) {
+		input[0] = 97;
+		const handle = pool.submit('upper', input, { share });
+		if (!share) input[0] = 98;
+		assert.equal(pool.join(handle).text(), 'A');
+		input[0] = 120;
+	}
+	assert.deepEqual(seen, ['a', 'a']);
+});
+
 test('audit reports a length difference at the end of the shorter output', async () => {
 	const pool = await start(1, { audit: { run: () => 'ABCD' } });
 	const handle = pool.submit('upper', 'abcdef');
