@@ -173,3 +173,83 @@ test('a plan naming exports the instance lacks, or an unknown restore strategy, 
 	expect(() => checkpoint.restore('bad' as 'full')).toThrow(/invalid context reset strategy/);
 	expect(checkpoint.restore('full').copiedBytes).toBe(65536);
 });
+
+const dirtyMemory = () => {
+	const plan = prepareContext(
+		compile(`(module (memory 3 4)
+			(func (export "set") (param i32 i32) (i32.store8 (local.get 0) (local.get 1))))`)
+	);
+	expect(plan.reasons).toEqual([]);
+	const instance = new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(plan.bytes)));
+	const memory = instance.exports[plan.memories[0]!] as WebAssembly.Memory;
+	const set = instance.exports.set as CallableFunction;
+	return {
+		checkpoint: new InstanceCheckpoint(instance, plan),
+		bytes: () => new Uint8Array(memory.buffer),
+		set
+	};
+};
+
+test('overwrite ranges are neither compared nor restored and everything else is', () => {
+	const { checkpoint, bytes, set } = dirtyMemory();
+	for (const address of [10, 70000, 131100]) set(address, 7);
+	const report = checkpoint.restore('changed', [
+		{ offset: 5, length: 20 },
+		{ offset: 70000, length: 1 }
+	]);
+	expect(report).toMatchObject({
+		checkedBytes: 3 * 65536 - 21,
+		copiedBytes: 65536,
+		changedPages: 1,
+		skippedBytes: 21
+	});
+	expect([bytes()[10], bytes()[70000], bytes()[131100]]).toEqual([7, 7, 0]);
+	expect(checkpoint.restore()).toMatchObject({ copiedBytes: 2 * 65536, skippedBytes: 0 });
+	expect(bytes().every((byte) => byte === 0)).toBe(true);
+});
+
+test('overwrite ranges merge when unsorted, overlapping or adjacent', () => {
+	const { checkpoint } = dirtyMemory();
+	const union = (ranges: { offset: number; length: number }[]) =>
+		checkpoint.restore('changed', ranges).skippedBytes;
+	expect(
+		union([
+			{ offset: 120, length: 50 },
+			{ offset: 10, length: 5 },
+			{ offset: 100, length: 50 }
+		])
+	).toBe(75);
+	expect(
+		union([
+			{ offset: 0, length: 10 },
+			{ offset: 10, length: 10 }
+		])
+	).toBe(20);
+	expect(union([{ offset: 3 * 65536, length: 0 }])).toBe(0);
+	expect(union([{ offset: 0, length: 3 * 65536 }])).toBe(3 * 65536);
+});
+
+test('a full restore skips overwrite ranges too', () => {
+	const { checkpoint } = dirtyMemory();
+	expect(checkpoint.restore('full', [{ offset: 100, length: 1000 }])).toMatchObject({
+		checkedBytes: 0,
+		copiedBytes: 3 * 65536 - 1000,
+		skippedBytes: 1000
+	});
+});
+
+test('an invalid overwrite range refuses before changing any binding', () => {
+	const { checkpoint, bytes, set } = dirtyMemory();
+	set(10, 7);
+	for (const range of [
+		{ offset: -1, length: 4 },
+		{ offset: 0, length: -4 },
+		{ offset: 0.5, length: 4 },
+		{ offset: 0, length: Number.NaN },
+		{ offset: 3 * 65536 - 2, length: 3 },
+		{ memory: 1, offset: 0, length: 4 },
+		{ memory: -1, offset: 0, length: 4 }
+	])
+		expect(() => checkpoint.restore('changed', [range])).toThrow(RangeError);
+	expect(bytes()[10]).toBe(7);
+});
