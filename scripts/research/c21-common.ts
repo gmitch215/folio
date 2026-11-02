@@ -11,7 +11,8 @@ export const hostMath = () => ({
 	sin: Math.sin,
 	cos: Math.cos,
 	floor: Math.floor,
-	sqrt: Math.sqrt
+	sqrt: Math.sqrt,
+	log2: Math.log2
 });
 
 export const moduleBytes = (spec: Spec) =>
@@ -70,11 +71,33 @@ export function instantiate(spec: Spec, layout: Layout, shared = false) {
 	return { memory, exports: instance.exports as Record<string, CallableFunction> };
 }
 
+// C21_MIXED=1 cuts these programs' records to 1, 1/2, 1/4, 1/8 or 1/16 of their size in a fixed pattern
+const mixable = new Set([
+	'xxhash32',
+	'xxhash64',
+	'xxhash3',
+	'miniz-adler32',
+	'miniz-crc32',
+	'sha256',
+	'sha1',
+	'md5'
+]);
+const mixedLength = (id: string, index: number, length: number) =>
+	process.env.C21_MIXED === '1' && mixable.has(id)
+		? Math.max(64, (Math.floor(length / [1, 2, 4, 8, 16][(index * 7 + 3) % 5]!) >> 4) << 4)
+		: length;
+
 export function recordsOf(spec: Spec, n = spec.n): Record_[] {
 	const makeAux = spec.makeAux ?? (() => new Uint8Array(0));
 	if (!spec.from) {
 		const make = spec.makeInput ?? (() => new Uint8Array(0));
-		return Array.from({ length: n }, (_, i) => ({ input: make(i), aux: makeAux(i) }));
+		return Array.from({ length: n }, (_, i) => {
+			const input = make(i);
+			return {
+				input: input.slice(0, mixedLength(spec.id, i, input.length)),
+				aux: makeAux(i)
+			};
+		});
 	}
 	const sibling = specOf(spec.from);
 	const source = recordsOf(sibling, n);
@@ -97,49 +120,4 @@ export function recordsOf(spec: Spec, n = spec.n): Record_[] {
 			throw new Error(`${sibling.id} record ${i} length ${length}`);
 		return { input: out.slice(at + 32, at + 32 + length), aux: makeAux(i) };
 	});
-}
-
-/** Marks the imported memory shared by flipping its limits flag; the module must already declare a maximum. */
-export function sharedMemoryImport(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
-	const out = new Uint8Array(bytes.length);
-	out.set(bytes);
-	let at = 8;
-	const leb = () => {
-		let value = 0,
-			shift = 0,
-			byte: number;
-		do {
-			byte = out[at++]!;
-			value |= (byte & 0x7f) << shift;
-			shift += 7;
-		} while (byte & 0x80);
-		return value;
-	};
-	const skip = (length: number) => (at += length);
-	while (at < out.length) {
-		const id = out[at++]!;
-		const size = leb();
-		const end = at + size;
-		if (id === 2) {
-			for (let count = leb(); count > 0; count--) {
-				skip(leb());
-				skip(leb());
-				const kind = out[at++]!;
-				if (kind === 2) {
-					if (out[at] !== 1) throw new Error('the memory import needs a maximum');
-					out[at] = 3;
-					return out;
-				}
-				if (kind === 0) leb();
-				else if (kind === 1) {
-					at++;
-					const flags = out[at++]!;
-					leb();
-					if (flags & 1) leb();
-				} else if (kind === 3) at += 2;
-			}
-		}
-		at = end;
-	}
-	throw new Error('no memory import');
 }

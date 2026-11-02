@@ -210,6 +210,96 @@ NOINLINE static void one(const rec_t *r, uint8_t *out) {
 	W32(out, 16);
 #undef context
 }
+#elif defined(K_BROTLIE)
+#include "brotli/encode.h"
+NOINLINE static void one(const rec_t *r, uint8_t *out) {
+	size_t size = SLOT - 32;
+	bump_set((void *)r->arena, ARENA);
+	int status = BrotliEncoderCompress(QUALITY, LGWIN, BROTLI_MODE_GENERIC, r->len,
+		(const uint8_t *)r->in, &size, DATA(out));
+	W32(out, status ? size : 0);
+}
+#elif defined(K_BROTLID)
+#include "brotli/decode.h"
+NOINLINE static void one(const rec_t *r, uint8_t *out) {
+	size_t size = SLOT - 32;
+	bump_set((void *)r->arena, ARENA);
+	int status = BrotliDecoderDecompress(r->len, (const uint8_t *)r->in, &size, DATA(out));
+	W32(out, status == BROTLI_DECODER_RESULT_SUCCESS ? size : 0);
+}
+#elif defined(K_WYHASH)
+#include "wyhash.h"
+NOINLINE static void one(const rec_t *r, uint8_t *out) { W64(out, wyhash((const void *)r->in, r->len, 0, _wyp)); }
+#elif defined(K_BLAKE2B)
+#include "blake2.h"
+NOINLINE static void one(const rec_t *r, uint8_t *out) {
+	W32(out, blake2b(DATA(out), 64, (const void *)r->in, r->len, 0, 0) ? 0 : 64);
+}
+#elif defined(K_QOAE)
+#define QOA_IMPLEMENTATION
+#define QOA_NO_STDIO
+#include "qoa.h"
+NOINLINE static void one(const rec_t *r, uint8_t *out) {
+	qoa_desc desc = {.channels = 2, .samplerate = 44100, .samples = r->len / 4};
+	unsigned int length = 0;
+	bump_set((void *)r->arena, ARENA);
+	void *data = qoa_encode((const short *)r->in, &desc, &length);
+	if (!data) {
+		W32(out, 0);
+		return;
+	}
+	memcpy(DATA(out), data, length);
+	free(data);
+	W32(out, length);
+}
+#elif defined(K_QOAD)
+#define QOA_IMPLEMENTATION
+#define QOA_NO_STDIO
+#include "qoa.h"
+NOINLINE static void one(const rec_t *r, uint8_t *out) {
+	qoa_desc desc;
+	bump_set((void *)r->arena, ARENA);
+	short *data = qoa_decode((const unsigned char *)r->in, (int)r->len, &desc);
+	if (!data) {
+		W32(out, 0);
+		return;
+	}
+	uint32_t length = desc.samples * desc.channels * 2;
+	memcpy(DATA(out), data, length);
+	free(data);
+	W32(out, length);
+}
+#elif defined(K_YYJSON)
+#include "yyjson.h"
+NOINLINE static void one(const rec_t *r, uint8_t *out) {
+	bump_set((void *)r->arena, ARENA);
+	yyjson_doc *doc = yyjson_read((const char *)r->in, r->len, 0);
+	if (!doc) {
+		W32(out, 0);
+		return;
+	}
+	W32(out + 4, yyjson_doc_get_read_size(doc));
+	W32(out, yyjson_doc_get_val_count(doc));
+	yyjson_doc_free(doc);
+}
+#elif defined(K_MD4C)
+#include "md4c-html.h"
+typedef struct {
+	uint8_t *dst;
+	uint32_t used;
+} sink_t;
+static void emit(const MD_CHAR *text, MD_SIZE size, void *user) {
+	sink_t *sink = (sink_t *)user;
+	if (sink->used + size <= SLOT - 32) memcpy(sink->dst + sink->used, text, size);
+	sink->used += size;
+}
+NOINLINE static void one(const rec_t *r, uint8_t *out) {
+	sink_t sink = {DATA(out), 0};
+	bump_set((void *)r->arena, ARENA);
+	int status = md_html((const MD_CHAR *)r->in, r->len, emit, &sink, MD_DIALECT_GITHUB, 0);
+	W32(out + 4, status);
+	W32(out, status ? 0 : sink.used);
+}
 #elif defined(K_M6502)
 #define CHIPS_IMPL
 #include "m6502.h"

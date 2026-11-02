@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { delimiter, join } from 'node:path';
-import { corpusManifest } from './corpus.ts';
+import { corpusManifest, fetchProject } from './corpus.ts';
 
 // bulk drivers for the 21 corpus kernels: n independent records through the unmodified entry
 const root = new URL('../../', import.meta.url).pathname;
@@ -105,6 +105,88 @@ const ram6502 = (i: number) => {
 	ram.set([0xa2, i & 255, 0xe8, 0x4c, 0x02, 0x02], 0x200);
 	return ram;
 };
+
+// stereo 16-bit audio of one QOA frame (5120 samples per channel), integer waves plus noise
+const qoaFrameBytes = 5120 * 2 * 2;
+const qoaFileBytes = 8 + 8 + 2 * 16 + 256 * 8 * 2;
+const pcm = (i: number) => {
+	const next = rng(Math.imul(i + 1, 2654435761) ^ 0x1b873593);
+	const data = new Int16Array(5120 * 2);
+	const triangle = (t: number, period: number) => {
+		const phase = t % period;
+		return phase < period / 2 ? phase : period - phase;
+	};
+	for (let t = 0; t < 5120; t++) {
+		const left = triangle(t + i * 37, 200 + (i % 7) * 13) * 60 + triangle(t, 61) * 20;
+		const right = triangle(t + i * 11, 331) * 40 + triangle(t, 97) * 25;
+		data[2 * t] = left - 6000 + Math.floor(next() * 400) - 200;
+		data[2 * t + 1] = right - 4000 + Math.floor(next() * 400) - 200;
+	}
+	return new Uint8Array(data.buffer);
+};
+
+const sentence = (next: () => number, words: number) =>
+	Array.from({ length: words }, () => vocabulary[Math.floor(next() * vocabulary.length)]!).join(
+		' '
+	);
+
+/** A JSON array of mixed objects: integers, fractions, exponents, escaped strings, nesting. */
+export const jsonDocument = (size: number) => (i: number) => {
+	const next = rng(Math.imul(i + 1, 2654435761) ^ 0x2c1b3c6d);
+	const parts: string[] = [];
+	let length = 2;
+	for (let k = 0; length < size - 400; k++) {
+		const fraction = (next() * 2000 - 1000).toFixed(3);
+		const exponent = `${1 + Math.floor(next() * 9)}.${Math.floor(next() * 100)}e${Math.floor(next() * 20) - 10}`;
+		const item =
+			`{"id":${k * 7 + i},"name":"${sentence(next, 2)}","tags":["${sentence(next, 1)}","${sentence(next, 1)}"],` +
+			`"score":${fraction},"ratio":${exponent},"ok":${next() < 0.5},"none":null,` +
+			`"nested":{"x":${Math.floor(next() * 1e6)},"y":[1,2.5,${k},"\\u00e9\\n\\"q\\""],"z":{}},` +
+			`"text":"${sentence(next, 6)}"}`;
+		parts.push(item);
+		length += item.length + 1;
+	}
+	return new TextEncoder().encode(`[${parts.join(',')}]`);
+};
+
+/** Markdown with headings, emphasis, links, lists, quotes, code fences and tables. */
+export const markdown = (size: number) => (i: number) => {
+	const next = rng(Math.imul(i + 1, 2654435761) ^ 0x68e31da4);
+	const blocks: string[] = [];
+	let length = 0;
+	for (let k = 0; length < size - 600; k++) {
+		const kind = Math.floor(next() * 7);
+		const paragraph = () =>
+			Array.from({ length: 3 + Math.floor(next() * 4) }, () => {
+				const word = sentence(next, 1);
+				const roll = next();
+				if (roll < 0.1) return `*${word}*`;
+				if (roll < 0.18) return `**${word}**`;
+				if (roll < 0.25) return `\`${word}\``;
+				if (roll < 0.32) return `[${word}](https://example.com/${word}?a=1&b=2)`;
+				if (roll < 0.36) return '&amp; <b>';
+				return word;
+			}).join(' ');
+		let block: string;
+		if (kind === 0) block = `${'#'.repeat(1 + (k % 4))} ${sentence(next, 3)}`;
+		else if (kind === 1) block = Array.from({ length: 4 }, () => `- ${paragraph()}`).join('\n');
+		else if (kind === 2)
+			block = Array.from({ length: 3 }, (_, n) => `${n + 1}. ${paragraph()}`).join('\n');
+		else if (kind === 3) block = `> ${paragraph()}\n> ${paragraph()}`;
+		else if (kind === 4) block = '```c\nint ' + sentence(next, 1) + '(void) { return 0; }\n```';
+		else if (kind === 5)
+			block = `| a | b |\n|---|---|\n| ${sentence(next, 1)} | ${sentence(next, 1)} |`;
+		else block = paragraph() + '\n' + paragraph();
+		blocks.push(block);
+		length += block.length + 2;
+	}
+	return new TextEncoder().encode(blocks.join('\n\n') + '\n');
+};
+
+// allocator slices of about twice the smallest size at which eight records still ran
+const brotliArena = 1 << 21;
+const yyjsonArena = 1 << 15;
+const md4cArena = 1 << 19;
 
 const N = 128;
 const lz = 32768;
@@ -497,6 +579,109 @@ export const specs: Spec[] = [
 		auxBytes: 65536,
 		arena: 0,
 		makeAux: ram6502
+	},
+	{
+		id: 'brotli-compress',
+		corpus: 'brotli-compress',
+		project: 'brotli',
+		define: 'K_BROTLIE',
+		extra: { ARENA: brotliArena, QUALITY: 5, LGWIN: 16 },
+		n: 48,
+		slot: slotOf(40000),
+		inputBytes: 32768,
+		auxBytes: 0,
+		arena: brotliArena,
+		makeInput: text(32768),
+		imports: true
+	},
+	{
+		id: 'brotli-decompress',
+		corpus: 'brotli-decompress',
+		project: 'brotli',
+		define: 'K_BROTLID',
+		extra: { ARENA: 1 << 17 },
+		n: 64,
+		slot: slotOf(32768),
+		inputBytes: 0,
+		auxBytes: 0,
+		arena: 1 << 17,
+		from: 'brotli-compress'
+	},
+	{
+		id: 'wyhash',
+		corpus: 'wyhash',
+		project: 'wyhash',
+		define: 'K_WYHASH',
+		n: 4096,
+		slot: 32,
+		inputBytes: 1024,
+		auxBytes: 0,
+		arena: 0,
+		makeInput: random(1024)
+	},
+	{
+		id: 'blake2b',
+		corpus: 'blake2b',
+		project: 'blake2',
+		define: 'K_BLAKE2B',
+		n: 256,
+		slot: 96,
+		inputBytes: 65536,
+		auxBytes: 0,
+		arena: 0,
+		makeInput: random(65536)
+	},
+	{
+		id: 'qoa-encode',
+		corpus: 'qoa-encode',
+		project: 'qoa',
+		define: 'K_QOAE',
+		extra: { ARENA: 16384 },
+		n: 32,
+		slot: slotOf(qoaFileBytes),
+		inputBytes: qoaFrameBytes,
+		auxBytes: 0,
+		arena: 16384,
+		makeInput: pcm
+	},
+	{
+		id: 'qoa-decode',
+		corpus: 'qoa-decode',
+		project: 'qoa',
+		define: 'K_QOAD',
+		extra: { ARENA: 65536 },
+		n: 32,
+		slot: slotOf(qoaFrameBytes),
+		inputBytes: 0,
+		auxBytes: 0,
+		arena: 65536,
+		from: 'qoa-encode'
+	},
+	{
+		id: 'yyjson-read',
+		corpus: 'yyjson-read',
+		project: 'yyjson',
+		define: 'K_YYJSON',
+		extra: { ARENA: yyjsonArena },
+		n: 1024,
+		slot: 32,
+		inputBytes: 4096,
+		auxBytes: 0,
+		arena: yyjsonArena,
+		makeInput: jsonDocument(4096)
+	},
+	{
+		id: 'md4c-html',
+		corpus: 'md4c-html',
+		project: 'md4c',
+		define: 'K_MD4C',
+		extra: { ARENA: md4cArena },
+		n: 16,
+		slot: slotOf(131072),
+		inputBytes: 65536,
+		auxBytes: 0,
+		arena: md4cArena,
+		makeInput: markdown(65536)
 	}
 ];
 
@@ -550,21 +735,29 @@ const sourcesDir = join(root, 'build/research/corpus/sources');
 export function projectOf(id: string) {
 	const project = corpusManifest.projects.find((item) => item.id === id);
 	if (!project) throw new Error(`unknown project ${id}`);
-	return {
-		...project,
-		dir: join(sourcesDir, `${project.id}-${project.sha256.slice(0, 16)}`)
-	};
+	const dir = join(sourcesDir, `${project.id}-${project.sha256.slice(0, 16)}`);
+	if (!existsSync(dir)) fetchProject(project, join(root, 'build/research/corpus'));
+	return { ...project, dir };
 }
+
+// projects that need libc declarations and helpers beyond the stubs in cases/include
+// projects whose 128-bit multiplication needs the pinned compiler runtime builtin
+const multi3Projects = new Set(['xxhash', 'wyhash', 'yyjson']);
+const libcProjects = new Set(['brotli', 'wyhash', 'blake2', 'qoa', 'yyjson', 'md4c']);
 
 export function buildSpec(spec: Spec): string {
 	const { clang, env } = compilerEnv();
 	const project = projectOf(spec.project);
-	const kernels = corpusManifest.cases.filter((item) => item.project === spec.project);
+	const kernels = [...corpusManifest.cases, ...corpusManifest.bulkCases].filter(
+		(item) => item.project === spec.project
+	);
 	const sourceList = [
 		...project.sources,
 		...(kernels.find((item) => item.id === spec.corpus)?.sources ?? [])
 	].map((path) => join(project.dir, path));
-	if (spec.project === 'xxhash') sourceList.push(join(root, 'build/research/corpus/multi3.c'));
+	if (multi3Projects.has(spec.project))
+		sourceList.push(join(root, 'build/research/corpus/multi3.c'));
+	const libc = libcProjects.has(spec.project);
 	const defines = Object.entries({ SLOT: spec.slot, ...(spec.extra ?? {}) }).map(
 		([key, value]) => `-D${key}=${value}`
 	);
@@ -584,11 +777,13 @@ export function buildSpec(spec: Spec): string {
 			`-D${spec.define}`,
 			...defines,
 			...(project.flags ?? []),
+			...(libc ? ['-I', join(adapters, 'c21/include')] : []),
 			'-I',
 			join(adapters, 'include'),
 			'-I',
 			join(project.dir, project.include),
 			join(adapters, 'c21/support-bulk.c'),
+			...(libc ? [join(adapters, 'c21/support-libc.c')] : []),
 			join(adapters, 'c21/bulk.c'),
 			...sourceList,
 			'-Wl,--no-entry,--import-memory,--export-memory,--allow-undefined',

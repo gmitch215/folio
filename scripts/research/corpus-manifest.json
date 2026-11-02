@@ -121,6 +121,80 @@
 			"licensePath": "LICENSE",
 			"include": "chips",
 			"sources": []
+		},
+		{
+			"id": "brotli",
+			"repository": "google/brotli",
+			"commit": "db24a98aed38a16de78cc05ca15cdd8dc2a0d92d",
+			"sha256": "113b9685dfc14dd2f3360d077283266eec2fbdfb0fe3e5600f11be151da0d68e",
+			"license": "MIT",
+			"licensePath": "LICENSE",
+			"include": "c/include",
+			"sources": [
+				"c/common/constants.c",
+				"c/common/context.c",
+				"c/common/dictionary.c",
+				"c/common/platform.c",
+				"c/common/shared_dictionary.c",
+				"c/common/transform.c",
+				"c/dec/bit_reader.c",
+				"c/dec/decode.c",
+				"c/dec/huffman.c",
+				"c/dec/prefix.c",
+				"c/dec/state.c",
+				"c/dec/static_init.c"
+			]
+		},
+		{
+			"id": "wyhash",
+			"repository": "wangyi-fudan/wyhash",
+			"commit": "e4764a0b637d34d3421a7760affada9288b625a8",
+			"sha256": "449fd098eb43073471e34de7e50b795562f80d96639954d336d7be1b40bbb3c9",
+			"license": "Unlicense",
+			"licensePath": "LICENSE",
+			"include": ".",
+			"sources": []
+		},
+		{
+			"id": "blake2",
+			"repository": "BLAKE2/BLAKE2",
+			"commit": "ed1974ea83433eba7b2d95c5dcd9ac33cb847913",
+			"sha256": "e1d1194cde9fec0f150961cca8f3d9bdf7c5a5cbe020d1cdfb962b4887793124",
+			"license": "CC0-1.0",
+			"licensePath": "COPYING",
+			"include": "ref",
+			"sources": ["ref/blake2b-ref.c"]
+		},
+		{
+			"id": "qoa",
+			"repository": "phoboslab/qoa",
+			"commit": "bc0589710ff6aa2f50e08fb4d0a815d567bc0f3e",
+			"sha256": "85bd2dd05802206ff983985627d1ca06da8aa018bd6378323eb04513f071257c",
+			"license": "MIT",
+			"licensePath": "LICENSE",
+			"include": ".",
+			"sources": []
+		},
+		{
+			"id": "yyjson",
+			"repository": "ibireme/yyjson",
+			"commit": "6447536015f3d600f3d65323b10976103b337ca7",
+			"sha256": "13d53411c9d818836a2dc0b3f4be40c34ee4e0fcd21ff903e0aebbfd52e9e08d",
+			"license": "MIT",
+			"licensePath": "LICENSE",
+			"include": "src",
+			"sources": ["src/yyjson.c"],
+			"flags": ["-DYYJSON_DISABLE_FILE=1"]
+		},
+		{
+			"id": "md4c",
+			"repository": "mity/md4c",
+			"commit": "7fc1815a5eeba2af7d6120a76202bf59f3b6e6e4",
+			"sha256": "924d9a5443b7fa44a341feb027ae7bfd5db7696278920b17474799dce06ed959",
+			"license": "MIT",
+			"licensePath": "LICENSE.md",
+			"include": "src",
+			"sources": ["src/md4c.c", "src/entity.c", "src/md4c-html.c"]
 		}
 	],
 	"cases": [
@@ -274,6 +348,89 @@
 			"category": "stateful-emulator",
 			"upstream": ["m6502_tick"],
 			"adapter": "serial pin bus for 65536 cycles of INX/JMP; no parallel loop added"
+		}
+	],
+	"bulkCases": [
+		{
+			"id": "brotli-compress",
+			"project": "brotli",
+			"variant": 1,
+			"category": "compression",
+			"upstream": ["BrotliEncoderCompress"],
+			"sources": [
+				"c/enc/backward_references.c",
+				"c/enc/backward_references_hq.c",
+				"c/enc/bit_cost.c",
+				"c/enc/block_splitter.c",
+				"c/enc/brotli_bit_stream.c",
+				"c/enc/cluster.c",
+				"c/enc/command.c",
+				"c/enc/compound_dictionary.c",
+				"c/enc/compress_fragment.c",
+				"c/enc/compress_fragment_two_pass.c",
+				"c/enc/dictionary_hash.c",
+				"c/enc/encode.c",
+				"c/enc/encoder_dict.c",
+				"c/enc/entropy_encode.c",
+				"c/enc/fast_log.c",
+				"c/enc/histogram.c",
+				"c/enc/literal_cost.c",
+				"c/enc/memory.c",
+				"c/enc/metablock.c",
+				"c/enc/static_dict.c",
+				"c/enc/static_dict_lut.c",
+				"c/enc/static_init.c",
+				"c/enc/utf8_util.c"
+			]
+		},
+		{
+			"id": "brotli-decompress",
+			"project": "brotli",
+			"variant": 2,
+			"category": "compression",
+			"upstream": ["BrotliDecoderDecompress"]
+		},
+		{
+			"id": "wyhash",
+			"project": "wyhash",
+			"variant": 1,
+			"category": "byte-transform",
+			"upstream": ["wyhash"]
+		},
+		{
+			"id": "blake2b",
+			"project": "blake2",
+			"variant": 1,
+			"category": "byte-transform",
+			"upstream": ["blake2b"]
+		},
+		{
+			"id": "qoa-encode",
+			"project": "qoa",
+			"variant": 1,
+			"category": "audio",
+			"upstream": ["qoa_encode"]
+		},
+		{
+			"id": "qoa-decode",
+			"project": "qoa",
+			"variant": 2,
+			"category": "audio",
+			"upstream": ["qoa_decode"]
+		},
+		{
+			"id": "yyjson-read",
+			"project": "yyjson",
+			"variant": 1,
+			"category": "parsing",
+			"upstream": ["yyjson_read", "yyjson_doc_get_val_count"]
+		},
+		{
+			"id": "md4c-html",
+			"project": "md4c",
+			"variant": 1,
+			"category": "parsing",
+			"upstream": ["md_html"]
 		}
 	]
 }

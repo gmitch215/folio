@@ -17,9 +17,10 @@ export const corpusManifest = JSON.parse(
 	memory: { initialPages: number; maximumPages: number; [key: string]: unknown };
 	projects: Project[];
 	cases: Kernel[];
+	bulkCases: Kernel[];
 };
 
-interface Project {
+export interface Project {
 	id: string;
 	repository: string;
 	commit: string;
@@ -64,7 +65,7 @@ export function verifySource(bytes: Uint8Array, expected: string): void {
 		throw new Error('upstream source hash mismatch');
 }
 
-function fetchProject(project: Project, cache: string): string {
+export function fetchProject(project: Project, cache: string): string {
 	if (
 		!/^[-\w]+\/[-\w]+$/.test(project.repository) ||
 		!/^[a-f0-9]{40}$/.test(project.commit) ||
