@@ -1,50 +1,57 @@
-# Forced Admission Complete
+# SQLite Lanes
 
-Question: when the admission threshold is set to zero, which corpus entries receive regions, and
-does running those regions in parallel pay?
+Question: can a program that was never written to run in parallel, SQLite, run faster on managed lanes when each lane keeps its own instance over a shard of the data and the owner merges the partial results?
 
-This completes the [interrupted diagnostic](../forced-admission/README.md), which stopped at 16 of
-21 cases. Each case runs in its own process with `minimumRegionWork` set to 0, native and Folio at
-widths 1, 2, 4 and 8, 3 paired rounds and a 60 second cap per case. Production defaults are
-unchanged; this is a diagnostic of what the default threshold declines.
+## Method
+
+SQLite 3.50.4 compiled freestanding to a 1,003,837-byte WebAssembly module (single thread, read-only deserialized image). The fixture is a deterministic table of 1,000,000 rows (`id`, `k INTEGER`, `v INTEGER`, `s TEXT` of 24 bytes), a 52,772,864-byte image whose SHA-256 matches the one used for the Node task-pool measurements. The table is also split by rowid range into 4 and 8 shard images of at most 14 MiB, each a complete database with the same schema.
+
+One Worker script with 13 Durable Object names: one `serial` object that holds the whole table (shipped in two parts), four `shards-4` objects and eight `shards-8` objects. Each object loads its image once and keeps the SQLite instance, so queries are warm. For each of five queries the owner runs three arms, interleaved and rotated, 12 repetitions after 2 warmups:
+
+- `serial`: one object, whole table.
+- `shards-4` and `shards-8`: the owner sends the query to every shard at once and merges the partials with the merge declared for that query (counts and sums add, group tables merge, top-10 lists merge).
+
+The queries are an index range aggregate, a full-scan `GROUP BY` on `k % 64`, a `LIKE '%x%'` scan, a join with a 1,000-row table and a top-10 by a non-indexed column. A query with no declared merge is refused. The recursive CTE and `CREATE INDEX` are refused because each row depends on the previous one. Every merged result is compared byte for byte with the serial result. Lane work is also counted in SQLite virtual-machine steps, because a Worker's clock does not advance during compute.
 
 ## Results
 
-Twenty cases completed inside the cap. `m6502` reached the cap in the first run (0 samples, SIGTERM,
-retained in `m6502-capped.jsonl`), and a separate run with a 900 second cap completed it.
+Median client wall in ms over the 12 repetitions, deployed on a paid account, each figure including the client round trip to the owner:
 
-| Outcome | Cases |
-| --- | ---: |
-| Dispatch workers and run speculatively | 11 |
-| Stay on the serial original-module route | 10 |
-| Replay or fall back to native | 0 fallbacks, replays in 4 |
-| Speculative cases faster than native at any width | 0 of 11 |
+| Query | Serial | 4 shards | 8 shards | Speedup at 4 / 8 |
+| --- | --- | --- | --- | --- |
+| range aggregate | 192.6 | 94.5 | 80.2 | 2.04 / 2.40 |
+| group by | 2,208.4 | 413.4 | 228.2 | 5.34 / 9.68 |
+| LIKE scan | 253.2 | 107.7 | 92.0 | 2.35 / 2.75 |
+| join | 480.6 | 174.4 | 117.2 | 2.76 / 4.10 |
+| top-10 | 799.4 | 289.4 | 211.4 | 2.76 / 3.78 |
 
-The eleven speculative cases are AES-CBC decrypt, AES-CTR, LZ4 compress, MD5, miniz compress and
-decompress, QOI encode and decode, SHA-1, SHA-256 and the 6502 emulator. At width 8 their wall time
-is between 108 and 45,645 times native by paired median: 0.06 ms native against 2,899 ms for QOI decode, 0.2 ms
-against 6,987 ms for the 6502 emulator, 0.2 ms against 225 ms for SHA-256. They split work into
-thousands of regions (67,600 for SHA-256, 77,824 for AES-CTR, 170,390 for the 6502 emulator), each far smaller than the cost of
-dispatching it.
+- All 178 returned samples were exact. Two samples (one in `topk` at 4 shards, one in `group` at 8 shards) received a 409 because a shard object had been evicted, and the owner reloaded it (1.0 to 1.4 s); they carry no result and are not counted as mismatches or speedups.
+- The total VDBE steps are the same in every arm of a query (for example 19.0 million for the group-by in all three arms), so the shards do the same work.
+- Cold load: the whole table took about 1.9 s per 26 MB part; each 13 MB shard about 1.0 to 1.15 s. The measured speedups are for warm shards.
+- The group-by speedup at 8 shards (9.7x on 8 lanes) is above the lane count. Wall per VDBE step is about 116 ns in the serial object and at most about 95 ns per lane in an 8-way shard (that bound includes the fixed round trip), which fits a smaller working set per lane. A Node control found that one worker on a one-eighth shard runs 2.2 times faster per row than one-eighth of the whole-table time, and neither a page cache sized to the shard nor the whole-table cache changed it. About 2.2x of the group-by figure is therefore a single-thread effect of the smaller table, and the cause of that effect is not isolated.
+- The run created and deleted its own script and Durable Object class: no leftover resources and no foreign changes.
 
-All outputs match native in every sample. The diagnostic supports the default threshold of 200,000
-net work units: lowering it on this corpus produces regions and no speedup.
+## Scope
+
+- One account, one coordinator location, one fixture and five queries. The merges are declared by hand for these queries; a general query needs a planner that proves a merge.
+- Speedups use a warm shard set. Shards must stay resident; an evicted shard costs a reload of 1 to 1.4 s.
+- The serial arm holds the full 52.7 MB table in one 128 MB isolate, and it fit.
+- Owner CPU and lane CPU were not parsed from the tail events; the record carries client wall and VDBE steps.
+- The tail events here keep timing, outcome, route and data center only.
+
+## Artifacts
+
+- `run/raw.jsonl`: every request, failures included.
+- `run/samples.json`: per-sample query, arm, equality, warm flag, VDBE steps and wall.
+- `run/loads.jsonl`: the shard uploads and their walls.
+- `run/summary.json` and `run/environment.json`: medians, counts, leftovers and the run record.
+- `run/tail.jsonl`: scrubbed tail events.
 
 ## Reproduction
 
 ```sh
-node scripts/research/admission-diagnostic.ts build/research/forced 60
-FOLIO_CORPUS_ADMISSION=0 node scripts/research/corpus-serial.ts build/research/forced-m6502 3 m6502
+FOLIO_SQLITE_SOURCE=/path/to/sqlite-amalgamation node experiments/sqlite-lanes/prepare.ts
+node experiments/sqlite-lanes/run.ts --dry-run
+FOLIO_CLOUDFLARE_ACCOUNT_ID=... FOLIO_CLOUDFLARE_API_TOKEN=... node experiments/sqlite-lanes/run.ts
+node scripts/research/lane-evidence.ts experiments/sqlite-lanes/runs/<name> results/managed/sqlite-lanes/run
 ```
-
-## Artifacts
-
-- `raw.jsonl`: environment, sample and closed records for the 20 completed cases plus the 900
-  second `m6502` run.
-- `summary.json`: paired summary generated from `raw.jsonl`.
-- `index.json`: the diagnostic's per-case completion table, including the capped `m6502` row.
-- `m6502-capped.jsonl`: the records the 60 second `m6502` process wrote before it was stopped.
-- `manifest.json`: byte lengths and SHA256 digests.
-
-Three paired rounds per arm is a small sample. The ratios are large enough that the sign and order
-of magnitude do not depend on it.

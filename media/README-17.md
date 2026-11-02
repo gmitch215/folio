@@ -1,49 +1,33 @@
-# Backing Ablation
+# Varied Inputs
 
-Question: with the call boundary held equal, does a shared base memory run faster than a copied one?
+Question: does checkpoint reset stay exact when the same private contexts run different inputs?
 
-The [crossover sweep](../crossover/README.md) compared a shared-memory arm with a copied-snapshot arm
-through different entry points, so the comparison changed the boundary as well as the backing. Here
-both backings run the same `runAll` call list with forced speculation. The two modules have the same
-instructions and memory size; only the import's shared flag differs. Cells use 64 `mix` calls at
-1,024 and 65,536 rounds, with none and a quarter of the calls updating one shared word. Arms are
-native and both backings at widths 2, 4 and 8, in 9 paired rounds after 2 warmups. Every sample
-compares complete memory with the native result.
+The [reset study](../reset-policies/README.md) uses one fixed input per kernel. This study builds
+the 21 corpus kernels with a runtime input seed and runs five input profiles (seeds 0 to 4) on two
+persistent `TaskPool` workers. JSON inputs change in size and the FFT phases change. Each result is
+compared with a fresh native instance that ran the same seed: return value, all 8 MiB of memory
+and ordered host effects. Float host effects are compared as IEEE 754 bits, because JSON text
+drops the sign of zero.
 
 ## Results
 
-Paired median speedup over native, shared against copied:
-
-| Cell | Width | Ryzen | M2 Pro |
-| --- | ---: | --- | --- |
-| 65,536 rounds, no conflicts | 4 | 1.22x, 1.21x | 2.74x, 2.67x |
-| 65,536 rounds, no conflicts | 8 | 2.24x, 2.12x | 3.40x, 3.04x |
-| 65,536 rounds, a quarter conflicting | 4 | 1.56x, 1.75x | 1.71x, 1.65x |
-| 65,536 rounds, a quarter conflicting | 8 | 1.48x, 1.67x | 1.87x, 1.86x |
-
-At 1,024 rounds every cell is 0.22x or lower with either backing. Across the 24 cells of each machine
-the two backings differ by up to about 20% in either direction, and neither is consistently faster.
-With the boundary equal, backing is not the limiting cost of speculation. The overlays, dispatch and
-validation are the same work in both.
-
-The Ryzen speedups here are lower than in [graded conflicts](../graded-conflicts/README.md) for the
-same cell (2.24x against 3.50x at width 8 with no conflicts). This run keeps six pools and 28 worker
-threads open and rotates seven arms, which the graded run does not. Compare the two backings inside
-this run and not against the graded figures.
+210 of 210 comparisons match. No context was recreated and `prepareContext` produced no refusal
+for any of the 21 kernels, so every restore used the generalized checkpoint. The record is a
+correctness check on 21 library kernels and carries no timing.
 
 ## Reproduction
 
 ```sh
-node scripts/research/backing.ts build/research/backing 9
-node scripts/research/analyze.ts build/research/backing/raw.jsonl summary.json
+FOLIO_CORPUS_INPUTS_READY=1 node scripts/research/inputs.ts build/research/inputs
 ```
 
-`scripts/research/backing.sh` runs it on the Linux rig under a timing lock with `nice -n 19` and cores 4
-to 11. The M2 Pro record ran unpinned on macOS.
+Omit the variable to build the input-seeded artifacts first. Use a new output path for each run.
+The record ran on an Apple M2 Pro with Node 26.8.2.
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 252 samples each (4 cells, 7 arms, 9 rounds).
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries.
-- `source.tar.gz`: the source the Ryzen run used.
+- `raw.jsonl`: environment, 210 comparison records and a closing record.
 - `manifest.json`: byte lengths and SHA256 digests.
+
+The environment row names the sources by SHA256. An earlier run of the same command against a
+previous revision of `src/compiler.ts` also matched 210 of 210 and is not retained.

@@ -1,77 +1,59 @@
-# Managed Operations
+# Managed Phases
 
-Question: what does one operation cost on managed lanes once setup, the serial oracle, diagnostics
-and close are taken out, and how does the first operation differ from later ones?
+Instrument: [phases](../../../experiments/managed/phases/README.md).
+[METHOD.md](../../../experiments/managed/phases/METHOD.md) defines the comparison and clocks.
+All eight deployed studies restored their account baseline. Records preserve exact completed
+operations and state-loss failures; no memory or return mismatch occurred.
 
-The [phase studies](../phases/README.md) time a whole lifecycle that includes an oracle, frame-copy
-diagnostics and an echo fanout. Here each invocation runs setup, a counted number of operations and
-close, with no diagnostics. Invocations with 0, 1 and 5 operations share the same setup, so the
-difference between counts isolates the first operation and the later ones. The instrument is the
-[phases](../../../experiments/managed/phases/README.md) probe in `measure` mode.
+| Record | Completed Operations | State-Loss Failures | Invocation Structure |
+| --- | ---: | ---: | --- |
+| [separate.json](separate.json) | 77 | 42 | Separate external requests |
+| [held.json](held.json) | 78 | 41 | One entry request per cell |
+| [reentrant-pilot.json](reentrant-pilot.json) | 8 | 2 | Two self-RPC pilot cells |
+| [reentrant.json](reentrant.json) | 77 | 13 | Self-RPC matrix |
+| [settled-separate.json](settled-separate.json) | 49 | 12 | Separate external requests after a 65 second tail settle wait |
+| [width-four.json](width-four.json) | 36 | 0 | Direct calls, width four, 128 KiB and 8 MiB |
+| [large-snapshots.json](large-snapshots.json) | 34 | 2 | Direct calls, width two, 16 MiB and 32 MiB |
+| [complete.json](complete.json) | 32 | 0 | Direct calls within an owner invocation |
 
-## Method
+Each record has a matching `.summary.json`. `settled-separate.json` (61 external requests), `width-four.json` (4) and `large-snapshots.json` (4) are later runs with no SQL calls; the request totals below cover the first five. The settled run feeds the [state-loss analysis](../state-loss/README.md).
 
-Free account, width four, 64 regions of 2,097,152 mixing rounds, arenas of 128 KiB and 8 MiB, native
-(`parallel: 'off'`) and automatic arms, 3 repeats of each count: 36 invocations in a seeded random
-order, one owner per invocation, calls made directly inside the owner so state is not lost between
-requests. Every operation compares its scalar and the whole arena with an oracle and passes. CPU is
-the sum of stored invocation CPU for the entry, owner and lane events of one invocation, joined by
-request identity. 35 of 36 invocations have a complete event set. The 36th (8 MiB, automatic, no
-operations) lost one event and is left out of the CPU medians. Wall time per operation is the
-difference of external wall time between invocations, and bytes come from each operation's report.
-The account baseline was restored. The run made 36 external requests, no SQL calls and no billed
-usage.
+At 16 MiB the four automatic operations complete through the lanes with no fallback and 67.1 MB sent per operation. At 32 MiB, the default snapshot limit, every lane call fails: the serialized frame is 33,554,540 bytes against the platform's 32 MiB limit for RPC arguments. The four operations still complete exact through native fallback (`transportFallbacks` 4), and the two diagnostic frame-copy phases fail with the same error. The usable snapshot is therefore below 32 MiB by the frame header. At width four the wire bytes per automatic operation equal the width-two figures (551,776 at 128 KiB, 33,581,920 at 8 MiB); CPU was not recovered for these runs. The final four-operation cells retain identical
+instance nonces, module UUIDs and object IDs. One cell has complete live-tail CPU; the others retain
+null tail aggregates. [stored.json](stored.json) joins 449 persisted log/event records by request
+identity and recovers all 192 expected invocation metrics, completing CPU for all eight final cells.
+Five studies made 245 measured external requests plus eight readiness requests,
+582 owner RPCs, 688 execution lane RPCs and 224 echo RPCs. Cleanup lane RPCs add at most 314:
+the total request upper bound is 2,061. Some state-loss cleanup calls find no pool, so that is
+not an exact total. Platform administrative API calls and deployment validation are separate.
+The initial refused deployment used global random initialization; its source/log and restored
+baseline remain in the ignored run directory.
 
-## Results
+| Memory | Width | Instrumented Lifecycle Ratio | Snapshot Protocol Bytes / Automatic Operation |
+| --- | ---: | ---: | ---: |
+| 128 KiB | 2 | 1.189x | 551,776 |
+| 128 KiB | 8 | 1.419x | 1,077,696 |
+| 8 MiB | 2 | 0.880x | 33,581,920 |
+| 8 MiB | 8 | 0.841x | 67,137,984 |
 
-Medians of three invocations per count, in milliseconds unless stated.
+| Memory | Width | Native CPU ms / Completed Operation | Automatic CPU ms / Completed Operation |
+| --- | ---: | ---: | ---: |
+| 128 KiB | 2 | 300.25 | 398.50 |
+| 128 KiB | 8 | 300.25 | 383.75 |
+| 8 MiB | 2 | 622.75 | 690.00 |
+| 8 MiB | 8 | 635.75 | 871.25 |
 
-| Arena | Arm | Setup CPU | First operation CPU | Later operation CPU | Later operation wall | Bytes sent per operation |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| 128 KiB | native | 265 | 468 | 211 | 267 | 0 |
-| 128 KiB | automatic | 258 | 315 | 304 | 155 | 541,948 |
-| 8 MiB | native | 285 | 706 | 405 | 425 | 0 |
-| 8 MiB | automatic | 260 | 676 | 676 | 599 | 33,572,092 |
+CPU uses complete stored invocation telemetry for the entire instrumented lifecycle. It includes
+the oracle and diagnostics; it does not isolate region compute, validation or transfer CPU.
 
-Each automatic operation sends four lane requests and receives 9,828 bytes. Every automatic
-operation ran speculatively with no replay, no fallback and no transport fallback.
+Ratios compare one native and one automatic instrumented lifecycle per cell, including oracle,
+four operations, diagnostic frame copies, echo fanout and close. They are not warm application
+speedups. Larger unused canonical heaps increase wire traffic and reverse the small-arena gain.
+First-use/warm automatic latency and every individual report remain in the raw records. The
+current implementation still requires the canonical heap to fit its owner.
 
-- **At 128 KiB a later operation costs more CPU, and its wall time is probably lower.** The
-  automatic arm uses 304 ms of CPU against 211 ms natively (1.44x), spread over the owner and four
-  lanes. Its wall time per operation is 155 ms against 267 ms (1.72x), from invocations of five and
-  one operations that differ by 622 ms and 1,068 ms. That gap of about 450 ms is as large as the spread
-  of setup wall time (671 to 1,112 ms) and rests on three invocations per count, so treat the wall
-  advantage as indicative and not resolved.
-- **The first operation is slower than later ones.** In the automatic arm the owner waits 344 to
-  574 ms for the first operation and 97 to 158 ms for later ones at 128 KiB, and 601 to 661 ms
-  against 334 to 501 ms at 8 MiB. The native arm pays a first-operation CPU premium as well (468
-  ms against 211 ms at 128 KiB).
-- **At 8 MiB there is no window.** A later operation takes 599 ms against 425 ms natively (0.71x),
-  uses 676 ms of CPU against 405 ms (1.67x) and sends 33.6 MB.
-- **Setup costs the same in every cell,** 258 to 285 ms of CPU, because the oracle runs serially at
-  the owner.
-
-So the only window the data points to is a small arena reused for several operations, and the wall-time half of it is not resolved. Three
-repeats per count is a small sample: CPU for one count varies by up to about 200 ms between
-invocations (the native 128 KiB arm reads 541 to 746 ms for one operation), and setup wall time
-alone varies from 671 to 1,112 ms, so wall differences below a few hundred milliseconds are not
-resolved, and the first-operation wall value stored in `operations.json` (21.55 ms for 128 KiB
-automatic) is noise and not a result. Not measured: any
-price, a deployed run at the 31 MiB default, widths other than four, and a different kernel.
-
-## Reproduction
-
-```sh
-FOLIO_PHASE_ENTRY=measure FOLIO_PHASE_WIDTHS=4 node experiments/managed/phases/drive.ts
-node experiments/managed/phases/measure.ts experiments/managed/runs/RUN operations.json
-```
-
-`measure.ts` reads the stored telemetry for the run with the Observability query API and saves the
-response beside the run, where it stays ignored.
-
-## Artifacts
-
-- `operations.json`: costs per arena and arm, and every invocation with its CPU, wall time and
-  per-operation await, bytes and report fields. The stored telemetry response is identified by its
-  SHA256.
-- `manifest.json`: byte lengths and SHA256 digests.
+Public records replace instance/module/object identities with consistent references. Original
+tail and inventories include deployment metadata and remain ignored. Source hashes, environment,
+raw-file digests and before/after baseline equality are in each public record. Analysis uses the
+command in the instrument README; historical source archives remain in the corresponding ignored
+run directory. Paid rate equivalents are models; no attributable paid bill was observed.

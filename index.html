@@ -1,5 +1,5 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@gmitch215/folio - v1.0.1</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
-<div class="tsd-toolbar-contents container"><a href="index.html" class="title">@gmitch215/folio - v1.0.1</a>
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@gmitch215/folio - v1.1.0</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="index.html" class="title">@gmitch215/folio - v1.1.0</a>
 <div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
 <ul role="listbox" id="tsd-search-results"></ul>
 <div id="tsd-search-status" aria-live="polite" aria-atomic="true">
@@ -7,7 +7,7 @@
 <div class="container container-main">
 <div class="col-content">
 <div class="tsd-page-title">
-<h1>@gmitch215/folio - v1.0.1</h1></div>
+<h1>@gmitch215/folio - v1.1.0</h1></div>
 <div class="tsd-panel tsd-typography"><h1 id="🚋-folio" class="tsd-anchor-link">🚋 Folio<a href="#🚋-folio" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
 <blockquote>
 <p>⚡ Shared WebAssembly memory and ordered speculative execution across isolates</p>
@@ -67,9 +67,13 @@ with imported memories, tables, globals and host functions bound as in native in
 <li>⏳ <strong>Asynchronous host effects</strong> through JSPI, executed once and in call order.</li>
 <li>🌐 <strong>Execution host and portable client</strong> for workerd, with sessions, quotas and joined cleanup.</li>
 <li>☁️ <strong>Managed backend</strong> that runs entirely in Workers and Durable Objects, with binary frames and
-copied snapshots between lanes.</li>
+copied snapshots or learned byte ranges between lanes.</li>
 <li>🧰 <strong>Task pool</strong> that runs named functions in private contexts on other threads, with ordered
 joins and an optional differential audit.</li>
+<li>🧮 <strong>Exact chunked recurrences</strong> that split one CRC-32, Adler-32 or AES-CTR stream across the
+task pool and join the chunk states into the serial result.</li>
+<li>🛑 <strong>Stall guard</strong> that stops an iteration batch that does not return and finishes the loop
+serially, for programs whose iterations can loop on state another iteration is changing.</li>
 <li>🧊 <strong>Baked boot images</strong> that write a booted memory into the module as data segments.</li>
 <li>📊 <strong>Opt-in profiling</strong> of worker time, validation, commit and replay cost.</li>
 </ul>
@@ -142,6 +146,21 @@ that are all zero, which saves traffic for sparse arenas, and lanes older than 1
 frames. The snapshot limit is 31 MiB by default. A frame over <code>maximumFrameBytes</code> (the snapshot limit
 plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that call runs at the
 owner and <code>diagnostics</code> names the frame size and the limit. See <a href="media/METHOD.md">the managed procedure</a>.</p>
+<p>Four options change what a call costs. <code>ranges</code> ships the byte ranges a region reads and writes,
+learned from earlier calls, instead of a snapshot: an 8 MiB arena sends about 0.2% of the bytes.
+<code>inline</code> on a <code>FolioLane</code> runs a module that tracks accesses in its own code, so a lane no longer
+calls back into JavaScript on every load and store. <code>runs: true</code> makes lanes answer in sorted byte
+runs that the owner validates and commits as intervals. <code>memo</code> reuses a recorded result when the
+bytes a region read are unchanged, through the same ordered validation. <code>fuel</code> bounds the
+speculative back-edges of one call (100,000,000 by default); a call that runs out finishes serially
+at the owner, so a long kernel needs a larger <code>fuel</code>.</p>
+<p>Lane placement decides whether lanes overlap. Service-bound Worker lanes share a thread with their
+caller, so four of them take as long as one lane run four times. Durable Object lanes run on their
+own isolates and overlap. A decomposition that fits a managed lane is a few large explicit units
+with a merge the caller declares, such as SQLite shards that each scan a row-id range; a loop of
+small records does not pay for a lane call. The
+<a href="media/README.md">sharded SQLite probe</a> runs 1,000,000-row queries 2.0x to 9.7x
+faster than one object at four and eight shards, with every result equal to the serial one.</p>
 <h2 id="🔗-browser-execution-and-page-leases" class="tsd-anchor-link">🔗 Browser Execution and Page Leases<a href="#🔗-browser-execution-and-page-leases" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/browser</code> exports <code>BrowserFolio</code> for Chromium and other hosts without JSPI. It
 takes a precompiled original module and the <code>loops</code>, <code>native</code>, <code>reasons</code> and <code>memories</code> metadata
@@ -182,6 +201,13 @@ start and end time, thread CPU time and byte counts, and <code>peakConcurrency(r
 tasks ran at the same time.</p>
 <p>The pool does not discover independent work. Region discovery and ordered validation stay in the
 core engine, and the task pool covers programs that can say which calls are independent.</p>
+<p><code>@gmitch215/folio/fold</code> covers one case where a single call is not independent but still splits
+exactly. A CRC-32, an Adler-32 or an AES-CTR stream over one input is a recurrence with an exact
+combine, so chunks run on separate tasks and join into the serial result. <code>chunkRanges(length, count, align)</code> cuts the input, <code>foldChunks(pool, input, { task, initial, combine })</code> runs one task
+per chunk and combines the results in order, and <code>crc32Combine</code>, <code>adler32Combine</code> and <code>ctrAdvance</code>
+supply the algebra. AES chunks must be multiples of 16 bytes except the last. Chunks are copied into
+their tasks, and 64 MiB of CRC-32 on eight workers ran 3.52x faster than serial with the result equal
+to <code>zlib.crc32</code>. A recurrence with no known combine, such as one SHA-256 message, stays serial.</p>
 <h2 id="🔄-context-checkpoints" class="tsd-anchor-link">🔄 Context Checkpoints<a href="#🔄-context-checkpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/context</code> resets a private Wasm instance between independent jobs.
 <code>prepareContext(bytes)</code> from <code>@gmitch215/folio/compiler</code> adds exports for every memory, mutable
@@ -443,13 +469,33 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 <td>Apple M2 Pro, 15 paired rounds, compile through first render</td>
 <td>830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image</td>
 </tr>
+<tr>
+<td>Managed range lanes</td>
+<td>deployed Durable Object lanes, 8 MiB arena, 65,536 rounds</td>
+<td>1.98x to 2.00x over serial with <code>fuel</code> raised to 1e9 and 0.2% of the snapshot bytes on the wire; 0.84x to 0.90x at the default fuel, where the owner finishes serially</td>
+</tr>
+<tr>
+<td>Managed SQLite shards</td>
+<td>deployed Durable Object lanes, 1,000,000 rows, 4 and 8 shards, declared merges</td>
+<td>2.0x to 9.7x over one object across five queries, 178 samples equal to the serial result</td>
+</tr>
+<tr>
+<td>Record-level corpus</td>
+<td>30 bulk drivers, Ryzen 9 9900X, three sessions of five rounds</td>
+<td>default admission wins on 7 drivers (SHA-256 2.01x, MD5 1.46x, SHA-1 1.55x, miniz CRC-32 1.52x, AES-CTR 1.21x, LZ4 compress 1.06x); explicit private contexts win on 26 (1.48x to 3.64x on 25); every output equal to the serial one</td>
+</tr>
+<tr>
+<td>Exact chunked recurrences</td>
+<td>one 64 MiB stream, eight task workers, Apple M2 Pro</td>
+<td>CRC-32 4.25x, Adler-32 5.00x, AES-128-CTR 3.69x with shared input; CRC-32 3.52x with copied chunks; outputs equal to <code>zlib</code> and <code>node:crypto</code></td>
+</tr>
 </tbody>
 </table>
 <p>A streaming workload stops improving near four workers, and <code>maximumWorkers</code> caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The
 <a href="documents/TECHNICAL_REPORT.html">technical report</a> lists every figure with its instrument, the raw samples
 live in <a href="media/results">results/</a>, and the Cloudflare probes are described in
-<a href="media/README.md">experiments/</a>.</p>
+<a href="media/README-1.md">experiments/</a>.</p>
 <h2 id="🔧-development" class="tsd-anchor-link">🔧 Development<a href="#🔧-development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build:c</span><span class="hl-1"> </span><span class="hl-3"># compile the C fixtures in tests/c with LLVM</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">typecheck</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test</span><span class="hl-1">             </span><span class="hl-3"># unit gate</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">test:integration</span><span class="hl-1"> </span><span class="hl-3"># local workerd probes and the managed lanes</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">example</span>
 </code><button type="button">Copy</button></pre>
@@ -457,8 +503,8 @@ live in <a href="media/results">results/</a>, and the Cloudflare probes are desc
 <p>Fixtures need <code>clang</code> and <code>wasm-ld</code> with the <code>wasm32</code> target. Tests need Node 26 for JSPI.
 <code>bun run test:coverage</code> runs the unit and integration projects with coverage, and <code>bun run test:e2e</code> deploys the probes to a Cloudflare account when <code>FREE_CLOUDFLARE_ACCOUNT_ID</code> and
 <code>FREE_CLOUDFLARE_API_TOKEN</code> are set; the experiments also accept <code>FOLIO_CLOUDFLARE_ACCOUNT_ID</code> and
-<code>FOLIO_CLOUDFLARE_API_TOKEN</code>. Layout notes live in <a href="media/README-1.md">tests/</a>,
-<a href="media/README-2.md">scripts/</a> and <a href="media/README.md">experiments/</a>.</p>
+<code>FOLIO_CLOUDFLARE_API_TOKEN</code>. Layout notes live in <a href="media/README-2.md">tests/</a>,
+<a href="media/README-3.md">scripts/</a> and <a href="media/README-1.md">experiments/</a>.</p>
 <h2 id="🤝-contributing" class="tsd-anchor-link">🤝 Contributing<a href="#🤝-contributing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Open an issue before a large change. Run <code>bun run typecheck</code>, <code>bun run test</code> and
 <code>bun run prettier:check</code> before sending a pull request. Changes to the compiler need a differential
@@ -504,7 +550,7 @@ samples.</p>
 <li><a href="#🤝-contributing"><span>🤝 <wbr/>Contributing</span></a></li>
 <li><a href="#📄-license"><span>📄 <wbr/>License</span></a></li></ul></div></details></div>
 <div class="site-menu">
-<nav class="tsd-navigation"><a href="modules.html">@gmitch215/folio - v1.0.1</a>
+<nav class="tsd-navigation"><a href="modules.html">@gmitch215/folio - v1.1.0</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
 <li>Loading...</li></ul></nav></div></div></div><footer>
 <p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>

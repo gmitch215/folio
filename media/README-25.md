@@ -1,104 +1,98 @@
-# LZ4 Consumer
+# BLAKE3 Feasibility
 
-Question: does the iteration route speed up a second outside program with a loop over several inputs, and
-what happens to a loop it cannot win?
-
-The program is the C implementation of LZ4 (`lz4/lz4`, commit `ebb370ca83af`, archive SHA256 `eb1a93e9...ffa9`,
-BSD-2-Clause), `lib/lz4.c` built freestanding to wasm32 and unmodified. `scripts/research/cases/lz4-compress-all.c`
-adds one entry, `compress_all(table, n, out, capacity)`, which calls `LZ4_compress_default` for each of `n` inputs
-into its own slot of `capacity` bytes, stores each size after the slots and returns the total compressed
-size. It carries no hint. `scripts/research/lz4-build.ts` checks the archive digest and writes the modules
-below. This record does not interpret the licence file of the project.
-
-Inputs are seeded pseudo-text with a compression ratio of 2.03 to 2.06, generated in the bench. Every sample
-asserts that the output equals the serial run, and the bench decodes the serial output with an independent
-block decoder and checks every input round-trips.
-
-## Modules
-
-| File | What it is |
-| --- | --- |
-| `lz4-compress-all.wasm` | the entry as specified: the slot size is a run-time argument and the loop returns a running total |
-| `lz4-compress-slots-{64k,256k,4m}.wasm` | the same loop with a compile-time slot size (`compress_slots(table, n, out)`), no total, one 4-byte size per loop step ("packed" below) |
-| `lz4-compress-padded-{64k,256k,4m}.wasm` | as `slots`, with each size in its own 32-byte granule ("padded" below) |
-
-A slot is `LZ4_compressBound` of the input rounded up to 4 KiB: 69,632, 266,240 and 4,214,784 bytes for 64 KiB,
-256 KiB and 4 MiB inputs.
-
-## What the route does with it
-
-`prepare(bytes).iterationRoute` on `lz4-compress-all.wasm` is not eligible. The loop is a countdown loop with
-a constant-stride table pointer and a run-time-stride output pointer, which the route accepts, and it also
-writes `total`, a local that the code after the loop reads. The route refuses an accumulator it cannot
-reproduce, so `Folio.run` runs the entry serially. A shared host memory passed to this module gives
-`LinkError` at `Folio.open`, because the module declares an unshared memory; the `default` arm passes an
-unshared memory and runs serially with `reason: unsupported-module`.
-
-The `slots` and `padded` modules are eligible. Their deepest stack use is 16,416 bytes (the 16 KiB
-`LZ4_stream_t`), inside the 32 KiB slot of an iteration.
+Question: why does default admission refuse the BLAKE3 file loop, and would inline tracking with a
+private stack per iteration make it dispatch? The [blake3-consumer](../blake3-consumer/README.md) study
+shows the refusal. This study holds the analysis and the prototype that led to the
+[iteration route](../iteration-route/README.md), so the numbers in the report's BLAKE3 sections can be
+traced to raw records.
 
 ## Method
 
-Ryzen 9 9900X, Node 26.10.0, cores 4 to 11, `nice -n 19`, `powersave` governor, 3 sessions of 9 rounds after
-2 warmups, width 8, one pool alive at a time, each arm paired with a native serial run in the same round.
-Arms: `default` (unshared host memory, serial by design, so about 1.00x is pair noise) and `automatic`
-(`Folio.open(bytes, { memory, workers: 8 })` with a shared host memory, then `run`). Wall time includes
-placing the inputs. Workloads: `large` is 32 inputs of 4 MiB, `small` is 128 inputs of 256 KiB and `tiny` is
-512 inputs of 64 KiB (padded module only).
+**Analysis.** Run on an Apple M2 Pro (Node 26.8.2) with other work in progress (load 3.3 to 6.6), so its
+timings are diagnostic. It used an edited copy of the library (`analysis/fsrc` in `source.tar.gz`) that prints each
+region candidate's estimate and records the reader, writer and address of every conflict. The analysis
+files are `analysis-*`.
+
+**Prototype.** A standalone binaryen pass adds inline read marks (64-byte granules), write marks (32-byte
+granules) and a copy-on-first-write undo record to a module with no host call. A small owner
+dispatches iterations to workers over one shared memory, each on its own 32 KiB stack slot, validates in
+order and rolls back and replays what fails. The loop body is outlined by hand in C (`hash_one`); the
+route in the library does that automatically. Three workloads: `large` (32 inputs of 4 MiB), `small` (128 inputs of
+256 KiB) and `mixed` (the 100-input set, 223,053,295 bytes, two inputs of 64 MiB). Each arm is paired with a
+serial run in the same round, 9 rounds after 2 warmups, three sessions, one pool alive at a time, width
+1 to 8. The `ceiling` arm is the same worker pool with no marks and no validation.
+
+The prototype ran on the Mac (`prototype-mac-*`) and was repeated on the Ryzen 9 9900X (Node 26.10.0,
+cores 4 to 11, `nice -n 19`, `powersave` governor; `prototype-rig-*`).
 
 ## Results
 
-Paired median speedup of the `automatic` arm over the serial run, with the range over rounds, three sessions.
+**Why no region clears the floor.** At the default floor of 200,000 net work the extractor finds 9 pure
+functions and admits none. At `minimumRegionWork` 0 it forms 31 regions from 35 sites. The estimate
+charges 3,600 units per tracked access, and BLAKE3 does at most 40 units of work per access (compress:
+1,291 over 32), so the best site has a net of 0 and `blake3_compress_in_place_portable` has -113,909.
+Counting hook calls on a 1 MiB input gives 774,712 tracked accesses (47.3 per block). Tracked execution
+runs 92x slower than native on 1 MiB, 42x on 64 KiB and 8x on 4 KiB, which is 0.13 to 0.17 microseconds
+per access against the 0.605 that the calibration assigns. A second reason is independent of the
+estimate: the default transaction budget of 262,144 bytes is exhausted by the 26 inputs of 256 KiB or more,
+which hold 99.4% of the bytes of the 100-input set.
 
-| Workload | Module | Session 1 | Session 2 | Session 3 | Outcome of the route |
-| --- | --- | --- | --- | --- | --- |
-| 32 x 4 MiB | packed | 0.99x (0.99 to 1.00) | 0.99x (0.97 to 1.00) | 0.99x (0.99 to 1.00) | `log-exhausted` after a few iterations |
-| 32 x 4 MiB | padded | 0.99x (0.98 to 1.00) | 0.99x (0.99 to 1.00) | 0.99x (0.98 to 1.00) | `log-exhausted` |
-| 128 x 256 KiB | packed | 0.97x (0.95 to 0.99) | 0.97x (0.95 to 0.98) | 0.96x (0.93 to 0.98) | `log-exhausted` |
-| 128 x 256 KiB | padded | 0.97x (0.96 to 0.98) | 0.97x (0.96 to 0.98) | 0.96x (0.93 to 0.98) | `log-exhausted` |
-| 512 x 64 KiB | padded | 0.87x (0.86 to 0.94) | 0.86x (0.86 to 0.92) | 0.87x (0.85 to 0.92) | `no-admission` after one batch |
-| 128 x 256 KiB | spec shape | serial | serial | serial | `unsupported-module`, no route |
+**Why 696 of 4,240 regions replay.** Every conflict is on the shadow stack: one region reads a callee
+frame that an earlier region of the same iteration wrote (`finalize_seek` hands its 32 finished bytes to
+`memcpy`). None touches the table, the output or the inputs. Giving each iteration its own stack slot
+(`analysis-stack-experiment.txt`) leaves all 696 in place, and the same eight reader and writer pairs. The
+conflicts are within one iteration, not across iterations.
 
-The speedup is 1.00x or below in every cell, and there is no cell where the route helps LZ4.
+**Untracked ceiling.** Workers with private stacks and no tracking reach 3.3x on the 100-input set, which two
+64 MiB inputs (30% each) bound (`analysis-ceiling-full.json`).
 
-- **The undo log is the limit.** An iteration that writes more than 2,048 granules (64 KiB) of tracked bytes
-  exhausts its log. At 4 MiB and 256 KiB the compressed output alone is about 2 MiB and 128 KiB, so the
-  first iterations exhaust the log, the batch rolls back, and the loop runs serially with
-  `reason: 'log-exhausted'`. When an iteration fails, the workers start no further iteration of its batch, so
-  the lost work is the iterations already running: 5 to 8 of the 32 of a batch. The cost is 1% to 4% of the
-  serial wall. `Folio.open` has no option for a larger log and no default changed.
-- **The packed size table also conflicts.** Eight 4-byte sizes share one 32-byte write granule, which the
-  validator reports as write-after-write. It never decides the result here, because the log is exhausted
-  first, and the padded module shows the same speedups.
-- **At 64 KiB inputs the iterations fit the log and still lose.** The route runs one batch of 32
-  iterations, finds its wall 2.1 to 3.9 times the serial time of those iterations (iteration 0 takes about
-  0.11 ms) and ends dispatch, which costs 13% of the serial wall (0.87x). The cost of tracked execution and validation of about 1,500 granules per iteration was not
-  separated from dispatch.
-- **Equality.** Output equals the serial run in every sample, and every input round-trips.
+**The prototype, Ryzen machine, width 8.** Speedup over serial, tracked arm, three session medians, and
+tracked over the untracked ceiling:
 
-Limits: one library, one machine, three module families, inputs of a fixed ratio. There is no `explicit` arm
-for LZ4. Whether a larger undo log would make 256 KiB and 4 MiB inputs profitable was not tested, because the
-log capacity is not reachable through `Folio.open`. The 64 KiB workload was added to see the route run
-without a stop for the log.
+| Workload | Tracked | Ceiling | Tracked over ceiling |
+| --- | --- | --- | --- |
+| `large`: 32 x 4 MiB | 3.20x, 3.23x, 3.29x | 4.45x, 4.39x, 5.03x | 1.39, 1.36, 1.53 |
+| `small`: 128 x 256 KiB | 2.47x, 2.46x, 2.49x | 4.38x, 4.66x, 4.38x | 1.77, 1.89, 1.76 |
+| `mixed`: 100-input set | 1.59x, 1.59x, 1.61x | 2.62x, 2.61x, 2.61x | 1.65, 1.64, 1.62 |
+
+Digests and memory equal serial in every sample, and no workload had a replay. The Mac gave 3.73x, 3.20x
+and 1.79x for the same cells. One of three rig sessions on `large` misses a 1.5x overhead bound over the
+ceiling.
+
+**What the prototype found.**
+
+- Ordered validation has to check write-after-read and write-after-write as well as read-after-write,
+  because writes land in place. A negative test (`prototype-test-negative.txt`) shows the
+  read-after-write rule alone ends with memory that differs from serial.
+- A 64-byte write granule makes the 32-byte output slots of neighbouring iterations share a granule, so
+  every batch fails validation (32 of 32 replayed). The 32-byte write granule is the measured design.
+- Tracking costs 1.38x to 1.45x of native on one thread (`prototype-test-single.json`). An earlier estimate
+  of 1.18x to 1.25x left out the mark for the second granule of an access that crosses a boundary.
+- The first Mac run is kept as `prototype-mac-invalid-large-1.jsonl` and is invalid: two arms shared a
+  memory, which left stale write bits and skipped the undo capture for tracked runs at widths 2, 4 and
+  8. It was fixed and all three sessions were rerun.
+
+## Limits
+
+- The analysis timings are diagnostic (loaded Mac, edited library copy). The rig numbers are the ones
+  to quote.
+- The prototype outlines the loop body by hand and is not the library. The library's own measurements are in
+  the iteration-route study and agree within the spread of the rig sessions.
+- One program. The 100-input set is bound by its two 64 MiB inputs at 3.3x before any overhead.
 
 ## Reproduction
 
-```sh
-node scripts/research/lz4-build.ts
-node scripts/research/lz4-bench.ts out.jsonl 9 32 4 slots
-node scripts/research/analyze.ts out.jsonl summary.json
-```
-
-`scripts/research/lz4.sh SESSIONS ROUNDS [OUTPUT_DIRECTORY]` runs the six cells for each session under the timing
-lock with `nice -n 19` and cores 4 to 11. The build downloads the pinned archive and refuses a digest that
-differs.
+`source.tar.gz` holds the analysis scripts (`analysis/`), the edited library copy (`analysis/fsrc`) and the prototype
+(`prototype/`, with `rig.sh`, `smoke.sh` and `run-tests.sh`). The BLAKE3 sources and inputs are the ones of the
+blake3-consumer study; `prototype/gen-sizes.ts` and `analysis/inputs.ts` regenerate the inputs.
 
 ## Artifacts
 
-- `rig-{packed,padded}-{large,small}-N.jsonl`, `rig-padded-tiny-N.jsonl` and `rig-spec-shape-small-N.jsonl` (N
-  from 1 to 3): raw records, with `*.summary.json` paired summaries from `analyze.ts`. `packed` is the
-  `slots` module, `spec-shape` is `lz4-compress-all.wasm`.
-- `lz4-compress-*.wasm`: the modules the sessions ran.
-- `rig-before.log`: memory, load and governor at the start.
-- `source.tar.gz`: `src/`, `scripts/research/` and `package.json` as run.
+- `analysis-*`: census and estimate listings, the stack experiment output, the conflict traces and the
+  ceiling record.
+- `prototype-{rig,mac}-{large,small,mixed}-N.jsonl` (N from 1 to 3): raw records, with
+  `prototype-*.summary.json` and `prototype-mac-*.table.txt` summaries and `prototype-mac-pooled.md`.
+- `prototype-test-*`: equality, negative, random, range, single-thread and test-vector checks.
+- `prototype-*-before.log`, `prototype-*-after.log`: load, memory and governor.
+- `source.tar.gz`: the scripts above.
 - `manifest.json`: byte lengths and SHA256 digests.

@@ -1,41 +1,53 @@
-# `tests/`
+# Experiments
 
-| where                | what                                                                                                                                           | runs                                            |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`                                                                | compiled to `build/*.wasm` by `bun run build:c` |
-| `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, boot image baking, context checkpoints, host, remote, managed, probes, research tooling | `bun run test`, under 5 seconds                 |
-| `tests/helpers/`     | worker entry points the unit tests spawn: the browser bridge and the task pool                                                                 | imported by `tests/unit/`                       |
-| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                                                             | `bun run test:integration`, about 25 seconds    |
-| `tests/e2e/`         | live deploys to a Cloudflare account                                                                                                           | `bun run test:e2e`, skipped without credentials |
+Executable probes for runtime capabilities, native sharing, managed execution and boot images.
+Sanitized records live under [results](../results/README.md). Each harness keeps its METHOD.md;
+raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup and recovery.
 
-`tests/setup.ts` rebuilds the C fixtures when a source file is newer than its output, so a fresh
-checkout runs the gate after installing `clang` and `lld`.
+| Harness                                        | Question                                                                                       | Environment                   |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------- |
+| [Cloud](cloud/README.md)                       | Which runtime capabilities and host transports are available?                                  | workerd and deployed isolates |
+| [Managed](managed/README.md)                   | What do copied snapshots and ordered validation cost?                                          | Durable Objects               |
+| [Browser](browser/README.md)                   | Can agents share an arena and extract counted loops without JSPI?                              | Chromium and Browser Run      |
+| [Consumer](consumer/README.md)                 | How do unchanged applications route and compare with native execution?                         | Chromium, isolates and Node   |
+| [Boot Images](bootimage/README.md)             | How do captured images behave during delivery, startup and replay?                             | workerd and Durable Objects   |
+| [Ordinary Worker Lanes](rpc/README.md)         | Do service-bound Workers overlap CPU work, and what does range transfer save?                  | Deployed Workers (Free)       |
+| [Range Lanes](ranges/README.md)                | Do learned byte ranges over service bindings cut bytes and wall against snapshots?             | workerd and Workers (Free)    |
+| [Concurrent Lane Calls](concurrency/README.md) | Do four lane calls issued at once overlap, and which lane type or placement restores it?       | Deployed Workers (paid)       |
+| [SQLite Lanes](sqlite-lanes/README.md)         | Does sharding a SQLite table across Durable Object lanes speed up queries with an exact merge? | Durable Objects (paid)        |
+| [Corpus Lanes](corpus-lanes/README.md)         | Do corpus kernels run as range lanes over Durable Objects, and at what cost per record?        | workerd and Durable Objects   |
+| [Shared Tools](lib/README.md)                  | Account access, metering, bundling and lifecycle helpers                                       | Node 26                       |
 
-## Fixtures
+## Local Runs
 
-Each C file is a separate artifact and a separate claim. `fixture.c` builds with inlining off and
-holds the counted-loop kernels. `generalized.c` builds with ordinary inlining and holds the branchy
-entry with a scalar carried across iterations. `sharing.c` holds the atomic and aliasing controls.
-`records.c` holds one loop that calls a function per record, the shape the iteration route runs on
-workers, and backs `examples/iteration.ts`.
-Fixture bytes must not depend on the machine's `PATH`; `tests/unit/fixtures.test.ts` checks that.
+```sh
+bun run build:c
+node experiments/cloud/local.ts
+node experiments/cloud/host-probe.ts
+node experiments/managed/prepare.ts
+node experiments/managed/local.ts
+node experiments/browser/extraction/prepare.ts
+node experiments/browser/extraction/local.ts
+```
 
-## Conventions
+Node 26 runs the drivers. Workers are TypeScript bundled by Wrangler, and each Worker
+project has its own tsconfig. Browser assets are compiled before serving them to Chromium.
 
-- One spec file per domain. Extend `managed.test.ts` rather than adding a second managed spec.
-- The gate is hermetic. Nothing in `unit/` opens a network connection or a real Cloudflare binding.
-- Probe workers run in `experiments/`, and their logic is tested here by importing the exports with
-  the platform modules mocked (`browser-probe.test.ts`).
-- A bug fix lands with the regression test that would have caught it.
+## Deployments
 
-## Live Deploys
+`node experiments/deploy.ts KIND` runs the selected bounded probe. It reads
+`FOLIO_CLOUDFLARE_ACCOUNT_ID` and `FOLIO_CLOUDFLARE_API_TOKEN`, with the
+`FREE_CLOUDFLARE_*` CI pair as fallback. It snapshots Workers, Durable Object namespaces,
+KV, R2 and D1 before provisioning and verifies the baseline after retirement and deletion.
+`node experiments/cleanup.ts NAME KIND` resumes cleanup after an interrupted driver.
 
-`tests/e2e/live-deploy.test.ts` runs `experiments/deploy.ts` for the capability probe and the
-managed lanes. Each run snapshots the account's Workers and Durable Object namespaces first and
-fails if they differ afterwards. Set `FOLIO_E2E_BROWSER=1` to include Browser Run, which has a daily
-minute allowance on Free.
+Read the harness METHOD.md for request, storage and session bounds before a live run.
+Browser Run has a daily session allowance. Durable Object rows are shared across all activity
+in the account, and usage meters may lag. A fresh resource name does not reset account quotas.
 
-The Free plan allows 100,000 Durable Object rows written per UTC day across the account. Before the
-first deploy the suite reads the account's rows written today and skips with a notice that names the
-reset time when a run would not fit; a deploy that the platform refuses for the same reason skips
-too, instead of failing. The meter can under-read on Free, so the refusal text is the second check.
+## Evidence
+
+Publish sanitized records under `results/<topic>/<study>/`, with short role names and a README.
+Keep timestamps, source hashes, configuration, sample counts and environment in metadata.
+Label local and deployed results separately. Preserve raw bytes and include failures and resets.
+Source archives retain the measured implementation.

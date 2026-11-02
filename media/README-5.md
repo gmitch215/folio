@@ -1,59 +1,77 @@
-# State Loss
+# Managed Operations
 
-Question: why did the owner lose its in-memory state in the managed phase studies, and is the cause
-replacement, routing or the instrumentation?
+Question: what does one operation cost on managed lanes once setup, the serial oracle, diagnostics
+and close are taken out, and how does the first operation differ from later ones?
 
-The [phase studies](../phases/README.md) preserve four request arrangements and a final
-direct-invocation arrangement. This study reads those records. For each cell it compares the
-identifiers returned by setup with those of later successful operations, groups failures by error
-message, and splits them by whether the cell runs the native workload in the owner (`native`) or
-through lanes (`automatic`). The `settled-separate` record is a new run of the separate-request
-arrangement with the driver's 65 second wait after starting tail, which the older arrangements did
-not have in the same form.
+The [phase studies](../phases/README.md) time a whole lifecycle that includes an oracle, frame-copy
+diagnostics and an echo fanout. Here each invocation runs setup, a counted number of operations and
+close, with no diagnostics. Invocations with 0, 1 and 5 operations share the same setup, so the
+difference between counts isolates the first operation and the later ones. The instrument is the
+[phases](../../../experiments/managed/phases/README.md) probe in `measure` mode.
+
+## Method
+
+Free account, width four, 64 regions of 2,097,152 mixing rounds, arenas of 128 KiB and 8 MiB, native
+(`parallel: 'off'`) and automatic arms, 3 repeats of each count: 36 invocations in a seeded random
+order, one owner per invocation, calls made directly inside the owner so state is not lost between
+requests. Every operation compares its scalar and the whole arena with an oracle and passes. CPU is
+the sum of stored invocation CPU for the entry, owner and lane events of one invocation, joined by
+request identity. 35 of 36 invocations have a complete event set. The 36th (8 MiB, automatic, no
+operations) lost one event and is left out of the CPU medians. Wall time per operation is the
+difference of external wall time between invocations, and bytes come from each operation's report.
+The account baseline was restored. The run made 36 external requests, no SQL calls and no billed
+usage.
 
 ## Results
 
-| Arrangement | Failed operations | In native cells | In automatic cells | Later operations in a new module | On a different object |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Separate external requests | 42 | 33 | 9 | 14 of 121 | 0 |
-| One entry request per cell | 41 | 33 | 8 | 15 of 120 | 0 |
-| Self-RPC | 13 | 10 | 3 | 45 of 149 | 0 |
-| Separate requests after a settle wait | 12 | 12 | 0 | 4 of 41 | 0 |
-| Direct calls in one invocation | 0 | 0 | 0 | 0 of 56 | 0 |
+Medians of three invocations per count, in milliseconds unless stated.
 
-Every failure reports that the owner's state is absent and setup is required. What the records show:
+| Arena | Arm | Setup CPU | First operation CPU | Later operation CPU | Later operation wall | Bytes sent per operation |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| 128 KiB | native | 265 | 468 | 211 | 267 | 0 |
+| 128 KiB | automatic | 258 | 315 | 304 | 155 | 541,948 |
+| 8 MiB | native | 285 | 706 | 405 | 425 | 0 |
+| 8 MiB | automatic | 260 | 676 | 676 | 599 | 33,572,092 |
 
-- **Routing is excluded.** The object identifier never differs from setup's in any later operation.
-- **The owner's state is replaced.** Some later operations report a new module identifier, and
-  every failure finds the state gone. Module identifiers are not isolate identities, so the record
-  does not name the platform event.
-- **The tail wait removes the automatic-cell failures and not the native-cell ones.** Across the
-  three older arrangements, 20 of 96 failures are in automatic cells. After the wait, 0 of 4
-  automatic cells lose state and all 4 native cells do, after 1 to 3 successful operations. Four
-  cells is a small sample, but the direction matches Cloudflare's documentation that starting tail
-  can replace instances.
-- **Native cells lose state with or without the wait.** There the owner runs the 64-region workload
-  itself, 0.3 s to 0.6 s of CPU per operation. The records correlate the loss with that work and do
-  not establish why. Memory size does not explain it, since 128 KiB cells lose state as well.
-- **Direct calls in one invocation lose nothing**, in 32 operations across 8 cells.
+Each automatic operation sends four lane requests and receives 9,828 bytes. Every automatic
+operation ran speculatively with no replay, no fallback and no transport fallback.
 
-A reusable session on this backend cannot assume the owner's state survives between requests, and
-should either rebuild its state from a request that carries it or run every operation inside one
-invocation. The backend does not provide durable recovery of an owner. Whether a longer wait, a
-smaller per-operation CPU cost or a different arrangement keeps native cells alive is untested.
+- **At 128 KiB a later operation costs more CPU, and its wall time is probably lower.** The
+  automatic arm uses 304 ms of CPU against 211 ms natively (1.44x), spread over the owner and four
+  lanes. Its wall time per operation is 155 ms against 267 ms (1.72x), from invocations of five and
+  one operations that differ by 622 ms and 1,068 ms. That gap of about 450 ms is as large as the spread
+  of setup wall time (671 to 1,112 ms) and rests on three invocations per count, so treat the wall
+  advantage as indicative and not resolved.
+- **The first operation is slower than later ones.** In the automatic arm the owner waits 344 to
+  574 ms for the first operation and 97 to 158 ms for later ones at 128 KiB, and 601 to 661 ms
+  against 334 to 501 ms at 8 MiB. The native arm pays a first-operation CPU premium as well (468
+  ms against 211 ms at 128 KiB).
+- **At 8 MiB there is no window.** A later operation takes 599 ms against 425 ms natively (0.71x),
+  uses 676 ms of CPU against 405 ms (1.67x) and sends 33.6 MB.
+- **Setup costs the same in every cell,** 258 to 285 ms of CPU, because the oracle runs serially at
+  the owner.
+
+So the only window the data points to is a small arena reused for several operations, and the wall-time half of it is not resolved. Three
+repeats per count is a small sample: CPU for one count varies by up to about 200 ms between
+invocations (the native 128 KiB arm reads 541 to 746 ms for one operation), and setup wall time
+alone varies from 671 to 1,112 ms, so wall differences below a few hundred milliseconds are not
+resolved, and the first-operation wall value stored in `operations.json` (21.55 ms for 128 KiB
+automatic) is noise and not a result. Not measured: any
+price, a deployed run at the 31 MiB default, widths other than four, and a different kernel.
 
 ## Reproduction
 
 ```sh
-node scripts/research/derive.ts state-loss state-loss.json separate.json held.json reentrant.json settled-separate.json complete.json
+FOLIO_PHASE_ENTRY=measure FOLIO_PHASE_WIDTHS=4 node experiments/managed/phases/drive.ts
+node experiments/managed/phases/measure.ts experiments/managed/runs/RUN operations.json
 ```
 
-with the records from the phase study. The settled run is
-`FOLIO_PHASE_ENTRY=separate FOLIO_PHASE_PAGES=2,128 FOLIO_PHASE_WIDTHS=2,4 node experiments/managed/phases/drive.ts`
-on a Free account, followed by the analyzer with the role `settled-separate`. It made 61 external
-requests, no SQL calls, and restored the account baseline.
+`measure.ts` reads the stored telemetry for the run with the Observability query API and saves the
+response beside the run, where it stays ignored.
 
 ## Artifacts
 
-- `state-loss.json`: counts per arrangement and the SHA256 of each input record.
+- `operations.json`: costs per arena and arm, and every invocation with its CPU, wall time and
+  per-operation await, bytes and report fields. The stored telemetry response is identified by its
+  SHA256.
 - `manifest.json`: byte lengths and SHA256 digests.
