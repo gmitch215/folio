@@ -1,0 +1,160 @@
+{
+	"run": {
+		"name": "cfw-folio-concurrency-67e0a8f9",
+		"startedAt": "2026-11-02T05:28:15.833Z",
+		"account": "SELECTED",
+		"reps": 12,
+		"warmups": 1,
+		"budget": {
+			"invocationCap": 1500,
+			"plannedInvocations": 1381
+		},
+		"priced": {
+			"counts": {
+				"workerRequests": 545,
+				"cpuMs": 137990,
+				"durableObjectRequests": 406,
+				"durableObjectGbSeconds": 921.6
+			},
+			"price": {
+				"usd": {
+					"workerRequests": 0.0001635,
+					"cpu": 0.0027598,
+					"durableObjectRequests": 0.000060899999999999996,
+					"durableObjectDuration": 0.01152
+				},
+				"total": 0.014504200000000002
+			}
+		}
+	},
+	"calibration": {
+		"rounds": {
+			"empty": 0,
+			"low": 86839246,
+			"high": 319651980
+		},
+		"calibration": [
+			{
+				"step": "probe",
+				"rounds": 1000000,
+				"netMs": -3.467333000000508
+			},
+			{
+				"step": "probe",
+				"rounds": 10000000,
+				"netMs": -10.652875000003405
+			},
+			{
+				"step": "probe",
+				"rounds": 100000000,
+				"netMs": 92.39016699999775
+			},
+			{
+				"step": "verify",
+				"pass": 0,
+				"level": "low",
+				"rounds": 75765639,
+				"netMs": 104.23616699999911
+			},
+			{
+				"step": "verify",
+				"pass": 0,
+				"level": "high",
+				"rounds": 368004530,
+				"netMs": 550.3288749999992
+			},
+			{
+				"step": "verify",
+				"pass": 1,
+				"level": "low",
+				"rounds": 50880562,
+				"netMs": 41.01416699999754
+			},
+			{
+				"step": "verify",
+				"pass": 1,
+				"level": "high",
+				"rounds": 227357760,
+				"netMs": 241.83062599999903
+			},
+			{
+				"step": "emptyWallMs",
+				"value": 56.302583000000595
+			}
+		]
+	},
+	"placement": {
+		"hints": [
+			"wnam",
+			"enam",
+			"weur",
+			"apac"
+		],
+		"status": 200,
+		"body": {
+			"coordinator": "IAD",
+			"placements": [
+				{
+					"arm": "worker",
+					"slot": 0,
+					"colo": "IAD"
+				},
+				{
+					"arm": "do-same",
+					"slot": 0,
+					"colo": "IAD"
+				},
+				{
+					"arm": "do-hint",
+					"slot": 0,
+					"colo": "DFW"
+				},
+				{
+					"arm": "worker",
+					"slot": 1,
+					"colo": "IAD"
+				},
+				{
+					"arm": "do-same",
+					"slot": 1,
+					"colo": "EWR"
+				},
+				{
+					"arm": "do-hint",
+					"slot": 1,
+					"colo": "IAD"
+				},
+				{
+					"arm": "worker",
+					"slot": 2,
+					"colo": "IAD"
+				},
+				{
+					"arm": "do-same",
+					"slot": 2,
+					"colo": "IAD"
+				},
+				{
+					"arm": "do-hint",
+					"slot": 2,
+					"colo": "CDG"
+				},
+				{
+					"arm": "worker",
+					"slot": 3,
+					"colo": "IAD"
+				},
+				{
+					"arm": "do-same",
+					"slot": 3,
+					"colo": "IAD"
+				},
+				{
+					"arm": "do-hint",
+					"slot": 3,
+					"colo": "HKG"
+				}
+			]
+		}
+	}
+}

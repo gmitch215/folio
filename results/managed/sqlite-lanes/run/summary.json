@@ -1,0 +1,26 @@
+{
+	"finished": "complete",
+	"invocations": 1254,
+	"samples": 180,
+	"mismatches": 2,
+	"coldWarmViolations": 0,
+	"medianClientMs": {
+		"range/serial": 192.6,
+		"range/shards-4": 94.5,
+		"range/shards-8": 80.2,
+		"group/shards-4": 413.4,
+		"group/shards-8": 228.2,
+		"group/serial": 2208.4,
+		"like/shards-8": 92,
+		"like/serial": 253.2,
+		"like/shards-4": 107.7,
+		"join/serial": 480.6,
+		"join/shards-4": 174.4,
+		"join/shards-8": 117.2,
+		"topk/shards-4": 289.4,
+		"topk/shards-8": 211.4,
+		"topk/serial": 799.4
+	},
+	"leftovers": [],
+	"foreignChanges": []
+}

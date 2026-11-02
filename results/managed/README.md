@@ -5,3 +5,6 @@
 - [state-loss](state-loss/README.md)
 - [operations](operations/README.md)
 - [ordinary-worker-lanes](ordinary-worker-lanes/README.md)
+- [lane-concurrency](lane-concurrency/README.md)
+- [range-lanes](range-lanes/README.md)
+- [sqlite-lanes](sqlite-lanes/README.md)

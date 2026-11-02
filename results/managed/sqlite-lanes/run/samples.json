@@ -1,0 +1,2928 @@
+[
+  {
+    "rep": 0,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 196.90874999999505
+  },
+  {
+    "rep": 0,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 91.09429200000159
+  },
+  {
+    "rep": 0,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 72.79820799999288
+  },
+  {
+    "rep": 0,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 375.2349170000016
+  },
+  {
+    "rep": 0,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 289.1200839999947
+  },
+  {
+    "rep": 0,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 1574.4927089999983
+  },
+  {
+    "rep": 0,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 95.57070899999962
+  },
+  {
+    "rep": 0,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 238.48395800000435
+  },
+  {
+    "rep": 0,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 106.21679199999926
+  },
+  {
+    "rep": 0,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 478.6875
+  },
+  {
+    "rep": 0,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 180.172083999998
+  },
+  {
+    "rep": 0,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 147.7308750000011
+  },
+  {
+    "rep": 0,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 320.6519999999946
+  },
+  {
+    "rep": 0,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 212.12825000000157
+  },
+  {
+    "rep": 0,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 1337.841542000002
+  },
+  {
+    "rep": 1,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 94.24412500000471
+  },
+  {
+    "rep": 1,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 223.5819579999952
+  },
+  {
+    "rep": 1,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 81.15991699999722
+  },
+  {
+    "rep": 1,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 826.875
+  },
+  {
+    "rep": 1,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 200.15574999999808
+  },
+  {
+    "rep": 1,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 251.29991600000358
+  },
+  {
+    "rep": 1,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 111.01970799999981
+  },
+  {
+    "rep": 1,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 158.45054199999868
+  },
+  {
+    "rep": 1,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 457.5210420000003
+  },
+  {
+    "rep": 1,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 99.61108300000342
+  },
+  {
+    "rep": 1,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 250.1984999999986
+  },
+  {
+    "rep": 1,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 85.546792000001
+  },
+  {
+    "rep": 1,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2110.1530420000054
+  },
+  {
+    "rep": 1,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 229.96075000001292
+  },
+  {
+    "rep": 1,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 404.66179099999135
+  },
+  {
+    "rep": 2,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 89.63741700000537
+  },
+  {
+    "rep": 2,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 257.1471670000028
+  },
+  {
+    "rep": 2,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 1,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 1140.015459000002
+  },
+  {
+    "rep": 2,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 562.3475000000035
+  },
+  {
+    "rep": 2,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 201.8039160000044
+  },
+  {
+    "rep": 2,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 109.49183299999277
+  },
+  {
+    "rep": 2,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 310.51329099999566
+  },
+  {
+    "rep": 2,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 428.8820410000044
+  },
+  {
+    "rep": 2,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 1288.2949999999983
+  },
+  {
+    "rep": 2,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 82.10366599999543
+  },
+  {
+    "rep": 2,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 191.25074999999197
+  },
+  {
+    "rep": 2,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 94.27937499999825
+  },
+  {
+    "rep": 2,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2141.813500000004
+  },
+  {
+    "rep": 2,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 609.8691669999971
+  },
+  {
+    "rep": 2,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 313.1142919999984
+  },
+  {
+    "rep": 3,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 249.0986669999984
+  },
+  {
+    "rep": 3,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 98.79620900000737
+  },
+  {
+    "rep": 3,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 108.96270899999945
+  },
+  {
+    "rep": 3,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 226.44045800001186
+  },
+  {
+    "rep": 3,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 437.8589590000047
+  },
+  {
+    "rep": 3,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2222.227792000005
+  },
+  {
+    "rep": 3,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 94.70416600001045
+  },
+  {
+    "rep": 3,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 189.00662500000908
+  },
+  {
+    "rep": 3,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 89.26774999999907
+  },
+  {
+    "rep": 3,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 797.6441659999982
+  },
+  {
+    "rep": 3,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 149.32450000000244
+  },
+  {
+    "rep": 3,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 409,
+    "reloads": 1,
+    "equal": false,
+    "warm": true,
+    "vmSteps": [],
+    "clientWallMs": 1401.1220419999881
+  },
+  {
+    "rep": 3,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 147.11729199999536
+  },
+  {
+    "rep": 3,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 1,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 1157.754958999998
+  },
+  {
+    "rep": 3,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 492.4105409999902
+  },
+  {
+    "rep": 4,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 241.6924169999984
+  },
+  {
+    "rep": 4,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 248.1204590000125
+  },
+  {
+    "rep": 4,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 801.2388339999889
+  },
+  {
+    "rep": 4,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 96.69170799999847
+  },
+  {
+    "rep": 4,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 387.6937909999979
+  },
+  {
+    "rep": 4,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 88.22324999999546
+  },
+  {
+    "rep": 4,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2297.4010830000043
+  },
+  {
+    "rep": 4,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 541.6117499999964
+  },
+  {
+    "rep": 4,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 205.98108300000604
+  },
+  {
+    "rep": 4,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 106.4776669999992
+  },
+  {
+    "rep": 4,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 93.55304199999955
+  },
+  {
+    "rep": 4,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 253.1002090000111
+  },
+  {
+    "rep": 4,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 113.30383299999812
+  },
+  {
+    "rep": 4,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 466.8335420000076
+  },
+  {
+    "rep": 4,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 228.3112919999985
+  },
+  {
+    "rep": 5,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 227.37783299999137
+  },
+  {
+    "rep": 5,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 246.78399999999965
+  },
+  {
+    "rep": 5,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 773.3491250000079
+  },
+  {
+    "rep": 5,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 162.04608400000143
+  },
+  {
+    "rep": 5,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 483.4164579999924
+  },
+  {
+    "rep": 5,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 137.1076250000042
+  },
+  {
+    "rep": 5,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 253.2574159999931
+  },
+  {
+    "rep": 5,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 79.45733399999153
+  },
+  {
+    "rep": 5,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 105.19704199999978
+  },
+  {
+    "rep": 5,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 409,
+    "reloads": 1,
+    "equal": false,
+    "warm": true,
+    "vmSteps": [],
+    "clientWallMs": 1021.2164159999957
+  },
+  {
+    "rep": 5,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 416.57424999999057
+  },
+  {
+    "rep": 5,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2245.272125000003
+  },
+  {
+    "rep": 5,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 106.5570000000007
+  },
+  {
+    "rep": 5,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 193.86012499999197
+  },
+  {
+    "rep": 5,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 1,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 708.4350000000122
+  },
+  {
+    "rep": 6,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2194.640207999997
+  },
+  {
+    "rep": 6,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 434.24316699999326
+  },
+  {
+    "rep": 6,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 219.9012500000099
+  },
+  {
+    "rep": 6,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 101.00837499999034
+  },
+  {
+    "rep": 6,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 79.88154200000281
+  },
+  {
+    "rep": 6,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 243.5175420000014
+  },
+  {
+    "rep": 6,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 105.64216599999054
+  },
+  {
+    "rep": 6,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 480.6039579999924
+  },
+  {
+    "rep": 6,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 408.3166670000064
+  },
+  {
+    "rep": 6,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 836.2201250000071
+  },
+  {
+    "rep": 6,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 338.2198750000098
+  },
+  {
+    "rep": 6,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 152.7446659999987
+  },
+  {
+    "rep": 6,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 96.14999999999418
+  },
+  {
+    "rep": 6,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 63.96416600000521
+  },
+  {
+    "rep": 6,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 191.12545799999498
+  },
+  {
+    "rep": 7,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 410.12758299999405
+  },
+  {
+    "rep": 7,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2139.3419589999976
+  },
+  {
+    "rep": 7,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 279.69166699999187
+  },
+  {
+    "rep": 7,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 186.96345900000597
+  },
+  {
+    "rep": 7,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 72.06879200000549
+  },
+  {
+    "rep": 7,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 87.7173749999929
+  },
+  {
+    "rep": 7,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 210.6047080000135
+  },
+  {
+    "rep": 7,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 327.1990829999995
+  },
+  {
+    "rep": 7,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 781.2332500000048
+  },
+  {
+    "rep": 7,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 163.50141700000677
+  },
+  {
+    "rep": 7,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 483.27675000000454
+  },
+  {
+    "rep": 7,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 136.4275409999973
+  },
+  {
+    "rep": 7,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 248.95933399999922
+  },
+  {
+    "rep": 7,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 83.62920799999847
+  },
+  {
+    "rep": 7,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 99.60833299999649
+  },
+  {
+    "rep": 8,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 116.19637499999953
+  },
+  {
+    "rep": 8,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 478.6355829999957
+  },
+  {
+    "rep": 8,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 193.12537500000326
+  },
+  {
+    "rep": 8,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 773.8499589999992
+  },
+  {
+    "rep": 8,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 292.3591250000027
+  },
+  {
+    "rep": 8,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 206.7300830000022
+  },
+  {
+    "rep": 8,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 95.6887080000015
+  },
+  {
+    "rep": 8,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 76.81487499999639
+  },
+  {
+    "rep": 8,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 204.97704199999862
+  },
+  {
+    "rep": 8,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 300.1273749999964
+  },
+  {
+    "rep": 8,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2242.4970420000027
+  },
+  {
+    "rep": 8,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 430.18395799999416
+  },
+  {
+    "rep": 8,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 267.4608750000043
+  },
+  {
+    "rep": 8,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 121.93274999999267
+  },
+  {
+    "rep": 8,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 90.50054100000125
+  },
+  {
+    "rep": 9,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 496.3702090000006
+  },
+  {
+    "rep": 9,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 112.50037500000326
+  },
+  {
+    "rep": 9,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 160.94800000000396
+  },
+  {
+    "rep": 9,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 1,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 666.1048330000049
+  },
+  {
+    "rep": 9,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 110.47504099999787
+  },
+  {
+    "rep": 9,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 259.4798340000125
+  },
+  {
+    "rep": 9,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 379.28662499999336
+  },
+  {
+    "rep": 9,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2227.248084000006
+  },
+  {
+    "rep": 9,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 217.17775000000256
+  },
+  {
+    "rep": 9,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 225.11837500000547
+  },
+  {
+    "rep": 9,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 107.79991699999664
+  },
+  {
+    "rep": 9,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 95.16912500000035
+  },
+  {
+    "rep": 9,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 239.20766700000968
+  },
+  {
+    "rep": 9,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 244.67433399999572
+  },
+  {
+    "rep": 9,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 756.3815419999883
+  },
+  {
+    "rep": 10,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 95.55466600001091
+  },
+  {
+    "rep": 10,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 73.48908299999312
+  },
+  {
+    "rep": 10,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 187.43970800000534
+  },
+  {
+    "rep": 10,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 222.57474999999977
+  },
+  {
+    "rep": 10,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2255.0106249999953
+  },
+  {
+    "rep": 10,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 404.9232919999922
+  },
+  {
+    "rep": 10,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 268.559500000003
+  },
+  {
+    "rep": 10,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 137.08654099999694
+  },
+  {
+    "rep": 10,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 98.67108299999381
+  },
+  {
+    "rep": 10,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 157.8860410000052
+  },
+  {
+    "rep": 10,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 118.19925000000512
+  },
+  {
+    "rep": 10,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 477.89608299999963
+  },
+  {
+    "rep": 10,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 241.67287500000384
+  },
+  {
+    "rep": 10,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 755.1727499999979
+  },
+  {
+    "rep": 10,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 286.4717079999973
+  },
+  {
+    "rep": 11,
+    "query": "range",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      970026,
+      969998,
+      970023,
+      970008,
+      970016,
+      970004,
+      970017,
+      970014
+    ],
+    "clientWallMs": 79.17445900000166
+  },
+  {
+    "rep": 11,
+    "query": "range",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1940009,
+      1940016,
+      1940005,
+      1940016
+    ],
+    "clientWallMs": 88.9501670000027
+  },
+  {
+    "rep": 11,
+    "query": "range",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      7760001
+    ],
+    "clientWallMs": 182.4077499999985
+  },
+  {
+    "rep": 11,
+    "query": "topk",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      3000021,
+      3000021,
+      3000021,
+      3000021
+    ],
+    "clientWallMs": 240.1235000000015
+  },
+  {
+    "rep": 11,
+    "query": "topk",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      12000021
+    ],
+    "clientWallMs": 1182.742333999995
+  },
+  {
+    "rep": 11,
+    "query": "topk",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021,
+      1500021
+    ],
+    "clientWallMs": 162.70999999999185
+  },
+  {
+    "rep": 11,
+    "query": "join",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      11000015
+    ],
+    "clientWallMs": 480.64908399998967
+  },
+  {
+    "rep": 11,
+    "query": "join",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015,
+      1375015
+    ],
+    "clientWallMs": 141.7131659999868
+  },
+  {
+    "rep": 11,
+    "query": "join",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2750015,
+      2750015,
+      2750015,
+      2750015
+    ],
+    "clientWallMs": 168.65637500000594
+  },
+  {
+    "rep": 11,
+    "query": "like",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      754820,
+      754821,
+      754821,
+      754820,
+      754821,
+      754821,
+      754820,
+      754821
+    ],
+    "clientWallMs": 98.29879200000141
+  },
+  {
+    "rep": 11,
+    "query": "like",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      1509628,
+      1509628,
+      1509629,
+      1509628
+    ],
+    "clientWallMs": 142.28766699999687
+  },
+  {
+    "rep": 11,
+    "query": "like",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      6038474
+    ],
+    "clientWallMs": 255.22208399999363
+  },
+  {
+    "rep": 11,
+    "query": "group",
+    "arm": "shards-4",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      4750984,
+      4750984,
+      4750984,
+      4750984
+    ],
+    "clientWallMs": 399.34504200000083
+  },
+  {
+    "rep": 11,
+    "query": "group",
+    "arm": "serial",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      19000984
+    ],
+    "clientWallMs": 2107.123125000013
+  },
+  {
+    "rep": 11,
+    "query": "group",
+    "arm": "shards-8",
+    "status": 200,
+    "reloads": 0,
+    "equal": true,
+    "warm": true,
+    "vmSteps": [
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984,
+      2375984
+    ],
+    "clientWallMs": 205.9602920000034
+  }
+]

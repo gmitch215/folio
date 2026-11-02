@@ -1,0 +1,56 @@
+{
+	"run": {
+		"name": "cfw-folio-sqlite-lanes-c5924aef",
+		"startedAt": "2026-11-02T08:44:14.904Z",
+		"account": "SELECTED",
+		"reps": 12,
+		"warmups": 2,
+		"budget": {
+			"invocationCap": 1500,
+			"plannedInvocations": 1188
+		},
+		"priced": {
+			"counts": {
+				"workerRequests": 259,
+				"cpuMs": 295797.6,
+				"durableObjectRequests": 929,
+				"durableObjectGbSeconds": 1497.6000000000001
+			},
+			"price": {
+				"usd": {
+					"workerRequests": 0.0000777,
+					"cpu": 0.005915952,
+					"durableObjectRequests": 0.00013935,
+					"durableObjectDuration": 0.018720000000000004
+				},
+				"total": 0.024853002000000006
+			}
+		},
+		"fixture": {
+			"rows": 1000000,
+			"sqlite": 3050004,
+			"whole": {
+				"bytes": 52772864,
+				"sha256": "acadfda8fb3d55849ac2d90935b602d01cdededf4825f8b39f637615ec6f9836"
+			},
+			"sets": {
+				"shards-4": [
+					"6c43273fa963cd1805505f4b56733e697986f2c33795148a5d076b677c011f2b",
+					"3aff8a80261de691f264388b95ef22a35c8b75568efbb1bfd99d5b7e9aa5efe0",
+					"19dd600f2c29ef29793cdbdc378432f9d79d5b3509d77017419fc07c127a73f1",
+					"f9910e3b703a2283f0759a54ecb76fc69e1b885ee5703cd2d0b0e4e60c55adaf"
+				],
+				"shards-8": [
+					"b641f9a5de5c1d0b82f74dfaade0d7d0e9fa51b5499bc99f350075a2c969ba77",
+					"6a76d3902cbe98f38078e4e01fd8b3b979df29428f014259c845df5be26b7ff4",
+					"4a77b875008e133a77a378052a09a472876ed7cae4af8572ebb087c39fabafcb",
+					"de39231ce6aa90e532c067c671909fa33f3977b7565146c05c6d53630fbdf71f",
+					"78bad8fc4d394dc28c0efe2c624b7b823f2fbf24841629fbce1c4fa59ea14801",
+					"f99e9df7916739622f68ca11adf6e7c9fa25f43a0feb6b830f0ba0edeb280fc6",
+					"767f713fd169e83796db31c940e3a9baee4cb90fac68d281c0d1c55d72fafd54",
+					"156d0266f2ef0c16205b08aa65f14f19444b11ddf122735ad466a767582ac704"
+				]
+			}
+		}
+	}
+}

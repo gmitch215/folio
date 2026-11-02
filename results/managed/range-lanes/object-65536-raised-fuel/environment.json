@@ -1,0 +1,46 @@
+{
+	"run": {
+		"name": "cfw-folio-ranges-684a8181",
+		"record": "do-scale-65536-fuel",
+		"startedAt": "2026-11-02T06:14:31.090Z",
+		"account": "SELECTED",
+		"plan": {
+			"checked": false,
+			"reason": "paid plan chosen by FOLIO_RANGES_PLAN"
+		},
+		"lanes": "do",
+		"rounds": 3,
+		"warmups": 2,
+		"sourceSha256": "1df251f1f34ef597d92e920190067efd34c05fe4b982e971c9df35fb5dcf49d1",
+		"budget": {
+			"invocationCap": 6000,
+			"plannedInvocations": 2131,
+			"durableObjectRows": 0,
+			"durableObjectCalls": 1928,
+			"priced": {
+				"counts": {
+					"workerRequests": 243,
+					"cpuMs": 2451046.3999999934,
+					"durableObjectRequests": 1928,
+					"durableObjectGbSeconds": 2669.4320128000004
+				},
+				"price": {
+					"usd": {
+						"workerRequests": 0.0000729,
+						"cpu": 0.049020927999999866,
+						"durableObjectRequests": 0.0002892,
+						"durableObjectDuration": 0.033367900160000005
+					},
+					"total": 0.08275092815999988
+				},
+				"activeSeconds": 2606.8672,
+				"objects": 8
+			}
+		}
+	},
+	"calibration": {
+		"survived": {},
+		"calibration": [],
+		"chosen": 65536
+	}
+}
