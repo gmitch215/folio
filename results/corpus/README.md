@@ -21,6 +21,8 @@
 - [Iteration Admission](iteration-admission/README.md)
 - [LZ4 Consumer](lz4-consumer/README.md)
 - [SHA-256 Consumer](sha256-consumer/README.md)
+- [Record-Level Rig](record-level-rig/README.md)
+- [Stall Guard Overhead](stall-guard-overhead/README.md)
 
 Explicit task-batch acceleration, automatic extraction of one entry and automatic dispatch of a loop of
 calls are separate results. See the
