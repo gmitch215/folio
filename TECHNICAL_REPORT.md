@@ -3043,16 +3043,16 @@ its input files.
 Current gate on Node 26.8.2 (run 2026-11-02): typecheck passes for the library and eight experiment
 projects (`cloud`, `managed`, `browser`, `consumer`, `rpc`, `ranges`, `concurrency` and
 `sqlite-lanes`), `prettier --check .` is clean, and the library builds with `tsc -p
-tsconfig.build.json`, including the `folio/fold` subpath. The unit project passes **796 tests** in 52
-files and the integration project **23 tests** in 6 files, against the local workerd. The corpus
+tsconfig.build.json`, including the `folio/fold` subpath. The unit project passes **797 tests** in 52
+files and the integration project **23 tests** in 6 files, against the local workerd (820 in 58 files
+under `vitest run --project unit --project integration --coverage`). Coverage on the same run is
+92.38% of statements, 88.10% of branches, 95.41% of functions and 94.25% of lines. The corpus
 lanes project (`experiments/corpus-lanes`) is not in the typecheck script because it imports a
-generated artifact that needs the corpus build. Coverage, the examples and the documentation build
-were last run on 2026-10-30, at 544 unit tests: coverage was
-91.00% of statements, 87.13% of branches, 93.30% of functions and 93.20% of lines. The library builds,
-and the six examples in `examples/` run. `examples/basic.ts` reports four workers and four
+generated artifact that needs the corpus build. The six examples in `examples/` run on this tree.
+`examples/basic.ts` reports four workers and four
 native-shared regions with zero replays and fallbacks, and `examples/iteration.ts` reports 31 dispatched
 iterations, no replay and digests equal to the serial run. The generated documentation builds with
-nonfatal documentation warnings. The integration project runs the host probe, the capability probe
+0 errors and 130 nonfatal documentation warnings. The integration project runs the host probe, the capability probe
 and all 39 managed rows in local workerd (1.20261019.1). `worker.ts`, `browser-worker.ts` and
 `iteration-worker.ts` run outside the coverage provider's instrumented realm.
 The dedicated FREE browser extraction deployment passed and restored its baseline; the general
@@ -3062,11 +3062,15 @@ extractor are retained in `results/compatibility/sources/source.tar.gz`, which a
 first copy of the Drupal harness that `scripts/probe/php-render.ts` replaces.
 
 Evidence accounting comes from `node scripts/research/evidence.ts`. The index in `results/index.json`
-preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 35 studies and
-339 artifacts (57,883,840 bytes): 33 `manifest.json` records and the 2 `artifacts.json` records of the
-boot configuration and lifecycle studies. `results/execution/source/manifest.json` lists sources
-under another schema and is not a study. `--summaries` regenerates the 171 summary files from
-their raw samples and finds all equal. The published v1.0.0 package resolves to
+preserves 315 historical artifacts (21,297,535 bytes) unchanged. The verifier checks 40 studies and
+390 artifacts (63,510,933 bytes): 38 `manifest.json` records and the 2 `artifacts.json` records of the
+boot configuration and lifecycle studies. The five v1.1 studies (lane concurrency, range lanes,
+sharded SQLite lanes, the record-level rig and the stall guard overhead) carry manifests written by
+`scripts/research/export.ts --manifest`, so their bytes and hashes are inside the same gate.
+`results/execution/source/manifest.json` lists sources under another schema and is not a study.
+`--summaries` compares 179 summary files and finds all equal: 171 regenerate from their raw samples,
+and the 8 of the lane studies are exporter output that the comparison copies unchanged, so for them
+it checks only that the file is intact. The published v1.0.0 package resolves to
 `b2b67f8f9656ee50c22f44941a6b831a39a77123`. The studies of the Independent Corpus section run through
 `scripts/research/` (see its README), most of them on the Ryzen rig through `matched.sh`,
 `backing.sh` and `focused.sh`.
