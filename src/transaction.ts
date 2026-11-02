@@ -4,9 +4,19 @@ export interface TransactionResult {
 	value?: unknown;
 	reads: number[];
 	writes: [number, number][];
+	/** Run encoding: read runs as flat start, length pairs; `reads` is then empty. See `runs.ts`. */
+	readRuns?: Uint32Array;
+	/** Run encoding: write runs as flat start, length pairs; `writes` is then empty. */
+	writeRuns?: Uint32Array;
+	/** Run encoding: the bytes of every write run, back to back. */
+	writeData?: Uint8Array;
 	trap?: string;
 	errorKind?: string;
 	exhausted?: boolean;
+	/** Ranges mode: reads of bytes that were not shipped. Informational; owners recompute it. */
+	escapes?: [number, number][];
+	/** Ranges mode: a trap or exhaustion that unshipped zeros may have caused. */
+	inconclusive?: boolean;
 	timing?: { wallMs: number; cpuMs: number };
 }
 

@@ -1,4 +1,5 @@
 import type { ExecutionProfile, ExecutionReport } from './node.ts';
+import { DirtyRuns, runBytes } from './runs.ts';
 import type { TransactionResult } from './transaction.ts';
 
 export interface RegionCall {
@@ -155,14 +156,19 @@ export class Coordinator {
 		const failure = outcomes.find((outcome) => outcome.status === 'rejected');
 		if (failure?.status === 'rejected') throw failure.reason;
 		const dirty = new Set<number>();
+		const dirtyRuns = new DirtyRuns();
 		const canonical = new Uint8Array(this.#memory.buffer);
 		const shared = new Uint8Array(this.#workerMemory.buffer);
 		const observe = (result: TransactionResult) => {
 			if (!this.#profile) return;
 			this.#profile.workerWallMs.push(result.timing!.wallMs);
 			this.#profile.workerCpuMs.push(result.timing!.cpuMs);
-			this.#profile.readBytes += result.reads.length;
-			this.#profile.writeBytes += result.writes.length;
+			this.#profile.readBytes += result.readRuns
+				? runBytes(result.readRuns)
+				: result.reads.length;
+			this.#profile.writeBytes += result.writeData
+				? result.writeData.length
+				: result.writes.length;
 		};
 		const commit = (result: TransactionResult) => {
 			const start = this.#profile ? performance.now() : 0;
@@ -171,6 +177,26 @@ export class Coordinator {
 				if (this.#memory !== this.#workerMemory) shared[address] = value;
 				dirty.add(address);
 			}
+			if (result.writeRuns) {
+				let at = 0;
+				for (let i = 0; i < result.writeRuns.length; i += 2) {
+					const start = result.writeRuns[i]!,
+						length = result.writeRuns[i + 1]!;
+					const data = result.writeData!;
+					const mirror = this.#memory !== this.#workerMemory;
+					if (length > 16) {
+						const piece = data.subarray(at, at + length);
+						canonical.set(piece, start);
+						if (mirror) shared.set(piece, start);
+					} else
+						for (let k = 0; k < length; k++) {
+							canonical[start + k] = data[at + k]!;
+							if (mirror) shared[start + k] = data[at + k]!;
+						}
+					dirtyRuns.add(start, length);
+					at += length;
+				}
+			}
 			if (this.#profile) this.#profile.commitMs += performance.now() - start;
 		};
 		for (let i = 0; i < batch.length; i++) {
@@ -178,7 +204,18 @@ export class Coordinator {
 			let result = outcome.value[Math.floor(i / width)]!;
 			observe(result);
 			const start = this.#profile ? performance.now() : 0;
-			const conflict = result.reads.some((address) => dirty.has(address));
+			// a batch's results share one encoding; both paths stay exact if they ever mix
+			const stored = dirtyRuns.count > 0;
+			const conflict =
+				result.reads.some(
+					(address) => dirty.has(address) || (stored && dirtyRuns.has(address))
+				) ||
+				(result.readRuns !== undefined &&
+					(dirtyRuns.overlaps(result.readRuns) ||
+						(dirty.size > 0 &&
+							[...dirty].some((address) =>
+								overlapsRuns(result.readRuns!, address)
+							))));
 			if (this.#profile) this.#profile.validationMs += performance.now() - start;
 			if (result.exhausted || conflict) {
 				if (result.exhausted) this.report.fallbacks++;
@@ -202,4 +239,16 @@ export class Coordinator {
 			trap(result);
 		}
 	}
+}
+
+function overlapsRuns(runs: Uint32Array, address: number): boolean {
+	let low = 0,
+		high = runs.length / 2 - 1;
+	while (low <= high) {
+		const mid = (low + high) >> 1;
+		if (runs[mid * 2]! > address) high = mid - 1;
+		else if (runs[mid * 2]! + runs[mid * 2 + 1]! <= address) low = mid + 1;
+		else return true;
+	}
+	return false;
 }
