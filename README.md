@@ -240,7 +240,10 @@ then `join(handle)` blocks until the output arrives, or `joinAsync(handle)` wait
 the event loop. `run(jobs)` submits a list and returns the results in submission order, and
 `runSync(jobs)` does the same where the caller cannot yield, such as inside a synchronous Wasm
 import. Input and output are strings or bytes, `submitJson` and `result.json()` cover structured
-values, and `pool.width` limits how many workers take tasks.
+values, and `pool.width` limits how many workers take tasks. Input on a `SharedArrayBuffer` is copied
+at submit so a later write cannot reach the task. `submit`, `run` and `runSync` take `{ share: true }`
+to post such an input as it is, which removes the copy when the caller promises not to write those
+bytes until the task is joined.
 
 ```ts
 import { Worker } from 'node:worker_threads';
@@ -324,6 +327,13 @@ instance for each job. Memory or table growth throws `ContextResetError` before 
 written, and the caller instantiates a new context. Host resources and the objects behind
 `externref` values stay with the caller. `restore()` reads every page, so its cost follows the memory
 size and not the number of changed pages.
+
+A job that writes its whole input region before it runs can skip that region.
+`restore('changed', ranges)` takes `{ offset, length }` ranges (and a `memory` index when the plan has
+more than one) that it neither compares nor copies back, and `skippedBytes` in the report counts them.
+The caller must write every byte of a range before the program reads it, because those bytes keep the
+previous job's contents. Everything outside the ranges is restored as before, and an invalid range
+throws a `RangeError` before anything changes.
 
 ## 🧊 Baked Boot Images
 
