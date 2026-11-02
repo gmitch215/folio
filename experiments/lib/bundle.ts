@@ -4,13 +4,12 @@ import { mkdtempSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Kind } from './cloudflare.ts';
 import { wranglerPath } from './cloudflare.ts';
 
 const repository = fileURLToPath(new URL('../../', import.meta.url));
 
 // wrangler's dry run bundles the worker exactly as a deploy would, with no account or network
-export function bundle(kind: Kind, config = `experiments/${kind}/wrangler.jsonc`) {
+export function bundle(kind: string, config = `experiments/${kind}/wrangler.jsonc`) {
 	const outdir = mkdtempSync(join(tmpdir(), `folio-${kind}-bundle-`));
 	execFileSync(
 		process.execPath,
