@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+
+- `@gmitch215/folio/slices` with `SlicePool` and `SliceConflictError`. `run(entry, count, args)` calls an
+  exported function over slices of a range on one shared memory, with one private stack per worker for a
+  module that keeps a stack pointer global, no copy and no tracking. The caller declares the calls
+  independent; `audit: true` replays the slices serially on a copy of the memory and throws when a returned
+  value or a byte below the stacks differs.
+- `{ share: true }` for `TaskPool.submit`, `run` and `runSync`, which posts a `SharedArrayBuffer` input
+  without copying it. The default still copies.
+- `restore(strategy, overwrite)` on `InstanceCheckpoint`: ranges the caller rewrites before the next read are
+  neither compared nor copied back, and `ContextResetReport` gains `skippedBytes`. `ContextRange` is exported.
+- `@gmitch215/folio/fold` with `chunkRanges`, `foldChunks`, `crc32Combine`, `adler32Combine` and
+  `ctrAdvance`, which split a CRC-32, Adler-32 or AES-CTR stream across the task pool and join the chunk
+  states into the serial result.
+- Iteration route options `iterationReadWindows`, `iterationReadSummary`, `iterationSecondChance`,
+  `iterationLogCeiling` and `iterationStall`, all off by default. Slot windows, verdict memory and
+  cold-start admission were added to the route. A module-local `call_indirect` table no longer refuses a loop.
+- `ManagedFolio` options `ranges`, `runs`, `memo` and `inline`, and the paged, hash-verified `Lease`
+  (`src/lease.ts`, with `LeaseMismatch`) for immutable content. Managed lanes ship learned byte ranges,
+  answer in runs, track inline in a lane and reuse recorded region results.
+- Research tooling under `scripts/research/` for the corpus, the lane studies and the rig, and
+  `export.ts --manifest` so every study sits under the evidence gate. The report carries a Correctness
+  Boundary, a Related Work section and the measured limits of each route.
+
+### Changed
+
+- A refused loop in the iteration route is now re-admitted from the median of its serial block means, not the
+  lower of the last two, so records of different sizes no longer hide a loop that wins. The first batch after
+  a call that stopped on cost is one iteration per worker, and ordered validation is linear in the pairs
+  it checks.
+- `ContextResetReport` has a new field, `skippedBytes`, always present and zero without `overwrite`.
+
 ## 1.0.1
 
 ### Added

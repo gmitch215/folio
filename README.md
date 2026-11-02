@@ -20,6 +20,7 @@ the same engine.
 - [Managed Workers](#-managed-workers)
 - [Browser Execution and Page Leases](#-browser-execution-and-page-leases)
 - [Task Pool](#-task-pool)
+- [Slice Pool](#-slice-pool)
 - [Context Checkpoints](#-context-checkpoints)
 - [Baked Boot Images](#-baked-boot-images)
 - [Execution and Memory](#-execution-and-memory)
@@ -35,12 +36,14 @@ the same engine.
 A Worker, a Linux machine in a Durable Object and a PHP interpreter all end up as one Wasm
 instance on one thread. Folio spreads the work of that instance across cores without asking the
 program to be rewritten. The caller passes one ordinary entry point. The compiler discovers the
-regions, so there are no access annotations and no caller-created chunks.
+regions, so on the automatic route there are no access annotations and no caller-created chunks. The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report says which checks each route runs.
 
 - **Native Sharing.** Isolates map the same backing allocation, so a 256 MiB arena costs about 4 MiB
   to attach to another isolate instead of a copy.
-- **Serial Semantics.** Uncertain dependencies run on private overlays and commit in original
-  order. A conflict replays against committed state, and a trap keeps its preceding writes.
+- **Serial Semantics.** On the automatic routes, uncertain dependencies run on private overlays and
+  commit in original order. A conflict replays against committed state, and a trap keeps its
+  preceding writes. Routes where the caller declares independence keep that contract and offer an
+  audit.
 - **Original Stack.** JSPI suspends the program's own Wasm stack at joins, so branches, scalar
   carry and host effects behave as they do natively.
 - **Portable.** The client and the managed backend use fetch, WebSockets and Durable Objects, with
@@ -63,6 +66,8 @@ and a small job loses to dispatch overhead.
   copied snapshots or learned byte ranges between lanes.
 - 🧰 **Task pool** that runs named functions in private contexts on other threads, with ordered
   joins and an optional differential audit.
+- 🍰 **Slice pool** that runs slices of a call range in place on one shared memory, with a private
+  stack per worker and an optional serial audit, for calls the caller declares independent.
 - 🧮 **Exact chunked recurrences** that split one CRC-32, Adler-32 or AES-CTR stream across the
   task pool and join the chunk states into the serial result.
 - 🛑 **Stall guard** that stops an iteration batch that does not return and finishes the loop
@@ -127,7 +132,7 @@ stays serial and the report names the reason.
 
 ## 🧩 Examples
 
-The [examples](examples) run against the built package with `node examples/<name>.ts` after `bun run build:c` and `bun run build`: `basic` runs one entry, `routing` reads the report and shows capped and adaptive routing, `iteration` runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, `context-reset` resets a private instance between jobs, `task-pool` joins independent jobs in order, and `boot-image` bakes captured memory into a module.
+The [examples](examples) run against the built package with `node examples/<name>.ts` after `bun run build:c` and `bun run build`: `basic` runs one entry, `routing` reads the report and shows capped and adaptive routing, `iteration` runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, `context-reset` resets a private instance between jobs, `task-pool` joins independent jobs in order, `slice-pool` fills one shared memory from several threads and audits the run against the serial one, and `boot-image` bakes captured memory into a module.
 
 ## ⏳ Asynchronous Host Effects
 
@@ -294,6 +299,47 @@ per chunk and combines the results in order, and `crc32Combine`, `adler32Combine
 supply the algebra. AES chunks must be multiples of 16 bytes except the last. Chunks are copied into
 their tasks, and 64 MiB of CRC-32 on eight workers ran 3.52x faster than serial with the result equal
 to `zlib.crc32`. A recurrence with no known combine, such as one SHA-256 message, stays serial.
+
+## 🍰 Slice Pool
+
+`@gmitch215/folio/slices` runs an exported function over a range of calls on several threads, on one
+shared memory, with no copy and no tracking. The caller declares that the calls are independent. A
+`SlicePool` compiles the module once, marks its imported memory shared, grows the memory by one
+private stack per worker when the module keeps a stack pointer global, and starts the workers.
+`run(entry, count, args)` splits `[0, count)` into slices, and `args(from, to)` returns the arguments
+of the call for a slice. The records go into `pool.memory` after `open`, because opening applies the
+module's data segments, and the results are read from it afterwards.
+
+```ts
+import { SlicePool } from '@gmitch215/folio/slices';
+
+const memory = new WebAssembly.Memory({ initial: 256, maximum: 4096, shared: true });
+const pool = await SlicePool.open(bytes, { memory, workers: 8 });
+write(pool.memory, records); // table, input bytes and an output area
+
+const report = await pool.run('bulk', records.length, (from, to) => [
+  table + 16 * from,
+  to - from,
+  out + from * slot
+]);
+read(pool.memory, out, records.length * slot);
+await pool.close();
+```
+
+The module must import its memory with a declared maximum that leaves room for the stacks, and keep
+at most one mutable global, which is taken to be the stack pointer. A start function, a dropped
+data segment or a second mutable global refuses the module. Arguments and results are i32 or i64
+(`bigint`). Imports other than the memory come from `imports`, a module specifier whose default export
+returns them, because functions do not cross threads.
+
+Nothing here checks independence. A program that writes state the serial program would share
+returns a different result. `run(..., { audit: true })` copies the memory before the run, runs the
+same slices serially on the copy and compares every returned value and every byte below the
+stacks, and throws `SliceConflictError` with the first difference. The audit costs a serial run and a
+memory copy and is meant for tests and canaries. A route that copies each task's records into a
+private context cannot win on a kernel whose speed is the copy's bandwidth; the slice pool has no
+copy, and on the quiet rig xxHash, Adler-32 and LZ4 decompress over thousands of records ran 1.7x
+to 4.9x faster than serial on eight workers (see the technical report).
 
 ## 🔄 Context Checkpoints
 
