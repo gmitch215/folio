@@ -14,6 +14,7 @@ import {
 	type IterationStop,
 	admissionSeam,
 	batchBound,
+	probeEstimate,
 	projectBatch,
 	refineEstimate
 } from './iteration-admission.ts';
@@ -1249,6 +1250,9 @@ export class IterationPool {
 		let block = 1;
 		let last = plainMs;
 		let estimate = plainMs;
+		const means = [plainMs];
+		let probed = 0;
+		let spent = 0;
 		let k = 1;
 		while (k < job.trip) {
 			const size = job.reconsider ? Math.min(block, job.trip - k) : job.trip - k;
@@ -1257,9 +1261,13 @@ export class IterationPool {
 				report.serial++;
 				job.replay(k + i);
 			}
-			const per = (performance.now() - t) / size;
+			const elapsed = performance.now() - t;
+			const per = elapsed / size;
 			k += size;
-			estimate = Math.min(last, per);
+			probed += size;
+			spent += elapsed;
+			means.push(per);
+			estimate = probeEstimate(admissionSeam.estimator, last, per, means, spent / probed);
 			last = per;
 			block = Math.min(block * 2, this.arena.batch);
 			if (report.admission) report.admission.estimateMs = estimate;

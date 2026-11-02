@@ -137,8 +137,30 @@ export const admissionSeam = {
 	batchScale: 1,
 	force: false,
 	trace: false,
-	gate: true
+	gate: true,
+	estimator: 'median' as 'min' | 'median' | 'mean' | 'q75'
 };
+
+/**
+ * The serial estimate the probe holds after a block: the lower of the last two block means, the
+ * median of every block mean so far, or the mean of every probed iteration.
+ * @internal
+ */
+export function probeEstimate(
+	kind: 'min' | 'median' | 'mean' | 'q75',
+	last: number,
+	per: number,
+	means: number[],
+	mean: number
+): number {
+	if (kind === 'mean') return mean;
+	if (kind === 'min') return Math.min(last, per);
+	const sorted = [...means].sort((x, y) => x - y);
+	if (kind === 'q75')
+		return sorted[Math.min(sorted.length - 1, Math.ceil(0.75 * sorted.length) - 1)]!;
+	const mid = sorted.length >> 1;
+	return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
+}
 
 /** `admitIteration` through the seam; what the host function calls. */
 export function decideAdmission(

@@ -38,6 +38,7 @@ import {
 	decideProof,
 	decideRemaining,
 	iterationAdmissionConstants,
+	probeEstimate,
 	probeFraction,
 	projectBatch,
 	proofBound,
@@ -3613,3 +3614,21 @@ test('a loop that wins is not stopped by the bound, and the real bound of a chea
 	}
 });
 // #endregion
+
+test('the probe estimate is the median of the block means, so a mix of record sizes does not pull it to the cheapest', () => {
+	// block means over one size cycle of an MD5-like loop whose largest record takes 0.105 ms
+	const means = [0.105 / 8, 0.105, 0.105 / 4, 0.105 / 16, 0.105 / 2];
+	const last = means[4]!;
+	const before = means[3]!;
+	const mean = means.reduce((x, y) => x + y, 0) / means.length;
+	assert.equal(admissionSeam.estimator, 'median');
+	assert.equal(probeEstimate('min', before, last, means, mean), before);
+	assert.equal(probeEstimate('median', before, last, means, mean), 0.105 / 4);
+	assert.equal(probeEstimate('mean', before, last, means, mean), mean);
+	assert.equal(probeEstimate('q75', before, last, means, mean), 0.105 / 2);
+	assert.equal(probeEstimate('median', 0.01, 0.02, [0.01, 0.02], 0.015), 0.015);
+	assert.equal(probeEstimate('median', 0.01, 0.01, [0.01], 0.01), 0.01);
+	// 127 iterations remain and the floor is 2.5 ms: the minimum stays under it and the median clears it
+	assert.ok(127 * probeEstimate('min', before, last, means, mean) < 2.5);
+	assert.ok(127 * probeEstimate('median', before, last, means, mean) > 2.5);
+});
