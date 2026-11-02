@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { expect, test } from 'vitest';
 import { distribution, summarizeResearch } from '../../scripts/research/analyze.ts';
+import { sharedMemoryImport } from '../../scripts/research/c21-common.ts';
 import { kernelResults, kernelTable, speedupCounts } from '../../scripts/research/denominators.ts';
 import {
 	blockerHistogram,
@@ -373,4 +374,30 @@ test('operation costs separate setup, the first operation and later ones by diff
 	expect(costs.invocationsWithCpu).toBe(4);
 	expect(costs.ownerAwaitMs).toEqual({ firstOperation: 30, laterOperation: 10 });
 	expect(costs.bytesPerOperation).toEqual({ sent: 100, received: 5 });
+});
+
+test('the in-place patch makes an imported memory shared and refuses a memory without a maximum', () => {
+	const compile = (limits: string) => {
+		const module = binaryen.parseText(`(module (import "env" "memory" (memory ${limits})))`);
+		try {
+			const compact = (binaryen.Features as unknown as { CompactImports: number })
+				.CompactImports;
+			module.setFeatures(binaryen.Features.All & ~compact);
+			return Uint8Array.from(module.emitBinary());
+		} finally {
+			module.dispose();
+		}
+	};
+	const bytes = compile('1 4');
+	expect(() => new WebAssembly.Module(bytes)).not.toThrow();
+	const patched = sharedMemoryImport(bytes);
+	const memory = new WebAssembly.Memory({ initial: 1, maximum: 4, shared: true });
+	expect(
+		() => new WebAssembly.Instance(new WebAssembly.Module(patched), { env: { memory } })
+	).not.toThrow();
+	expect(
+		() => new WebAssembly.Instance(new WebAssembly.Module(bytes), { env: { memory } })
+	).toThrow(WebAssembly.LinkError);
+	expect(bytes).not.toEqual(patched);
+	expect(() => sharedMemoryImport(compile('1'))).toThrow('maximum');
 });

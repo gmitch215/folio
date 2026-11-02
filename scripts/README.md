@@ -144,9 +144,11 @@ FOLIO_RIG_NODE=/path/to/node FOLIO_RESEARCH_REVISION=rig-label \
   bash scripts/research/c21-arms.sh 3 5 build/research/c21-runs/arms
 ```
 
+`C21_OVERWRITE=1` makes the worker pass the ranges `writeRecords` sets to `restore()`, so the reset skips them. `C21_ARMS=inplace` runs the in-place arm: one shared memory holds the records and each worker runs a slice of the bulk entry on the unmodified module with its own stack (`c21-inplace-worker.ts`), for specs without a config block and with at most the stack pointer global. `copy-bandwidth.mjs` measures how fast 1, 2, 4 and 8 threads copy a shared buffer into a wasm memory.
+
 `C21_SHARED=1` makes the explicit arm encode each task into a `SharedArrayBuffer` and submit it with
 `{ share: true }`, so the pool posts the bytes without copying them. `c21-shared.sh` runs the
-explicit arm for five programs at n of 64, 512 and 4096, copied and shared, one fresh process per
+explicit arm for five programs at n of 64, 512 and 4096 as copy, shared, skip and in-place variants, one fresh process per
 cell under the same lock and pinning. `C21_PROGRAMS`, `C21_SIZES` and `C21_VARIANTS` narrow the
 matrix, and `c21-shared-table.mjs` prints the median speedup per variant with the range over
 sessions:

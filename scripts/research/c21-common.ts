@@ -98,3 +98,48 @@ export function recordsOf(spec: Spec, n = spec.n): Record_[] {
 		return { input: out.slice(at + 32, at + 32 + length), aux: makeAux(i) };
 	});
 }
+
+/** Marks the imported memory shared by flipping its limits flag; the module must already declare a maximum. */
+export function sharedMemoryImport(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
+	const out = new Uint8Array(bytes.length);
+	out.set(bytes);
+	let at = 8;
+	const leb = () => {
+		let value = 0,
+			shift = 0,
+			byte: number;
+		do {
+			byte = out[at++]!;
+			value |= (byte & 0x7f) << shift;
+			shift += 7;
+		} while (byte & 0x80);
+		return value;
+	};
+	const skip = (length: number) => (at += length);
+	while (at < out.length) {
+		const id = out[at++]!;
+		const size = leb();
+		const end = at + size;
+		if (id === 2) {
+			for (let count = leb(); count > 0; count--) {
+				skip(leb());
+				skip(leb());
+				const kind = out[at++]!;
+				if (kind === 2) {
+					if (out[at] !== 1) throw new Error('the memory import needs a maximum');
+					out[at] = 3;
+					return out;
+				}
+				if (kind === 0) leb();
+				else if (kind === 1) {
+					at++;
+					const flags = out[at++]!;
+					leb();
+					if (flags & 1) leb();
+				} else if (kind === 3) at += 2;
+			}
+		}
+		at = end;
+	}
+	throw new Error('no memory import');
+}

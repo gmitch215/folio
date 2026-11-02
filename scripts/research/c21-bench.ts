@@ -13,6 +13,7 @@ import {
 	moduleBytes,
 	outputOf,
 	recordsOf,
+	sharedMemoryImport,
 	specOf,
 	writeRecords
 } from './c21-common.ts';
@@ -199,6 +200,15 @@ const explicitArm = (chunk: number) => async (): Promise<Open> => {
 				out.set(result.bytes, at);
 				at += result.bytes.length;
 			}
+			const sums = await Promise.all(
+				Array.from({ length: width }, () => pool.joinAsync(pool.submit('stats')))
+			);
+			const phases: Record<string, number> = {};
+			for (const sum of sums)
+				for (const [key, value] of Object.entries(
+					JSON.parse(sum.text()) as Record<string, number>
+				))
+					phases[key] = (phases[key] ?? 0) + value;
 			return {
 				wallMs,
 				cpuMs: used,
@@ -207,8 +217,78 @@ const explicitArm = (chunk: number) => async (): Promise<Open> => {
 					tasks: tasks.length,
 					chunk,
 					shared: share,
-					bytes: tasks.reduce((a, t) => a + t.length, 0)
+					overwrite: process.env.C21_OVERWRITE === '1',
+					bytes: tasks.reduce((a, t) => a + t.length, 0),
+					phases
 				}
+			};
+		},
+		close: async () => {
+			pool.close();
+			await Promise.all(workers.map((worker) => worker.terminate()));
+		}
+	};
+};
+
+// no copy and no reset: one shared memory holds the records, each worker runs a slice of the bulk entry
+const inplaceArm = async (): Promise<Open> => {
+	assert.ok(!spec.config, 'the in-place arm needs a spec without a config');
+	// a module with one mutable global keeps its stack pointer there; give every worker its own 64 KiB stack past the layout
+	const plan = prepareContext(bytes);
+	assert.ok(
+		plan.globals.length <= 1,
+		'the in-place arm handles at most the stack pointer global'
+	);
+	const memory = new WebAssembly.Memory({
+		initial: layout.pages + width + 1,
+		maximum: 65536,
+		shared: true
+	});
+	writeRecords(memory, spec, layout, records);
+	const module = new WebAssembly.Module(sharedMemoryImport(Uint8Array.from(plan.bytes)));
+	const pool = new TaskPool(width),
+		workers: Worker[] = [];
+	await Promise.all(
+		Array.from({ length: width }, async (_, index) => {
+			const link = pool.link(index);
+			const worker = new Worker(new URL('./c21-inplace-worker.ts', import.meta.url), {
+				workerData: {
+					c21Inplace: true,
+					spec: spec.id,
+					module,
+					memory,
+					link,
+					table: layout.table,
+					out: layout.out,
+					stack: plan.globals[0],
+					stackTop: (layout.pages + 1 + index) * 65536
+				},
+				transferList: [link.port]
+			});
+			workers.push(worker);
+			await new Promise<void>((resolve, reject) => {
+				worker.once('message', () => resolve());
+				worker.once('error', reject);
+			});
+		})
+	);
+	const step = Math.ceil(n / width);
+	const slices: [string, string][] = [];
+	for (let from = 0; from < n; from += step)
+		slices.push(['slice', `${from},${Math.min(from + step, n)}`]);
+	return {
+		run: async () => {
+			clearOutput(memory, spec, layout, n);
+			const cpu = process.cpuUsage(),
+				start = performance.now();
+			await pool.run(slices);
+			const wallMs = performance.now() - start,
+				used = cpuMs(cpu);
+			return {
+				wallMs,
+				cpuMs: used,
+				out: Uint8Array.from(outputOf(memory, spec, layout, n)),
+				report: { tasks: slices.length, inplace: true }
 			};
 		},
 		close: async () => {
@@ -247,7 +327,10 @@ const arms: [string, () => Promise<Open>][] =
 				['explicit-1', explicitArm(1)]
 			];
 const only = process.env.C21_ARMS?.split(',');
-const ordered = only ? only.flatMap((name) => arms.filter(([arm]) => arm === name)) : arms;
+const optional: [string, () => Promise<Open>][] = [['inplace', inplaceArm]];
+const ordered = only
+	? only.flatMap((name) => [...arms, ...optional].filter(([arm]) => arm === name))
+	: arms;
 for (const [name, open] of ordered) {
 	const arm = await open();
 	try {
