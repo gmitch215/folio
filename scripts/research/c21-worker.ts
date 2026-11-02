@@ -10,12 +10,16 @@ export const contextLayout = (spec: Spec, chunk: number, inputCap: number) =>
 	layoutOf(spec, chunk, Array(chunk).fill(inputCap), { arenaSlices: 1, configCopies: 1 });
 
 /** A task is a count, then per record a length, the input bytes padded to 8, and the aux bytes. */
-export const encodeTask = (spec: Spec, records: { input: Uint8Array; aux: Uint8Array }[]) => {
+export const encodeTask = (
+	spec: Spec,
+	records: { input: Uint8Array; aux: Uint8Array }[],
+	shared = false
+) => {
 	const size = records.reduce(
 		(n, r) => n + 8 + Math.ceil(r.input.length / 8) * 8 + spec.auxBytes,
 		8
 	);
-	const bytes = new Uint8Array(size);
+	const bytes = new Uint8Array(shared ? new SharedArrayBuffer(size) : new ArrayBuffer(size));
 	const view = new DataView(bytes.buffer);
 	view.setUint32(0, records.length, true);
 	let at = 8;

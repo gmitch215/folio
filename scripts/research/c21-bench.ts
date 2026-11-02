@@ -181,14 +181,16 @@ const explicitArm = (chunk: number) => async (): Promise<Open> => {
 	);
 	const groups: (typeof records)[] = [];
 	for (let at = 0; at < n; at += chunk) groups.push(records.slice(at, at + chunk));
-	const tasks = groups.map((group) => encodeTask(spec, group));
+	const share = process.env.C21_SHARED === '1';
+	const tasks = groups.map((group) => encodeTask(spec, group, share));
 	const out = new Uint8Array(n * spec.slot);
 	return {
 		run: async () => {
 			const cpu = process.cpuUsage(),
 				start = performance.now();
 			const results = await pool.run(
-				tasks.map((task) => ['bulk', task] as [string, Uint8Array])
+				tasks.map((task) => ['bulk', task] as [string, Uint8Array]),
+				{ share }
 			);
 			const wallMs = performance.now() - start,
 				used = cpuMs(cpu);
@@ -204,6 +206,7 @@ const explicitArm = (chunk: number) => async (): Promise<Open> => {
 				report: {
 					tasks: tasks.length,
 					chunk,
+					shared: share,
 					bytes: tasks.reduce((a, t) => a + t.length, 0)
 				}
 			};
