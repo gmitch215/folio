@@ -37,6 +37,7 @@ Folio has three execution backends. They were measured separately and are not on
 | Lane concurrency, deployed                             | at 100 ms of CPU per call, four service-bound Worker lanes take 4.07 times one lane's wall (fully serialized), four Durable Object lanes take 1.42 times (CPU over wall 0.94 to 0.98); 1,381 invocations                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | deployed account, `results/managed/lane-concurrency/`                               |
 | Range lanes, deployed                                  | an 8 MiB arena ships 0.20% of a snapshot's bytes; at 65,536 rounds on Durable Object lanes the warm run is 1.98x to 2.00x faster than serial with fuel 1e9, and 0.84x to 0.90x at the default fuel, where the owner runs everything serially after 100,000,000 back-edges                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | deployed account, `results/managed/range-lanes/`                                    |
 | SQLite shards on Durable Object lanes, deployed        | 1,000,000-row table at 4 and 8 shards: range scan 2.04x and 2.40x, group-by 5.34x and 9.68x, like 2.35x and 2.75x, join 2.76x and 4.10x, top-10 2.76x and 3.78x of the serial time; 178 samples all equal to the unsplit serial result; group-by exceeds the shard count because a smaller table runs faster per row on one thread (cause not isolated)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | deployed account, `results/managed/sqlite-lanes/`                                   |
+| Affine state recovery from a binary                    | the operator of six streaming update functions (CRC-32, CRC-32C, CRC-16, CRC-64, a multiplicative hash, an LCG) recovered by probing in 525 to 585 calls and 7 to 42 ms, three refusals (FNV-1a, Adler-32, SHA-256 compression); exact mode 2.03x to 3.23x at eight workers on 64 MiB with the serial state in every sample, including a function that fools the probe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Apple M2 Pro at load 5.8 to 7.1, directional (see Affine State Recovery)            |
 | Exact chunked CRC-32, Adler-32 and AES-CTR             | one 64 MiB stream at eight workers: 4.25x, 5.00x and 3.69x, outputs equal to serial and to `zlib` and `node:crypto`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Mac at load 8 to 13, directional (see Exact Chunked Recurrences)                    |
 | Browser Run, deployed                                  | eight workers, **40000** exact atomic increments, 256 MiB arena, growth and zero fill                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | deployed account, `experiments/browser/runs/cfw-folio-browser-0e66d825/`            |
 | Cross-isolate shared memory through managed Worker RPC | refused in both directions; `MessageChannel` refuses SAB                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | deployed capability probe                                                           |
@@ -1312,8 +1313,9 @@ for that batch.
 ### Record-Level Corpus
 
 The single-call result above ran each kernel as one entry. The iteration route works on a loop of
-calls over bulk input, so 27 bulk drivers call each of the 21 unmodified entries on `n` independent
-records (the 21 base drivers plus shared-state and 64-pixel QOI variants). Every output matched
+calls over bulk input, so 27 bulk drivers (30 in the quiet-machine rerun below, after later variants
+were added) call each of the 21 unmodified entries on `n` independent records (the 21 base drivers
+plus shared-state and 64-pixel QOI variants). Every output matched
 serial in every sample (1,060 timed, 216 counter). The runs are single sessions on a loaded laptop
 (load 5 to 8), so the timings are directional. The subsection after the four mechanisms repeats them
 on the quiet Ryzen rig with three sessions per cell, 30 drivers.
@@ -1359,7 +1361,9 @@ iteration even with zero conflicts. The windows removed the conflicts and left t
 so the windows alone do not reach the explicit ceiling, which an earlier design note expected they would.
 Coarsening (dispatching many records as one unit) did not help the five cost-bound programs: tracked
 time per iteration stays 4.1 to 4.5 times native for xxHash32 (about 75 us against 18 us), each batch
-adds about 1 ms of wake and join, and the read-mark scan costs about 12 to 19 us per iteration.
+adds about 1 ms of wake and join (the measured thread handoff is 3.14 us, so the rest of that
+millisecond is in the batch protocol and was not isolated), and the read-mark scan costs 36 us per
+iteration, 14 to 19 us once records are coarsened.
 
 #### Quiet-Machine Rerun
 
@@ -1448,6 +1452,140 @@ This is a speedup of one input to a program that was never written to run in par
 change to its result. It is a different mechanism from the record-level wins: the chunks are not
 independent iterations, they are a monoid homomorphism over the input. A recurrence with no such
 structure stays serial under this route (Architectural Boundaries).
+
+### Affine State Recovery
+
+`src/affine.ts` removes the need to write a combine by hand for one class of update functions. The
+class is an exported function `f(state, pointer, length)` over a freestanding module that returns the
+new state and keeps no state outside its state parameter, the shape of `crc32(crc, buffer, length)`.
+`probeAffine` finds the roles of the three parameters by trial, then tests under a seeded PRNG
+whether the state transition is affine over GF(2) or over Z/2^w: additivity of the state part (32
+trials), recovery of the one-byte operator (w + 1 calls over GF(2), 2 over Z/2^w), independence of the
+state part from the data at equal lengths (32 trials), homogeneity of the operator at lengths 1, 2, 7,
+64, 1,000 and 65,537 (24 trials), additivity of the data part (32 trials) and streaming composition
+over random splits (32 trials). It returns a model or a refusal that names the check that failed. The
+operator for a long chunk comes from repeated squaring.
+
+| subject                                 | ring    | bits | calls | probe time (three sessions) |
+| --------------------------------------- | ------- | ---- | ----- | --------------------------- |
+| miniz `mz_crc32`, unmodified, unwrapped | GF(2)   | 32   | 552   | 15.1 to 20.5 ms             |
+| CRC-32C, bitwise                        | GF(2)   | 32   | 552   | 21.9 to 25.3 ms             |
+| CRC-16, table driven                    | GF(2)   | 32   | 552   | 10.9 to 11.4 ms             |
+| CRC-64, table driven, i64 state         | GF(2)   | 64   | 585   | 31.3 to 42.5 ms             |
+| `h = h * 31 + byte`                     | Z/2^32  | 32   | 525   | 7.0 to 7.4 ms               |
+| LCG checksum                            | Z/2^32  | 32   | 525   | 6.7 to 7.4 ms               |
+| FNV-1a, Adler-32, SHA-256 compression   | refused |      | 31    | under 1 ms                  |
+
+The recovered first column of the miniz operator is `0x77073096`, the CRC-32 table entry for 1, and
+the LCG multiplier is `0x19660d`, which is 1664525. FNV-1a, Adler-32 (modulus 65,521) and the SHA-256
+compression over a chaining word fail the additivity check at the first trial in both rings.
+
+`foldAffine` runs the chunks on a `TaskPool` in one of two modes, and the modes give different
+guarantees. In exact mode pass 1 runs chunks from state zero and gives each chunk's affine offset, the
+model predicts each chunk's start state, pass 2 runs every chunk from its predicted start, and an
+ordered comparison checks each chunk's real end state against the next predicted start. Chunk 0 starts
+from the real initial state, so by induction every checked start is real and the last end state is the
+result without trusting the affine claim. The first mismatch makes the remaining bytes run serially
+from the last real state. In audit mode one pass runs and a seeded sample of chunks reruns from its
+predicted start; an error in an unsampled chunk goes undetected.
+
+A control function that is a table CRC-32 except for one trigger value that no probe reaches shows the
+difference. The probe accepts it with all five checks passing. On 8 MiB at eight workers the trigger
+lies in chunk 3, exact mode recorded `mismatchAt` 3, fell back and returned the serial state in all 15
+timed rounds, and audit mode with two sampled chunks returned a wrong state in 6 of 7 seeds. In a unit
+test of 24 seeds at 256 KiB audit caught it in 4. Auditing all seven chunks caught it.
+
+On a loaded laptop (Apple M2 Pro, load 5.8 to 7.1 on 12 threads, three sessions of five rounds after
+two warmups, medians of the session medians) at eight workers:
+
+| subject             | input  | exact mode speedup | audit mode speedup | CPU ratio, exact | hand-derived combine |
+| ------------------- | ------ | ------------------ | ------------------ | ---------------- | -------------------- |
+| miniz CRC-32        | 64 MiB | 3.23x              | 3.01x              | 1.87             | 4.28x at CPU 1.16    |
+| miniz CRC-32        | 8 MiB  | 3.12x              | 3.09x              | 1.92             | 5.33x at CPU 1.23    |
+| CRC-32C             | 64 MiB | 3.10x              | 3.40x              | 1.86             |                      |
+| CRC-16              | 64 MiB | 2.96x              | 3.15x              | 1.95             |                      |
+| CRC-64              | 64 MiB | 2.91x              | 3.27x              | 1.94             |                      |
+| `h = h * 31 + byte` | 64 MiB | 2.03x              | 2.59x              | 2.34             |                      |
+| LCG checksum        | 64 MiB | 2.26x              | 2.69x              | 2.22             |                      |
+
+Exact mode first beats serial near 64 KiB to 256 KiB at eight workers and near 256 KiB to 1 MiB at
+three or four workers, and never at two, because it does twice the work. The cost of exactness is
+therefore about a second pass: on the miniz CRC-32 exact mode reaches 3.1x to 3.2x where the
+hand-derived combine reaches 4.3x to 5.3x, with 1.9 times the CPU against 1.2 times. The two
+Z/2^32 subjects are faster serially per byte, so the fixed costs weigh more and exact mode reaches
+2.0x to 2.3x.
+
+What the guarantee does not cover. Exact mode returns the state of the serial chain of calls over the
+same chunk boundaries, which equals one call over the whole input only if the function composes over a
+split. The probe checks composition on 32 random splits and nothing proves it, so a function whose
+result depends on the call length would break it. Both modes assume the kernel keeps no state outside
+the state parameter, because each worker keeps one instance across tasks. The probe sees lengths up to
+65,537 and states and data from a PRNG. Only freestanding modules with an exported memory and a
+three-parameter entry are probed. There is no rig run, no state wider than 64 bits and no block
+kernel with a positive result for the register form; the next section covers state in memory. The closest published work found by a literature search for this
+section takes source or a small finite state set as input (Farzan and Nicolet, Mytkowicz et al.), and
+zlib ships the CRC-32 and Adler-32 combines for known parameters. The search found no tool that
+recovers the operator of a compiled streaming function by probing and uses it for chunk combination.
+That is the result of about 25 queries, several papers could not be read in full, and it is not a
+claim of priority.
+
+### Boundary-State Speculation Beyond Registers
+
+Three follow-up studies test whether the exact mode of the previous section, which runs chunks without
+access tracking and compares explicit boundary state, extends past a scalar state. Every number below
+comes from a Mac at a one-minute load of 14 to 56 on 12 threads, so speedups are directional and none
+is a rig result. Every timed sample equalled the serial state (1,635 of 1,635 for state in memory,
+6,075 of 6,075 for sweeps).
+
+State in memory (`src/affine-state.ts`, `probeState` and `foldState`). The entry is
+`(context, pointer, length)` and the state lives in a context struct that the call reads and writes in
+place. Discovery by trial splits up to 256 bytes into state, read-only parameters and scratch, groups
+state bytes that interact into factors, and tests each factor over GF(2), Z/2^32 words and one
+little or big endian integer with the five checks of the scalar probe. It recovered a CRC-32 context
+with a magic parameter, a CRC register beside a length counter (two factors), a Fletcher pair, a
+polynomial hash whose multiplier sits in the context, a last-8-bytes register, and the unmodified
+tiny-AES `AES_CTR_xcrypt_buffer` (one 128-bit big-endian counter). It refused the corpus SHA-256, SHA-1,
+MD5 and xxHash32 updates over their real contexts (they trap on random state, and a reachable-state
+additivity check fails), a CRC with a coupled counter, and a kernel with a counter outside the
+context. The adversarial CRC that flips one bit at a rare register value passes the probe, and exact
+mode recorded a mismatch at chunk 3 and returned the serial state. At 64 MiB on eight workers exact
+mode reached 1.28x for the CRC context, 1.62x for the polynomial hash and 1.24x for last-8, and lost
+on the CRC-plus-counter and Fletcher structs (0.95x and 0.62x). These are below the scalar form's 2.0x
+to 3.2x, and the runs were at a higher load, so how much of the gap is the in-memory path is not
+known. Limits found: a byte that changes only on rare inputs can be missed by trial discovery, and
+output a call writes and never reads (a hash value, ciphertext) is not returned, so the AES-CTR fold
+returns the counter and not the ciphertext.
+
+Recorded boundary states (`src/boundaries.ts`, `recordBoundaries` and `verifyBoundaries`). A serial
+run records the state every `step` bytes; the caller keeps the log. A later run executes every chunk
+in parallel from its recorded start and compares each end state with the next recorded start, so a
+chain that is not affine (SHA-256, SHA-1, MD5) becomes a parallel verification. By the same induction
+the result is serial for any log; eleven forged, stale or wrong-width logs per subject never changed a
+result. An identical rerun reached 2.77x to 3.67x at 8 MiB and 1.65x to 2.95x at 64 MiB with 16 chunks
+on eight workers (ideal 8x; CPU ratio 1.3 to 2.2, because each chunk is copied twice). An edit nine
+tenths in still won (1.34x to 1.92x at 64 MiB). An edit in the first half lost (0.38x to 1.19x at
+64 MiB), because the first mismatch forces the remainder to run serially after the wasted parallel
+pass. A chain that forgets (a nonlinear hash of the last 8 bytes) kept 1.3x to 3.1x through an edit
+that left a chunk's end state unchanged. The first run costs a serial run plus the copies.
+
+Fixed-point sweeps (`scripts/research/sweeps-*.ts`, a harness with no library change). Chunks guess a
+start state, run untracked in parallel, and rerun when the assumed start differs from the previous
+chunk's end, until nothing changes. On 1 MiB of text at eight chunks a UTF-8 validating DFA converged
+in 1 sweep (8 chunk runs; 3.91x at 64 MiB, range 2.77x to 5.60x), and with a sticky error flag it also
+took 1 sweep, but needed 8 sweeps at 32 chunks on 64 KiB. A quote-aware CSV scanner, a CSV scanner
+with a row count, a Base64 validity DFA and a run-length decoder took 8 sweeps at eight chunks, as did
+the CRC-32 and SHA-256 controls, and speedup fell below 1.0x at 64 MiB because each pass copies the
+input. The boundary state sets agree: the UTF-8 DFA collapses to one end state within 64 bytes from
+any of 256 start states, the counters do not collapse. The mechanism therefore holds for state that
+resynchronises and fails for state that carries a count. Whether resynchronising DFAs are already
+covered by published parallel DFA work (Mytkowicz et al. enumerate start states) was not checked
+against the original papers here, so this is not offered as new.
+
+The common structure is a predictor of chunk start states (recovered algebra, a recorded log, a
+guessed fixed point) and one validator that compares explicit end state with the next start, which
+keeps the result equal to serial without trusting the predictor. Whether that structure is
+a contribution or a repackaging of known speculation and checkpointing work is open: the literature
+reading behind it is incomplete, and the quiet-rig runs are not done.
 
 ### What the Corpus Shows
 
@@ -2858,10 +2996,12 @@ What stays open is a program that exposes the independence, such as a batch API.
 **A recurrence with an exact combine.** CRC-32, Adler-32 and the AES-CTR counter look like chains
 and are not boundaries, because their update is linear or closed-form over the input. The chunked
 helper joins chunk states exactly (Exact Chunked Recurrences). AES-CBC decrypt carries an IV that is
-a copy of the previous ciphertext block, and renaming it removes the chain. The mechanism needs the
-algebra, and Folio finds none by itself. xxHash32 and xxHash64 are a rotate and multiply recurrence
-with no combine known to this work, so a long single xxHash stream stays serial. That is open, not
-closed.
+a copy of the previous ciphertext block, and renaming it removes the chain. The hand-derived combines
+need the algebra written down. For a streaming update function whose state is affine over GF(2) or
+over Z/2^w, Folio now recovers the operator from the binary by probing (Affine State Recovery), and
+refuses Adler-32, FNV-1a and a SHA-256 compression because they are affine over neither ring. xxHash32
+and xxHash64 are a rotate and multiply recurrence with no combine known to this work, so a long single
+xxHash stream stays serial. That is open, not closed.
 
 **A choice that needs a measurement.** No signal available before the first batch separates the
 loops that win from the loops that lose. With the tracked iteration timed alone on one worker the
