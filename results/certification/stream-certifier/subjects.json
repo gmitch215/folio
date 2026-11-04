@@ -1,0 +1,511 @@
+{
+  "kind": "certifier-subjects",
+  "node": "v26.8.2",
+  "rows": [
+    {
+      "kind": "real",
+      "name": "crc32c",
+      "entry": "crc32c",
+      "certifyMs": 143.2,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 3175
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "e41fb2a59b7d9c59f1cf7afefef9b14214dd73f1810a8f7d240212227ce1536b",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "crc16",
+      "entry": "crc16",
+      "certifyMs": 514.9,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "transforms",
+      "stats": {
+        "paths": 16,
+        "loops": 8,
+        "expressions": 210842
+      },
+      "initializationBytes": 513,
+      "exclusions": [
+        [
+          65536,
+          65537
+        ],
+        [
+          65552,
+          66064
+        ]
+      ],
+      "moduleSha256": "ec7782732ea12dc90e88328d05c4d7f6492152830e000dda06f40c0d79d6041f",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "crc64",
+      "entry": "crc64",
+      "certifyMs": 1585.8,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 64,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 16,
+        "loops": 8,
+        "expressions": 204832
+      },
+      "initializationBytes": 2049,
+      "exclusions": [
+        [
+          65536,
+          65537
+        ],
+        [
+          65552,
+          67600
+        ]
+      ],
+      "moduleSha256": "ed484828e4474191acf8db419275ab86e8e6e908b26d43593a29e1838ff0e8b0",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "poly31",
+      "entry": "poly31",
+      "certifyMs": 9.1,
+      "verdict": "certified",
+      "ring": "z2w",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 703
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "dfee3b26a47226273525ae1190282835851a59d39db5f5ca4185d0bdf5c25aa5",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "lcg",
+      "entry": "lcg",
+      "certifyMs": 11.9,
+      "verdict": "certified",
+      "ring": "z2w",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 743
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "537c2d51cbeeda7bcf8389d80401e1c4cbf5e8c52defb543b4aa644ed12fa702",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "fnv1a",
+      "entry": "fnv1a",
+      "certifyMs": 6.1,
+      "verdict": "refused",
+      "reason": "gf2: the state passes through an operation that is not affine: product by a constant that is not a power of two; z2w: the state passes through an operation that is not affine: product by a constant that is not a power of two; zp: the state passes through an operation that is not affine: product by a constant that is not a power of two"
+    },
+    {
+      "kind": "real",
+      "name": "adler32",
+      "entry": "adler32",
+      "certifyMs": 6.3,
+      "verdict": "certified",
+      "ring": "zp",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 885
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "9e27bf8b828ffdfb194461f540ba1a4aee6bad68e311d73c6de3540c5d0577af",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "sha256c",
+      "entry": "sha256c",
+      "certifyMs": 16.7,
+      "verdict": "refused",
+      "reason": "gf2: unsupported expression kind 11; z2w: unsupported expression kind 11; zp: unsupported expression kind 11"
+    },
+    {
+      "kind": "real",
+      "name": "xlcg",
+      "entry": "xlcg",
+      "certifyMs": 8.5,
+      "verdict": "certified",
+      "ring": "z2w",
+      "bits": 32,
+      "zeroLength": "identity",
+      "output": {
+        "inPlace": true,
+        "step": "1013904223"
+      },
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 861
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "267ce83384b87f4e1d6ce5863755ead2fec969b27f0d7bfa443cdbf7f7f0f28f",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "xshift",
+      "entry": "xshift",
+      "certifyMs": 11.1,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "identity",
+      "output": {
+        "inPlace": true,
+        "step": "0"
+      },
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 1165
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "d987e358e43271543922ecb89fc6a8d8178cfb552fe17a19a5b20bd12f0ba29d",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "xsbox",
+      "entry": "xsbox",
+      "certifyMs": 50.2,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "identity",
+      "output": {
+        "inPlace": true,
+        "step": "0"
+      },
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 1273
+      },
+      "initializationBytes": 0,
+      "exclusions": [
+        [
+          65536,
+          65792
+        ]
+      ],
+      "moduleSha256": "8a7b4f36ffe775b8f61b3d8d296137d95311ace6e6cd7ab04fcba09c14ef8197",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "xfeed",
+      "entry": "xfeed",
+      "certifyMs": 17.2,
+      "verdict": "certified",
+      "ring": "z2w",
+      "bits": 32,
+      "zeroLength": "identity",
+      "output": {
+        "inPlace": true,
+        "step": "reads the bytes"
+      },
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 913
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "b33e387d8f5e08b41174cff1e3b4dfa58bc5797da66ff56805ec59a442f3e05f",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "miniz-crc32",
+      "entry": "mz_crc32",
+      "certifyMs": 304.4,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 32,
+        "loops": 16,
+        "expressions": 10460
+      },
+      "initializationBytes": 0,
+      "exclusions": [
+        [
+          65536,
+          66560
+        ]
+      ],
+      "moduleSha256": "8d34bdfc4d0efe727f2f18916b7562141fb0cc4562e7e5514c84dcf274cbacaa",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "real",
+      "name": "miniz-adler32",
+      "entry": "mz_adler32",
+      "certifyMs": 26.2,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: a branch is undecided; zp: a branch is undecided"
+    },
+    {
+      "kind": "constructed",
+      "name": "control",
+      "entry": "update",
+      "certifyMs": 76.4,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 3791
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "7e1fbbe66b85ebb791c2543093b56f47f222a237dec0e74ae5831f46e0991f71",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "constructed",
+      "name": "final-xor",
+      "entry": "update",
+      "certifyMs": 21,
+      "verdict": "refused",
+      "reason": "gf2: length 2 is not the fold of the byte step; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-trigger",
+      "entry": "update",
+      "certifyMs": 236.6,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-xor",
+      "entry": "update",
+      "certifyMs": 17,
+      "verdict": "refused",
+      "reason": "gf2: length 2 is not the fold of the byte step; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "position-parity",
+      "entry": "update",
+      "certifyMs": 27.7,
+      "verdict": "refused",
+      "reason": "gf2: length 2 is not the fold of the byte step; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "equivalent-wrapper",
+      "entry": "update",
+      "certifyMs": 19.2,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 3868
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "8ccce4583457ae1c3299fd2366c6246ec2a4bce2636dbdcc349df139545cf099",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "constructed",
+      "name": "rare-state",
+      "entry": "update",
+      "certifyMs": 26.4,
+      "verdict": "refused",
+      "reason": "gf2: branch on data; z2w: branch on data; zp: branch on data"
+    },
+    {
+      "kind": "constructed",
+      "name": "nonlinear",
+      "entry": "update",
+      "certifyMs": 3.3,
+      "verdict": "refused",
+      "reason": "gf2: the state passes through an operation that is not affine: product of two data values; z2w: the state passes through an operation that is not affine: product of two data values; zp: the state passes through an operation that is not affine: product of two data values"
+    },
+    {
+      "kind": "constructed",
+      "name": "poly31",
+      "entry": "update",
+      "certifyMs": 17.9,
+      "verdict": "certified",
+      "ring": "z2w",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 687
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "1eab73861500975125d28e1b7600698a27b1aad640dc28d2ffda98b09095b0f7",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "constructed",
+      "name": "table-crc32",
+      "entry": "update",
+      "certifyMs": 32.9,
+      "verdict": "certified",
+      "ring": "gf2",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 911
+      },
+      "initializationBytes": 0,
+      "exclusions": [
+        [
+          0,
+          1024
+        ]
+      ],
+      "moduleSha256": "2ba70131b3035a412ef0f5f483ed22b79942cf1d339134c971d7bddb296a88c8",
+      "groundTruth": "agrees"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-eq-1000",
+      "entry": "update",
+      "certifyMs": 85.9,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-ge-1000",
+      "entry": "update",
+      "certifyMs": 54.6,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-eq-4096",
+      "entry": "update",
+      "certifyMs": 64.3,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-ge-4096",
+      "entry": "update",
+      "certifyMs": 52.3,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-eq-65537",
+      "entry": "update",
+      "certifyMs": 40.8,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-ge-65537",
+      "entry": "update",
+      "certifyMs": 47,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-eq-100000",
+      "entry": "update",
+      "certifyMs": 109.3,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-ge-100000",
+      "entry": "update",
+      "certifyMs": 81.2,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-eq-262144",
+      "entry": "update",
+      "certifyMs": 113.6,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "length-ge-262144",
+      "entry": "update",
+      "certifyMs": 76.4,
+      "verdict": "refused",
+      "reason": "gf2: a branch is undecided; z2w: the state passes through an operation that is not affine: Xor is not affine over z2w; zp: the state passes through an operation that is not affine: Xor is not affine over z2w"
+    },
+    {
+      "kind": "constructed",
+      "name": "adler32",
+      "entry": "update",
+      "certifyMs": 6.2,
+      "verdict": "certified",
+      "ring": "zp",
+      "bits": 32,
+      "zeroLength": "identity",
+      "stats": {
+        "paths": 8,
+        "loops": 4,
+        "expressions": 1167
+      },
+      "initializationBytes": 0,
+      "exclusions": [],
+      "moduleSha256": "2e446eb15350894f2a1514f2b3aad3846ec62da80773fbe5f2b079329de9927d",
+      "groundTruth": "agrees"
+    }
+  ]
+}

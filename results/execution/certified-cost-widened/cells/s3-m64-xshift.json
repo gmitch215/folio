@@ -1,0 +1,43 @@
+{
+  "kind": "certified-route-cost",
+  "node": "v26.10.0",
+  "subject": "xshift",
+  "width": 8,
+  "mib": 64,
+  "ring": "gf2",
+  "stats": {
+    "paths": 8,
+    "loops": 4,
+    "expressions": 1165
+  },
+  "certifyMs": [
+    16.463,
+    5.317,
+    3.761,
+    3.994,
+    3.332
+  ],
+  "prepareMs": 20.456,
+  "compileMs": 0.065,
+  "firstCallMs": 359.195,
+  "steadyMs": [
+    16.438,
+    20.17,
+    15.858,
+    10.336,
+    16.355,
+    10.571,
+    10.574
+  ],
+  "serialMs": [
+    76.9,
+    76.765,
+    76.719,
+    76.714,
+    76.68,
+    76.672,
+    76.63
+  ],
+  "cpuSteadyMs": 81.667,
+  "cpuSerialMs": 76.743
+}

@@ -1,0 +1,43 @@
+{
+  "kind": "certified-route-cost",
+  "node": "v26.10.0",
+  "subject": "crc32c",
+  "width": 8,
+  "mib": 8,
+  "ring": "gf2",
+  "stats": {
+    "paths": 8,
+    "loops": 4,
+    "expressions": 3175
+  },
+  "certifyMs": [
+    21.158,
+    8.356,
+    7.006,
+    6.955,
+    6.844
+  ],
+  "prepareMs": 20.702,
+  "compileMs": 0.071,
+  "firstCallMs": 346.828,
+  "steadyMs": [
+    7.381,
+    7.262,
+    7.409,
+    7.255,
+    7.22,
+    3.881,
+    7.216
+  ],
+  "serialMs": [
+    27.997,
+    28.016,
+    28.041,
+    28.019,
+    27.92,
+    27.944,
+    28.066
+  ],
+  "cpuSteadyMs": 29.829,
+  "cpuSerialMs": 28.005
+}

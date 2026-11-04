@@ -1,0 +1,43 @@
+{
+  "kind": "certified-route-cost",
+  "node": "v26.10.0",
+  "subject": "miniz-crc32",
+  "width": 8,
+  "mib": 64,
+  "ring": "gf2",
+  "stats": {
+    "paths": 32,
+    "loops": 16,
+    "expressions": 10460
+  },
+  "certifyMs": [
+    123.044,
+    93.203,
+    88.238,
+    101.475,
+    104.806
+  ],
+  "prepareMs": 24.245,
+  "compileMs": 0.08,
+  "firstCallMs": 376.156,
+  "steadyMs": [
+    24.151,
+    23.651,
+    18.869,
+    24.389,
+    24.19,
+    29.257,
+    23.509
+  ],
+  "serialMs": [
+    116.084,
+    115.961,
+    115.821,
+    115.68,
+    115.622,
+    115.555,
+    115.466
+  ],
+  "cpuSteadyMs": 119.79,
+  "cpuSerialMs": 115.801
+}

@@ -1,0 +1,43 @@
+{
+  "kind": "certified-route-cost",
+  "node": "v26.10.0",
+  "subject": "adler32",
+  "width": 8,
+  "mib": 64,
+  "ring": "zp",
+  "stats": {
+    "paths": 8,
+    "loops": 4,
+    "expressions": 885
+  },
+  "certifyMs": [
+    15.207,
+    3.786,
+    2.614,
+    2.533,
+    2.443
+  ],
+  "prepareMs": 20.374,
+  "compileMs": 0.066,
+  "firstCallMs": 369.05,
+  "steadyMs": [
+    16.966,
+    17.598,
+    20.785,
+    16.694,
+    16.423,
+    16.403,
+    16.4
+  ],
+  "serialMs": [
+    127.472,
+    127.333,
+    127.221,
+    127.173,
+    128.331,
+    128.342,
+    128.363
+  ],
+  "cpuSteadyMs": 131.691,
+  "cpuSerialMs": 127.766
+}

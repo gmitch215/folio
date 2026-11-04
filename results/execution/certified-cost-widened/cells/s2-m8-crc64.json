@@ -1,0 +1,43 @@
+{
+  "kind": "certified-route-cost",
+  "node": "v26.10.0",
+  "subject": "crc64",
+  "width": 8,
+  "mib": 8,
+  "ring": "gf2",
+  "stats": {
+    "paths": 16,
+    "loops": 8,
+    "expressions": 204832
+  },
+  "certifyMs": [
+    673.817,
+    629.049,
+    629.265,
+    630.528,
+    626.095
+  ],
+  "prepareMs": 22.537,
+  "compileMs": 0.076,
+  "firstCallMs": 346.916,
+  "steadyMs": [
+    3.941,
+    3.832,
+    4.158,
+    4.082,
+    4.051,
+    3.746,
+    3.741
+  ],
+  "serialMs": [
+    14.332,
+    14.319,
+    14.305,
+    14.303,
+    14.294,
+    14.303,
+    14.309
+  ],
+  "cpuSteadyMs": 16.1,
+  "cpuSerialMs": 14.337
+}
