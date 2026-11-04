@@ -1,0 +1,331 @@
+{
+ "modules": 804,
+ "distinctBinaries": 782,
+ "tally": {
+  "stream": {
+   "FALSE-REFUSAL": 385,
+   "accepted-correct": 177,
+   "refused-valid-z2w-out-of-class": 20,
+   "correct-refusal": 222
+  },
+  "loop": {
+   "FALSE-REFUSAL": 421,
+   "accepted-correct": 141,
+   "refused-valid-z2w-out-of-class": 20,
+   "correct-refusal": 222
+  },
+  "streamInForm": {
+   "FALSE-REFUSAL": 95,
+   "accepted-correct": 177,
+   "refused-valid-z2w-out-of-class": 10,
+   "correct-refusal": 67
+  },
+  "loopInForm": {
+   "FALSE-REFUSAL": 149,
+   "accepted-correct": 141,
+   "refused-valid-z2w-out-of-class": 10,
+   "correct-refusal": 155
+  }
+ },
+ "addressDependent": [
+  "c/addr-parity/O0/loop",
+  "c/addr-parity/O1/loop",
+  "c/addr-parity/O2/loop",
+  "c/addr-parity/O3/loop",
+  "c/addr-parity/Os/loop",
+  "wrap/load-off1/stream",
+  "wrap/load-ptr-plus-3/stream",
+  "wrap/load16/stream",
+  "len/extra-when-ptr-aligned/loop",
+  "len/ptr-parity/loop",
+  "len/ptr-used-as-data/loop",
+  "len/load-two-different/loop"
+ ],
+ "anyWrong": [],
+ "causes": {
+  "stream": {
+   "FALSE-REFUSAL | Expected values to be strictly equal:": {
+    "n": 22,
+    "examples": [
+     "c/crc32c/O0/stream",
+     "c/crc32c/O1/stream",
+     "c/crc32/O0/stream",
+     "c/crc32/O1/stream",
+     "c/crc16/O0/stream"
+    ]
+   },
+   "FALSE-REFUSAL | step must be pure supported arithmetic": {
+    "n": 18,
+    "examples": [
+     "c/crc32c/Os/stream",
+     "c/crc32/Os/stream",
+     "c/crc16/Os/stream",
+     "c/crc32-msb/Os/stream",
+     "c/parity/O2/stream"
+    ]
+   },
+   "FALSE-REFUSAL | unsupported step operation N": {
+    "n": 28,
+    "examples": [
+     "c/rotl5/O2/stream",
+     "c/rotl5/O3/stream",
+     "c/rotl5/Os/stream",
+     "ops/neg-mask2/stream",
+     "ops/neg-byte/stream"
+    ]
+   },
+   "FALSE-REFUSAL | initializing data segments refuse shared backend promotion": {
+    "n": 10,
+    "examples": [
+     "c/nibble-crc/O0/stream",
+     "c/nibble-crc/O1/stream",
+     "c/nibble-crc/O2/stream",
+     "c/nibble-crc/O3/stream",
+     "c/nibble-crc/Os/stream"
+    ]
+   },
+   "refused-valid-z2w-out-of-class | Expected values to be strictly equal:": {
+    "n": 4,
+    "examples": [
+     "c/poly31/O0/stream",
+     "c/poly31/O1/stream",
+     "c/sum/O0/stream",
+     "c/sum/O1/stream"
+    ]
+   },
+   "refused-valid-z2w-out-of-class | unsupported step operation N": {
+    "n": 6,
+    "examples": [
+     "c/poly31/O2/stream",
+     "c/poly31/O3/stream",
+     "c/poly31/Os/stream",
+     "c/sum/O2/stream",
+     "c/sum/O3/stream"
+    ]
+   },
+   "FALSE-REFUSAL | Cannot convert undefined or null to object": {
+    "n": 2,
+    "examples": [
+     "ops/nop/stream",
+     "wrap/nop/stream"
+    ]
+   },
+   "FALSE-REFUSAL | The expression evaluated to a falsy value:": {
+    "n": 3,
+    "examples": [
+     "raw/multivalue-block/stream",
+     "raw/multivalue-block-shl/stream",
+     "raw/multivalue-loop/stream"
+    ]
+   },
+   "FALSE-REFUSAL | Expected values to be strictly deep-equal:": {
+    "n": 4,
+    "examples": [
+     "wrap/second-exit-const/stream",
+     "wrap/load8s/stream",
+     "wrap/swap-args/stream",
+     "wrap/tee-ptr-load/stream"
+    ]
+   },
+   "FALSE-REFUSAL | unsupported wrapper expression N": {
+    "n": 3,
+    "examples": [
+     "wrap/br-table/stream",
+     "wrap/store-in-loop/stream",
+     "wrap/inc-via-tee/stream"
+    ]
+   },
+   "FALSE-REFUSAL | start refuses": {
+    "n": 2,
+    "examples": [
+     "state/start-func/stream",
+     "state/start-noop/stream"
+    ]
+   },
+   "FALSE-REFUSAL | imports refuse": {
+    "n": 2,
+    "examples": [
+     "state/import-noop/stream",
+     "state/import-unused-global/stream"
+    ]
+   },
+   "FALSE-REFUSAL | memory sharing": {
+    "n": 1,
+    "examples": [
+     "state/memory-shared/stream"
+    ]
+   }
+  },
+  "loop": {
+   "FALSE-REFUSAL | function shape": {
+    "n": 28,
+    "examples": [
+     "c/crc32c/O0/loop",
+     "c/crc32/O0/loop",
+     "c/crc16/O0/loop",
+     "c/crc32-msb/O0/loop",
+     "c/xorshift/O0/loop"
+    ]
+   },
+   "FALSE-REFUSAL | does not return the state": {
+    "n": 12,
+    "examples": [
+     "c/crc32c/O1/loop",
+     "c/crc32/O1/loop",
+     "c/crc16/O1/loop",
+     "c/crc32-msb/O1/loop",
+     "c/xorshift/O1/loop"
+    ]
+   },
+   "FALSE-REFUSAL | statement outside the state": {
+    "n": 20,
+    "examples": [
+     "c/crc32c/Os/loop",
+     "c/crc32/Os/loop",
+     "c/crc16/Os/loop",
+     "c/crc32-msb/Os/loop",
+     "c/xorbyte/O2/loop"
+    ]
+   },
+   "FALSE-REFUSAL | no loop": {
+    "n": 4,
+    "examples": [
+     "c/xorshift/O2/loop",
+     "c/xorshift/O3/loop",
+     "c/parity/O2/loop",
+     "c/parity/O3/loop"
+    ]
+   },
+   "FALSE-REFUSAL | operation N": {
+    "n": 19,
+    "examples": [
+     "c/rotl5/Os/loop",
+     "c/count-down-ptr/Os/loop",
+     "ops/neg-mask2/loop",
+     "ops/neg-byte/loop",
+     "ops/neg-signbit-sar/loop"
+    ]
+   },
+   "FALSE-REFUSAL | data segments": {
+    "n": 8,
+    "examples": [
+     "c/nibble-crc/O0/loop",
+     "c/nibble-crc/O1/loop",
+     "c/nibble-crc/O2/loop",
+     "c/nibble-crc/O3/loop",
+     "c/nibble-crc/Os/loop"
+    ]
+   },
+   "refused-valid-z2w-out-of-class | function shape": {
+    "n": 2,
+    "examples": [
+     "c/poly31/O0/loop",
+     "c/sum/O0/loop"
+    ]
+   },
+   "refused-valid-z2w-out-of-class | does not return the state": {
+    "n": 2,
+    "examples": [
+     "c/poly31/O1/loop",
+     "c/sum/O1/loop"
+    ]
+   },
+   "refused-valid-z2w-out-of-class | statement outside the state": {
+    "n": 4,
+    "examples": [
+     "c/poly31/O2/loop",
+     "c/poly31/O3/loop",
+     "c/sum/O2/loop",
+     "c/sum/O3/loop"
+    ]
+   },
+   "refused-valid-z2w-out-of-class | operation N": {
+    "n": 2,
+    "examples": [
+     "c/poly31/Os/loop",
+     "c/sum/Os/loop"
+    ]
+   },
+   "FALSE-REFUSAL | expression N": {
+    "n": 6,
+    "examples": [
+     "c/parity/Os/loop",
+     "ops/select/loop",
+     "ops/popcnt-parity/loop",
+     "ops/eqz-const/loop",
+     "ops/wrap-i64/loop"
+    ]
+   },
+   "FALSE-REFUSAL | load other than the input byte": {
+    "n": 2,
+    "examples": [
+     "c/signed-byte/Os/loop",
+     "len/load-signed/loop"
+    ]
+   },
+   "FALSE-REFUSAL | start function": {
+    "n": 2,
+    "examples": [
+     "loopstate/start/loop",
+     "loopstate/start-noop/loop"
+    ]
+   },
+   "FALSE-REFUSAL | imports": {
+    "n": 1,
+    "examples": [
+     "loopstate/import-fn/loop"
+    ]
+   },
+   "FALSE-REFUSAL | non-iN local": {
+    "n": 1,
+    "examples": [
+     "loopstate/extra-local-unused/loop"
+    ]
+   },
+   "FALSE-REFUSAL | Cannot convert undefined or null to object": {
+    "n": 2,
+    "examples": [
+     "loopstate/guard-inside-extra-pre-stmt/loop",
+     "ops/nop/loop"
+    ]
+   },
+   "FALSE-REFUSAL | no zero-length exit block": {
+    "n": 2,
+    "examples": [
+     "loopstate/nested-block-guard/loop",
+     "len/different-params/loop"
+    ]
+   },
+   "FALSE-REFUSAL | local N read before it is defined": {
+    "n": 37,
+    "examples": [
+     "ops/local-uninit/loop",
+     "fuzz-2/loop",
+     "fuzz-3/loop",
+     "fuzz-4/loop",
+     "fuzz-6w/loop"
+    ]
+   },
+   "FALSE-REFUSAL | statement kind in the loop": {
+    "n": 3,
+    "examples": [
+     "ops/drop-expr/loop",
+     "len/store-in-loop/loop",
+     "len/call-in-loop/loop"
+    ]
+   },
+   "FALSE-REFUSAL | pointer or length used as data": {
+    "n": 1,
+    "examples": [
+     "cond/len-post/loop"
+    ]
+   },
+   "FALSE-REFUSAL | conditioning after the loop is not a state xor constant": {
+    "n": 1,
+    "examples": [
+     "cond/post-xor-self/loop"
+    ]
+   }
+  }
+ }
+}

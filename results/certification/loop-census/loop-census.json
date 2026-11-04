@@ -1,0 +1,73 @@
+{
+  "kind": "real-loop-certification-spike",
+  "node": "v26.8.2",
+  "rows": [
+    {
+      "name": "crc32c",
+      "entry": "crc32c",
+      "certified": true,
+      "reason": null,
+      "conditioning": "ffffffff",
+      "operatorEqualsSampled": true,
+      "comparisons": 112
+    },
+    {
+      "name": "crc16",
+      "entry": "crc16",
+      "certified": false,
+      "reason": "function shape"
+    },
+    {
+      "name": "crc64",
+      "entry": "crc64",
+      "certified": false,
+      "reason": "entry shape"
+    },
+    {
+      "name": "poly31",
+      "entry": "poly31",
+      "certified": false,
+      "reason": "statement outside the state"
+    },
+    {
+      "name": "lcg",
+      "entry": "lcg",
+      "certified": false,
+      "reason": "statement outside the state"
+    },
+    {
+      "name": "fnv1a",
+      "entry": "fnv1a",
+      "certified": false,
+      "reason": "statement outside the state"
+    },
+    {
+      "name": "adler32",
+      "entry": "adler32",
+      "certified": false,
+      "reason": "function shape"
+    },
+    {
+      "name": "sha256c",
+      "entry": "sha256c",
+      "certified": false,
+      "reason": "data segments"
+    },
+    {
+      "name": "miniz-crc32",
+      "entry": "mz_crc32",
+      "certified": false,
+      "reason": "data segments"
+    }
+  ],
+  "negatives": [
+    {
+      "label": "post conditioning removed",
+      "refusal": "conditioning does not cancel across calls"
+    },
+    {
+      "label": "post conditioning uses another constant",
+      "refusal": "conditioning does not cancel across calls"
+    }
+  ]
+}

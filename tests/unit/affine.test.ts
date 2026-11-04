@@ -1,5 +1,7 @@
+import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { Worker } from 'node:worker_threads';
 import { crc32 } from 'node:zlib';
 import { afterAll, beforeAll, describe, test } from 'vitest';
@@ -17,6 +19,11 @@ import {
 	corpusEntry,
 	ownContext
 } from '../../scripts/research/affine-state-build.ts';
+import { checkLoop, Refusal, refusalOf } from '../../scripts/research/loop-check.ts';
+import { caseWat } from '../../scripts/research/redteam/gen-ops.ts';
+import { buildWat } from '../../scripts/research/redteam/lib.ts';
+import { build, mutants } from '../../scripts/research/split-sensitivity.ts';
+import { checkStream } from '../../scripts/research/stream-check.ts';
 import {
 	foldState,
 	modelSubject,
@@ -373,6 +380,193 @@ describe('adversarial control', () => {
 		assert.equal(all.state, expected);
 		assert.equal(all.mismatchAt, 3);
 	});
+});
+
+describe('length-sensitive control', () => {
+	const size = 262144;
+	let input: Uint8Array;
+	const wasm: Record<string, string> = {};
+
+	// h = h * 31 + byte, with a bit flipped only when one call covers exactly 262144 bytes
+	function build(sensitive: boolean): string {
+		const text = `(module (memory (export "memory") 32 512)
+			(func (export "update") (param $s i32) (param $p i32) (param $n i32) (result i32)
+				(local $i i32)
+				(block $done (loop $again
+					(br_if $done (i32.ge_u (local.get $i) (local.get $n)))
+					(local.set $s (i32.add (i32.mul (local.get $s) (i32.const 31))
+						(i32.load8_u (i32.add (local.get $p) (local.get $i)))))
+					(local.set $i (i32.add (local.get $i) (i32.const 1))) (br $again)))
+				${sensitive ? `(if (i32.eq (local.get $n) (i32.const ${size})) (then (local.set $s (i32.xor (local.get $s) (i32.const 1)))))` : ''}
+				(local.get $s)))`;
+		const module = binaryen.parseText(text);
+		const file = `${mkdtempSync(`${tmpdir()}/folio-length-`)}/${sensitive ? 'sensitive' : 'plain'}.wasm`;
+		writeFileSync(file, module.emitBinary());
+		module.dispose();
+		return file;
+	}
+
+	beforeAll(() => {
+		input = Uint8Array.from({ length: size }, (_, k) => (k * 17 + 31) & 255);
+		wasm.plain = build(false);
+		wasm.sensitive = build(true);
+	}, 60000);
+
+	test('exact mode equals the unsplit call when the function composes', () => {
+		const { model, pool, serial } = session('length-plain', wasm.plain!, 'update');
+		const result = foldAffine(pool, input, model);
+		assert.equal(result.mismatchAt, -1);
+		assert.equal(result.state, serial(input));
+	});
+
+	test('exact mode validates the chunk chain and misses a length-dependent difference', () => {
+		const { model, pool, serial } = session('length-sensitive', wasm.sensitive!, 'update');
+		const result = foldAffine(pool, input, model);
+		assert.equal(result.mismatchAt, -1);
+		assert.equal(result.fallbackBytes, 0);
+		assert.notEqual(result.state, serial(input));
+		assert.equal(result.state, serial(input) ^ 1n);
+	});
+});
+
+describe('spike checkers', () => {
+	const instance = (bytes: Uint8Array) =>
+		new WebAssembly.Instance(new WebAssembly.Module(Uint8Array.from(bytes))).exports as Record<
+			string,
+			any
+		>;
+	const accepts = (check: () => unknown) => {
+		try {
+			check();
+			return true;
+		} catch {
+			return false;
+		}
+	};
+
+	// the model with one zero-start run per chunk reproduces the serial call
+	function assertModel(bytes: Uint8Array, entry: string, model: AffineModel) {
+		const exports = instance(bytes);
+		const update = exports[entry] as Function;
+		const heap = new Uint8Array((exports.memory as WebAssembly.Memory).buffer);
+		heap.set(
+			Uint8Array.from(
+				{ length: 65537 },
+				(_, k) => (Math.imul(k, 2654435761) ^ (k >>> 8)) & 255
+			),
+			1024
+		);
+		for (const length of [1, 257, 65537]) {
+			for (const initial of [0, 0xffffffff]) {
+				const serial = BigInt(update(initial | 0, 1024, length) >>> 0);
+				for (const width of [2, 8]) {
+					let combined = BigInt(initial);
+					for (let k = 0; k < width; k++) {
+						const from = Math.floor((k * length) / width);
+						const to = Math.floor(((k + 1) * length) / width);
+						const offset = BigInt(update(0, 1024 + from, to - from) >>> 0);
+						combined = predictEnd(model, combined, to - from, offset);
+					}
+					assert.equal(combined, serial, `length ${length} width ${width}`);
+				}
+			}
+		}
+	}
+
+	test('both refuse a nop with a clean error', () => {
+		const loop =
+			buildWat(`(func $update (export "update") (param i32 i32 i32) (result i32) (local i32)
+			(block $g (br_if $g (i32.eqz (local.get 2)))
+				(loop $l (nop) (local.set 3 (i32.load8_u (local.get 1)))
+					(local.set 0 (i32.xor (local.get 0) (local.get 3)))
+					(local.set 1 (i32.add (local.get 1) (i32.const 1)))
+					(br_if $l (local.tee 2 (i32.add (local.get 2) (i32.const -1))))))
+			(local.get 0))`);
+		assert.throws(() => checkLoop(loop, 'update'), Refusal);
+		assert.match(refusalOf(loop, 'update')!, /no readable form/);
+		const stream = buildWat(`(func $step (export "transition") (param i32 i32) (result i32)
+				(block (result i32) (nop) (i32.xor (local.get 0) (local.get 1))))
+			(func $update (export "update") (param i32 i32 i32) (result i32)
+				(block $done (br_if $done (i32.eqz (local.get 2)))
+					(loop $again (local.set 0 (call $step (local.get 0) (i32.load8_u (local.get 1))))
+						(local.set 1 (i32.add (local.get 1) (i32.const 1)))
+						(br_if $again (local.tee 2 (i32.add (local.get 2) (i32.const -1))))))
+				(local.get 0))`);
+		assert.throws(() => checkStream(stream), assert.AssertionError);
+		assert.throws(() => checkStream(stream), /no readable form/);
+	});
+
+	test('the loop checker certifies the clang crc32c', () => {
+		const bytes = new Uint8Array(readFileSync(paths.crc32c!));
+		const { model, conditioning } = checkLoop(bytes, 'crc32c');
+		assert.equal(conditioning, 0xffffffffn);
+		const sampled = probeAffine(bytes, 'crc32c');
+		assert.equal(sampled.kind, 'model');
+		assert.deepEqual(model.operator, (sampled as AffineModel).operator);
+		assertModel(bytes, 'crc32c', model);
+	});
+
+	test('the loop checker refuses both conditioning edits of the clang crc32c', () => {
+		const compact = (binaryen.Features as unknown as { CompactImports: number }).CompactImports;
+		const crc = new Uint8Array(readFileSync(paths.crc32c!));
+		// the post-loop xor with -1 that closes the guard block, as binaryen prints it
+		const post =
+			'   (local.set $0\n    (i32.xor\n     (local.get $0)\n     (i32.const -1)\n    )\n   )\n  )\n  (local.get $0)';
+		const refusal = (replacement: string) => {
+			const mod = binaryen.readBinary(crc);
+			mod.setFeatures(binaryen.Features.All & ~compact);
+			const text = mod.emitText();
+			mod.dispose();
+			assert.ok(text.includes(post));
+			const parsed = binaryen.parseText(text.replace(post, replacement));
+			parsed.setFeatures(binaryen.Features.All & ~compact);
+			const bytes = Uint8Array.from(parsed.emitBinary());
+			parsed.dispose();
+			return refusalOf(bytes, 'crc32c');
+		};
+		const cancel = 'conditioning does not cancel across calls';
+		assert.equal(refusal('  )\n  (local.get $0)'), cancel);
+		assert.equal(refusal(post.replace('-1', '-2')), cancel);
+	});
+
+	test('the stream checker accepts the template CRC step and refuses length hazards', () => {
+		const module = (id: string) => build(mutants().find((m) => m.id === id)!.text);
+		const control = module('control');
+		const { model } = checkStream(control);
+		assert.equal(model.ring, 'gf2');
+		assertModel(control, 'update', model);
+		for (const id of ['length-xor', 'length-eq-1000', 'length-eq-262144', 'final-xor'])
+			assert.equal(
+				accepts(() => checkStream(module(id))),
+				false,
+				id
+			);
+	});
+
+	// recorded verdicts of the red-team operator cases: [case, form, accepted]
+	const sample: [string, 'stream' | 'loop', boolean][] = [
+		['neg-bit0', 'stream', true],
+		['shu-32', 'loop', true],
+		['tee-state-alias', 'stream', true],
+		['set-in-block-first', 'loop', true],
+		['neg-mask3', 'stream', false],
+		['and-vars', 'loop', false],
+		['clz', 'stream', false],
+		['mul-odd', 'stream', false],
+		['rotl-const', 'stream', false],
+		['select', 'loop', false],
+		['local-uninit', 'loop', false],
+		['tee-reassign', 'loop', false]
+	];
+	for (const [id, form, expected] of sample) {
+		test(`red-team case ${id} in the ${form} form is ${expected ? 'accepted' : 'refused'}`, () => {
+			const bytes = buildWat(caseWat(id, form));
+			const run =
+				form === 'stream' ? () => checkStream(bytes) : () => checkLoop(bytes, 'update');
+			assert.equal(accepts(run), expected);
+			if (expected) assertModel(bytes, 'update', run().model);
+		});
+	}
 });
 
 // #region state in the context

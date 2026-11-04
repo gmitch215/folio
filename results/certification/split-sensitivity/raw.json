@@ -1,0 +1,390 @@
+{
+  "kind": "split-sensitivity-mutation-bench",
+  "node": "v26.8.2",
+  "rows": [
+    {
+      "id": "control",
+      "note": "bitwise CRC-32C step, template wrapper",
+      "moduleSha256": "7e1fbbe66b85ebb7",
+      "chainEqualsUnsplit": true,
+      "firstFailure": "",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 34.5,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263155"
+      },
+      "checker": "accepts",
+      "checkerReason": "",
+      "checkerMs": 11.4
+    },
+    {
+      "id": "final-xor",
+      "note": "CRC-style final xor applied on every call",
+      "moduleSha256": "d4b4f07626e86aba",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 0 cut 0 state 0",
+      "probe": "refused",
+      "probeCalls": 23,
+      "probeMs": 213.3,
+      "exact": "no model",
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly deep-equal:",
+      "checkerMs": 3.28
+    },
+    {
+      "id": "length-trigger",
+      "note": "one bit flipped when one call covers 262144 bytes",
+      "moduleSha256": "eb216807f87af072",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 262144 cut 87381 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 34,
+      "exact": "WRONG",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263154"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 1.94
+    },
+    {
+      "id": "length-xor",
+      "note": "call length mixed into the result",
+      "moduleSha256": "3d1bbb7aee556904",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 7 cut 2 state 0",
+      "probe": "refused",
+      "probeCalls": 23,
+      "probeMs": 207,
+      "exact": "no model",
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 1.35
+    },
+    {
+      "id": "position-parity",
+      "note": "byte xor index parity",
+      "moduleSha256": "cc2307a14c526e45",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 7 cut 3 state 0",
+      "probe": "refused",
+      "probeCalls": 23,
+      "probeMs": 200,
+      "exact": "no model",
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.83
+    },
+    {
+      "id": "equivalent-wrapper",
+      "note": "same function through an index-counted loop (benign)",
+      "moduleSha256": "8ccce4583457ae1c",
+      "chainEqualsUnsplit": true,
+      "firstFailure": "",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 30.9,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263155"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.76
+    },
+    {
+      "id": "rare-state",
+      "note": "step flips a bit when the register hits one value reached mid-stream",
+      "moduleSha256": "0e27df0f25fad5f7",
+      "chainEqualsUnsplit": true,
+      "firstFailure": "",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 29.5,
+      "exact": "correct by fallback",
+      "exactDetail": {
+        "mismatchAt": 1,
+        "fallbackBytes": 131072,
+        "state": "1456154563",
+        "unsplit": "1456154563"
+      },
+      "checker": "refuses",
+      "checkerReason": "step must be pure supported arithmetic",
+      "checkerMs": 1.65
+    },
+    {
+      "id": "nonlinear",
+      "note": "state times byte",
+      "moduleSha256": "8de1716606d778fe",
+      "chainEqualsUnsplit": true,
+      "firstFailure": "",
+      "probe": "refused",
+      "probeCalls": 20,
+      "probeMs": 15.9,
+      "exact": "no model",
+      "checker": "refuses",
+      "checkerReason": "unsupported step operation 8",
+      "checkerMs": 0.71
+    },
+    {
+      "id": "poly31",
+      "note": "h = h * 31 + byte, affine over Z/2^32",
+      "moduleSha256": "1eab738615009751",
+      "chainEqualsUnsplit": true,
+      "firstFailure": "",
+      "probe": "model z2w",
+      "probeCalls": 525,
+      "probeMs": 4.2,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "859701248",
+        "unsplit": "859701248"
+      },
+      "checker": "refuses",
+      "checkerReason": "unsupported step operation 2",
+      "checkerMs": 1.73
+    },
+    {
+      "id": "table-crc32",
+      "note": "table-driven CRC-32, 256-entry table in a data segment",
+      "moduleSha256": "2ba70131b3035a41",
+      "chainEqualsUnsplit": true,
+      "firstFailure": "",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 12.6,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "2358591652",
+        "unsplit": "2358591652"
+      },
+      "checker": "refuses",
+      "checkerReason": "initializing data segments refuse shared backend promotion",
+      "checkerMs": 0.8
+    },
+    {
+      "id": "length-eq-1000",
+      "note": "bit flipped when n == 1000",
+      "moduleSha256": "759ed96df0f61b53",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 1000 cut 333 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 31.4,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263155"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.86
+    },
+    {
+      "id": "length-ge-1000",
+      "note": "bit flipped when n >= 1000",
+      "moduleSha256": "a9736d9c2015b125",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 1000 cut 333 state 0",
+      "probe": "refused",
+      "probeCalls": 366,
+      "probeMs": 20.1,
+      "exact": "no model",
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.84
+    },
+    {
+      "id": "length-eq-4096",
+      "note": "bit flipped when n == 4096",
+      "moduleSha256": "268d7520f76a9b26",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 4096 cut 1365 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 30.3,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263155"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.72
+    },
+    {
+      "id": "length-ge-4096",
+      "note": "bit flipped when n >= 4096",
+      "moduleSha256": "c35ba22e213d90ca",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 4096 cut 1365 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 32.1,
+      "exact": "WRONG",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "2917499176",
+        "unsplit": "50263154"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 1.22
+    },
+    {
+      "id": "length-eq-65537",
+      "note": "bit flipped when n == 65537",
+      "moduleSha256": "a810f109395c6e3d",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 65537 cut 21845 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 30.5,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263155"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.95
+    },
+    {
+      "id": "length-ge-65537",
+      "note": "bit flipped when n >= 65537",
+      "moduleSha256": "6adf366652934328",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 65537 cut 21845 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 30.3,
+      "exact": "WRONG",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263154"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.99
+    },
+    {
+      "id": "length-eq-100000",
+      "note": "bit flipped when n == 100000",
+      "moduleSha256": "6b72aee0b90308a9",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 100000 cut 33333 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 31.3,
+      "exact": "correct",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263155"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.77
+    },
+    {
+      "id": "length-ge-100000",
+      "note": "bit flipped when n >= 100000",
+      "moduleSha256": "e6d6a5d45bcb8e5a",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 100000 cut 33333 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 28.2,
+      "exact": "WRONG",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263154"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.94
+    },
+    {
+      "id": "length-eq-262144",
+      "note": "bit flipped when n == 262144",
+      "moduleSha256": "eb216807f87af072",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 262144 cut 87381 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 28.1,
+      "exact": "WRONG",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263154"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.84
+    },
+    {
+      "id": "length-ge-262144",
+      "note": "bit flipped when n >= 262144",
+      "moduleSha256": "a56d973297725f96",
+      "chainEqualsUnsplit": false,
+      "firstFailure": "length 262144 cut 87381 state 0",
+      "probe": "model gf2",
+      "probeCalls": 552,
+      "probeMs": 29.7,
+      "exact": "WRONG",
+      "exactDetail": {
+        "mismatchAt": -1,
+        "fallbackBytes": 0,
+        "state": "50263155",
+        "unsplit": "50263154"
+      },
+      "checker": "refuses",
+      "checkerReason": "Expected values to be strictly equal:",
+      "checkerMs": 0.84
+    },
+    {
+      "id": "adler32",
+      "note": "Adler-32 step, affine over Z/65521 on reduced states",
+      "moduleSha256": "2e446eb15350894f",
+      "chainEqualsUnsplit": true,
+      "firstFailure": "",
+      "probe": "refused",
+      "probeCalls": 31,
+      "probeMs": 0.3,
+      "exact": "no model",
+      "checker": "refuses",
+      "checkerReason": "unsupported step operation 0",
+      "checkerMs": 0.84
+    }
+  ]
+}
