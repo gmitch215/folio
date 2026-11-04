@@ -4,6 +4,9 @@ import { serveTasks, type TaskLink, type TaskPool, type TaskResult } from './tas
 /** `gf2` is affine over GF(2)^bits (xor), `z2w` is affine over Z/2^bits (add, multiply). */
 export type AffineRing = 'gf2' | 'z2w';
 
+/** The model of a certificate may also be `zp`: two 16-bit digits of the state, each a residue mod p. */
+export type AffineModelRing = AffineRing | 'zp';
+
 /** Where the state, the pointer and the length sit in the entry's parameter list. */
 export interface AffineLayout {
 	entry: string;
@@ -24,15 +27,19 @@ export interface AffineCheck {
 /**
  * The recovered model: T(s, x) = A(|x|) s + T(0, x) over `ring`, with A(|x|) the `align`-byte
  * operator raised to the power |x| / align. `operator` is the columns of that operator over GF(2),
- * or its multiplier over Z/2^bits.
+ * or its multiplier over Z/2^bits. Over `zp` the state is `digits` digits of `bits / digits` bits,
+ * each reduced mod `modulus` after a call of at least one byte, and `operator` is the digits by
+ * digits matrix mod `modulus` in row order.
  */
 export interface AffineModel {
 	kind: 'model';
-	ring: AffineRing;
+	ring: AffineModelRing;
 	bits: 32 | 64;
 	align: number;
 	layout: AffineLayout;
 	operator: bigint[] | bigint;
+	modulus?: bigint;
+	digits?: number;
 	checks: AffineCheck[];
 	calls: number;
 }
@@ -179,6 +186,7 @@ interface Powers {
 	squares: bigint[][];
 	byUnits: Map<number, bigint[]>;
 	byMultiplier: Map<number, bigint>;
+	byResidues: Map<number, bigint[]>;
 }
 
 const powers = new WeakMap<AffineModel, Powers>();
@@ -186,7 +194,7 @@ const powers = new WeakMap<AffineModel, Powers>();
 function powersOf(model: AffineModel): Powers {
 	let found = powers.get(model);
 	if (!found) {
-		found = { squares: [], byUnits: new Map(), byMultiplier: new Map() };
+		found = { squares: [], byUnits: new Map(), byMultiplier: new Map(), byResidues: new Map() };
 		if (model.ring === 'gf2') found.squares.push(model.operator as bigint[]);
 		powers.set(model, found);
 	}
@@ -222,16 +230,66 @@ function multiplierPower(model: AffineModel, units: number): bigint {
 	return result;
 }
 
+// the digits of a zp state, lowest first
+function residues(model: AffineModel, state: bigint): bigint[] {
+	const k = model.digits!;
+	const width = BigInt(model.bits / k);
+	return Array.from(
+		{ length: k },
+		(_, i) => (state >> (width * BigInt(i))) & mask(model.bits / k)
+	);
+}
+
+function residueState(model: AffineModel, digits: bigint[]): bigint {
+	const width = BigInt(model.bits / model.digits!);
+	return digits.reduce((acc, d, i) => acc | (d << (width * BigInt(i))), 0n);
+}
+
+function residuePower(model: AffineModel, units: number): bigint[] {
+	const cache = powersOf(model);
+	const cached = cache.byResidues.get(units);
+	if (cached) return cached;
+	const k = model.digits!;
+	const p = model.modulus!;
+	const times = (a: bigint[], b: bigint[]) =>
+		Array.from({ length: k * k }, (_, at) => {
+			const i = Math.floor(at / k);
+			const j = at % k;
+			let sum = 0n;
+			for (let t = 0; t < k; t++) sum += a[i * k + t]! * b[t * k + j]!;
+			return sum % p;
+		});
+	let result: bigint[] = Array.from({ length: k * k }, (_, at) => (at % (k + 1) === 0 ? 1n : 0n));
+	let base = model.operator as bigint[];
+	for (let n = units; n > 0; n = Math.floor(n / 2)) {
+		if (n % 2 === 1) result = times(base, result);
+		base = times(base, base);
+	}
+	cache.byResidues.set(units, result);
+	return result;
+}
+
 /**
  * The state-dependent part of T(state, x) for a chunk of `length` bytes: A(length) state. The
  * operator comes from repeated squaring and is cached per length. `length` must be a multiple of
- * `model.align`.
+ * `model.align`. Over `zp` a zero length leaves the state as it is and any other length reduces
+ * every digit.
  */
 export function advance(model: AffineModel, state: bigint, length: number): bigint {
 	if (!Number.isSafeInteger(length) || length < 0 || length % model.align)
 		throw new RangeError(`length ${length} is not a multiple of ${model.align}`);
 	const units = length / model.align;
 	if (model.ring === 'gf2') return gfApply(matrixPower(model, units), state);
+	if (model.ring === 'zp') {
+		if (units === 0) return state;
+		const k = model.digits!;
+		const m = residuePower(model, units);
+		const s = residues(model, state);
+		return residueState(
+			model,
+			s.map((_, i) => s.reduce((sum, d, j) => sum + m[i * k + j]! * d, 0n) % model.modulus!)
+		);
+	}
 	return (multiplierPower(model, units) * state) & mask(model.bits);
 }
 
@@ -243,7 +301,16 @@ export function predictEnd(
 	offset: bigint
 ): bigint {
 	const moved = advance(model, start, length);
-	return model.ring === 'gf2' ? moved ^ offset : (moved + offset) & mask(model.bits);
+	if (model.ring === 'gf2') return moved ^ offset;
+	if (model.ring === 'zp') {
+		if (length === 0) return start;
+		const o = residues(model, offset);
+		return residueState(
+			model,
+			residues(model, moved).map((d, i) => (d + o[i]!) % model.modulus!)
+		);
+	}
+	return (moved + offset) & mask(model.bits);
 }
 
 // #endregion
@@ -261,7 +328,7 @@ export function probeAffine(
 	module: WebAssembly.Module | Uint8Array,
 	entry: string,
 	options: AffineProbeOptions = {}
-): AffineModel | AffineRefusal {
+): (AffineModel & { ring: AffineRing }) | AffineRefusal {
 	const trials = options.trials ?? 32;
 	const align = options.align ?? 1;
 	if (!Number.isSafeInteger(trials) || trials < 1) throw new RangeError('invalid trial count');
@@ -288,7 +355,7 @@ function probe(
 	trials: number,
 	align: number,
 	seed: number
-): AffineModel | AffineRefusal {
+): (AffineModel & { ring: AffineRing }) | AffineRefusal {
 	if (kernel.arity !== 3) return refuse(`expected 3 parameters, found ${kernel.arity}`);
 	const rng = mulberry(seed);
 	const word = (bits: number) =>
@@ -412,7 +479,7 @@ function probe(
 						minus(T(1n << BigInt(k), DATA, align), zeroUnit)
 					)
 				: minus(T(1n, DATA, align), zeroUnit);
-		const model: AffineModel = {
+		const model: AffineModel & { ring: AffineRing } = {
 			kind: 'model',
 			ring,
 			bits,

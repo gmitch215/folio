@@ -135,3 +135,47 @@ uint32_t EXPORT(adv)(uint32_t crc, const uint8_t *p, uint32_t n) {
 	}
 	return crc;
 }
+
+// transforms in place: byte i is replaced by a function of itself and the generator state before it
+uint32_t EXPORT(xlcg)(uint32_t s, uint8_t *p, uint32_t n) {
+	for (uint32_t i = 0; i < n; i++) {
+		s = s * 1664525u + 1013904223u;
+		p[i] ^= (uint8_t)(s >> 24);
+	}
+	return s;
+}
+
+uint32_t EXPORT(xshift)(uint32_t s, uint8_t *p, uint32_t n) {
+	for (uint32_t i = 0; i < n; i++) {
+		s ^= s << 13;
+		s ^= s >> 17;
+		s ^= s << 5;
+		p[i] ^= (uint8_t)s;
+	}
+	return s;
+}
+
+#define SB(i) ((uint8_t)((i) * 167u + 13u))
+#define SB4(n) SB(n), SB(n + 1), SB(n + 2), SB(n + 3)
+#define SB16(n) SB4(n), SB4(n + 4), SB4(n + 8), SB4(n + 12)
+#define SB64(n) SB16(n), SB16(n + 16), SB16(n + 32), SB16(n + 48)
+static const uint8_t sbox[256] = {SB64(0), SB64(64), SB64(128), SB64(192)};
+
+uint32_t EXPORT(xsbox)(uint32_t s, uint8_t *p, uint32_t n) {
+	for (uint32_t i = 0; i < n; i++) {
+		s ^= s << 13;
+		s ^= s >> 17;
+		s ^= s << 5;
+		p[i] ^= sbox[s & 0xffu];
+	}
+	return s;
+}
+
+// the state reads the input byte, so the chunks cannot start without running the ones before them
+uint32_t EXPORT(xfeed)(uint32_t s, uint8_t *p, uint32_t n) {
+	for (uint32_t i = 0; i < n; i++) {
+		s = s * 31u + p[i];
+		p[i] ^= (uint8_t)(s >> 24);
+	}
+	return s;
+}

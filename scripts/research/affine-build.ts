@@ -80,6 +80,22 @@ function compile(output: string, entry: string, extra: string[], inputs: string[
 	return output;
 }
 
+/** The C subjects that rewrite their input in place, and the ring of their state. */
+export const outputSubjects = [
+	{ name: 'xlcg', ring: 'z2w' },
+	{ name: 'xshift', ring: 'gf2' },
+	{ name: 'xsbox', ring: 'gf2' },
+	{ name: 'xfeed', ring: 'z2w' }
+] as const;
+
+/** Builds the in-place subjects and returns the wasm path of each by name. */
+export function buildOutputSubjects(outDir = defaultOut): Record<string, string> {
+	const out: Record<string, string> = {};
+	for (const { name } of outputSubjects)
+		out[name] = compile(join(outDir, `${name}.wasm`), name, [], []);
+	return out;
+}
+
 /** Builds every static subject and returns the wasm path of each by name. */
 export function buildSubjects(outDir = defaultOut): Record<string, string> {
 	const out: Record<string, string> = {};
@@ -100,11 +116,11 @@ const manifest = JSON.parse(readFileSync(join(cases, '../corpus-manifest.json'),
 const pin = manifest.projects.find((project) => project.id === 'miniz')!;
 
 /**
- * Builds miniz's own `mz_crc32` as the entry, with no wrapper: unsigned long is 32 bits on wasm32,
- * so the export already has the (state, pointer, length) shape. Returns undefined when the pinned
- * archive is not in the corpus cache; `fetchMiniz` downloads it.
+ * Builds one of miniz's own functions, `mz_crc32` or `mz_adler32`, as the entry with no wrapper:
+ * unsigned long is 32 bits on wasm32, so the export already has the (state, pointer, length) shape.
+ * Returns undefined when the pinned archive is not in the corpus cache; `fetchMiniz` downloads it.
  */
-export function buildMiniz(outDir = defaultOut): string | undefined {
+export function buildMiniz(outDir = defaultOut, entry = 'mz_crc32'): string | undefined {
 	const archive = join(root, 'build/research/corpus/miniz.tar.gz');
 	if (!existsSync(archive)) return undefined;
 	if (createHash('sha256').update(readFileSync(archive)).digest('hex') !== pin.sha256)
@@ -117,7 +133,7 @@ export function buildMiniz(outDir = defaultOut): string | undefined {
 		work,
 		readdirSync(work).find((entry) => entry.endsWith(pin.commit))!
 	);
-	const output = join(outDir, 'miniz-crc32.wasm');
+	const output = join(outDir, `miniz-${entry === 'mz_crc32' ? 'crc32' : entry.slice(3)}.wasm`);
 	const inputs = [join(dir, 'miniz.c'), join(cases, 'support-min.c')];
 	if (stale(output, [...inputs, new URL(import.meta.url).pathname])) {
 		execFileSync(
@@ -141,7 +157,7 @@ export function buildMiniz(outDir = defaultOut): string | undefined {
 				...inputs,
 				'-o',
 				output,
-				...link('mz_crc32'),
+				...link(entry),
 				'-Wl,--allow-undefined'
 			],
 			{ env, stdio: 'pipe' }
