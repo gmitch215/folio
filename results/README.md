@@ -17,6 +17,7 @@ parameters and sample counts are recorded in the data.
 | [Managed](managed/README.md)             | Copied-snapshot lane validation                             |
 | [Portability](portability/README.md)     | Host bridge, runtime capabilities and concurrency           |
 | [Analysis](analysis/README.md)           | Work/span models and their controls                         |
+| [Certification](certification/README.md) | Stream checkers: split sensitivity, red team, real loops    |
 | [Verification](verification/README.md)   | Historical test and verification records                    |
 
 ## Provenance

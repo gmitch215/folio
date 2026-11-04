@@ -21,6 +21,7 @@ the same engine.
 - [Browser Execution and Page Leases](#-browser-execution-and-page-leases)
 - [Task Pool](#-task-pool)
 - [Slice Pool](#-slice-pool)
+- [Certified Stream Folds](#-certified-stream-folds)
 - [Context Checkpoints](#-context-checkpoints)
 - [Baked Boot Images](#-baked-boot-images)
 - [Execution and Memory](#-execution-and-memory)
@@ -340,6 +341,69 @@ memory copy and is meant for tests and canaries. A route that copies each task's
 private context cannot win on a kernel whose speed is the copy's bandwidth; the slice pool has no
 copy, and on the quiet rig xxHash, Adler-32 and LZ4 decompress over thousands of records ran 1.7x
 to 4.9x faster than serial on eight workers (see the technical report).
+
+## 🧮 Certified Stream Folds
+
+`@gmitch215/folio/certify` decides whether an exported function `entry(state, ptr, len)` over a byte
+stream is the left fold of one affine byte step, for every length of at least one byte, and
+`@gmitch215/folio/certified` runs such a function on workers. `certifyStream(bytes, entry)` returns a
+certificate or the reason it refused. The proof executes the function symbolically, so it covers the
+unrolled main loop and tail that clang emits, tables the module carries or builds on its first call,
+64-bit states and internal calls. The step is affine in the state over GF(2) (bit operations), over
+Z/2^w (add and multiply) or over two 16-bit residues of one modulus (Adler-32 keeps its two sums this
+way), and it may apply any pure function to the input bytes.
+
+A certificate names the module digest. `verifyCertificate(bytes, certificate)` re-derives it from the
+module, and `guardInput` checks that an input range stays inside memory and clear of the bytes the proof
+read. With a certificate, `foldCertified` runs every chunk once from state zero on its own worker, reads
+the input in place from shared memory and combines the end states with the recovered model. It does not
+run a second pass, because the certificate replaces the validation that `foldAffine` needs when it only
+has a sampled model.
+
+```ts
+import { Worker } from 'node:worker_threads';
+import { certifyStream } from '@gmitch215/folio/certify';
+import { foldCertified, installPrefill, shareCertified } from '@gmitch215/folio/certified';
+import { TaskPool } from '@gmitch215/folio/tasks';
+
+const certificate = certifyStream(bytes, 'crc32c');
+if (certificate.kind === 'refusal') throw new Error(certificate.reason);
+
+const pages = 256;
+const subject = shareCertified(bytes, certificate, pages);
+const memory = new WebAssembly.Memory({ initial: pages, maximum: pages, shared: true });
+installPrefill(subject, memory);
+const module = new WebAssembly.Module(subject.bytes);
+
+const pool = new TaskPool(8);
+for (let index = 0; index < 8; index++) {
+  const link = pool.link(index);
+  // worker.ts calls serveCertified(link, { module, memory, layout }) from workerData
+  new Worker(new URL('./worker.ts', import.meta.url), {
+    workerData: { link, module, memory, layout: certificate.layout },
+    transferList: [link.port]
+  });
+}
+
+const input = new Uint8Array(memory.buffer, 1 << 20, 64 * 1024 * 1024);
+// fill the input here
+const { state } = foldCertified(pool, input, memory, certificate);
+```
+
+A function that also rewrites its input in place, such as a stream cipher that xors a keystream into
+the buffer, gets an `output` field when the proof shows that byte i becomes a fixed function of the
+original byte and the fold state before it, and that nothing else is written. When the state does not
+read the input bytes, `reconstructCertified` starts every chunk at its own state, which the model gives
+without running the kernel, and each worker rewrites its own bytes once. A chunk that ends in a state
+the model did not predict makes it throw, because the input is already rewritten. `foldCertified`
+throws for a certificate with `output`: chunks that start from state zero would write the wrong bytes.
+
+A refusal describes the checker and not the function: a function it cannot prove runs serially or through
+`foldAffine` in exact mode. The checker refuses a branch on input data or on the state, a pointer or
+length used as data, state kept in memory or globals, stores other than the in-place byte rewrite,
+imports, a start function and passive data segments. A function that depends on the alignment of its pointer or reads
+past its input is refused. `zeroLength` in the certificate says what a call over no bytes returns, and
+`foldCertified` runs an empty input as the serial call.
 
 ## 🔄 Context Checkpoints
 

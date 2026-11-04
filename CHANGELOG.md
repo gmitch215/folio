@@ -16,6 +16,20 @@
 - `@gmitch215/folio/fold` with `chunkRanges`, `foldChunks`, `crc32Combine`, `adler32Combine` and
   `ctrAdvance`, which split a CRC-32, Adler-32 or AES-CTR stream across the task pool and join the chunk
   states into the serial result.
+- `@gmitch215/folio/certify` with `certifyStream`, `verifyCertificate` and `guardInput`. `certifyStream`
+  proves that an exported `entry(state, ptr, len)` is the left fold of one affine byte step for every length
+  of at least one byte, by running the function symbolically, and returns a certificate bound to the module
+  digest or the reason it refused. It covers unrolled loops with tails, tables the module carries or builds
+  on its first call, 64-bit states and internal calls over GF(2), Z/2^w and two 16-bit residues of one
+  modulus (Adler-32), and a function that rewrites its input in place gets an `output` proof that byte i
+  becomes a fixed function of the original byte and the fold state before it.
+- `@gmitch215/folio/certified` with `shareCertified`, `installPrefill`, `serveCertified`, `foldCertified`
+  and `reconstructCertified`: a certified function runs once per chunk on workers that read the input in
+  place from shared memory, and the end states combine through the certificate's model with no second
+  pass. `reconstructCertified` runs a kernel that rewrites its input, starting each chunk at the state the
+  model gives it.
+- `@gmitch215/folio/affine` exports `probeAffine`, `foldAffine` and the affine model types that the
+  certificate carries.
 - Iteration route options `iterationReadWindows`, `iterationReadSummary`, `iterationSecondChance`,
   `iterationLogCeiling` and `iterationStall`, all off by default. Slot windows, verdict memory and
   cold-start admission were added to the route. A module-local `call_indirect` table no longer refuses a loop.
