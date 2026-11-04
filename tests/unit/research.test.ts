@@ -1,4 +1,5 @@
 import binaryen from 'binaryen';
+import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -373,4 +374,122 @@ test('operation costs separate setup, the first operation and later ones by diff
 	expect(costs.invocationsWithCpu).toBe(4);
 	expect(costs.ownerAwaitMs).toEqual({ firstOperation: 30, laterOperation: 10 });
 	expect(costs.bytesPerOperation).toEqual({ sent: 100, received: 5 });
+});
+
+test('the one-pass table takes the median over sessions of the paired per-round medians', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-onepass-'));
+	try {
+		const cell = (
+			serialWall: number,
+			arms: Record<string, [number, number][]>
+		): { rows: object[] } => ({
+			rows: [0, 1].flatMap((round) => [
+				{ arm: 'serial', round, wallMs: serialWall, cpuMs: 100 },
+				...Object.entries(arms).map(([arm, rounds]) => ({
+					arm,
+					round,
+					wallMs: rounds[round]![0],
+					cpuMs: rounds[round]![1]
+				}))
+			])
+		});
+		const cells = join(root, 'cells');
+		mkdirSync(cells);
+		writeFileSync(
+			join(cells, 's1-m8-w2.json'),
+			JSON.stringify(
+				cell(100, {
+					'one-shared': [
+						[50, 101],
+						[40, 103]
+					],
+					'one-copy': [
+						[80, 120],
+						[80, 120]
+					],
+					'two-shared': [
+						[200, 100],
+						[200, 100]
+					]
+				})
+			)
+		);
+		writeFileSync(
+			join(cells, 's2-m8-w2.json'),
+			JSON.stringify(
+				cell(140, {
+					'one-shared': [
+						[40, 110],
+						[35, 110]
+					],
+					'one-copy': [
+						[80, 100],
+						[80, 100]
+					],
+					'two-shared': [
+						[140, 150],
+						[140, 150]
+					]
+				})
+			)
+		);
+		writeFileSync(join(cells, 'notes.json'), '{}');
+		const script = 'scripts/research/summary-onepass-table.mjs';
+		const summary = join(root, 'summary.json');
+		const text = execFileSync(process.execPath, [script, cells, summary], { encoding: 'utf8' });
+		expect(JSON.parse(readFileSync(summary, 'utf8'))).toEqual([
+			{
+				mib: 8,
+				width: 2,
+				serialMs: 120,
+				'one-shared': { speed: 3, cpu: 1.06, sessions: 2, speedRange: [2.25, 3.75] },
+				'one-copy': { speed: 1.5, cpu: 1.1, sessions: 2, speedRange: [1.25, 1.75] },
+				'two-shared': { speed: 0.75, cpu: 1.25, sessions: 2, speedRange: [0.5, 1] }
+			}
+		]);
+		expect(text).toContain('8 MiB w2 serial 120 ms (70 MB/s) | one-shared 3x cpu 1.06');
+		expect(() =>
+			execFileSync(process.execPath, [script, cells, summary], { stdio: 'pipe' })
+		).toThrow(/refusing to overwrite/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('the break-even table repays certification and first use against the saving per call', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-breakeven-'));
+	try {
+		const files = [64, 1, 8].map((mib) => {
+			const [serialMs, secondCallMs, firstCallMs] =
+				mib === 1 ? [7, 2, 500] : mib === 8 ? [60, 10, 100] : [5, 8, 100];
+			const path = join(root, `coldstart-w8-m${mib}.json`);
+			writeFileSync(
+				path,
+				JSON.stringify({
+					width: 8,
+					mib,
+					probeMs: 10,
+					checkMs: 40,
+					firstCallMs,
+					secondCallMs,
+					serialMs
+				})
+			);
+			return path;
+		});
+		const lines = execFileSync(
+			process.execPath,
+			['scripts/research/summary-breakeven-table.mjs', ...files],
+			{ encoding: 'utf8' }
+		)
+			.trim()
+			.split('\n');
+		expect(lines.slice(2)).toEqual([
+			'| 1 | 10.00 | 40.00 | 50.00 | 498.00 | 7.00 | 2.00 | 5.00 | 10.0 | 109.6 |',
+			'| 8 | 10.00 | 40.00 | 50.00 | 90.00 | 60.00 | 10.00 | 50.00 | 1.0 | 2.8 |',
+			'| 64 | 10.00 | 40.00 | 50.00 | 92.00 | 5.00 | 8.00 | -3.00 | never | never |'
+		]);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
 });

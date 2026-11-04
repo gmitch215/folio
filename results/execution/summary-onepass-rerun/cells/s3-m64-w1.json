@@ -1,0 +1,169 @@
+{
+  "kind": "checked-compiled-stream-wrapper",
+  "compiledEvidence": {
+    "moduleSha256": "4b1dbb56e3bd36394a92c4280a934ed416e7c68fa05ac20e1ecd8ef95e737901",
+    "expressions": 84,
+    "stepExport": "transition",
+    "entry": "update",
+    "schema": "experimental-linear-byte-stream-v1",
+    "guard": "exclusive immutable input; (ptr >>> 0) + (len >>> 0) <= memory byte length",
+    "observation": "return i32 only; complete entry closure has no stores, globals or host calls"
+  },
+  "node": "v26.10.0",
+  "width": 1,
+  "mib": 64,
+  "moduleSha256": "4b1dbb56e3bd36394a92c4280a934ed416e7c68fa05ac20e1ecd8ef95e737901",
+  "checkedExpressions": 84,
+  "rejected": [],
+  "generatedStepControl": {
+    "checkedExpressions": 109,
+    "rejected": [
+      "multiply",
+      "rare-branch",
+      "hidden-state",
+      "extra-output"
+    ]
+  },
+  "limitations": [
+    "checker covers one compiled loop skeleton with a pure step, applied to the executed shared-import module; exclusivity is declared",
+    "one local process per whole study, order alternated; not independent arm processes",
+    "one size/architecture/session, no quiet-machine performance claim"
+  ],
+  "rows": [
+    {
+      "arm": "serial",
+      "round": 0,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 224.53305699999987,
+      "cpuMs": 224.584
+    },
+    {
+      "arm": "one-copy",
+      "round": 0,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 267.745265,
+      "cpuMs": 275.872
+    },
+    {
+      "arm": "one-shared",
+      "round": 0,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 224.7942149999999,
+      "cpuMs": 232.737
+    },
+    {
+      "arm": "one-shared",
+      "round": 1,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 224.3289249999998,
+      "cpuMs": 224.45
+    },
+    {
+      "arm": "one-copy",
+      "round": 1,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 266.90984300000036,
+      "cpuMs": 275.114
+    },
+    {
+      "arm": "serial",
+      "round": 1,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 224.04470300000003,
+      "cpuMs": 229.619
+    },
+    {
+      "arm": "serial",
+      "round": 2,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 223.8620719999999,
+      "cpuMs": 223.852
+    },
+    {
+      "arm": "one-copy",
+      "round": 2,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 268.1166909999997,
+      "cpuMs": 279.373
+    },
+    {
+      "arm": "one-shared",
+      "round": 2,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 225.00861299999997,
+      "cpuMs": 235.415
+    },
+    {
+      "arm": "one-shared",
+      "round": 3,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 223.70511199999964,
+      "cpuMs": 223.705
+    },
+    {
+      "arm": "one-copy",
+      "round": 3,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 268.3205990000006,
+      "cpuMs": 282.138
+    },
+    {
+      "arm": "serial",
+      "round": 3,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 223.78717899999992,
+      "cpuMs": 226.684
+    },
+    {
+      "arm": "serial",
+      "round": 4,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 223.75886900000023,
+      "cpuMs": 223.745
+    },
+    {
+      "arm": "one-copy",
+      "round": 4,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 267.52223800000047,
+      "cpuMs": 274.039
+    },
+    {
+      "arm": "one-shared",
+      "round": 4,
+      "inputBytes": 67108864,
+      "tasks": 1,
+      "exact": true,
+      "wallMs": 224.28318800000034,
+      "cpuMs": 232.71
+    }
+  ]
+}

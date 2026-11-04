@@ -1,0 +1,1028 @@
+{
+  "kind": "serial-footprint-probe",
+  "node": "v26.8.2",
+  "records": 6,
+  "limitations": [
+    "write sets are byte differences against a baseline: same-value writes and reads are invisible",
+    "stack writes are separated by relocating __stack_pointer to the memory tail; modules without that global are not shifted",
+    "poisoning overwrites the union of shared written bytes with pseudo-random values, two seeds",
+    "records are the first six of each driver, one input pattern"
+  ],
+  "rows": [
+    {
+      "id": "lz4-compress",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "lz4-decompress",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "miniz-compress",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 6,
+      "sharedRegions": {
+        "static-zone": 6
+      },
+      "sharedFirst": [
+        67745,
+        67746,
+        67750,
+        67752,
+        67753,
+        67754
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "sharedOutsideOwn": 6
+    },
+    {
+      "id": "miniz-decompress",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 5,
+      "sharedRegions": {
+        "static-zone": 5
+      },
+      "sharedFirst": [
+        65769,
+        65770,
+        65774,
+        65776,
+        65777
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "sharedOutsideOwn": 5
+    },
+    {
+      "id": "miniz-crc32",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "miniz-adler32",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "jsmn-parse",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "jsmn-parse-slot",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "aes-cbc-encrypt-slot",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "md5-slot",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "jsmn-parse-shared",
+      "label": "fail",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 3417,
+      "sharedRegions": {
+        "static-zone": 3417
+      },
+      "sharedFirst": [
+        65536,
+        65544,
+        65545,
+        65548,
+        65552,
+        65556,
+        65560,
+        65564
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        3417,
+        3417,
+        3417,
+        3417,
+        3417,
+        3417
+      ],
+      "sharedOutsideOwn": 3417
+    },
+    {
+      "id": "kissfft-complex",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "kissfft-real",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "kissfft-real-shared",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 16359,
+      "sharedRegions": {
+        "config": 16359
+      },
+      "sharedFirst": [
+        1069334,
+        1069335,
+        1069338,
+        1069339,
+        1069340,
+        1069341,
+        1069342,
+        1069343
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        16188,
+        16203,
+        16187,
+        16162,
+        16134,
+        16165
+      ],
+      "sharedOutsideOwn": 16359
+    },
+    {
+      "id": "aes-cbc-encrypt",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "aes-cbc-decrypt",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "aes-cbc-decrypt-shared",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 192,
+      "sharedRegions": {
+        "static-zone": 192
+      },
+      "sharedFirst": [
+        66064,
+        66065,
+        66066,
+        66067,
+        66068,
+        66069,
+        66070,
+        66072
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        190,
+        190,
+        192,
+        192,
+        189,
+        192
+      ],
+      "sharedOutsideOwn": 192
+    },
+    {
+      "id": "aes-ctr",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "xxhash32",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "xxhash64",
+      "label": "pass",
+      "stackShifted": false,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": null,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "xxhash3",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "qoi-encode",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 5,
+      "sharedRegions": {
+        "static-zone": 5
+      },
+      "sharedFirst": [
+        65549,
+        65550,
+        65554,
+        65556,
+        65557
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "sharedOutsideOwn": 5
+    },
+    {
+      "id": "qoi-decode",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 5,
+      "sharedRegions": {
+        "static-zone": 5
+      },
+      "sharedFirst": [
+        65537,
+        65538,
+        65542,
+        65544,
+        65545
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "sharedOutsideOwn": 5
+    },
+    {
+      "id": "qoi-encode-64",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 4,
+      "sharedRegions": {
+        "static-zone": 4
+      },
+      "sharedFirst": [
+        65550,
+        65554,
+        65556,
+        65557
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "sharedOutsideOwn": 4
+    },
+    {
+      "id": "qoi-decode-64",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 5,
+      "sharedRegions": {
+        "static-zone": 5
+      },
+      "sharedFirst": [
+        65537,
+        65538,
+        65542,
+        65544,
+        65545
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "sharedOutsideOwn": 5
+    },
+    {
+      "id": "sha256",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "sha256-shared",
+      "label": "fail",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 35,
+      "sharedRegions": {
+        "static-zone": 35
+      },
+      "sharedFirst": [
+        65792,
+        65853,
+        65866,
+        65872,
+        65873,
+        65874,
+        65875,
+        65876
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        35,
+        35,
+        35,
+        35,
+        35,
+        35
+      ],
+      "sharedOutsideOwn": 35
+    },
+    {
+      "id": "sha1",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "md5",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "m6502",
+      "label": "pass",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "brotli-compress",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 6,
+      "sharedRegions": {
+        "static-zone": 6
+      },
+      "sharedFirst": [
+        506433,
+        506434,
+        506438,
+        506440,
+        506441,
+        506442
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        6,
+        6,
+        5,
+        6,
+        6,
+        6
+      ],
+      "sharedOutsideOwn": 6
+    },
+    {
+      "id": "brotli-decompress",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 5,
+      "sharedRegions": {
+        "static-zone": 5
+      },
+      "sharedFirst": [
+        197505,
+        197506,
+        197510,
+        197512,
+        197513
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "sharedOutsideOwn": 5
+    },
+    {
+      "id": "wyhash",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "blake2b",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 0,
+      "sharedRegions": {},
+      "sharedFirst": [],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sharedOutsideOwn": 0
+    },
+    {
+      "id": "qoa-encode",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 5,
+      "sharedRegions": {
+        "static-zone": 5
+      },
+      "sharedFirst": [
+        66193,
+        66194,
+        66197,
+        66200,
+        66201
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        5,
+        5,
+        4,
+        5,
+        5,
+        5
+      ],
+      "sharedOutsideOwn": 5
+    },
+    {
+      "id": "qoa-decode",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 4,
+      "sharedRegions": {
+        "static-zone": 4
+      },
+      "sharedFirst": [
+        66050,
+        66054,
+        66056,
+        66057
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "sharedOutsideOwn": 4
+    },
+    {
+      "id": "yyjson-read",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 5,
+      "sharedRegions": {
+        "static-zone": 5
+      },
+      "sharedFirst": [
+        78913,
+        78914,
+        78917,
+        78920,
+        78921
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "sharedOutsideOwn": 5
+    },
+    {
+      "id": "md4c-html",
+      "label": "unlabeled",
+      "stackShifted": true,
+      "records": 6,
+      "sharedWriteBytes": 6,
+      "sharedRegions": {
+        "static-zone": 6
+      },
+      "sharedFirst": [
+        120389,
+        120390,
+        120394,
+        120396,
+        120397,
+        120398
+      ],
+      "carriedEqualsFresh": true,
+      "permutedEqualsFresh": true,
+      "stackShiftOutputEqual": true,
+      "poisonChangedOutputs": 0,
+      "poisonTrials": 12,
+      "writeSetBytes": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "sharedOutsideOwn": 6
+    }
+  ]
+}

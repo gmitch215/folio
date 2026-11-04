@@ -1,0 +1,214 @@
+{
+  "kind": "checked-compiled-stream-wrapper",
+  "compiledEvidence": {
+    "moduleSha256": "4b1dbb56e3bd36394a92c4280a934ed416e7c68fa05ac20e1ecd8ef95e737901",
+    "expressions": 84,
+    "stepExport": "transition",
+    "entry": "update",
+    "schema": "experimental-linear-byte-stream-v1",
+    "guard": "exclusive immutable input; (ptr >>> 0) + (len >>> 0) <= memory byte length",
+    "observation": "return i32 only; complete entry closure has no stores, globals or host calls"
+  },
+  "node": "v26.10.0",
+  "width": 2,
+  "mib": 64,
+  "moduleSha256": "4b1dbb56e3bd36394a92c4280a934ed416e7c68fa05ac20e1ecd8ef95e737901",
+  "checkedExpressions": 84,
+  "rejected": [],
+  "generatedStepControl": {
+    "checkedExpressions": 109,
+    "rejected": [
+      "multiply",
+      "rare-branch",
+      "hidden-state",
+      "extra-output"
+    ]
+  },
+  "limitations": [
+    "checker covers one compiled loop skeleton with a pure step, applied to the executed shared-import module; exclusivity is declared",
+    "one local process per whole study, order alternated; not independent arm processes",
+    "one size/architecture/session, no quiet-machine performance claim"
+  ],
+  "rows": [
+    {
+      "arm": "serial",
+      "round": 0,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 224.04146500000002,
+      "cpuMs": 224.038
+    },
+    {
+      "arm": "one-copy",
+      "round": 0,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 147.54888500000015,
+      "cpuMs": 282.31
+    },
+    {
+      "arm": "two-shared",
+      "round": 0,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 221.30784099999983,
+      "cpuMs": 221.306
+    },
+    {
+      "arm": "one-shared",
+      "round": 0,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 112.26140799999985,
+      "cpuMs": 228.334
+    },
+    {
+      "arm": "one-shared",
+      "round": 1,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 111.11293699999987,
+      "cpuMs": 230.994
+    },
+    {
+      "arm": "two-shared",
+      "round": 1,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 222.5027809999997,
+      "cpuMs": 231.561
+    },
+    {
+      "arm": "one-copy",
+      "round": 1,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 149.26519499999995,
+      "cpuMs": 284.951
+    },
+    {
+      "arm": "serial",
+      "round": 1,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 222.93100100000038,
+      "cpuMs": 222.929
+    },
+    {
+      "arm": "serial",
+      "round": 2,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 223.24482199999966,
+      "cpuMs": 223.237
+    },
+    {
+      "arm": "one-copy",
+      "round": 2,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 149.58584500000006,
+      "cpuMs": 306.577
+    },
+    {
+      "arm": "two-shared",
+      "round": 2,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 221.51185899999973,
+      "cpuMs": 221.339
+    },
+    {
+      "arm": "one-shared",
+      "round": 2,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 111.32090400000016,
+      "cpuMs": 221.967
+    },
+    {
+      "arm": "one-shared",
+      "round": 3,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 111.20598399999972,
+      "cpuMs": 221.731
+    },
+    {
+      "arm": "two-shared",
+      "round": 3,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 221.4754069999999,
+      "cpuMs": 221.459
+    },
+    {
+      "arm": "one-copy",
+      "round": 3,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 147.96061099999952,
+      "cpuMs": 280.903
+    },
+    {
+      "arm": "serial",
+      "round": 3,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 221.53417699999954,
+      "cpuMs": 221.525
+    },
+    {
+      "arm": "serial",
+      "round": 4,
+      "inputBytes": 67108864,
+      "tasks": 0,
+      "exact": true,
+      "wallMs": 221.10792500000025,
+      "cpuMs": 221.031
+    },
+    {
+      "arm": "one-copy",
+      "round": 4,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 146.5012880000004,
+      "cpuMs": 299.319
+    },
+    {
+      "arm": "two-shared",
+      "round": 4,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 222.84083699999974,
+      "cpuMs": 226.09
+    },
+    {
+      "arm": "one-shared",
+      "round": 4,
+      "inputBytes": 67108864,
+      "tasks": 2,
+      "exact": true,
+      "wallMs": 111.47524299999986,
+      "cpuMs": 222.34
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "kind": "experimental-compiled-wrapper-check",
+  "node": "v26.8.2",
+  "binary": "stream.wasm",
+  "evidence": {
+    "moduleSha256": "6e92da8161fc2b96d2874362e7e33e71ddecdc8d98100d31e9636badb122bcfe",
+    "expressions": 84,
+    "stepExport": "transition",
+    "entry": "update",
+    "schema": "experimental-linear-byte-stream-v1",
+    "guard": "exclusive immutable input; (ptr >>> 0) + (len >>> 0) <= memory byte length",
+    "observation": "return i32 only; complete entry closure has no stores, globals or host calls"
+  },
+  "sharedImportEvidence": {
+    "moduleSha256": "4b1dbb56e3bd36394a92c4280a934ed416e7c68fa05ac20e1ecd8ef95e737901",
+    "expressions": 84,
+    "stepExport": "transition",
+    "entry": "update",
+    "schema": "experimental-linear-byte-stream-v1",
+    "guard": "exclusive immutable input; (ptr >>> 0) + (len >>> 0) <= memory byte length",
+    "observation": "return i32 only; complete entry closure has no stores, globals or host calls"
+  },
+  "comparisons": 112,
+  "negatives": [
+    {
+      "name": "call-finalization",
+      "status": "valid-module-refused"
+    },
+    {
+      "name": "hidden-global",
+      "status": "valid-module-refused"
+    },
+    {
+      "name": "extra-output",
+      "status": "valid-module-refused"
+    },
+    {
+      "name": "nonlinear-step",
+      "status": "valid-module-refused"
+    },
+    {
+      "name": "active-data",
+      "status": "valid-module-refused"
+    }
+  ],
+  "limitations": [
+    "single narrow LLVM loop skeleton; not a general loop verifier",
+    "checker requires independent review; no proof-assistant/SMT certificate",
+    "execution comparisons are untimed"
+  ]
+}
