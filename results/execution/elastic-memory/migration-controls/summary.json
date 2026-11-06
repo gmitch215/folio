@@ -1,0 +1,556 @@
+{
+	"schema": "folio.controls-summary.v1",
+	"setup": "512 MiB logical heap, four pages touched before handoff, receiver touches 1, 2 or 4 of them",
+	"allExact": true,
+	"rowCount": 15,
+	"predictionMismatches": [
+		{
+			"mode": "prefetch",
+			"receiverTouched": 1
+		},
+		{
+			"mode": "prefetch",
+			"receiverTouched": 2
+		}
+	],
+	"referenceMatchesCapacityLocal": true,
+	"rows": [
+		{
+			"mode": "eager",
+			"receiverTouched": 1,
+			"predicted": {
+				"mode": "eager",
+				"receiverTouched": 1,
+				"fetchedPages": 8192,
+				"checkpointPages": 8193,
+				"totalPages": 16385,
+				"totalBytes": 1073807360
+			},
+			"measured": {
+				"fetchedPages": 8192,
+				"checkpointPages": 8193,
+				"totalPages": 16385,
+				"totalBytes": 1073807360
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 536870912,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 536936448,
+				"receiverFetchBytes": 0,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 536936448,
+				"fromReceiverBytes": 0
+			},
+			"faults": 0
+		},
+		{
+			"mode": "eager",
+			"receiverTouched": 2,
+			"predicted": {
+				"mode": "eager",
+				"receiverTouched": 2,
+				"fetchedPages": 8192,
+				"checkpointPages": 8193,
+				"totalPages": 16385,
+				"totalBytes": 1073807360
+			},
+			"measured": {
+				"fetchedPages": 8192,
+				"checkpointPages": 8193,
+				"totalPages": 16385,
+				"totalBytes": 1073807360
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 536870912,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 536936448,
+				"receiverFetchBytes": 0,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 536936448,
+				"fromReceiverBytes": 0
+			},
+			"faults": 0
+		},
+		{
+			"mode": "eager",
+			"receiverTouched": 4,
+			"predicted": {
+				"mode": "eager",
+				"receiverTouched": 4,
+				"fetchedPages": 8192,
+				"checkpointPages": 8193,
+				"totalPages": 16385,
+				"totalBytes": 1073807360
+			},
+			"measured": {
+				"fetchedPages": 8192,
+				"checkpointPages": 8193,
+				"totalPages": 16385,
+				"totalBytes": 1073807360
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 536870912,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 536936448,
+				"receiverFetchBytes": 0,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 536936448,
+				"fromReceiverBytes": 0
+			},
+			"faults": 0
+		},
+		{
+			"mode": "postcopy",
+			"receiverTouched": 1,
+			"predicted": {
+				"mode": "postcopy",
+				"receiverTouched": 1,
+				"fetchedPages": 5,
+				"checkpointPages": 1,
+				"totalPages": 6,
+				"totalBytes": 393216
+			},
+			"measured": {
+				"fetchedPages": 5,
+				"checkpointPages": 1,
+				"totalPages": 6,
+				"totalBytes": 393216
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 65536,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 131072,
+				"fromReceiverBytes": 0
+			},
+			"faults": 5
+		},
+		{
+			"mode": "postcopy",
+			"receiverTouched": 2,
+			"predicted": {
+				"mode": "postcopy",
+				"receiverTouched": 2,
+				"fetchedPages": 6,
+				"checkpointPages": 1,
+				"totalPages": 7,
+				"totalBytes": 458752
+			},
+			"measured": {
+				"fetchedPages": 6,
+				"checkpointPages": 1,
+				"totalPages": 7,
+				"totalBytes": 458752
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 131072,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 196608,
+				"fromReceiverBytes": 0
+			},
+			"faults": 6
+		},
+		{
+			"mode": "postcopy",
+			"receiverTouched": 4,
+			"predicted": {
+				"mode": "postcopy",
+				"receiverTouched": 4,
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"measured": {
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 262144,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 8
+		},
+		{
+			"mode": "prefetch",
+			"receiverTouched": 1,
+			"predicted": {
+				"mode": "prefetch",
+				"receiverTouched": 1,
+				"fetchedPages": 5,
+				"checkpointPages": 1,
+				"totalPages": 6,
+				"totalBytes": 393216
+			},
+			"measured": {
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": false,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 262144,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 0
+		},
+		{
+			"mode": "prefetch",
+			"receiverTouched": 2,
+			"predicted": {
+				"mode": "prefetch",
+				"receiverTouched": 2,
+				"fetchedPages": 6,
+				"checkpointPages": 1,
+				"totalPages": 7,
+				"totalBytes": 458752
+			},
+			"measured": {
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": false,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 262144,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 0
+		},
+		{
+			"mode": "prefetch",
+			"receiverTouched": 4,
+			"predicted": {
+				"mode": "prefetch",
+				"receiverTouched": 4,
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"measured": {
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 262144,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 0
+		},
+		{
+			"mode": "elastic",
+			"receiverTouched": 1,
+			"predicted": {
+				"mode": "elastic",
+				"receiverTouched": 1,
+				"fetchedPages": 4,
+				"checkpointPages": 5,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"measured": {
+				"fetchedPages": 4,
+				"checkpointPages": 5,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 327680,
+				"receiverFetchBytes": 0,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 4
+		},
+		{
+			"mode": "elastic",
+			"receiverTouched": 2,
+			"predicted": {
+				"mode": "elastic",
+				"receiverTouched": 2,
+				"fetchedPages": 4,
+				"checkpointPages": 5,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"measured": {
+				"fetchedPages": 4,
+				"checkpointPages": 5,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 327680,
+				"receiverFetchBytes": 0,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 4
+		},
+		{
+			"mode": "elastic",
+			"receiverTouched": 4,
+			"predicted": {
+				"mode": "elastic",
+				"receiverTouched": 4,
+				"fetchedPages": 4,
+				"checkpointPages": 5,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"measured": {
+				"fetchedPages": 4,
+				"checkpointPages": 5,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 327680,
+				"receiverFetchBytes": 0,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 4
+		},
+		{
+			"mode": "elastic-lazy",
+			"receiverTouched": 1,
+			"predicted": {
+				"mode": "elastic-lazy",
+				"receiverTouched": 1,
+				"fetchedPages": 5,
+				"checkpointPages": 1,
+				"totalPages": 6,
+				"totalBytes": 393216
+			},
+			"measured": {
+				"fetchedPages": 5,
+				"checkpointPages": 1,
+				"totalPages": 6,
+				"totalBytes": 393216
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 65536,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 131072,
+				"fromReceiverBytes": 0
+			},
+			"faults": 5
+		},
+		{
+			"mode": "elastic-lazy",
+			"receiverTouched": 2,
+			"predicted": {
+				"mode": "elastic-lazy",
+				"receiverTouched": 2,
+				"fetchedPages": 6,
+				"checkpointPages": 1,
+				"totalPages": 7,
+				"totalBytes": 458752
+			},
+			"measured": {
+				"fetchedPages": 6,
+				"checkpointPages": 1,
+				"totalPages": 7,
+				"totalBytes": 458752
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 131072,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 196608,
+				"fromReceiverBytes": 0
+			},
+			"faults": 6
+		},
+		{
+			"mode": "elastic-lazy",
+			"receiverTouched": 4,
+			"predicted": {
+				"mode": "elastic-lazy",
+				"receiverTouched": 4,
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"measured": {
+				"fetchedPages": 8,
+				"checkpointPages": 1,
+				"totalPages": 9,
+				"totalBytes": 589824
+			},
+			"match": true,
+			"direction": {
+				"sourceFetchBytes": 262144,
+				"sourceWritebackBytes": 0,
+				"checkpointBytes": 65536,
+				"receiverFetchBytes": 262144,
+				"receiverWritebackBytes": 0,
+				"toReceiverBytes": 327680,
+				"fromReceiverBytes": 0
+			},
+			"faults": 8
+		}
+	],
+	"referenceComparison": [
+		{
+			"mode": "eager",
+			"fields": [
+				"checkpointBytes",
+				"fetchBytes",
+				"writebackBytes",
+				"totalPayloadBytes",
+				"value"
+			],
+			"match": true,
+			"touchedRaw": {
+				"checkpointBytes": 536936448,
+				"fetchBytes": 536870912,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 1073807360,
+				"value": 372424704
+			},
+			"captureRaw": {
+				"checkpointBytes": 536936448,
+				"fetchBytes": 536870912,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 1073807360,
+				"value": 372424704
+			}
+		},
+		{
+			"mode": "postcopy",
+			"fields": [
+				"checkpointBytes",
+				"fetchBytes",
+				"writebackBytes",
+				"totalPayloadBytes",
+				"value"
+			],
+			"match": true,
+			"touchedRaw": {
+				"checkpointBytes": 65536,
+				"fetchBytes": 524288,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 589824,
+				"value": 372424704
+			},
+			"captureRaw": {
+				"checkpointBytes": 65536,
+				"fetchBytes": 524288,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 589824,
+				"value": 372424704
+			}
+		},
+		{
+			"mode": "prefetch",
+			"fields": [
+				"checkpointBytes",
+				"fetchBytes",
+				"writebackBytes",
+				"totalPayloadBytes",
+				"value"
+			],
+			"match": true,
+			"touchedRaw": {
+				"checkpointBytes": 65536,
+				"fetchBytes": 524288,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 589824,
+				"value": 372424704
+			},
+			"captureRaw": {
+				"checkpointBytes": 65536,
+				"fetchBytes": 524288,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 589824,
+				"value": 372424704
+			}
+		},
+		{
+			"mode": "elastic",
+			"fields": [
+				"checkpointBytes",
+				"fetchBytes",
+				"writebackBytes",
+				"totalPayloadBytes",
+				"value"
+			],
+			"match": true,
+			"touchedRaw": {
+				"checkpointBytes": 327680,
+				"fetchBytes": 262144,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 589824,
+				"value": 372424704
+			},
+			"captureRaw": {
+				"checkpointBytes": 327680,
+				"fetchBytes": 262144,
+				"writebackBytes": 0,
+				"totalPayloadBytes": 589824,
+				"value": 372424704
+			}
+		}
+	]
+}

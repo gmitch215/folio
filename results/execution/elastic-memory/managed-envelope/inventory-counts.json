@@ -1,0 +1,59 @@
+{
+  "note": "counts of account inventory files; the originals hold resource ids and are not promoted",
+  "inventory": [
+    {
+      "file": "propagation/baseline.json",
+      "originalBytes": 415,
+      "originalSha256": "6f02c7947b29ec16b69daffc60f5269645f21bcb362ecaa5fcff49d21ae9f10d",
+      "counts": {
+        "scripts": 0,
+        "namespaces": 0,
+        "kv": 2,
+        "r2": 0,
+        "d1": 1
+      }
+    },
+    {
+      "file": "propagation/after.json",
+      "originalBytes": 415,
+      "originalSha256": "6f02c7947b29ec16b69daffc60f5269645f21bcb362ecaa5fcff49d21ae9f10d",
+      "counts": {
+        "scripts": 0,
+        "namespaces": 0,
+        "kv": 2,
+        "r2": 0,
+        "d1": 1
+      }
+    },
+    {
+      "file": "propagation/namespaces.json",
+      "originalBytes": 385,
+      "originalSha256": "18f052c7bee4ed333e8508be28c22c36367ed8f68dfc179762b515833051d414",
+      "counts": 2
+    },
+    {
+      "file": "first-run/baseline.json",
+      "originalBytes": 415,
+      "originalSha256": "6f02c7947b29ec16b69daffc60f5269645f21bcb362ecaa5fcff49d21ae9f10d",
+      "counts": {
+        "scripts": 0,
+        "namespaces": 0,
+        "kv": 2,
+        "r2": 0,
+        "d1": 1
+      }
+    },
+    {
+      "file": "first-run/after.json",
+      "originalBytes": 566,
+      "originalSha256": "f6aa96c78f3a97bfaa09d233dc2386f06b93c2cd8d9935cd571accaa7c0d4b83",
+      "counts": {
+        "scripts": 1,
+        "namespaces": 0,
+        "kv": 2,
+        "r2": 0,
+        "d1": 1
+      }
+    }
+  ]
+}

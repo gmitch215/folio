@@ -1,0 +1,303 @@
+{
+  "o1": [
+    {
+      "logicalMiB": 192,
+      "executorWasmBytes": 327680,
+      "sampledHeapMax": 11787904,
+      "checkpointBytes": 327680,
+      "fetchBytes": 262144,
+      "exact": true
+    },
+    {
+      "logicalMiB": 512,
+      "executorWasmBytes": 327680,
+      "sampledHeapMax": 10483232,
+      "checkpointBytes": 327680,
+      "fetchBytes": 262144,
+      "exact": true
+    },
+    {
+      "logicalMiB": 1024,
+      "executorWasmBytes": 327680,
+      "sampledHeapMax": 10482672,
+      "checkpointBytes": 327680,
+      "fetchBytes": 262144,
+      "exact": true
+    },
+    {
+      "logicalMiB": 2048,
+      "executorWasmBytes": 327680,
+      "sampledHeapMax": 10483248,
+      "checkpointBytes": 327680,
+      "fetchBytes": 262144,
+      "exact": true
+    }
+  ],
+  "o2": [
+    {
+      "mode": "elastic",
+      "logicalMiB": 192,
+      "wasmBytes": 327680,
+      "checkpointBytes": 327680,
+      "fetchBytes": 262144,
+      "totalPayloadBytes": 589824,
+      "checkpointCopyMs": 0.02562500000021828,
+      "faults": 4,
+      "wallMs": 143.40662499999962
+    },
+    {
+      "mode": "elastic",
+      "logicalMiB": 512,
+      "wasmBytes": 327680,
+      "checkpointBytes": 327680,
+      "fetchBytes": 262144,
+      "totalPayloadBytes": 589824,
+      "checkpointCopyMs": 0.026749999999992724,
+      "faults": 4,
+      "wallMs": 60.86116700000002
+    },
+    {
+      "mode": "eager",
+      "logicalMiB": 192,
+      "wasmBytes": 201392128,
+      "checkpointBytes": 201392128,
+      "fetchBytes": 201326592,
+      "totalPayloadBytes": 402718720,
+      "checkpointCopyMs": 85.90137500000037,
+      "faults": 0,
+      "wallMs": 363.2872090000001
+    },
+    {
+      "mode": "eager",
+      "logicalMiB": 512,
+      "wasmBytes": 536936448,
+      "checkpointBytes": 536936448,
+      "fetchBytes": 536870912,
+      "totalPayloadBytes": 1073807360,
+      "checkpointCopyMs": 543.288125,
+      "faults": 0,
+      "wallMs": 1243.984458
+    },
+    {
+      "mode": "postcopy",
+      "logicalMiB": 192,
+      "wasmBytes": 201392128,
+      "checkpointBytes": 65536,
+      "fetchBytes": 524288,
+      "totalPayloadBytes": 589824,
+      "checkpointCopyMs": 0.01541700000052515,
+      "faults": 8,
+      "wallMs": 82.51862500000061
+    },
+    {
+      "mode": "postcopy",
+      "logicalMiB": 512,
+      "wasmBytes": 536936448,
+      "checkpointBytes": 65536,
+      "fetchBytes": 524288,
+      "totalPayloadBytes": 589824,
+      "checkpointCopyMs": 0.018000000000029104,
+      "faults": 8,
+      "wallMs": 70.0521660000004
+    },
+    {
+      "mode": "prefetch",
+      "logicalMiB": 192,
+      "wasmBytes": 201392128,
+      "checkpointBytes": 65536,
+      "fetchBytes": 524288,
+      "totalPayloadBytes": 589824,
+      "checkpointCopyMs": 0.01633399999991525,
+      "faults": 0,
+      "wallMs": 67.26116700000057
+    },
+    {
+      "mode": "prefetch",
+      "logicalMiB": 512,
+      "wasmBytes": 536936448,
+      "checkpointBytes": 65536,
+      "fetchBytes": 524288,
+      "totalPayloadBytes": 589824,
+      "checkpointCopyMs": 0.01541700000052515,
+      "faults": 0,
+      "wallMs": 66.44508300000052
+    }
+  ],
+  "fullScan": {
+    "logicalMiB": 2048,
+    "executorWasmBytes": 327680,
+    "sampledHeapMax": 12691424,
+    "fetchedPages": 32768,
+    "fetchBytes": 2147483648,
+    "checkpointBytes": 327680,
+    "totalPayloadBytes": 2147811328,
+    "value": -1002039693,
+    "exact": true
+  },
+  "thrashing": [
+    {
+      "mode": "elastic",
+      "logicalMiB": 512,
+      "totalPayloadBytes": 33882112,
+      "fetchBytes": 33554432,
+      "checkpointBytes": 327680,
+      "exact": true
+    },
+    {
+      "mode": "postcopy",
+      "logicalMiB": 512,
+      "totalPayloadBytes": 16842752,
+      "fetchBytes": 16777216,
+      "checkpointBytes": 65536,
+      "exact": true
+    },
+    {
+      "mode": "prefetch",
+      "logicalMiB": 512,
+      "totalPayloadBytes": 16842752,
+      "fetchBytes": 16777216,
+      "checkpointBytes": 65536,
+      "exact": true
+    },
+    {
+      "mode": "elastic-write",
+      "logicalMiB": 512,
+      "totalPayloadBytes": 67436544,
+      "fetchBytes": 33554432,
+      "checkpointBytes": 327680,
+      "exact": true
+    },
+    {
+      "mode": "elastic-write",
+      "logicalMiB": 2048,
+      "totalPayloadBytes": 67436544,
+      "fetchBytes": 33554432,
+      "checkpointBytes": 327680,
+      "exact": true
+    }
+  ],
+  "mutable": [
+    {
+      "logicalMiB": 512,
+      "dirtyPagesVerified": 48,
+      "fetchBytes": 33554432,
+      "writebackBytes": 33554432,
+      "checkpointBytes": 327680,
+      "totalPayloadBytes": 67436544,
+      "exact": true
+    },
+    {
+      "logicalMiB": 2048,
+      "dirtyPagesVerified": 139,
+      "fetchBytes": 33554432,
+      "writebackBytes": 33554432,
+      "checkpointBytes": 327680,
+      "totalPayloadBytes": 67436544,
+      "exact": true
+    }
+  ],
+  "compiled": [
+    {
+      "logicalMiB": 192,
+      "exact": true,
+      "freshExecutorIsolates": 9,
+      "checkpointBytes": 1048576,
+      "executorWasmBytes": 131072,
+      "cachePages": 4,
+      "sampledHeapMax": 12102136,
+      "fetchBytes": 67108864,
+      "writebackBytes": 67108864,
+      "dirtyPagesVerified": 60
+    },
+    {
+      "logicalMiB": 512,
+      "exact": true,
+      "freshExecutorIsolates": 9,
+      "checkpointBytes": 1048576,
+      "executorWasmBytes": 131072,
+      "cachePages": 4,
+      "sampledHeapMax": 12067216,
+      "fetchBytes": 67108864,
+      "writebackBytes": 67108864,
+      "dirtyPagesVerified": 48
+    },
+    {
+      "logicalMiB": 2048,
+      "exact": true,
+      "freshExecutorIsolates": 9,
+      "checkpointBytes": 1048576,
+      "executorWasmBytes": 131072,
+      "cachePages": 4,
+      "sampledHeapMax": 12094208,
+      "fetchBytes": 67108864,
+      "writebackBytes": 67108864,
+      "dirtyPagesVerified": 139
+    }
+  ],
+  "native": [
+    {
+      "logicalMiB": 192,
+      "actual": 3968823577,
+      "expected": 3968823577,
+      "exact": true,
+      "comparedPages": 3072,
+      "comparedBytes": 201326592,
+      "sha256": "fe5e899156f5179f8dd154b23bac4af7f07cc88129ff704745c29fa72aa58913"
+    },
+    {
+      "logicalMiB": 512,
+      "actual": 2913418413,
+      "expected": 2913418413,
+      "exact": true,
+      "comparedPages": 8192,
+      "comparedBytes": 536870912,
+      "sha256": "154be5859a9c418a54a8cb68ec110cd4460c4f1850298f7f4d6a1db6dc87f85b"
+    }
+  ],
+  "backing": [
+    {
+      "artifact": "raw.json",
+      "bytesVerified": 2147483648,
+      "pagesVerified": 32768,
+      "allocatedFileBlocks512Bytes": 4194304,
+      "sha256": "826183fab9dde5da2ade9ee15f261aa5f2e35edeb50d04ba2c89243764f55552",
+      "exact": true
+    },
+    {
+      "artifact": "full-scan.json",
+      "bytesVerified": 2147483648,
+      "pagesVerified": 32768,
+      "allocatedFileBlocks512Bytes": 4194304,
+      "sha256": "826183fab9dde5da2ade9ee15f261aa5f2e35edeb50d04ba2c89243764f55552",
+      "exact": true
+    },
+    {
+      "artifact": "read-only.json",
+      "bytesVerified": 2147483648,
+      "pagesVerified": 32768,
+      "allocatedFileBlocks512Bytes": 4194304,
+      "sha256": "826183fab9dde5da2ade9ee15f261aa5f2e35edeb50d04ba2c89243764f55552",
+      "exact": true
+    }
+  ],
+  "checks": {
+    "cases": 21,
+    "allExact": true,
+    "nativeComparedBytes": 738197504,
+    "archivedSourceHashes": true,
+    "compiledModuleHashes": true
+  },
+  "interpretation": [
+    "fixed executor Wasm memory and bounded sampled heap through 2GiB logical state",
+    "constant transfer is shared with post-copy/lazy controls; not a novel property by itself",
+    "four-frame thrashing increases transfer; no universal speedup",
+    "local process RSS and memoryUsage counters are not managed isolate peak memory"
+  ],
+  "limitations": [
+    "local Node isolates; process RSS is shared and not an isolate meter",
+    "eager/post-copy/prefetch controls model mechanisms; not reproductions of published systems",
+    "read-only controls and mutable pointer chase with four resident software frames; one local session",
+    "peak samples are observed values, not a complete peak proof",
+    "payload counts exclude RPC headers and filesystem protocol overhead"
+  ]
+}

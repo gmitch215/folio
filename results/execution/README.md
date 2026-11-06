@@ -21,3 +21,4 @@
 - [differential-guards](differential-guards/README.md)
 - [differential-release](differential-release/README.md)
 - [source](source/README.md)
+- [elastic-memory](elastic-memory/README.md)

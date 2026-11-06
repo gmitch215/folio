@@ -1,0 +1,470 @@
+{
+  "data": {
+    "t0": {
+      "fields": [
+        {
+          "name": "avg"
+        },
+        {
+          "name": "confidence"
+        },
+        {
+          "name": "count"
+        },
+        {
+          "name": "dimensions"
+        },
+        {
+          "name": "max"
+        },
+        {
+          "name": "quantiles"
+        },
+        {
+          "name": "sum"
+        }
+      ],
+      "inputFields": [],
+      "name": "AccountDurableObjectsPeriodicGroups"
+    },
+    "t1": {
+      "fields": [],
+      "inputFields": [
+        {
+          "name": "AND"
+        },
+        {
+          "name": "OR"
+        },
+        {
+          "name": "coloCode"
+        },
+        {
+          "name": "coloCode_geq"
+        },
+        {
+          "name": "coloCode_gt"
+        },
+        {
+          "name": "coloCode_ilike"
+        },
+        {
+          "name": "coloCode_in"
+        },
+        {
+          "name": "coloCode_leq"
+        },
+        {
+          "name": "coloCode_like"
+        },
+        {
+          "name": "coloCode_lt"
+        },
+        {
+          "name": "coloCode_neq"
+        },
+        {
+          "name": "coloCode_notin"
+        },
+        {
+          "name": "coloCode_notlike"
+        },
+        {
+          "name": "date"
+        },
+        {
+          "name": "date_geq"
+        },
+        {
+          "name": "date_gt"
+        },
+        {
+          "name": "date_in"
+        },
+        {
+          "name": "date_leq"
+        },
+        {
+          "name": "date_lt"
+        },
+        {
+          "name": "date_neq"
+        },
+        {
+          "name": "date_notin"
+        },
+        {
+          "name": "datetime"
+        },
+        {
+          "name": "datetimeFifteenMinutes"
+        },
+        {
+          "name": "datetimeFifteenMinutes_geq"
+        },
+        {
+          "name": "datetimeFifteenMinutes_gt"
+        },
+        {
+          "name": "datetimeFifteenMinutes_in"
+        },
+        {
+          "name": "datetimeFifteenMinutes_leq"
+        },
+        {
+          "name": "datetimeFifteenMinutes_lt"
+        },
+        {
+          "name": "datetimeFifteenMinutes_neq"
+        },
+        {
+          "name": "datetimeFifteenMinutes_notin"
+        },
+        {
+          "name": "datetimeFiveMinutes"
+        },
+        {
+          "name": "datetimeFiveMinutes_geq"
+        },
+        {
+          "name": "datetimeFiveMinutes_gt"
+        },
+        {
+          "name": "datetimeFiveMinutes_in"
+        },
+        {
+          "name": "datetimeFiveMinutes_leq"
+        },
+        {
+          "name": "datetimeFiveMinutes_lt"
+        },
+        {
+          "name": "datetimeFiveMinutes_neq"
+        },
+        {
+          "name": "datetimeFiveMinutes_notin"
+        },
+        {
+          "name": "datetimeHour"
+        },
+        {
+          "name": "datetimeHour_geq"
+        },
+        {
+          "name": "datetimeHour_gt"
+        },
+        {
+          "name": "datetimeHour_in"
+        },
+        {
+          "name": "datetimeHour_leq"
+        },
+        {
+          "name": "datetimeHour_lt"
+        },
+        {
+          "name": "datetimeHour_neq"
+        },
+        {
+          "name": "datetimeHour_notin"
+        },
+        {
+          "name": "datetimeMinute"
+        },
+        {
+          "name": "datetimeMinute_geq"
+        },
+        {
+          "name": "datetimeMinute_gt"
+        },
+        {
+          "name": "datetimeMinute_in"
+        },
+        {
+          "name": "datetimeMinute_leq"
+        },
+        {
+          "name": "datetimeMinute_lt"
+        },
+        {
+          "name": "datetimeMinute_neq"
+        },
+        {
+          "name": "datetimeMinute_notin"
+        },
+        {
+          "name": "datetimeSixHours"
+        },
+        {
+          "name": "datetimeSixHours_geq"
+        },
+        {
+          "name": "datetimeSixHours_gt"
+        },
+        {
+          "name": "datetimeSixHours_in"
+        },
+        {
+          "name": "datetimeSixHours_leq"
+        },
+        {
+          "name": "datetimeSixHours_lt"
+        },
+        {
+          "name": "datetimeSixHours_neq"
+        },
+        {
+          "name": "datetimeSixHours_notin"
+        },
+        {
+          "name": "datetime_geq"
+        },
+        {
+          "name": "datetime_gt"
+        },
+        {
+          "name": "datetime_in"
+        },
+        {
+          "name": "datetime_leq"
+        },
+        {
+          "name": "datetime_lt"
+        },
+        {
+          "name": "datetime_neq"
+        },
+        {
+          "name": "datetime_notin"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "name_geq"
+        },
+        {
+          "name": "name_gt"
+        },
+        {
+          "name": "name_ilike"
+        },
+        {
+          "name": "name_in"
+        },
+        {
+          "name": "name_leq"
+        },
+        {
+          "name": "name_like"
+        },
+        {
+          "name": "name_lt"
+        },
+        {
+          "name": "name_neq"
+        },
+        {
+          "name": "name_notin"
+        },
+        {
+          "name": "name_notlike"
+        },
+        {
+          "name": "namespaceId"
+        },
+        {
+          "name": "namespaceId_geq"
+        },
+        {
+          "name": "namespaceId_gt"
+        },
+        {
+          "name": "namespaceId_ilike"
+        },
+        {
+          "name": "namespaceId_in"
+        },
+        {
+          "name": "namespaceId_leq"
+        },
+        {
+          "name": "namespaceId_like"
+        },
+        {
+          "name": "namespaceId_lt"
+        },
+        {
+          "name": "namespaceId_neq"
+        },
+        {
+          "name": "namespaceId_notin"
+        },
+        {
+          "name": "namespaceId_notlike"
+        },
+        {
+          "name": "objectId"
+        },
+        {
+          "name": "objectId_geq"
+        },
+        {
+          "name": "objectId_gt"
+        },
+        {
+          "name": "objectId_ilike"
+        },
+        {
+          "name": "objectId_in"
+        },
+        {
+          "name": "objectId_leq"
+        },
+        {
+          "name": "objectId_like"
+        },
+        {
+          "name": "objectId_lt"
+        },
+        {
+          "name": "objectId_neq"
+        },
+        {
+          "name": "objectId_notin"
+        },
+        {
+          "name": "objectId_notlike"
+        }
+      ],
+      "name": "AccountDurableObjectsPeriodicGroupsFilter_InputObject"
+    },
+    "t2": {
+      "fields": [
+        {
+          "name": "coloCode"
+        },
+        {
+          "name": "date"
+        },
+        {
+          "name": "datetime"
+        },
+        {
+          "name": "datetimeFifteenMinutes"
+        },
+        {
+          "name": "datetimeFiveMinutes"
+        },
+        {
+          "name": "datetimeHour"
+        },
+        {
+          "name": "datetimeMinute"
+        },
+        {
+          "name": "datetimeSixHours"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "namespaceId"
+        },
+        {
+          "name": "objectId"
+        }
+      ],
+      "inputFields": [],
+      "name": "AccountDurableObjectsPeriodicGroupsDimensions"
+    },
+    "t3": {
+      "fields": [
+        {
+          "name": "activeWebsocketConnections"
+        },
+        {
+          "name": "memoryUsageBytes"
+        }
+      ],
+      "inputFields": [],
+      "name": "AccountDurableObjectsPeriodicGroupsMax"
+    },
+    "t4": {
+      "fields": [
+        {
+          "name": "memoryUsageBytesP25"
+        },
+        {
+          "name": "memoryUsageBytesP50"
+        },
+        {
+          "name": "memoryUsageBytesP75"
+        },
+        {
+          "name": "memoryUsageBytesP90"
+        },
+        {
+          "name": "memoryUsageBytesP95"
+        },
+        {
+          "name": "memoryUsageBytesP99"
+        },
+        {
+          "name": "memoryUsageBytesP999"
+        }
+      ],
+      "inputFields": [],
+      "name": "AccountDurableObjectsPeriodicGroupsQuantiles"
+    },
+    "t5": {
+      "fields": [
+        {
+          "name": "activeTime"
+        },
+        {
+          "name": "cpuTime"
+        },
+        {
+          "name": "duration"
+        },
+        {
+          "name": "exceededCpuErrors"
+        },
+        {
+          "name": "exceededMemoryErrors"
+        },
+        {
+          "name": "fatalInternalErrors"
+        },
+        {
+          "name": "inboundWebsocketMsgCount"
+        },
+        {
+          "name": "outboundWebsocketMsgCount"
+        },
+        {
+          "name": "rowsRead"
+        },
+        {
+          "name": "rowsWritten"
+        },
+        {
+          "name": "storageDeletes"
+        },
+        {
+          "name": "storageReadUnits"
+        },
+        {
+          "name": "storageWriteUnits"
+        },
+        {
+          "name": "subrequests"
+        }
+      ],
+      "inputFields": [],
+      "name": "AccountDurableObjectsPeriodicGroupsSum"
+    }
+  },
+  "errors": null
+}

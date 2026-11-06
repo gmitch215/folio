@@ -1,0 +1,31 @@
+{
+  "requestedAt": "2026-11-04T05:02:49.295Z",
+  "start": "2026-11-04T04:32:49.287Z",
+  "status": 200,
+  "body": {
+    "data": {
+      "viewer": {
+        "accounts": [
+          {
+            "workersInvocationsAdaptive": [
+              {
+                "quantiles": {
+                  "cpuTimeP50": 765,
+                  "cpuTimeP99": 2537,
+                  "memoryUsageBytesP50": 1886436,
+                  "memoryUsageBytesP99": 2672868
+                },
+                "sum": {
+                  "errors": 0,
+                  "requests": 237
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "errors": null
+  },
+  "scope": "script-filtered analytics; not per-executor/owner isolation without role dimensions"
+}

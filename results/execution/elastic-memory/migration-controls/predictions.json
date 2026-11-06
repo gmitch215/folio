@@ -1,0 +1,92 @@
+{
+  "schema": "folio.predictions.v1",
+  "written": "2026-11-05, before any touched-trace run",
+  "unit": "pages of 65,536 bytes; a checkpoint image counts in pages (eager: 8,193; post-copy, prefetch, lazy: 1; elastic: 5)",
+  "setup": "512 MiB logical heap, 4 pages touched before handoff, receiver touches t of those 4 pages after handoff",
+  "rows": [
+    {
+      "mode": "eager",
+      "receiverTouched": [1, 2, 4],
+      "fetchedPages": 8192,
+      "checkpointPages": 8193,
+      "totalPages": 16385,
+      "totalBytes": 1073807360,
+      "refutedBy": "any total other than 1,073,807,360 bytes at any t; any receiver fetch (eager does not reset the receiver's frames)"
+    },
+    {
+      "mode": "postcopy",
+      "receiverTouched": 1,
+      "fetchedPages": 5,
+      "checkpointPages": 1,
+      "totalPages": 6,
+      "totalBytes": 393216,
+      "refutedBy": "a fetch count other than 5 pages, or a total other than 393,216 bytes"
+    },
+    {
+      "mode": "postcopy",
+      "receiverTouched": 2,
+      "fetchedPages": 6,
+      "checkpointPages": 1,
+      "totalPages": 7,
+      "totalBytes": 458752,
+      "refutedBy": "a fetch count other than 6 pages, or a total other than 458,752 bytes"
+    },
+    {
+      "mode": "postcopy",
+      "receiverTouched": 4,
+      "fetchedPages": 8,
+      "checkpointPages": 1,
+      "totalPages": 9,
+      "totalBytes": 589824,
+      "refutedBy": "a fetch count other than 8 pages, or a total other than 589,824 bytes (this is the existing four-page row)"
+    },
+    {
+      "mode": "prefetch",
+      "receiverTouched": [1, 2, 4],
+      "fetchedPages": "4 + t",
+      "checkpointPages": 1,
+      "totalPages": "6, 7, 9",
+      "totalBytes": "393,216, 458,752, 589,824",
+      "refutedBy": "any total that differs from post-copy at the same t (the profile is the same four pages, and the receiver refetches the same pages)"
+    },
+    {
+      "mode": "elastic",
+      "receiverTouched": [1, 2, 4],
+      "fetchedPages": 4,
+      "checkpointPages": 5,
+      "totalPages": 9,
+      "totalBytes": 589824,
+      "refutedBy": "any total other than 589,824 bytes at any t; any receiver fetch (the four frames travel in the checkpoint, so the receiver fetches nothing at t = 1, 2 or 4)"
+    },
+    {
+      "mode": "elastic-lazy",
+      "receiverTouched": 1,
+      "fetchedPages": 5,
+      "checkpointPages": 1,
+      "totalPages": 6,
+      "totalBytes": 393216,
+      "refutedBy": "any total other than the post-copy total at the same t; this arm is new, so the prediction is that it moves the same pages as post-copy and differs only in resident memory"
+    },
+    {
+      "mode": "elastic-lazy",
+      "receiverTouched": 2,
+      "fetchedPages": 6,
+      "checkpointPages": 1,
+      "totalPages": 7,
+      "totalBytes": 458752,
+      "refutedBy": "as above"
+    },
+    {
+      "mode": "elastic-lazy",
+      "receiverTouched": 4,
+      "fetchedPages": 8,
+      "checkpointPages": 1,
+      "totalPages": 9,
+      "totalBytes": 589824,
+      "refutedBy": "as above"
+    }
+  ],
+  "identity": "post-copy total = (4 + t + 1) pages, elastic total = (4 + 5) pages. Equal only at t = 4.",
+  "reference": "the t = 4 rows of the touched matrix must equal the existing capacity-local rows for eager, post-copy, prefetch and elastic in payload bytes, page counts and checkpoint bytes. Any difference is a change in the executor, not a finding.",
+  "policy": "round-robin (victim = counter mod frames) evicts in load order. Not measured on the 512 MiB rows: four working pages never evict in four frames, so round-robin and LRU give the same counts there by construction, and the controls' eviction count is recorded to check that."
+}

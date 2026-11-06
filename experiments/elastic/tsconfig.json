@@ -1,0 +1,14 @@
+{
+	"extends": "../../tsconfig.json",
+	"include": [
+		"run.ts",
+		"metrics.ts",
+		"metrics-do.ts",
+		"introspection.ts",
+		"tail.ts",
+		"freeze.ts",
+		"check-cleanup.ts",
+		"../lib/workerd.d.ts"
+	],
+	"exclude": []
+}

@@ -1,0 +1,89 @@
+{
+  "requestedAt": "2026-11-04T05:04:28.429Z",
+  "start": "2026-11-04T04:34:28.428Z",
+  "status": 200,
+  "roles": [
+    {
+      "alias": "n0",
+      "class": "Executor"
+    },
+    {
+      "alias": "n1",
+      "class": "PageOwner"
+    }
+  ],
+  "body": {
+    "data": {
+      "__type": {
+        "fields": [
+          {
+            "description": "Sum of active time - microseconds",
+            "name": "activeTime"
+          },
+          {
+            "description": "Sum of CPU time - microseconds",
+            "name": "cpuTime"
+          },
+          {
+            "description": "Sum of Duration - GB*s",
+            "name": "duration"
+          },
+          {
+            "description": "Sum of CPU exceeded errors",
+            "name": "exceededCpuErrors"
+          },
+          {
+            "description": "Sum of memory exceeded errors",
+            "name": "exceededMemoryErrors"
+          },
+          {
+            "description": "Sum of fatal internal server errors",
+            "name": "fatalInternalErrors"
+          },
+          {
+            "description": "Sum of incoming websocket messages",
+            "name": "inboundWebsocketMsgCount"
+          },
+          {
+            "description": "Sum of outbound websocket messages",
+            "name": "outboundWebsocketMsgCount"
+          },
+          {
+            "description": "Sum of rows read (by sqlite backed DOs)",
+            "name": "rowsRead"
+          },
+          {
+            "description": "Sum of rows written (by sqlite backed DOs)",
+            "name": "rowsWritten"
+          },
+          {
+            "description": "Sum of storage deletes (by non-sqlite backed DOs)",
+            "name": "storageDeletes"
+          },
+          {
+            "description": "Sum of storage reads - in 4KB units (by non-sqlite backed DOs)",
+            "name": "storageReadUnits"
+          },
+          {
+            "description": "Sum of storage writes - in 4KB units (by non-sqlite backed DOs)",
+            "name": "storageWriteUnits"
+          },
+          {
+            "description": "Sum of subrequests",
+            "name": "subrequests"
+          }
+        ]
+      },
+      "viewer": {
+        "accounts": [
+          {
+            "n0": [],
+            "n1": []
+          }
+        ]
+      }
+    },
+    "errors": null
+  },
+  "scope": "namespace periodic samples; max is maximum reported sample, not an unsampled absolute peak"
+}

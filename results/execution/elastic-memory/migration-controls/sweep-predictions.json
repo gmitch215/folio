@@ -1,0 +1,252 @@
+{
+	"schema": "folio.sweep-predictions.v1",
+	"model": "scripts/research/elastic-model.ts simulate, remote-owner, write-back, LRU frame cache",
+	"frames": [
+		4,
+		8,
+		16,
+		32,
+		64,
+		128,
+		256
+	],
+	"traces": {
+		"dense": {
+			"ops": 15360,
+			"counts": {
+				"ops": 15360,
+				"fills": 3072,
+				"stores": 6144,
+				"loads": 6144,
+				"writes": 9216,
+				"distinctLoadPages": 3072
+			},
+			"coldAccesses": 3072,
+			"minReuseDistance": 0,
+			"maxReuseDistance": 3071,
+			"rows": [
+				{
+					"frames": 4,
+					"gets": 3072,
+					"puts": 3072,
+					"hops": 6144,
+					"totalMs": 175538,
+					"lruHits": 9216,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 8,
+					"gets": 3072,
+					"puts": 3072,
+					"hops": 6144,
+					"totalMs": 175538,
+					"lruHits": 9216,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 16,
+					"gets": 3072,
+					"puts": 3072,
+					"hops": 6144,
+					"totalMs": 175538,
+					"lruHits": 9216,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 32,
+					"gets": 3072,
+					"puts": 3072,
+					"hops": 6144,
+					"totalMs": 175538,
+					"lruHits": 9216,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 64,
+					"gets": 3072,
+					"puts": 3072,
+					"hops": 6144,
+					"totalMs": 175538,
+					"lruHits": 9216,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 128,
+					"gets": 3072,
+					"puts": 3072,
+					"hops": 6144,
+					"totalMs": 175538,
+					"lruHits": 9216,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 256,
+					"gets": 3067,
+					"puts": 3072,
+					"hops": 6139,
+					"totalMs": 175483,
+					"lruHits": 9221,
+					"lruMisses": 6139
+				}
+			]
+		},
+		"skewed": {
+			"ops": 20000,
+			"counts": {
+				"ops": 20000,
+				"fills": 0,
+				"stores": 5979,
+				"loads": 14021,
+				"writes": 5979,
+				"distinctLoadPages": 1779
+			},
+			"coldAccesses": 2091,
+			"minReuseDistance": 0,
+			"maxReuseDistance": 2042,
+			"rows": [
+				{
+					"frames": 4,
+					"gets": 17243,
+					"puts": 5608,
+					"hops": 22851,
+					"totalMs": 422104,
+					"lruHits": 2757,
+					"lruMisses": 17243
+				},
+				{
+					"frames": 8,
+					"gets": 15443,
+					"puts": 5212,
+					"hops": 20655,
+					"totalMs": 390366,
+					"lruHits": 4557,
+					"lruMisses": 15443
+				},
+				{
+					"frames": 16,
+					"gets": 13332,
+					"puts": 4563,
+					"hops": 17895,
+					"totalMs": 347497,
+					"lruHits": 6668,
+					"lruMisses": 13332
+				},
+				{
+					"frames": 32,
+					"gets": 11245,
+					"puts": 3879,
+					"hops": 15124,
+					"totalMs": 303818,
+					"lruHits": 8755,
+					"lruMisses": 11245
+				},
+				{
+					"frames": 64,
+					"gets": 9274,
+					"puts": 3232,
+					"hops": 12506,
+					"totalMs": 262536,
+					"lruHits": 10726,
+					"lruMisses": 9274
+				},
+				{
+					"frames": 128,
+					"gets": 7538,
+					"puts": 2701,
+					"hops": 10239,
+					"totalMs": 227365,
+					"lruHits": 12462,
+					"lruMisses": 7538
+				},
+				{
+					"frames": 256,
+					"gets": 5885,
+					"puts": 2166,
+					"hops": 8051,
+					"totalMs": 192976,
+					"lruHits": 14115,
+					"lruMisses": 5885
+				}
+			]
+		},
+		"scan": {
+			"ops": 6144,
+			"counts": {
+				"ops": 6144,
+				"fills": 0,
+				"stores": 0,
+				"loads": 6144,
+				"writes": 0,
+				"distinctLoadPages": 3072
+			},
+			"coldAccesses": 3072,
+			"minReuseDistance": 3071,
+			"maxReuseDistance": 3071,
+			"rows": [
+				{
+					"frames": 4,
+					"gets": 6144,
+					"puts": 0,
+					"hops": 6144,
+					"totalMs": 86220,
+					"lruHits": 0,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 8,
+					"gets": 6144,
+					"puts": 0,
+					"hops": 6144,
+					"totalMs": 86220,
+					"lruHits": 0,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 16,
+					"gets": 6144,
+					"puts": 0,
+					"hops": 6144,
+					"totalMs": 86220,
+					"lruHits": 0,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 32,
+					"gets": 6144,
+					"puts": 0,
+					"hops": 6144,
+					"totalMs": 86220,
+					"lruHits": 0,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 64,
+					"gets": 6144,
+					"puts": 0,
+					"hops": 6144,
+					"totalMs": 86220,
+					"lruHits": 0,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 128,
+					"gets": 6144,
+					"puts": 0,
+					"hops": 6144,
+					"totalMs": 86220,
+					"lruHits": 0,
+					"lruMisses": 6144
+				},
+				{
+					"frames": 256,
+					"gets": 6144,
+					"puts": 0,
+					"hops": 6144,
+					"totalMs": 86220,
+					"lruHits": 0,
+					"lruMisses": 6144
+				}
+			]
+		}
+	}
+}

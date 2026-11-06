@@ -1,0 +1,98 @@
+{
+  "exact": true,
+  "logicalBytes": 201326592,
+  "verifiedPages": 3072,
+  "verifiedBytes": 201326592,
+  "executorWasmBytesEachSegment": 65536,
+  "executorObjects": 2,
+  "ownerObjects": 4,
+  "ownerApplicationCacheBytesEach": 65536,
+  "physicalIsolateCount": null,
+  "faults": 15360,
+  "segments": 961,
+  "handoffs": 960,
+  "clientAttempts": 971,
+  "statuses": {
+    "200": 970,
+    "404": 1
+  },
+  "programOwnerCalls": 15360,
+  "programExecutorCalls": 961,
+  "diagnosticsAndCleanupOwnerCalls": 8,
+  "dataPuts": 9216,
+  "logicalCleanupDeletedPages": 3072,
+  "logicalLoadOperations": 6144,
+  "checkpointResponseBytes": 62914560,
+  "checkpointResumeRequestBytes": 62914560,
+  "checkpointPayloadBothDirections": 125829120,
+  "clientRunHeadersWallMs": 392268.1862639997,
+  "totalRunnerWallMs": 422733.476417,
+  "wallScope": "request log timers stop at response headers; runner wall includes deploy/readiness/15-second wait/verification/cleanup",
+  "roleMetrics": [
+    {
+      "role": "Executor",
+      "max": {
+        "memoryUsageBytes": 4771892
+      },
+      "quantiles": {
+        "memoryUsageBytesP50": 2380472,
+        "memoryUsageBytesP99": 4771892
+      },
+      "sum": {
+        "activeTime": 347275370,
+        "cpuTime": 6587069,
+        "duration": 44.451247359999996,
+        "exceededCpuErrors": 0,
+        "exceededMemoryErrors": 0,
+        "rowsRead": 0,
+        "rowsWritten": 0,
+        "storageReadUnits": 0,
+        "storageWriteUnits": 0,
+        "subrequests": 15360
+      }
+    },
+    {
+      "role": "PageOwner",
+      "max": {
+        "memoryUsageBytes": 26421476
+      },
+      "quantiles": {
+        "memoryUsageBytesP50": 12986596,
+        "memoryUsageBytesP99": 26421476
+      },
+      "sum": {
+        "activeTime": 184953977,
+        "cpuTime": 11259311,
+        "duration": 23.674109056000002,
+        "exceededCpuErrors": 0,
+        "exceededMemoryErrors": 0,
+        "rowsRead": 9216,
+        "rowsWritten": 9216,
+        "storageReadUnits": 0,
+        "storageWriteUnits": 0,
+        "subrequests": 0
+      }
+    }
+  ],
+  "metricScope": "namespace periodic whole-isolate samples; no absolute peak or placement guarantee; cleanup billing accounting unreconciled",
+  "tail": {
+    "events": 47,
+    "models": {
+      "stateless": 47
+    },
+    "outcomes": {
+      "ok": 47
+    },
+    "cpuMsSum": 7
+  },
+  "cleanupBaselineRestored": true,
+  "firstAttemptPartialAndPropagation404Retained": true,
+  "frozenSourceManifest": "propagation/source/sources.json",
+  "limits": [
+    "Fixture supports aligned i32 load/store and whole-page fill only",
+    "Client-driven fresh top-level HTTP continuation chain; not one original request",
+    "External SQLite backing; no physical shared-memory or parallel CPU proof",
+    "No PHP or arbitrary-program proof",
+    "Known Free credentials; subscription API billing scope unavailable"
+  ]
+}
