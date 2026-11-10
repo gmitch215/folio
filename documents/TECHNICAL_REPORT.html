@@ -2640,7 +2640,8 @@ LCG keystream (<code>z2w</code>, the top byte of the state is an atom), xorshift
 256-entry table (<code>gf2</code>, the table is an atom keyed by the state) and a state that reads the bytes it
 rewrites. FNV-1a and the SHA-256 compression are not affine and are refused. miniz's own <code>mz_adler32</code>,
 which clang compiles with the zlib blocking of 5,552 bytes (a counted loop inside a counted loop), is
-refused, so the certified Adler-32 is the per-byte reduction. Each certificate agrees with execution
+refused at its null-pointer test first and, past that test, for the blocking itself, so the certified
+Adler-32 is the per-byte reduction. Each certificate agrees with execution
 at lengths up to 1 MiB, several chain cuts, the model at 2 to 8 chunks, a repeated call and shifted
 pointers, and the in-place ones also agree on the bytes after a call, after two calls cut anywhere and
 after chunks run in reverse order from the states a serial run reaches. On the 21 constructed
