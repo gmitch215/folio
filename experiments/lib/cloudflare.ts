@@ -102,7 +102,7 @@ export async function snapshot(api: Api): Promise<Snapshot> {
 }
 
 /** names and modified times of what the account lists, so two of these show what changed between them */
-export async function inventory(api: Api) {
+export async function inventory(api: Api, onError?: (path: string, error: unknown) => void) {
 	const list = async (
 		path: string,
 		pick: (row: any) => Record<string, unknown>,
@@ -110,7 +110,8 @@ export async function inventory(api: Api) {
 	) => {
 		try {
 			return (unwrap(await api(path)) as any[]).map(pick);
-		} catch {
+		} catch (error) {
+			onError?.(path, error);
 			return null;
 		}
 	};

@@ -1,0 +1,23 @@
+{
+	"extends": "../../tsconfig.json",
+	"include": [
+		"engine.ts",
+		"store.ts",
+		"lz4.ts",
+		"programs.ts",
+		"plan.ts",
+		"predictions.ts",
+		"service.ts",
+		"driver.ts",
+		"local.ts",
+		"sweep.ts",
+		"live.ts",
+		"workerd.ts",
+		"prepare.ts",
+		"trace-build.ts",
+		"worker.ts",
+		"wasm.d.ts",
+		"../lib/workerd.d.ts"
+	],
+	"exclude": []
+}

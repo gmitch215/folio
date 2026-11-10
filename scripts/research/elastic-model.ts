@@ -296,6 +296,118 @@ export function counts(trace: readonly Op[]) {
 	return out;
 }
 
+export interface TierConfig {
+	frames: number;
+	cold: number;
+}
+
+export interface TierResult {
+	ops: number;
+	frameHits: number;
+	coldHits: number;
+	storeReads: number;
+	storeWrites: number;
+	compressions: number;
+	decompressions: number;
+	coldEvictions: number;
+}
+
+// Frames and a compressed pool, both LRU, a page in at most one of them. A frame victim goes to the
+// pool whole (compressed, dirty or not); a pool victim is written to the store only when dirty.
+// A fill drops any pooled copy without decoding it. Pool capacity counts pages, so counts are exact.
+export function simulateTiers(trace: readonly Op[], { frames, cold }: TierConfig): TierResult {
+	if (!Number.isInteger(frames) || frames < 1) throw new Error('frames must be >= 1');
+	if (!Number.isInteger(cold) || cold < 0) throw new Error('cold must be >= 0');
+	const out: TierResult = {
+		ops: trace.length,
+		frameHits: 0,
+		coldHits: 0,
+		storeReads: 0,
+		storeWrites: 0,
+		compressions: 0,
+		decompressions: 0,
+		coldEvictions: 0
+	};
+	const framed = new Map<number, boolean>();
+	const pooled = new Map<number, boolean>();
+	const evictPooled = () => {
+		const [victim, dirty] = pooled.entries().next().value!;
+		pooled.delete(victim);
+		out.coldEvictions++;
+		if (dirty) {
+			out.decompressions++;
+			out.storeWrites++;
+		}
+	};
+	for (const { kind, page } of trace) {
+		if (framed.has(page)) {
+			out.frameHits++;
+			const dirty = framed.get(page)! || kind !== 'load';
+			framed.delete(page);
+			framed.set(page, dirty);
+			continue;
+		}
+		let dirty = kind !== 'load';
+		if (kind === 'fill') pooled.delete(page);
+		else if (pooled.has(page)) {
+			out.coldHits++;
+			out.decompressions++;
+			dirty = pooled.get(page)! || kind === 'store';
+			pooled.delete(page);
+		} else out.storeReads++;
+		if (framed.size >= frames) {
+			const [victim, victimDirty] = framed.entries().next().value!;
+			framed.delete(victim);
+			if (cold > 0) {
+				pooled.set(victim, victimDirty);
+				out.compressions++;
+				if (pooled.size > cold) evictPooled();
+			} else if (victimDirty) out.storeWrites++;
+		}
+		framed.set(page, dirty);
+	}
+	for (const dirty of framed.values()) if (dirty) out.storeWrites++;
+	for (const dirty of pooled.values()) {
+		if (!dirty) continue;
+		out.decompressions++;
+		out.storeWrites++;
+	}
+	return out;
+}
+
+export interface TimeParams {
+	baseMs: number;
+	// fixed cost of a request that wrote to the store
+	flushMs: number;
+	readMs: number;
+	writeMs: number;
+	decompressMs: number;
+	compressMs: number;
+	hitMs: number;
+}
+
+export interface TimeCounts {
+	flushes: number;
+	storeReads: number;
+	storeWrites: number;
+	compressions: number;
+	decompressions: number;
+	hits: number;
+}
+
+// wall time of one request from its counts: base, flush, store reads and writes, codec and hits
+export function predictTime(p: TimeParams, c: TimeCounts): number {
+	return (
+		p.baseMs +
+		c.flushes * p.flushMs +
+		c.storeReads * p.readMs +
+		c.storeWrites * p.writeMs +
+		c.decompressions * p.decompressMs +
+		c.compressions * p.compressMs +
+		c.hits * p.hitMs
+	);
+}
+
 export function solveLinear(f: (x: number) => number, target: number) {
 	const a = f(0);
 	return (target - a) / (f(1) - a);

@@ -3,6 +3,7 @@ import {
 	counts,
 	fixtureTrace,
 	phaseMeans,
+	predictTime,
 	refitHop,
 	simulate,
 	variants,
@@ -136,4 +137,36 @@ test('invalid combinations are rejected', () => {
 	expect(() => simulate(trace, framedThrough)).toThrow();
 	const colocatedThrough: Config = { ...variants['colocated-4'], writePolicy: 'write-through' };
 	expect(() => simulate(trace, colocatedThrough)).toThrow();
+});
+
+test('predictTime adds the base, the flush, store reads and writes, codec and hits, term by term', () => {
+	const params = {
+		baseMs: 10,
+		flushMs: 25,
+		readMs: 0.5,
+		writeMs: 1,
+		decompressMs: 0.1,
+		compressMs: 0.2,
+		hitMs: 0.01
+	};
+	const counted = {
+		flushes: 1,
+		storeReads: 4,
+		storeWrites: 2,
+		compressions: 3,
+		decompressions: 5,
+		hits: 100
+	};
+	expect(predictTime(params, counted)).toBeCloseTo(10 + 25 + 2 + 2 + 0.6 + 0.5 + 1, 9);
+	expect(
+		predictTime(params, {
+			...counted,
+			flushes: 0,
+			storeReads: 0,
+			storeWrites: 0,
+			compressions: 0,
+			decompressions: 0,
+			hits: 0
+		})
+	).toBe(10);
 });
