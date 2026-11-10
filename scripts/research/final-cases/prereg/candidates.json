@@ -1,0 +1,416 @@
+[
+	{
+		"id": "libdeflate-libdeflate_deflate_compress",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_deflate_compress_bound",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_zlib_compress",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_zlib_compress_bound",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_gzip_compress",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_gzip_compress_bound",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_deflate_decompress",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_deflate_decompress_ex",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_zlib_decompress",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_zlib_decompress_ex",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_gzip_decompress",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "libdeflate-libdeflate_gzip_decompress_ex",
+		"project": "libdeflate",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "zopfli-ZopfliCompress",
+		"project": "zopfli",
+		"build": "failed",
+		"native": "not-run"
+	},
+	{
+		"id": "cjson-cJSON_ParseWithLength",
+		"project": "cjson",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "cjson-cJSON_ParseWithLengthOpts",
+		"project": "cjson",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "cjson-cJSON_PrintPreallocated",
+		"project": "cjson",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "cjson-cJSON_CreateIntArray",
+		"project": "cjson",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "cjson-cJSON_CreateFloatArray",
+		"project": "cjson",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "cjson-cJSON_CreateDoubleArray",
+		"project": "cjson",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "cjson-cJSON_CreateStringArray",
+		"project": "cjson",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "tinycbor-cbor_encoder_init",
+		"project": "tinycbor",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "tinycbor-cbor_encode_text_string",
+		"project": "tinycbor",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "tinycbor-cbor_encode_byte_string",
+		"project": "tinycbor",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "tinycbor-cbor_encode_raw",
+		"project": "tinycbor",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "tinycbor-cbor_encoder_create_array",
+		"project": "tinycbor",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "tinycbor-cbor_encoder_create_map",
+		"project": "tinycbor",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "tinycbor-cbor_parser_init",
+		"project": "tinycbor",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "nanopb-pb_ostream_from_buffer",
+		"project": "nanopb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "nanopb-pb_write",
+		"project": "nanopb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "nanopb-pb_encode_string",
+		"project": "nanopb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "nanopb-pb_istream_from_buffer",
+		"project": "nanopb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "nanopb-pb_read",
+		"project": "nanopb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "base64-base64_encode",
+		"project": "base64",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "base64-base64_stream_encode",
+		"project": "base64",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "base64-base64_decode",
+		"project": "base64",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "base64-base64_stream_decode",
+		"project": "base64",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "ryu-d2s_buffered_n",
+		"project": "ryu",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "ryu-d2s_buffered",
+		"project": "ryu",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "ryu-f2s_buffered_n",
+		"project": "ryu",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "ryu-f2s_buffered",
+		"project": "ryu",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_writer_track_push",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_writer_track_bytes",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_writer_init",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_write_object_bytes",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_start_array",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_start_map",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_write_str",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_write_utf8",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_write_bin",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_start_str",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_start_bin",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "mpack-mpack_write_bytes",
+		"project": "mpack",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stb_c_lexer_init",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbds_hash_bytes",
+		"project": "stb",
+		"build": "ok",
+		"native": "mismatch"
+	},
+	{
+		"id": "stb-stbds_hash_string",
+		"project": "stb",
+		"build": "ok",
+		"native": "mismatch"
+	},
+	{
+		"id": "stb-stbds_arrgrowf",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbds_hmfree_func",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbds_hmget_key",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbds_hmget_key_ts",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbds_hmput_default",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbds_hmput_key",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbds_hmdel_key",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbi_load_from_memory",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "stb-stbi_load_gif_from_memory",
+		"project": "stb",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "minimp3-mp3dec_init",
+		"project": "minimp3",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "minimp3-mp3dec_f32_to_s16",
+		"project": "minimp3",
+		"build": "failed",
+		"native": "not-run"
+	},
+	{
+		"id": "minimp3-mp3dec_decode_frame",
+		"project": "minimp3",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "pcre2-pcre2_regexec",
+		"project": "pcre2",
+		"build": "ok",
+		"native": "equal"
+	},
+	{
+		"id": "pcre2-pcre2_regerror",
+		"project": "pcre2",
+		"build": "ok",
+		"native": "equal"
+	}
+]

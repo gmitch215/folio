@@ -1,0 +1,145 @@
+{
+	"candidatesSha256": "f460a93d9461d11dd899b293574613b212ad88ce48498a2342409730699c884d",
+	"seed": "folio-v1.1-final-corpus",
+	"cap": 6,
+	"drawn": [
+		"base64-base64_decode",
+		"base64-base64_encode",
+		"base64-base64_stream_decode",
+		"base64-base64_stream_encode",
+		"cjson-cJSON_CreateDoubleArray",
+		"cjson-cJSON_CreateFloatArray",
+		"cjson-cJSON_CreateIntArray",
+		"cjson-cJSON_CreateStringArray",
+		"cjson-cJSON_ParseWithLength",
+		"cjson-cJSON_ParseWithLengthOpts",
+		"libdeflate-libdeflate_deflate_compress",
+		"libdeflate-libdeflate_gzip_compress_bound",
+		"libdeflate-libdeflate_gzip_decompress",
+		"libdeflate-libdeflate_gzip_decompress_ex",
+		"libdeflate-libdeflate_zlib_compress_bound",
+		"libdeflate-libdeflate_zlib_decompress",
+		"minimp3-mp3dec_decode_frame",
+		"minimp3-mp3dec_init",
+		"mpack-mpack_write_bin",
+		"mpack-mpack_write_bytes",
+		"mpack-mpack_write_object_bytes",
+		"mpack-mpack_write_utf8",
+		"mpack-mpack_writer_track_bytes",
+		"mpack-mpack_writer_track_push",
+		"nanopb-pb_encode_string",
+		"nanopb-pb_istream_from_buffer",
+		"nanopb-pb_ostream_from_buffer",
+		"nanopb-pb_read",
+		"nanopb-pb_write",
+		"pcre2-pcre2_regerror",
+		"pcre2-pcre2_regexec",
+		"ryu-d2s_buffered",
+		"ryu-d2s_buffered_n",
+		"ryu-f2s_buffered",
+		"ryu-f2s_buffered_n",
+		"stb-stb_c_lexer_init",
+		"stb-stbds_hmdel_key",
+		"stb-stbds_hmfree_func",
+		"stb-stbds_hmget_key_ts",
+		"stb-stbds_hmput_key",
+		"stb-stbi_load_gif_from_memory",
+		"tinycbor-cbor_encode_byte_string",
+		"tinycbor-cbor_encode_raw",
+		"tinycbor-cbor_encode_text_string",
+		"tinycbor-cbor_encoder_create_map",
+		"tinycbor-cbor_encoder_init",
+		"tinycbor-cbor_parser_init"
+	],
+	"notDrawn": [
+		{
+			"id": "cjson-cJSON_PrintPreallocated",
+			"reason": "over-cap"
+		},
+		{
+			"id": "libdeflate-libdeflate_deflate_compress_bound",
+			"reason": "over-cap"
+		},
+		{
+			"id": "libdeflate-libdeflate_deflate_decompress",
+			"reason": "over-cap"
+		},
+		{
+			"id": "libdeflate-libdeflate_deflate_decompress_ex",
+			"reason": "over-cap"
+		},
+		{
+			"id": "libdeflate-libdeflate_gzip_compress",
+			"reason": "over-cap"
+		},
+		{
+			"id": "libdeflate-libdeflate_zlib_compress",
+			"reason": "over-cap"
+		},
+		{
+			"id": "libdeflate-libdeflate_zlib_decompress_ex",
+			"reason": "over-cap"
+		},
+		{
+			"id": "minimp3-mp3dec_f32_to_s16",
+			"reason": "build-failed"
+		},
+		{
+			"id": "mpack-mpack_start_array",
+			"reason": "over-cap"
+		},
+		{
+			"id": "mpack-mpack_start_bin",
+			"reason": "over-cap"
+		},
+		{
+			"id": "mpack-mpack_start_map",
+			"reason": "over-cap"
+		},
+		{
+			"id": "mpack-mpack_start_str",
+			"reason": "over-cap"
+		},
+		{
+			"id": "mpack-mpack_write_str",
+			"reason": "over-cap"
+		},
+		{
+			"id": "mpack-mpack_writer_init",
+			"reason": "over-cap"
+		},
+		{
+			"id": "stb-stbds_arrgrowf",
+			"reason": "over-cap"
+		},
+		{
+			"id": "stb-stbds_hash_bytes",
+			"reason": "native-not-equal"
+		},
+		{
+			"id": "stb-stbds_hash_string",
+			"reason": "native-not-equal"
+		},
+		{
+			"id": "stb-stbds_hmget_key",
+			"reason": "over-cap"
+		},
+		{
+			"id": "stb-stbds_hmput_default",
+			"reason": "over-cap"
+		},
+		{
+			"id": "stb-stbi_load_from_memory",
+			"reason": "over-cap"
+		},
+		{
+			"id": "tinycbor-cbor_encoder_create_array",
+			"reason": "over-cap"
+		},
+		{
+			"id": "zopfli-ZopfliCompress",
+			"reason": "build-failed"
+		}
+	],
+	"projects": 10
+}

@@ -1,0 +1,4148 @@
+{
+	"schema": 1,
+	"batch": "A",
+	"shimDigest": "4eefbdd4d092133bda078e275946e5e11e8ee6aa9c07ec233395e817393582db",
+	"memory": {
+		"initialPages": 4096,
+		"maximumPages": 8192
+	},
+	"projects": [
+		{
+			"id": "libdeflate",
+			"repository": "ebiggers/libdeflate",
+			"tag": "v1.26",
+			"nativeFlags": ["-U__aarch64__"],
+			"commit": "92e6a0db9fa848d742f9eb286c92afc60f2c3dda",
+			"license": "MIT",
+			"licenseFile": "COPYING",
+			"treeListingSha256": "eea7971d4b08484580234116722af596bc929e2884b6226d6913a57d6516f32e",
+			"vendorDigest": "2dd60dedd1cf05601632c6f24fadae1ae737d33595bb05a06ff79b16ffad874e",
+			"include": [".", "lib"],
+			"config": [],
+			"translationUnits": [
+				"lib/deflate_compress.c",
+				"lib/deflate_decompress.c",
+				"lib/gzip_compress.c",
+				"lib/gzip_decompress.c",
+				"lib/zlib_compress.c",
+				"lib/zlib_decompress.c",
+				"lib/adler32.c",
+				"lib/crc32.c",
+				"lib/utils.c"
+			],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on libdeflate.h (14 candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": [
+					"libdeflate_deflate_compress",
+					"libdeflate_deflate_compress_bound",
+					"libdeflate_zlib_compress",
+					"libdeflate_zlib_compress_bound",
+					"libdeflate_gzip_compress",
+					"libdeflate_gzip_compress_bound",
+					"libdeflate_deflate_decompress",
+					"libdeflate_deflate_decompress_ex",
+					"libdeflate_zlib_decompress",
+					"libdeflate_zlib_decompress_ex",
+					"libdeflate_gzip_decompress",
+					"libdeflate_gzip_decompress_ex",
+					"libdeflate_adler32",
+					"libdeflate_crc32"
+				],
+				"skipped": [
+					{
+						"function": "libdeflate_adler32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "libdeflate_crc32",
+						"reason": "over-cap"
+					}
+				]
+			},
+			"drivers": [
+				{
+					"id": "libdeflate-libdeflate_deflate_compress",
+					"function": "libdeflate_deflate_compress",
+					"category": "deflate",
+					"define": "K_DEFLATE_COMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 2097152,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "4857b27c665dec7815db039cd8d082e31baceb11e2f6a7f2d086f0670a2106f5",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "4857b27c665dec7815db039cd8d082e31baceb11e2f6a7f2d086f0670a2106f5",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_deflate_compress_bound",
+					"function": "libdeflate_deflate_compress_bound",
+					"category": "deflate",
+					"define": "K_DEFLATE_COMPRESS_BOUND",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 2097152,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "814abec4400e76359ae268f7a38d729f122f87bb23373d5ed645a0501926bf44",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "814abec4400e76359ae268f7a38d729f122f87bb23373d5ed645a0501926bf44",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_zlib_compress",
+					"function": "libdeflate_zlib_compress",
+					"category": "deflate",
+					"define": "K_ZLIB_COMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 2097152,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "cdade042ff1df37305f190f4bf92a4e4d40c13f28372d5627fac49974837e76e",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "cdade042ff1df37305f190f4bf92a4e4d40c13f28372d5627fac49974837e76e",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_zlib_compress_bound",
+					"function": "libdeflate_zlib_compress_bound",
+					"category": "deflate",
+					"define": "K_ZLIB_COMPRESS_BOUND",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 2097152,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "bc46fa90b7c7f435f2ebd021a8b605d58c825663fecb27374348d7c827de3bb0",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "bc46fa90b7c7f435f2ebd021a8b605d58c825663fecb27374348d7c827de3bb0",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_gzip_compress",
+					"function": "libdeflate_gzip_compress",
+					"category": "deflate",
+					"define": "K_GZIP_COMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 2097152,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a37db22be7388477a71345226c987e3fa04c1720d4d54c928900af59d4bccf2f",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a37db22be7388477a71345226c987e3fa04c1720d4d54c928900af59d4bccf2f",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_gzip_compress_bound",
+					"function": "libdeflate_gzip_compress_bound",
+					"category": "deflate",
+					"define": "K_GZIP_COMPRESS_BOUND",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 2097152,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "f0817a9636c0c156f28c49536dc8bd83c027a6632ee251c700e3a136c306fc04",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "f0817a9636c0c156f28c49536dc8bd83c027a6632ee251c700e3a136c306fc04",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_deflate_decompress",
+					"function": "libdeflate_deflate_decompress",
+					"category": "deflate",
+					"define": "K_DEFLATE_DECOMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 2097152,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "cc1ec7c25c76134e3fa1df87ad2cb671354bebc1179365cd1ff0ec2a7666308b",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "cc1ec7c25c76134e3fa1df87ad2cb671354bebc1179365cd1ff0ec2a7666308b",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_deflate_decompress_ex",
+					"function": "libdeflate_deflate_decompress_ex",
+					"category": "deflate",
+					"define": "K_DEFLATE_DECOMPRESS_EX",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 2097152,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "f5f5d6ac229871603976b4b80d3c7fb0873555238635bb4869eb9dee549df545",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "f5f5d6ac229871603976b4b80d3c7fb0873555238635bb4869eb9dee549df545",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_zlib_decompress",
+					"function": "libdeflate_zlib_decompress",
+					"category": "deflate",
+					"define": "K_ZLIB_DECOMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 2097152,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "cc1ec7c25c76134e3fa1df87ad2cb671354bebc1179365cd1ff0ec2a7666308b",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "cc1ec7c25c76134e3fa1df87ad2cb671354bebc1179365cd1ff0ec2a7666308b",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_zlib_decompress_ex",
+					"function": "libdeflate_zlib_decompress_ex",
+					"category": "deflate",
+					"define": "K_ZLIB_DECOMPRESS_EX",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 2097152,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "346a544f3a28e8eb7d441b7fa950894ed8a2d281eb73da3fb4266e6863ac0227",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "346a544f3a28e8eb7d441b7fa950894ed8a2d281eb73da3fb4266e6863ac0227",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_gzip_decompress",
+					"function": "libdeflate_gzip_decompress",
+					"category": "deflate",
+					"define": "K_GZIP_DECOMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 2097152,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "cc1ec7c25c76134e3fa1df87ad2cb671354bebc1179365cd1ff0ec2a7666308b",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "cc1ec7c25c76134e3fa1df87ad2cb671354bebc1179365cd1ff0ec2a7666308b",
+						"equal": true
+					}
+				},
+				{
+					"id": "libdeflate-libdeflate_gzip_decompress_ex",
+					"function": "libdeflate_gzip_decompress_ex",
+					"category": "deflate",
+					"define": "K_GZIP_DECOMPRESS_EX",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 2097152,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/libdeflate.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "81ed19352f4b11ce67b958406251efbfa606a14ade5b7a7a9f084f57df617654",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "81ed19352f4b11ce67b958406251efbfa606a14ade5b7a7a9f084f57df617654",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "zopfli",
+			"repository": "google/zopfli",
+			"tag": "zopfli-1.0.3",
+			"commit": "bd64b2f0553d4f1ef4e6627647c5d9fc8c71ffc0",
+			"license": "Apache-2.0",
+			"licenseFile": "COPYING",
+			"treeListingSha256": "c2c7a52883263d95cd5aca8a84ca98128275ba3c0c050f72eab5cbdd3114b8c1",
+			"vendorDigest": "8abacd8a1ed21b4ed145dad41cb1c8130164c9b5bed5ea384ee09e6fa53fd5d9",
+			"include": ["src/zopfli"],
+			"config": [],
+			"translationUnits": [
+				"src/zopfli/zopfli_lib.c",
+				"src/zopfli/zlib_container.c",
+				"src/zopfli/util.c",
+				"src/zopfli/blocksplitter.c",
+				"src/zopfli/deflate.c",
+				"src/zopfli/squeeze.c",
+				"src/zopfli/gzip_container.c",
+				"src/zopfli/katajainen.c",
+				"src/zopfli/hash.c",
+				"src/zopfli/lz77.c",
+				"src/zopfli/cache.c",
+				"src/zopfli/tree.c"
+			],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on src/zopfli/zopfli.h (1 candidate; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": ["ZopfliCompress"],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "zopfli-ZopfliCompress",
+					"function": "ZopfliCompress",
+					"category": "deflate",
+					"define": "K_ZOPFLI_COMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 536870912,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zopfli.c",
+					"result": {
+						"build": "PASS",
+						"run": "failed",
+						"error": "layout needs 34360079424 bytes, over the wasm32 memory limit"
+					}
+				}
+			]
+		},
+		{
+			"id": "cjson",
+			"repository": "DaveGamble/cJSON",
+			"tag": "v1.7.19",
+			"commit": "c859b25da02955fef659d658b8f324b5cde87be3",
+			"license": "MIT",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "63a550acd89f729ce0275a8a6c3fbd509e37b1c4485bc1c3407260db2689185b",
+			"vendorDigest": "698a7cea0a5dbca0d938b1e8b4f219d33a2a902eff78e51f2f60c005175d8a5d",
+			"include": ["."],
+			"config": [],
+			"translationUnits": ["cJSON.c"],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on cJSON.h and cJSON_Utils.h (scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": [
+					"cJSON_ParseWithLength",
+					"cJSON_ParseWithLengthOpts",
+					"cJSON_PrintPreallocated",
+					"cJSON_CreateIntArray",
+					"cJSON_CreateFloatArray",
+					"cJSON_CreateDoubleArray",
+					"cJSON_CreateStringArray"
+				],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "cjson-cJSON_ParseWithLength",
+					"function": "cJSON_ParseWithLength",
+					"category": "json",
+					"define": "K_PARSE_WITH_LENGTH",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/cjson.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "71c9e58519feda8fe955142e2d5a0c79a7eb269570e79530030569edaa9ee967",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "71c9e58519feda8fe955142e2d5a0c79a7eb269570e79530030569edaa9ee967",
+						"equal": true
+					}
+				},
+				{
+					"id": "cjson-cJSON_ParseWithLengthOpts",
+					"function": "cJSON_ParseWithLengthOpts",
+					"category": "json",
+					"define": "K_PARSE_WITH_LENGTH_OPTS",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/cjson.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a10da527df814db78349731fb4cb7753f70a6df98f0f16bd64d83ff56c4ea576",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a10da527df814db78349731fb4cb7753f70a6df98f0f16bd64d83ff56c4ea576",
+						"equal": true
+					}
+				},
+				{
+					"id": "cjson-cJSON_PrintPreallocated",
+					"function": "cJSON_PrintPreallocated",
+					"category": "json",
+					"define": "K_PRINT_PREALLOCATED",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/cjson.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "71c9e58519feda8fe955142e2d5a0c79a7eb269570e79530030569edaa9ee967",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "71c9e58519feda8fe955142e2d5a0c79a7eb269570e79530030569edaa9ee967",
+						"equal": true
+					}
+				},
+				{
+					"id": "cjson-cJSON_CreateIntArray",
+					"function": "cJSON_CreateIntArray",
+					"category": "json",
+					"define": "K_CREATE_INT_ARRAY",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/cjson.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "d570722bffc99a4d7860dab700ff2ec108f2b95743a99bcbc840cb8d66ad2142",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "d570722bffc99a4d7860dab700ff2ec108f2b95743a99bcbc840cb8d66ad2142",
+						"equal": true
+					}
+				},
+				{
+					"id": "cjson-cJSON_CreateFloatArray",
+					"function": "cJSON_CreateFloatArray",
+					"category": "json",
+					"define": "K_CREATE_FLOAT_ARRAY",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/cjson.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "bc0f9586680b587d38f1b2fbc3fa98405e4e8d181f8d38dd4b5a7646feef9fc0",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "bc0f9586680b587d38f1b2fbc3fa98405e4e8d181f8d38dd4b5a7646feef9fc0",
+						"equal": true
+					}
+				},
+				{
+					"id": "cjson-cJSON_CreateDoubleArray",
+					"function": "cJSON_CreateDoubleArray",
+					"category": "json",
+					"define": "K_CREATE_DOUBLE_ARRAY",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/cjson.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "bc0f9586680b587d38f1b2fbc3fa98405e4e8d181f8d38dd4b5a7646feef9fc0",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "bc0f9586680b587d38f1b2fbc3fa98405e4e8d181f8d38dd4b5a7646feef9fc0",
+						"equal": true
+					}
+				},
+				{
+					"id": "cjson-cJSON_CreateStringArray",
+					"function": "cJSON_CreateStringArray",
+					"category": "json",
+					"define": "K_CREATE_STRING_ARRAY",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/cjson.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "4b41e535a233b3fba478a8eaf122dfe874aa4ea4e4edefac49fbb84673f108ce",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "4b41e535a233b3fba478a8eaf122dfe874aa4ea4e4edefac49fbb84673f108ce",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "tinycbor",
+			"repository": "intel/tinycbor",
+			"tag": "v7.1",
+			"commit": "da6421f2b5b91e3468c0af7265117427ea73f19e",
+			"license": "MIT",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "05603280170854edfb8cdcf73474e2069da5b83a408cf0368bb948688e50fe79",
+			"vendorDigest": "9ef5704ec36e284b5d6033b93929a7fcc1049c8518a675c4f4098d4680ca123e",
+			"include": ["src"],
+			"config": ["config/tinycbor"],
+			"translationUnits": [
+				"src/cborencoder.c",
+				"src/cborencoder_float.c",
+				"src/cborencoder_close_container_checked.c",
+				"src/cborparser.c",
+				"src/cborparser_float.c",
+				"src/cborparser_dup_string.c",
+				"src/cborerrorstrings.c",
+				"src/cborvalidation.c"
+			],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on src/cbor.h and src/cborjson.h (7 candidates, all in cbor.h; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": [
+					"cbor_encoder_init",
+					"cbor_encode_text_string",
+					"cbor_encode_byte_string",
+					"cbor_encode_raw",
+					"cbor_encoder_create_array",
+					"cbor_encoder_create_map",
+					"cbor_parser_init"
+				],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "tinycbor-cbor_encoder_init",
+					"function": "cbor_encoder_init",
+					"category": "cbor",
+					"define": "K_ENCODER_INIT",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/tinycbor.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a3840468011865a487017283705ca60d2c9ce62e07f9901372d7347d057edcd2",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a3840468011865a487017283705ca60d2c9ce62e07f9901372d7347d057edcd2",
+						"equal": true
+					}
+				},
+				{
+					"id": "tinycbor-cbor_encode_text_string",
+					"function": "cbor_encode_text_string",
+					"category": "cbor",
+					"define": "K_ENCODE_TEXT_STRING",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/tinycbor.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "989e233072e1048b4497c1708a71262e8b35fac021132e39c1ccefe642f3e3dd",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "989e233072e1048b4497c1708a71262e8b35fac021132e39c1ccefe642f3e3dd",
+						"equal": true
+					}
+				},
+				{
+					"id": "tinycbor-cbor_encode_byte_string",
+					"function": "cbor_encode_byte_string",
+					"category": "cbor",
+					"define": "K_ENCODE_BYTE_STRING",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/tinycbor.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "34ce130f77fbc32c5ce1560439d440eb71b176a89b2a7dfd5fa2ae44f87e06ac",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "34ce130f77fbc32c5ce1560439d440eb71b176a89b2a7dfd5fa2ae44f87e06ac",
+						"equal": true
+					}
+				},
+				{
+					"id": "tinycbor-cbor_encode_raw",
+					"function": "cbor_encode_raw",
+					"category": "cbor",
+					"define": "K_ENCODE_RAW",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/tinycbor.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "bd37d761b03f7a7644048f4b0916ec556b3bb6f8fc1697abad7b4f9b1862b509",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "bd37d761b03f7a7644048f4b0916ec556b3bb6f8fc1697abad7b4f9b1862b509",
+						"equal": true
+					}
+				},
+				{
+					"id": "tinycbor-cbor_encoder_create_array",
+					"function": "cbor_encoder_create_array",
+					"category": "cbor",
+					"define": "K_CREATE_ARRAY",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/tinycbor.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "ac0a9c03ce7f8a66a036a85e468b0d0699d7010ec81e825f908766a0525a0226",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "ac0a9c03ce7f8a66a036a85e468b0d0699d7010ec81e825f908766a0525a0226",
+						"equal": true
+					}
+				},
+				{
+					"id": "tinycbor-cbor_encoder_create_map",
+					"function": "cbor_encoder_create_map",
+					"category": "cbor",
+					"define": "K_CREATE_MAP",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/tinycbor.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "301c3bfd7cfa0ddf7f97d7e9a2d5edb114f78644be6d51c20c9e7772bafcfa51",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "301c3bfd7cfa0ddf7f97d7e9a2d5edb114f78644be6d51c20c9e7772bafcfa51",
+						"equal": true
+					}
+				},
+				{
+					"id": "tinycbor-cbor_parser_init",
+					"function": "cbor_parser_init",
+					"category": "cbor",
+					"define": "K_PARSER_INIT",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/tinycbor.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "af6ce70ed68af4011a01c3a1dcbcd23fc126b80d56a1708f47591ab882279ba0",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "af6ce70ed68af4011a01c3a1dcbcd23fc126b80d56a1708f47591ab882279ba0",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "nanopb",
+			"repository": "nanopb/nanopb",
+			"tag": "0.4.92",
+			"commit": "160d4f09e5fabb2b66aa2dea32d4f38ace2c4b3f",
+			"license": "Zlib",
+			"licenseFile": "LICENSE.txt",
+			"treeListingSha256": "1ca922790db053f712d36825c6fd9aa5fd344db63f248a1e37d6c5363449b72d",
+			"vendorDigest": "19119c14e4c72cad3d4ede97fb5ec5dd22da81b0d10d5bb364a71ca45bd6bebc",
+			"include": ["."],
+			"config": [],
+			"translationUnits": ["pb_common.c", "pb_decode.c", "pb_encode.c"],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on pb.h, pb_common.h, pb_encode.h and pb_decode.h (5 candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": [
+					"pb_ostream_from_buffer",
+					"pb_write",
+					"pb_encode_string",
+					"pb_istream_from_buffer",
+					"pb_read"
+				],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "nanopb-pb_ostream_from_buffer",
+					"function": "pb_ostream_from_buffer",
+					"category": "protobuf",
+					"define": "K_OSTREAM_FROM_BUFFER",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/nanopb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "72dcf461313345530dee0c1cf5e7dbd326c6f414208718e832803c65d9d93023",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "72dcf461313345530dee0c1cf5e7dbd326c6f414208718e832803c65d9d93023",
+						"equal": true
+					}
+				},
+				{
+					"id": "nanopb-pb_write",
+					"function": "pb_write",
+					"category": "protobuf",
+					"define": "K_WRITE",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/nanopb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "c4d76cc01c36461fcb84db64cfab85914289a5ade936504e3c5d955609408f34",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "c4d76cc01c36461fcb84db64cfab85914289a5ade936504e3c5d955609408f34",
+						"equal": true
+					}
+				},
+				{
+					"id": "nanopb-pb_encode_string",
+					"function": "pb_encode_string",
+					"category": "protobuf",
+					"define": "K_ENCODE_STRING",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/nanopb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "c41e41926511de6bdac87989257c84a75e3f405f2d42d18e5007c524c458f519",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "c41e41926511de6bdac87989257c84a75e3f405f2d42d18e5007c524c458f519",
+						"equal": true
+					}
+				},
+				{
+					"id": "nanopb-pb_istream_from_buffer",
+					"function": "pb_istream_from_buffer",
+					"category": "protobuf",
+					"define": "K_ISTREAM_FROM_BUFFER",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/nanopb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "698a890bf3e2c66a11b1552758f1fc3cbc21097da1b731e94061bc554de96601",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "698a890bf3e2c66a11b1552758f1fc3cbc21097da1b731e94061bc554de96601",
+						"equal": true
+					}
+				},
+				{
+					"id": "nanopb-pb_read",
+					"function": "pb_read",
+					"category": "protobuf",
+					"define": "K_READ",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/nanopb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "c2e2dff2ae9cfe7430ac9666ac9aecd74f09a1343579c6d407feca4639b1ce2a",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "c2e2dff2ae9cfe7430ac9666ac9aecd74f09a1343579c6d407feca4639b1ce2a",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "base64",
+			"repository": "aklomp/base64",
+			"tag": "v0.5.3",
+			"commit": "5d5074cb856b9a53fe64f04ddf47812a85f4fb5a",
+			"license": "BSD-2-Clause",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "287ed4e1c5ed790c95ab60bf0244a01f2c925af58bef165f28ed8c734534c1fc",
+			"vendorDigest": "4a03cfe39d201b4ae35da08fab77558891b138b7907a43b42c37e56665cb006b",
+			"include": ["include", "lib"],
+			"config": ["config/base64"],
+			"translationUnits": [
+				"lib/lib.c",
+				"lib/codec_choose.c",
+				"lib/tables/tables.c",
+				"lib/arch/generic/codec.c"
+			],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on include/libbase64.h (4 candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": [
+					"base64_encode",
+					"base64_stream_encode",
+					"base64_decode",
+					"base64_stream_decode"
+				],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "base64-base64_encode",
+					"function": "base64_encode",
+					"category": "base64",
+					"define": "K_ENCODE",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/base64.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "e339b7373e24e6c35878f0a0c5bc94669deaaef45144aa8e3168c25761fabd1a",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "e339b7373e24e6c35878f0a0c5bc94669deaaef45144aa8e3168c25761fabd1a",
+						"equal": true
+					}
+				},
+				{
+					"id": "base64-base64_stream_encode",
+					"function": "base64_stream_encode",
+					"category": "base64",
+					"define": "K_STREAM_ENCODE",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/base64.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "e339b7373e24e6c35878f0a0c5bc94669deaaef45144aa8e3168c25761fabd1a",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "e339b7373e24e6c35878f0a0c5bc94669deaaef45144aa8e3168c25761fabd1a",
+						"equal": true
+					}
+				},
+				{
+					"id": "base64-base64_decode",
+					"function": "base64_decode",
+					"category": "base64",
+					"define": "K_DECODE",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/base64.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "caa72cef0d95bb100cc6ad0f22bf350e1b55be54ba3e45c182329309b8056658",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "caa72cef0d95bb100cc6ad0f22bf350e1b55be54ba3e45c182329309b8056658",
+						"equal": true
+					}
+				},
+				{
+					"id": "base64-base64_stream_decode",
+					"function": "base64_stream_decode",
+					"category": "base64",
+					"define": "K_STREAM_DECODE",
+					"records": 128,
+					"slot": 4096,
+					"recordCapacity": 2048,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/base64.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "caa72cef0d95bb100cc6ad0f22bf350e1b55be54ba3e45c182329309b8056658",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "caa72cef0d95bb100cc6ad0f22bf350e1b55be54ba3e45c182329309b8056658",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "ryu",
+			"batch": "B",
+			"repository": "ulfjack/ryu",
+			"tag": "v2.0",
+			"commit": "72e18e8d14d4392a4a3261f37cde248e4fbedbec",
+			"license": "Apache-2.0 OR BSL-1.0",
+			"licenseFile": "LICENSE-Apache2, LICENSE-Boost",
+			"treeListingSha256": "9354857c6c600090b075b6ad2001974852e58eb79c4b1bc38e89c284f518e30e",
+			"vendorDigest": "7b70811df07ba16eaf2d9c20e1e06023762801f95449d441cb081d60b46202f1",
+			"include": ["."],
+			"config": [],
+			"translationUnits": ["ryu/f2s.c", "ryu/d2s.c", "ryu/generic_128.c", "ryu/d2fixed.c"],
+			"candidates": {
+				"rule": 2,
+				"enumeration": "corpus-enumerate.ts on ryu/ryu.h (scratchpad/v11/w4/enumeration.json, script sha256 4accf8cd...); rule 1 gives 0; ryu/ryu2.h is not in the header list",
+				"candidates": ["d2s_buffered_n", "d2s_buffered", "f2s_buffered_n", "f2s_buffered"],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "ryu-d2s_buffered_n",
+					"function": "d2s_buffered_n",
+					"category": "float-to-string",
+					"define": "K_D2S_BUFFERED_N",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/ryu.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "53ebf3aaeae76a22905085856e022c4746a02d485ea80c9e18d92ca2b9156229",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "53ebf3aaeae76a22905085856e022c4746a02d485ea80c9e18d92ca2b9156229",
+						"equal": true
+					}
+				},
+				{
+					"id": "ryu-d2s_buffered",
+					"function": "d2s_buffered",
+					"category": "float-to-string",
+					"define": "K_D2S_BUFFERED",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/ryu.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "53ebf3aaeae76a22905085856e022c4746a02d485ea80c9e18d92ca2b9156229",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "53ebf3aaeae76a22905085856e022c4746a02d485ea80c9e18d92ca2b9156229",
+						"equal": true
+					}
+				},
+				{
+					"id": "ryu-f2s_buffered_n",
+					"function": "f2s_buffered_n",
+					"category": "float-to-string",
+					"define": "K_F2S_BUFFERED_N",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/ryu.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "58b3068ddbd70d43589b2e0b3ad9284a64b7caa6345a900ea07f0bcf8673c067",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "58b3068ddbd70d43589b2e0b3ad9284a64b7caa6345a900ea07f0bcf8673c067",
+						"equal": true
+					}
+				},
+				{
+					"id": "ryu-f2s_buffered",
+					"function": "f2s_buffered",
+					"category": "float-to-string",
+					"define": "K_F2S_BUFFERED",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/ryu.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "58b3068ddbd70d43589b2e0b3ad9284a64b7caa6345a900ea07f0bcf8673c067",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "58b3068ddbd70d43589b2e0b3ad9284a64b7caa6345a900ea07f0bcf8673c067",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "mpack",
+			"batch": "B",
+			"repository": "ludocode/mpack",
+			"tag": "v1.1.1",
+			"commit": "79d3fcd3e04338b06e82d01a62f4aa98c7bad5f7",
+			"license": "MIT",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "8526edd3ce63a20ffbd613a18e7bae4be811eb49bf16b928759aaee025741b72",
+			"vendorDigest": "beadf098bb33dc86b2ef6da6687a676540008e470c3043edf14117608bf54eec",
+			"include": ["src/mpack"],
+			"config": [],
+			"translationUnits": [
+				"src/mpack/mpack-platform.c",
+				"src/mpack/mpack-common.c",
+				"src/mpack/mpack-writer.c",
+				"src/mpack/mpack-reader.c",
+				"src/mpack/mpack-node.c",
+				"src/mpack/mpack-expect.c"
+			],
+			"candidates": {
+				"rule": 1,
+				"enumeration": "corpus-enumerate.ts on src/mpack/{mpack, mpack-common, mpack-writer, mpack-reader, mpack-node, mpack-expect, mpack-platform}.h (102 unique candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cd...)",
+				"candidates": [
+					"mpack_tag_debug_pseudo_json",
+					"mpack_tag_debug_describe",
+					"mpack_print_append",
+					"mpack_print_file_callback",
+					"mpack_track_push",
+					"mpack_track_bytes",
+					"mpack_track_str_bytes_all",
+					"mpack_utf8_check",
+					"mpack_utf8_check_no_null",
+					"mpack_str_check_no_null",
+					"mpack_writer_track_push",
+					"mpack_writer_track_bytes",
+					"mpack_writer_init",
+					"mpack_write_object_bytes",
+					"mpack_start_array",
+					"mpack_start_map",
+					"mpack_write_str",
+					"mpack_write_utf8",
+					"mpack_write_bin",
+					"mpack_write_ext",
+					"mpack_start_str",
+					"mpack_start_bin",
+					"mpack_start_ext",
+					"mpack_write_bytes",
+					"mpack_reader_init",
+					"mpack_reader_init_data",
+					"mpack_skip_bytes",
+					"mpack_read_bytes",
+					"mpack_read_utf8",
+					"mpack_read_cstr",
+					"mpack_read_utf8_cstr",
+					"mpack_read_bytes_alloc_impl",
+					"mpack_read_bytes_alloc",
+					"mpack_read_bytes_inplace",
+					"mpack_read_utf8_inplace",
+					"mpack_should_read_bytes_inplace",
+					"mpack_read_timestamp",
+					"mpack_print_data_to_buffer",
+					"mpack_print_data_to_callback",
+					"mpack_print_data_to_file",
+					"mpack_print_data_to_stdout",
+					"mpack_print",
+					"mpack_reader_ensure_straddle",
+					"mpack_reader_ensure",
+					"mpack_read_native_straddle",
+					"mpack_read_native",
+					"mpack_reader_track_bytes",
+					"mpack_reader_track_str_bytes_all",
+					"mpack_tree_init_data",
+					"mpack_tree_init",
+					"mpack_tree_init_stream",
+					"mpack_tree_init_pool",
+					"mpack_tree_init_filename",
+					"mpack_tree_init_file",
+					"mpack_tree_init_stdfile",
+					"mpack_tree_set_limits",
+					"mpack_node_print_to_buffer",
+					"mpack_node_copy_data",
+					"mpack_node_copy_utf8",
+					"mpack_node_copy_cstr",
+					"mpack_node_copy_utf8_cstr",
+					"mpack_node_enum",
+					"mpack_node_enum_optional",
+					"mpack_node_map_str",
+					"mpack_node_map_str_optional",
+					"mpack_node_map_contains_str",
+					"mpack_expect_map_range",
+					"mpack_expect_map_max",
+					"mpack_expect_map_match",
+					"mpack_expect_map_max_or_nil",
+					"mpack_expect_array_range",
+					"mpack_expect_array_max",
+					"mpack_expect_array_match",
+					"mpack_expect_array_max_or_nil",
+					"mpack_expect_array_alloc_impl",
+					"mpack_expect_str_buf",
+					"mpack_expect_utf8",
+					"mpack_expect_str_max",
+					"mpack_expect_str_length",
+					"mpack_expect_str_match",
+					"mpack_expect_cstr",
+					"mpack_expect_utf8_cstr",
+					"mpack_expect_cstr_alloc",
+					"mpack_expect_utf8_cstr_alloc",
+					"mpack_expect_bin_max",
+					"mpack_expect_bin_size",
+					"mpack_expect_bin_buf",
+					"mpack_expect_bin_size_buf",
+					"mpack_expect_bin_alloc",
+					"mpack_expect_ext_max",
+					"mpack_expect_ext_size",
+					"mpack_expect_ext_buf",
+					"mpack_expect_ext_alloc",
+					"mpack_expect_enum",
+					"mpack_expect_enum_optional",
+					"mpack_expect_key_uint",
+					"mpack_expect_key_cstr",
+					"mpack_memcmp",
+					"mpack_memcpy",
+					"mpack_memmove",
+					"mpack_memset",
+					"mpack_realloc"
+				],
+				"skipped": [
+					{
+						"function": "mpack_tag_debug_pseudo_json",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_tag_debug_describe",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_print_append",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_print_file_callback",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_track_push",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_track_bytes",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_track_str_bytes_all",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_utf8_check",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_utf8_check_no_null",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_str_check_no_null",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_write_ext",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_start_ext",
+						"reason": "compiled-out"
+					},
+					{
+						"function": "mpack_reader_init",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_reader_init_data",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_skip_bytes",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_bytes",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_utf8",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_cstr",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_utf8_cstr",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_bytes_alloc_impl",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_bytes_alloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_bytes_inplace",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_utf8_inplace",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_should_read_bytes_inplace",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_timestamp",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_print_data_to_buffer",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_print_data_to_callback",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_print_data_to_file",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_print_data_to_stdout",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_print",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_reader_ensure_straddle",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_reader_ensure",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_native_straddle",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_read_native",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_reader_track_bytes",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_reader_track_str_bytes_all",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_init_data",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_init",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_init_stream",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_init_pool",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_init_filename",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_init_file",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_init_stdfile",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_tree_set_limits",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_print_to_buffer",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_copy_data",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_copy_utf8",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_copy_cstr",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_copy_utf8_cstr",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_enum",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_enum_optional",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_map_str",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_map_str_optional",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_node_map_contains_str",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_map_range",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_map_max",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_map_match",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_map_max_or_nil",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_array_range",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_array_max",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_array_match",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_array_max_or_nil",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_array_alloc_impl",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_str_buf",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_utf8",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_str_max",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_str_length",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_str_match",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_cstr",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_utf8_cstr",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_cstr_alloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_utf8_cstr_alloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_bin_max",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_bin_size",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_bin_buf",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_bin_size_buf",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_bin_alloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_ext_max",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_ext_size",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_ext_buf",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_ext_alloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_enum",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_enum_optional",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_key_uint",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_expect_key_cstr",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_memcmp",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_memcpy",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_memmove",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_memset",
+						"reason": "over-cap"
+					},
+					{
+						"function": "mpack_realloc",
+						"reason": "over-cap"
+					}
+				]
+			},
+			"drivers": [
+				{
+					"id": "mpack-mpack_writer_track_push",
+					"function": "mpack_writer_track_push",
+					"category": "writer-tracking",
+					"define": "K_WRITER_TRACK_PUSH",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a9d23653668f4d51d5193e8b419c5239f4172242eb5c07c19ead398632ccb3d1",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a9d23653668f4d51d5193e8b419c5239f4172242eb5c07c19ead398632ccb3d1",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_writer_track_bytes",
+					"function": "mpack_writer_track_bytes",
+					"category": "writer-tracking",
+					"define": "K_WRITER_TRACK_BYTES",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a9d23653668f4d51d5193e8b419c5239f4172242eb5c07c19ead398632ccb3d1",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a9d23653668f4d51d5193e8b419c5239f4172242eb5c07c19ead398632ccb3d1",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_writer_init",
+					"function": "mpack_writer_init",
+					"category": "writer-core",
+					"define": "K_WRITER_INIT",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a9d23653668f4d51d5193e8b419c5239f4172242eb5c07c19ead398632ccb3d1",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a9d23653668f4d51d5193e8b419c5239f4172242eb5c07c19ead398632ccb3d1",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_write_object_bytes",
+					"function": "mpack_write_object_bytes",
+					"category": "writer-core",
+					"define": "K_WRITE_OBJECT_BYTES",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "8fc7b9033b6b958d6cbaa2cc7582c01ebdf9bb3849d2a4c405994a70101e7a48",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "8fc7b9033b6b958d6cbaa2cc7582c01ebdf9bb3849d2a4c405994a70101e7a48",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_start_array",
+					"function": "mpack_start_array",
+					"category": "writer-core",
+					"define": "K_START_ARRAY",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "7ad78c5f734adca5cb8cef4fa29ad7b877bb90462baf29764bd84fd82d154879",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "7ad78c5f734adca5cb8cef4fa29ad7b877bb90462baf29764bd84fd82d154879",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_start_map",
+					"function": "mpack_start_map",
+					"category": "writer-core",
+					"define": "K_START_MAP",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "98f49576eecd9c8bc1d6b2d6a99df2c2d060bc9af0a9306bd9a2bec9064aabeb",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "98f49576eecd9c8bc1d6b2d6a99df2c2d060bc9af0a9306bd9a2bec9064aabeb",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_write_str",
+					"function": "mpack_write_str",
+					"category": "writer-core",
+					"define": "K_WRITE_STR",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "710d73acb34f23fc6d23b17f132c7f3fff8c4e87e943f046614ba3ab4745a55c",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "710d73acb34f23fc6d23b17f132c7f3fff8c4e87e943f046614ba3ab4745a55c",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_write_utf8",
+					"function": "mpack_write_utf8",
+					"category": "writer-core",
+					"define": "K_WRITE_UTF8",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "4b2f8f021cae8fe115af68c44310b83d61c348a8dd6d14ed2b5299bf8163f583",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "4b2f8f021cae8fe115af68c44310b83d61c348a8dd6d14ed2b5299bf8163f583",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_write_bin",
+					"function": "mpack_write_bin",
+					"category": "writer-core",
+					"define": "K_WRITE_BIN",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "657bd802767f4502395a1ae5a596d36f805e408823a18abef134e12b7e71f043",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "657bd802767f4502395a1ae5a596d36f805e408823a18abef134e12b7e71f043",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_start_str",
+					"function": "mpack_start_str",
+					"category": "writer-core",
+					"define": "K_START_STR",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "63237812c83baea07304bd349a222ea1380013333a857fafa7ada16fb6ac1cd8",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "63237812c83baea07304bd349a222ea1380013333a857fafa7ada16fb6ac1cd8",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_start_bin",
+					"function": "mpack_start_bin",
+					"category": "writer-core",
+					"define": "K_START_BIN",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "5a56f711f234d423a5854a7dedd0620f1697658fcb97129b5637368f3924e7b9",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "5a56f711f234d423a5854a7dedd0620f1697658fcb97129b5637368f3924e7b9",
+						"equal": true
+					}
+				},
+				{
+					"id": "mpack-mpack_write_bytes",
+					"function": "mpack_write_bytes",
+					"category": "writer-core",
+					"define": "K_WRITE_BYTES",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/mpack.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "8fc7b9033b6b958d6cbaa2cc7582c01ebdf9bb3849d2a4c405994a70101e7a48",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "8fc7b9033b6b958d6cbaa2cc7582c01ebdf9bb3849d2a4c405994a70101e7a48",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "stb",
+			"batch": "B",
+			"repository": "nothings/stb",
+			"tag": "HEAD (no tags)",
+			"commit": "4e9b368bfc071e97206ea5c6adba68dd0cbf8897",
+			"license": "MIT OR Unlicense",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "0c79e0376eb624dffb428af7365316cb10e3f43a24aa7621cd88ad9fa04d5510",
+			"vendorDigest": "18c3e6726e32a16312ec6dc60617bc847a4c7dd0d4ab6b40e438703b3fec37f2",
+			"include": ["."],
+			"config": [],
+			"translationUnits": [],
+			"candidates": {
+				"rule": 1,
+				"enumeration": "corpus-enumerate.ts on the 18 top-level stb_*.h (33 unique candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cd...); stb_vorbis.c is not in the list",
+				"candidates": [
+					"stb_c_lexer_init",
+					"stbds_hash_bytes",
+					"stbds_hash_string",
+					"stbds_arrgrowf",
+					"stbds_hmfree_func",
+					"stbds_hmget_key",
+					"stbds_hmget_key_ts",
+					"stbds_hmput_default",
+					"stbds_hmput_key",
+					"stbds_hmdel_key",
+					"stbi_load_from_memory",
+					"stbi_load_gif_from_memory",
+					"stbi_convert_wchar_to_utf8",
+					"stbi_load_16_from_memory",
+					"stbi_loadf_from_memory",
+					"stbi_is_hdr_from_memory",
+					"stbi_info_from_memory",
+					"stbi_is_16_bit_from_memory",
+					"stbi_zlib_decode_malloc_guesssize",
+					"stbi_zlib_decode_malloc_guesssize_headerflag",
+					"stbi_zlib_decode_malloc",
+					"stbi_zlib_decode_buffer",
+					"stbi_zlib_decode_noheader_malloc",
+					"stbi_zlib_decode_noheader_buffer",
+					"stbiw_convert_wchar_to_utf8",
+					"stbi_zlib_compress",
+					"stb_include_strings",
+					"stb_leakcheck_realloc",
+					"stbtt_GetScaledFontVMetrics",
+					"stbtt_PackFontRange",
+					"stbtt_GetKerningTable",
+					"stbtt_CompareUTF8toUTF16_bigendian",
+					"stbvox_set_buffer"
+				],
+				"skipped": [
+					{
+						"function": "stbi_convert_wchar_to_utf8",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_load_16_from_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_loadf_from_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_is_hdr_from_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_info_from_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_is_16_bit_from_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_zlib_decode_malloc_guesssize",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_zlib_decode_malloc_guesssize_headerflag",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_zlib_decode_malloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_zlib_decode_buffer",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_zlib_decode_noheader_malloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_zlib_decode_noheader_buffer",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbiw_convert_wchar_to_utf8",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbi_zlib_compress",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stb_include_strings",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stb_leakcheck_realloc",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbtt_GetScaledFontVMetrics",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbtt_PackFontRange",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbtt_GetKerningTable",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbtt_CompareUTF8toUTF16_bigendian",
+						"reason": "over-cap"
+					},
+					{
+						"function": "stbvox_set_buffer",
+						"reason": "over-cap"
+					}
+				]
+			},
+			"drivers": [
+				{
+					"id": "stb-stb_c_lexer_init",
+					"function": "stb_c_lexer_init",
+					"category": "lexer",
+					"define": "K_LEXER_INIT",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "1185eb13da9e512809389b615a4c942ae3b0b8b63c00fba61292d77e7bcff7d4",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "1185eb13da9e512809389b615a4c942ae3b0b8b63c00fba61292d77e7bcff7d4",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbds_hash_bytes",
+					"function": "stbds_hash_bytes",
+					"category": "hash",
+					"define": "K_HASH_BYTES",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "51d53312844ec7bdb42dc025eebc1bdbd39824e696a69a710318d3a2f4c8f967",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "dbbe9a0318fa9b0169837de67f1e10f21a0d2352654f6edfaf6eb1080f19ea01",
+						"equal": false
+					}
+				},
+				{
+					"id": "stb-stbds_hash_string",
+					"function": "stbds_hash_string",
+					"category": "hash",
+					"define": "K_HASH_STRING",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 32,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "f9eddaadd4924cfec921a6999cfb37ce672f46dc4bf2aa7e0a69f844ff647446",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a3ab9685b2add2570b4dd449bf9fb3ac1e8b8b18456a42ec9c7241978f801cc4",
+						"equal": false
+					}
+				},
+				{
+					"id": "stb-stbds_arrgrowf",
+					"function": "stbds_arrgrowf",
+					"category": "dynarray",
+					"define": "K_ARRGROWF",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "db3bbbad5e62a8575d4e5b9e37b99b1b1be1d8b6ce703ad642f507418fc3e90d",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "db3bbbad5e62a8575d4e5b9e37b99b1b1be1d8b6ce703ad642f507418fc3e90d",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbds_hmfree_func",
+					"function": "stbds_hmfree_func",
+					"category": "hashmap",
+					"define": "K_HMFREE_FUNC",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "9c88570bbf05140ec18e63c34aac0a5f34baeab6d1cc326b66376aacca99605c",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "9c88570bbf05140ec18e63c34aac0a5f34baeab6d1cc326b66376aacca99605c",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbds_hmget_key",
+					"function": "stbds_hmget_key",
+					"category": "hashmap",
+					"define": "K_HMGET_KEY",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "2035dc4fbd9ab5779b9d622413cb915eed098fae120f3eeaa4546d0a2fca300b",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "2035dc4fbd9ab5779b9d622413cb915eed098fae120f3eeaa4546d0a2fca300b",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbds_hmget_key_ts",
+					"function": "stbds_hmget_key_ts",
+					"category": "hashmap",
+					"define": "K_HMGET_KEY_TS",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "2035dc4fbd9ab5779b9d622413cb915eed098fae120f3eeaa4546d0a2fca300b",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "2035dc4fbd9ab5779b9d622413cb915eed098fae120f3eeaa4546d0a2fca300b",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbds_hmput_default",
+					"function": "stbds_hmput_default",
+					"category": "hashmap",
+					"define": "K_HMPUT_DEFAULT",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "b51fd1ed307b99342a7ffcee432dcb7d682c3ee967e7878d384d54f8d2998a61",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "b51fd1ed307b99342a7ffcee432dcb7d682c3ee967e7878d384d54f8d2998a61",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbds_hmput_key",
+					"function": "stbds_hmput_key",
+					"category": "hashmap",
+					"define": "K_HMPUT_KEY",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "37a42dc3c8b20fe8cb26edf986be0f01b6b58e82e4043bab5275e1017eece399",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "37a42dc3c8b20fe8cb26edf986be0f01b6b58e82e4043bab5275e1017eece399",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbds_hmdel_key",
+					"function": "stbds_hmdel_key",
+					"category": "hashmap",
+					"define": "K_HMDEL_KEY",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "f4f7b2c3da9b4c9ccfdce6e4ed5704404b3206c00f85222033a0717e249027bf",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "f4f7b2c3da9b4c9ccfdce6e4ed5704404b3206c00f85222033a0717e249027bf",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbi_load_from_memory",
+					"function": "stbi_load_from_memory",
+					"category": "image",
+					"define": "K_STBI_LOAD",
+					"records": 64,
+					"slot": 64,
+					"recordCapacity": 4096,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "41cb370c7c609fee22b725e993bc41a5bb3361820ccbab18a125e18b031bd8fc",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "41cb370c7c609fee22b725e993bc41a5bb3361820ccbab18a125e18b031bd8fc",
+						"equal": true
+					}
+				},
+				{
+					"id": "stb-stbi_load_gif_from_memory",
+					"function": "stbi_load_gif_from_memory",
+					"category": "image",
+					"define": "K_STBI_LOAD_GIF",
+					"records": 64,
+					"slot": 64,
+					"recordCapacity": 4096,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/stb.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "e8c1f80098efccaf1b385da25465e7416520a80a6265960ff2d6a89db7732f69",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "e8c1f80098efccaf1b385da25465e7416520a80a6265960ff2d6a89db7732f69",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "minimp3",
+			"batch": "B",
+			"repository": "lieff/minimp3",
+			"tag": "HEAD (no tags)",
+			"commit": "ea99364f61c14656440e8d77e9c233ccf3124633",
+			"license": "CC0-1.0",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "3689fbdf7a4918bd0416c278661b8c2360185ba619c810e3507df161df7d3acc",
+			"vendorDigest": "1549e2aae82ecaaf4871bb8f4294e23b9fef95b7af28b4e46a16d8f441dabfb2",
+			"include": ["."],
+			"config": [],
+			"translationUnits": [],
+			"nativeFlags": ["-DMINIMP3_NO_SIMD"],
+			"candidates": {
+				"rule": 2,
+				"enumeration": "corpus-enumerate.ts on minimp3.h (scratchpad/v11/w4/enumeration.json, script sha256 4accf8cd...); rule 1 gives 0 (mp3_bytes and num_samples are not named len, size or count)",
+				"candidates": ["mp3dec_init", "mp3dec_f32_to_s16", "mp3dec_decode_frame"],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "minimp3-mp3dec_init",
+					"function": "mp3dec_init",
+					"category": "decoder-state",
+					"define": "K_MP3_INIT",
+					"records": 128,
+					"slot": 6720,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/minimp3.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "0dece293d901d407fe7624435daae2c43bc4b75b0ef5d939f45a1b72f8326322",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "0dece293d901d407fe7624435daae2c43bc4b75b0ef5d939f45a1b72f8326322",
+						"equal": true
+					}
+				},
+				{
+					"id": "minimp3-mp3dec_f32_to_s16",
+					"function": "mp3dec_f32_to_s16",
+					"category": "pcm-convert",
+					"define": "K_MP3_F32_TO_S16",
+					"records": 128,
+					"slot": 2080,
+					"recordCapacity": 4096,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/minimp3.c",
+					"result": {
+						"build": "failed",
+						"error": "<repo>/scripts/research/final-cases/drivers/minimp3.c:88:2: error: call to undeclared function 'mp3dec_f32_to_s16'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]\n   88 |         mp3dec_f32_to_s16((const float *)P(r->in), (int16_t *)DATA(out), (int)n);\n      |         ^\n1 error generated."
+					}
+				},
+				{
+					"id": "minimp3-mp3dec_decode_frame",
+					"function": "mp3dec_decode_frame",
+					"category": "decode",
+					"define": "K_MP3_DECODE_FRAME",
+					"records": 64,
+					"slot": 4640,
+					"recordCapacity": 448,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/minimp3.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "ab01bb38b902a0672c95746d15d40c40d69f88b47696a07220d77260a42c3940",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "ab01bb38b902a0672c95746d15d40c40d69f88b47696a07220d77260a42c3940",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "pcre2",
+			"batch": "B",
+			"repository": "PCRE2Project/pcre2",
+			"tag": "pcre2-10.49",
+			"commit": "6f9d7c1373262c541324a16a358785b33ef116cf",
+			"license": "BSD-3-Clause WITH PCRE2-exception",
+			"licenseFile": "LICENCE.md",
+			"treeListingSha256": "3e82eee53c7b808d4730d74163d880411056a7db75806e8be6428b08e08ae7b8",
+			"vendorDigest": "50aa185399ec877a49b78d20943e8af3ce27b193a7fa40b30293020c1a894241",
+			"include": ["src"],
+			"config": ["config/pcre2"],
+			"defines": ["HAVE_CONFIG_H"],
+			"translationUnits": [
+				"src/pcre2_auto_possess.c",
+				"src/pcre2_chartables.c",
+				"src/pcre2_chkdint.c",
+				"src/pcre2_compile.c",
+				"src/pcre2_compile_cgroup.c",
+				"src/pcre2_compile_class.c",
+				"src/pcre2_config.c",
+				"src/pcre2_context.c",
+				"src/pcre2_convert.c",
+				"src/pcre2_dfa_match.c",
+				"src/pcre2_error.c",
+				"src/pcre2_extuni.c",
+				"src/pcre2_find_bracket.c",
+				"src/pcre2_jit_compile.c",
+				"src/pcre2_maketables.c",
+				"src/pcre2_match.c",
+				"src/pcre2_match_data.c",
+				"src/pcre2_match_next.c",
+				"src/pcre2_newline.c",
+				"src/pcre2_ord2utf.c",
+				"src/pcre2_pattern_info.c",
+				"src/pcre2_script_run.c",
+				"src/pcre2_serialize.c",
+				"src/pcre2_string_utils.c",
+				"src/pcre2_study.c",
+				"src/pcre2_substitute.c",
+				"src/pcre2_substring.c",
+				"src/pcre2_tables.c",
+				"src/pcre2_ucd.c",
+				"src/pcre2_valid_utf.c",
+				"src/pcre2_xclass.c",
+				"src/pcre2posix.c"
+			],
+			"candidates": {
+				"rule": 1,
+				"enumeration": "corpus-enumerate.ts on src/pcre2.h.generic and src/pcre2posix.h (2 candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cd...); pcre2.h.generic gives 0 functions and 20 unparsed items",
+				"candidates": ["pcre2_regexec", "pcre2_regerror"],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "pcre2-pcre2_regexec",
+					"function": "pcre2_regexec",
+					"category": "regex",
+					"define": "K_REGEXEC",
+					"records": 64,
+					"slot": 64,
+					"recordCapacity": 128,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pcre2.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "03d7e5d490251171aebdada41d1d6a4bf39e190afa4574aeee9d7d98fc276c60",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "03d7e5d490251171aebdada41d1d6a4bf39e190afa4574aeee9d7d98fc276c60",
+						"equal": true
+					}
+				},
+				{
+					"id": "pcre2-pcre2_regerror",
+					"function": "pcre2_regerror",
+					"category": "regex",
+					"define": "K_REGERROR",
+					"records": 128,
+					"slot": 128,
+					"recordCapacity": 16,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pcre2.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "307981fcc2adb9c0785bc3991ac1b39cc79bb904b0d37a2883b2d63d8ba1f9df",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "307981fcc2adb9c0785bc3991ac1b39cc79bb904b0d37a2883b2d63d8ba1f9df",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "picohttpparser",
+			"batch": "C",
+			"repository": "h2o/picohttpparser",
+			"tag": "v1.5",
+			"commit": "54413dc68acd3aca70317d3c0a8c1d45819c9de2",
+			"license": "NO LICENSE FILE at the pin; README.md says dual-licensed Perl or MIT",
+			"licence": "pending",
+			"licenseFile": "README.md",
+			"treeListingSha256": "4c936fbd5b088b41a332f55b5a1da73a34312de403a580805d4a4e348379fc9c",
+			"vendorDigest": "f8190c733efc5eeca8bcac4a3d74cb08aefd7310aed9819a4ed92f96cdd5234d",
+			"include": ["."],
+			"config": [],
+			"translationUnits": ["picohttpparser.c"],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on picohttpparser.h (3 candidates, rule 1; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": ["phr_parse_request", "phr_parse_response", "phr_parse_headers"],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "picohttpparser-phr_parse_request",
+					"function": "phr_parse_request",
+					"category": "http-parse",
+					"define": "K_PARSE_REQUEST",
+					"records": 128,
+					"slot": 512,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/picohttpparser.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "4cd87378594d1978e55d51c544a869801223a078f3a246a38cb4dc3d67e6364e",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "4cd87378594d1978e55d51c544a869801223a078f3a246a38cb4dc3d67e6364e",
+						"equal": true
+					}
+				},
+				{
+					"id": "picohttpparser-phr_parse_response",
+					"function": "phr_parse_response",
+					"category": "http-parse",
+					"define": "K_PARSE_RESPONSE",
+					"records": 128,
+					"slot": 512,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/picohttpparser.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "630629c7b4d5c3cee4ef61bafa10107a1b2af241001f488d126f5e31669f2a06",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "630629c7b4d5c3cee4ef61bafa10107a1b2af241001f488d126f5e31669f2a06",
+						"equal": true
+					}
+				},
+				{
+					"id": "picohttpparser-phr_parse_headers",
+					"function": "phr_parse_headers",
+					"category": "http-parse",
+					"define": "K_PARSE_HEADERS",
+					"records": 128,
+					"slot": 512,
+					"recordCapacity": 512,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/picohttpparser.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "c833c8643961b03fee91e3e9e788ed0073d1e7ea158e90a45f2fc80c1072c10f",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "c833c8643961b03fee91e3e9e788ed0073d1e7ea158e90a45f2fc80c1072c10f",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "zstd",
+			"batch": "C",
+			"repository": "facebook/zstd",
+			"tag": "v1.5.7",
+			"nativeFlags": [],
+			"defines": ["ZSTD_LEGACY_SUPPORT=0"],
+			"commit": "f8745da6ff1ad1e7bab384bd1f9d742439278e99",
+			"license": "NEEDS A PERSON: BSD-style (LICENSE) or GPL-2.0 (COPYING), at the user's option per lib/zstd.h",
+			"licence": "pending",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "9e29788dacf590d88723aab634798c966d5d37a511324491bcffbb0a1f873fb4",
+			"vendorDigest": "60183aa27438b69e2b58d9b69477f9503d340d5278a61897852d9653e862c8b8",
+			"include": ["lib", "lib/common", "lib/compress", "lib/decompress"],
+			"config": [],
+			"translationUnits": [
+				"lib/common/debug.c",
+				"lib/common/entropy_common.c",
+				"lib/common/error_private.c",
+				"lib/common/fse_decompress.c",
+				"lib/common/pool.c",
+				"lib/common/threading.c",
+				"lib/common/xxhash.c",
+				"lib/common/zstd_common.c",
+				"lib/compress/fse_compress.c",
+				"lib/compress/hist.c",
+				"lib/compress/huf_compress.c",
+				"lib/compress/zstd_compress.c",
+				"lib/compress/zstd_compress_literals.c",
+				"lib/compress/zstd_compress_sequences.c",
+				"lib/compress/zstd_compress_superblock.c",
+				"lib/compress/zstd_double_fast.c",
+				"lib/compress/zstd_fast.c",
+				"lib/compress/zstd_lazy.c",
+				"lib/compress/zstd_ldm.c",
+				"lib/compress/zstd_opt.c",
+				"lib/compress/zstd_preSplit.c",
+				"lib/compress/zstdmt_compress.c",
+				"lib/decompress/huf_decompress.c",
+				"lib/decompress/zstd_ddict.c",
+				"lib/decompress/zstd_decompress.c",
+				"lib/decompress/zstd_decompress_block.c"
+			],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on lib/zstd.h, lib/zdict.h, lib/zstd_errors.h (85 unique rule-1 candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": [
+					"ZSTD_compress",
+					"ZSTD_decompress",
+					"ZSTD_getFrameContentSize",
+					"ZSTD_getDecompressedSize",
+					"ZSTD_findFrameCompressedSize",
+					"ZSTD_compressCCtx",
+					"ZSTD_decompressDCtx",
+					"ZSTD_CCtx_setPledgedSrcSize",
+					"ZSTD_compress2",
+					"ZSTD_compress_usingDict",
+					"ZSTD_decompress_usingDict",
+					"ZSTD_createCDict",
+					"ZSTD_compress_usingCDict",
+					"ZSTD_createDDict",
+					"ZSTD_decompress_usingDDict",
+					"ZSTD_getDictID_fromDict",
+					"ZSTD_getDictID_fromFrame",
+					"ZSTD_CCtx_loadDictionary",
+					"ZSTD_CCtx_refPrefix",
+					"ZSTD_DCtx_loadDictionary",
+					"ZSTD_DCtx_refPrefix",
+					"ZSTD_findDecompressedSize",
+					"ZSTD_decompressBound",
+					"ZSTD_frameHeaderSize",
+					"ZSTD_getFrameHeader",
+					"ZSTD_getFrameHeader_advanced",
+					"ZSTD_decompressionMargin",
+					"ZSTD_generateSequences",
+					"ZSTD_mergeBlockDelimiters",
+					"ZSTD_compressSequences",
+					"ZSTD_compressSequencesAndLiterals",
+					"ZSTD_writeSkippableFrame",
+					"ZSTD_readSkippableFrame",
+					"ZSTD_isSkippableFrame",
+					"ZSTD_estimateDStreamSize_fromFrame",
+					"ZSTD_initStaticCCtx",
+					"ZSTD_initStaticCStream",
+					"ZSTD_initStaticDCtx",
+					"ZSTD_initStaticDStream",
+					"ZSTD_initStaticCDict",
+					"ZSTD_initStaticDDict",
+					"ZSTD_createCDict_advanced",
+					"ZSTD_createCDict_advanced2",
+					"ZSTD_createDDict_advanced",
+					"ZSTD_createCDict_byReference",
+					"ZSTD_compress_advanced",
+					"ZSTD_compress_usingCDict_advanced",
+					"ZSTD_CCtx_loadDictionary_byReference",
+					"ZSTD_CCtx_loadDictionary_advanced",
+					"ZSTD_CCtx_refPrefix_advanced",
+					"ZSTD_compressStream2_simpleArgs",
+					"ZSTD_isFrame",
+					"ZSTD_createDDict_byReference",
+					"ZSTD_DCtx_loadDictionary_byReference",
+					"ZSTD_DCtx_loadDictionary_advanced",
+					"ZSTD_DCtx_refPrefix_advanced",
+					"ZSTD_DCtx_setMaxWindowSize",
+					"ZSTD_decompressStream_simpleArgs",
+					"ZSTD_initCStream_srcSize",
+					"ZSTD_initCStream_usingDict",
+					"ZSTD_initCStream_advanced",
+					"ZSTD_initCStream_usingCDict_advanced",
+					"ZSTD_resetCStream",
+					"ZSTD_initDStream_usingDict",
+					"ZSTD_compressBegin_usingDict",
+					"ZSTD_copyCCtx",
+					"ZSTD_compressContinue",
+					"ZSTD_compressEnd",
+					"ZSTD_compressBegin_advanced",
+					"ZSTD_compressBegin_usingCDict_advanced",
+					"ZSTD_decompressBegin_usingDict",
+					"ZSTD_decompressContinue",
+					"ZSTD_compressBlock",
+					"ZSTD_decompressBlock",
+					"ZSTD_insertBlock",
+					"ZDICT_trainFromBuffer",
+					"ZDICT_finalizeDictionary",
+					"ZDICT_getDictID",
+					"ZDICT_getDictHeaderSize",
+					"ZDICT_trainFromBuffer_cover",
+					"ZDICT_optimizeTrainFromBuffer_cover",
+					"ZDICT_trainFromBuffer_fastCover",
+					"ZDICT_optimizeTrainFromBuffer_fastCover",
+					"ZDICT_trainFromBuffer_legacy",
+					"ZDICT_addEntropyTablesFromBuffer"
+				],
+				"skipped": [
+					{
+						"function": "ZSTD_compress_usingCDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_createDDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_decompress_usingDDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_getDictID_fromDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_getDictID_fromFrame",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_CCtx_loadDictionary",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_CCtx_refPrefix",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_DCtx_loadDictionary",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_DCtx_refPrefix",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_findDecompressedSize",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_decompressBound",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_frameHeaderSize",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_getFrameHeader",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_getFrameHeader_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_decompressionMargin",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_generateSequences",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_mergeBlockDelimiters",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressSequences",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressSequencesAndLiterals",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_writeSkippableFrame",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_readSkippableFrame",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_isSkippableFrame",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_estimateDStreamSize_fromFrame",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initStaticCCtx",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initStaticCStream",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initStaticDCtx",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initStaticDStream",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initStaticCDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initStaticDDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_createCDict_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_createCDict_advanced2",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_createDDict_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_createCDict_byReference",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compress_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compress_usingCDict_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_CCtx_loadDictionary_byReference",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_CCtx_loadDictionary_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_CCtx_refPrefix_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressStream2_simpleArgs",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_isFrame",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_createDDict_byReference",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_DCtx_loadDictionary_byReference",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_DCtx_loadDictionary_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_DCtx_refPrefix_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_DCtx_setMaxWindowSize",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_decompressStream_simpleArgs",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initCStream_srcSize",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initCStream_usingDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initCStream_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initCStream_usingCDict_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_resetCStream",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_initDStream_usingDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressBegin_usingDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_copyCCtx",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressContinue",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressEnd",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressBegin_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressBegin_usingCDict_advanced",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_decompressBegin_usingDict",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_decompressContinue",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_compressBlock",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_decompressBlock",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZSTD_insertBlock",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_trainFromBuffer",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_finalizeDictionary",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_getDictID",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_getDictHeaderSize",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_trainFromBuffer_cover",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_optimizeTrainFromBuffer_cover",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_trainFromBuffer_fastCover",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_optimizeTrainFromBuffer_fastCover",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_trainFromBuffer_legacy",
+						"reason": "over-cap"
+					},
+					{
+						"function": "ZDICT_addEntropyTablesFromBuffer",
+						"reason": "over-cap"
+					}
+				]
+			},
+			"drivers": [
+				{
+					"id": "zstd-ZSTD_compress",
+					"function": "ZSTD_compress",
+					"category": "zstd-frame",
+					"define": "K_COMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 131072,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_decompress",
+					"function": "ZSTD_decompress",
+					"category": "zstd-frame",
+					"define": "K_DECOMPRESS",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 262144,
+					"genArena": 131072,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a14e3f64e7d34d383e9fd1536a54dc64547da6c2f1a2d2066fc07f9ef73c3e61",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a14e3f64e7d34d383e9fd1536a54dc64547da6c2f1a2d2066fc07f9ef73c3e61",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_getFrameContentSize",
+					"function": "ZSTD_getFrameContentSize",
+					"category": "zstd-frame",
+					"define": "K_GET_FRAME_CONTENT_SIZE",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 131072,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "2de20d8a90211a7162bdeff21792c8929f6be8e489a65e0ac10f008516617664",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "2de20d8a90211a7162bdeff21792c8929f6be8e489a65e0ac10f008516617664",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_getDecompressedSize",
+					"function": "ZSTD_getDecompressedSize",
+					"category": "zstd-frame",
+					"define": "K_GET_DECOMPRESSED_SIZE",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 131072,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "2de20d8a90211a7162bdeff21792c8929f6be8e489a65e0ac10f008516617664",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "2de20d8a90211a7162bdeff21792c8929f6be8e489a65e0ac10f008516617664",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_findFrameCompressedSize",
+					"function": "ZSTD_findFrameCompressedSize",
+					"category": "zstd-frame",
+					"define": "K_FIND_FRAME_COMPRESSED_SIZE",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 131072,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "14c063ac00d631d0677b3f1566d9141a68f74f0e19289e4725d38e291d4a8232",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "14c063ac00d631d0677b3f1566d9141a68f74f0e19289e4725d38e291d4a8232",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_compressCCtx",
+					"function": "ZSTD_compressCCtx",
+					"category": "zstd-context",
+					"define": "K_COMPRESS_CCTX",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 131072,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_decompressDCtx",
+					"function": "ZSTD_decompressDCtx",
+					"category": "zstd-context",
+					"define": "K_DECOMPRESS_DCTX",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 262144,
+					"genArena": 131072,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a14e3f64e7d34d383e9fd1536a54dc64547da6c2f1a2d2066fc07f9ef73c3e61",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a14e3f64e7d34d383e9fd1536a54dc64547da6c2f1a2d2066fc07f9ef73c3e61",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_CCtx_setPledgedSrcSize",
+					"function": "ZSTD_CCtx_setPledgedSrcSize",
+					"category": "zstd-context",
+					"define": "K_CCTX_SET_PLEDGED_SRC_SIZE",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "e774c1f20984ff5c53d64e5c5c0571af5e56c98a8487e14fce8cc654102964fc",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "e774c1f20984ff5c53d64e5c5c0571af5e56c98a8487e14fce8cc654102964fc",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_compress2",
+					"function": "ZSTD_compress2",
+					"category": "zstd-context",
+					"define": "K_COMPRESS2",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 131072,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_compress_usingDict",
+					"function": "ZSTD_compress_usingDict",
+					"category": "zstd-context",
+					"define": "K_COMPRESS_USING_DICT",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 131072,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "db34b6f227df40b86107c321f13257a716b3cf06a96e5b5af3299abf379a45da",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_decompress_usingDict",
+					"function": "ZSTD_decompress_usingDict",
+					"category": "zstd-context",
+					"define": "K_DECOMPRESS_USING_DICT",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 262144,
+					"genArena": 131072,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a14e3f64e7d34d383e9fd1536a54dc64547da6c2f1a2d2066fc07f9ef73c3e61",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a14e3f64e7d34d383e9fd1536a54dc64547da6c2f1a2d2066fc07f9ef73c3e61",
+						"equal": true
+					}
+				},
+				{
+					"id": "zstd-ZSTD_createCDict",
+					"function": "ZSTD_createCDict",
+					"category": "zstd-context",
+					"define": "K_CREATE_CDICT",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 131072,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/zstd.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "e0feacf40c019f2fc6e5e9ba97c9759e2e6ecda06d848e6c41cb1a7d5bc083d9",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "e0feacf40c019f2fc6e5e9ba97c9759e2e6ecda06d848e6c41cb1a7d5bc083d9",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "dr_libs",
+			"batch": "C",
+			"repository": "mackron/dr_libs",
+			"tag": "wav-0.14.6",
+			"nativeFlags": ["-ffp-contract=off"],
+			"commit": "35b5c392cc15456736c440a68dbe073178bbffe0",
+			"license": "NEEDS A PERSON: Public Domain (Unlicense) or MIT-0, per LICENSE alternatives 1 and 2",
+			"licence": "pending",
+			"licenseFile": "LICENSE",
+			"treeListingSha256": "e8d1c546aabde3eb5edee67f95dd8327a0f5f25d1f50e713a34f9cad8eaa8a7a",
+			"vendorDigest": "e79779dc6ac815b7a3695cff8534288eb87ab4f98010a2263ed9a0df5f0c02a0",
+			"include": ["."],
+			"config": [],
+			"translationUnits": [],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on dr_wav.h, dr_flac.h, dr_mp3.h (52 candidates after the PRIVATE and INTERNAL exclusion; script sha256 6122d1df1b1ab8659117c47b712187f0035bad801472e374244788dd466d9de2; scratchpad/v11/w4/enumeration.json)",
+				"candidates": [
+					"drwav_init_write_sequential",
+					"drwav_init_write_sequential_pcm_frames",
+					"drwav_init_write_with_metadata",
+					"drwav_target_write_size_bytes",
+					"drwav_read_raw",
+					"drwav_write_raw",
+					"drwav_u8_to_s16",
+					"drwav_s24_to_s16",
+					"drwav_s32_to_s16",
+					"drwav_f32_to_s16",
+					"drwav_f64_to_s16",
+					"drwav_alaw_to_s16",
+					"drwav_mulaw_to_s16",
+					"drwav_u8_to_f32",
+					"drwav_s16_to_f32",
+					"drwav_s24_to_f32",
+					"drwav_s32_to_f32",
+					"drwav_f64_to_f32",
+					"drwav_alaw_to_f32",
+					"drwav_mulaw_to_f32",
+					"drwav_u8_to_s32",
+					"drwav_s16_to_s32",
+					"drwav_s24_to_s32",
+					"drwav_f32_to_s32",
+					"drwav_f64_to_s32",
+					"drwav_alaw_to_s32",
+					"drwav_mulaw_to_s32",
+					"drwav_init_file_write_sequential",
+					"drwav_init_file_write_sequential_pcm_frames",
+					"drwav_init_file_write_sequential_w",
+					"drwav_init_file_write_sequential_pcm_frames_w",
+					"drwav_init_memory",
+					"drwav_init_memory_ex",
+					"drwav_init_memory_with_metadata",
+					"drwav_init_memory_write_sequential",
+					"drwav_init_memory_write_sequential_pcm_frames",
+					"drwav_open_memory_and_read_pcm_frames_s16",
+					"drwav_open_memory_and_read_pcm_frames_f32",
+					"drwav_open_memory_and_read_pcm_frames_s32",
+					"drflac_open_memory",
+					"drflac_open_memory_with_metadata",
+					"drflac_open_memory_and_read_pcm_frames_s32",
+					"drflac_open_memory_and_read_pcm_frames_s16",
+					"drflac_open_memory_and_read_pcm_frames_f32",
+					"drflac_init_vorbis_comment_iterator",
+					"drflac_init_cuesheet_track_iterator",
+					"drmp3dec_f32_to_s16",
+					"drmp3_init_memory_with_metadata",
+					"drmp3_init_memory",
+					"drmp3_bind_seek_table",
+					"drmp3_open_memory_and_read_pcm_frames_f32",
+					"drmp3_open_memory_and_read_pcm_frames_s16"
+				],
+				"skipped": [
+					{
+						"function": "drwav_mulaw_to_s16",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_u8_to_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_s16_to_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_s24_to_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_s32_to_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_f64_to_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_alaw_to_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_mulaw_to_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_u8_to_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_s16_to_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_s24_to_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_f32_to_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_f64_to_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_alaw_to_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_mulaw_to_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_file_write_sequential",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_file_write_sequential_pcm_frames",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_file_write_sequential_w",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_file_write_sequential_pcm_frames_w",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_memory_ex",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_memory_with_metadata",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_memory_write_sequential",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_init_memory_write_sequential_pcm_frames",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_open_memory_and_read_pcm_frames_s16",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_open_memory_and_read_pcm_frames_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drwav_open_memory_and_read_pcm_frames_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drflac_open_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drflac_open_memory_with_metadata",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drflac_open_memory_and_read_pcm_frames_s32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drflac_open_memory_and_read_pcm_frames_s16",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drflac_open_memory_and_read_pcm_frames_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drflac_init_vorbis_comment_iterator",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drflac_init_cuesheet_track_iterator",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drmp3dec_f32_to_s16",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drmp3_init_memory_with_metadata",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drmp3_init_memory",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drmp3_bind_seek_table",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drmp3_open_memory_and_read_pcm_frames_f32",
+						"reason": "over-cap"
+					},
+					{
+						"function": "drmp3_open_memory_and_read_pcm_frames_s16",
+						"reason": "over-cap"
+					}
+				]
+			},
+			"drivers": [
+				{
+					"id": "dr_libs-drwav_init_write_sequential",
+					"function": "drwav_init_write_sequential",
+					"category": "wav-writer",
+					"define": "K_INIT_WRITE_SEQUENTIAL",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "4d197184af36ae32142f8cb294dfa29d5f1e3594ea5ca8e4193609ef7d643548",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "4d197184af36ae32142f8cb294dfa29d5f1e3594ea5ca8e4193609ef7d643548",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_init_write_sequential_pcm_frames",
+					"function": "drwav_init_write_sequential_pcm_frames",
+					"category": "wav-writer",
+					"define": "K_INIT_WRITE_SEQUENTIAL_PCM_FRAMES",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "99984d44f7c1b3c5f381f35ecf44db8ba01089363bcda82618c38e810ae2d45f",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "99984d44f7c1b3c5f381f35ecf44db8ba01089363bcda82618c38e810ae2d45f",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_init_write_with_metadata",
+					"function": "drwav_init_write_with_metadata",
+					"category": "wav-writer",
+					"define": "K_INIT_WRITE_WITH_METADATA",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "c1aabe25eefbe62f0eea0ff5271f4cf542f8ceb84edabc31ab7362c05e92fdca",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "c1aabe25eefbe62f0eea0ff5271f4cf542f8ceb84edabc31ab7362c05e92fdca",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_target_write_size_bytes",
+					"function": "drwav_target_write_size_bytes",
+					"category": "wav-writer",
+					"define": "K_TARGET_WRITE_SIZE_BYTES",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "5f254a4f6cec3cb8842c4c6592098b3ca81801b63d6813dd2d9d8b9286892d61",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "5f254a4f6cec3cb8842c4c6592098b3ca81801b63d6813dd2d9d8b9286892d61",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_read_raw",
+					"function": "drwav_read_raw",
+					"category": "wav-read",
+					"define": "K_READ_RAW",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "414664a08827cf80d85351f16882ef669ff3dd57cfe880b14bd487fdc57fa523",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "414664a08827cf80d85351f16882ef669ff3dd57cfe880b14bd487fdc57fa523",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_write_raw",
+					"function": "drwav_write_raw",
+					"category": "wav-writer",
+					"define": "K_WRITE_RAW",
+					"records": 64,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "2814c645830c01608974f900d4fadbc0325fdfa49168a2c5e329321c3e8d6480",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "2814c645830c01608974f900d4fadbc0325fdfa49168a2c5e329321c3e8d6480",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_u8_to_s16",
+					"function": "drwav_u8_to_s16",
+					"category": "wav-convert",
+					"define": "K_U8_TO_S16",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "299534edd9719b524d3e56c639c5e500e2dcc6cd1fb03beb5d008cf3f20e8782",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "299534edd9719b524d3e56c639c5e500e2dcc6cd1fb03beb5d008cf3f20e8782",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_s24_to_s16",
+					"function": "drwav_s24_to_s16",
+					"category": "wav-convert",
+					"define": "K_S24_TO_S16",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "9e85f08ee24ef14f50c0393a9ef5ad0161c84367d3aa4b19e12e5cfc2301ef2c",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "9e85f08ee24ef14f50c0393a9ef5ad0161c84367d3aa4b19e12e5cfc2301ef2c",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_s32_to_s16",
+					"function": "drwav_s32_to_s16",
+					"category": "wav-convert",
+					"define": "K_S32_TO_S16",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "74c52cc31d190bdc205bad19b9bfb7fb1ccc32f928a252b8ef78e53dd8baae4c",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "74c52cc31d190bdc205bad19b9bfb7fb1ccc32f928a252b8ef78e53dd8baae4c",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_f32_to_s16",
+					"function": "drwav_f32_to_s16",
+					"category": "wav-convert",
+					"define": "K_F32_TO_S16",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "120f93bbee14d1820b0173842023b5a9cc6da20e7309aa6538dc4f787ce2c6b4",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "120f93bbee14d1820b0173842023b5a9cc6da20e7309aa6538dc4f787ce2c6b4",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_f64_to_s16",
+					"function": "drwav_f64_to_s16",
+					"category": "wav-convert",
+					"define": "K_F64_TO_S16",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "ada73f9c2d2f8264ef46f697b467ced813d28470f2597d957b6b2b28ae5a2ca9",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "ada73f9c2d2f8264ef46f697b467ced813d28470f2597d957b6b2b28ae5a2ca9",
+						"equal": true
+					}
+				},
+				{
+					"id": "dr_libs-drwav_alaw_to_s16",
+					"function": "drwav_alaw_to_s16",
+					"category": "wav-convert",
+					"define": "K_ALAW_TO_S16",
+					"records": 128,
+					"slot": 2048,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/dr_libs.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "e39cfaf76f18a6db38545ca20a2ae28fc32b93c356c0fd9e19a6c38cf08ef2cf",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "e39cfaf76f18a6db38545ca20a2ae28fc32b93c356c0fd9e19a6c38cf08ef2cf",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "pffft",
+			"batch": "C",
+			"repository": "marton78/pffft",
+			"tag": "v1.2.0",
+			"nativeFlags": ["-ffp-contract=off"],
+			"defines": ["PFFFT_SIMD_DISABLE"],
+			"commit": "5055b930db0ee22dc34ca05247b958cdc5c8e54b",
+			"license": "NEEDS A PERSON: LICENSE.txt carries the NCAR/UCAR name clause",
+			"licence": "pending",
+			"licenseFile": "LICENSE.txt",
+			"treeListingSha256": "e4b5fef98ecdaff9d8f5bf2a351ce7c6f629e1db447721fb21158a4eb6db1756",
+			"vendorDigest": "71b4a3307808e8763f3b50f6c820f06a748d2afcd04e6b50bb6cf6612055211c",
+			"include": ["include/pffft", "src"],
+			"config": [],
+			"translationUnits": [
+				"src/pffft.c",
+				"src/pffft_common.c",
+				"src/pffft_double.c",
+				"src/fftpack.c"
+			],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on include/pffft/pffft.h and include/pffft/pffft_double.h; rule 1 has 0 candidates, so rule 2 (22 candidates; scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": [
+					"pffft_destroy_setup",
+					"pffft_transform",
+					"pffft_transform_ordered",
+					"pffft_zreorder",
+					"pffft_zconvolve_accumulate",
+					"pffft_zconvolve_scale",
+					"pffft_zconvolve",
+					"pffft_zconvert_zp",
+					"pffft_zconvolve_zp",
+					"pffft_zconvolve_no_accu",
+					"pffft_aligned_free",
+					"pffftd_destroy_setup",
+					"pffftd_transform",
+					"pffftd_transform_ordered",
+					"pffftd_zreorder",
+					"pffftd_zconvolve_accumulate",
+					"pffftd_zconvolve_scale",
+					"pffftd_zconvolve",
+					"pffftd_zconvert_zp",
+					"pffftd_zconvolve_zp",
+					"pffftd_zconvolve_no_accu",
+					"pffftd_aligned_free"
+				],
+				"skipped": [
+					{
+						"function": "pffftd_transform",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_transform_ordered",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_zreorder",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_zconvolve_accumulate",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_zconvolve_scale",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_zconvolve",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_zconvert_zp",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_zconvolve_zp",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_zconvolve_no_accu",
+						"reason": "over-cap"
+					},
+					{
+						"function": "pffftd_aligned_free",
+						"reason": "over-cap"
+					}
+				]
+			},
+			"drivers": [
+				{
+					"id": "pffft-pffft_destroy_setup",
+					"function": "pffft_destroy_setup",
+					"category": "pffft-setup",
+					"define": "K_DESTROY_SETUP",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a75a1e7c47632971b5dea588aa1015c4f29f016cb36110bdc7ebb029c6650336",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a75a1e7c47632971b5dea588aa1015c4f29f016cb36110bdc7ebb029c6650336",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_transform",
+					"function": "pffft_transform",
+					"category": "pffft-transform",
+					"define": "K_TRANSFORM",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "20636c4a6c9b2e2afe0deb63415935a9cb88727cfddc7e06ebc1e7a63352ac4d",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "20636c4a6c9b2e2afe0deb63415935a9cb88727cfddc7e06ebc1e7a63352ac4d",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_transform_ordered",
+					"function": "pffft_transform_ordered",
+					"category": "pffft-transform",
+					"define": "K_TRANSFORM_ORDERED",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "20636c4a6c9b2e2afe0deb63415935a9cb88727cfddc7e06ebc1e7a63352ac4d",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "20636c4a6c9b2e2afe0deb63415935a9cb88727cfddc7e06ebc1e7a63352ac4d",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_zreorder",
+					"function": "pffft_zreorder",
+					"category": "pffft-transform",
+					"define": "K_ZREORDER",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "04e5ef53b9711fa64b2278c9c00a3c2300b5885e356205b7c73aa235acc7562c",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "04e5ef53b9711fa64b2278c9c00a3c2300b5885e356205b7c73aa235acc7562c",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_zconvolve_accumulate",
+					"function": "pffft_zconvolve_accumulate",
+					"category": "pffft-convolve",
+					"define": "K_ZCONVOLVE_ACCUMULATE",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "432a234bba1194180ff6174c1d3f134ce9782bba2103fbf91afa62a73c2f6c7d",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "432a234bba1194180ff6174c1d3f134ce9782bba2103fbf91afa62a73c2f6c7d",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_zconvolve_scale",
+					"function": "pffft_zconvolve_scale",
+					"category": "pffft-convolve",
+					"define": "K_ZCONVOLVE_SCALE",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "432a234bba1194180ff6174c1d3f134ce9782bba2103fbf91afa62a73c2f6c7d",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "432a234bba1194180ff6174c1d3f134ce9782bba2103fbf91afa62a73c2f6c7d",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_zconvolve",
+					"function": "pffft_zconvolve",
+					"category": "pffft-convolve",
+					"define": "K_ZCONVOLVE",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "4db01a9a907e5fcf53ffe92827c78dff5132fde44e7d200caa04ede9987db1d9",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "4db01a9a907e5fcf53ffe92827c78dff5132fde44e7d200caa04ede9987db1d9",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_zconvert_zp",
+					"function": "pffft_zconvert_zp",
+					"category": "pffft-convolve",
+					"define": "K_ZCONVERT_ZP",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "755589c7d48523b390dd34c4640daa2966cac4445f40741c7b8d5d5bfe810022",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "755589c7d48523b390dd34c4640daa2966cac4445f40741c7b8d5d5bfe810022",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_zconvolve_zp",
+					"function": "pffft_zconvolve_zp",
+					"category": "pffft-convolve",
+					"define": "K_ZCONVOLVE_ZP",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "020ec97d81cae0f251cf4e293f4a9536369df1a4ba3e7292922c87d2b3ce5872",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "020ec97d81cae0f251cf4e293f4a9536369df1a4ba3e7292922c87d2b3ce5872",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_zconvolve_no_accu",
+					"function": "pffft_zconvolve_no_accu",
+					"category": "pffft-convolve",
+					"define": "K_ZCONVOLVE_NO_ACCU",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "432a234bba1194180ff6174c1d3f134ce9782bba2103fbf91afa62a73c2f6c7d",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "432a234bba1194180ff6174c1d3f134ce9782bba2103fbf91afa62a73c2f6c7d",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffft_aligned_free",
+					"function": "pffft_aligned_free",
+					"category": "pffft-setup",
+					"define": "K_ALIGNED_FREE",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "04e5ef53b9711fa64b2278c9c00a3c2300b5885e356205b7c73aa235acc7562c",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "04e5ef53b9711fa64b2278c9c00a3c2300b5885e356205b7c73aa235acc7562c",
+						"equal": true
+					}
+				},
+				{
+					"id": "pffft-pffftd_destroy_setup",
+					"function": "pffftd_destroy_setup",
+					"category": "pffft-setup",
+					"define": "K_PFFFTD_DESTROY_SETUP",
+					"records": 64,
+					"slot": 1024,
+					"recordCapacity": 1024,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": true,
+					"sourceFile": "scripts/research/final-cases/drivers/pffft.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "a75a1e7c47632971b5dea588aa1015c4f29f016cb36110bdc7ebb029c6650336",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "a75a1e7c47632971b5dea588aa1015c4f29f016cb36110bdc7ebb029c6650336",
+						"equal": true
+					}
+				}
+			]
+		},
+		{
+			"id": "picojpeg",
+			"batch": "C",
+			"repository": "richgel999/picojpeg",
+			"tag": "v10",
+			"commit": "f121f69c1f4f436b8df9de58fd88e16ca0836770",
+			"license": "NO LICENSE FILE at the pin; picojpeg.h line 2 says public domain",
+			"licence": "pending",
+			"licenseFile": "picojpeg.h",
+			"treeListingSha256": "1a44996ca37452421e369bfe2c01ae2f05c0ca0b733415093e686f4e9eb98041",
+			"vendorDigest": "27b9cdd9ed3e56e70ceb52a9ba93bde9d015239ca528ea83d22dce1b91a59629",
+			"include": ["."],
+			"config": [],
+			"translationUnits": ["picojpeg.c"],
+			"candidates": {
+				"enumeration": "corpus-enumerate.ts on picojpeg.h; rule 1 has 0 candidates (no size parameter), rule 2 has 1 (scratchpad/v11/w4/enumeration.json, script sha256 4accf8cdf1c7f8e9041e06ad341403ceb9fd039927f83e0975a3f8d4f8ab9e6d)",
+				"candidates": ["pjpeg_decode_init"],
+				"skipped": []
+			},
+			"drivers": [
+				{
+					"id": "picojpeg-pjpeg_decode_init",
+					"function": "pjpeg_decode_init",
+					"category": "jpeg-header",
+					"define": "K_DECODE_INIT",
+					"records": 128,
+					"slot": 64,
+					"recordCapacity": 256,
+					"arena": 65536,
+					"genArena": 65536,
+					"arenaResetPerRecord": false,
+					"sourceFile": "scripts/research/final-cases/drivers/picojpeg.c",
+					"result": {
+						"build": "PASS",
+						"run": "PASS",
+						"wasmSlotsSha256": "18774dd0d83f00793843f1c2a2b208d91359e9c62ebcad526d8d03c270b2b076",
+						"stableAcrossRuns": true,
+						"native": "PASS",
+						"nativeSlotsSha256": "18774dd0d83f00793843f1c2a2b208d91359e9c62ebcad526d8d03c270b2b076",
+						"equal": true
+					}
+				}
+			]
+		}
+	]
+}
