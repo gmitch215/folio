@@ -1,0 +1,39 @@
+{
+  "seen": {
+    "writeRows": 4304,
+    "schemaRows": 10,
+    "cleanupRows": 12656,
+    "requests": 53,
+    "internal": 3,
+    "external": 0
+  },
+  "byRung": {
+    "0": {
+      "writeRows": 0,
+      "schemaRows": 0,
+      "cleanupRows": 0,
+      "requests": 1,
+      "internal": 0,
+      "external": 0
+    },
+    "6c": {
+      "writeRows": 4304,
+      "schemaRows": 10,
+      "cleanupRows": 12656,
+      "requests": 52,
+      "internal": 3,
+      "external": 0
+    }
+  },
+  "retries": 16,
+  "planned": {
+    "writeRows": 8480,
+    "schemaRows": 16,
+    "cleanupRows": 8480,
+    "requests": 38,
+    "cleanupRequests": 8,
+    "internal": 6,
+    "external": 0
+  },
+  "failure": "Error: row cap 17000"
+}

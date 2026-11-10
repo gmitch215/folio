@@ -1,0 +1,145 @@
+{
+  "config": {
+    "name": "live",
+    "rung1": {
+      "sizesKiB": [
+        1,
+        4,
+        16,
+        64,
+        256
+      ],
+      "n": 16,
+      "repeats": 20
+    },
+    "rung2": {
+      "n": 200,
+      "repeats": 3,
+      "hint": "enam",
+      "coloProbe": true
+    },
+    "rung3": {
+      "seq": 1000,
+      "rpcSeq": 33,
+      "fan": 16,
+      "repeats": 2
+    },
+    "rung4": {
+      "ladder": [
+        1000000,
+        4000000,
+        16000000,
+        32000000,
+        64000000,
+        128000000
+      ],
+      "targetsMs": [
+        50,
+        200
+      ],
+      "repeats": 5,
+      "noops": 3
+    },
+    "rung5": {
+      "sizeKiB": 64,
+      "read": 200,
+      "rmw": [
+        50,
+        200
+      ],
+      "repeats": 3
+    },
+    "rung6": {
+      "mib": 64,
+      "extentPages": 16,
+      "repeats": 3,
+      "holdMs": 70000,
+      "pageRowArm": false
+    },
+    "rung6b": {
+      "sizesMiB": [
+        16,
+        32,
+        64,
+        128,
+        256
+      ],
+      "putMiB": 128,
+      "armMiB": 64,
+      "extentPages": 16,
+      "repeats": 3,
+      "holdMs": 70000,
+      "tailMs": 130000
+    },
+    "rung6c": {
+      "repeats": 2,
+      "holdMs": 70000,
+      "minutes": [
+        5,
+        10,
+        15,
+        20
+      ],
+      "restartMib": 64,
+      "smallMib": 16,
+      "smallRowBytes": 4096,
+      "extentPages": 16,
+      "secondMib": 64
+    },
+    "rung7": {
+      "sizesMiB": [
+        64,
+        128
+      ],
+      "repeats": 6,
+      "holdMs": 75000,
+      "touchChunkMiB": 16,
+      "bare": 2
+    },
+    "caps": {
+      "rows": 8000,
+      "requests": 1500,
+      "planningDailyRows": 80000
+    },
+    "assumptions": {
+      "schemaRowsPerTable": 2,
+      "readyPolls": 1
+    }
+  },
+  "rungs": [
+    "6b"
+  ],
+  "planned": {
+    "perRung": {
+      "6b": {
+        "writeRows": 2256,
+        "schemaRows": 42,
+        "cleanupRows": 2256,
+        "requests": 56,
+        "cleanupRequests": 24,
+        "internal": 0,
+        "external": 0
+      }
+    },
+    "setup": {
+      "writeRows": 0,
+      "schemaRows": 0,
+      "cleanupRows": 0,
+      "requests": 1,
+      "cleanupRequests": 0,
+      "internal": 0,
+      "external": 0
+    },
+    "total": {
+      "writeRows": 2256,
+      "schemaRows": 42,
+      "cleanupRows": 2256,
+      "requests": 57,
+      "cleanupRequests": 24,
+      "internal": 0,
+      "external": 0
+    }
+  },
+  "expectedSpendUsd": 0,
+  "plan": "Free"
+}

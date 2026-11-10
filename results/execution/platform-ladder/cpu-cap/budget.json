@@ -1,0 +1,115 @@
+{
+  "config": {
+    "name": "live",
+    "rung1": {
+      "sizesKiB": [
+        1,
+        4,
+        16,
+        64,
+        256
+      ],
+      "n": 16,
+      "repeats": 20
+    },
+    "rung2": {
+      "n": 200,
+      "repeats": 3,
+      "hint": "enam",
+      "coloProbe": true
+    },
+    "rung3": {
+      "seq": 1000,
+      "rpcSeq": 33,
+      "fan": 16,
+      "repeats": 2
+    },
+    "rung4": {
+      "ladder": [
+        1000000,
+        4000000,
+        16000000,
+        32000000,
+        64000000,
+        128000000
+      ],
+      "targetsMs": [
+        50,
+        200
+      ],
+      "repeats": 5,
+      "noops": 3
+    },
+    "rung5": {
+      "sizeKiB": 64,
+      "read": 200,
+      "rmw": [
+        50,
+        200
+      ],
+      "repeats": 3
+    },
+    "rung6": {
+      "mib": 64,
+      "extentPages": 16,
+      "repeats": 3,
+      "holdMs": 70000,
+      "pageRowArm": false
+    },
+    "rung7": {
+      "sizesMiB": [
+        64,
+        128
+      ],
+      "repeats": 6,
+      "holdMs": 75000,
+      "touchChunkMiB": 16,
+      "bare": 2
+    },
+    "caps": {
+      "rows": 8000,
+      "requests": 1500,
+      "planningDailyRows": 80000
+    },
+    "assumptions": {
+      "schemaRowsPerTable": 2,
+      "readyPolls": 1
+    }
+  },
+  "rungs": [
+    4
+  ],
+  "planned": {
+    "perRung": {
+      "4": {
+        "writeRows": 0,
+        "schemaRows": 0,
+        "cleanupRows": 0,
+        "requests": 19,
+        "cleanupRequests": 0,
+        "internal": 0,
+        "external": 0
+      }
+    },
+    "setup": {
+      "writeRows": 0,
+      "schemaRows": 0,
+      "cleanupRows": 0,
+      "requests": 1,
+      "cleanupRequests": 0,
+      "internal": 0,
+      "external": 0
+    },
+    "total": {
+      "writeRows": 0,
+      "schemaRows": 0,
+      "cleanupRows": 0,
+      "requests": 20,
+      "cleanupRequests": 0,
+      "internal": 0,
+      "external": 0
+    }
+  },
+  "expectedSpendUsd": 0,
+  "plan": "Free"
+}

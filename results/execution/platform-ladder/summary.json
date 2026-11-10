@@ -1,0 +1,1086 @@
+{
+  "schema": "folio.platform-ladder.summary.v1",
+  "note": "milliseconds and MiB are rounded to three decimals; n is the count behind each cell",
+  "runs": {
+    "cpu-cap": {
+      "rawSha256": "08e80871b7ab0ce0e87750dea8b75160da67e39c341f344eec3b1cc19fb98f99",
+      "lines": 19,
+      "clientCalls": 19,
+      "rowsSeen": 0,
+      "rowsPlanned": 0,
+      "requestsSeen": 20,
+      "requestsPlanned": 20,
+      "internalSeen": 0,
+      "internalPlanned": 0,
+      "retries": 0,
+      "failure": null,
+      "accountEqualsBaseline": true,
+      "meterSettled": false,
+      "meterPolls": 12,
+      "meterRows": 0,
+      "meterRowsWritten": 0,
+      "namespaces": null
+    },
+    "spill-pilot": {
+      "rawSha256": "ab8739d8f6a32a3ed9fd1050afb0239855ae5224653ef1ad422d89ecb083da92",
+      "lines": 22,
+      "clientCalls": 22,
+      "rowsSeen": 838,
+      "rowsPlanned": 774,
+      "requestsSeen": 24,
+      "requestsPlanned": 21,
+      "internalSeen": 0,
+      "internalPlanned": 0,
+      "retries": 3,
+      "failure": null,
+      "accountEqualsBaseline": true,
+      "meterSettled": true,
+      "meterPolls": 2,
+      "meterRows": 17,
+      "meterRowsWritten": 390,
+      "namespaces": 6
+    },
+    "ladder": {
+      "rawSha256": "7a3da8ee93d5a349172f4b11cc704dc488800777901d9c92fe7133409071eb6a",
+      "lines": 7786,
+      "clientCalls": 428,
+      "rowsSeen": 6386,
+      "rowsPlanned": 6386,
+      "requestsSeen": 430,
+      "requestsPlanned": 427,
+      "internalSeen": 5153,
+      "internalPlanned": 5153,
+      "retries": 3,
+      "failure": null,
+      "accountEqualsBaseline": true,
+      "meterSettled": true,
+      "meterPolls": 2,
+      "meterRows": 32,
+      "meterRowsWritten": 5951,
+      "namespaces": 7
+    },
+    "memory": {
+      "rawSha256": "fc0628ce15724132dda724267fd0099ad590855d1e168f1bc6642205a37a89b3",
+      "lines": 125,
+      "clientCalls": 125,
+      "rowsSeen": 0,
+      "rowsPlanned": 0,
+      "requestsSeen": 126,
+      "requestsPlanned": 123,
+      "internalSeen": 0,
+      "internalPlanned": 0,
+      "retries": 3,
+      "failure": null,
+      "accountEqualsBaseline": true,
+      "meterSettled": true,
+      "meterPolls": 2,
+      "meterRows": 37,
+      "meterRowsWritten": 0,
+      "namespaces": 20
+    }
+  },
+  "rung1": {
+    "noopBase": {
+      "n": 20,
+      "medianMs": 54.687
+    },
+    "cells": [
+      {
+        "shape": "await",
+        "sizeKiB": 1,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 113.662,
+        "wallP90Ms": 155.369,
+        "netMedianMs": 58.975,
+        "netPerWriteMs": 3.686
+      },
+      {
+        "shape": "await",
+        "sizeKiB": 4,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 80.348,
+        "wallP90Ms": 121.661,
+        "netMedianMs": 25.66,
+        "netPerWriteMs": 1.604
+      },
+      {
+        "shape": "await",
+        "sizeKiB": 16,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 81.494,
+        "wallP90Ms": 96.363,
+        "netMedianMs": 26.807,
+        "netPerWriteMs": 1.675
+      },
+      {
+        "shape": "await",
+        "sizeKiB": 64,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 94.25,
+        "wallP90Ms": 110.993,
+        "netMedianMs": 39.563,
+        "netPerWriteMs": 2.473
+      },
+      {
+        "shape": "await",
+        "sizeKiB": 256,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 138.165,
+        "wallP90Ms": 168.807,
+        "netMedianMs": 83.478,
+        "netPerWriteMs": 5.217
+      },
+      {
+        "shape": "noawait",
+        "sizeKiB": 1,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 109.392,
+        "wallP90Ms": 148.487,
+        "netMedianMs": 54.705,
+        "netPerWriteMs": 3.419
+      },
+      {
+        "shape": "noawait",
+        "sizeKiB": 4,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 82.654,
+        "wallP90Ms": 106.664,
+        "netMedianMs": 27.967,
+        "netPerWriteMs": 1.748
+      },
+      {
+        "shape": "noawait",
+        "sizeKiB": 16,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 82.914,
+        "wallP90Ms": 100.182,
+        "netMedianMs": 28.227,
+        "netPerWriteMs": 1.764
+      },
+      {
+        "shape": "noawait",
+        "sizeKiB": 64,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 93.511,
+        "wallP90Ms": 116.101,
+        "netMedianMs": 38.824,
+        "netPerWriteMs": 2.426
+      },
+      {
+        "shape": "noawait",
+        "sizeKiB": 256,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 138.781,
+        "wallP90Ms": 170.706,
+        "netMedianMs": 84.094,
+        "netPerWriteMs": 5.256
+      },
+      {
+        "shape": "sql",
+        "sizeKiB": 1,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 104.938,
+        "wallP90Ms": 147.77,
+        "netMedianMs": 50.251,
+        "netPerWriteMs": 3.141
+      },
+      {
+        "shape": "sql",
+        "sizeKiB": 4,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 81.355,
+        "wallP90Ms": 100.893,
+        "netMedianMs": 26.668,
+        "netPerWriteMs": 1.667
+      },
+      {
+        "shape": "sql",
+        "sizeKiB": 16,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 79.162,
+        "wallP90Ms": 104.75,
+        "netMedianMs": 24.475,
+        "netPerWriteMs": 1.53
+      },
+      {
+        "shape": "sql",
+        "sizeKiB": 64,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 89.67,
+        "wallP90Ms": 119.878,
+        "netMedianMs": 34.983,
+        "netPerWriteMs": 2.186
+      },
+      {
+        "shape": "sql",
+        "sizeKiB": 256,
+        "requests": 20,
+        "writesPerRequest": 16,
+        "wallMedianMs": 131.83,
+        "wallP90Ms": 170.582,
+        "netMedianMs": 77.143,
+        "netPerWriteMs": 4.821
+      }
+    ],
+    "spread": [
+      {
+        "sizeKiB": 1,
+        "wallMedianRatioMaxOverMin": 1.083
+      },
+      {
+        "sizeKiB": 4,
+        "wallMedianRatioMaxOverMin": 1.029
+      },
+      {
+        "sizeKiB": 16,
+        "wallMedianRatioMaxOverMin": 1.047
+      },
+      {
+        "sizeKiB": 64,
+        "wallMedianRatioMaxOverMin": 1.051
+      },
+      {
+        "sizeKiB": 256,
+        "wallMedianRatioMaxOverMin": 1.053
+      }
+    ],
+    "putInsideObject": {
+      "n": 1600,
+      "maxMs": 0
+    }
+  },
+  "rung2": {
+    "modes": [
+      {
+        "shape": "fetch/h0",
+        "n": 603,
+        "median": 10,
+        "p90": 16,
+        "min": 4,
+        "max": 35
+      },
+      {
+        "shape": "fetch/h1",
+        "n": 603,
+        "median": 11,
+        "p90": 22,
+        "min": 1,
+        "max": 25
+      },
+      {
+        "shape": "local/h0",
+        "n": 603,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "shape": "rpc/h0",
+        "n": 603,
+        "median": 7,
+        "p90": 10,
+        "min": 3,
+        "max": 52
+      },
+      {
+        "shape": "rpc/h1",
+        "n": 603,
+        "median": 10,
+        "p90": 25,
+        "min": 1,
+        "max": 30
+      },
+      {
+        "shape": "selfstub/h0",
+        "n": 603,
+        "median": 3,
+        "p90": 5,
+        "min": 1,
+        "max": 16
+      }
+    ],
+    "firstCall": {
+      "n": 18,
+      "median": 18,
+      "p90": 33.5,
+      "min": 0,
+      "max": 52
+    },
+    "clientRequests": 30,
+    "failedClientRequests": 0,
+    "colos": [
+      "IAD"
+    ]
+  },
+  "rung3": [
+    {
+      "shape": "seq",
+      "repeat": 0,
+      "requested": 1000,
+      "ok": 1000,
+      "errorAt": 999,
+      "error": "Too many API requests by single Worker invocation",
+      "status": 200
+    },
+    {
+      "shape": "seqrpc",
+      "repeat": 0,
+      "requested": 33,
+      "ok": 34,
+      "errorAt": null,
+      "error": null,
+      "status": 200
+    },
+    {
+      "shape": "allfetch",
+      "repeat": 0,
+      "requested": 16,
+      "ok": 17,
+      "errorAt": null,
+      "error": null,
+      "status": 200
+    },
+    {
+      "shape": "allrpc",
+      "repeat": 0,
+      "requested": 16,
+      "ok": 17,
+      "errorAt": null,
+      "error": null,
+      "status": 200
+    },
+    {
+      "shape": "seq",
+      "repeat": 1,
+      "requested": 1000,
+      "ok": 1000,
+      "errorAt": 999,
+      "error": "Too many API requests by single Worker invocation",
+      "status": 200
+    },
+    {
+      "shape": "seqrpc",
+      "repeat": 1,
+      "requested": 33,
+      "ok": 34,
+      "errorAt": null,
+      "error": null,
+      "status": 200
+    },
+    {
+      "shape": "allfetch",
+      "repeat": 1,
+      "requested": 16,
+      "ok": 17,
+      "errorAt": null,
+      "error": null,
+      "status": 200
+    },
+    {
+      "shape": "allrpc",
+      "repeat": 1,
+      "requested": 16,
+      "ok": 17,
+      "errorAt": null,
+      "error": null,
+      "status": 200
+    }
+  ],
+  "rung4": {
+    "cpu-cap": {
+      "requests": 19,
+      "ok": 19,
+      "noopMedianMs": 67.111,
+      "noopN": 2,
+      "maxIters": 128000000,
+      "maxWallMs": 2225.939,
+      "loops": [
+        {
+          "shape": "ladder",
+          "iters": 1000000,
+          "wallMs": 84.396,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 4000000,
+          "wallMs": 148.722,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 16000000,
+          "wallMs": 335.732,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 32000000,
+          "wallMs": 554.581,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 64000000,
+          "wallMs": 1295.713,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 128000000,
+          "wallMs": 2225.939,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 2972354,
+          "wallMs": 139.644,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 2972354,
+          "wallMs": 111.512,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 2972354,
+          "wallMs": 122.191,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 2972354,
+          "wallMs": 119.541,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 2972354,
+          "wallMs": 133.803,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 11889417,
+          "wallMs": 311.459,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 11889417,
+          "wallMs": 231.313,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 11889417,
+          "wallMs": 251.227,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 11889417,
+          "wallMs": 227.578,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 11889417,
+          "wallMs": 281.849,
+          "status": 200
+        }
+      ]
+    },
+    "ladder": {
+      "requests": 19,
+      "ok": 19,
+      "noopMedianMs": 84.859,
+      "noopN": 2,
+      "maxIters": 139711140,
+      "maxWallMs": 876.133,
+      "loops": [
+        {
+          "shape": "ladder",
+          "iters": 1000000,
+          "wallMs": 66.893,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 4000000,
+          "wallMs": 110.412,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 16000000,
+          "wallMs": 104.763,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 32000000,
+          "wallMs": 137.333,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 64000000,
+          "wallMs": 159.514,
+          "status": 200
+        },
+        {
+          "shape": "ladder",
+          "iters": 128000000,
+          "wallMs": 281.536,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 34927785,
+          "wallMs": 127.922,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 34927785,
+          "wallMs": 128.747,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 34927785,
+          "wallMs": 146.237,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 34927785,
+          "wallMs": 142.419,
+          "status": 200
+        },
+        {
+          "shape": "burn-50ms",
+          "iters": 34927785,
+          "wallMs": 118.849,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 139711140,
+          "wallMs": 260.757,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 139711140,
+          "wallMs": 249.067,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 139711140,
+          "wallMs": 303.164,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 139711140,
+          "wallMs": 876.133,
+          "status": 200
+        },
+        {
+          "shape": "burn-200ms",
+          "iters": 139711140,
+          "wallMs": 836.397,
+          "status": 200
+        }
+      ]
+    }
+  },
+  "rung5": {
+    "sizeKiB": 64,
+    "rmw": [
+      {
+        "n": 50,
+        "wallMs": 125.382
+      },
+      {
+        "n": 200,
+        "wallMs": 145.512
+      },
+      {
+        "n": 50,
+        "wallMs": 78.805
+      },
+      {
+        "n": 200,
+        "wallMs": 88.856
+      },
+      {
+        "n": 50,
+        "wallMs": 117.177
+      },
+      {
+        "n": 200,
+        "wallMs": 176.803
+      }
+    ],
+    "read": [
+      {
+        "n": 200,
+        "wallMs": 98.138
+      },
+      {
+        "n": 200,
+        "wallMs": 81.976
+      },
+      {
+        "n": 200,
+        "wallMs": 101.266
+      }
+    ],
+    "base": [
+      {
+        "n": 0,
+        "wallMs": 108.865
+      },
+      {
+        "n": 0,
+        "wallMs": 66.051
+      },
+      {
+        "n": 0,
+        "wallMs": 88.385
+      }
+    ],
+    "slopes": [
+      {
+        "repeat": 0,
+        "msPerCycle": 0.134
+      },
+      {
+        "repeat": 1,
+        "msPerCycle": 0.067
+      },
+      {
+        "repeat": 2,
+        "msPerCycle": 0.398
+      }
+    ]
+  },
+  "rung7": {
+    "classes": 26,
+    "cells": [
+      {
+        "linearMiB": 0,
+        "arm": "bare",
+        "planned": 2,
+        "measured": 0,
+        "values": [
+          {
+            "repeat": 0,
+            "meterMiB": null
+          },
+          {
+            "repeat": 1,
+            "meterMiB": null
+          }
+        ],
+        "minMiB": null,
+        "maxMiB": null
+      },
+      {
+        "linearMiB": 64,
+        "arm": "written",
+        "planned": 6,
+        "measured": 5,
+        "values": [
+          {
+            "repeat": 0,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 1,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 2,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 3,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 4,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 5,
+            "meterMiB": null
+          }
+        ],
+        "minMiB": 65.5,
+        "maxMiB": 65.5
+      },
+      {
+        "linearMiB": 64,
+        "arm": "untouched",
+        "planned": 6,
+        "measured": 5,
+        "values": [
+          {
+            "repeat": 0,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 1,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 2,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 3,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 4,
+            "meterMiB": 65.5
+          },
+          {
+            "repeat": 5,
+            "meterMiB": null
+          }
+        ],
+        "minMiB": 65.5,
+        "maxMiB": 65.5
+      },
+      {
+        "linearMiB": 128,
+        "arm": "written",
+        "planned": 6,
+        "measured": 5,
+        "values": [
+          {
+            "repeat": 0,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 1,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 2,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 3,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 4,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 5,
+            "meterMiB": null
+          }
+        ],
+        "minMiB": 129.5,
+        "maxMiB": 129.5
+      },
+      {
+        "linearMiB": 128,
+        "arm": "untouched",
+        "planned": 6,
+        "measured": 4,
+        "values": [
+          {
+            "repeat": 0,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 1,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 2,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 3,
+            "meterMiB": 129.5
+          },
+          {
+            "repeat": 4,
+            "meterMiB": null
+          },
+          {
+            "repeat": 5,
+            "meterMiB": null
+          }
+        ],
+        "minMiB": 129.5,
+        "maxMiB": 129.5
+      }
+    ],
+    "meterClasses": [
+      {
+        "cls": "M01",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M02",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M03",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M04",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M05",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M06",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M07",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M08",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M09",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M10",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M11",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M12",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M13",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M14",
+        "minutes": 1,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M15",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M16",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M17",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M18",
+        "minutes": 2,
+        "maxMiB": 65.5,
+        "minMiB": 65.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      },
+      {
+        "cls": "M19",
+        "minutes": 2,
+        "maxMiB": 129.5,
+        "minMiB": 129.5,
+        "rowsWritten": 0,
+        "rowsRead": 0,
+        "exceeded": 0
+      }
+    ]
+  },
+  "ladderMeter": [
+    {
+      "cls": "Burner",
+      "minutes": 1,
+      "maxMiB": 2,
+      "minMiB": 2,
+      "rowsWritten": 0,
+      "rowsRead": 0,
+      "exceeded": 0
+    },
+    {
+      "cls": "Executor",
+      "minutes": 2,
+      "maxMiB": 3.771,
+      "minMiB": 2.581,
+      "rowsWritten": 0,
+      "rowsRead": 0,
+      "exceeded": 0
+    },
+    {
+      "cls": "Owner",
+      "minutes": 2,
+      "maxMiB": 33.141,
+      "minMiB": 4,
+      "rowsWritten": 4802,
+      "rowsRead": 1633,
+      "exceeded": 0
+    },
+    {
+      "cls": "SpillNone",
+      "minutes": 8,
+      "maxMiB": 2,
+      "minMiB": 1.5,
+      "rowsWritten": 0,
+      "rowsRead": 0,
+      "exceeded": 0
+    },
+    {
+      "cls": "SpillPut",
+      "minutes": 8,
+      "maxMiB": 36,
+      "minMiB": 1.5,
+      "rowsWritten": 192,
+      "rowsRead": 192,
+      "exceeded": 0
+    },
+    {
+      "cls": "SpillSql",
+      "minutes": 10,
+      "maxMiB": 36,
+      "minMiB": 1.5,
+      "rowsWritten": 198,
+      "rowsRead": 195,
+      "exceeded": 0
+    },
+    {
+      "cls": "Store",
+      "minutes": 1,
+      "maxMiB": 29.688,
+      "minMiB": 29.688,
+      "rowsWritten": 759,
+      "rowsRead": 2106,
+      "exceeded": 0
+    }
+  ]
+}

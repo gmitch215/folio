@@ -1,0 +1,3827 @@
+{
+  "schema": "folio.spill-memory.summary.v1",
+  "note": "MiB are rounded to three decimals; R is the class peak in the hold minutes minus the class idle control; n is the count behind each cell",
+  "runs": {
+    "restart-rows": {
+      "rawSha256": "dbdf1ba0b50a492e49115179946ee362177766097036ecb6da483389b8fc9eb0",
+      "lines": 52,
+      "clientCalls": 52,
+      "rowsSeen": 16970,
+      "rowsPlanned": 16976,
+      "requestsSeen": 53,
+      "requestsPlanned": 46,
+      "internalSeen": 3,
+      "internalPlanned": 6,
+      "retries": 16,
+      "failure": "Error: row cap 17000",
+      "accountEqualsBaseline": true,
+      "meterSettled": true,
+      "meterPolls": 2,
+      "meterRows": 36,
+      "meterRowsWritten": 4314,
+      "namespaces": 19
+    },
+    "size-ladder": {
+      "rawSha256": "479bf11cf8e8d1071e96dc62645454e69f6158f639db2fc6bd4ad805c980201d",
+      "lines": 82,
+      "clientCalls": 82,
+      "rowsSeen": 4554,
+      "rowsPlanned": 4554,
+      "requestsSeen": 83,
+      "requestsPlanned": 81,
+      "internalSeen": 0,
+      "internalPlanned": 0,
+      "retries": 2,
+      "failure": null,
+      "accountEqualsBaseline": true,
+      "meterSettled": true,
+      "meterPolls": 2,
+      "meterRows": 60,
+      "meterRowsWritten": 2298,
+      "namespaces": 19
+    },
+    "row-size-sweep": {
+      "rawSha256": "105bb8417cefe8740b595ff3b6b3d0127b226ca4d9950bb14d6c8627f42b83b5",
+      "lines": 51,
+      "clientCalls": 51,
+      "rowsSeen": 29784,
+      "rowsPlanned": 29784,
+      "requestsSeen": 56,
+      "requestsPlanned": 52,
+      "internalSeen": 3,
+      "internalPlanned": 3,
+      "retries": 4,
+      "failure": null,
+      "accountEqualsBaseline": true,
+      "meterSettled": true,
+      "meterPolls": 2,
+      "meterRows": 32,
+      "meterRowsWritten": 5322,
+      "namespaces": 20
+    },
+    "row-size-cliff": {
+      "rawSha256": "fbfaf80587d31c0cb558e7229b945c687d3d8beb9f70c94f5078523f424212d9",
+      "lines": 13,
+      "clientCalls": 13,
+      "rowsSeen": 46428,
+      "rowsPlanned": 46428,
+      "requestsSeen": 14,
+      "requestsPlanned": 14,
+      "internalSeen": 0,
+      "internalPlanned": 0,
+      "retries": 0,
+      "failure": null,
+      "accountEqualsBaseline": true,
+      "meterSettled": true,
+      "meterPolls": 2,
+      "meterRows": 10,
+      "meterRowsWritten": 23218,
+      "namespaces": 28
+    }
+  },
+  "rung6": {
+    "note": "raw lines are in the platform-ladder study",
+    "spill-pilot": {
+      "rawSha256": "ab8739d8f6a32a3ed9fd1050afb0239855ae5224653ef1ad422d89ecb083da92",
+      "objects": [
+        {
+          "cls": "SpillPut",
+          "control": true,
+          "repeat": -1,
+          "window": [
+            "2026-11-05T20:33:00Z",
+            "2026-11-05T20:35:00Z"
+          ],
+          "peakMiB": 1.5,
+          "spillWallMs": [],
+          "spillAttempts": 0,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": null,
+          "sqlRows": null,
+          "bytes": null,
+          "idleMiB": 1.5,
+          "rMiB": null
+        },
+        {
+          "cls": "SpillPut",
+          "control": false,
+          "repeat": 0,
+          "window": [
+            "2026-11-05T20:38:00Z",
+            "2026-11-05T20:40:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1216.25
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            0,
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillPut",
+          "control": false,
+          "repeat": 1,
+          "window": [
+            "2026-11-05T20:43:00Z",
+            "2026-11-05T20:44:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1805.156
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillPut",
+          "control": false,
+          "repeat": 2,
+          "window": [
+            "2026-11-05T20:47:00Z",
+            "2026-11-05T20:48:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1902.54
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillSql",
+          "control": true,
+          "repeat": -1,
+          "window": [
+            "2026-11-05T20:32:00Z",
+            "2026-11-05T20:33:00Z"
+          ],
+          "peakMiB": 1.5,
+          "spillWallMs": [],
+          "spillAttempts": 0,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": null,
+          "sqlRows": null,
+          "bytes": null,
+          "idleMiB": 1.5,
+          "rMiB": null
+        },
+        {
+          "cls": "SpillSql",
+          "control": false,
+          "repeat": 0,
+          "window": [
+            "2026-11-05T20:36:00Z",
+            "2026-11-05T20:37:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1211.37
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 64,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillSql",
+          "control": false,
+          "repeat": 1,
+          "window": [
+            "2026-11-05T20:41:00Z",
+            "2026-11-05T20:42:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1369.67
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 64,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillSql",
+          "control": false,
+          "repeat": 2,
+          "window": [
+            "2026-11-05T20:45:00Z",
+            "2026-11-05T20:46:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1493.106
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 64,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        }
+      ]
+    },
+    "ladder": {
+      "rawSha256": "7a3da8ee93d5a349172f4b11cc704dc488800777901d9c92fe7133409071eb6a",
+      "objects": [
+        {
+          "cls": "SpillNone",
+          "control": true,
+          "repeat": -1,
+          "window": [
+            "2026-11-05T21:00:00Z",
+            "2026-11-05T21:01:00Z"
+          ],
+          "peakMiB": 1.5,
+          "spillWallMs": [],
+          "spillAttempts": 0,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": null,
+          "sqlRows": null,
+          "bytes": null,
+          "idleMiB": 1.5,
+          "rMiB": null
+        },
+        {
+          "cls": "SpillNone",
+          "control": false,
+          "repeat": 0,
+          "window": [
+            "2026-11-05T21:07:00Z",
+            "2026-11-05T21:08:00Z"
+          ],
+          "peakMiB": 2,
+          "spillWallMs": [
+            518.34
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 0,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 0.5
+        },
+        {
+          "cls": "SpillNone",
+          "control": false,
+          "repeat": 1,
+          "window": [
+            "2026-11-05T21:14:00Z",
+            "2026-11-05T21:15:00Z"
+          ],
+          "peakMiB": 2,
+          "spillWallMs": [
+            693.245
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 0,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 0.5
+        },
+        {
+          "cls": "SpillNone",
+          "control": false,
+          "repeat": 2,
+          "window": [
+            "2026-11-05T21:20:00Z",
+            "2026-11-05T21:21:00Z"
+          ],
+          "peakMiB": 2,
+          "spillWallMs": [
+            473.703
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 0,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 0.5
+        },
+        {
+          "cls": "SpillPut",
+          "control": true,
+          "repeat": -1,
+          "window": [
+            "2026-11-05T20:59:00Z",
+            "2026-11-05T21:00:00Z"
+          ],
+          "peakMiB": 1.5,
+          "spillWallMs": [],
+          "spillAttempts": 0,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": null,
+          "sqlRows": null,
+          "bytes": null,
+          "idleMiB": 1.5,
+          "rMiB": null
+        },
+        {
+          "cls": "SpillPut",
+          "control": false,
+          "repeat": 0,
+          "window": [
+            "2026-11-05T21:05:00Z",
+            "2026-11-05T21:06:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1698.255
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillPut",
+          "control": false,
+          "repeat": 1,
+          "window": [
+            "2026-11-05T21:12:00Z",
+            "2026-11-05T21:13:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            2717.305
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillPut",
+          "control": false,
+          "repeat": 2,
+          "window": [
+            "2026-11-05T21:18:00Z",
+            "2026-11-05T21:19:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1271.547
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 0,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillSql",
+          "control": true,
+          "repeat": -1,
+          "window": [
+            "2026-11-05T20:57:00Z",
+            "2026-11-05T20:59:00Z"
+          ],
+          "peakMiB": 1.5,
+          "spillWallMs": [],
+          "spillAttempts": 0,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": null,
+          "sqlRows": null,
+          "bytes": null,
+          "idleMiB": 1.5,
+          "rMiB": null
+        },
+        {
+          "cls": "SpillSql",
+          "control": false,
+          "repeat": 0,
+          "window": [
+            "2026-11-05T21:02:00Z",
+            "2026-11-05T21:04:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1240.646
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            0,
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 64,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillSql",
+          "control": false,
+          "repeat": 1,
+          "window": [
+            "2026-11-05T21:09:00Z",
+            "2026-11-05T21:11:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1751.101
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            0,
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 64,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        },
+        {
+          "cls": "SpillSql",
+          "control": false,
+          "repeat": 2,
+          "window": [
+            "2026-11-05T21:16:00Z",
+            "2026-11-05T21:17:00Z"
+          ],
+          "peakMiB": 36,
+          "spillWallMs": [
+            1221.281
+          ],
+          "spillAttempts": 1,
+          "holdStatuses": [
+            200
+          ],
+          "plannedRows": 64,
+          "sqlRows": 64,
+          "bytes": 67108864,
+          "idleMiB": 1.5,
+          "rMiB": 34.5
+        }
+      ]
+    },
+    "writtenClassesInLadder": [
+      {
+        "cls": "Owner",
+        "minutes": 2,
+        "maxMiB": 33.141,
+        "minMiB": 4,
+        "rowsWritten": 4802,
+        "rowsRead": 1633,
+        "exceeded": 0
+      },
+      {
+        "cls": "Store",
+        "minutes": 1,
+        "maxMiB": 29.688,
+        "minMiB": 29.688,
+        "rowsWritten": 759,
+        "rowsRead": 2106,
+        "exceeded": 0
+      }
+    ]
+  },
+  "restart-rows": {
+    "controls": [
+      {
+        "cls": "CtlRestart",
+        "shape": "control",
+        "peakMiB": 1.5
+      },
+      {
+        "cls": "CtlSmall",
+        "shape": "control",
+        "peakMiB": 1.5
+      },
+      {
+        "cls": "CtlSec",
+        "shape": "control",
+        "peakMiB": 1.5
+      },
+      {
+        "cls": "CtlSecExec",
+        "shape": "control",
+        "peakMiB": 1.5
+      }
+    ],
+    "arms": [
+      {
+        "arm": "6c restart Restart hold",
+        "rung": "6c",
+        "cls": "Restart",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 2,
+        "rMiB": [
+          34.5,
+          34.5
+        ],
+        "statuses": [
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null
+        ],
+        "medianRMiB": 34.5
+      },
+      {
+        "arm": "6c restart Restart fresh-5",
+        "rung": "6c",
+        "cls": "Restart",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 2,
+        "rMiB": [
+          0,
+          0
+        ],
+        "statuses": [
+          200,
+          200
+        ],
+        "isolates": [
+          "same",
+          "same"
+        ],
+        "medianRMiB": 0
+      },
+      {
+        "arm": "6c restart Restart fresh-10",
+        "rung": "6c",
+        "cls": "Restart",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 2,
+        "rMiB": [
+          0,
+          0
+        ],
+        "statuses": [
+          200,
+          200
+        ],
+        "isolates": [
+          "fresh",
+          "same"
+        ],
+        "medianRMiB": 0
+      },
+      {
+        "arm": "6c restart Restart fresh-15",
+        "rung": "6c",
+        "cls": "Restart",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 2,
+        "rMiB": [
+          0,
+          0
+        ],
+        "statuses": [
+          200,
+          200
+        ],
+        "isolates": [
+          "fresh",
+          "same"
+        ],
+        "medianRMiB": 0
+      },
+      {
+        "arm": "6c restart Restart fresh-20",
+        "rung": "6c",
+        "cls": "Restart",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          0,
+          0,
+          0
+        ],
+        "statuses": [
+          0,
+          0,
+          200
+        ],
+        "isolates": [
+          "fresh",
+          "fresh",
+          "same"
+        ],
+        "medianRMiB": 0
+      },
+      {
+        "arm": "6c small4k SmallRows hold",
+        "rung": "6c",
+        "cls": "SmallRows",
+        "mib": 16,
+        "rowKiB": 4,
+        "n": 1,
+        "rMiB": [
+          1.875
+        ],
+        "statuses": [
+          0
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 1.875
+      },
+      {
+        "arm": "6c smallExt SmallExt hold",
+        "rung": "6c",
+        "cls": "SmallExt",
+        "mib": 16,
+        "rowKiB": 1024,
+        "n": 1,
+        "rMiB": [
+          16
+        ],
+        "statuses": [
+          0
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 16
+      },
+      {
+        "arm": "6c second SecOwn hold",
+        "rung": "6c",
+        "cls": "SecOwn",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 1,
+        "rMiB": [
+          34.5
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 34.5
+      }
+    ],
+    "holds": [
+      {
+        "rung": "6c",
+        "arm": "controls",
+        "cls": "CtlRestart",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:22:00Z",
+          "2026-11-05T22:23:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "controls",
+        "cls": "CtlSmall",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:23:00Z",
+          "2026-11-05T22:24:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "controls",
+        "cls": "CtlSec",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:24:00Z",
+          "2026-11-05T22:25:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "controls",
+        "cls": "CtlSecExec",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:25:00Z",
+          "2026-11-05T22:26:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:27:00Z",
+          "2026-11-05T22:28:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-5",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:32:00Z",
+          "2026-11-05T22:33:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "same",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-10",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:37:00Z",
+          "2026-11-05T22:38:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "fresh",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-15",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:42:00Z",
+          "2026-11-05T22:43:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "fresh",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-20",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:49:00Z",
+          "2026-11-05T22:49:00Z"
+        ],
+        "status": 0,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "fresh",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-20",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:49:00Z",
+          "2026-11-05T22:51:00Z"
+        ],
+        "status": 0,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "fresh",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-20",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T22:51:00Z",
+          "2026-11-05T22:51:00Z"
+        ],
+        "status": 0,
+        "peakMiB": null,
+        "idleMiB": 1.5,
+        "rMiB": null,
+        "isolate": "fresh",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "small4k",
+        "cls": "SmallRows",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": 4096,
+        "window": [
+          "2026-11-05T22:52:00Z",
+          "2026-11-05T22:54:00Z"
+        ],
+        "status": 0,
+        "peakMiB": 3.375,
+        "idleMiB": 1.5,
+        "rMiB": 1.875,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "small4k",
+        "cls": "SmallRows",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": 4096,
+        "window": [
+          "2026-11-05T22:54:00Z",
+          "2026-11-05T22:55:00Z"
+        ],
+        "status": 0,
+        "peakMiB": null,
+        "idleMiB": 1.5,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "small4k",
+        "cls": "SmallRows",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": 4096,
+        "window": [
+          "2026-11-05T22:55:00Z",
+          "2026-11-05T22:55:00Z"
+        ],
+        "status": 0,
+        "peakMiB": null,
+        "idleMiB": 1.5,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "smallExt",
+        "cls": "SmallExt",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": 1048576,
+        "window": [
+          "2026-11-05T23:00:00Z",
+          "2026-11-05T23:02:00Z"
+        ],
+        "status": 0,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "smallExt",
+        "cls": "SmallExt",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": 1048576,
+        "window": [
+          "2026-11-05T23:02:00Z",
+          "2026-11-05T23:02:00Z"
+        ],
+        "status": 0,
+        "peakMiB": null,
+        "idleMiB": 1.5,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "smallExt",
+        "cls": "SmallExt",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": 1048576,
+        "window": [
+          "2026-11-05T23:02:00Z",
+          "2026-11-05T23:02:00Z"
+        ],
+        "status": 0,
+        "peakMiB": null,
+        "idleMiB": 1.5,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "second",
+        "cls": "SecOwn",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:05:00Z",
+          "2026-11-05T23:06:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": "SecExec",
+        "callerRMiB": 0.094
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:07:00Z",
+          "2026-11-05T23:08:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-5",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:12:00Z",
+          "2026-11-05T23:13:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "same",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-10",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:17:00Z",
+          "2026-11-05T23:18:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "same",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-15",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:22:00Z",
+          "2026-11-05T23:23:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "same",
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6c",
+        "arm": "restart",
+        "cls": "Restart",
+        "shape": "fresh-20",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:27:00Z",
+          "2026-11-05T23:28:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": "same",
+        "caller": null,
+        "callerRMiB": null
+      }
+    ],
+    "afterClear": [
+      {
+        "rung": "6c",
+        "cls": "Restart",
+        "clearMinute": "2026-11-05T22:51:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "Restart",
+        "clearMinute": "2026-11-05T22:51:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "Restart",
+        "clearMinute": "2026-11-05T22:51:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "SmallRows",
+        "clearMinute": "2026-11-05T22:55:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "SmallRows",
+        "clearMinute": "2026-11-05T22:55:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "SmallRows",
+        "clearMinute": "2026-11-05T22:58:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "SmallExt",
+        "clearMinute": "2026-11-05T23:02:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "SmallExt",
+        "clearMinute": "2026-11-05T23:02:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "SmallExt",
+        "clearMinute": "2026-11-05T23:02:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "SecOwn",
+        "clearMinute": "2026-11-05T23:06:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6c",
+        "cls": "Restart",
+        "clearMinute": "2026-11-05T23:28:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      }
+    ],
+    "decay": [],
+    "rowsWritten": [
+      {
+        "cls": "Restart",
+        "spills": 2,
+        "reported": 132,
+        "meter": 132
+      },
+      {
+        "cls": "SmallRows",
+        "spills": 1,
+        "reported": 4098,
+        "meter": 4098
+      },
+      {
+        "cls": "SmallExt",
+        "spills": 1,
+        "reported": 18,
+        "meter": 18
+      },
+      {
+        "cls": "SecOwn",
+        "spills": 1,
+        "reported": 66,
+        "meter": 66
+      }
+    ]
+  },
+  "size-ladder": {
+    "controls": [
+      {
+        "cls": "CtlSql",
+        "shape": "control-sql",
+        "peakMiB": 1.5
+      },
+      {
+        "cls": "CtlSql",
+        "shape": "control-sql",
+        "peakMiB": 1.5
+      },
+      {
+        "cls": "CtlPut",
+        "shape": "control-put",
+        "peakMiB": 1.5
+      }
+    ],
+    "arms": [
+      {
+        "arm": "6b size16 Size0 hold-size16",
+        "rung": "6b",
+        "cls": "Size0",
+        "mib": 16,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          16,
+          16,
+          16
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 16
+      },
+      {
+        "arm": "6b size32 Size1 hold-size32",
+        "rung": "6b",
+        "cls": "Size1",
+        "mib": 32,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          2.5,
+          2.5,
+          2.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 2.5
+      },
+      {
+        "arm": "6b size64 Size2 hold-size64",
+        "rung": "6b",
+        "cls": "Size2",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          34.5,
+          34.5,
+          34.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 34.5
+      },
+      {
+        "arm": "6b size128 Size3 hold-size128",
+        "rung": "6b",
+        "cls": "Size3",
+        "mib": 128,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          32.5,
+          32.5,
+          32.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 32.5
+      },
+      {
+        "arm": "6b size256 Size4 hold-size256",
+        "rung": "6b",
+        "cls": "Size4",
+        "mib": 256,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          28.5,
+          28.5,
+          28.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 28.5
+      },
+      {
+        "arm": "6b put128 PutOne hold-put128",
+        "rung": "6b",
+        "cls": "PutOne",
+        "mib": 128,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          32.5,
+          32.5,
+          32.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 32.5
+      },
+      {
+        "arm": "6b readback64 ReadBack hold-readback64",
+        "rung": "6b",
+        "cls": "ReadBack",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          31.5,
+          31.5,
+          31.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 31.5
+      },
+      {
+        "arm": "6b drop64 Drop hold-drop64",
+        "rung": "6b",
+        "cls": "Drop",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 4,
+        "rMiB": [
+          34.5,
+          0,
+          34.5,
+          34.5
+        ],
+        "statuses": [
+          0,
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 34.5
+      },
+      {
+        "arm": "6b drop64 Drop tail-drop64",
+        "rung": "6b",
+        "cls": "Drop",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 3,
+        "rMiB": [
+          0,
+          34.5,
+          34.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 34.5
+      }
+    ],
+    "holds": [
+      {
+        "rung": "6b",
+        "arm": "controls",
+        "cls": "CtlSql",
+        "shape": "control-sql",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:34:00Z",
+          "2026-11-05T23:34:00Z"
+        ],
+        "status": 404,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "controls",
+        "cls": "CtlSql",
+        "shape": "control-sql",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:34:00Z",
+          "2026-11-05T23:35:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "controls",
+        "cls": "CtlPut",
+        "shape": "control-put",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:35:00Z",
+          "2026-11-05T23:36:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size16",
+        "cls": "Size0",
+        "shape": "hold-size16",
+        "repeat": 0,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:37:00Z",
+          "2026-11-05T23:38:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size32",
+        "cls": "Size1",
+        "shape": "hold-size32",
+        "repeat": 0,
+        "hold": null,
+        "mib": 32,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:39:00Z",
+          "2026-11-05T23:40:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 4,
+        "idleMiB": 1.5,
+        "rMiB": 2.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size64",
+        "cls": "Size2",
+        "shape": "hold-size64",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:41:00Z",
+          "2026-11-05T23:42:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size128",
+        "cls": "Size3",
+        "shape": "hold-size128",
+        "repeat": 0,
+        "hold": null,
+        "mib": 128,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:43:00Z",
+          "2026-11-05T23:44:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34,
+        "idleMiB": 1.5,
+        "rMiB": 32.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size256",
+        "cls": "Size4",
+        "shape": "hold-size256",
+        "repeat": 0,
+        "hold": null,
+        "mib": 256,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:45:00Z",
+          "2026-11-05T23:46:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 30,
+        "idleMiB": 1.5,
+        "rMiB": 28.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "put128",
+        "cls": "PutOne",
+        "shape": "hold-put128",
+        "repeat": 0,
+        "hold": null,
+        "mib": 128,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:47:00Z",
+          "2026-11-05T23:48:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34,
+        "idleMiB": 1.5,
+        "rMiB": 32.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "readback64",
+        "cls": "ReadBack",
+        "shape": "hold-readback64",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:49:00Z",
+          "2026-11-05T23:50:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 33,
+        "idleMiB": 1.5,
+        "rMiB": 31.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "drop64",
+        "cls": "Drop",
+        "shape": "hold-drop64",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:54:00Z",
+          "2026-11-05T23:57:00Z"
+        ],
+        "status": 0,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "drop64",
+        "cls": "Drop",
+        "shape": "hold-drop64",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:57:00Z",
+          "2026-11-05T23:58:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "drop64",
+        "cls": "Drop",
+        "shape": "tail-drop64",
+        "repeat": 0,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-05T23:58:00Z",
+          "2026-11-06T00:00:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": 1.5,
+        "rMiB": 0,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size16",
+        "cls": "Size0",
+        "shape": "hold-size16",
+        "repeat": 1,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:01:00Z",
+          "2026-11-06T00:02:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size32",
+        "cls": "Size1",
+        "shape": "hold-size32",
+        "repeat": 1,
+        "hold": null,
+        "mib": 32,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:03:00Z",
+          "2026-11-06T00:04:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 4,
+        "idleMiB": 1.5,
+        "rMiB": 2.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size64",
+        "cls": "Size2",
+        "shape": "hold-size64",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:05:00Z",
+          "2026-11-06T00:06:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size128",
+        "cls": "Size3",
+        "shape": "hold-size128",
+        "repeat": 1,
+        "hold": null,
+        "mib": 128,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:07:00Z",
+          "2026-11-06T00:08:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34,
+        "idleMiB": 1.5,
+        "rMiB": 32.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size256",
+        "cls": "Size4",
+        "shape": "hold-size256",
+        "repeat": 1,
+        "hold": null,
+        "mib": 256,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:09:00Z",
+          "2026-11-06T00:10:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 30,
+        "idleMiB": 1.5,
+        "rMiB": 28.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "put128",
+        "cls": "PutOne",
+        "shape": "hold-put128",
+        "repeat": 1,
+        "hold": null,
+        "mib": 128,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:11:00Z",
+          "2026-11-06T00:12:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34,
+        "idleMiB": 1.5,
+        "rMiB": 32.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "readback64",
+        "cls": "ReadBack",
+        "shape": "hold-readback64",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:13:00Z",
+          "2026-11-06T00:14:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 33,
+        "idleMiB": 1.5,
+        "rMiB": 31.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "drop64",
+        "cls": "Drop",
+        "shape": "hold-drop64",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:15:00Z",
+          "2026-11-06T00:16:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "drop64",
+        "cls": "Drop",
+        "shape": "tail-drop64",
+        "repeat": 1,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:16:00Z",
+          "2026-11-06T00:18:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size16",
+        "cls": "Size0",
+        "shape": "hold-size16",
+        "repeat": 2,
+        "hold": null,
+        "mib": 16,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:19:00Z",
+          "2026-11-06T00:20:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size32",
+        "cls": "Size1",
+        "shape": "hold-size32",
+        "repeat": 2,
+        "hold": null,
+        "mib": 32,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:21:00Z",
+          "2026-11-06T00:22:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 4,
+        "idleMiB": 1.5,
+        "rMiB": 2.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size64",
+        "cls": "Size2",
+        "shape": "hold-size64",
+        "repeat": 2,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:23:00Z",
+          "2026-11-06T00:24:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size128",
+        "cls": "Size3",
+        "shape": "hold-size128",
+        "repeat": 2,
+        "hold": null,
+        "mib": 128,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:25:00Z",
+          "2026-11-06T00:26:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34,
+        "idleMiB": 1.5,
+        "rMiB": 32.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "size256",
+        "cls": "Size4",
+        "shape": "hold-size256",
+        "repeat": 2,
+        "hold": null,
+        "mib": 256,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:27:00Z",
+          "2026-11-06T00:28:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 30,
+        "idleMiB": 1.5,
+        "rMiB": 28.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "put128",
+        "cls": "PutOne",
+        "shape": "hold-put128",
+        "repeat": 2,
+        "hold": null,
+        "mib": 128,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:29:00Z",
+          "2026-11-06T00:30:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34,
+        "idleMiB": 1.5,
+        "rMiB": 32.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "readback64",
+        "cls": "ReadBack",
+        "shape": "hold-readback64",
+        "repeat": 2,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:31:00Z",
+          "2026-11-06T00:32:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 33,
+        "idleMiB": 1.5,
+        "rMiB": 31.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "drop64",
+        "cls": "Drop",
+        "shape": "hold-drop64",
+        "repeat": 2,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:33:00Z",
+          "2026-11-06T00:34:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6b",
+        "arm": "drop64",
+        "cls": "Drop",
+        "shape": "tail-drop64",
+        "repeat": 2,
+        "hold": null,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:34:00Z",
+          "2026-11-06T00:36:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      }
+    ],
+    "afterClear": [
+      {
+        "rung": "6b",
+        "cls": "Size0",
+        "clearMinute": "2026-11-05T23:38:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size1",
+        "clearMinute": "2026-11-05T23:40:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size2",
+        "clearMinute": "2026-11-05T23:42:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size3",
+        "clearMinute": "2026-11-05T23:44:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size4",
+        "clearMinute": "2026-11-05T23:46:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "PutOne",
+        "clearMinute": "2026-11-05T23:48:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "ReadBack",
+        "clearMinute": "2026-11-05T23:50:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Drop",
+        "clearMinute": "2026-11-05T23:58:00Z",
+        "plus1MiB": 1.5,
+        "plus2MiB": 1.5
+      },
+      {
+        "rung": "6b",
+        "cls": "Size0",
+        "clearMinute": "2026-11-06T00:02:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size1",
+        "clearMinute": "2026-11-06T00:04:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size2",
+        "clearMinute": "2026-11-06T00:06:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size3",
+        "clearMinute": "2026-11-06T00:08:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size4",
+        "clearMinute": "2026-11-06T00:10:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "PutOne",
+        "clearMinute": "2026-11-06T00:12:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "ReadBack",
+        "clearMinute": "2026-11-06T00:14:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Drop",
+        "clearMinute": "2026-11-06T00:16:00Z",
+        "plus1MiB": 36,
+        "plus2MiB": 36
+      },
+      {
+        "rung": "6b",
+        "cls": "Size0",
+        "clearMinute": "2026-11-06T00:20:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size1",
+        "clearMinute": "2026-11-06T00:22:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size2",
+        "clearMinute": "2026-11-06T00:24:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size3",
+        "clearMinute": "2026-11-06T00:26:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Size4",
+        "clearMinute": "2026-11-06T00:28:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "PutOne",
+        "clearMinute": "2026-11-06T00:30:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "ReadBack",
+        "clearMinute": "2026-11-06T00:32:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6b",
+        "cls": "Drop",
+        "clearMinute": "2026-11-06T00:34:00Z",
+        "plus1MiB": 36,
+        "plus2MiB": 36
+      }
+    ],
+    "decay": [],
+    "rowsWritten": [
+      {
+        "cls": "Size0",
+        "spills": 3,
+        "reported": 54,
+        "meter": 54
+      },
+      {
+        "cls": "Size1",
+        "spills": 3,
+        "reported": 102,
+        "meter": 102
+      },
+      {
+        "cls": "Size2",
+        "spills": 3,
+        "reported": 198,
+        "meter": 198
+      },
+      {
+        "cls": "Size3",
+        "spills": 3,
+        "reported": 390,
+        "meter": 390
+      },
+      {
+        "cls": "Size4",
+        "spills": 3,
+        "reported": 774,
+        "meter": 774
+      },
+      {
+        "cls": "PutOne",
+        "spills": 3,
+        "reported": 384,
+        "meter": 384
+      },
+      {
+        "cls": "ReadBack",
+        "spills": 3,
+        "reported": 198,
+        "meter": 198
+      },
+      {
+        "cls": "Drop",
+        "spills": 3,
+        "reported": 198,
+        "meter": 198
+      }
+    ]
+  },
+  "row-size-sweep": {
+    "controls": [
+      {
+        "cls": "CtlSmall",
+        "shape": "control",
+        "peakMiB": 1.5
+      },
+      {
+        "cls": "CtlSec",
+        "shape": "control",
+        "peakMiB": 1.5
+      },
+      {
+        "cls": "CtlSecExec",
+        "shape": "control",
+        "peakMiB": 1.5
+      }
+    ],
+    "arms": [
+      {
+        "arm": "6d small4k SmallRows hold",
+        "rung": "6d",
+        "cls": "SmallRows",
+        "mib": 16,
+        "rowKiB": 4,
+        "n": 2,
+        "rMiB": [
+          1.945,
+          1.945
+        ],
+        "statuses": [
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null
+        ],
+        "medianRMiB": 1.945
+      },
+      {
+        "arm": "6d small16k Small16 hold",
+        "rung": "6d",
+        "cls": "Small16",
+        "mib": 16,
+        "rowKiB": 16,
+        "n": 1,
+        "rMiB": [
+          16.25
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 16.25
+      },
+      {
+        "arm": "6d small64k Small64 hold",
+        "rung": "6d",
+        "cls": "Small64",
+        "mib": 16,
+        "rowKiB": 64,
+        "n": 1,
+        "rMiB": [
+          16
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 16
+      },
+      {
+        "arm": "6d small256k Small256 hold",
+        "rung": "6d",
+        "cls": "Small256",
+        "mib": 16,
+        "rowKiB": 256,
+        "n": 1,
+        "rMiB": [
+          16
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 16
+      },
+      {
+        "arm": "6d smallExt SmallExt hold",
+        "rung": "6d",
+        "cls": "SmallExt",
+        "mib": 16,
+        "rowKiB": 1024,
+        "n": 2,
+        "rMiB": [
+          16,
+          16
+        ],
+        "statuses": [
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null
+        ],
+        "medianRMiB": 16
+      },
+      {
+        "arm": "6d big64k Big64 hold",
+        "rung": "6d",
+        "cls": "Big64",
+        "mib": 64,
+        "rowKiB": 64,
+        "n": 1,
+        "rMiB": [
+          32.625
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 32.625
+      },
+      {
+        "arm": "6d big16k Big16 hold",
+        "rung": "6d",
+        "cls": "Big16",
+        "mib": 64,
+        "rowKiB": 16,
+        "n": 1,
+        "rMiB": [
+          33.031
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 33.031
+      },
+      {
+        "arm": "6d decay Decay hold",
+        "rung": "6d",
+        "cls": "Decay",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 14,
+        "rMiB": [
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5,
+          34.5
+        ],
+        "statuses": [
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "medianRMiB": 34.5
+      },
+      {
+        "arm": "6d second SecOwn hold",
+        "rung": "6d",
+        "cls": "SecOwn",
+        "mib": 64,
+        "rowKiB": null,
+        "n": 1,
+        "rMiB": [
+          34.5
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 34.5
+      }
+    ],
+    "holds": [
+      {
+        "rung": "6d",
+        "arm": "controls",
+        "cls": "CtlSmall",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:41:00Z",
+          "2026-11-06T00:42:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "controls",
+        "cls": "CtlSec",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:42:00Z",
+          "2026-11-06T00:43:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "controls",
+        "cls": "CtlSecExec",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:43:00Z",
+          "2026-11-06T00:44:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "small4k",
+        "cls": "SmallRows",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 4096,
+        "window": [
+          "2026-11-06T00:45:00Z",
+          "2026-11-06T00:46:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 3.445,
+        "idleMiB": 1.5,
+        "rMiB": 1.945,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "small16k",
+        "cls": "Small16",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 16384,
+        "window": [
+          "2026-11-06T00:47:00Z",
+          "2026-11-06T00:48:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.75,
+        "idleMiB": 1.5,
+        "rMiB": 16.25,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "small64k",
+        "cls": "Small64",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 65536,
+        "window": [
+          "2026-11-06T00:49:00Z",
+          "2026-11-06T00:50:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "small256k",
+        "cls": "Small256",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 262144,
+        "window": [
+          "2026-11-06T00:51:00Z",
+          "2026-11-06T00:52:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "smallExt",
+        "cls": "SmallExt",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 1048576,
+        "window": [
+          "2026-11-06T00:53:00Z",
+          "2026-11-06T00:54:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "big64k",
+        "cls": "Big64",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 64,
+        "rowBytes": 65536,
+        "window": [
+          "2026-11-06T00:55:00Z",
+          "2026-11-06T00:56:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34.125,
+        "idleMiB": 1.5,
+        "rMiB": 32.625,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "big16k",
+        "cls": "Big16",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 64,
+        "rowBytes": 16384,
+        "window": [
+          "2026-11-06T00:57:00Z",
+          "2026-11-06T00:58:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 34.531,
+        "idleMiB": 1.5,
+        "rMiB": 33.031,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T00:59:00Z",
+          "2026-11-06T01:00:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 2,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:00:00Z",
+          "2026-11-06T01:01:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 3,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:01:00Z",
+          "2026-11-06T01:02:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 4,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:02:00Z",
+          "2026-11-06T01:03:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 5,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:03:00Z",
+          "2026-11-06T01:04:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 6,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:04:00Z",
+          "2026-11-06T01:06:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 7,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:06:00Z",
+          "2026-11-06T01:07:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "second",
+        "cls": "SecOwn",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:08:00Z",
+          "2026-11-06T01:09:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": "SecExec",
+        "callerRMiB": 0.094
+      },
+      {
+        "rung": "6d",
+        "arm": "small4k",
+        "cls": "SmallRows",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 4096,
+        "window": [
+          "2026-11-06T01:10:00Z",
+          "2026-11-06T01:11:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 3.445,
+        "idleMiB": 1.5,
+        "rMiB": 1.945,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "smallExt",
+        "cls": "SmallExt",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 1048576,
+        "window": [
+          "2026-11-06T01:12:00Z",
+          "2026-11-06T01:13:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.5,
+        "idleMiB": 1.5,
+        "rMiB": 16,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 1,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:14:00Z",
+          "2026-11-06T01:15:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 2,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:15:00Z",
+          "2026-11-06T01:16:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 3,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:16:00Z",
+          "2026-11-06T01:17:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 4,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:17:00Z",
+          "2026-11-06T01:18:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 5,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:18:00Z",
+          "2026-11-06T01:19:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 6,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:19:00Z",
+          "2026-11-06T01:21:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6d",
+        "arm": "decay",
+        "cls": "Decay",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 7,
+        "mib": 64,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:21:00Z",
+          "2026-11-06T01:22:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 36,
+        "idleMiB": 1.5,
+        "rMiB": 34.5,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      }
+    ],
+    "afterClear": [
+      {
+        "rung": "6d",
+        "cls": "SmallRows",
+        "clearMinute": "2026-11-06T00:46:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "Small16",
+        "clearMinute": "2026-11-06T00:48:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "Small64",
+        "clearMinute": "2026-11-06T00:50:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "Small256",
+        "clearMinute": "2026-11-06T00:52:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "SmallExt",
+        "clearMinute": "2026-11-06T00:54:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "Big64",
+        "clearMinute": "2026-11-06T00:56:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "Big16",
+        "clearMinute": "2026-11-06T00:58:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "Decay",
+        "clearMinute": "2026-11-06T01:07:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "SecOwn",
+        "clearMinute": "2026-11-06T01:09:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "SmallRows",
+        "clearMinute": "2026-11-06T01:11:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "SmallExt",
+        "clearMinute": "2026-11-06T01:13:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6d",
+        "cls": "Decay",
+        "clearMinute": "2026-11-06T01:22:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      }
+    ],
+    "decay": [
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T00:59:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 1"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:00:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 1"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:01:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 2"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:02:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 3"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:03:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 4"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:04:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 5"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:05:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 6"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:06:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 6"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:07:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 7 + clear"
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:08:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:09:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:10:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      },
+      {
+        "repeat": 0,
+        "minute": "2026-11-06T01:11:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:14:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 1"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:15:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 1"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:16:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 2"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:17:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 3"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:18:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 4"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:19:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 5"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:20:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 6"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:21:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 6"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:22:00Z",
+        "peakMiB": 36,
+        "rMiB": 34.5,
+        "covered": "hold 7 + clear"
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:23:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:24:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:25:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      },
+      {
+        "repeat": 1,
+        "minute": "2026-11-06T01:26:00Z",
+        "peakMiB": null,
+        "rMiB": null,
+        "covered": ""
+      }
+    ],
+    "rowsWritten": [
+      {
+        "cls": "SmallRows",
+        "spills": 2,
+        "reported": 8196,
+        "meter": 8196
+      },
+      {
+        "cls": "Small16",
+        "spills": 1,
+        "reported": 1026,
+        "meter": 1026
+      },
+      {
+        "cls": "Small64",
+        "spills": 1,
+        "reported": 258,
+        "meter": 258
+      },
+      {
+        "cls": "Small256",
+        "spills": 1,
+        "reported": 66,
+        "meter": 66
+      },
+      {
+        "cls": "SmallExt",
+        "spills": 2,
+        "reported": 36,
+        "meter": 36
+      },
+      {
+        "cls": "Big64",
+        "spills": 1,
+        "reported": 1026,
+        "meter": 1026
+      },
+      {
+        "cls": "Big16",
+        "spills": 1,
+        "reported": 4098,
+        "meter": 4098
+      },
+      {
+        "cls": "Decay",
+        "spills": 2,
+        "reported": 132,
+        "meter": 132
+      },
+      {
+        "cls": "SecOwn",
+        "spills": 1,
+        "reported": 66,
+        "meter": 66
+      }
+    ],
+    "unlistedNamespaces": [
+      {
+        "label": "unknown-0",
+        "cls": "SmallRows",
+        "minutes": 4,
+        "maxMiB": 3.445,
+        "rowsWritten": 8196
+      },
+      {
+        "label": "unknown-1",
+        "cls": "Small16",
+        "minutes": 2,
+        "maxMiB": 17.75,
+        "rowsWritten": 1026
+      },
+      {
+        "label": "unknown-2",
+        "cls": "Small64",
+        "minutes": 2,
+        "maxMiB": 17.5,
+        "rowsWritten": 258
+      },
+      {
+        "label": "unknown-3",
+        "cls": "Small256",
+        "minutes": 2,
+        "maxMiB": 17.5,
+        "rowsWritten": 66
+      },
+      {
+        "label": "unknown-4",
+        "cls": "SmallExt",
+        "minutes": 4,
+        "maxMiB": 17.5,
+        "rowsWritten": 36
+      }
+    ]
+  },
+  "row-size-cliff": {
+    "controls": [
+      {
+        "cls": "CtlSmall",
+        "shape": "control",
+        "peakMiB": 1.5
+      }
+    ],
+    "arms": [
+      {
+        "arm": "6e rows8k Rows8k hold",
+        "rung": "6e",
+        "cls": "Rows8k",
+        "mib": 16,
+        "rowKiB": 8,
+        "n": 2,
+        "rMiB": [
+          16.25,
+          16.25
+        ],
+        "statuses": [
+          200,
+          200
+        ],
+        "isolates": [
+          null,
+          null
+        ],
+        "medianRMiB": 16.25
+      },
+      {
+        "arm": "6e rows6k Rows6k hold",
+        "rung": "6e",
+        "cls": "Rows6k",
+        "mib": 16,
+        "rowKiB": 6,
+        "n": 1,
+        "rMiB": [
+          16.496
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 16.496
+      },
+      {
+        "arm": "6e big4k Big4k hold",
+        "rung": "6e",
+        "cls": "Big4k",
+        "mib": 64,
+        "rowKiB": 4,
+        "n": 1,
+        "rMiB": [
+          12.238
+        ],
+        "statuses": [
+          200
+        ],
+        "isolates": [
+          null
+        ],
+        "medianRMiB": 12.238
+      }
+    ],
+    "holds": [
+      {
+        "rung": "6e",
+        "arm": "controls",
+        "cls": "CtlSmall",
+        "shape": "control",
+        "repeat": -1,
+        "hold": null,
+        "mib": null,
+        "rowBytes": null,
+        "window": [
+          "2026-11-06T01:38:00Z",
+          "2026-11-06T01:39:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 1.5,
+        "idleMiB": null,
+        "rMiB": null,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6e",
+        "arm": "rows8k",
+        "cls": "Rows8k",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 8192,
+        "window": [
+          "2026-11-06T01:40:00Z",
+          "2026-11-06T01:41:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.75,
+        "idleMiB": 1.5,
+        "rMiB": 16.25,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6e",
+        "arm": "rows6k",
+        "cls": "Rows6k",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 6144,
+        "window": [
+          "2026-11-06T01:42:00Z",
+          "2026-11-06T01:43:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.996,
+        "idleMiB": 1.5,
+        "rMiB": 16.496,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6e",
+        "arm": "big4k",
+        "cls": "Big4k",
+        "shape": "hold",
+        "repeat": 0,
+        "hold": 1,
+        "mib": 64,
+        "rowBytes": 4096,
+        "window": [
+          "2026-11-06T01:44:00Z",
+          "2026-11-06T01:45:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 13.738,
+        "idleMiB": 1.5,
+        "rMiB": 12.238,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      },
+      {
+        "rung": "6e",
+        "arm": "rows8k",
+        "cls": "Rows8k",
+        "shape": "hold",
+        "repeat": 1,
+        "hold": 1,
+        "mib": 16,
+        "rowBytes": 8192,
+        "window": [
+          "2026-11-06T01:46:00Z",
+          "2026-11-06T01:47:00Z"
+        ],
+        "status": 200,
+        "peakMiB": 17.75,
+        "idleMiB": 1.5,
+        "rMiB": 16.25,
+        "isolate": null,
+        "caller": null,
+        "callerRMiB": null
+      }
+    ],
+    "afterClear": [
+      {
+        "rung": "6e",
+        "cls": "Rows8k",
+        "clearMinute": "2026-11-06T01:41:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6e",
+        "cls": "Rows6k",
+        "clearMinute": "2026-11-06T01:43:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6e",
+        "cls": "Big4k",
+        "clearMinute": "2026-11-06T01:45:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      },
+      {
+        "rung": "6e",
+        "cls": "Rows8k",
+        "clearMinute": "2026-11-06T01:47:00Z",
+        "plus1MiB": null,
+        "plus2MiB": null
+      }
+    ],
+    "decay": [],
+    "rowsWritten": [
+      {
+        "cls": "Rows8k",
+        "spills": 2,
+        "reported": 4100,
+        "meter": 4100
+      },
+      {
+        "cls": "Rows6k",
+        "spills": 1,
+        "reported": 2732,
+        "meter": 2732
+      },
+      {
+        "cls": "Big4k",
+        "spills": 1,
+        "reported": 16386,
+        "meter": 16386
+      }
+    ]
+  }
+}

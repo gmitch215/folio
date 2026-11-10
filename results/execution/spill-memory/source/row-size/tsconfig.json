@@ -1,0 +1,6 @@
+{
+	"extends": "../../../../tsconfig.json",
+	"compilerOptions": { "noEmit": true, "allowJs": false, "rootDir": "../../../.." },
+	"include": ["config.ts", "plan.ts", "counters.ts", "runner.ts", "harness.ts", "redact.ts", "meter.ts", "live.ts", "local.ts", "recover-meter.ts", "e1.test.ts"],
+	"exclude": []
+}
