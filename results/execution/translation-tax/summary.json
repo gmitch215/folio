@@ -1,0 +1,1101 @@
+{
+	"kind": "translation-tax",
+	"gate": {
+		"name": "G-tau",
+		"threshold": 1,
+		"arm": "bcd",
+		"default": {
+			"config": "default",
+			"tau": 1.578,
+			"tauRange": [
+				1.122,
+				1.751
+			],
+			"pairs": 4,
+			"pass": false
+		},
+		"optimized": {
+			"config": "optimized",
+			"tau": 0.874,
+			"tauRange": [
+				0.858,
+				2.043
+			],
+			"pairs": 5,
+			"pass": true
+		}
+	},
+	"regions": {
+		"dataStart": 1024,
+		"dataEnd": 4260418,
+		"stackBase": 37970912,
+		"stackEnd": 4416480,
+		"segments": 19545
+	},
+	"span": {
+		"front": {
+			"accesses": 1908025709,
+			"linearPages": 1327,
+			"boundaryPages": [
+				67,
+				579
+			],
+			"accessShare": {
+				"static": 0.06934203683730343,
+				"stack": 0.685076806268547,
+				"heap": 0.24558115689414958
+			},
+			"sets": {
+				"touched": {
+					"static": {
+						"pages": 24,
+						"accesses": 132306389,
+						"spanPages": 68,
+						"first": 0,
+						"last": 67
+					},
+					"stack": {
+						"pages": 3,
+						"accesses": 1307144159,
+						"spanPages": 3,
+						"first": 577,
+						"last": 579
+					},
+					"heap": {
+						"pages": 727,
+						"accesses": 468575161,
+						"spanPages": 743,
+						"first": 580,
+						"last": 1322
+					},
+					"all": {
+						"pages": 754,
+						"accesses": 1908025709,
+						"spanPages": 1323,
+						"first": 0,
+						"last": 1322
+					}
+				},
+				"hot50": {
+					"static": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"stack": {
+						"pages": 1,
+						"accesses": 1302479394,
+						"spanPages": 1,
+						"first": 578,
+						"last": 578
+					},
+					"heap": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"all": {
+						"pages": 1,
+						"accesses": 1302479394,
+						"spanPages": 1,
+						"first": 578,
+						"last": 578
+					}
+				},
+				"hot90": {
+					"static": {
+						"pages": 7,
+						"accesses": 130461514,
+						"spanPages": 64,
+						"first": 4,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 1307138317,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 44,
+						"accesses": 279793673,
+						"spanPages": 734,
+						"first": 580,
+						"last": 1313
+					},
+					"all": {
+						"pages": 53,
+						"accesses": 1717393504,
+						"spanPages": 1310,
+						"first": 4,
+						"last": 1313
+					}
+				},
+				"hot99": {
+					"static": {
+						"pages": 10,
+						"accesses": 131792292,
+						"spanPages": 67,
+						"first": 1,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 1307138317,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 512,
+						"accesses": 450163808,
+						"spanPages": 742,
+						"first": 580,
+						"last": 1321
+					},
+					"all": {
+						"pages": 524,
+						"accesses": 1889094417,
+						"spanPages": 1321,
+						"first": 1,
+						"last": 1321
+					}
+				}
+			},
+			"window": {
+				"hot90SpanPages": 1310,
+				"hot90SpanMiB": 81.875,
+				"hot90Pages": 53,
+				"linearMiB": 82.9375,
+				"spanOverLinear": 0.987189148455162,
+				"hot90WithoutStackHoleSpanMiB": 50
+			}
+		},
+		"admin": {
+			"accesses": 3353171404,
+			"linearPages": 1495,
+			"boundaryPages": [
+				67,
+				579
+			],
+			"accessShare": {
+				"static": 0.04255723278260427,
+				"stack": 0.7134540981550134,
+				"heap": 0.24398866906238234
+			},
+			"sets": {
+				"touched": {
+					"static": {
+						"pages": 25,
+						"accesses": 142701696,
+						"spanPages": 68,
+						"first": 0,
+						"last": 67
+					},
+					"stack": {
+						"pages": 3,
+						"accesses": 2392333880,
+						"spanPages": 3,
+						"first": 577,
+						"last": 579
+					},
+					"heap": {
+						"pages": 887,
+						"accesses": 818135828,
+						"spanPages": 909,
+						"first": 580,
+						"last": 1488
+					},
+					"all": {
+						"pages": 915,
+						"accesses": 3353171404,
+						"spanPages": 1489,
+						"first": 0,
+						"last": 1488
+					}
+				},
+				"hot50": {
+					"static": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"stack": {
+						"pages": 1,
+						"accesses": 2384032900,
+						"spanPages": 1,
+						"first": 578,
+						"last": 578
+					},
+					"heap": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"all": {
+						"pages": 1,
+						"accesses": 2384032900,
+						"spanPages": 1,
+						"first": 578,
+						"last": 578
+					}
+				},
+				"hot90": {
+					"static": {
+						"pages": 5,
+						"accesses": 134981721,
+						"spanPages": 19,
+						"first": 49,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 2392328342,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 27,
+						"accesses": 492126068,
+						"spanPages": 869,
+						"first": 580,
+						"last": 1448
+					},
+					"all": {
+						"pages": 34,
+						"accesses": 3019436131,
+						"spanPages": 1400,
+						"first": 49,
+						"last": 1448
+					}
+				},
+				"hot99": {
+					"static": {
+						"pages": 11,
+						"accesses": 142056061,
+						"spanPages": 67,
+						"first": 1,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 2392328342,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 454,
+						"accesses": 785394165,
+						"spanPages": 905,
+						"first": 580,
+						"last": 1484
+					},
+					"all": {
+						"pages": 467,
+						"accesses": 3319778568,
+						"spanPages": 1484,
+						"first": 1,
+						"last": 1484
+					}
+				}
+			},
+			"window": {
+				"hot90SpanPages": 1400,
+				"hot90SpanMiB": 87.5,
+				"hot90Pages": 34,
+				"linearMiB": 93.4375,
+				"spanOverLinear": 0.9364548494983278,
+				"hot90WithoutStackHoleSpanMiB": 55.625
+			}
+		},
+		"modules": {
+			"accesses": 3826101143,
+			"linearPages": 1499,
+			"boundaryPages": [
+				67,
+				579
+			],
+			"accessShare": {
+				"static": 0.036003637345558795,
+				"stack": 0.7107294889407475,
+				"heap": 0.25326687371369366
+			},
+			"sets": {
+				"touched": {
+					"static": {
+						"pages": 24,
+						"accesses": 137753558,
+						"spanPages": 68,
+						"first": 0,
+						"last": 67
+					},
+					"stack": {
+						"pages": 3,
+						"accesses": 2719322910,
+						"spanPages": 3,
+						"first": 577,
+						"last": 579
+					},
+					"heap": {
+						"pages": 880,
+						"accesses": 969024675,
+						"spanPages": 916,
+						"first": 580,
+						"last": 1495
+					},
+					"all": {
+						"pages": 907,
+						"accesses": 3826101143,
+						"spanPages": 1496,
+						"first": 0,
+						"last": 1495
+					}
+				},
+				"hot50": {
+					"static": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"stack": {
+						"pages": 1,
+						"accesses": 2710864769,
+						"spanPages": 1,
+						"first": 578,
+						"last": 578
+					},
+					"heap": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"all": {
+						"pages": 1,
+						"accesses": 2710864769,
+						"spanPages": 1,
+						"first": 578,
+						"last": 578
+					}
+				},
+				"hot90": {
+					"static": {
+						"pages": 5,
+						"accesses": 129276220,
+						"spanPages": 19,
+						"first": 49,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 2719321758,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 25,
+						"accesses": 596097020,
+						"spanPages": 882,
+						"first": 580,
+						"last": 1461
+					},
+					"all": {
+						"pages": 32,
+						"accesses": 3444694998,
+						"spanPages": 1413,
+						"first": 49,
+						"last": 1461
+					}
+				},
+				"hot99": {
+					"static": {
+						"pages": 10,
+						"accesses": 136910930,
+						"spanPages": 67,
+						"first": 1,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 2719321758,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 435,
+						"accesses": 931685325,
+						"spanPages": 900,
+						"first": 580,
+						"last": 1479
+					},
+					"all": {
+						"pages": 447,
+						"accesses": 3787918013,
+						"spanPages": 1479,
+						"first": 1,
+						"last": 1479
+					}
+				}
+			},
+			"window": {
+				"hot90SpanPages": 1413,
+				"hot90SpanMiB": 88.3125,
+				"hot90Pages": 32,
+				"linearMiB": 93.6875,
+				"spanOverLinear": 0.9426284189459639,
+				"hot90WithoutStackHoleSpanMiB": 56.4375
+			}
+		},
+		"flush": {
+			"accesses": 3816942028,
+			"linearPages": 1681,
+			"boundaryPages": [
+				67,
+				579
+			],
+			"accessShare": {
+				"static": 0.035652741383474844,
+				"stack": 0.7549711538348782,
+				"heap": 0.20937610478164695
+			},
+			"sets": {
+				"touched": {
+					"static": {
+						"pages": 22,
+						"accesses": 136084447,
+						"spanPages": 68,
+						"first": 0,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 2881681127,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 1051,
+						"accesses": 799176454,
+						"spanPages": 1091,
+						"first": 580,
+						"last": 1670
+					},
+					"all": {
+						"pages": 1075,
+						"accesses": 3816942028,
+						"spanPages": 1671,
+						"first": 0,
+						"last": 1670
+					}
+				},
+				"hot50": {
+					"static": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"stack": {
+						"pages": 1,
+						"accesses": 2858522081,
+						"spanPages": 1,
+						"first": 579,
+						"last": 579
+					},
+					"heap": {
+						"pages": 0,
+						"accesses": 0,
+						"spanPages": 0,
+						"first": null,
+						"last": null
+					},
+					"all": {
+						"pages": 1,
+						"accesses": 2858522081,
+						"spanPages": 1,
+						"first": 579,
+						"last": 579
+					}
+				},
+				"hot90": {
+					"static": {
+						"pages": 6,
+						"accesses": 131922021,
+						"spanPages": 53,
+						"first": 15,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 2881681127,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 15,
+						"accesses": 424849244,
+						"spanPages": 889,
+						"first": 580,
+						"last": 1468
+					},
+					"all": {
+						"pages": 23,
+						"accesses": 3438452392,
+						"spanPages": 1454,
+						"first": 15,
+						"last": 1468
+					}
+				},
+				"hot99": {
+					"static": {
+						"pages": 12,
+						"accesses": 135526682,
+						"spanPages": 68,
+						"first": 0,
+						"last": 67
+					},
+					"stack": {
+						"pages": 2,
+						"accesses": 2881681127,
+						"spanPages": 2,
+						"first": 578,
+						"last": 579
+					},
+					"heap": {
+						"pages": 399,
+						"accesses": 761566655,
+						"spanPages": 1071,
+						"first": 580,
+						"last": 1650
+					},
+					"all": {
+						"pages": 413,
+						"accesses": 3778774464,
+						"spanPages": 1651,
+						"first": 0,
+						"last": 1650
+					}
+				}
+			},
+			"window": {
+				"hot90SpanPages": 1454,
+				"hot90SpanMiB": 90.875,
+				"hot90Pages": 23,
+				"linearMiB": 105.0625,
+				"spanOverLinear": 0.8649613325401546,
+				"hot90WithoutStackHoleSpanMiB": 59
+			}
+		}
+	},
+	"classes": {
+		"counts": {
+			"stack": 1086101919,
+			"static": 89040162,
+			"hoisted": 16,
+			"checked": 732848609
+		},
+		"total": 1907990706,
+		"share": {
+			"stack": 0.569,
+			"static": 0.047,
+			"hoisted": 0,
+			"checked": 0.384
+		},
+		"exempt": 0.616
+	},
+	"hostCounts": {
+		"slow": 12,
+		"straddles": 12
+	},
+	"build": {
+		"a": {
+			"name": "a",
+			"options": {
+				"shape": "call"
+			},
+			"tableBase": 4456448,
+			"ms": 5368,
+			"bytes": 25219359,
+			"stats": {
+				"loads": 840838,
+				"stores": 402381,
+				"sites": {
+					"stack": 0,
+					"static": 0,
+					"hoisted": 0,
+					"checked": 1243219
+				},
+				"prologueChecks": 0,
+				"hoistedLoops": 0,
+				"hoistedKeys": 0,
+				"bytesIn": 14011467,
+				"bytesOut": 25219359
+			}
+		},
+		"b": {
+			"name": "b",
+			"options": {
+				"shape": "call",
+				"exempt": true
+			},
+			"tableBase": 4456448,
+			"ms": 5116,
+			"bytes": 18397395,
+			"stats": {
+				"loads": 840838,
+				"stores": 402381,
+				"sites": {
+					"stack": 739769,
+					"static": 31435,
+					"hoisted": 0,
+					"checked": 472015
+				},
+				"prologueChecks": 13662,
+				"hoistedLoops": 0,
+				"hoistedKeys": 0,
+				"bytesIn": 14011467,
+				"bytesOut": 18397395
+			}
+		},
+		"c": {
+			"name": "c",
+			"options": {
+				"shape": "call",
+				"exempt": true,
+				"hoist": true
+			},
+			"tableBase": 4456448,
+			"ms": 5100,
+			"bytes": 18398116,
+			"stats": {
+				"loads": 840838,
+				"stores": 402381,
+				"sites": {
+					"stack": 739769,
+					"static": 31435,
+					"hoisted": 36,
+					"checked": 471979
+				},
+				"prologueChecks": 13662,
+				"hoistedLoops": 8,
+				"hoistedKeys": 15,
+				"bytesIn": 14011467,
+				"bytesOut": 18398116
+			}
+		},
+		"bd": {
+			"name": "bd",
+			"options": {
+				"shape": "inline",
+				"exempt": true
+			},
+			"tableBase": 4456448,
+			"ms": 9036,
+			"bytes": 44354581,
+			"stats": {
+				"loads": 840838,
+				"stores": 402381,
+				"sites": {
+					"stack": 739769,
+					"static": 31435,
+					"hoisted": 0,
+					"checked": 472015
+				},
+				"prologueChecks": 13662,
+				"hoistedLoops": 0,
+				"hoistedKeys": 0,
+				"bytesIn": 14011467,
+				"bytesOut": 44354581
+			}
+		},
+		"bcd": {
+			"name": "bcd",
+			"options": {
+				"shape": "inline",
+				"exempt": true,
+				"hoist": true
+			},
+			"tableBase": 4456448,
+			"ms": 8441,
+			"bytes": 44353251,
+			"stats": {
+				"loads": 840838,
+				"stores": 402381,
+				"sites": {
+					"stack": 739769,
+					"static": 31435,
+					"hoisted": 36,
+					"checked": 471979
+				},
+				"prologueChecks": 13662,
+				"hoistedLoops": 8,
+				"hoistedKeys": 15,
+				"bytesIn": 14011467,
+				"bytesOut": 44353251
+			}
+		},
+		"trust": {
+			"name": "trust",
+			"options": {
+				"shape": "inline",
+				"exempt": true,
+				"hoist": true,
+				"trustAlign": true
+			},
+			"tableBase": 4456448,
+			"ms": 205619,
+			"bytes": 39175015,
+			"stats": {
+				"loads": 840838,
+				"stores": 402381,
+				"sites": {
+					"stack": 739769,
+					"static": 31435,
+					"hoisted": 36,
+					"checked": 471979
+				},
+				"prologueChecks": 13662,
+				"hoistedLoops": 8,
+				"hoistedKeys": 15,
+				"bytesIn": 14011467,
+				"bytesOut": 39175015
+			}
+		},
+		"count": {
+			"name": "count",
+			"options": {
+				"shape": "inline",
+				"exempt": true,
+				"hoist": true,
+				"count": true
+			},
+			"tableBase": 4456448,
+			"ms": 10358,
+			"bytes": 55542967,
+			"stats": {
+				"loads": 840838,
+				"stores": 402381,
+				"sites": {
+					"stack": 739769,
+					"static": 31435,
+					"hoisted": 36,
+					"checked": 471979
+				},
+				"prologueChecks": 13662,
+				"hoistedLoops": 8,
+				"hoistedKeys": 15,
+				"bytesIn": 14011467,
+				"bytesOut": 55542967
+			}
+		}
+	},
+	"bench": {
+		"default": {
+			"native": {
+				"n": 5,
+				"ms": [
+					880,
+					833,
+					816,
+					1002,
+					849
+				],
+				"medianMs": 849
+			},
+			"arms": {
+				"emit": {
+					"n": 5,
+					"stalledPairs": 0,
+					"unfilteredMedianRatio": 1.01,
+					"ms": [
+						843,
+						878,
+						824,
+						858,
+						920
+					],
+					"medianMs": 858,
+					"ratios": [
+						0.958,
+						1.054,
+						1.01,
+						0.856,
+						1.084
+					],
+					"medianRatio": 1.01,
+					"minRatio": 0.856,
+					"maxRatio": 1.084,
+					"tau": 0.01,
+					"tauMin": -0.144,
+					"tauMax": 0.084
+				},
+				"a": {
+					"n": 5,
+					"stalledPairs": 0,
+					"unfilteredMedianRatio": 4.43,
+					"ms": [
+						3908,
+						3690,
+						4032,
+						3668,
+						3582
+					],
+					"medianMs": 3690,
+					"ratios": [
+						4.441,
+						4.43,
+						4.941,
+						3.661,
+						4.219
+					],
+					"medianRatio": 4.43,
+					"minRatio": 3.661,
+					"maxRatio": 4.941,
+					"tau": 3.43,
+					"tauMin": 2.661,
+					"tauMax": 3.941
+				},
+				"b": {
+					"n": 4,
+					"stalledPairs": 1,
+					"unfilteredMedianRatio": 2.339,
+					"ms": [
+						2055,
+						1948,
+						2010,
+						1990
+					],
+					"medianMs": 2000,
+					"ratios": [
+						2.335,
+						2.339,
+						2.006,
+						2.344
+					],
+					"medianRatio": 2.337,
+					"minRatio": 2.006,
+					"maxRatio": 2.344,
+					"tau": 1.337,
+					"tauMin": 1.006,
+					"tauMax": 1.344
+				},
+				"c": {
+					"n": 5,
+					"stalledPairs": 0,
+					"unfilteredMedianRatio": 2.28,
+					"ms": [
+						2021,
+						1879,
+						1907,
+						1971,
+						1936
+					],
+					"medianMs": 1936,
+					"ratios": [
+						2.297,
+						2.256,
+						2.337,
+						1.967,
+						2.28
+					],
+					"medianRatio": 2.28,
+					"minRatio": 1.967,
+					"maxRatio": 2.337,
+					"tau": 1.28,
+					"tauMin": 0.967,
+					"tauMax": 1.337
+				},
+				"bd": {
+					"n": 5,
+					"stalledPairs": 0,
+					"unfilteredMedianRatio": 2.509,
+					"ms": [
+						2276,
+						2121,
+						2047,
+						2114,
+						2130
+					],
+					"medianMs": 2121,
+					"ratios": [
+						2.586,
+						2.546,
+						2.509,
+						2.11,
+						2.509
+					],
+					"medianRatio": 2.509,
+					"minRatio": 2.11,
+					"maxRatio": 2.586,
+					"tau": 1.509,
+					"tauMin": 1.11,
+					"tauMax": 1.586
+				},
+				"bcd": {
+					"n": 4,
+					"stalledPairs": 1,
+					"unfilteredMedianRatio": 2.587,
+					"ms": [
+						2140,
+						2111,
+						2126,
+						2336
+					],
+					"medianMs": 2133,
+					"ratios": [
+						2.569,
+						2.587,
+						2.122,
+						2.751
+					],
+					"medianRatio": 2.578,
+					"minRatio": 2.122,
+					"maxRatio": 2.751,
+					"tau": 1.578,
+					"tauMin": 1.122,
+					"tauMax": 1.751
+				},
+				"trust": {
+					"n": 5,
+					"stalledPairs": 0,
+					"unfilteredMedianRatio": 2.419,
+					"ms": [
+						2129,
+						2033,
+						2006,
+						2042,
+						2042
+					],
+					"medianMs": 2042,
+					"ratios": [
+						2.419,
+						2.441,
+						2.458,
+						2.038,
+						2.405
+					],
+					"medianRatio": 2.419,
+					"minRatio": 2.038,
+					"maxRatio": 2.458,
+					"tau": 1.419,
+					"tauMin": 1.038,
+					"tauMax": 1.458
+				},
+				"count": {
+					"n": 3,
+					"stalledPairs": 0,
+					"unfilteredMedianRatio": 3.413,
+					"ms": [
+						3444,
+						2596,
+						2843
+					],
+					"medianMs": 2843,
+					"ratios": [
+						3.914,
+						2.95,
+						3.413
+					],
+					"medianRatio": 3.413,
+					"minRatio": 2.95,
+					"maxRatio": 3.914,
+					"tau": 2.413,
+					"tauMin": 1.95,
+					"tauMax": 2.914
+				}
+			}
+		},
+		"optimized": {
+			"native": {
+				"n": 6,
+				"ms": [
+					763540,
+					764,
+					769,
+					825,
+					813,
+					772
+				],
+				"medianMs": 792.5
+			},
+			"arms": {
+				"b": {
+					"n": 5,
+					"stalledPairs": 1,
+					"unfilteredMedianRatio": 2.37,
+					"ms": [
+						1844,
+						1819,
+						1955,
+						1927,
+						1927
+					],
+					"medianMs": 1927,
+					"ratios": [
+						2.414,
+						2.365,
+						2.37,
+						2.37,
+						2.496
+					],
+					"medianRatio": 2.37,
+					"minRatio": 2.365,
+					"maxRatio": 2.496,
+					"tau": 1.37,
+					"tauMin": 1.365,
+					"tauMax": 1.496
+				},
+				"bcd": {
+					"n": 5,
+					"stalledPairs": 1,
+					"unfilteredMedianRatio": 1.87,
+					"ms": [
+						1425,
+						1508,
+						1546,
+						2474,
+						1434
+					],
+					"medianMs": 1508,
+					"ratios": [
+						1.865,
+						1.961,
+						1.874,
+						3.043,
+						1.858
+					],
+					"medianRatio": 1.874,
+					"minRatio": 1.858,
+					"maxRatio": 3.043,
+					"tau": 0.874,
+					"tauMin": 0.858,
+					"tauMax": 2.043
+				}
+			}
+		}
+	},
+	"renderHashesDistinct": 1,
+	"loadavg1": {
+		"min": 3.6923828125,
+		"max": 18.912109375
+	}
+}
