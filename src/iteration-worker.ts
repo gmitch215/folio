@@ -2,13 +2,25 @@ import { parentPort, workerData } from 'node:worker_threads';
 import {
 	iterationArguments,
 	iterationEntryBytes,
+	iterationShadowCopies,
 	iterationWindowCopy
 } from './iteration-layout.ts';
 import { markReadSummary, scanReads } from './read-scan.ts';
 import { markReadWindow, readWindowsAt } from './read-windows.ts';
 
-const { module, memory, arena, globals, iterate, locals, frameSize, port, signal, control } =
-	workerData;
+const {
+	module,
+	memory,
+	arena,
+	globals,
+	iterate,
+	locals,
+	frameSize,
+	port,
+	signal,
+	control,
+	ownership
+} = workerData;
 const L = arena;
 const ENTRY = iterationEntryBytes;
 const plain = new WebAssembly.Instance(module, { env: { memory } }).exports as any;
@@ -33,6 +45,13 @@ function runOne(job: any, s: number) {
 	const regionLow = win ? win.copy : frame;
 	if (frameSize) u8.copyWithin(frame, job.frameBase, job.frameBase + frameSize);
 	if (win) u8.copyWithin(win.copy, job.window.low, job.window.end);
+	// a certified window is private and untracked: the slot starts from the owner's bytes
+	const own = ownership ? iterationShadowCopies(top, frameSize, ownership.windows) : undefined;
+	if (own)
+		ownership.windows.forEach((w: { low: number; end: number; delta: string }, i: number) => {
+			u8.copyWithin(own.copies[i]!.copy, w.low, w.end);
+			exportsOf[w.delta].value = own.copies[i]!.delta;
+		});
 	const shadow = L.frameShadow + s * L.frameSlotBytes;
 	if (region) {
 		u8.fill(0, shadow, shadow + L.frameSlotBytes);
@@ -57,7 +76,7 @@ function runOne(job: any, s: number) {
 	exportsOf[globals.logLimit].value = limit;
 	exportsOf[globals.stampAddress].value = L.stamp;
 	const stack = exportsOf[globals.stackPointer];
-	if (stack) stack.value = win ? win.copy : frameSize ? frame : top;
+	if (stack) stack.value = own ? own.low : win ? win.copy : frameSize ? frame : top;
 	const slotted = exportsOf[globals.slotLow] !== undefined;
 	if (slotted) {
 		exportsOf[globals.exemptLow].value = top - L.slotBytes;

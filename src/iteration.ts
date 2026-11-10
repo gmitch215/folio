@@ -6,7 +6,7 @@ import {
 	Worker,
 	receiveMessageOnPort
 } from 'node:worker_threads';
-import type { IterationRoute } from './extract.ts';
+import type { IterationRoute, OwnershipPlan } from './extract.ts';
 import { inlineGlobals, lowerInline } from './inline.ts';
 import {
 	type IterationAdmission,
@@ -25,6 +25,7 @@ import {
 	iterationArena,
 	iterationEntryBytes,
 	iterationGranules,
+	iterationShadowCopies,
 	iterationWindowCopy
 } from './iteration-layout.ts';
 import {
@@ -736,6 +737,11 @@ export class IterationPool {
 		if (arena.base + arena.bytes > arena.memoryBytes)
 			throw new RangeError('arena does not fit in memory');
 		if (frameSize >= arena.slotBytes) throw new RangeError('slot is smaller than the frame');
+		if (route.ownership) {
+			const shadow = route.ownership.windows.reduce((n, w) => n + w.end - w.low + 64, 0);
+			if (arena.slotBytes - frameSize - shadow < windowStackBytes)
+				throw new RangeError('the slot cannot hold the certified windows and a stack');
+		}
 		const lowered = lowerInline(route.module, {
 			readGranule: iterationGranules.read,
 			writeGranule: iterationGranules.write,
@@ -774,6 +780,7 @@ export class IterationPool {
 								iterate: route.iterate,
 								locals: route.locals,
 								frameSize,
+								ownership: route.ownership,
 								port: channel.port2,
 								signal,
 								control: pool.#control.buffer
@@ -835,6 +842,18 @@ export class IterationPool {
 			throw new RangeError('invalid trip count');
 		const A = this.arena;
 		const report = (this.#report = newReport(Math.min(this.width, Math.max(job.trip, 0))));
+		const owned = this.#route.ownership;
+		const why = owned && this.#refuseOwnership(owned, job.frameBase);
+		if (why) {
+			// the certified windows cannot be privatized here, so the program runs as written
+			report.windowRefused = why;
+			report.stopped = 'no-admission';
+			for (let k = 0; k < job.trip; k++) {
+				report.serial++;
+				job.replay(k);
+			}
+			return report;
+		}
 		// serial time per iteration as far as it is known: iteration 0, then timed serial blocks, then
 		// the workers' own times scaled by `kappa`, the ratio of serial to tracked time
 		let estimate: IterationEstimate = { estimateMs: 0 };
@@ -1377,6 +1396,18 @@ export class IterationPool {
 		window?: IterationWindow
 	): void {
 		const A = this.arena;
+		const owned = this.#route.ownership;
+		if (owned && kept > 0) {
+			// the last kept iteration wrote every copy-out byte, so its copy is the serial window
+			const last = outcomes[kept - 1]!;
+			const top = A.slots + (last.index - outcomes[0]!.index + 1) * A.slotBytes;
+			const { copies } = iterationShadowCopies(top, A.frameBytes, owned.windows);
+			for (const [from, end] of owned.copyOut) {
+				const i = owned.windows.findIndex((w) => from >= w.low && end <= w.end);
+				const at = copies[i]!.copy - owned.windows[i]!.low;
+				this.#u8.copyWithin(from, from + at, end + at);
+			}
+		}
 		if (!A.frameBytes && !window) return;
 		for (let k = 0; k < kept; k++) {
 			const o = outcomes[k]!;
@@ -1428,6 +1459,28 @@ export class IterationPool {
 			return 'the window overlaps the owner frame';
 		if (A.slotBytes - A.frameBytes - bytes - 64 < windowStackBytes)
 			return `the window leaves less than ${windowStackBytes} bytes of stack in a slot`;
+	}
+
+	// why the certified windows cannot be privatized for this call, or undefined when they can
+	#refuseOwnership(plan: OwnershipPlan, frameBase: number): string | undefined {
+		const A = this.arena;
+		const meets = (w: { low: number; end: number }, low: number, end: number) =>
+			w.low < end && w.end > low;
+		for (const w of plan.windows) {
+			if (w.end > this.#memoryBytes) return 'a certified window passes the end of memory';
+			if (meets(w, A.base, A.base + A.bytes)) return 'a certified window overlaps the arena';
+			if (
+				this.#grown &&
+				meets(
+					w,
+					this.#grown.base,
+					this.#grown.base + this.#grown.inFlight * this.#grown.bytes
+				)
+			)
+				return 'a certified window overlaps the grown logs';
+			if (A.frameBytes && meets(w, frameBase, frameBase + A.frameBytes))
+				return 'a certified window overlaps the owner frame';
+		}
 	}
 
 	// address ranges a read window must stay out of: the arena and the grown logs

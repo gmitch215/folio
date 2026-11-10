@@ -215,6 +215,26 @@ export function iterationArguments(
 	return values;
 }
 
+/**
+ * Where one slot keeps the private copies of certified windows: each below the one before it, the
+ * first below the frame, each at its window's offset modulo 64. `low` is the lowest address used,
+ * where the slot's stack may start.
+ */
+export function iterationShadowCopies(
+	top: number,
+	frameSize: number,
+	windows: readonly { low: number; end: number }[]
+): { copies: { copy: number; delta: number }[]; low: number } {
+	let at = top - frameSize;
+	const copies = windows.map((w) => {
+		const base = at - (w.end - w.low);
+		const copy = base - ((((base - w.low) % 64) + 64) % 64);
+		at = copy;
+		return { copy, delta: copy - w.low };
+	});
+	return { copies, low: at };
+}
+
 /** An address window the iterations of a loop run on slot-private copies of. */
 export interface IterationWindow {
 	/** First byte, a multiple of 64. */

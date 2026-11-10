@@ -1420,6 +1420,8 @@ export interface StackRoute {
 	stack?: { name: string; initial: number };
 	/** Immutable globals with a constant initializer that the set reads. */
 	constants: string[];
+	/** Delta globals of an ownership redirect that the set reads; the worker module exports them. */
+	redirect?: string[];
 	/** The worker set: closed under calls, in module order. */
 	functions: string[];
 	/** The members that sit on a call cycle. */
@@ -1490,6 +1492,17 @@ function tableShapes(m: binaryen.Module) {
 		for (const name of s.data) if (name) shape.functions.add(name);
 	}
 	return { shapes, written };
+}
+
+/** Name prefix of the mutable delta globals an ownership redirect adds; the stack route sets them aside. */
+export const redirectDelta = '__folio_od';
+
+/** What an ownership redirect hands the iteration executor: windows with their delta globals and the copy-out. */
+export interface OwnershipPlan {
+	/** each window `[low, end)` and the exported mutable global that holds `copy - low` */
+	windows: { low: number; end: number; delta: string }[];
+	/** byte ranges the last record's copy supplies */
+	copyOut: [number, number][];
 }
 
 /** Computes the stack route of a module. A failure is reported in `diagnostics`, never thrown. */
@@ -1597,7 +1610,17 @@ export function stackRoute(original: Uint8Array, options: AdmissionOptions = {})
 			bodies.push(body);
 		}
 		const referenced = new Set(bodies.flatMap((body) => [...body.refs]));
-		const named = [...globals.keys()].filter((name) => referenced.has(name));
+		const deltas = [...globals.keys()].filter(
+			(name) =>
+				name.startsWith(redirectDelta) &&
+				referenced.has(name) &&
+				globals.get(name)!.mutable &&
+				!globals.get(name)!.refusal
+		);
+		if (deltas.length) route.redirect = deltas;
+		const named = [...globals.keys()].filter(
+			(name) => referenced.has(name) && !deltas.includes(name)
+		);
 		const mutable = named.filter((name) => globals.get(name)!.mutable);
 		if (mutable.length > 1) {
 			for (const name of mutable.slice(1))
@@ -1724,6 +1747,8 @@ export interface IterationRoute {
 	iterate?: string;
 	stackExport?: string;
 	module?: Uint8Array;
+	/** set when `module` carries an ownership redirect: the windows each slot keeps a private copy of */
+	ownership?: OwnershipPlan;
 	diagnostics: string[];
 }
 
@@ -2157,6 +2182,10 @@ function outlineOwner(
 			const g = binaryen.getGlobalInfo(m.getGlobal(name));
 			w.addGlobal(name, g.type, false, w.copyExpression(g.init));
 		}
+		for (const name of context.route.redirect ?? []) {
+			w.addGlobal(name, binaryen.i32, true, w.i32.const(0));
+			w.addGlobalExport(name, name);
+		}
 		for (const name of context.route.functions) {
 			const g = binaryen.getFunctionInfo(m.getFunction(name));
 			w.addFunction(name, g.params, g.results, g.vars, w.copyExpression(g.body));
@@ -2196,7 +2225,16 @@ function outlineOwner(
 		const stackExport = '__folio_stack';
 		if (stack) w.addGlobalExport(stack, stackExport);
 		if (!w.validate()) throw new Error('invalid iteration module');
-		const bytes = w.emitBinary();
+		// a redirect keeps names so the stack route still sets its delta globals aside
+		const named = Boolean(context.route.redirect?.length);
+		const before = (binaryen as any).getDebugInfo();
+		if (named) (binaryen as any).setDebugInfo(true);
+		let bytes: Uint8Array;
+		try {
+			bytes = w.emitBinary();
+		} finally {
+			(binaryen as any).setDebugInfo(before);
+		}
 		new WebAssembly.Module(Uint8Array.from(bytes));
 		const trip = entry(counter);
 		const locals: IterationLocal[] = [
