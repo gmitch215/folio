@@ -1,10 +1,11 @@
 import binaryen from 'binaryen';
 import { expect, test } from 'vitest';
 import {
-	TranslateRefusal,
 	initTable,
 	translate,
+	TranslateRefusal,
 	translationHost,
+	type CensusSite,
 	type TranslateOptions
 } from '../../scripts/research/elastic-translate.ts';
 import {
@@ -12,6 +13,7 @@ import {
 	ladderRenders
 } from '../../scripts/research/translation-duration-summary.ts';
 import { hotSet, regionOf, spanReport } from '../../scripts/research/translation-span.ts';
+import { medianCi, routeTau, tauTable } from '../../scripts/research/translation-tau2-summary.ts';
 import { classShares, pairedTau } from '../../scripts/research/translation-tax-summary.ts';
 
 const PAGE = 65536;
@@ -253,6 +255,181 @@ test('hoist lifts the lookup of a loop-invariant base out of a call-free loop', 
 	expect(() => moved.exports.sum!(6 * PAGE, 2)).toThrow('page miss');
 });
 
+test('floor checks no access, so a page the table does not hold reads like the original', () => {
+	const original = assemble(
+		'(func (export "read") (param i32) (result i32) (i32.load offset=4 (local.get 0)))'
+	);
+	const { bytes, stats } = translate(original, { ...options, floor: true });
+	expect(stats.sites.checked).toBe(0);
+	expect(stats.sites.static).toBe(1);
+	expect(() =>
+		instantiate(translate(original, options).bytes, true).exports.read!(6 * PAGE)
+	).toThrow('page miss');
+	expect(instantiate(bytes, true).exports.read!(6 * PAGE)).toBe(
+		instantiate(original, false).exports.read!(6 * PAGE)
+	);
+});
+
+test('census counts each checked access in its own slot and leaves the access untranslated', () => {
+	const original = assemble(`
+		(func (export "f") (param $p i32) (result i32)
+			(i32.store offset=8 (local.get $p) (i32.const 7))
+			(i32.add (i32.load (local.get $p)) (i32.load offset=4 (local.get $p))))`);
+	const base = 10 * PAGE;
+	const sites: CensusSite[] = [];
+	const { bytes, stats } = translate(original, { ...options, census: { base, sites } });
+	expect(stats.sites.checked).toBe(3);
+	expect(sites.map((s) => [s.id, s.store, s.bytes, s.offset])).toEqual([
+		[0, true, 4, 8],
+		[1, false, 4, 0],
+		[2, false, 4, 4]
+	]);
+	const moved = instantiate(bytes, true);
+	new Int32Array(moved.memory.buffer, base, 3).fill(0);
+	const native = instantiate(original, false);
+	for (const p of [64, PAGE - 8, 6 * PAGE])
+		expect(moved.exports.f!(p)).toBe(native.exports.f!(p));
+	expect([...new Int32Array(moved.memory.buffer, base, 4)]).toEqual([
+		3,
+		3,
+		3,
+		expect.any(Number)
+	]);
+});
+
+test('elision labels split sound, region and oracle groups at calls, writes and other lookups', () => {
+	const original = assemble(`
+		(func $g)
+		(func (export "interleave") (param $p i32) (param $q i32) (result i32)
+			(i32.add (i32.load (local.get $p))
+			(i32.add (i32.load offset=4 (local.get $p))
+			(i32.add (i32.load (local.get $q))
+				(i32.load offset=8 (local.get $p))))))
+		(func (export "calls") (param $p i32) (result i32)
+			(drop (i32.load (local.get $p)))
+			(call $g)
+			(drop (i32.load offset=4 (local.get $p)))
+			(local.set $p (i32.add (local.get $p) (i32.const 8)))
+			(i32.load offset=4 (local.get $p)))
+		(func (export "chase") (param $p i32) (result i32)
+			(drop (i32.load (local.get $p)))
+			(drop (i32.load (i32.load offset=4 (local.get $p))))
+			(i32.load offset=8 (local.get $p)))
+		(func (export "walk") (param $p i32) (param $n i32) (param $q i32)
+			(loop $l
+				(drop (i32.load (local.get $q)))
+				(drop (i32.load8_u (local.get $p)))
+				(local.set $p (i32.add (local.get $p) (i32.const 1)))
+				(br_if $l (i32.sub (local.get $n) (i32.const 1)))))`);
+	const sites: CensusSite[] = [];
+	translate(original, { ...options, census: { base: 10 * PAGE, sites } });
+	const label = (fn: number) =>
+		sites.filter((s) => s.fn === fn).map((s) => `${s.sound[0]}${s.region[0]}${s.oracle[0]}`);
+	const fns = Object.fromEntries(
+		['interleave', 'calls', 'chase', 'walk'].map((n, i) => [n, i + 1])
+	) as Record<string, number>;
+	expect(label(fns.interleave!)).toEqual(['lll', 'mmm', 'lll', 'lmm']);
+	expect(label(fns.calls!)).toEqual(['lll', 'lll', 'lll']);
+	expect(sites.filter((s) => s.fn === fns.chase).map((s) => s.shape)).toEqual([
+		'local',
+		'local',
+		'other',
+		'local'
+	]);
+	expect(label(fns.chase!)).toEqual(['lll', 'mmm', 'nnn', 'llm']);
+	const walk = sites.filter((s) => s.fn === fns.walk);
+	expect(walk.map((s) => s.loop)).toEqual(['invariant', 'affine']);
+	expect(walk.map((s) => s.loopCalls || s.loopInner)).toEqual([false, false]);
+});
+
+test('a group of accesses off one pointer pays one lookup and agrees with the original at every page edge', () => {
+	const original = assemble(`
+		(func (export "sum") (param $p i32) (result i32)
+			(i32.store offset=12 (local.get $p) (i32.const 77))
+			(i32.add (i32.add (i32.load (local.get $p)) (i32.load offset=4 (local.get $p)))
+				(i32.add (i32.load8_u offset=8 (local.get $p)) (i32.load offset=12 (local.get $p)))))`);
+	const plain = translate(original, { ...options, count: true });
+	const grouped = translate(original, { ...options, count: true, groups: true });
+	expect(plain.stats.sites.checked).toBe(5);
+	expect(grouped.stats.sites.checked).toBe(5);
+	expect(grouped.stats.groupSites).toBe(4);
+	const moved = instantiate(grouped.bytes, true);
+	const native = instantiate(original, false);
+	for (const p of [0, 4, PAGE - 16, PAGE - 12, PAGE - 4, 2 * PAGE - 17, 3 * PAGE - 20])
+		expect(
+			attempt(() => moved.exports.sum!(p)),
+			`p=${p}`
+		).toEqual(attempt(() => native.exports.sum!(p)));
+	const c = counted(grouped.bytes);
+	c.e.sum(PAGE + 64);
+	expect([c.e.__folio_n_checked.value, c.e.__folio_n_member.value]).toEqual([5, 4]);
+	expect(c.host.counts.slow).toBe(0);
+});
+
+test('a group never reuses a page once another lookup could have evicted it', () => {
+	const original = assemble(`
+		(func (export "mix") (param $p i32) (param $q i32) (result i32) (local $s i32)
+			(local.set $s (i32.load (local.get $p)))
+			(local.set $s (i32.add (local.get $s) (i32.load offset=4 (local.get $p))))
+			(local.set $s (i32.add (local.get $s) (i32.load (local.get $q))))
+			(local.set $s (i32.add (local.get $s) (i32.load offset=8 (local.get $p))))
+			(i32.store offset=12 (local.get $p) (local.get $s))
+			(i32.add (local.get $s) (i32.load offset=12 (local.get $p))))`);
+	const { bytes, stats } = translate(original, { ...options, groups: true });
+	expect(stats.groupSites).toBe(3);
+	const A = 1;
+	const B = 2;
+	const FRAME = 5;
+	const memory = new WebAssembly.Memory({ initial: 12, maximum: 12 });
+	const view = new Uint8Array(memory.buffer);
+	const backing = new Map<number, Uint8Array>();
+	for (const page of [A, B]) {
+		const data = new Uint8Array(PAGE).map((_, i) => (i * 31 + page * 7) & 255);
+		backing.set(page, data);
+	}
+	const table = new Int32Array(memory.buffer, TABLE, 65536).fill(-1);
+	let resident = -1;
+	let handlerCalls = 0;
+	const frame = () => view.subarray(FRAME * PAGE, (FRAME + 1) * PAGE);
+	const evict = () => {
+		if (resident < 0) return;
+		backing.get(resident)!.set(frame());
+		table[resident] = -1;
+		resident = -1;
+	};
+	const instance = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(bytes)), {
+		env: { memory },
+		folio: {
+			slow(pointer: number, offset: number, size: number) {
+				handlerCalls++;
+				const address = pointer + offset;
+				const page = address >>> 16;
+				if ((address + size - 1) >>> 16 !== page) throw new Error('span straddles pages');
+				if (resident !== page) {
+					evict();
+					frame().set(backing.get(page)!);
+					table[page] = (FRAME - page) * PAGE;
+					resident = page;
+				}
+				return table[page]!;
+			},
+			stack_miss() {
+				throw new Error('stack');
+			}
+		}
+	});
+	const mix = instance.exports.mix as (p: number, q: number) => number;
+	const native = instantiate(original, false);
+	const nativeView = new Uint8Array(native.memory.buffer);
+	for (const page of [A, B]) nativeView.set(backing.get(page)!, page * PAGE);
+	const got = mix(A * PAGE + 16, B * PAGE + 32);
+	expect(got).toBe(native.exports.mix!(A * PAGE + 16, B * PAGE + 32));
+	evict();
+	expect(handlerCalls).toBe(3);
+	for (const page of [A, B])
+		expect(backing.get(page)).toEqual(nativeView.slice(page * PAGE, (page + 1) * PAGE));
+});
+
 test('counters report the dynamic share of each access class', () => {
 	const original = assemble(`
 		(func (export "f") (param i32) (result i32) (local $fp i32)
@@ -271,6 +448,157 @@ test('counters report the dynamic share of each access class', () => {
 	e.f(64);
 	e.f(64);
 	expect([e.__folio_n_stack.value, e.__folio_n_checked.value]).toEqual([4, 2]);
+});
+
+function counted(bytes: Uint8Array, delta?: Record<number, number>) {
+	const memory = new WebAssembly.Memory({ initial: 12, maximum: 12 });
+	initTable(memory, TABLE, 4);
+	const table = new Int32Array(memory.buffer, TABLE, 65536);
+	for (const [page, value] of Object.entries(delta ?? {})) table[Number(page)] = value;
+	const host = translationHost(memory, TABLE);
+	const instance = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(bytes)), {
+		env: { memory },
+		...host.imports
+	});
+	return { memory, host, e: instance.exports as Record<string, any> };
+}
+
+const walk = `
+	(func (export "walk") (param $p i32) (param $n i32) (result i32) (local $s i32)
+		(loop $l
+			(local.set $s (i32.add (local.get $s) (i32.load8_u (i32.add (local.get $p) (local.get $n)))))
+			(local.set $n (i32.sub (local.get $n) (i32.const 1)))
+			(br_if $l (local.get $n)))
+		(local.get $s))`;
+
+for (const cache of ['function', 'site'] as const) {
+	test(`cache ${cache}: every width agrees with the original and a hit skips the lookup`, () => {
+		const original = everyAccess();
+		const { bytes } = translate(original, { ...options, cache });
+		const native = instantiate(original, false);
+		const moved = instantiate(bytes, true);
+		for (const [op] of loads)
+			for (const suffix of ['', '_o'])
+				for (const address of addresses) {
+					const name = op.replace('.', '_') + suffix;
+					expect(
+						attempt(() => moved.exports[name]!(address)),
+						`${name} @ ${address}`
+					).toEqual(attempt(() => native.exports[name]!(address)));
+				}
+		const a = new Uint8Array(native.memory.buffer, 0, 4 * PAGE);
+		const b = new Uint8Array(moved.memory.buffer, 0, 4 * PAGE);
+		expect(Buffer.compare(a, b)).toBe(0);
+	});
+
+	test(`cache ${cache}: the delta of the cached page is used and a page change refreshes it`, () => {
+		const original = assemble(walk);
+		const { bytes } = translate(original, { ...options, cache, count: true });
+		const plain = translate(original, options);
+		const run = (b: Uint8Array) => {
+			const m = counted(b, { 1: 2 * PAGE, 2: 3 * PAGE });
+			const view = new Uint8Array(m.memory.buffer);
+			for (let i = 0; i < 64; i++) {
+				view[3 * PAGE + i] = i + 1;
+				view[PAGE + i] = 100;
+			}
+			return m;
+		};
+		const cached = run(bytes);
+		const reference = run(plain.bytes);
+		expect(cached.e.walk(2 * PAGE - 4, 40)).toBe(reference.e.walk(2 * PAGE - 4, 40));
+		expect(cached.e.walk(PAGE + 0, 40)).toBe(reference.e.walk(PAGE + 0, 40));
+		expect(cached.e.walk(PAGE + 0, 40)).toBe(reference.e.walk(PAGE + 0, 40));
+		expect(cached.host.counts.slow).toBe(reference.host.counts.slow);
+		// 120 loads, two page changes in the first call: far fewer misses than loads
+		const misses = cached.e.__folio_n_miss.value;
+		expect(misses).toBeLessThan(10);
+		expect(misses).toBeGreaterThanOrEqual(2);
+	});
+
+	test(`cache ${cache}: a page the table does not hold still traps, first access included`, () => {
+		const original = assemble(
+			'(func (export "read") (param i32) (result i32) (i32.load (local.get 0)))'
+		);
+		const { bytes } = translate(original, { ...options, cache });
+		expect(() => counted(bytes).e.read(5 * PAGE + 16)).toThrow(
+			'folio.translate: page miss at 0x00050010 (4 bytes)'
+		);
+		expect(() => counted(bytes).e.read(0xfffffff0 | 0)).toThrow();
+		expect(() => counted(bytes).e.read(-1)).toThrow();
+	});
+}
+
+test('cache site keeps its entry across calls and cache function does not', () => {
+	const original = assemble(
+		'(func (export "read") (param i32) (result i32) (i32.load (local.get 0)))'
+	);
+	const misses = (cache: 'function' | 'site') => {
+		const m = counted(translate(original, { ...options, cache, count: true }).bytes);
+		for (let i = 0; i < 5; i++) m.e.read(PAGE + 8 * i);
+		return m.e.__folio_n_miss.value;
+	};
+	expect(misses('site')).toBe(1);
+	expect(misses('function')).toBe(5);
+});
+
+test('an access inside a pinned range skips the table and one that leaves it uses the table', () => {
+	const original = assemble(
+		'(func (export "read") (param i32) (result i32) (i32.load (local.get 0)))'
+	);
+	const arenas = [{ lo: 2 * PAGE, size: 2 * PAGE }];
+	const { bytes } = translate(original, { ...options, arenas, count: true });
+	const m = counted(bytes, { 2: -1, 3: -1 });
+	new DataView(m.memory.buffer).setUint32(2 * PAGE + 8, 0x01020304, true);
+	expect(m.e.read(2 * PAGE + 8)).toBe(0x01020304);
+	expect(m.e.read(4 * PAGE - 4)).toBeTypeOf('number');
+	expect(m.host.counts.slow).toBe(0);
+	expect(m.e.__folio_n_miss.value).toBe(0);
+	expect(m.e.read(PAGE + 4)).toBeTypeOf('number');
+	expect(m.e.__folio_n_miss.value).toBe(1);
+	expect(() => m.e.read(4 * PAGE - 2)).toThrow('page miss');
+	expect(() => m.e.read(2 * PAGE - 1)).toThrow('page straddle');
+	expect(() => m.e.read(4 * PAGE)).toThrow('page miss');
+});
+
+test('a pinned range ignores sites whose offset reaches the range start', () => {
+	const original = assemble(`
+		(func (export "low") (param i32) (result i32) (i32.load offset=8 (local.get 0)))
+		(func (export "flat") (param i32) (result i32) (i32.load (local.get 0)))`);
+	const { bytes } = translate(original, { ...options, arenas: [{ lo: 4, size: PAGE }] });
+	const m = counted(bytes, { 0: -1 });
+	expect(m.e.flat(8)).toBeTypeOf('number');
+	expect(() => m.e.low(0)).toThrow('page miss');
+	expect(() => m.e.flat(0xfffffff8 | 0)).toThrow();
+});
+
+test('every width agrees with the original under a pinned range, edges included', () => {
+	const original = everyAccess();
+	const arenas = [{ lo: PAGE, size: 2 * PAGE }];
+	const { bytes } = translate(original, { ...options, arenas });
+	const native = instantiate(original, false);
+	const moved = instantiate(bytes, true);
+	for (const [op] of loads)
+		for (const suffix of ['', '_o'])
+			for (const address of addresses) {
+				const name = op.replace('.', '_') + suffix;
+				expect(
+					attempt(() => moved.exports[name]!(address)),
+					`${name} @ ${address}`
+				).toEqual(attempt(() => native.exports[name]!(address)));
+			}
+	for (const [op, type] of stores)
+		for (const suffix of ['', '_o'])
+			for (const address of addresses) {
+				const name = op.replace('.', '_') + suffix;
+				const value =
+					type === 'i64' ? 0x1122334455667788n : type === 'i32' ? 0x55aa33cc : 1.5;
+				attempt(() => native.exports[name]!(address, value));
+				attempt(() => moved.exports[name]!(address, value));
+			}
+	const a = new Uint8Array(native.memory.buffer, 0, 4 * PAGE);
+	const b = new Uint8Array(moved.memory.buffer, 0, 4 * PAGE);
+	expect(Buffer.compare(a, b)).toBe(0);
 });
 
 const row = (arm: string, rep: number, requestMs: number) => ({
@@ -380,4 +708,65 @@ test('a ladder sample gives one cumulative rung per render and tau per rung', ()
 	expect((t[0]!.arms.bcd as any).tau).toBe(1.75);
 	expect((t[1]!.arms.bcd as any).tau).toBeCloseTo(1.5, 5);
 	expect(ladderRenders(rows, 'default').bcd).toEqual({ 1: 275, 2: 100 });
+});
+
+test('a median interval needs six samples and takes order statistics around the middle', () => {
+	expect(medianCi([1, 2, 3, 4, 5])).toBeNull();
+	expect(medianCi([1, 2, 3, 4, 5, 6])).toEqual([1, 6]);
+	expect(medianCi([10, 9, 8, 7, 6, 5, 4, 3, 2, 1])).toEqual([2, 9]);
+});
+
+test('a route only supports a gate claim with ten quiet pairs, and a zma arm pairs with its own native', () => {
+	const sample = (arm: string, rep: number, requestMs: number, load = 1) => ({
+		config: 'default',
+		site: 'stock',
+		workload: 'front',
+		arm,
+		rep,
+		requestMs,
+		ok: true,
+		loadStart: [load],
+		loadEnd: [load]
+	});
+	const quiet: ReturnType<typeof sample>[] = [];
+	for (let rep = 1; rep <= 10; rep++)
+		quiet.push(
+			sample('native', rep, 100),
+			sample('bcd', rep, 180),
+			sample('native-zma', rep, 200),
+			sample('r-all-zma', rep, 300)
+		);
+	const bcd = routeTau(quiet, 'stock', 'front', 'bcd')!;
+	expect([bcd.tau, bcd.n, bcd.claimGrade, bcd.meetsGate]).toEqual([0.8, 10, true, true]);
+	expect(bcd.tauCi).toEqual([0.8, 0.8]);
+	const zma = routeTau(quiet, 'stock', 'front', 'r-all-zma', 'native-zma')!;
+	expect(zma.tau).toBe(0.5);
+	const loud = quiet.map((r) => (r.rep === 3 && r.arm === 'bcd' ? { ...r, loadEnd: [6] } : r));
+	const noisy = routeTau(loud, 'stock', 'front', 'bcd')!;
+	expect([noisy.samplesAtLoadLimit, noisy.claimGrade, noisy.meetsGate]).toEqual([
+		1,
+		false,
+		false
+	]);
+	const few = routeTau(
+		quiet.filter((r) => r.rep <= 9),
+		'stock',
+		'front',
+		'bcd'
+	)!;
+	expect([few.n, few.claimGrade]).toEqual([9, false]);
+	const slow = quiet.map((r) => (r.arm === 'bcd' ? { ...r, requestMs: 400 } : r));
+	expect(routeTau(slow, 'stock', 'front', 'bcd')!.meetsGate).toBe(false);
+	const table = tauTable(
+		[
+			...quiet,
+			{ ...quiet[0]!, arm: 'bcd', normalizedSha256: 'a' },
+			{ ...quiet[1]!, normalizedSha256: 'b' }
+		],
+		['bcd', 'r-all-zma']
+	);
+	expect(table[0]!.renderHashesDistinct).toBe(2);
+	expect(table.map((t) => [t.route, t.nativeN, t.nativeMedianMs])).toEqual([
+		['stock:front', 10, 100]
+	]);
 });

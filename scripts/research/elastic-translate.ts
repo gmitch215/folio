@@ -1,11 +1,13 @@
-import binaryenTyped from 'binaryen';
+import type binaryenTyped from 'binaryen';
+import { analyzeElision, type ElideSite } from './elastic-elide.ts';
 import { MISS_ENTRY } from './elastic-translate-host.ts';
+import { binaryen, children, type Setter } from './elastic-walk.ts';
 
 export * from './elastic-translate-host.ts';
 
 const LAST_BYTE_OF_PAGE = 0x10000;
-// the package typings omit the expression namespaces and the C entry points this pass uses
-const binaryen: any = binaryenTyped;
+// the last page of a 4 GiB space, which a 32-bit memory cannot hold
+const CACHE_EMPTY = -LAST_BYTE_OF_PAGE;
 
 export interface TranslateOptions {
 	/** `call` sends every checked access through one shared helper, `inline` expands the lookup */
@@ -16,8 +18,18 @@ export interface TranslateOptions {
 	hoist?: boolean;
 	/** skip the page-crossing check where the align immediate is at least the access width */
 	trustAlign?: boolean;
-	/** add a counter per access class, exported as `__folio_n_<class>` */
+	/** add a counter per access class, exported as `__folio_n_<class>`, and `__folio_n_miss` */
 	count?: boolean;
+	/** keep the last page base and delta per function (locals) or per site (globals) */
+	cache?: 'function' | 'site';
+	/** ranges the host keeps resident and identity-mapped; an access wholly inside one skips the table */
+	arenas?: { lo: number; size: number }[];
+	/** census arm: count each checked access in its own i32 slot at `base` and leave it untranslated */
+	census?: { base: number; sites: CensusSite[] };
+	/** one lookup per run of accesses off one pointer when nothing between them can run the pager */
+	groups?: boolean;
+	/** cost floor: no access is checked, so only the rest of the pass (stack bound, module size) remains */
+	floor?: boolean;
 	/** address of the 65,536-entry i32 table inside linear memory */
 	tableBase: number;
 	/** constant addresses below this stay untranslated when `exempt` is set */
@@ -26,6 +38,8 @@ export interface TranslateOptions {
 	stackFloor?: number;
 }
 
+export type CensusSite = Omit<ElideSite, 'expr'> & { id: number; fn: number };
+
 export interface TranslateStats {
 	loads: number;
 	stores: number;
@@ -33,6 +47,9 @@ export interface TranslateStats {
 	prologueChecks: number;
 	hoistedLoops: number;
 	hoistedKeys: number;
+	cacheSites: number;
+	arenaSites: number;
+	groupSites: number;
 	bytesIn: number;
 	bytesOut: number;
 }
@@ -47,112 +64,6 @@ export class TranslateRefusal extends Error {
 }
 
 const i32 = binaryen.i32;
-const refused: Record<number, string> = {
-	[binaryen.AtomicRMWId]: 'atomics',
-	[binaryen.AtomicCmpxchgId]: 'atomics',
-	[binaryen.AtomicWaitId]: 'atomics',
-	[binaryen.AtomicNotifyId]: 'atomics',
-	[binaryen.AtomicFenceId]: 'atomics',
-	[binaryen.MemoryCopyId]: 'memory.copy',
-	[binaryen.MemoryFillId]: 'memory.fill',
-	[binaryen.MemoryInitId]: 'memory.init',
-	[binaryen.SIMDLoadId]: 'simd memory access',
-	[binaryen.SIMDLoadStoreLaneId]: 'simd memory access',
-	[binaryen.TryId]: 'exception handling'
-};
-const leaves = new Set<number>([
-	binaryen.ConstId,
-	binaryen.LocalGetId,
-	binaryen.GlobalGetId,
-	binaryen.MemorySizeId,
-	binaryen.NopId,
-	binaryen.UnreachableId,
-	binaryen.RefFuncId,
-	binaryen.DataDropId
-]);
-
-type Setter = (expression: number) => void;
-type Visit = (child: number, set: Setter) => void;
-
-// every expression kind the walk knows; anything else is recorded and refused
-function children(e: number, id: number, visit: Visit, unknown: Set<string>) {
-	switch (id) {
-		case binaryen.BlockId:
-			for (let k = 0, n = binaryen.Block.getNumChildren(e); k < n; k++)
-				visit(binaryen.Block.getChildAt(e, k), (x) => binaryen.Block.setChildAt(e, k, x));
-			return;
-		case binaryen.IfId:
-			visit(binaryen.If.getCondition(e), (x) => binaryen.If.setCondition(e, x));
-			visit(binaryen.If.getIfTrue(e), (x) => binaryen.If.setIfTrue(e, x));
-			if (binaryen.If.getIfFalse(e))
-				visit(binaryen.If.getIfFalse(e), (x) => binaryen.If.setIfFalse(e, x));
-			return;
-		case binaryen.LoopId:
-			visit(binaryen.Loop.getBody(e), (x) => binaryen.Loop.setBody(e, x));
-			return;
-		case binaryen.BreakId:
-			if (binaryen.Break.getCondition(e))
-				visit(binaryen.Break.getCondition(e), (x) => binaryen.Break.setCondition(e, x));
-			if (binaryen.Break.getValue(e))
-				visit(binaryen.Break.getValue(e), (x) => binaryen.Break.setValue(e, x));
-			return;
-		case binaryen.SwitchId:
-			visit(binaryen.Switch.getCondition(e), (x) => binaryen.Switch.setCondition(e, x));
-			if (binaryen.Switch.getValue(e))
-				visit(binaryen.Switch.getValue(e), (x) => binaryen.Switch.setValue(e, x));
-			return;
-		case binaryen.CallId:
-			for (let k = 0, n = binaryen.Call.getNumOperands(e); k < n; k++)
-				visit(binaryen.Call.getOperandAt(e, k), (x) => binaryen.Call.setOperandAt(e, k, x));
-			return;
-		case binaryen.CallIndirectId:
-			visit(binaryen.CallIndirect.getTarget(e), (x) => binaryen.CallIndirect.setTarget(e, x));
-			for (let k = 0, n = binaryen.CallIndirect.getNumOperands(e); k < n; k++)
-				visit(binaryen.CallIndirect.getOperandAt(e, k), (x) =>
-					binaryen.CallIndirect.setOperandAt(e, k, x)
-				);
-			return;
-		case binaryen.LocalSetId:
-			visit(binaryen.LocalSet.getValue(e), (x) => binaryen.LocalSet.setValue(e, x));
-			return;
-		case binaryen.GlobalSetId:
-			visit(binaryen.GlobalSet.getValue(e), (x) => binaryen.GlobalSet.setValue(e, x));
-			return;
-		case binaryen.LoadId:
-			visit(binaryen.Load.getPtr(e), (x) => binaryen.Load.setPtr(e, x));
-			return;
-		case binaryen.StoreId:
-			visit(binaryen.Store.getPtr(e), (x) => binaryen.Store.setPtr(e, x));
-			visit(binaryen.Store.getValue(e), (x) => binaryen.Store.setValue(e, x));
-			return;
-		case binaryen.UnaryId:
-			visit(binaryen.Unary.getValue(e), (x) => binaryen.Unary.setValue(e, x));
-			return;
-		case binaryen.BinaryId:
-			visit(binaryen.Binary.getLeft(e), (x) => binaryen.Binary.setLeft(e, x));
-			visit(binaryen.Binary.getRight(e), (x) => binaryen.Binary.setRight(e, x));
-			return;
-		case binaryen.SelectId:
-			visit(binaryen.Select.getIfTrue(e), (x) => binaryen.Select.setIfTrue(e, x));
-			visit(binaryen.Select.getIfFalse(e), (x) => binaryen.Select.setIfFalse(e, x));
-			visit(binaryen.Select.getCondition(e), (x) => binaryen.Select.setCondition(e, x));
-			return;
-		case binaryen.DropId:
-			visit(binaryen.Drop.getValue(e), (x) => binaryen.Drop.setValue(e, x));
-			return;
-		case binaryen.ReturnId:
-			if (binaryen.Return.getValue(e))
-				visit(binaryen.Return.getValue(e), (x) => binaryen.Return.setValue(e, x));
-			return;
-		case binaryen.MemoryGrowId:
-			visit(binaryen.MemoryGrow.getDelta(e), (x) => binaryen.MemoryGrow.setDelta(e, x));
-			return;
-		default:
-			if (leaves.has(id)) return;
-			unknown.add(refused[id] ?? `expression kind ${id}`);
-	}
-}
-
 type Class = 'stack' | 'static' | 'hoisted' | 'checked';
 
 interface Key {
@@ -180,6 +91,9 @@ export function translate(input: Uint8Array, options: TranslateOptions) {
 		prologueChecks: 0,
 		hoistedLoops: 0,
 		hoistedKeys: 0,
+		cacheSites: 0,
+		arenaSites: 0,
+		groupSites: 0,
 		bytesIn: input.length,
 		bytesOut: 0
 	};
@@ -209,11 +123,17 @@ function run(
 	stats: TranslateStats
 ) {
 	const unknown = new Set<string>();
+	if (options.groups && (shape === 'call' || options.cache || options.arenas || options.census))
+		throw new TypeError(
+			'folio.translate: groups needs the inline shape and no cache, arenas or census'
+		);
 	if (mod.getNumGlobals() === 0) throw new TranslateRefusal(['no stack pointer global']);
 	const spName = binaryen.getGlobalInfo(mod.getGlobalByIndex(0)).name;
 	const staticLimit = options.staticLimit ?? 0;
 	const stackFloor = options.stackFloor ?? 0;
 	const exempt = !!options.exempt;
+	const arenas = options.arenas ?? [];
+	let siteCount = 0;
 	const imports = { slow: 'folio_slow', stackMiss: 'folio_stack_miss' };
 	mod.addFunctionImport(imports.slow, 'folio', 'slow', binaryen.createType([i32, i32, i32]), i32);
 	mod.addFunctionImport(
@@ -225,7 +145,7 @@ function run(
 	);
 	const counters: Record<string, string> = {};
 	if (options.count)
-		for (const cls of ['stack', 'static', 'hoisted', 'checked']) {
+		for (const cls of ['stack', 'static', 'hoisted', 'checked', 'miss', 'member']) {
 			counters[cls] = `__folio_n_${cls}`;
 			mod.addGlobal(counters[cls]!, i32, true, mod.i32.const(0));
 			mod.addGlobalExport(counters[cls]!, counters[cls]!);
@@ -347,6 +267,7 @@ function run(
 			return false;
 		};
 
+		let fnCache = false;
 		const vars = new Map<string, number>();
 		const named = (name: string, type: number) => {
 			const k = `${name}:${type}`;
@@ -400,34 +321,167 @@ function run(
 		const needsStraddle = (bytes: number, align: number) =>
 			bytes > 1 && !(options.trustAlign && align >= bytes);
 
+		const missCount = (): number[] =>
+			options.count
+				? [
+						mod.global.set(
+							counters.miss!,
+							mod.i32.add(mod.global.get(counters.miss!, i32), mod.i32.const(1))
+						)
+					]
+				: [];
+
+		// the table path, behind a one-entry cache when the site can use one
+		const tablePath = (p: number, o: number, bytes: number, align: number): number => {
+			const straddle = needsStraddle(bytes, align);
+			// a hit needs p and p + o inside the cached page, so no wrapped sum can hit
+			const window = LAST_BYTE_OF_PAGE + 1 - bytes - o;
+			if (!options.cache || window < 1) {
+				const e = E();
+				return mod.block(
+					null,
+					[...lookup(o, bytes, straddle, e, p), mod.i32.add(get(p), get(e))],
+					i32
+				);
+			}
+			stats.cacheSites++;
+			let base: () => number;
+			let delta: () => number;
+			let save: (page: number) => number[];
+			let dest: number;
+			if (options.cache === 'function') {
+				fnCache = true;
+				const cb = named('cb', i32);
+				const cd = named('cd', i32);
+				base = () => get(cb);
+				delta = () => get(cd);
+				dest = cd;
+				save = (page) => [mod.local.set(cb, page)];
+			} else {
+				const gb = `__folio_cb${siteCount}`;
+				const gd = `__folio_cd${siteCount++}`;
+				mod.addGlobal(gb, i32, true, mod.i32.const(CACHE_EMPTY));
+				mod.addGlobal(gd, i32, true, mod.i32.const(0));
+				base = () => mod.global.get(gb, i32);
+				delta = () => mod.global.get(gd, i32);
+				dest = E();
+				save = (page) => [mod.global.set(gb, page), mod.global.set(gd, get(dest))];
+			}
+			const page = o !== 0 ? get(A()) : get(p);
+			return mod.block(
+				null,
+				[
+					mod.if(
+						mod.i32.ge_u(mod.i32.sub(get(p), base()), mod.i32.const(window)),
+						mod.block(null, [
+							...lookup(o, bytes, straddle, dest, p),
+							...save(mod.i32.and(page, mod.i32.const(-LAST_BYTE_OF_PAGE))),
+							...missCount()
+						])
+					),
+					mod.i32.add(get(p), delta())
+				],
+				i32
+			);
+		};
+
 		const translated = (ptr: number, o: number, bytes: number, align: number): number => {
 			if (shape === 'call')
 				return mod.call('folio_xl', [ptr, mod.i32.const(o), mod.i32.const(bytes)], i32);
-			const e = E();
 			// a pointer that is already a local is used where it is
 			const direct =
 				binaryen.getExpressionId(ptr) === binaryen.LocalGetId
 					? binaryen.LocalGet.getIndex(ptr)
 					: undefined;
 			const p = direct ?? P();
-			return mod.block(
+			const set = direct === undefined ? [mod.local.set(p, ptr)] : [];
+			// an arena hit leaves the address as it is; o below lo keeps a wrapped sum out
+			let outside: number | undefined;
+			for (const { lo, size } of arenas) {
+				if (o >= lo) continue;
+				const out = mod.i32.ge_u(
+					mod.i32.add(get(p), mod.i32.const((o - lo) | 0)),
+					mod.i32.const((size - bytes + 1) | 0)
+				);
+				outside = outside === undefined ? out : mod.i32.and(outside, out);
+			}
+			if (outside === undefined)
+				return mod.block(null, [...set, tablePath(p, o, bytes, align)], i32);
+			stats.arenaSites++;
+			const miss = mod.block(
 				null,
-				[
-					...(direct === undefined ? [mod.local.set(p, ptr)] : []),
-					...lookup(o, bytes, needsStraddle(bytes, align), e, p),
-					mod.i32.add(get(p), get(e))
-				],
+				[...(options.cache ? [] : missCount()), tablePath(p, o, bytes, align)],
 				i32
 			);
+			return mod.block(null, [...set, mod.if(outside, miss, get(p))], i32);
 		};
 
-		const counted = (cls: Class, ptr: number): number => {
+		const counted = (cls: Class | 'member', ptr: number): number => {
 			if (!options.count) return ptr;
 			const name = counters[cls]!;
 			return mod.block(
 				null,
 				[
 					mod.global.set(name, mod.i32.add(mod.global.get(name, i32), mod.i32.const(1))),
+					ptr
+				],
+				i32
+			);
+		};
+
+		const census = options.census;
+		let analysis = new Map<number, ElideSite>();
+		const siteOf = (e: number) => {
+			const site = options.groups ? analysis.get(e) : undefined;
+			return site && site.shape !== 'other' ? site : undefined;
+		};
+		const groupDelta = new Map<ElideSite, number>();
+		const groupTranslated = (site: ElideSite, ptr: number): number => {
+			if (site.sound === 'member') {
+				const gd = groupDelta.get(site.lead!);
+				if (gd === undefined)
+					throw new Error(`folio.translate: group member before its leader in ${fname}`);
+				stats.groupSites++;
+				return counted('member', mod.i32.add(ptr, get(gd)));
+			}
+			const direct =
+				binaryen.getExpressionId(ptr) === binaryen.LocalGetId
+					? binaryen.LocalGet.getIndex(ptr)
+					: undefined;
+			const p = direct ?? P();
+			const set = direct === undefined ? [mod.local.set(p, ptr)] : [];
+			const gd = binaryen._BinaryenFunctionAddVar(fn, i32);
+			groupDelta.set(site, gd);
+			const span = site.hi! - site.lo!;
+			return mod.block(
+				null,
+				[...set, ...lookup(site.lo!, span, span > 1, gd, p), mod.i32.add(get(p), get(gd))],
+				i32
+			);
+		};
+		const access = (e: number, ptr: number, o: number, bytes: number, align: number) => {
+			const site = siteOf(e);
+			return site ? groupTranslated(site, ptr) : translated(ptr, o, bytes, align);
+		};
+		const tally = (e: number, ptr: number): number => {
+			const { expr, lead, ...site } = analysis.get(e)!;
+			void expr;
+			void lead;
+			const id = census!.sites.length;
+			census!.sites.push({ ...site, id, fn: index });
+			const slot = mod.i32.const(census!.base + 4 * id);
+			return mod.block(
+				null,
+				[
+					mod.i32.store(
+						0,
+						4,
+						slot,
+						mod.i32.add(
+							mod.i32.load(0, 4, mod.i32.const(census!.base + 4 * id)),
+							mod.i32.const(1)
+						)
+					),
 					ptr
 				],
 				i32
@@ -453,6 +507,7 @@ function run(
 		};
 
 		const classify = (ptr: number, o: number, bytes: number): Class => {
+			if (options.floor) return 'static';
 			if (exempt) {
 				const c = constOf(ptr);
 				if (c !== undefined && (c >>> 0) + o + bytes <= staticLimit) return 'static';
@@ -572,10 +627,11 @@ function run(
 				const bytes = binaryen.Load.getBytes(e);
 				const cls = classify(ptr, o, bytes);
 				stats.sites[cls]++;
-				if (cls === 'checked')
+				if (census && cls === 'checked') binaryen.Load.setPtr(e, tally(e, ptr));
+				else if (cls === 'checked')
 					binaryen.Load.setPtr(
 						e,
-						counted(cls, translated(ptr, o, bytes, binaryen.Load.getAlign(e)))
+						counted(cls, access(e, ptr, o, bytes, binaryen.Load.getAlign(e)))
 					);
 				else if (cls === 'hoisted') {
 					const k = keyOf(ptr, o)!;
@@ -620,21 +676,25 @@ function run(
 					binaryen.Store.setPtr(e, counted(cls, mod.i32.add(ptr, get(key.local))));
 					return level;
 				}
+				if (census) {
+					binaryen.Store.setPtr(e, tally(e, ptr));
+					return level;
+				}
 				const vid = binaryen.getExpressionId(value);
 				const simple =
 					vid === binaryen.ConstId ||
 					vid === binaryen.LocalGetId ||
 					vid === binaryen.GlobalGetId;
 				const align = binaryen.Store.getAlign(e);
-				if (simple) {
-					binaryen.Store.setPtr(e, counted(cls, translated(ptr, o, bytes, align)));
+				if (simple || siteOf(e)?.sound === 'member') {
+					binaryen.Store.setPtr(e, counted(cls, access(e, ptr, o, bytes, align)));
 					return level;
 				}
 				// translate after the value, so a miss inside the value cannot invalidate the frame
 				const depth = valueLevel + 1;
 				const tp = named(`sp${depth}`, i32);
 				const tv = named(`sv${depth}`, valueType);
-				binaryen.Store.setPtr(e, counted(cls, translated(get(tp), o, bytes, align)));
+				binaryen.Store.setPtr(e, counted(cls, access(e, get(tp), o, bytes, align)));
 				binaryen.Store.setValue(e, get(tv, valueType));
 				set(mod.block(null, [mod.local.set(tp, ptr), mod.local.set(tv, value), e]));
 				return depth;
@@ -678,7 +738,26 @@ function run(
 			return level;
 		};
 
+		if (census || options.groups)
+			analysis = new Map(
+				analyzeElision(
+					body,
+					(_e, ptr, o, bytes) => classify(ptr, o, bytes) === 'checked',
+					unknown
+				).map((s) => [s.expr, s])
+			);
 		rewrite(body, (x) => binaryen.Function.setBody(fn, x));
+		if (fnCache) {
+			const rewritten = binaryen.Function.getBody(fn);
+			binaryen.Function.setBody(
+				fn,
+				mod.block(
+					null,
+					[mod.local.set(named('cb', i32), mod.i32.const(CACHE_EMPTY)), rewritten],
+					binaryen.getExpressionType(rewritten)
+				)
+			);
+		}
 	}
 	if (unknown.size) throw new TranslateRefusal([...unknown].sort());
 	if (!mod.validate()) throw new TypeError('folio.translate produced an invalid module');
