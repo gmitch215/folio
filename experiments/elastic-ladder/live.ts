@@ -213,9 +213,10 @@ export async function runLive(
 	deps: Deps,
 	config: LadderConfig,
 	cells: readonly Cell[],
-	options: { approved: boolean; hold?: ReadyHold }
+	options: { approved: boolean; hold?: ReadyHold; paid?: boolean }
 ) {
 	assert.ok(options.approved, 'live run needs --approved');
+	const paid = options.paid === true;
 	remember(deps.creds.account);
 	remember(deps.creds.token);
 	const priced = priceCells(cells, config);
@@ -231,27 +232,30 @@ export async function runLive(
 		planningLimit: config.caps.planningDailyRows
 	});
 	if (
-		lacksRows(spent.rowsWritten, rowsOf(priced.total)) ||
-		spent.rowsWritten + rowsOf(priced.total) > config.caps.planningDailyRows
+		!paid &&
+		(lacksRows(spent.rowsWritten, rowsOf(priced.total)) ||
+			spent.rowsWritten + rowsOf(priced.total) > config.caps.planningDailyRows)
 	) {
 		deps.log({ skipped: quotaNotice(spent.rowsWritten, rowsOf(priced.total)) });
 		return { skipped: true, spent };
 	}
-	try {
-		const subs = await deps.api('/subscriptions');
-		assert.ok(
-			!subs.some(
-				(row: any) =>
-					row.state === 'enabled' &&
-					/workers.*(paid|standard|bundled|unbound)/i.test(row.rate_plan?.id ?? '')
-			),
-			'paid Workers account refused'
-		);
-	} catch (error) {
-		// the known Free token has no billing scope; any other failure stops the run
-		if (!String(error).includes('Authentication error')) throw error;
-		deps.log({ plan: 'not verified, billing scope unavailable' });
-	}
+	if (paid) deps.log({ plan: 'paid account selected with --paid' });
+	else
+		try {
+			const subs = await deps.api('/subscriptions');
+			assert.ok(
+				!subs.some(
+					(row: any) =>
+						row.state === 'enabled' &&
+						/workers.*(paid|standard|bundled|unbound)/i.test(row.rate_plan?.id ?? '')
+				),
+				'paid Workers account refused'
+			);
+		} catch (error) {
+			// the known Free token has no billing scope; any other failure stops the run
+			if (!String(error).includes('Authentication error')) throw error;
+			deps.log({ plan: 'not verified, billing scope unavailable' });
+		}
 	const inventoryErrors: string[] = [];
 	const baseline = await inventory(deps.api, (path, error) =>
 		inventoryErrors.push(`${path}: ${redact(String(error))}`)
@@ -269,7 +273,7 @@ export async function runLive(
 	const stamp = new Date().toISOString().replace(/[:.]/g, '-');
 	const dir = new URL(`runs/${stamp}/`, deps.outDir);
 	await mkdir(dir, { recursive: true });
-	const name = `folio-e2-${crypto.randomUUID().slice(0, 8)}`;
+	const name = `${paid ? 'cfw-e2e' : 'folio-e2'}-${crypto.randomUUID().slice(0, 8)}`;
 	const secret = crypto.randomUUID();
 	remember(secret);
 	await save(dir, 'budget.json', {
@@ -277,7 +281,7 @@ export async function runLive(
 		cells: cells.map((c) => ({ ...c.variant, workload: c.workload, repeat: c.repeat })),
 		planned: priced,
 		expectedSpendUsd: 0,
-		plan: 'Free'
+		plan: paid ? 'Paid' : 'Free'
 	});
 	let deployed = false;
 	let failure: string | undefined;
@@ -351,7 +355,7 @@ export async function runLive(
 
 // recovers a run whose driver died: retire the class and check the account against a baseline digest
 export async function cleanupRun(deps: Deps, name: string, baselineSha256: string) {
-	assert.match(name, /^folio-e2-[0-9a-f]{8}$/);
+	assert.match(name, /^(folio-e2|cfw-e2e)-[0-9a-f]{8}$/);
 	const known = await deps.api('/workers/scripts');
 	if (known.some((row: { id: string }) => row.id === name)) await retire(deps.api, name, classes);
 	const after = await inventory(deps.api);
@@ -373,6 +377,7 @@ export function parse(argv: string[]) {
 			'repeat-offset': { type: 'string', default: '0' },
 			'row-cap': { type: 'string' },
 			approved: { type: 'boolean', default: false },
+			paid: { type: 'boolean', default: false },
 			cleanup: { type: 'string' },
 			baseline: { type: 'string' },
 			'ready-streak': { type: 'string', default: '1' },
@@ -445,7 +450,11 @@ async function main() {
 		return;
 	}
 	console.log(
-		JSON.stringify(scrub(await runLive(deps, config, cells, { approved: true, hold })), null, 2)
+		JSON.stringify(
+			scrub(await runLive(deps, config, cells, { approved: true, hold, paid: values.paid })),
+			null,
+			2
+		)
 	);
 }
 

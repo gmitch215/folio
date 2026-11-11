@@ -504,7 +504,7 @@ function liveDeps(cloud: ReturnType<typeof fakeCloud>, out: string, spent = 5, l
 		gql: gqlFor(spent) as any,
 		fetchImpl: ((input: any, init: any) => {
 			const url = String(input);
-			expect(url).toMatch(/^https:\/\/folio-e2-[0-9a-f]{8}\./);
+			expect(url).toMatch(/^https:\/\/(folio-e2|cfw-e2e)-[0-9a-f]{8}\./);
 			// the deployed Worker holds a random secret; the local world holds a fixed one
 			const headers = { ...init?.headers, authorization: `Bearer ${SECRET}` };
 			return world.fetchImpl(url.replace(/^https:\/\/[^/]+/, BASE), { ...init, headers });
@@ -581,6 +581,47 @@ test('a live run refuses without --approved, over the row cap, or on a day with 
 	const skipped: any = await runLive(deps, one.config, one.cells, { approved: true });
 	expect(skipped.skipped).toBe(true);
 	expect(cloud.scripts.size).toBe(0);
+});
+
+test('--paid skips the Free plan refusals and deploys under a cfw-e2e name', async () => {
+	const base = fakeCloud();
+	const names: string[] = [];
+	const cloud = {
+		...base,
+		api: async (path: string, init: any = {}) => {
+			if (path === '/subscriptions')
+				return [{ state: 'enabled', rate_plan: { id: 'workers_paid_standard' } }];
+			if (init.method === 'PUT') names.push(/\/scripts\/([^/]+)$/.exec(path)![1]!);
+			return base.api(path, init);
+		}
+	};
+	const config = { ...TINY, caps: { ...TINY.caps, rows: 100000 } };
+	const cells = cellsFor([{ ...VARIANTS.v4!, frames: 8 }], ['dense'], config.pages);
+	await expect(
+		runLive(liveDeps(cloud as any, join(dir, 'paid-refused')), config, cells, {
+			approved: true
+		})
+	).rejects.toThrow(/paid Workers account refused/);
+	expect(parse(['--paid']).values.paid).toBe(true);
+	expect(parse([]).values.paid).toBe(false);
+	const log: object[] = [];
+	const out = join(dir, 'paid');
+	const result: any = await runLive(liveDeps(cloud as any, out, 99_999_999, log), config, cells, {
+		approved: true,
+		paid: true
+	});
+	expect(result.skipped).toBe(false);
+	expect(result.failure).toBeUndefined();
+	expect(result.cleanup.accountEqualsBaseline).toBe(true);
+	expect(names.filter((n) => n.startsWith('cfw-e2e-')).length).toBeGreaterThan(0);
+	expect(names.every((n) => /^cfw-e2e-[0-9a-f]{8}$/.test(n))).toBe(true);
+	expect(log).toContainEqual({ plan: 'paid account selected with --paid' });
+	const [run] = readdirSync(join(out, 'runs'));
+	expect(JSON.parse(readFileSync(join(out, 'runs', run!, 'budget.json'), 'utf8')).plan).toBe(
+		'Paid'
+	);
+	const recovered = await cleanupRun(liveDeps(cloud as any, out), 'cfw-e2e-00000000', 'x');
+	expect(recovered.equalsBaseline).toBe(false);
 });
 
 async function captured(
