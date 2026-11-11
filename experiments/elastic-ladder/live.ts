@@ -11,7 +11,16 @@ import { createApi, credentials, inventory, inventoryDiff, retire } from '../lib
 import { lacksRows, quotaNotice } from '../lib/quota.ts';
 import { makeLadderCtx, runCell } from './driver.ts';
 import type { Cell, LadderConfig, Variant } from './plan.ts';
-import { LIVE, RESIDENT, VARIANTS, cellsFor, priceCells, requestsOf, rowsOf } from './plan.ts';
+import {
+	EPHEMERAL,
+	LIVE,
+	RESIDENT,
+	VARIANTS,
+	cellsFor,
+	priceCells,
+	requestsOf,
+	rowsOf
+} from './plan.ts';
 import type { Workload } from './programs.ts';
 import { WORKLOADS } from './programs.ts';
 
@@ -84,6 +93,14 @@ async function save(dir: URL, file: string, value: unknown) {
 }
 
 // the main module is the one .js file; every .wasm beside it is an imported module
+export const liveCredentials = (env: Record<string, string | undefined>) =>
+	credentials({
+		FOLIO_CLOUDFLARE_ACCOUNT_ID: env.FOLIO_CLOUDFLARE_ACCOUNT_ID,
+		FOLIO_CLOUDFLARE_API_TOKEN: env.FOLIO_CLOUDFLARE_API_TOKEN,
+		FREE_CLOUDFLARE_ACCOUNT_ID: env.FREE_CLOUDFLARE_ACCOUNT_ID,
+		FREE_CLOUDFLARE_API_TOKEN: env.FREE_CLOUDFLARE_API_TOKEN
+	});
+
 export async function readBundle(dir: string) {
 	const files = await readdir(dir);
 	const main = files.find((f) => f.endsWith('.js') && !f.endsWith('.js.map'));
@@ -134,25 +151,58 @@ async function deploy(deps: Deps, name: string, secret: string) {
 	};
 }
 
-async function ready(deps: Deps, ctx: Awaited<ReturnType<typeof makeLadderCtx>>, polls = 30) {
+export interface ReadyHold {
+	// consecutive 200s required before init
+	streak: number;
+	// ms to wait after the ready answer before init
+	settle: number;
+}
+
+const READY_DEFAULT: ReadyHold = { streak: 1, settle: 0 };
+
+export async function ready(
+	deps: Pick<Deps, 'sleep'>,
+	ctx: Awaited<ReturnType<typeof makeLadderCtx>>,
+	polls = 30,
+	hold: ReadyHold = READY_DEFAULT
+) {
+	const began = performance.now();
+	let lastStatus = 0;
+	const note = (count: number, ok: boolean) =>
+		ctx.sink({
+			level: 'ready',
+			ts: new Date().toISOString(),
+			polls: count,
+			ok,
+			lastStatus,
+			elapsedMs: performance.now() - began
+		});
+	let streak = 0;
 	for (let i = 0; i < polls; i++) {
 		ctx.counters.guard({});
 		ctx.counters.issue({}, i > 0);
 		let ok = false;
+		lastStatus = 0;
 		try {
 			const response = await ctx.fetchImpl(`${ctx.base}/ready`, {
 				headers: { authorization: `Bearer ${ctx.secret}` },
 				signal: AbortSignal.timeout(ctx.timeoutMs)
 			});
+			lastStatus = response.status;
 			await response.arrayBuffer();
 			ok = response.ok;
 		} catch {
 			// not up yet
 		}
 		ctx.counters.record(0, { requests: 1 });
-		if (ok) return;
+		streak = ok ? streak + 1 : 0;
+		if (ok && streak >= hold.streak) {
+			if (hold.settle > 0) await deps.sleep(hold.settle);
+			return note(i + 1, true);
+		}
 		await deps.sleep(1000);
 	}
+	await note(polls, false);
 	throw new Abort('worker did not become ready');
 }
 
@@ -163,7 +213,7 @@ export async function runLive(
 	deps: Deps,
 	config: LadderConfig,
 	cells: readonly Cell[],
-	options: { approved: boolean }
+	options: { approved: boolean; hold?: ReadyHold }
 ) {
 	assert.ok(options.approved, 'live run needs --approved');
 	remember(deps.creds.account);
@@ -250,7 +300,7 @@ export async function runLive(
 			rawFile: new URL('raw.jsonl', dir),
 			log: deps.log
 		});
-		await ready(deps, ctx);
+		await ready(deps, ctx, 30, options.hold);
 		for (const cell of cells) {
 			const result = await runCell(ctx, cell, config);
 			results.push({ variant: cell.variant.name, workload: cell.workload, ...result });
@@ -324,10 +374,21 @@ export function parse(argv: string[]) {
 			'row-cap': { type: 'string' },
 			approved: { type: 'boolean', default: false },
 			cleanup: { type: 'string' },
-			baseline: { type: 'string' }
+			baseline: { type: 'string' },
+			'ready-streak': { type: 'string', default: '1' },
+			'ready-settle': { type: 'string', default: '0' }
 		}
 	});
-	const known: Record<string, Variant> = { ...VARIANTS, ...RESIDENT };
+	const hold: ReadyHold = {
+		streak: Number(values['ready-streak']),
+		settle: Number(values['ready-settle'])
+	};
+	assert.ok(
+		Number.isInteger(hold.streak) && hold.streak >= 1,
+		'--ready-streak is an integer >= 1'
+	);
+	assert.ok(hold.settle >= 0, '--ready-settle is ms >= 0');
+	const known: Record<string, Variant> = { ...VARIANTS, ...RESIDENT, ...EPHEMERAL };
 	const names = values.variants!.split(',');
 	for (const n of names) assert.ok(n in known, `unknown variant ${n}`);
 	const workloads = values.workloads!.split(',') as Workload[];
@@ -354,20 +415,17 @@ export function parse(argv: string[]) {
 		Number(values.repeats),
 		Number(values['repeat-offset'])
 	);
-	return { values, config, cells };
+	return { values, config, cells, hold };
 }
 
 async function main() {
-	const { values, config, cells } = parse(process.argv.slice(2));
+	const { values, config, cells, hold } = parse(process.argv.slice(2));
 	const env = process.env;
 	if (!values.approved && !values.cleanup) {
 		console.log(JSON.stringify(dryRun(config, cells, env), null, 2));
 		return;
 	}
-	const creds = credentials({
-		FREE_CLOUDFLARE_ACCOUNT_ID: env.FREE_CLOUDFLARE_ACCOUNT_ID,
-		FREE_CLOUDFLARE_API_TOKEN: env.FREE_CLOUDFLARE_API_TOKEN
-	});
+	const creds = liveCredentials(env);
 	remember(creds.account);
 	remember(creds.token);
 	const { bundle } = await import('../lib/bundle.ts');
@@ -387,7 +445,7 @@ async function main() {
 		return;
 	}
 	console.log(
-		JSON.stringify(scrub(await runLive(deps, config, cells, { approved: true })), null, 2)
+		JSON.stringify(scrub(await runLive(deps, config, cells, { approved: true, hold })), null, 2)
 	);
 }
 

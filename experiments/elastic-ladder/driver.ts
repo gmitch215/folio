@@ -81,6 +81,27 @@ export interface Reply {
 
 const minuteOf = (iso: string) => iso.slice(0, 16) + ':00Z';
 
+// the headers that classify a platform failure; others can carry cookies
+const KEPT_HEADERS = [
+	'cf-ray',
+	'content-type',
+	'content-length',
+	'server',
+	'date',
+	'retry-after',
+	'cf-cache-status',
+	'x-front-colo'
+];
+const BODY_END_CHARS = 1024;
+
+const keptHeaders = (headers: Headers) =>
+	Object.fromEntries(
+		KEPT_HEADERS.flatMap((name) => {
+			const value = headers.get(name);
+			return value === null ? [] : [[name, value]];
+		})
+	);
+
 async function call(
 	ctx: LadderCtx,
 	cell: Cell,
@@ -98,6 +119,8 @@ async function call(
 	const wallAt = Date.now();
 	const stopBeat = op === 'run' ? heartbeat(ctx, cell, segment) : () => {};
 	let status = 0;
+	let statusLine = '';
+	let seenHeaders: Record<string, string> = {};
 	let colo: string | null = null;
 	let body: any = null;
 	let text = '';
@@ -121,6 +144,8 @@ async function call(
 			}
 		);
 		status = response.status;
+		statusLine = `${status} ${response.statusText}`.trim();
+		seenHeaders = keptHeaders(response.headers);
 		colo = response.headers.get('x-front-colo') || null;
 		if (status === 200 && response.headers.get('x-done') === '0') {
 			checkpoint = new Uint8Array(await response.arrayBuffer());
@@ -167,9 +192,18 @@ async function call(
 		op,
 		segment,
 		status,
+		statusLine,
+		headers: seenHeaders,
 		wallMs,
 		wallClockMs,
 		colo,
+		...(!ok && text
+			? {
+					bodyChars: text.length,
+					bodyHead: text.slice(0, BODY_END_CHARS),
+					bodyTail: text.slice(-BODY_END_CHARS)
+				}
+			: {}),
 		...summary,
 		stats,
 		error: error ?? (status === 200 ? summary.error : text.slice(0, ERROR_BODY_CHARS))
@@ -185,7 +219,8 @@ export const configOf = (cell: Cell): RunConfig => ({
 	cold: cell.variant.cold,
 	rowBytes: cell.variant.rowBytes,
 	quantum: Number.isFinite(cell.variant.quantum) ? cell.variant.quantum : null,
-	resident: cell.variant.resident === true
+	resident: cell.variant.resident === true,
+	ephemeral: cell.variant.ephemeral === true
 });
 
 export interface CellResult {

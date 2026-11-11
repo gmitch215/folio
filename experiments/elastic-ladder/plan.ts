@@ -16,6 +16,9 @@ export interface Variant {
 	quantum: number;
 	// every page in the object's memory with no pager and no store; frames and cold are unused, dense only
 	resident?: boolean;
+	// dirty frames are written only on eviction and the end of a request writes nothing; the store is
+	// not the state afterwards, so a result is never a persistent-state result
+	ephemeral?: boolean;
 }
 
 export const VARIANTS: Record<string, Variant> = {
@@ -33,6 +36,11 @@ export const RESIDENT: Record<string, Variant> = {
 		quantum: Infinity,
 		resident: true
 	}
+};
+
+// kept apart from VARIANTS for the same reason; a different durability contract
+export const EPHEMERAL: Record<string, Variant> = {
+	v4e: { name: 'v4e', frames: 64, cold: 0, rowBytes: PAGE, quantum: Infinity, ephemeral: true }
 };
 
 export interface LadderConfig {
@@ -72,6 +80,7 @@ export function checkVariant(v: Variant) {
 	if (!Number.isInteger(v.frames) || v.frames < 1) throw new Error('frames must be >= 1');
 	if (!Number.isInteger(v.cold) || v.cold < 0) throw new Error('cold must be >= 0');
 	if (!(v.quantum >= 1)) throw new Error('quantum must be >= 1');
+	if (v.ephemeral && v.cold > 0) throw new Error('an ephemeral variant needs cold 0');
 	if (![1024, 2048, 4096, 8192, 16384, 32768, PAGE].includes(v.rowBytes))
 		throw new Error('rowBytes must divide 65536 and be at least 1024');
 }
@@ -107,8 +116,11 @@ export function priceCell(cell: Cell, config: LadderConfig): LadderPrice {
 	const init = cell.workload === 'dense' ? 0 : cell.pages;
 	p.writeRows = (init + model.storeWrites) * rpp;
 	p.schemaRows = config.assumptions.schemaRowsPerTable;
-	p.cleanupRows = cell.pages * rpp;
-	p.readRows = (model.storeReads + cell.pages) * rpp;
+	// an ephemeral dense run stores only what it evicted, and verify reads the rest from its frames
+	const ephemeralDense = cell.variant.ephemeral && cell.workload === 'dense';
+	p.cleanupRows = (ephemeralDense ? model.distinctStored : cell.pages) * rpp;
+	p.readRows =
+		(model.storeReads + cell.pages - (cell.variant.ephemeral ? model.droppedDirty : 0)) * rpp;
 	return p;
 }
 

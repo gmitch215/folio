@@ -299,6 +299,8 @@ export function counts(trace: readonly Op[]) {
 export interface TierConfig {
 	frames: number;
 	cold: number;
+	// dirty frames are written only on eviction; nothing is written back when the request ends
+	ephemeral?: boolean;
 }
 
 export interface TierResult {
@@ -310,14 +312,23 @@ export interface TierResult {
 	compressions: number;
 	decompressions: number;
 	coldEvictions: number;
+	// pages the run wrote to the store at least once
+	distinctStored: number;
+	// dirty pages still resident when an ephemeral run ends, never written
+	droppedDirty: number;
 }
 
 // Frames and a compressed pool, both LRU, a page in at most one of them. A frame victim goes to the
 // pool whole (compressed, dirty or not); a pool victim is written to the store only when dirty.
 // A fill drops any pooled copy without decoding it. Pool capacity counts pages, so counts are exact.
-export function simulateTiers(trace: readonly Op[], { frames, cold }: TierConfig): TierResult {
+export function simulateTiers(
+	trace: readonly Op[],
+	{ frames, cold, ephemeral = false }: TierConfig
+): TierResult {
 	if (!Number.isInteger(frames) || frames < 1) throw new Error('frames must be >= 1');
 	if (!Number.isInteger(cold) || cold < 0) throw new Error('cold must be >= 0');
+	if (ephemeral && cold > 0) throw new Error('an ephemeral run needs cold 0');
+	const stored = new Set<number>();
 	const out: TierResult = {
 		ops: trace.length,
 		frameHits: 0,
@@ -326,7 +337,13 @@ export function simulateTiers(trace: readonly Op[], { frames, cold }: TierConfig
 		storeWrites: 0,
 		compressions: 0,
 		decompressions: 0,
-		coldEvictions: 0
+		coldEvictions: 0,
+		distinctStored: 0,
+		droppedDirty: 0
+	};
+	const write = (page: number) => {
+		out.storeWrites++;
+		stored.add(page);
 	};
 	const framed = new Map<number, boolean>();
 	const pooled = new Map<number, boolean>();
@@ -336,7 +353,7 @@ export function simulateTiers(trace: readonly Op[], { frames, cold }: TierConfig
 		out.coldEvictions++;
 		if (dirty) {
 			out.decompressions++;
-			out.storeWrites++;
+			write(victim);
 		}
 	};
 	for (const { kind, page } of trace) {
@@ -362,16 +379,21 @@ export function simulateTiers(trace: readonly Op[], { frames, cold }: TierConfig
 				pooled.set(victim, victimDirty);
 				out.compressions++;
 				if (pooled.size > cold) evictPooled();
-			} else if (victimDirty) out.storeWrites++;
+			} else if (victimDirty) write(victim);
 		}
 		framed.set(page, dirty);
 	}
-	for (const dirty of framed.values()) if (dirty) out.storeWrites++;
-	for (const dirty of pooled.values()) {
+	for (const [page, dirty] of framed) {
+		if (!dirty) continue;
+		if (ephemeral) out.droppedDirty++;
+		else write(page);
+	}
+	for (const [page, dirty] of pooled) {
 		if (!dirty) continue;
 		out.decompressions++;
-		out.storeWrites++;
+		write(page);
 	}
+	out.distinctStored = stored.size;
 	return out;
 }
 
@@ -406,6 +428,128 @@ export function predictTime(p: TimeParams, c: TimeCounts): number {
 		c.compressions * p.compressMs +
 		c.hits * p.hitMs
 	);
+}
+
+// model B: one fixed term per request plus one cost per store read, store write and codec call
+export interface TimeFit {
+	baseMs: number;
+	readMs: number;
+	writeMs: number;
+	codecMs: number;
+}
+
+export interface TimeSample {
+	wallMs: number;
+	storeReads: number;
+	storeWrites: number;
+	compressions: number;
+	decompressions: number;
+}
+
+const featuresOf = (s: Omit<TimeSample, 'wallMs'>) => [
+	1,
+	s.storeReads / 1000,
+	s.storeWrites / 1000,
+	(s.compressions + s.decompressions) / 1000
+];
+
+// least squares over the listed feature columns through the normal equations, in scaled units
+function solveColumns(samples: readonly TimeSample[], cols: readonly number[]): number[] {
+	const n = cols.length;
+	const a = Array.from({ length: n }, () => new Array<number>(n + 1).fill(0));
+	for (const s of samples) {
+		const x = featuresOf(s);
+		for (let i = 0; i < n; i++) {
+			for (let j = 0; j < n; j++) a[i]![j]! += x[cols[i]!]! * x[cols[j]!]!;
+			a[i]![n]! += x[cols[i]!]! * s.wallMs;
+		}
+	}
+	for (let col = 0; col < n; col++) {
+		let pivot = col;
+		for (let r = col + 1; r < n; r++)
+			if (Math.abs(a[r]![col]!) > Math.abs(a[pivot]![col]!)) pivot = r;
+		if (Math.abs(a[pivot]![col]!) < 1e-9) throw new Error('samples do not identify the model');
+		[a[col], a[pivot]] = [a[pivot]!, a[col]!];
+		for (let r = 0; r < n; r++) {
+			if (r === col) continue;
+			const f = a[r]![col]! / a[col]![col]!;
+			for (let c = col; c <= n; c++) a[r]![c]! -= f * a[col]![c]!;
+		}
+	}
+	return a.map((row, i) => row[n]! / row[i]!);
+}
+
+const toFit = ([baseMs, readMs, writeMs, codecMs]: readonly number[]): TimeFit => ({
+	baseMs: baseMs!,
+	readMs: readMs! / 1000,
+	writeMs: writeMs! / 1000,
+	codecMs: codecMs! / 1000
+});
+
+// ordinary least squares; throws when the samples cannot identify all four terms
+export function fitTime(samples: readonly TimeSample[]): TimeFit {
+	return toFit(solveColumns(samples, [0, 1, 2, 3]));
+}
+
+// non-negative least squares: the optimum is the unconstrained fit on some subset of terms with
+// the rest at zero, so take the feasible subset fit with the smallest squared error
+export function fitTimeNonNegative(samples: readonly TimeSample[]): TimeFit {
+	solveColumns(samples, [0, 1, 2, 3]);
+	let best: { sse: number; v: number[] } | undefined;
+	for (let mask = 1; mask < 16; mask++) {
+		const cols = [0, 1, 2, 3].filter((c) => mask & (1 << c));
+		let sol: number[];
+		try {
+			sol = solveColumns(samples, cols);
+		} catch {
+			continue;
+		}
+		if (sol.some((v) => v < 0)) continue;
+		const v = [0, 0, 0, 0];
+		cols.forEach((c, i) => (v[c] = sol[i]!));
+		const f = toFit(v);
+		const sse = samples.reduce((sum, s) => sum + (predictFit(f, s) - s.wallMs) ** 2, 0);
+		if (!best || sse < best.sse - 1e-9) best = { sse, v };
+	}
+	return toFit(best!.v);
+}
+
+export function predictFit(fit: TimeFit, s: Omit<TimeSample, 'wallMs'>): number {
+	return predictTime(
+		{
+			baseMs: fit.baseMs,
+			flushMs: 0,
+			readMs: fit.readMs,
+			writeMs: fit.writeMs,
+			decompressMs: fit.codecMs,
+			compressMs: fit.codecMs,
+			hitMs: 0
+		},
+		{
+			flushes: 0,
+			storeReads: s.storeReads,
+			storeWrites: s.storeWrites,
+			compressions: s.compressions,
+			decompressions: s.decompressions,
+			hits: 0
+		}
+	);
+}
+
+// percent error of predicted against measured, signed
+export const percentError = (predicted: number, measured: number) =>
+	((predicted - measured) / measured) * 100;
+
+export function leaveOneOut(samples: readonly TimeSample[], fitter = fitTime) {
+	return samples.map((held, i) => {
+		const fit = fitter(samples.filter((_, j) => j !== i));
+		const predicted = predictFit(fit, held);
+		return {
+			predicted,
+			measured: held.wallMs,
+			percentError: percentError(predicted, held.wallMs)
+		};
+	});
 }
 
 export function solveLinear(f: (x: number) => number, target: number) {

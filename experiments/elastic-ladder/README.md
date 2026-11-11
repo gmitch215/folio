@@ -22,6 +22,8 @@ A variant is a record in `plan.ts`: resident frames, pool capacity in pages (0 f
 | `v4`    |     64 |           0 | 64 KiB | one request |
 | `v6`    |     64 | 1,024 pages | 64 KiB | one request |
 
+`v4e` is a V4 with request-scoped frames: a dirty frame is written only when it is evicted, and nothing is written back when the request ends. Its store is not the state afterwards, so a `v4e` result is never a persistent-state result and it sits outside `VARIANTS`. At 768 pages with 768 frames it moves no rows. `unpaged` keeps every page in one buffer with no store.
+
 The default row is 64 KiB, one row per page. E1d found that rows of 6 KiB or more hold everything written in platform memory (about 34 MiB at the cap), and that 4 KiB rows hold 0.12 to 0.19 of it at 256 rows per MiB. A 4 KiB row at full scale costs about 98,000 rows for a dense run, so `plan.ts` prices it and the live driver refuses it under the default row cap.
 
 ## Commands
@@ -42,3 +44,22 @@ node experiments/elastic-ladder/workerd.ts 96 64
 - Frames and the pool live in the object between requests. A resume that reaches a restarted object is refused with a 409, never run on lost frames.
 - Rows read are exact at 64 KiB rows. A range read of a smaller row size reads one row past the page when a next row exists, so the price is a lower bound there.
 - Time inside a Durable Object does not advance during synchronous work, so per-page codec time comes only from local runs. A live run gets wall time per request.
+
+## Day 2 analysis rules
+
+Fixed on 10 Nov 2026 before any day 2 run. `day2-predictions-nnls.json` holds the gate model B2, the time model fit by non-negative least squares on the ten exact day 1 runs, and the predicted wall time of every planned day 2 cell. `day2-predictions.json` holds model B1, the unconstrained fit of the same form, which has negative read and codec costs; it is reported beside B2 and does not gate.
+
+- p90 is the nearest rank over completed repeats: sort the run walls and take the value at rank ceil(0.9 n).
+- A failed or stalled attempt counts as a run over the threshold. The exception is a stall where the heartbeat log proves the work finished inside the threshold and the stall was client-side: heartbeat lines kept their 1 s spacing, or the object's own counters show the run completed.
+- The 2x unpaged comparison uses a request that fits unpaged: unpaged against V4 with frames equal to the pages (768 frames at 768 pages, every page resident), run back to back at the same time of day. The 64-frame paged cell at 768 pages is an extra cell and does not enter the 2x gate.
+- The model gate counts a variant as met when B2 predicted over measured is within 20% on day 2, using `day2-predictions-nnls.json` as written. The model is not refit before that comparison.
+- No cell is dropped after its result is seen. A cell that cannot run is reported as not run.
+
+## Day 3 analysis rules
+
+Fixed on 11 Nov 2026 before any day 3 run. Every day 2 rule above stands. `day3-predictions.json` holds model C, the same time form as B2 fitted by non-negative least squares on every completed exact run at 3,072 pages of days 1 and 2 (18 runs), and the predicted wall time of every planned day 3 cell. B1 and B2 predictions sit beside each cell and never gate.
+
+- The model gate counts a variant as met when model C predicted over measured is within 20% on every day 3 cell of that variant at 3,072 pages. The model is not refit before that comparison.
+- The dense p90 rule is unchanged. A failed attempt counts as over, so a run of `f` failures needs at least `9 f` completed runs before the rule can pass.
+- A `v4e` run is reported as a different mechanism. It never enters the dense p90, the model gate or a persistent-state claim.
+- The pair for the 2x comparison stays unpaged against `v4` with frames equal to the pages, run back to back.

@@ -563,7 +563,8 @@ test('the live path deploys, runs two variants, tears down and checks the accoun
 		.trim()
 		.split('\n')
 		.map((l) => JSON.parse(l));
-	expect(raw.every((r) => r.colo === 'LOCAL')).toBe(true);
+	expect(raw.filter((r) => r.level === 'client').every((r) => r.colo === 'LOCAL')).toBe(true);
+	expect(raw.filter((r) => r.level === 'ready')).toHaveLength(1);
 	expect(raw.filter((r) => r.op === 'run').length).toBe(cells.length);
 	expect(redact('x')).toBe('x');
 	const recovered = await cleanupRun(liveDeps(cloud, out), 'folio-e2-00000000', 'x');

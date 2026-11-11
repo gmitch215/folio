@@ -59,6 +59,8 @@ export interface PagerOptions {
 	randomSeed?: number;
 	// evict every frame after each operation
 	evictEvery?: boolean;
+	// a dirty frame is written only when evicted; the end of the request writes nothing
+	ephemeral?: boolean;
 }
 
 function mulberry32(seed: number) {
@@ -88,6 +90,7 @@ export class Pager {
 		this.o = o;
 		if (o.cold > 0 && !o.codec) throw new Error('a compressed pool needs a codec');
 		if (o.frames < 1) throw new Error('frames must be >= 1');
+		if (o.ephemeral && o.cold > 0) throw new Error('an ephemeral pager needs cold 0');
 		if (o.randomSeed !== undefined) this.random = mulberry32(o.randomSeed);
 		this.clock = o.clock ?? (() => 0);
 	}
@@ -214,8 +217,15 @@ export class Pager {
 		return result;
 	}
 
+	// the bytes of a resident dirty frame, which an ephemeral run never stores
+	dirtyFrame(page: number) {
+		const frame = this.frames.get(page);
+		return frame?.dirty ? frame.bytes : null;
+	}
+
 	// writes every dirty page to the backend; the pages stay resident and clean
 	flush() {
+		if (this.o.ephemeral) return;
 		for (const [page, frame] of this.frames) {
 			if (!frame.dirty) continue;
 			this.store(page, frame.bytes);

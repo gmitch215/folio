@@ -1,8 +1,13 @@
 import { expect, test } from 'vitest';
 import {
 	counts,
+	fitTime,
+	fitTimeNonNegative,
 	fixtureTrace,
+	leaveOneOut,
+	percentError,
 	phaseMeans,
+	predictFit,
 	predictTime,
 	refitHop,
 	simulate,
@@ -169,4 +174,72 @@ test('predictTime adds the base, the flush, store reads and writes, codec and hi
 			hits: 0
 		})
 	).toBe(10);
+});
+
+const truth = { baseMs: 12, readMs: 0.3, writeMs: 0.5, codecMs: 0.02 };
+const grid = [
+	[3000, 3000, 0, 0],
+	[2900, 3000, 6000, 3200],
+	[9000, 3200, 0, 0],
+	[2800, 1200, 9000, 7600],
+	[6000, 0, 0, 0],
+	[6000, 0, 6000, 0]
+].map(([storeReads, storeWrites, compressions, decompressions]) => ({
+	storeReads: storeReads!,
+	storeWrites: storeWrites!,
+	compressions: compressions!,
+	decompressions: decompressions!
+}));
+const synthetic = grid.map((g) => ({ ...g, wallMs: predictFit(truth, g) }));
+
+test('fitTime recovers known parameters from synthetic data and predicts it back exactly', () => {
+	const fit = fitTime(synthetic);
+	expect(fit.baseMs).toBeCloseTo(truth.baseMs, 6);
+	expect(fit.readMs).toBeCloseTo(truth.readMs, 9);
+	expect(fit.writeMs).toBeCloseTo(truth.writeMs, 9);
+	expect(fit.codecMs).toBeCloseTo(truth.codecMs, 9);
+	for (const s of synthetic) expect(predictFit(fit, s)).toBeCloseTo(s.wallMs, 6);
+});
+
+test('fitTime is deterministic and refuses samples that cannot identify the terms', () => {
+	expect(fitTime(synthetic)).toEqual(fitTime(synthetic));
+	expect(() => fitTime(synthetic.slice(0, 1))).toThrow('identify');
+	expect(() => fitTime([synthetic[0]!, synthetic[0]!, synthetic[0]!, synthetic[0]!])).toThrow(
+		'identify'
+	);
+});
+
+test('fitTimeNonNegative recovers known non-negative parameters and is deterministic', () => {
+	const fit = fitTimeNonNegative(synthetic);
+	expect(fit.baseMs).toBeCloseTo(truth.baseMs, 6);
+	expect(fit.readMs).toBeCloseTo(truth.readMs, 9);
+	expect(fit.writeMs).toBeCloseTo(truth.writeMs, 9);
+	expect(fit.codecMs).toBeCloseTo(truth.codecMs, 9);
+	expect(fitTimeNonNegative(synthetic)).toEqual(fit);
+	expect(() => fitTimeNonNegative(synthetic.slice(0, 1))).toThrow('identify');
+});
+
+test('fitTimeNonNegative returns no negative coefficient where least squares gives one', () => {
+	const negative = { baseMs: 12, readMs: 0.3, writeMs: 0.5, codecMs: -0.02 };
+	const data = grid.map((g) => ({ ...g, wallMs: predictFit(negative, g) }));
+	expect(fitTime(data).codecMs).toBeLessThan(0);
+	const fit = fitTimeNonNegative(data);
+	for (const v of Object.values(fit)) expect(v).toBeGreaterThanOrEqual(0);
+	const sse = (f: typeof fit) =>
+		data.reduce((sum, s) => sum + (predictFit(f, s) - s.wallMs) ** 2, 0);
+	expect(sse(fit)).toBeGreaterThan(sse(fitTime(data)));
+	for (const nudge of [{ baseMs: 1 }, { readMs: 0.01 }, { writeMs: 0.01 }, { codecMs: 0.01 }]) {
+		const [k, d] = Object.entries(nudge)[0]!;
+		const other = { ...fit, [k]: Math.max(0, fit[k as keyof typeof fit] + d) };
+		expect(sse(other)).toBeGreaterThanOrEqual(sse(fit) - 1e-6);
+	}
+});
+
+test('leaveOneOut holds each sample out in turn and is zero on exact data', () => {
+	const out = leaveOneOut(synthetic);
+	expect(out).toHaveLength(synthetic.length);
+	for (const row of out) expect(Math.abs(row.percentError)).toBeLessThan(1e-6);
+	const noisy = synthetic.map((s, i) => ({ ...s, wallMs: s.wallMs * (i === 0 ? 2 : 1) }));
+	expect(Math.abs(leaveOneOut(noisy)[0]!.percentError)).toBeGreaterThan(10);
+	expect(percentError(110, 100)).toBeCloseTo(10, 9);
 });

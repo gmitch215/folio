@@ -16,6 +16,7 @@ export interface RunConfig {
 	randomSeed?: number;
 	evictEvery?: boolean;
 	resident?: boolean;
+	ephemeral?: boolean;
 }
 
 export interface ObjectDeps {
@@ -112,10 +113,13 @@ export class ExecutorObject {
 			if (op === 'run') return await this.run(cfg, request, rows);
 			if (op === 'verify') {
 				const pager = this.session?.pager;
+				// an ephemeral run's resident dirty frames are its only copy of those pages
 				const read =
 					pager instanceof Resident
 						? (page: number) => pager.page(page)
-						: (page: number) => backend.read(page);
+						: cfg.ephemeral && pager
+							? (page: number) => pager.dirtyFrame(page) ?? backend.read(page)
+							: (page: number) => backend.read(page);
 				return json(this.verify(cfg, read, rows));
 			}
 			if (op === 'clear') {
@@ -167,7 +171,8 @@ export class ExecutorObject {
 							codec: cfg.cold > 0 ? this.deps.codec!() : undefined,
 							clock: this.deps.clock,
 							randomSeed: cfg.randomSeed,
-							evictEvery: cfg.evictEvery
+							evictEvery: cfg.evictEvery,
+							ephemeral: cfg.ephemeral
 						}),
 				expected,
 				program: this.programOf(cfg, expected),
