@@ -16,7 +16,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">OwnedSliceReport</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#copyoutms">copyOutMs</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#refused">refused</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">&quot;snapshot&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#replayed">replayed</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#restorems">restoreMs</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#snapshotbytes">snapshotBytes</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#snapshotms">snapshotMs</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tasks">tasks</a><span class="tsd-signature-symbol">:</span> <a href="tasks.TaskRecord.html" class="tsd-signature-type tsd-kind-interface">TaskRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#trap">trap</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L57">src/slices.ts:57</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L57">src/slices.ts:57</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -40,48 +40,48 @@
 <h3 class="tsd-anchor-link" id="copyoutms"><span>copy<wbr/>Out<wbr/>Ms</span><a href="#copyoutms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">copyOutMs</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L60">src/slices.ts:60</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L60">src/slices.ts:60</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="refused"><code class="tsd-tag">Optional</code><span>refused</span><a href="#refused" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">refused</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">&quot;snapshot&quot;</span></div>
 <div class="tsd-comment tsd-typography"><p><code>snapshot</code> when <code>writes</code> was past the limit and the calls ran serially in place.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L65">src/slices.ts:65</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L65">src/slices.ts:65</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="replayed"><span>replayed</span><a href="#replayed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">replayed</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 <div class="tsd-comment tsd-typography"><p>A slice trapped, so the calls ran again serially in place and that run decided the result.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L63">src/slices.ts:63</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L63">src/slices.ts:63</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="restorems"><span>restore<wbr/>Ms</span><a href="#restorems" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">restoreMs</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L61">src/slices.ts:61</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L61">src/slices.ts:61</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="snapshotbytes"><span>snapshot<wbr/>Bytes</span><a href="#snapshotbytes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">snapshotBytes</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L58">src/slices.ts:58</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L58">src/slices.ts:58</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="snapshotms"><span>snapshot<wbr/>Ms</span><a href="#snapshotms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">snapshotMs</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L59">src/slices.ts:59</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L59">src/slices.ts:59</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="tasks"><span>tasks</span><a href="#tasks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tasks</span><span class="tsd-signature-symbol">:</span> <a href="tasks.TaskRecord.html" class="tsd-signature-type tsd-kind-interface">TaskRecord</a><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L68">src/slices.ts:68</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L68">src/slices.ts:68</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="trap"><code class="tsd-tag">Optional</code><span>trap</span><a href="#trap" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">trap</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>First line of the failure of the first failed slice.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c3640d4846dcc416a383620faa6014eb95724da7/src/slices.ts#L67">src/slices.ts:67</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L67">src/slices.ts:67</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

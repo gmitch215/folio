@@ -4,19 +4,22 @@ Executable probes for runtime capabilities, native sharing, managed execution an
 Sanitized records live under [results](../results/README.md). Each harness keeps its METHOD.md;
 raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup and recovery.
 
-| Harness                                        | Question                                                                                       | Environment                   |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------- |
-| [Cloud](cloud/README.md)                       | Which runtime capabilities and host transports are available?                                  | workerd and deployed isolates |
-| [Managed](managed/README.md)                   | What do copied snapshots and ordered validation cost?                                          | Durable Objects               |
-| [Browser](browser/README.md)                   | Can agents share an arena and extract counted loops without JSPI?                              | Chromium and Browser Run      |
-| [Consumer](consumer/README.md)                 | How do unchanged applications route and compare with native execution?                         | Chromium, isolates and Node   |
-| [Boot Images](bootimage/README.md)             | How do captured images behave during delivery, startup and replay?                             | workerd and Durable Objects   |
-| [Ordinary Worker Lanes](rpc/README.md)         | Do service-bound Workers overlap CPU work, and what does range transfer save?                  | Deployed Workers (Free)       |
-| [Range Lanes](ranges/README.md)                | Do learned byte ranges over service bindings cut bytes and wall against snapshots?             | workerd and Workers (Free)    |
-| [Concurrent Lane Calls](concurrency/README.md) | Do four lane calls issued at once overlap, and which lane type or placement restores it?       | Deployed Workers (paid)       |
-| [SQLite Lanes](sqlite-lanes/README.md)         | Does sharding a SQLite table across Durable Object lanes speed up queries with an exact merge? | Durable Objects (paid)        |
-| [Corpus Lanes](corpus-lanes/README.md)         | Do corpus kernels run as range lanes over Durable Objects, and at what cost per record?        | workerd and Durable Objects   |
-| [Shared Tools](lib/README.md)                  | Account access, metering, bundling and lifecycle helpers                                       | Node 26                       |
+| Harness                                        | Question                                                                                                 | Environment                                |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| [Cloud](cloud/README.md)                       | Which runtime capabilities and host transports are available?                                            | workerd and deployed isolates              |
+| [Managed](managed/README.md)                   | What do copied snapshots and ordered validation cost?                                                    | Durable Objects                            |
+| [Browser](browser/README.md)                   | Can agents share an arena and extract counted loops without JSPI?                                        | Chromium and Browser Run                   |
+| [Consumer](consumer/README.md)                 | How do unchanged applications route and compare with native execution?                                   | Chromium, isolates and Node                |
+| [Boot Images](bootimage/README.md)             | How do captured images behave during delivery, startup and replay?                                       | workerd and Durable Objects                |
+| [Ordinary Worker Lanes](rpc/README.md)         | Do service-bound Workers overlap CPU work, and what does range transfer save?                            | Deployed Workers (Free)                    |
+| [Range Lanes](ranges/README.md)                | Do learned byte ranges over service bindings cut bytes and wall against snapshots?                       | workerd and Workers (Free)                 |
+| [Concurrent Lane Calls](concurrency/README.md) | Do four lane calls issued at once overlap, and which lane type or placement restores it?                 | Deployed Workers (paid)                    |
+| [SQLite Lanes](sqlite-lanes/README.md)         | Does sharding a SQLite table across Durable Object lanes speed up queries with an exact merge?           | Durable Objects (paid)                     |
+| [Corpus Lanes](corpus-lanes/README.md)         | Do corpus kernels run as range lanes over Durable Objects, and at what cost per record?                  | workerd and Durable Objects                |
+| [Elastic](elastic/README.md)                   | Can the dense 192 MiB fixture complete on the Free managed plan with a 64 KiB executor memory?           | Durable Objects (Free)                     |
+| [Elastic Limits](elastic-limits/README.md)     | What do the platform's storage calls, stub hops, CPU caps and memory meter cost?                         | Workers and Durable Objects (Free)         |
+| [Elastic Ladder](elastic-ladder/README.md)     | Can one Durable Object run the 192 MiB dense program with its pages in its own SQLite, and at what cost? | Durable Objects, Free and STUDENT accounts |
+| [Shared Tools](lib/README.md)                  | Account access, metering, bundling and lifecycle helpers                                                 | Node 26                                    |
 
 ## Local Runs
 
