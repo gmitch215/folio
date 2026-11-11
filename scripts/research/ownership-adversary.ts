@@ -8,6 +8,8 @@ import { BASES, INSERTS, moduleOf, routeMatches } from './ownership-modules.ts';
 // usage: ownership-adversary.ts [alloc OUT.jsonl] ; mutate hand modules and real drivers, certify, and compare the
 // private-window route with the serial run for every accepted mutant; `alloc` runs the allocator mutants instead
 if (process.argv[2] === 'alloc') await import('./ownership-alloc-adversary.ts');
+if (process.argv[2] === 'prefix') await import('./ownership-prefix-adversary.ts');
+if (process.argv[2] === 'kissfft') await import('./ownership-kissfft-adversary.ts');
 interface Row {
 	label: string;
 	operator: string;

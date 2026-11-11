@@ -95,7 +95,10 @@ for (const id of DRIVERS) {
 		process.env.ALLOC && arenaBytes
 			? { allocator: { arenaBytes, assumeInArena: !!process.env.ASSUME } }
 			: {};
-	const result = certifyOwnership(bytes, allocator);
+	const result = certifyOwnership(bytes, {
+		...allocator,
+		...(process.env.PREFIX ? { prefix: true as const } : {})
+	});
 	const ms = Math.round(performance.now() - started);
 	const sha = createHash('sha256').update(bytes).digest('hex').slice(0, 12);
 	let line = `${id} ${sha} ${ms}ms: `;
