@@ -14,7 +14,11 @@ import {
 } from '../../scripts/research/translation-duration-summary.ts';
 import { hotSet, regionOf, spanReport } from '../../scripts/research/translation-span.ts';
 import { medianCi, routeTau, tauTable } from '../../scripts/research/translation-tau2-summary.ts';
-import { classShares, pairedTau } from '../../scripts/research/translation-tax-summary.ts';
+import {
+	classShares,
+	gateBlock,
+	pairedTau
+} from '../../scripts/research/translation-tax-summary.ts';
 
 const PAGE = 65536;
 const TABLE = 8 * PAGE;
@@ -636,6 +640,16 @@ test('paired tau takes the median of per-repeat ratios and keeps the range', () 
 	expect(
 		pairedTau([{ ...row('native', 1, 1), ok: false }, row('b', 1, 2)], 'default', 'b')
 	).toBeNull();
+});
+
+test('the gate reads the default tier and marks the optimizing tier exploratory with no pass', () => {
+	const bcd = (tau: number) => ({ bcd: { tau, tauMin: tau - 0.1, tauMax: tau + 0.1, n: 5 } });
+	const gate = gateBlock({ default: { arms: bcd(1.578) }, optimized: { arms: bcd(0.874) } });
+	expect(gate.default.pass).toBe(false);
+	expect(gate.default.tau).toBe(1.578);
+	expect(gate.optimized).not.toHaveProperty('pass');
+	expect(gate.optimized.exploratory).toBe(true);
+	expect(gate.optimized.tau).toBe(0.874);
 });
 
 test('class shares add up and the exempt share is stack plus static', () => {

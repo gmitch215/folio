@@ -67,6 +67,28 @@ export function classShares(counters: Record<string, number>) {
 	};
 }
 
+/** Only the default tier gates; Workers cannot select the optimizing tier. */
+export function gateBlock(arms: Record<string, any>) {
+	const bcd = (config: string) => arms[config]?.arms?.bcd;
+	const tau = (config: string) => {
+		const b = bcd(config);
+		return {
+			config,
+			tau: b?.tau ?? null,
+			tauRange: b ? [b.tauMin, b.tauMax] : null,
+			pairs: b?.n ?? 0
+		};
+	};
+	const def = bcd('default');
+	return {
+		name: 'G-tau',
+		threshold: GATE_TAU,
+		arm: 'bcd',
+		default: { ...tau('default'), pass: def ? def.tau <= GATE_TAU : null },
+		optimized: { ...tau('optimized'), exploratory: true }
+	};
+}
+
 export function buildSummary(dir: string) {
 	const read = (path: string) => JSON.parse(readFileSync(join(dir, path), 'utf8'));
 	const regions: Regions = read('span/regions.json');
@@ -109,25 +131,9 @@ export function buildSummary(dir: string) {
 	const loads = raws
 		.flatMap((r) => [r.loadStart?.[0], r.loadEnd?.[0]])
 		.filter((x) => x !== undefined);
-	const verdict = (config: string) => {
-		const bcd = (arms[config] as any)?.arms?.bcd;
-		return {
-			config,
-			tau: bcd?.tau ?? null,
-			tauRange: bcd ? [bcd.tauMin, bcd.tauMax] : null,
-			pairs: bcd?.n ?? 0,
-			pass: bcd ? bcd.tau <= GATE_TAU : null
-		};
-	};
 	return {
 		kind: 'translation-tax',
-		gate: {
-			name: 'G-tau',
-			threshold: GATE_TAU,
-			arm: 'bcd',
-			default: verdict('default'),
-			optimized: verdict('optimized')
-		},
+		gate: gateBlock(arms),
 		regions,
 		span,
 		classes: counted ? classShares(counted.counters!) : null,

@@ -2,7 +2,7 @@
 
 Question: how much does it cost every load and store to go through a software page table with every page resident, on the PHP render that motivated elastic memory, and how much of that cost can static analysis remove?
 
-Result: the full path (shadow-stack and constant-address accesses left untranslated, invariant lookups hoisted, one inlined lookup per remaining access) costs a tau of 1.58 on the first uncached front-page render under default V8 tiering and 0.87 once the module is compiled by the optimizing tier before the request. The gate of tau at most 1 fails in the first case and passes in the second. Hoisting contributed nothing measurable: 16 of 1.9 billion accesses qualified. The window idea fails on address span: the 90% hot set is 23 to 53 pages but spans 86.5% to 98.7% of linear memory.
+Result: the full path (shadow-stack and constant-address accesses left untranslated, invariant lookups hoisted, one inlined lookup per remaining access) costs a tau of 1.58 on the first uncached front-page render under default V8 tiering and 0.87 once the module is compiled by the optimizing tier before the request. The gate of tau at most 1 fails in the first case. The second case reads 0.87, but it is an exploratory arm, since Workers cannot select the optimizing tier, so it is not a gate result. Hoisting contributed nothing measurable: 16 of 1.9 billion accesses qualified. The window idea fails on address span: the 90% hot set is 23 to 53 pages but spans 86.5% to 98.7% of linear memory.
 
 ## Inputs
 
