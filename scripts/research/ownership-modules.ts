@@ -241,6 +241,89 @@ export const moduleOf = (statements: string[], insert?: string): Uint8Array<Arra
 
 export const wasmOf = (name: string) => assemble(driverWat({ body: SYNTHETIC[name]! }));
 
+const SCRATCH = `(i32.store (i32.const 4120) (local.get $sum))
+	(i32.store (i32.const 4124) (i32.add (i32.load (i32.const 4120)) (i32.const 1)))
+	(i32.store (local.get $slot) (i32.load (i32.const 4124)))`;
+
+const COUNT_FN = '(func $put (param i32 i32) (i32.store offset=4 (local.get 0) (local.get 1)))';
+const BY_I = '(i32.add (i32.const 4200) (local.get $i))';
+
+/** A loop counter of the entry in a record body; `keep` has to certify, the rest has to be refused. */
+export interface CounterUse {
+	body: string;
+	keep?: boolean;
+	extra?: string;
+}
+
+export const COUNTER_USES: Record<string, CounterUse> = {
+	'address-slot': {
+		keep: true,
+		body: `${SCRATCH}
+			(i32.store (i32.add (local.get $o) (i32.add (i32.shl (local.get $i) (i32.const 6)) (i32.const 8))) (local.get $sum))`
+	},
+	'address-table': {
+		keep: true,
+		body: `${SCRATCH}
+			(i32.store offset=12 (local.get $slot) (i32.load (i32.add (local.get $t) (i32.add (i32.shl (local.get $i) (i32.const 4)) (i32.const 8)))))`
+	},
+	'two-counters-address': {
+		keep: true,
+		body: `${SCRATCH}
+			(i32.store offset=20 (i32.add (local.get $o) (i32.shl (local.get $j) (i32.const 5))) (local.get $sum))
+			(local.set $j (i32.add (local.get $j) (i32.const 2)))`
+	},
+	'data-direct': { body: `${SCRATCH} (i32.store offset=4 (local.get $slot) (local.get $i))` },
+	'data-after-add': {
+		body: `${SCRATCH} (i32.store offset=4 (local.get $slot) (i32.add (local.get $sum) (local.get $i)))`
+	},
+	'data-after-shift': {
+		body: `${SCRATCH} (i32.store offset=4 (local.get $slot) (i32.shl (local.get $i) (i32.const 3)))`
+	},
+	'data-after-mask': {
+		body: `${SCRATCH} (i32.store offset=4 (local.get $slot) (i32.and (local.get $i) (i32.const 255)))`
+	},
+	'data-through-local': {
+		body: `${SCRATCH} (local.set $q (local.get $i)) (i32.store offset=4 (local.get $slot) (local.get $q))`
+	},
+	'data-through-call': {
+		extra: COUNT_FN,
+		body: `${SCRATCH} (call $put (local.get $slot) (local.get $i))`
+	},
+	'data-select': {
+		body: `${SCRATCH} (i32.store offset=4 (local.get $slot)
+			(select (local.get $i) (local.get $sum) (i32.and (local.get $sum) (i32.const 1))))`
+	},
+	'data-store8': { body: `${SCRATCH} (i32.store8 offset=4 (local.get $slot) (local.get $i))` },
+	'data-store16': { body: `${SCRATCH} (i32.store16 offset=4 (local.get $slot) (local.get $i))` },
+	'data-extend': {
+		body: `${SCRATCH} (i64.store offset=8 (local.get $slot) (i64.extend_i32_u (local.get $i)))`
+	},
+	'data-table-index': {
+		body: `${SCRATCH} (i32.store offset=4 (local.get $slot) (i32.load8_u ${BY_I}))`
+	},
+	'data-fill': {
+		body: `${SCRATCH} (memory.fill (i32.const 4128) (local.get $i) (i32.const 8))`
+	},
+	'data-second-counter': {
+		body: `${SCRATCH}
+			(i32.store offset=24 (local.get $slot) (local.get $j))
+			(local.set $j (i32.add (local.get $j) (i32.const 2)))`
+	},
+	'address-constant-base': {
+		body: `${SCRATCH} (i32.store (i32.add (i32.const 4136) (i32.shl (local.get $i) (i32.const 2))) (local.get $sum))`
+	}
+};
+
+export const counterModule = (
+	use: CounterUse & { replace?: [string, string][] }
+): Uint8Array<ArrayBuffer> => {
+	let wat = driverWat({ body: use.body, extra: use.extra })
+		.replace('(memory 8)', '(memory 8 40)')
+		.replace('(local $i i32)', '(local $i i32) (local $q i32) (local $j i32)');
+	for (const [from, to] of use.replace ?? []) wat = wat.replace(from, to);
+	return assemble(wat);
+};
+
 export const iterModuleOf = (
 	statements: string[],
 	insert?: string,

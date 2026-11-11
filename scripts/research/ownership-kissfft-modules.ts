@@ -350,6 +350,61 @@ export function runKiss(
 	return { trapped, memory: view.slice(0, 8 * 65536) };
 }
 
+/**
+ * The listed premise 'record-derived pointers stay inside their regions': each record run alone writes no byte of
+ * another record's out slot or input outside its own slot, its own input and the windows.
+ */
+export function recordsOwn(
+	bytes: Uint8Array,
+	windows: { low: number; end: number }[],
+	cases: { image: Uint8Array; call: { table: number; n: number; out: number; slot: number } }[],
+	inputBytes: number,
+	imports: WebAssembly.ModuleImports
+): { ok: boolean; why?: string } {
+	const module = new WebAssembly.Module(Uint8Array.from(bytes));
+	for (const [k, { image, call }] of cases.entries())
+		for (let r = 0; r < call.n; r++) {
+			const pages = image.length / 65536;
+			const memory = new WebAssembly.Memory({ initial: pages, maximum: pages });
+			const view = new Uint8Array(memory.buffer);
+			view.set(image);
+			const p = new Uint32Array(memory.buffer, call.table + 16 * r, 1)[0]!;
+			const instance = new WebAssembly.Instance(module, { env: { memory, ...imports } });
+			try {
+				(instance.exports.bulk as (t: number, n: number, o: number) => number)(
+					call.table + 16 * r,
+					1,
+					call.out + r * call.slot
+				);
+			} catch {
+				continue;
+			}
+			const mine = (at: number) =>
+				(at >= call.out + r * call.slot && at < call.out + (r + 1) * call.slot) ||
+				(at >= p && at < p + inputBytes) ||
+				windows.some((w) => at >= w.low && at < w.end);
+			const others = (at: number) => {
+				if (at >= call.out && at < call.out + call.n * call.slot) return true;
+				for (let i = 0; i < call.n; i++) {
+					const q = new Uint32Array(
+						image.buffer,
+						image.byteOffset + call.table + 16 * i,
+						1
+					)[0]!;
+					if (at >= q && at < q + inputBytes) return true;
+				}
+				return false;
+			};
+			for (let at = 0; at < image.length; at++)
+				if (view[at] !== image[at] && !mine(at) && others(at))
+					return {
+						ok: false,
+						why: `case ${k} record ${r} wrote byte ${at} of another record`
+					};
+		}
+	return { ok: true };
+}
+
 export type KissRoute = 'equal' | 'differs' | 'premise';
 
 /** The private-window route against the serial run; a result that depends on the memory size is a premise violation. */

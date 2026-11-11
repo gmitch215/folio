@@ -22,6 +22,7 @@ import {
 	kissRoute,
 	KN,
 	KTMP,
+	recordsOwn,
 	type KissMutant
 } from './ownership-kissfft-modules.ts';
 import { ARENA, DATA, OUT, RECORDS, TABLE } from './ownership-modules.ts';
@@ -534,7 +535,48 @@ if (existsSync(driverFile) && PER_DRIVER > 0) {
 				[NEVER],
 				bytes,
 				options,
-				(c) => slicesTruth(bytes, c, cases, layout.pages, 65536, hostMath(), PAGE)
+				async (c) => {
+					const own = recordsOwn(bytes, c.windows, cases, lengthOf, hostMath());
+					if (!own.ok) return { route: 'premise', why: own.why };
+					return slicesTruth(bytes, c, cases, layout.pages, 65536, hostMath(), PAGE);
+				}
+			);
+		}
+	// the entry's count, its countdown and an index made from both, stored as data into the slot header
+	const entryAt = text.indexOf('(func $bulk');
+	const callAt = text.indexOf('(call $one', entryAt);
+	const forms: Record<string, string> = {
+		countdown: '(local.get $3)',
+		count: '(local.get $1)',
+		'countdown-plus': '(i32.add (local.get $3) (i32.const 1))',
+		'countdown-shifted': '(i32.shl (local.get $3) (i32.const 2))',
+		index: '(i32.sub (local.get $1) (local.get $3))',
+		'index-masked': '(i32.and (i32.sub (local.get $1) (local.get $3)) (i32.const 3))',
+		'index-select':
+			'(select (local.get $3) (i32.const 7) (i32.and (i32.load8_u (i32.const 1069340)) (i32.const 1)))'
+	};
+	const stores: Record<string, (x: string) => string> = {
+		i32: (x) => `(i32.store offset=8 (local.get $2) ${x})`,
+		i8: (x) => `(i32.store8 offset=8 (local.get $2) ${x})`,
+		i64: (x) => `(i64.store offset=8 (local.get $2) (i64.extend_i32_u ${x}))`
+	};
+	for (const [name, expr] of Object.entries(forms))
+		for (const [kind, make] of Object.entries(stores)) {
+			const edited = text.slice(0, callAt) + make(expr) + '\n' + text.slice(callAt);
+			const bytes = assembleText(edited);
+			if (!bytes) continue;
+			await classify(
+				`${DRIVER}-counter-${name}-${kind}`,
+				'driver',
+				'counter',
+				[NEVER],
+				bytes,
+				options,
+				async (c) => {
+					const own = recordsOwn(bytes, c.windows, cases, lengthOf, hostMath());
+					if (!own.ok) return { route: 'premise', why: own.why };
+					return slicesTruth(bytes, c, cases, layout.pages, 65536, hostMath(), PAGE);
+				}
 			);
 		}
 }

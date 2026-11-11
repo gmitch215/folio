@@ -17,6 +17,7 @@ import {
 	TABLE,
 	type AllocBase
 } from './ownership-alloc-modules.ts';
+import { regionsMatch } from './ownership-cursor-modules.ts';
 import { extremeMatches } from './ownership-extent-modules.ts';
 import {
 	bootedImage,
@@ -40,7 +41,7 @@ interface Row {
 	operator: string;
 	outcome: string;
 	relocation?: 'equal' | 'differs' | 'skipped';
-	route?: 'equal' | 'differs' | 'refused' | 'notRunnable' | 'nonterminating';
+	route?: 'equal' | 'differs' | 'refused' | 'notRunnable' | 'nonterminating' | 'premise';
 	why?: string;
 }
 
@@ -131,6 +132,20 @@ async function classify(label: string, operator: string, bytes: Uint8Array) {
 			outcome: 'certificate',
 			relocation: 'skipped',
 			route: 'nonterminating'
+		};
+		rows.push(row);
+		emit(row);
+		return;
+	}
+	const own = regionsMatch(bytes, r.windows);
+	if (!own.ok) {
+		const row: Row = {
+			label,
+			operator,
+			outcome: 'certificate',
+			relocation: 'skipped',
+			route: 'premise',
+			why: own.why
 		};
 		rows.push(row);
 		emit(row);
@@ -301,15 +316,11 @@ for (const [name, base] of Object.entries(STACKIDX_BASES)) {
 
 const accepted = rows.filter((r) => r.outcome === 'certificate');
 const refused = rows.filter((r) => r.outcome !== 'certificate');
-// these inserts store at a stack offset that may pass the entry stack pointer; the checker takes unknown stack
-// offsets to stay inside the record's frames (a listed assumption, accepted the same way before the stack-offset rules)
-const PREMISE = new Set(['store-far-index', 'store-sp-index']);
-const wrong = (r: Row) => !PREMISE.has(r.operator);
-const premise = accepted.filter(
-	(r) => !wrong(r) && (r.relocation === 'differs' || r.route === 'differs')
-);
-const wrongReloc = accepted.filter((r) => r.relocation === 'differs' && wrong(r));
-const wrongRoute = accepted.filter((r) => r.route === 'differs' && wrong(r));
+// a record that writes outside its own slot, arena slice, windows and stack breaks the listed premise
+// 'record-derived pointers stay inside their regions'; the check runs each record alone (`regionsMatch`)
+const premise = accepted.filter((r) => r.route === 'premise');
+const wrongReloc = accepted.filter((r) => r.relocation === 'differs');
+const wrongRoute = accepted.filter((r) => r.route === 'differs');
 const reasons = new Map<string, number>();
 for (const r of refused) reasons.set(r.outcome, (reasons.get(r.outcome) ?? 0) + 1);
 const routes = new Map<string, number>();

@@ -11,6 +11,7 @@ import {
 	capModule,
 	capRefusal
 } from '../../scripts/research/ownership-cap-modules.ts';
+import { regionsMatch } from '../../scripts/research/ownership-cursor-modules.ts';
 import { extremeMatches, SHIM_FUNCS } from '../../scripts/research/ownership-extent-modules.ts';
 import {
 	certifyOwnership,
@@ -213,5 +214,20 @@ describe('a select whose arm is cut by its own condition', () => {
 			),
 			'ptr-deref'
 		);
+	});
+
+	test('a stack address indexed past the frames is accepted and breaks the listed premise, not the domain', () => {
+		const indexed =
+			'(i32.store (i32.add (global.get $sp) (i32.shl (i32.and (local.get $sum) (i32.const 15)) (i32.const 2))) (local.get $sum))';
+		for (const name of ['selclamp', 'selfalse', 'selmin', 'selsum']) {
+			const base = CAP_BASES[name]!;
+			const own = (statements: string[]) => {
+				const bytes = allocModuleOf(base, statements);
+				return regionsMatch(bytes, certificate(bytes).windows);
+			};
+			assert.deepEqual(own(base.statements), { ok: true }, name);
+			const bad = [...base.statements.slice(0, 3), indexed, ...base.statements.slice(3)];
+			assert.equal(own(bad).ok, false, name);
+		}
 	});
 });

@@ -6,11 +6,14 @@ import {
 	KEXTENT,
 	KFACTORS,
 	KISS_MUTANTS,
+	KISS_RUN,
+	KISS_WORK,
 	kissCase,
 	kissModule,
 	kissMutantModule,
 	kissOptions,
 	kissRoute,
+	recordsOwn,
 	staleModule,
 	valsModule
 } from '../../scripts/research/ownership-kissfft-modules.ts';
@@ -156,6 +159,22 @@ describe('config premise and bounded recursion', () => {
 		assert.ok(!checkConfig(c, aux, table));
 		assert.ok(!checkConfig(c, ok.subarray(0, KCFG + 8), table));
 		assert.ok(checkConfig({ ...c, config: undefined }, aux, table));
+	});
+
+	test('a record pointer indexed below its slot is accepted and breaks the listed premise, not the domain', () => {
+		const imports = { f: () => {} };
+		const cases = [1, 2, 3].map((seed) => kissCase(seed));
+		const own = (bytes: Uint8Array) =>
+			recordsOwn(bytes, certificate(bytes).windows, cases, 320, imports);
+		assert.deepEqual(own(kissModule()), { ok: true });
+		const below = kissModule(
+			KISS_WORK,
+			KISS_RUN.replace(
+				'(i32.store offset=40 (local.get $slot)',
+				'(i32.store (i32.sub (local.get $slot) (i32.const 8)) (i32.const 7))\n\t\t(i32.store offset=40 (local.get $slot)'
+			)
+		);
+		assert.equal(own(below).ok, false);
 	});
 
 	test('the layout guard knows the config region', () => {
