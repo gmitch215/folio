@@ -32,6 +32,10 @@ export interface TranslateOptions {
 	floor?: boolean;
 	/** address of the 65,536-entry i32 table inside linear memory */
 	tableBase: number;
+	/** stores look up a second table that holds only pages already marked dirty; a miss calls `folio.slow_w` */
+	dirty?: boolean;
+	/** address of the write table when `dirty` is set */
+	writeTableBase?: number;
 	/** constant addresses below this stay untranslated when `exempt` is set */
 	staticLimit?: number;
 	/** lowest stack pointer value the pinned stack window allows when `exempt` is set */
@@ -127,6 +131,22 @@ function run(
 		throw new TypeError(
 			'folio.translate: groups needs the inline shape and no cache, arenas or census'
 		);
+	if (options.dirty) {
+		if (options.writeTableBase === undefined)
+			throw new TypeError('folio.translate: dirty needs writeTableBase');
+		if (
+			shape === 'call' ||
+			options.hoist ||
+			options.cache ||
+			options.arenas ||
+			options.groups ||
+			options.census ||
+			options.floor
+		)
+			throw new TypeError(
+				'folio.translate: dirty needs the inline shape and no hoist, cache, arenas, groups, census or floor'
+			);
+	}
 	if (mod.getNumGlobals() === 0) throw new TranslateRefusal(['no stack pointer global']);
 	const spName = binaryen.getGlobalInfo(mod.getGlobalByIndex(0)).name;
 	const staticLimit = options.staticLimit ?? 0;
@@ -134,8 +154,20 @@ function run(
 	const exempt = !!options.exempt;
 	const arenas = options.arenas ?? [];
 	let siteCount = 0;
-	const imports = { slow: 'folio_slow', stackMiss: 'folio_stack_miss' };
+	const imports = {
+		slow: 'folio_slow',
+		slowWrite: 'folio_slow_w',
+		stackMiss: 'folio_stack_miss'
+	};
 	mod.addFunctionImport(imports.slow, 'folio', 'slow', binaryen.createType([i32, i32, i32]), i32);
+	if (options.dirty)
+		mod.addFunctionImport(
+			imports.slowWrite,
+			'folio',
+			'slow_w',
+			binaryen.createType([i32, i32, i32]),
+			i32
+		);
 	mod.addFunctionImport(
 		imports.stackMiss,
 		'folio',
@@ -151,14 +183,18 @@ function run(
 			mod.addGlobalExport(counters[cls]!, counters[cls]!);
 		}
 
-	const tableLoad = (a: () => number) =>
+	const tableLoad = (a: () => number, write = false) =>
 		mod.i32.load(
-			tableBase,
+			write ? options.writeTableBase! : tableBase,
 			4,
 			mod.i32.and(mod.i32.shr_u(a(), mod.i32.const(14)), mod.i32.const(0x3fffc))
 		);
-	const slowCall = (p: () => number, o: number, bytes: number) =>
-		mod.call(imports.slow, [p(), mod.i32.const(o), mod.i32.const(bytes)], i32);
+	const slowCall = (p: () => number, o: number, bytes: number, write = false) =>
+		mod.call(
+			write ? imports.slowWrite : imports.slow,
+			[p(), mod.i32.const(o), mod.i32.const(bytes)],
+			i32
+		);
 
 	if (shape === 'call') {
 		// (p, o, n) -> p + delta, the lookup of the inline form with o and n as arguments
@@ -285,7 +321,8 @@ function run(
 			bytes: number,
 			straddle: boolean,
 			dest: number,
-			pLocal: number
+			pLocal: number,
+			write = false
 		): number[] => {
 			const out: number[] = [];
 			let a: () => number = () => get(pLocal);
@@ -305,13 +342,13 @@ function run(
 						mod.i32.const(LAST_BYTE_OF_PAGE - bytes)
 					)
 				);
-			out.push(mod.local.set(dest, tableLoad(a)));
+			out.push(mod.local.set(dest, tableLoad(a, write)));
 			out.push(
 				mod.if(
 					slow,
 					mod.local.set(
 						dest,
-						slowCall(() => get(pLocal), o, bytes)
+						slowCall(() => get(pLocal), o, bytes, write)
 					)
 				)
 			);
@@ -332,7 +369,13 @@ function run(
 				: [];
 
 		// the table path, behind a one-entry cache when the site can use one
-		const tablePath = (p: number, o: number, bytes: number, align: number): number => {
+		const tablePath = (
+			p: number,
+			o: number,
+			bytes: number,
+			align: number,
+			write = false
+		): number => {
 			const straddle = needsStraddle(bytes, align);
 			// a hit needs p and p + o inside the cached page, so no wrapped sum can hit
 			const window = LAST_BYTE_OF_PAGE + 1 - bytes - o;
@@ -340,7 +383,7 @@ function run(
 				const e = E();
 				return mod.block(
 					null,
-					[...lookup(o, bytes, straddle, e, p), mod.i32.add(get(p), get(e))],
+					[...lookup(o, bytes, straddle, e, p, write), mod.i32.add(get(p), get(e))],
 					i32
 				);
 			}
@@ -385,7 +428,13 @@ function run(
 			);
 		};
 
-		const translated = (ptr: number, o: number, bytes: number, align: number): number => {
+		const translated = (
+			ptr: number,
+			o: number,
+			bytes: number,
+			align: number,
+			write = false
+		): number => {
 			if (shape === 'call')
 				return mod.call('folio_xl', [ptr, mod.i32.const(o), mod.i32.const(bytes)], i32);
 			// a pointer that is already a local is used where it is
@@ -406,7 +455,7 @@ function run(
 				outside = outside === undefined ? out : mod.i32.and(outside, out);
 			}
 			if (outside === undefined)
-				return mod.block(null, [...set, tablePath(p, o, bytes, align)], i32);
+				return mod.block(null, [...set, tablePath(p, o, bytes, align, write)], i32);
 			stats.arenaSites++;
 			const miss = mod.block(
 				null,
@@ -459,9 +508,16 @@ function run(
 				i32
 			);
 		};
-		const access = (e: number, ptr: number, o: number, bytes: number, align: number) => {
+		const access = (
+			e: number,
+			ptr: number,
+			o: number,
+			bytes: number,
+			align: number,
+			write = false
+		) => {
 			const site = siteOf(e);
-			return site ? groupTranslated(site, ptr) : translated(ptr, o, bytes, align);
+			return site ? groupTranslated(site, ptr) : translated(ptr, o, bytes, align, write);
 		};
 		const tally = (e: number, ptr: number): number => {
 			const { expr, lead, ...site } = analysis.get(e)!;
@@ -687,14 +743,20 @@ function run(
 					vid === binaryen.GlobalGetId;
 				const align = binaryen.Store.getAlign(e);
 				if (simple || siteOf(e)?.sound === 'member') {
-					binaryen.Store.setPtr(e, counted(cls, access(e, ptr, o, bytes, align)));
+					binaryen.Store.setPtr(
+						e,
+						counted(cls, access(e, ptr, o, bytes, align, !!options.dirty))
+					);
 					return level;
 				}
 				// translate after the value, so a miss inside the value cannot invalidate the frame
 				const depth = valueLevel + 1;
 				const tp = named(`sp${depth}`, i32);
 				const tv = named(`sv${depth}`, valueType);
-				binaryen.Store.setPtr(e, counted(cls, access(e, get(tp), o, bytes, align)));
+				binaryen.Store.setPtr(
+					e,
+					counted(cls, access(e, get(tp), o, bytes, align, !!options.dirty))
+				);
 				binaryen.Store.setValue(e, get(tv, valueType));
 				set(mod.block(null, [mod.local.set(tp, ptr), mod.local.set(tv, value), e]));
 				return depth;
