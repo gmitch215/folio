@@ -332,6 +332,10 @@ interface V {
 	fl?: [number, number, number][];
 	/** allocator mode: the low 32-bit word of the immutable i64 symbol `lw`; the fact u<lw> bounds the whole i64 */
 	lw?: number;
+	/** derived from a stepped loop counter of the entry or from its record count: a slice starts them elsewhere than the serial run */
+	c?: boolean;
+	/** with c: not the counter or the record count itself but arithmetic, a select or a join made from them */
+	d?: boolean;
 }
 
 const mk = (
@@ -426,13 +430,29 @@ function sameNn(a: [string, V][] | undefined, b: [string, V][] | undefined): boo
 	);
 }
 
+// a join of a flagged and an unflagged value is derived: it is the counter on some paths only
+const orC = (out: V, a: V, b: V): V => {
+	if (!a.c && !b.c) return out;
+	const d = !!a.d || !!b.d || !a.c !== !b.c;
+	return out.c && !!out.d === d ? out : { ...out, c: true, d };
+};
+
 const joinV = (a: V, b: V): V =>
-	ptrMKeep(
-		sgKeep(
-			sentKeep(stackIdxKeep(keepSym(keepTag(joinBase(a, b), a, b), a, b), a, b), a, b, false),
+	orC(
+		ptrMKeep(
+			sgKeep(
+				sentKeep(
+					stackIdxKeep(keepSym(keepTag(joinBase(a, b), a, b), a, b), a, b),
+					a,
+					b,
+					false
+				),
+				a,
+				b,
+				false
+			),
 			a,
-			b,
-			false
+			b
 		),
 		a,
 		b
@@ -519,6 +539,8 @@ function sameV(a: V, b: V): boolean {
 		a.ld === b.ld &&
 		a.lk === b.lk &&
 		a.lw === b.lw &&
+		!a.c === !b.c &&
+		!a.d === !b.d &&
 		samePair(a.pair, b.pair) &&
 		samePieces(a.fl, b.fl)
 	);
@@ -529,21 +551,25 @@ let thresholds: number[] = [];
 const widenV = (old: V, now: V): V =>
 	sameV(old, now)
 		? old
-		: ptrMKeep(
-				sgKeep(
-					sentKeep(
-						curKeep(
-							keepSym(keepTag(widenBase(old, now), old, now), old, now),
+		: orC(
+				ptrMKeep(
+					sgKeep(
+						sentKeep(
+							curKeep(
+								keepSym(keepTag(widenBase(old, now), old, now), old, now),
+								old,
+								now
+							),
 							old,
-							now
+							now,
+							true
 						),
 						old,
 						now,
 						true
 					),
 					old,
-					now,
-					true
+					now
 				),
 				old,
 				now
@@ -3720,6 +3746,104 @@ export function memoryAccesses(body: number): number[] {
 	return found;
 }
 
+// the analysis runs one record with fresh locals, so a local that a record reads before it writes
+// holds the last record's value in the serial run and zero at the start of a slice; only a counter
+// stepped by a constant may do that
+function carriedLocal(entry: number, count: number, counters?: Set<number>): number | undefined {
+	const stepped = (e: number, x: number) => {
+		if (binaryen.getExpressionId(e) !== binaryen.BinaryId) return false;
+		const b = info(e);
+		const op = I32BIN.get(b.op);
+		const self = (n: number) =>
+			binaryen.getExpressionId(n) === binaryen.LocalGetId && info(n).index === x;
+		const cst = (n: number) =>
+			binaryen.getExpressionId(n) === binaryen.ConstId && info(n).type === binaryen.i32;
+		return (
+			(op === 'Add' && ((self(b.left) && cst(b.right)) || (self(b.right) && cst(b.left)))) ||
+			(op === 'Sub' && self(b.left) && cst(b.right))
+		);
+	};
+	const loops: number[] = [];
+	const find = (e: number) => {
+		const id = binaryen.getExpressionId(e);
+		if (id === binaryen.NopId || id === binaryen.UnreachableId) return;
+		if (id === binaryen.LoopId) loops.push(e);
+		else for (const child of operands(info(e))) find(child);
+	};
+	find(entry);
+	for (const loop of loops) {
+		// cur[x] is 1 when x is assigned on every path since the top of this iteration
+		let cur: Uint8Array = new Uint8Array(count);
+		let dead = false;
+		const live = new Set<number>();
+		const plain = new Set<number>();
+		const stepw = new Set<number>();
+		const labels = new Map<string, Uint8Array>();
+		const meet = (name: string) => {
+			const seen = labels.get(name);
+			if (!seen) labels.set(name, cur.slice());
+			else for (let i = 0; i < count; i++) seen[i] = seen[i]! & cur[i]!;
+		};
+		const join = (other: Uint8Array, otherDead: boolean) => {
+			if (otherDead) return;
+			if (dead) cur = other;
+			else for (let i = 0; i < count; i++) cur[i] = cur[i]! & other[i]!;
+			dead = false;
+		};
+		const walk = (e: number) => {
+			const id = binaryen.getExpressionId(e);
+			if (id === binaryen.NopId) return;
+			if (id === binaryen.UnreachableId) {
+				dead = true;
+				return;
+			}
+			const v = info(e);
+			if (id === binaryen.LocalGetId) {
+				if (!dead && !cur[v.index]) live.add(v.index);
+			} else if (id === binaryen.LocalSetId) {
+				walk(v.value);
+				cur[v.index] = 1;
+				if (!stepped(v.value, v.index)) plain.add(v.index);
+				else stepw.add(v.index);
+			} else if (id === binaryen.IfId) {
+				walk(v.condition);
+				const before = cur.slice();
+				const wasDead = dead;
+				walk(v.ifTrue);
+				const taken = cur;
+				const takenDead = dead;
+				cur = before;
+				dead = wasDead;
+				if (v.ifFalse) walk(v.ifFalse);
+				join(taken, takenDead);
+			} else if (id === binaryen.BlockId) {
+				for (const child of v.children) walk(child);
+				const seen = v.name ? labels.get(v.name) : undefined;
+				if (seen) join(seen, false);
+			} else if (id === binaryen.BreakId) {
+				if (v.value) walk(v.value);
+				if (v.condition) walk(v.condition);
+				if (!dead) meet(v.name);
+				if (!v.condition) dead = true;
+			} else if (id === binaryen.SwitchId) {
+				if (v.value) walk(v.value);
+				walk(v.condition);
+				if (!dead) for (const name of [...v.names, v.defaultName]) meet(name);
+				dead = true;
+			} else if (id === binaryen.ReturnId) {
+				if (v.value) walk(v.value);
+				dead = true;
+			} else for (const child of operands(v)) walk(child);
+		};
+		walk(info(loop).body);
+		for (const x of live) {
+			if (plain.has(x)) return x;
+			if (stepw.has(x)) counters?.add(x);
+		}
+	}
+	return undefined;
+}
+
 const localOf = (expr: number): number | undefined => {
 	const id = binaryen.getExpressionId(expr);
 	if (id === binaryen.LocalGetId) return info(expr).index;
@@ -4174,7 +4298,74 @@ function merge(S: State, outs: Pend[]): V | undefined {
 	return val?.p && val.z && !val.nn ? nonNullFacts(outs, j.c, val) : val;
 }
 
+// the entry's stepped loop counters and its record count: a slice starts them elsewhere than the serial run,
+// so a value that carries the c flag may address records and end the loop but is never stored as data
+let entryFlow: { fn: string; count: number; counters: Set<number>; outer: Set<string> } | undefined;
+
+// the labels a loop test of the entry may branch to: its outermost loops and the blocks around them
+function outerLabels(entry: number): Set<string> {
+	const out = new Set<string>();
+	const walk = (e: number, around: string[]) => {
+		const id = binaryen.getExpressionId(e);
+		if (id === binaryen.NopId || id === binaryen.UnreachableId) return;
+		const v = info(e);
+		if (id === binaryen.LoopId) {
+			if (v.name) out.add(v.name);
+			for (const name of around) out.add(name);
+			return;
+		}
+		const next = id === binaryen.BlockId && v.name ? [...around, v.name] : around;
+		for (const child of operands(v)) walk(child, next);
+	};
+	walk(entry, []);
+	return out;
+}
+// bumped whenever a flagged value is read, so an expression that reads one yields a flagged value
+let flagMark = 0;
+
 function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
+	const before = flagMark;
+	const r = evCore(ctx, e, S, F);
+	if (!r || flagMark === before) return r;
+	const id = binaryen.getExpressionId(e);
+	if (
+		id === binaryen.LocalSetId &&
+		F.fn === entryFlow?.fn &&
+		entryFlow.counters.has(info(e).index)
+	)
+		return { ...r, c: true, d: false };
+	const passes =
+		id === binaryen.LocalGetId ||
+		id === binaryen.CallId ||
+		id === binaryen.CallIndirectId ||
+		id === binaryen.LocalSetId;
+	return r.c && (r.d || passes) ? r : { ...r, c: true, d: true };
+}
+
+// a loop test of the entry branches to its loop or to a block around it and compares a counter with a bound
+// or another counter; a counter against a known constant, or a branch to a label inside the loop, picks
+// records, and a condition whose operands are not both known cannot be told apart, so it counts too
+function flaggedTest(ctx: Ctx, F: Frame, label: string, cond: number, raw: V): boolean {
+	if (!entryFlow || F.fn !== entryFlow.fn || !entryFlow.outer.has(label)) return true;
+	const id = binaryen.getExpressionId(cond);
+	const b = id === binaryen.BinaryId || id === binaryen.UnaryId ? info(cond) : undefined;
+	if (id === binaryen.UnaryId && I32UN.get(b.op) === 'EqZ') {
+		const a = ctx.vals.get(b.value);
+		return !a || !!a.d;
+	}
+	if (id !== binaryen.BinaryId || !COMPARE_REL[I32BIN.get(b.op) ?? '']) return !!raw.d;
+	const l = ctx.vals.get(b.left);
+	const r = ctx.vals.get(b.right);
+	if (!l || !r) return true;
+	if ((l.c && !r.c && isExact(r)) || (r.c && !l.c && isExact(l))) return true;
+	// the counter and the record count are compared as they are: an offset of one selects records
+	return !!((l.c && l.d) || (r.c && r.d));
+}
+
+const counterRefusal = (what: string) =>
+	refuse('read-before-write', `counter-as-data: ${what} depends on a loop counter of the entry`);
+
+function evCore(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 	if (++ctx.steps > ctx.maxSteps) refuse('budget', `more than ${ctx.maxSteps} steps`);
 	const id = binaryen.getExpressionId(e);
 	const v = id === binaryen.NopId || id === binaryen.UnreachableId ? undefined : info(e);
@@ -4195,8 +4386,17 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 			return exactV(c, t);
 		}
 		case binaryen.LocalGetId: {
+			const raw = S.l[v.index]!;
+			const source =
+				!raw.r &&
+				!!entryFlow &&
+				F.fn === entryFlow.fn &&
+				(v.index === entryFlow.count || entryFlow.counters.has(v.index));
 			const x = tightLocal(ctx, S, F, v.index);
-			return stampLocal(ctx, ctx.alloc ? symLocal(ctx, S, v.index, x) : x);
+			const got = stampLocal(ctx, ctx.alloc ? symLocal(ctx, S, v.index, x) : x);
+			if (!raw.c && !source) return got;
+			flagMark++;
+			return source ? { ...got, c: true, d: false } : { ...got, c: true, d: !!raw.d };
 		}
 		case binaryen.LocalSetId: {
 			let val = ev(ctx, v.value, S, F)!;
@@ -4243,7 +4443,9 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 		case binaryen.BlockId:
 			return evalBlock(ctx, v, S, F);
 		case binaryen.IfId: {
-			const c = condV(ctx, ev(ctx, v.condition, S, F)!);
+			const raw = ev(ctx, v.condition, S, F)!;
+			if (raw.c) counterRefusal('a branch condition');
+			const c = condV(ctx, raw);
 			noStack(c, 'a branch condition');
 			const arm = (expr: number, s: State) => {
 				if (!expr) return { ok: true, v: undefined as V | undefined, s };
@@ -4283,7 +4485,10 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 				push(F, v.name, cloneState(S), val);
 				throw END;
 			}
-			const c = condV(ctx, ev(ctx, v.condition, S, F)!);
+			const raw = ev(ctx, v.condition, S, F)!;
+			if (raw.c && flaggedTest(ctx, F, v.name, v.condition, raw))
+				counterRefusal('a branch condition');
+			const c = condV(ctx, raw);
 			noStack(c, 'a branch condition');
 			const d = decide(c);
 			if (d === 'yes') {
@@ -4301,6 +4506,7 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 		case binaryen.SwitchId: {
 			const val = v.value ? ev(ctx, v.value, S, F) : undefined;
 			const c = ev(ctx, v.condition, S, F)!;
+			if (c.c) counterRefusal('a branch condition');
 			noStack(c, 'a branch condition');
 			if (ctx.alloc && c.a)
 				refuse('ptr-control', 'an arena-derived value selects a branch target');
@@ -4437,7 +4643,11 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 		}
 		case binaryen.LoadId: {
 			if (v.isAtomic) return refuse('unsupported', 'atomic load');
+			const mark = flagMark;
 			const addr = ev(ctx, v.ptr, S, F)!;
+			// a record-derived address indexed by a counter reads the record's own data; any other address
+			// indexed by one reads a table whose content depends on the counter
+			flagMark = addr.c && !addr.r ? mark + 1 : mark;
 			const offset = BigInt.asUintN(32, BigInt(v.offset));
 			const read = access(ctx, S, F, e, false, addr, Number(offset), v.bytes);
 			// byte cells of one source are exact, so they outrank the summary of tainted stores
@@ -4488,6 +4698,8 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 			if (v.isAtomic) return refuse('unsupported', 'atomic store');
 			const addr = ev(ctx, v.ptr, S, F)!;
 			const val = ev(ctx, v.value, S, F)!;
+			if (val.c) counterRefusal('a stored value');
+			if (addr.c && !addr.r) counterRefusal('a store address that is not record-derived');
 			const offset = BigInt.asUintN(32, BigInt(v.offset));
 			if (!stackSlotStore(ctx, val, addr, Number(offset), v.bytes))
 				noStack(val, 'stored as data');
@@ -4498,6 +4710,8 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 		case binaryen.MemoryFillId: {
 			const dest = ev(ctx, v.dest, S, F)!;
 			const fill = ev(ctx, v.value, S, F);
+			if (fill?.c) counterRefusal('a fill value');
+			if (dest.c && !dest.r) counterRefusal('a fill address that is not record-derived');
 			noStack(fill, 'stored as data');
 			const size = ev(ctx, v.size, S, F)!;
 			noStack(size, 'a bulk size');
@@ -4509,6 +4723,9 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 			const dest = ev(ctx, v.dest, S, F)!;
 			const src = ev(ctx, v.source, S, F)!;
 			const size = ev(ctx, v.size, S, F)!;
+			if (size.c) counterRefusal('a copy size');
+			if ((dest.c && !dest.r) || (src.c && !src.r))
+				counterRefusal('a copy address that is not record-derived');
 			noStack(size, 'a bulk size');
 			if (ctx.alloc && size.a) refuse('ptr-deref', 'a bulk size derived from the arena base');
 			bulk(ctx, S, F, e, dest, src, size);
@@ -4531,6 +4748,7 @@ function ev(ctx: Ctx, e: number, S: State, F: Frame): V | undefined {
 			const args = (v.operands as number[]).map((o) => ev(ctx, o, S, F)!);
 			const target = binaryen.getFunctionInfo(ctx.module.getFunction(v.target));
 			if (target.module) {
+				if (args.some((a) => a.c)) counterRefusal('an argument given to the host');
 				for (const a of args) noStack(a, 'given to the host');
 				if (ctx.alloc && args.some((a) => a.a))
 					refuse(
@@ -6281,6 +6499,7 @@ function scanImage(module: binaryen.Module, windows: OwnershipWindow[]) {
 const ASSUMPTIONS = [
 	'record regions (table, out slots, inputs, aux, arena slices, stack slots) do not overlap a window',
 	'record-derived pointers stay inside their regions',
+	'the entry branches on its loop counters and record count only to end or repeat its loop, against the record count or another counter',
 	'an implicit trap discards the private copies and the serial path decides',
 	'the start function and the host leave the baseline window bytes the private copies start from',
 	'the stack pointer discipline and stack residue are not proved'
@@ -6344,6 +6563,7 @@ export function certifyOwnership(
 		return fail('invalid', 'the module cannot be read');
 	}
 	thresholds = [];
+	entryFlow = undefined;
 	try {
 		module.setFeatures(binaryen.Features.All & ~compactImports);
 		const mem = module.getMemoryInfo();
@@ -6358,6 +6578,25 @@ export function certifyOwnership(
 		for (const p of [conv.table, conv.count, conv.out])
 			if (params[p] !== binaryen.i32)
 				return fail('unsupported', 'the convention names a parameter that is not i32');
+		const counters = new Set<number>();
+		const carried = entryInfo.body
+			? carriedLocal(
+					entryInfo.body,
+					params.length + (entryInfo.vars as number[]).length,
+					counters
+				)
+			: undefined;
+		if (carried !== undefined)
+			return fail(
+				'read-before-write',
+				`local ${carried} of the entry holds a value from the previous record`
+			);
+		entryFlow = {
+			fn: target.value,
+			count: conv.count,
+			counters,
+			outer: entryInfo.body ? outerLabels(entryInfo.body) : new Set()
+		};
 		const sp = stackRoute(bytes).stack?.name;
 		const maxSteps = options.maxSteps ?? 4_000_000;
 		const alloc: AllocCfg | undefined = options.allocator
