@@ -2947,6 +2947,34 @@ test('a scratch cell every iteration writes first moves to a window and the run 
 	}
 });
 
+test('a loop that ends in its first batch learns the window from that batch for the next call', async () => {
+	// 24 iterations are one batch, so no iteration is left to probe the scratch cell with
+	const run = await both(wasm(ownerSource(scratchItem)), distinct(24), 4);
+	try {
+		assert.ok(run.equal);
+		const first = run.got.report!.iteration!;
+		assert.equal(first.batches, 1);
+		assert.equal(first.replayed, 23);
+		assert.deepEqual(first.window, {
+			low: 0x40000,
+			end: 0x40040,
+			source: 'discovered',
+			batches: 0
+		});
+		const after = Buffer.from(programPages(run.folio.memory, wat.pages));
+		const { args } = planImage(distinct(24));
+		const again = await run.folio.run('run', args);
+		const second = again.iteration!;
+		assert.equal(second.window!.source, 'given');
+		assert.equal(second.replayed, 0);
+		assert.equal(second.stopped, undefined);
+		assert.equal(second.conflicts.raw + second.conflicts.waw + second.conflicts.war, 0);
+		assert.equal(Buffer.compare(after, programPages(run.folio.memory, wat.pages)), 0);
+	} finally {
+		await run.folio.close();
+	}
+});
+
 // the first iteration of the loop also fills 2176 write granules past the scratch cell, past the 2048
 // of a log; the others do not. The cell is the shared location, and the fill is what a race on it
 // can do to an iteration, here fixed by the iteration's position so no timing is involved

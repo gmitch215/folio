@@ -1126,14 +1126,13 @@ export class Folio {
 			stopped === 'log-exhausted' ||
 			stopped === 'frame-carried dependence' ||
 			stopped === 'stalled';
-		if (structural) it.verdicts.set(key, { stop: stopped, skipped: 0 });
+		const w = pool.report.window;
+		const learned = w?.source === 'discovered' && !w.batches;
+		if (structural && !learned) it.verdicts.set(key, { stop: stopped, skipped: 0 });
 		else if (pool.report.admission?.probeLost)
 			it.verdicts.set(key, { stop: 'no-admission', skipped: 0 });
-		else if (pool.report.window?.batches)
-			it.verdicts.set(key, {
-				window: { low: pool.report.window.low, end: pool.report.window.end },
-				skipped: 0
-			});
+		else if (w && (w.batches || learned))
+			it.verdicts.set(key, { window: { low: w.low, end: w.end }, skipped: 0 });
 		else if (known) it.verdicts.delete(key);
 		return 1;
 	}

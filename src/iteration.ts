@@ -1109,8 +1109,22 @@ export class IterationPool {
 			const fits = !exhausted || outcomes.some((o) => o.status === 0);
 			if (shared && !area && fits) {
 				tried = true;
-				probeLeft = 2;
-				learning = true;
+				if (first + count < job.trip) {
+					probeLeft = 2;
+					learning = true;
+				} else {
+					// no iteration is left to probe with: the cell half the batch wrote is the window
+					// for the next call, and validation checks it there like any given window
+					const found = discoverWindow(outcomes, A.windowBytes);
+					const why = found.window
+						? this.#refuseWindow(found.window, job.frameBase)
+						: found.reason;
+					if (why || !found.window) report.windowRefused = why;
+					else {
+						window = found.window;
+						report.window = { ...window, source: 'discovered', batches: 0 };
+					}
+				}
 			}
 			if (area) {
 				this.#rollback(logs, first, outcomes, v.first);
