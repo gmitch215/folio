@@ -30,7 +30,7 @@ import { decodeValues, encodeValues, sharedMemoryImport } from './slices.ts';
 import { TaskPool } from './tasks.ts';
 
 /** @since 1.1.0 */
-export const ROUTER_VERSION = 'folio-router-1';
+export const ROUTER_VERSION = 'folio-router-2';
 
 /** `summary` is the certified stream fold, `window` the certified private window on slices. */
 export type Route = 'summary' | 'window' | 'explicit' | 'tracked' | 'serial';
@@ -119,6 +119,10 @@ export const routerConstants: RouterConstants = {
 
 /** Records a first call runs serially to estimate the serial time of one record. */
 const PROBE_RECORDS = 4;
+
+/** The per-record serial estimate after a tracked call: the lower of it and that call's plain first iteration. @internal */
+export const lowerEstimate = (current: number, plainMs: number | undefined): number =>
+	plainMs !== undefined && plainMs > 0 && plainMs < current ? plainMs : current;
 
 export interface RouterOptions {
 	mode: RouterMode;
@@ -360,6 +364,20 @@ function ownershipReason(refusal: OwnershipRefusal): RouterReason {
 	}
 }
 
+/** The prefix domain is tried after a plain refusal unless the caller chose an option the checker does not combine with it. @internal */
+export function effectiveOwnership(given: OwnershipOptions | undefined): {
+	options: OwnershipOptions | null;
+	prefixFallback: boolean;
+} {
+	const o = given ?? {};
+	const prefixFallback =
+		o.prefix === undefined && !o.allocator && !o.config && (o.recursion ?? 1) <= 1;
+	return {
+		options: prefixFallback ? { ...o, prefix: true } : (given ?? null),
+		prefixFallback
+	};
+}
+
 /** Everything `decide` needs and makes: the choice, the certificate the route runs on, and the trace. */
 interface Plan {
 	decision: RouterDecision;
@@ -457,9 +475,18 @@ export function decide(bytes: Uint8Array, call: RouterCall, options: RouterOptio
 	)
 		return finish('serial', 'no-route-in-mode', 'the mode has no route for a records call');
 
-	const result = ask('ownership', config(['ownership', options.ownership ?? null]), () =>
-		certifyOwnership(bytes, { entry: call.entry, ...options.ownership })
-	);
+	const ownership = effectiveOwnership(options.ownership);
+	const result = ask('ownership', config(['ownership', ownership.options]), () => {
+		const plain = certifyOwnership(bytes, { entry: call.entry, ...options.ownership });
+		if (plain.kind === 'certificate' || !ownership.prefixFallback) return plain;
+		// the prefix option is not a superset of the plain check, so it runs second and a refusal keeps the plain reason
+		const prefixed = certifyOwnership(bytes, {
+			entry: call.entry,
+			...options.ownership,
+			prefix: true
+		});
+		return prefixed.kind === 'certificate' ? prefixed : plain;
+	});
 	let refusal: OwnershipRefusal | undefined;
 	if (result.kind === 'certificate') {
 		if (!allowed.includes('window')) {
@@ -498,8 +525,9 @@ export function decide(bytes: Uint8Array, call: RouterCall, options: RouterOptio
 		const last = considered[considered.length - 1]!;
 		return finish('serial', last.reason, last.detail);
 	}
+	// allocator statics move to a slot-private window the route validates, and the loss rule ends a dispatch that does not pay
 	const why = ownershipReason(refusal);
-	if (why !== 'no-certificate')
+	if (why !== 'no-certificate' && why !== 'allocator-state')
 		return finish('serial', why, `${refusal.reason}: ${refusal.detail}`);
 	const { importsDeterministic, residueUnobserved } = options.assume ?? {};
 	const shape = ask('shape', config('shape'), () => analyzeModule(bytes, call.entry));
@@ -541,6 +569,7 @@ export class Router {
 	// serial time of one record from the first probe, kept so the floor test needs no second probe
 	#perRecordMs?: number;
 	#dispatches = 0;
+	#losses = 0;
 	#why?: RouterReason;
 	#exports: WebAssembly.Exports = {};
 	// width of the stream state in bits, for the serial path of a stream call
@@ -786,13 +815,12 @@ export class Router {
 		return this.#after(call, 0, undefined, started);
 	}
 
-	// a dispatch that costs more than the serial time of its records, past the first, ends the dispatch
+	// two dispatches in a row past the first that cost more than the serial time of their records end the dispatch
 	#judge(ms: number, left: number): void {
 		this.#dispatches++;
-		if (
-			this.#dispatches >= 2 &&
-			ms * iterationAdmissionConstants.margin > left * this.#perRecordMs!
-		) {
+		if (this.#dispatches < 2) return;
+		if (ms * iterationAdmissionConstants.margin <= left * this.#perRecordMs!) this.#losses = 0;
+		else if (++this.#losses >= 2) {
 			this.#route = 'serial';
 			this.#why = 'dispatch-lost';
 		}
@@ -842,7 +870,13 @@ export class Router {
 			if (!report.iteration?.batches) {
 				this.#route = 'serial';
 				this.#why = 'below-floor';
-			} else this.#judge(performance.now() - dispatched, left);
+			} else {
+				this.#perRecordMs = lowerEstimate(
+					this.#perRecordMs!,
+					report.iteration.admission?.plainIterationMs
+				);
+				this.#judge(performance.now() - dispatched, left);
+			}
 			return done('tracked', 'tracked-eligible', {
 				tracked: { mode: report.mode, reason: report.reason, iteration: report.iteration }
 			});

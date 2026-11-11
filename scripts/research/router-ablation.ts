@@ -513,7 +513,7 @@ async function child(args: ChildArgs): Promise<void> {
 		d.write(memory);
 		close = () => pool.close();
 		run = async () => {
-			admissionSeam.force = false;
+			admissionSeam.force = process.env.FORCE_ADMISSION === '1';
 			const report = await pool.run('bulk', [d.layout.table, d.n, d.layout.out]);
 			const it = report.iteration;
 			return {
@@ -660,12 +660,14 @@ const flag = (argv: string[], name: string) => {
 	return at < 0 ? undefined : argv[at + 1];
 };
 
-function spawnChild(args: ChildArgs) {
+function spawnChild(args: ChildArgs): Record<string, unknown> {
+	const t0 = Date.now() / 1000;
 	const result = spawnSync(process.execPath, [here, 'child', JSON.stringify(args)], {
 		encoding: 'utf8',
 		maxBuffer: 1 << 26,
 		timeout: 900_000
 	});
+	const t1 = Date.now() / 1000;
 	const line = result.stdout.split('\n').find((l) => l.startsWith('ROW '));
 	if (!line)
 		return {
@@ -675,9 +677,11 @@ function spawnChild(args: ChildArgs) {
 			round: args.round,
 			status: result.status,
 			signal: result.signal,
-			stderr: result.stderr.slice(-600)
+			stderr: result.stderr.slice(-600),
+			t0,
+			t1
 		};
-	return JSON.parse(line.slice(4)) as Record<string, unknown>;
+	return { ...(JSON.parse(line.slice(4)) as Record<string, unknown>), t0, t1 };
 }
 
 async function main(argv: string[]) {

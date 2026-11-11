@@ -17,6 +17,12 @@ import {
 	TABLE
 } from '../../scripts/research/ownership-modules.ts';
 import {
+	mutantModule,
+	PREFIX_BASES,
+	PREFIX_MUTANTS,
+	prefixModuleOf
+} from '../../scripts/research/ownership-prefix-modules.ts';
+import {
 	FINAL_DIR,
 	firstDifference,
 	guardManifest,
@@ -24,9 +30,11 @@ import {
 	summarize,
 	type Sample
 } from '../../scripts/research/router-ablation.ts';
+import { certifyOwnership } from '../../src/ownership.ts';
 import {
 	CertificateCache,
 	decide,
+	lowerEstimate,
 	Router,
 	ROUTER_REASONS,
 	type RecordsCall,
@@ -59,6 +67,7 @@ const clean = assemble(iterWat({ body: SYNTHETIC.clean!, max: MAX }));
 const counter = assemble(iterWat({ body: SYNTHETIC.counter!, max: MAX }));
 const cursor = iterModuleOf(BASES.scratch!, 'cursor-store', MAX);
 const imported = iterModuleOf(BASES.scratch!, 'import-plain', MAX);
+const prefixed = prefixModuleOf(PREFIX_BASES.sha!);
 const wild = iterModuleOf(BASES.fill!, 'wide-dynamic-store', MAX);
 
 const STREAM_WAT = (mix: string) => `(module
@@ -120,7 +129,7 @@ describe('route order and refusal reasons', () => {
 			['mode has no records route', 'no-route-in-mode', window, 'w1'],
 			['no certificate in the w2 mode', 'no-certificate', clean, 'w2'],
 			['unasserted assumptions', 'assumption-unasserted', clean, 'router'],
-			['allocator state', 'allocator-state', cursor, 'router', { assume }],
+			['allocator state', 'allocator-state', cursor, 'w2'],
 			['shared static state', 'shared-state', counter, 'router', { assume }],
 			['an import', 'unclassified-dependency', imported, 'router', { assume }],
 			['a wild store', 'wild-store', wild, 'w2']
@@ -163,6 +172,44 @@ describe('route order and refusal reasons', () => {
 		const explicit = route(clean, 'router', { assume, explicit: async () => {} });
 		assert.equal(explicit.route, 'explicit');
 	});
+
+	test('an allocator driver takes the tracked route only on the caller assertions', () => {
+		const taken = route(cursor, 'router', { assume });
+		assert.equal(taken.route, 'tracked');
+		assert.equal(taken.reason, 'tracked-eligible');
+		assert.equal(route(cursor, 'router').reason, 'assumption-unasserted');
+		assert.equal(route(cursor, 'w2').reason, 'allocator-state');
+		assert.equal(route(counter, 'router', { assume }).reason, 'shared-state');
+	});
+
+	test('a buffer filled up to a cursor takes the window route through the prefix option', () => {
+		const sha = records({ entry: 'bulk' });
+		const got = decide(prefixed, sha, options('w2')).decision;
+		assert.equal(got.route, 'window');
+		assert.equal(got.reason, 'certified-window');
+		assert.equal(certifyOwnership(prefixed, { entry: 'bulk' }).kind, 'refusal');
+		for (const name of [
+			'cursor-plus-two',
+			'skip-a-byte',
+			'conditional-byte',
+			'reset-above-prefix'
+		]) {
+			const bytes = mutantModule(PREFIX_MUTANTS.find((m) => m.name === name)!);
+			const refused = decide(bytes, sha, options('w2')).decision;
+			assert.equal(refused.route, 'serial', name);
+			assert.equal(refused.reason, 'shared-state', `${name}: ${refused.detail}`);
+		}
+	});
+});
+
+describe('serial estimate', () => {
+	test('a tracked call lowers the per-record estimate to its own plain first iteration, never raises it', () => {
+		assert.equal(lowerEstimate(0.5, 0.04), 0.04);
+		assert.equal(lowerEstimate(0.5, 0.9), 0.5);
+		assert.equal(lowerEstimate(0.5, undefined), 0.5);
+		assert.equal(lowerEstimate(0.5, 0), 0.5);
+		assert.equal(lowerEstimate(0.5, Number.NaN), 0.5);
+	});
 });
 
 describe('certificate cache', () => {
@@ -193,6 +240,7 @@ describe('certificate cache', () => {
 		assert.ok(!miss(window, cache));
 		assert.ok(miss(iterModuleOf(BASES.scratch!, undefined, MAX + 1), cache));
 		assert.ok(miss(window, cache, { ownership: { maxSteps: 3_999_999 } }));
+		assert.ok(miss(window, cache, { ownership: { prefix: { cell: 4160, base: 4096 } } }));
 		assert.ok(miss(window, new CertificateCache({ backend: 'another-engine' })));
 		const copy = new CertificateCache({ backend: 'another-engine' });
 		copy.load(cache.serialize());
@@ -247,7 +295,9 @@ describe('running a route', () => {
 			const slot = (r: Router) =>
 				new Uint8Array(r.memory.buffer).slice(OUT, OUT + 64 * RECORDS);
 			assert.deepEqual(slot(forced), serialBytes(window, 3));
-			// the second dispatch is judged against the serial estimate; tiny records lose and stay serial
+			// dispatches after the first are judged against the serial estimate, and two losses in a
+			// row end the dispatch: tiny records lose and stay serial
+			assert.equal((await forced.run()).route, 'window');
 			assert.equal((await forced.run()).route, 'window');
 			const lost = await forced.run();
 			assert.equal(lost.route, 'serial');
