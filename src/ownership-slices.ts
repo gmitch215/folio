@@ -1,5 +1,5 @@
 import { redirectOwnership, type OwnershipRedirect } from './ownership-redirect.ts';
-import { guardRecords, type OwnershipCertificate } from './ownership.ts';
+import { checkConfig, guardRecords, type OwnershipCertificate } from './ownership.ts';
 import {
 	SlicePool,
 	type SlicePoolOptions,
@@ -11,11 +11,12 @@ import {
  * `layout`: a record region overlaps a certified window, so the certificate does not apply.
  * `wild-store`: the module stores to an address outside every window that no record owns, and
  * nothing here tracks it.
+ * `config`: the memory or a table word differs from the config the certificate was made for.
  */
 export class OwnershipSlicesError extends Error {
-	readonly code: 'layout' | 'wild-store';
+	readonly code: 'layout' | 'wild-store' | 'config';
 
-	constructor(code: 'layout' | 'wild-store', detail: string) {
+	constructor(code: 'layout' | 'wild-store' | 'config', detail: string) {
 		super(detail);
 		this.name = 'OwnershipSlicesError';
 		this.code = code;
@@ -91,6 +92,18 @@ export class OwnershipSlices {
 		const { regions, ...rest } = options;
 		if (!guardRecords(this.#certificate, [...regions, ...options.writes]))
 			throw new OwnershipSlicesError('layout', 'a record region overlaps a certified window');
+		const table = args(0, count)[0];
+		if (
+			this.#certificate.config &&
+			!checkConfig(this.#certificate, new Uint8Array(this.memory.buffer), {
+				at: Number(table),
+				count
+			})
+		)
+			throw new OwnershipSlicesError(
+				'config',
+				'the config words differ from the certificate'
+			);
 		return this.#pool.run(this.#certificate.entry, count, args, rest);
 	}
 

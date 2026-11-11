@@ -129,7 +129,11 @@ export function redirectOwnership(
 				const id = binaryen.getExpressionId(e);
 				if (id === binaryen.LoadId || id === binaryen.StoreId) {
 					const k = Number(BigInt.asUintN(32, BigInt(v.offset)));
-					if (k > lowest)
+					// a constant base plus the offset cannot wrap, so only a dynamic base needs the bound
+					const fixed =
+						binaryen.getExpressionId(v.ptr) === binaryen.ConstId &&
+						((binaryen.getExpressionInfo(v.ptr) as any).value >>> 0) + k <= 0xffffffff;
+					if (k > lowest && !fixed)
 						throw new OwnershipRedirectError(
 							'unsupported',
 							'an access offset passes a window'

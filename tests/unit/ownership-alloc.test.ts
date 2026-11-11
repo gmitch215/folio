@@ -244,3 +244,231 @@ describe('allocator certificate', () => {
 				assert.ok(reason === 'none' || OWNERSHIP_REASONS.includes(reason as never), name);
 	});
 });
+
+// a copy of a base with statements replaced or inserted, matched by their text
+const edited = (base: (typeof ALLOC_BASES)[string], change: (statements: string[]) => string[]) =>
+	allocModuleOf(base, change([...base.statements]));
+const swap = (statements: string[], from: string, to: string) =>
+	statements.map((s) => (s.includes(from) ? s.replace(from, to) : s));
+const insertBefore = (statements: string[], marker: string, add: string) => {
+	const at = statements.findIndex((s) => s.includes(marker));
+	assert.ok(at >= 0, marker);
+	return [...statements.slice(0, at), add, ...statements.slice(at)];
+};
+
+describe('allocator pieces: width-tracked cells', () => {
+	const widths = ALLOC_BASES.widths!;
+
+	test('one-, two- and four-byte fields keep their value and decide the allocation size', () => {
+		const bytes = allocBytes('widths');
+		const c = certificate(bytes);
+		assert.deepEqual(relocationMatches(bytes, c, [1, 2]), { ok: true });
+		assert.ok(verifyOwnership(bytes, c));
+	});
+
+	test('a byte read from inside a wider exact cell is the right byte, and the branch it decides is the real one', () => {
+		// byte 0 of 513 is 1; with 514 the else arm runs and it leaks a pointer
+		refusal(
+			edited(widths, (s) => swap(s, 'const 513', 'const 514')),
+			'ptr-store'
+		);
+		// byte 2 of 513 is 0, so the else arm runs; making it nonzero sends the run into the leaking arm
+		refusal(
+			edited(widths, (s) => swap(s, 'const 513', 'const 66049')),
+			'ptr-store'
+		);
+		// a signed byte load sign extends: 127 is not negative
+		refusal(
+			edited(widths, (s) => swap(s, 'const 128', 'const 127')),
+			'ptr-store'
+		);
+	});
+
+	test('a field overwritten by data, partly or by an unknown address, is not trusted', () => {
+		const cases: [string, (s: string[]) => string[]][] = [
+			[
+				'store8 data over the byte',
+				(s) =>
+					swap(
+						s,
+						'store8 offset=8 (global.get $sp) (i32.const 4)',
+						'store8 offset=8 (global.get $sp) (i32.and (local.get $sum) (i32.const 255))'
+					)
+			],
+			[
+				'store8 data over one byte of a wider cell',
+				(s) =>
+					insertBefore(
+						s,
+						'local.set $b',
+						'(i32.store8 offset=13 (global.get $sp) (local.get $sum))'
+					)
+			],
+			[
+				'store4 data over the cell',
+				(s) =>
+					insertBefore(
+						s,
+						'local.set $b',
+						'(i32.store offset=12 (global.get $sp) (local.get $sum))'
+					)
+			],
+			[
+				'store at an unknown stack offset',
+				(s) =>
+					insertBefore(
+						s,
+						'local.set $a',
+						'(i32.store8 (i32.add (global.get $sp) (i32.and (local.get $sum) (i32.const 24))) (i32.const 1))'
+					)
+			],
+			[
+				'memory.fill over the fields',
+				(s) =>
+					insertBefore(
+						s,
+						'local.set $a',
+						'(memory.fill (i32.add (global.get $sp) (i32.const 8)) (local.get $sum) (i32.const 8))'
+					)
+			]
+		];
+		for (const [name, change] of cases) {
+			const r = certifyOwnership(edited(widths, change), options);
+			assert.equal(r.kind, 'refusal', name);
+		}
+	});
+
+	test('an i64 store of a constant becomes two exact words that a 4-byte load reads', () => {
+		const wide = (value: string, load: string) =>
+			edited(widths, (s) =>
+				insertBefore(
+					s,
+					'local.set $a',
+					`(i64.store (global.get $sp) (i64.const ${value}))\n(local.set $d (call $malloc (i32.mul (i32.load offset=${load} (global.get $sp)) (i32.const 16))))\n(i32.store (local.get $d) (i32.const 1))`
+				)
+			);
+		const low = wide('3', '0');
+		assert.deepEqual(relocationMatches(low, certificate(low), [1, 2]), { ok: true });
+		const high = wide('17179869184', '4');
+		assert.deepEqual(relocationMatches(high, certificate(high), [1, 2]), { ok: true });
+		// the other word is zero, so the size is zero and the allocation still succeeds; the read of a data word does not
+		const dataWord = edited(widths, (s) =>
+			insertBefore(
+				s,
+				'local.set $a',
+				'(i64.store (global.get $sp) (i64.extend_i32_u (local.get $sum)))\n(local.set $d (call $malloc (i32.load (global.get $sp))))\n(i32.store (local.get $d) (i32.const 1))'
+			)
+		);
+		assert.equal(certifyOwnership(dataWord, options).kind, 'refusal');
+	});
+});
+
+describe('allocator pieces: nullable pointers', () => {
+	const nullable = ALLOC_BASES.nullable!;
+	const withTail = (...tail: string[]) => edited(nullable, (s) => [...s, ...tail]);
+	const LEAK = '(i32.store offset=32 (local.get $slot) (local.get $a))';
+
+	test('a malloc result joined with null certifies when every use is guarded by a null test', () => {
+		const bytes = allocBytes('nullable');
+		const c = certificate(bytes);
+		assert.deepEqual(relocationMatches(bytes, c, [1, 2, 3]), { ok: true });
+		assert.ok(verifyOwnership(bytes, c));
+	});
+
+	test('refinement takes the right side of eqz, a bare condition, br_if and a compare with zero', () => {
+		// a pointer leaked on the nonzero side is still a pointer
+		refusal(withTail(`(if (local.get $a) (then ${LEAK}))`), 'ptr-store');
+		refusal(withTail(`(if (i32.eqz (local.get $a)) (then) (else ${LEAK}))`), 'ptr-store');
+		refusal(withTail(`(if (i32.ne (local.get $a) (i32.const 0)) (then ${LEAK}))`), 'ptr-store');
+		refusal(withTail(`(block $x (br_if $x (i32.eqz (local.get $a))) ${LEAK})`), 'ptr-store');
+		// on the null side the value is exactly 0, so the same store is plain data and certifies
+		for (const tail of [
+			`(if (i32.eqz (local.get $a)) (then ${LEAK}))`,
+			`(if (local.get $a) (then) (else ${LEAK}))`,
+			`(if (i32.eq (local.get $a) (i32.const 0)) (then ${LEAK}))`,
+			`(block $x (br_if $x (local.get $a)) ${LEAK})`
+		]) {
+			const bytes = withTail(tail);
+			assert.deepEqual(
+				relocationMatches(bytes, certificate(bytes), [1, 2]),
+				{ ok: true },
+				tail
+			);
+		}
+	});
+
+	test('a maybe-null pointer is not dereferenced, offset, compared, hashed, returned or copied past its test', () => {
+		const cases: [string, string[], string][] = [
+			['deref', ['(i32.store (local.get $a) (i32.const 1))'], 'ptr-deref'],
+			['load', ['(drop (i32.load (local.get $a)))'], 'ptr-deref'],
+			[
+				'copy then test the original',
+				[
+					'(local.set $d (local.get $a))',
+					'(if (local.get $a) (then (i32.store (local.get $d) (i32.const 1))))'
+				],
+				'ptr-deref'
+			],
+			['bulk', ['(memory.fill (local.get $a) (i32.const 0) (i32.const 4))'], 'ptr-deref'],
+			[
+				'offset leaked',
+				['(i32.store offset=32 (local.get $slot) (i32.add (local.get $a) (i32.const 4)))'],
+				'ptr-store'
+			],
+			[
+				'difference with a plain pointer',
+				['(i32.store offset=32 (local.get $slot) (i32.sub (local.get $a) (local.get $b)))'],
+				'ptr-store'
+			],
+			[
+				'ordered compare with a pointer',
+				[
+					'(if (i32.lt_u (local.get $a) (local.get $b)) (then (i32.store offset=32 (local.get $slot) (i32.const 1))))'
+				],
+				'ptr-compare'
+			],
+			[
+				'signed compare with zero',
+				[
+					'(if (i32.lt_s (local.get $a) (i32.const 0)) (then (i32.store offset=32 (local.get $slot) (i32.const 1))))'
+				],
+				'ptr-compare'
+			],
+			[
+				'hashed into a branch',
+				[
+					'(if (i32.and (local.get $a) (i32.const 8)) (then (i32.store offset=32 (local.get $slot) (i32.const 1))))'
+				],
+				'ptr-control'
+			],
+			[
+				'stored to a window and read back unguarded',
+				[
+					'(i32.store (i32.const 4200) (local.get $a))',
+					'(i32.store (i32.load (i32.const 4200)) (i32.const 1))'
+				],
+				'ptr-deref'
+			]
+		];
+		for (const [name, tail, reason] of cases) {
+			const r = certifyOwnership(withTail(...tail), options);
+			assert.equal(r.kind, 'refusal', name);
+			assert.equal(
+				(r as OwnershipRefusal).reason,
+				reason,
+				`${name}: ${(r as OwnershipRefusal).detail}`
+			);
+		}
+		const returned = allocModuleOf(nullable, nullable.statements, 'return-ptr');
+		refusal(returned, 'ptr-return');
+	});
+
+	test('a pointer that is tested after it was stored and read back is guarded by the test on the copy', () => {
+		const bytes = withTail(
+			'(i32.store (i32.const 4200) (local.get $a))',
+			'(local.set $d (i32.load (i32.const 4200)))',
+			'(if (local.get $d) (then (i32.store (local.get $d) (i32.const 1))))'
+		);
+		assert.deepEqual(relocationMatches(bytes, certificate(bytes), [1, 2]), { ok: true });
+	});
+});
