@@ -73,6 +73,8 @@ const NODE = (name: string, size = 8) => `(local.set $${name} (call $malloc (i32
 export interface AllocBase {
 	statements: string[];
 	stack?: boolean;
+	/** module-level text the base needs, such as a table or a data segment */
+	extra?: string;
 }
 
 export const ALLOC_BASES: Record<string, AllocBase> = {
@@ -146,6 +148,82 @@ export const ALLOC_BASES: Record<string, AllocBase> = {
 			'(i32.store (local.get $slot) (i32.load (local.get $n)))',
 			'(i32.store offset=4 (local.get $slot) (i32.sub (local.get $n) (local.get $a)))',
 			'(global.set $sp (i32.add (global.get $sp) (i32.const 32)))'
+		]
+	},
+	widths: {
+		stack: true,
+		statements: [
+			'(global.set $sp (i32.sub (global.get $sp) (i32.const 32)))',
+			SET,
+			'(i32.store8 offset=8 (global.get $sp) (i32.const 4))',
+			'(i32.store offset=12 (global.get $sp) (i32.const 513))',
+			'(i32.store16 offset=20 (global.get $sp) (i32.const 770))',
+			'(i32.store8 offset=24 (global.get $sp) (i32.const 128))',
+			'(local.set $a (call $malloc (i32.mul (i32.load8_u offset=8 (global.get $sp)) (i32.const 16))))',
+			'(local.set $b (call $malloc (i32.load8_u offset=13 (global.get $sp))))',
+			'(local.set $c (call $malloc (i32.load8_u offset=21 (global.get $sp))))',
+			'(i32.store (local.get $a) (local.get $sum))',
+			'(i32.store (local.get $b) (local.get $sum))',
+			'(i32.store8 (local.get $c) (local.get $sum))',
+			'(if (i32.eq (i32.load8_u offset=12 (global.get $sp)) (i32.const 1)) (then (i32.store offset=8 (local.get $slot) (local.get $sum))) (else (i32.store offset=8 (local.get $slot) (local.get $a))))',
+			'(if (i32.load8_u offset=14 (global.get $sp)) (then (i32.store offset=12 (local.get $slot) (local.get $a))) (else (i32.store offset=12 (local.get $slot) (local.get $sum))))',
+			'(if (i32.lt_s (i32.load8_s offset=24 (global.get $sp)) (i32.const 0)) (then (i32.store offset=16 (local.get $slot) (local.get $sum))) (else (i32.store offset=16 (local.get $slot) (local.get $a))))',
+			'(i32.store (local.get $slot) (i32.sub (local.get $b) (local.get $a)))',
+			'(i32.store offset=4 (local.get $slot) (i32.load16_u offset=20 (global.get $sp)))',
+			'(global.set $sp (i32.add (global.get $sp) (i32.const 32)))'
+		]
+	},
+	fnptr: {
+		stack: true,
+		extra: `(type $ft (func (param i32) (result i32)))
+	(table 5 funcref)
+	(elem (i32.const 1) $falloc $fadd $fmul $fid)
+	(func $falloc (type $ft) (call $malloc (local.get 0)))
+	(func $fadd (type $ft) (i32.add (local.get 0) (i32.const 1)))
+	(func $fmul (type $ft) (i32.mul (local.get 0) (i32.const 3)))
+	(func $fid (type $ft) (local.get 0))
+	(data (i32.const 100000) "\\02\\00\\00\\00\\03\\00\\00\\00")`,
+		statements: [
+			'(global.set $sp (i32.sub (global.get $sp) (i32.const 32)))',
+			SET,
+			'(i64.store (global.get $sp) (i64.const 0))',
+			'(if (i32.eqz (i32.load (global.get $sp))) (then (i32.store (global.get $sp) (i32.const 1))))',
+			'(local.set $a (call_indirect (type $ft) (i32.const 16) (i32.load (global.get $sp))))',
+			'(i32.store (local.get $a) (local.get $sum))',
+			'(i32.store (local.get $slot) (call_indirect (type $ft) (local.get $sum) (i32.load (i32.const 100000))))',
+			'(i32.store offset=4 (local.get $slot) (call_indirect (type $ft) (local.get $len) (i32.load offset=4 (i32.const 100000))))',
+			'(i32.store offset=8 (local.get $slot) (i32.load (local.get $a)))',
+			'(global.set $sp (i32.add (global.get $sp) (i32.const 32)))'
+		]
+	},
+	stackptr: {
+		stack: true,
+		statements: [
+			'(global.set $sp (i32.sub (global.get $sp) (i32.const 64)))',
+			SET,
+			'(i32.store offset=32 (global.get $sp) (local.get $sum))',
+			'(i32.store (global.get $sp) (i32.add (global.get $sp) (i32.const 32)))',
+			'(local.set $n (i32.load (global.get $sp)))',
+			'(i32.store offset=4 (local.get $slot) (i32.load (local.get $n)))',
+			'(i32.store (local.get $n) (i32.add (i32.load (local.get $n)) (i32.const 1)))',
+			'(i32.store offset=8 (local.get $slot) (i32.load offset=32 (global.get $sp)))',
+			'(if (i32.eq (local.get $n) (i32.add (global.get $sp) (i32.const 32))) (then (i32.store offset=12 (local.get $slot) (i32.const 1))) (else (i32.store offset=12 (local.get $slot) (local.get $sum))))',
+			'(if (local.get $n) (then (i32.store offset=16 (local.get $slot) (i32.const 2))))',
+			'(i32.store (local.get $slot) (i32.lt_u (local.get $n) (global.get $sp)))',
+			'(global.set $sp (i32.add (global.get $sp) (i32.const 64)))'
+		]
+	},
+	nullable: {
+		statements: [
+			SET,
+			'(local.set $b (if (result i32) (i32.and (local.get $sum) (i32.const 1)) (then (call $malloc (i32.const 8))) (else (i32.const 0))))',
+			'(block $nb (br_if $nb (i32.eqz (local.get $b))) (i32.store (local.get $b) (i32.const 3)) (i32.store offset=12 (local.get $slot) (i32.load (local.get $b))))',
+			'(if (i32.ne (local.get $b) (i32.const 0)) (then (i32.store offset=16 (local.get $slot) (i32.const 1))))',
+			'(i32.store (local.get $slot) (i32.eqz (local.get $b)))',
+			'(if (local.get $b) (then (i32.store offset=20 (local.get $slot) (i32.const 5))))',
+			'(i32.store offset=24 (local.get $slot) (select (i32.const 9) (i32.const 8) (local.get $b)))',
+			'(local.set $a (call $malloc (i32.shl (i32.and (local.get $sum) (i32.const 127)) (i32.const 3))))',
+			'(if (i32.eqz (local.get $a)) (then (i32.store offset=8 (local.get $slot) (i32.const 77))) (else (i32.store (local.get $a) (local.get $sum)) (i32.store offset=4 (local.get $slot) (i32.load (local.get $a)))))'
 		]
 	}
 };
@@ -408,7 +486,7 @@ export const ALLOC_INSERTS: Record<string, AllocInsert> = {
 	'indirect-call': {
 		text: '(call_indirect (type $nt) (i32.const 0))',
 		extra: TABLE_NOP,
-		expect: ['isolation']
+		expect: ['isolation', 'none']
 	},
 	'trap-after-write': { text: `(if ${ODD} (then (unreachable)))`, expect: ['failure', 'none'] },
 	'trap-early': { text: `(if ${ODD} (then (unreachable)))`, expect: ['none', 'failure'] }
@@ -426,7 +504,7 @@ export const allocModuleOf = (
 	return assemble(
 		allocWat({
 			body: all.join('\n\t\t'),
-			extra: add?.extra ?? '',
+			extra: [base.extra, add?.extra].filter(Boolean).join('\n'),
 			ret: add?.ret,
 			max,
 			stack: needsSp
