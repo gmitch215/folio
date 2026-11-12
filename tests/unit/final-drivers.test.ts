@@ -61,6 +61,13 @@ describe('final driver manifest', () => {
 	test('the shim and every vendored upstream tree match their digests', () => {
 		verifyDigests(manifest);
 	});
+
+	test('git keeps the vendored trees byte for byte and prettier skips them', () => {
+		const attributes = readFileSync(join(root, '.gitattributes'), 'utf8');
+		const ignored = readFileSync(join(root, '.prettierignore'), 'utf8');
+		expect(attributes).toMatch(/^scripts\/research\/final-cases\/upstream\/\*\* -text$/m);
+		expect(ignored).toMatch(/^scripts\/research\/final-cases\/upstream\/$/m);
+	});
 });
 
 // two small drivers: one protobuf stream read and one CBOR encoder init.
