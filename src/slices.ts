@@ -40,7 +40,9 @@ export interface SliceRunOptions {
 	grain?: number;
 	/**
 	 * Byte ranges the calls write outside the windows, such as the output slots. A pool opened with
-	 * `ownership` needs them: they are copied before the run and put back when a slice traps.
+	 * `ownership` needs them: they are copied before the run and put back when a slice traps. The
+	 * list must name every range the calls write: a range left out keeps the writes of the calls
+	 * after the trap, and the serial replay does not undo them.
 	 */
 	writes?: [number, number][];
 	/** Largest copy of `writes` in bytes. Past it the calls run serially in place. Default 64 MiB. */

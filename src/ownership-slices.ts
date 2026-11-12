@@ -26,7 +26,11 @@ export class OwnershipSlicesError extends Error {
 export interface OwnershipSliceRunOptions extends Omit<SliceRunOptions, 'writes'> {
 	/** Every region the records touch: the table, inputs, aux data, outputs and arena slices. */
 	regions: [number, number][];
-	/** The regions the records write outside the windows. They are restored when a slice traps. */
+	/**
+	 * The regions the records write outside the windows. They are restored when a slice traps. The
+	 * list must name every range the records write: a range left out keeps the writes of the records
+	 * after the trap, and the serial replay does not undo them.
+	 */
 	writes: [number, number][];
 }
 
