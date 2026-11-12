@@ -47,7 +47,9 @@ the same engine.</p>
 <p>A Worker, a Linux machine in a Durable Object and a PHP interpreter all end up as one Wasm
 instance on one thread. Folio spreads the work of that instance across cores without asking the
 program to be rewritten. The caller passes one ordinary entry point. The compiler discovers the
-regions, so on the automatic route there are no access annotations and no caller-created chunks. The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report says which checks each route runs.</p>
+regions, so on the automatic route there are no access annotations and no caller-created chunks.
+The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report
+says which checks each route runs.</p>
 <ul>
 <li><strong>Native Sharing.</strong> Isolates map the same backing allocation, so a 256 MiB arena costs about 4 MiB
 to attach to another isolate instead of a copy.</li>
@@ -159,7 +161,19 @@ stays serial and the report names the reason.</p>
 <p>A program whose iterations can read state another iteration is changing and then loop on it, such as
 a linked structure two iterations rewrite, needs <code>iterationStall</code>.</p>
 <h2 id="🧩-examples" class="tsd-anchor-link">🧩 Examples<a href="#🧩-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>iteration</code> runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, <code>slice-pool</code> fills one shared memory from several threads and audits the run against the serial one, and <code>boot-image</code> bakes captured memory into a module.</p>
+<p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after
+<code>bun run build:c</code> and <code>bun run build</code>:</p>
+<ul>
+<li><code>basic</code> runs one entry.</li>
+<li><code>routing</code> reads the report and shows capped and adaptive routing.</li>
+<li><code>iteration</code> runs a loop of per-record calls on workers over a shared memory and compares the
+digests with the serial run.</li>
+<li><code>context-reset</code> resets a private instance between jobs.</li>
+<li><code>task-pool</code> joins independent jobs in order.</li>
+<li><code>slice-pool</code> fills one shared memory from several threads and audits the run against the serial
+one.</li>
+<li><code>boot-image</code> bakes captured memory into a module.</li>
+</ul>
 <h2 id="⏳-asynchronous-host-effects" class="tsd-anchor-link">⏳ Asynchronous Host Effects<a href="#⏳-asynchronous-host-effects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Folio</span><span class="hl-1">, </span><span class="hl-5">suspending</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">folio</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Folio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-9">module</span><span class="hl-1">, {</span><br/><span class="hl-1">  </span><span class="hl-5">imports:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">host:</span><span class="hl-1"> {</span><br/><span class="hl-1">      </span><span class="hl-5">read:</span><span class="hl-1"> </span><span class="hl-0">suspending</span><span class="hl-1">(</span><span class="hl-6">async</span><span class="hl-1"> (</span><span class="hl-5">key</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> (</span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">fetch</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">URL</span><span class="hl-1">(</span><span class="hl-0">String</span><span class="hl-1">(</span><span class="hl-5">key</span><span class="hl-1">), </span><span class="hl-5">storageUrl</span><span class="hl-1">))).</span><span class="hl-5">status</span><span class="hl-1">)</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">promising:</span><span class="hl-1"> [</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">]</span><br/><span class="hl-1">});</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;main&#39;</span><span class="hl-1">, [</span><span class="hl-8">42</span><span class="hl-1">]);</span><br/><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span>
 </code><button type="button">Copy</button></pre>
@@ -188,11 +202,12 @@ whose <code>execute(frame)</code> returns a binary response, and <code>FolioLane
 The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
 ordered byte validation connect independent lanes. A transport failure falls back to native owner
 execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
-must fit the owner runtime. Frames carry the whole snapshot by default. <code>snapshotEncoding: 'auto'</code> omits pages
-that are all zero, which saves traffic for sparse arenas, and lanes older than 1.0.1 reject its
-frames. The snapshot limit is 31 MiB by default. A frame over <code>maximumFrameBytes</code> (the snapshot limit
-plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that call runs at the
-owner and <code>diagnostics</code> names the frame size and the limit. See <a href="media/METHOD.md">the managed procedure</a>.</p>
+must fit the owner runtime. Frames carry the whole snapshot by default. <code>snapshotEncoding: 'auto'</code>
+omits pages that are all zero, which saves traffic for sparse arenas, and lanes older than 1.0.1
+reject its frames. The snapshot limit is 31 MiB by default. A frame over <code>maximumFrameBytes</code> (the
+snapshot limit plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that
+call runs at the owner and <code>diagnostics</code> names the frame size and the limit. See
+<a href="media/METHOD.md">the managed procedure</a>.</p>
 <p>Four options change what a call costs. <code>ranges</code> ships the byte ranges a region reads and writes,
 learned from earlier calls, instead of a snapshot: an 8 MiB arena sends about 0.2% of the bytes.
 <code>inline</code> on a <code>FolioLane</code> runs a module that tracks accesses in its own code, so a lane no longer
@@ -310,8 +325,8 @@ throws for a certificate with <code>output</code>: chunks that start from state 
 <p>A refusal describes the checker and not the function: a function it cannot prove runs serially or through
 <code>foldAffine</code> in exact mode. The checker refuses a branch on input data or on the state, a pointer or
 length used as data, state kept in memory or globals, stores other than the in-place byte rewrite,
-imports, a start function and passive data segments. A function that depends on the alignment of its pointer or reads
-past its input is refused. <code>zeroLength</code> in the certificate says what a call over no bytes returns, and
+imports, a start function and passive data segments. A function that depends on the alignment of
+its pointer or reads past its input is refused. <code>zeroLength</code> in the certificate says what a call over no bytes returns, and
 <code>foldCertified</code> runs an empty input as the serial call.</p>
 <h2 id="🔏-ownership-certificates" class="tsd-anchor-link">🔏 Ownership Certificates<a href="#🔏-ownership-certificates" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/ownership</code> checks whether a function that loops over records keeps its scratch
@@ -362,7 +377,11 @@ passes, so they must be complete.</li>
 <p>The <code>allocator</code>, <code>prefix</code> and <code>config</code> modes add their own premises, which the certificate lists in
 <code>allocator.assumptions</code>, <code>prefix.rules</code> and <code>config.rules</code>. The checker has produced false
 certificates. A red team round found three classes of them that earlier mutation testing had not
-found, and the fixes are part of this release. PENDING(readme-audit-status)</p>
+found, and the fixes are part of this release. Red team round 3 found four more classes before the
+checker was frozen, and those are closed too. On the frozen checker, the adversary families and two
+generators of 20,000 modules each found no module whose certificate was wrong. The adversary
+families accept the same number of modules as before the fixes, so they do not exercise the new
+refusals, and the generators have blind spots. The premises above still apply.</p>
 <h2 id="🚦-router" class="tsd-anchor-link">🚦 Router<a href="#🚦-router" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/router</code> picks one route for a call from the module bytes and a description of
 the call, runs it and says why. A call is <code>{ kind: 'stream', entry, ptr, len }</code> for one function
@@ -443,8 +462,8 @@ zeros, and pages that are zero in both are left out. Pass the global values and 
 the same instance's table references to <code>captureImage</code> as <code>globals</code> and <code>table</code>; it records what boot
 changed. <code>bakeModule</code> writes changed i32, i64, f32 and f64 globals into their initial values and
 refuses changed table slots unless <code>allowTableChanges</code> is set. It throws <code>ImageMismatchError</code>, which
-has a <code>code</code>, for a wrong module digest, a start function, no memory, an image over the memory maximum and a global it
-cannot rewrite. Adjacent pages become one segment of at most <code>maxSegmentBytes</code> (64 MiB).</p>
+has a <code>code</code>, for a wrong module digest, a start function, no memory, an image over the memory
+maximum and a global it cannot rewrite. Adjacent pages become one segment of at most <code>maxSegmentBytes</code> (64 MiB).</p>
 <p><code>applyImage(memory, image)</code> copies the pages into a fresh instance's memory without baking. It
 cannot set a module's globals or table slots, so an image that records changed ones is refused with
 code <code>global</code> or <code>table</code>; <code>{ memoryOnly: true }</code> copies the memory anyway and leaves the instance
@@ -568,8 +587,8 @@ contention or leaves CPU for other jobs.</li>
 apply when <code>open</code> prepares raw bytes), <code>fuel</code> (100,000,000), <code>maxTransactionBytes</code> (262,144),
 <code>promising</code>, <code>profile</code> and <code>adaptiveRouting</code>. With <code>adaptiveRouting</code>, a call shape (entry, width,
 memory size and numeric arguments) whose last two runs mostly replayed or fell back runs natively
-for the next 16 calls and is then probed again. It is off by default. A one-worker pool uses its native entry and creates no idle
-worker.</p>
+for the next 16 calls and is then probed again. It is off by default. A one-worker pool uses its
+native entry and creates no idle worker.</p>
 <p>Profiling is opt-in. <code>report.profile</code> holds elapsed time, worker observations, validation, commit
 and replay time, and tracked read and write bytes. On generalized batches <code>workerWallMs</code> and
 <code>workerCpuMs</code> hold per-region observations. Measure process CPU once at the coordinator, because
@@ -736,12 +755,12 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 <tr>
 <td>Ownership certificate, slice route</td>
 <td>frozen final corpus, 47 drivers from 10 projects</td>
-<td>PENDING(readme-final-eval)</td>
+<td>window certificate on 1 of 47 drivers (<code>minimp3-mp3dec_init</code>), run on the window in 21 of 30 arm64 rounds and 0 of 30 x86_64 rounds; router geomean stays 0.90, gate missed (<code>router-ablation-final.ts</code>, rig and Mac)</td>
 </tr>
 <tr>
 <td>Router</td>
 <td>frozen final corpus, 47 drivers from 10 projects</td>
-<td>PENDING(readme-final-eval)</td>
+<td>geomean 0.899 (0.861 to 0.935) on the Ryzen 9 9900X rig and 0.900 (0.858 to 0.941) on the Apple M2 Pro, three sessions each, against 1.20; slowest of the five slowest 0.594 and 0.561 against 0.90; 17,484 rows, 0 wrong; not met</td>
 </tr>
 <tr>
 <td>Unmodified external programs</td>
