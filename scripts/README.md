@@ -25,6 +25,9 @@ artifact the evidence names.
 `prepare.ts` runs the compiler over `fixture.wasm` and `generalized.wasm` and writes
 `build/probe.json` and `build/control-prepared.json`, which the probes read.
 
+`sqlite-source.sh` downloads the SQLite 3.50.4 amalgamation into `build/`, checks its sha256 and
+prints the directory. CI sets `FOLIO_SQLITE_SOURCE` from it for the SQLite lanes integration test.
+
 ## Analyze
 
 `bun scripts/analyze/run.ts` regenerates every `results/*/summary.json` from its raw `.jsonl`.
@@ -115,6 +118,9 @@ an environment record that names the runtime, hardware and a SHA256 of every sou
 | `elastic-pager.ts`, `elastic-pager-glue.ts`                                                                                                | a frames pool with a CLOCK hand and a store under a translated module, the host accessor that makes the emscripten heap views read through its page table, and the glue patch that installs it                  |
 | `translation-span.ts`, `translation-tax-summary.ts`                                                                                        | page span of the hot set and region split; `summary.json` of the tax study with paired tau per arm, class shares and the G-tau block (the optimizing tier is exploratory)                                       |
 | `translation-tau2-summary.ts`, `translation-duration-summary.ts`                                                                           | tau per route with a median interval for the quiet-rig sweep (a gate claim needs ten quiet pairs per route); tau against request duration, one row per workload and render rung                                 |
+| `stack-check.ts`                                                                                                                           | inserts a check before every stack-pointer lowering of a module so that a stack overflow traps cleanly; refuses a stack-pointer write shape it does not know                                                    |
+| `final-cases/`                                                                                                                             | the final corpus: `draw.ts` (seeded draw), `build-drivers.ts`, the shim, the driver sources, `final-manifest.json` and `prereg/` with the pre-registration and the `FROZEN` marker                              |
+| `external-apps/`                                                                                                                           | builds unchanged outside programs against a freestanding libc layer and times them with paired rounds                                                                                                           |
 | `export.ts`, `evidence.ts`                                                                                                                 | copy a run into `results/` with summaries and a manifest; verify every manifest and the historical index                                                                                                        |
 | `environment.ts`, `backing.ts`, `corpus-worker.ts`, `crossover-worker.ts`, `grain-worker.ts`, `plot.py`                                    | the environment record every harness writes; the backing ablation; worker entries of the harnesses above; standalone figures from frozen summaries                                                              |
 

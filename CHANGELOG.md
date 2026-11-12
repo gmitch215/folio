@@ -36,6 +36,26 @@
 - `ManagedFolio` options `ranges`, `runs`, `memo` and `inline`, and the paged, hash-verified `Lease`
   (`src/lease.ts`, with `LeaseMismatch`) for immutable content. Managed lanes ship learned byte ranges,
   answer in runs, track inline in a lane and reuse recorded region results.
+- `@gmitch215/folio/ownership` with `certifyOwnership` and `verifyOwnership`. `certifyOwnership` proves
+  that a record's scratch window is private under six obligations (state isolation, read before write,
+  aliasing, final state, escaping addresses, failure) and returns a window and a copy-out rule or a typed
+  refusal. Options cover a prefix-written buffer, a configuration premise, recursion and an allocator mode
+  with pointer provenance. `verifyOwnership` re-derives a certificate.
+- `@gmitch215/folio/ownership-redirect` with `redirectOwnership` and `ownershipRoute`, which run a certified
+  window on per-worker shadow copies on the iteration pool, and `@gmitch215/folio/ownership-slices` with
+  `OwnershipSlices` and `ownershipSlices`, which run it in place on the slice pool. The slice route is fail
+  closed: on a trap or any failure it publishes nothing and reruns serially, and it refuses a certificate
+  that has wild stores.
+- `@gmitch215/folio/router` with `Router`, `CertificateCache`, `decide` and `analyzeModule`. The router picks
+  the certified summary, the certified window, tracked speculation or serial per call, caches certificates
+  and refusals by module digest, backend, checker versions and options, and ends a dispatch after two losing
+  dispatches. The ownership and router results are development results: 6 of 10 drivers certify and the
+  router's development interval does not exclude 1.0 (see the report).
+- A second verifier for stream certificates (`scripts/research/certify-verify*.ts`), a counts script
+  (`certify-counts.ts`) and the four adversary rounds, with their raw rows under `results/certification/`.
+- Research tooling for the elastic-memory study under `scripts/research/` and `experiments/elastic*`: the
+  translating pass, the translation tax and duration summaries, the stack-limit check pass, the paging
+  governor with an injectable clock, a paging runtime with real eviction, and the live ladder harness.
 - Research tooling under `scripts/research/` for the corpus, the lane studies and the rig, and
   `export.ts --manifest` so every study sits under the evidence gate. The report carries a Correctness
   Boundary, a Related Work section and the measured limits of each route.

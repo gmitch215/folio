@@ -3,7 +3,7 @@
 | where                | what                                                                                                                                           | runs                                            |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
 | `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`                                                                | compiled to `build/*.wasm` by `bun run build:c` |
-| `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, boot image baking, context checkpoints, host, remote, managed, probes, research tooling | `bun run test`, under 5 seconds                 |
+| `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, boot image baking, context checkpoints, host, remote, managed, probes, research tooling | `bun run test`, about 40 seconds in all         |
 | `tests/helpers/`     | worker entry points the unit tests spawn: the browser bridge and the task pool                                                                 | imported by `tests/unit/`                       |
 | `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                                                             | `bun run test:integration`, about 25 seconds    |
 | `tests/e2e/`         | live deploys to a Cloudflare account                                                                                                           | `bun run test:e2e`, skipped without credentials |
@@ -24,6 +24,8 @@ Fixture bytes must not depend on the machine's `PATH`; `tests/unit/fixtures.test
 
 - One spec file per domain. Extend `managed.test.ts` rather than adding a second managed spec.
 - The gate is hermetic. Nothing in `unit/` opens a network connection or a real Cloudflare binding.
+- Each unit spec file is meant to run in under 2 seconds on an idle machine. Under load some files take
+  longer.
 - Probe workers run in `experiments/`, and their logic is tested here by importing the exports with
   the platform modules mocked (`browser-probe.test.ts`).
 - A bug fix lands with the regression test that would have caught it.

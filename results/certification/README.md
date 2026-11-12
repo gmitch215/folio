@@ -11,3 +11,5 @@ study runs the same corpora and two further rounds of review.
 - [checker-redteam](checker-redteam/README.md)
 - [loop-census](loop-census/README.md)
 - [stream-certifier](stream-certifier/README.md)
+- [stream-verifier](stream-verifier/README.md)
+- [adversary-round-four](adversary-round-four/README.md)

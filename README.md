@@ -22,6 +22,8 @@ the same engine.
 - [Task Pool](#-task-pool)
 - [Slice Pool](#-slice-pool)
 - [Certified Stream Folds](#-certified-stream-folds)
+- [Ownership Certificates](#-ownership-certificates)
+- [Router](#-router)
 - [Context Checkpoints](#-context-checkpoints)
 - [Baked Boot Images](#-baked-boot-images)
 - [Execution and Memory](#-execution-and-memory)
@@ -71,8 +73,14 @@ and a small job loses to dispatch overhead.
   stack per worker and an optional serial audit, for calls the caller declares independent.
 - 🧮 **Exact chunked recurrences** that split one CRC-32, Adler-32 or AES-CTR stream across the
   task pool and join the chunk states into the serial result.
-- 🛑 **Stall guard** that stops an iteration batch that does not return and finishes the loop
-  serially, for programs whose iterations can loop on state another iteration is changing.
+- 🔏 **Ownership certificates** that check whether the fixed-address scratch of a record function is
+  private to each record, so a certified loop of records runs in place on the slice pool. Each
+  certificate lists the premises it relies on.
+- 🚦 **Router** that picks the certified summary, the certified window, tracked speculation or
+  serial for each call, caches certificates and refusals, and names the reason for every refusal.
+- 🛑 **Stall guard** (`iterationStall`, off by default) that stops an iteration batch that does not
+  return and finishes the loop serially, for programs whose iterations can loop on state another
+  iteration is changing.
 - 🧊 **Baked boot images** that write a booted memory into the module as data segments.
 - 📊 **Opt-in profiling** of worker time, validation, commit and replay cost.
 
@@ -130,6 +138,19 @@ runs on the owner, and its measured time and the time of each batch decide wheth
 loop that writes more per iteration than the undo log holds, or whose batches lose to the serial time,
 finishes serially. With an unshared memory, or one the library cannot grow by the arena it needs, the run
 stays serial and the report names the reason.
+
+Five `Folio.open` options adjust the iteration route. All five are off by default.
+
+| Option                  | Effect                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `iterationReadWindows`  | Learns read windows from the first batch that finishes without a conflict, so loads of the input the iterations stream through set no per-access mark. A window can cost a false conflict, never a different result.                                                                                                                                                                                   |
+| `iterationReadSummary`  | Keeps a summary of the 64-word blocks of each read bitmap that a read touched, so workers scan those blocks and not the whole bitmap. The conflicts found do not change. It adds a few instructions to every tracked read.                                                                                                                                                                             |
+| `iterationSecondChance` | Judges a loop a little under the dispatch floor on one timed batch, and lets the batches a running loop has shown decide whether the rest pays. A probe that loses ends the dispatch and the loop runs serially for the next 16 calls. The result is the same either way.                                                                                                                              |
+| `iterationLogCeiling`   | A number of undo entries per iteration. When a batch exhausts the default log, the logs grow to this size and the batch retries once. Unset, that batch finishes serially. On padded LZ4 the retry cost more than the dispatch gained, because ordered validation is quadratic in the logged entries.                                                                                                  |
+| `iterationStall`        | `true` or `{ factor, floorMs }`. Workers poll a stop word at every loop start. A batch that runs past `factor` times the serial time of its iterations (50 by default), and at least `floorMs` (2000 ms), traps and rolls back from the undo logs, and the loop finishes serially with `iteration.stopped` set to `stalled`. The poll cost 0.9% to 11.2% of worker time on the four programs measured. |
+
+A program whose iterations can read state another iteration is changing and then loop on it, such as
+a linked structure two iterations rewrite, needs `iterationStall`.
 
 ## 🧩 Examples
 
@@ -405,6 +426,167 @@ imports, a start function and passive data segments. A function that depends on 
 past its input is refused. `zeroLength` in the certificate says what a call over no bytes returns, and
 `foldCertified` runs an empty input as the serial call.
 
+## 🔏 Ownership Certificates
+
+`@gmitch215/folio/ownership` checks whether a function that loops over records keeps its scratch
+memory private to each record. Compiled drivers often write a fixed address (a scratch buffer, a
+static table, a cursor) before they read it back, and records that run on several threads over one
+memory collide there. `certifyOwnership(bytes, options)` takes an entry that is `bulk(table, count,
+out, ...)` by default (`entry` and `convention` name another function and record layout), finds the
+fixed-address windows the records write, and returns a certificate or a refusal. A certificate
+covers six obligations: state isolation, read before write, aliasing through indirect pointers and
+bulk operations, the final state the owner must rebuild, escaping addresses, and failure (a trap or
+aborted iteration publishes nothing). The `prefix`, `config`, `recursion` and `allocator` options
+widen the domain the checker handles, and each adds premises that the certificate lists.
+
+A refusal carries a `reason` from the closed list `OWNERSHIP_REASONS`, the `obligation` it belongs
+to, a `detail` and, where there is one, an `address`. The reasons are one per obligation
+(`isolation`, `read-before-write`, `aliasing`, `final-state`, `escape`, `failure`), the pointer
+rules of the allocator mode (`ptr-store`, `ptr-return`, `ptr-import`, `ptr-compare`, `ptr-control`,
+`ptr-deref`, `allocator`), `prefix-store`, `prefix-cover`, `config-store`, and four about scope:
+`no-window`, `unsupported`, `budget` and `invalid`. `budget` means the analysis hit its step limit
+(4,000,000 by default) and says nothing about the program. Any refusal says what the checker could
+not establish, and the function runs serially or on another route. On the 10 development drivers
+that fail the plain slice pool, 6 certify.
+
+`verifyOwnership(bytes, certificate)` re-derives the certificate from the module and compares
+everything except the work counters. A certificate names the module digest and the checker version
+(`OWNERSHIP_CHECKER`).
+
+Two routes run a certified driver. `ownershipSlices` from `@gmitch215/folio/ownership-slices`
+redirects every window access to a private copy per worker and runs the records in place on the
+slice pool. A trap in any slice puts `writes` back and runs the calls serially in place, so the
+serial run decides the memory and the trap. `ownershipSlices` throws `OwnershipSlicesError` with
+code `wild-store` for a certificate that records stores no record owns. `run` throws it with code
+`layout` when a record region overlaps a window, and with `config` when the memory differs from a
+configuration the certificate assumed. `redirectOwnership` and `ownershipRoute` from
+`@gmitch215/folio/ownership-redirect` make the same rewrite and hand it to the iteration pool,
+which tracks every access and paid less on the module measured.
+
+```ts
+import { certifyOwnership, verifyOwnership } from '@gmitch215/folio/ownership';
+import { ownershipSlices } from '@gmitch215/folio/ownership-slices';
+
+const certificate = certifyOwnership(bytes, { entry: 'bulk' });
+if (certificate.kind === 'refusal') {
+  throw new Error(`${certificate.reason} (${certificate.obligation}): ${certificate.detail}`);
+}
+if (!verifyOwnership(bytes, certificate)) throw new Error('the certificate does not re-derive');
+
+const memory = new WebAssembly.Memory({ initial: 8, maximum: 40, shared: true });
+const pool = await ownershipSlices(bytes, certificate, { memory, workers: 4 });
+try {
+  // write the record table, the inputs and the output area into pool.memory here
+  const report = await pool.run(
+    count,
+    (from, to) => [table + 16 * from, to - from, out + 64 * from],
+    {
+      regions: [
+        [table, table + 16 * count],
+        [input, input + inputBytes],
+        [out, out + 64 * count]
+      ],
+      writes: [[out, out + 64 * count]]
+    }
+  );
+  console.log(report.ownership?.replayed);
+} finally {
+  await pool.close();
+}
+```
+
+A certificate rests on premises that the checker does not prove, and a run that breaks one can
+return a different result than the serial program:
+
+- The record regions (table, output slots, inputs, auxiliary data, arena slices and stack slots)
+  do not overlap a window. `OwnershipSlices.run` checks the `regions` and `writes` the caller
+  passes, so they must be complete.
+- Record-derived pointers stay inside their regions. The library does not check this one.
+- The entry branches on its loop counters and the record count only to end or repeat its loop.
+- A trap discards the private copies and the serial path decides what happens next.
+- The start function and the host leave the window bytes the private copies start from.
+- The stack pointer discipline and the stack residue are not proved.
+
+The `allocator`, `prefix` and `config` modes add their own premises, which the certificate lists in
+`allocator.assumptions`, `prefix.rules` and `config.rules`. The checker has produced false
+certificates. A red team round found three classes of them that earlier mutation testing had not
+found, and the fixes are part of this release. PENDING(readme-audit-status)
+
+## 🚦 Router
+
+`@gmitch215/folio/router` picks one route for a call from the module bytes and a description of
+the call, runs it and says why. A call is `{ kind: 'stream', entry, ptr, len }` for one function
+`entry(state, ptr, len)` over a byte stream, or `{ kind: 'records', entry, count, args, regions,
+writes }` for a loop of independent calls, where `args(from, to)` returns the arguments of a slice.
+`Router.open(bytes, call, options)` decides and builds the memory and pools its route needs, and
+`router.run()` executes the call. `decide(bytes, call, options)` returns the decision without
+running anything. A parallel route over a records call needs a module that imports its memory,
+which the router allocates shared.
+
+The order is fixed. A stream takes the certified summary when `certifyStream` returns a
+certificate. A loop of records takes the certified window when the ownership certificate exists,
+records no wild stores and the regions clear its windows, then the explicit runner in
+`options.explicit` if the caller supplied one, then tracked speculation, then serial. Tracked
+speculation runs only after an ownership refusal for allocator state or a missing window, and only
+when `assume` states that imports are deterministic (or absent) and that nothing reads the stack
+zone afterwards. `mode` limits the routes: `router` is the whole chain, `serial` never leaves the
+owner, `w1` is the summary only and `w2` the window only, and `independent` and `shared` try the
+summary and then the window, with the module analyses made independently or shared. The last
+four are the arms of the development ablation.
+
+Certificates and refusals go into a `CertificateCache`, keyed by the module's SHA-256 and by the
+backend, the checker versions, `ROUTER_VERSION` (`folio-router-2`) and the options that change a
+certificate. A refused module costs a map lookup after the first call, and `serialize()` and
+`load()` move the cache between processes. A route has a floor: the window route stays serial below
+0.8 ms of remaining serial work and the summary route below 1 MiB, both in `routerConstants`, and
+the tracked and explicit routes use the admission floor of the iteration route. The router runs the
+first records of a call serially to estimate that time, and it stops dispatching after two losing
+dispatches in a row. The constants were fitted on development data, so a result on the development
+drivers describes the fit, and the figure on the frozen final corpus is in Measured Results.
+
+```ts
+import { Router } from '@gmitch215/folio/router';
+
+const router = await Router.open(
+  bytes,
+  {
+    kind: 'records',
+    entry: 'bulk',
+    count,
+    args: (from, to) => [table + 16 * from, to - from, out + 64 * from],
+    regions: [
+      [table, table + 16 * count],
+      [input, input + inputBytes],
+      [out, out + 64 * count]
+    ],
+    writes: [[out, out + 64 * count]]
+  },
+  { mode: 'router', pages: 8, maxPages: 40, workers: 4 }
+);
+try {
+  console.log(router.decision.route, router.decision.reason, router.decision.detail);
+  for (const step of router.decision.considered) {
+    console.log(step.route, step.verdict, step.reason);
+  }
+  // write the record table, the inputs and the output area into router.memory here
+  const run = await router.run();
+  console.log(run.route, run.reason, run.wallMs);
+} finally {
+  await router.close();
+}
+```
+
+A refusal is a decision with `route: 'serial'` and a `reason` from the closed list
+`ROUTER_REASONS`. The first four reasons are routes taken (`certified-summary`,
+`certified-window`, `explicit-runner`, `tracked-eligible`) and the rest are refusals, such as
+`allocator-state`, `shared-state`, `wild-store`, `layout-overlap`, `assumption-unasserted`,
+`memory-not-imported` and `below-floor`. `decision.considered` lists each route in the order the
+router looked at it, with a `verdict` of `taken`, `refused` or `skipped`, its reason and a `detail`
+that quotes the certifier's refusal. `decision.cacheHit` and `certifyMs` say whether the analysis
+was paid for on this call. The `route` that `run()` returns is the route that executed, which
+differs from the decision when a floor sends the call to the owner (`below-floor`) or the loss rule
+stops a dispatch (`dispatch-lost`).
+
 ## 🔄 Context Checkpoints
 
 `@gmitch215/folio/context` resets a private Wasm instance between independent jobs.
@@ -599,6 +781,17 @@ and replay time, and tracked read and write bytes. On generalized batches `worke
 `workerCpuMs` hold per-region observations. Measure process CPU once at the coordinator, because
 summing overlapping process-wide counters double counts.
 
+Subpaths added in 1.1 for certified and routed execution, with their runtime exports and the types
+that go with them:
+
+| Subpath              | Exports                                                                                                                                                 | Contract                                                                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `affine`             | `probeAffine`, `foldAffine`, `foldExact`, `serveAffine`, `affineSerial`, `advance`, `predictEnd`, `AFFINE_TASK`, `gfApply`, `gfMul`, `mask`, `mulberry` | Sampled affine model of a stream function and its chunked fold, with the GF(2) helpers the model uses; `exact` mode validates every boundary |
+| `ownership`          | `certifyOwnership`, `verifyOwnership`, `guardRecords`, `checkConfig`, `memoryAccesses`, `OWNERSHIP_REASONS`, `OWNERSHIP_CHECKER`                        | Window certificate or typed refusal, its re-derivation, and the layout and configuration checks a router runs                                |
+| `ownership-redirect` | `redirectOwnership`, `ownershipRoute`, `OwnershipRedirectError`                                                                                         | Rewrites a certified module so each window access adds a per-worker delta                                                                    |
+| `ownership-slices`   | `OwnershipSlices`, `ownershipSlices`, `OwnershipSlicesError`                                                                                            | The slice pool over a certified module, with serial replay after a trap                                                                      |
+| `router`             | `Router`, `openRouter`, `decide`, `analyzeModule`, `CertificateCache`, `defaultBackend`, `routerConstants`, `ROUTER_VERSION`, `ROUTER_REASONS`          | Route choice per call, certificate cache and the decision record                                                                             |
+
 The generated API reference is published to GitHub Pages from `bun run docs:build`.
 
 ## 🧪 Consumer Harness
@@ -658,6 +851,11 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 | Managed SQLite shards              | deployed Durable Object lanes, 1,000,000 rows, 4 and 8 shards, declared merges  | 2.0x to 9.7x over one object across five queries, 178 samples equal to the serial result                                                                                                                                             |
 | Record-level corpus                | 30 bulk drivers, Ryzen 9 9900X, three sessions of five rounds                   | default admission wins on 7 drivers (SHA-256 2.01x, MD5 1.46x, SHA-1 1.55x, miniz CRC-32 1.52x, AES-CTR 1.21x, LZ4 compress 1.06x); explicit private contexts win on 26 (1.48x to 3.64x on 25); every output equal to the serial one |
 | Exact chunked recurrences          | one 64 MiB stream, eight task workers, Apple M2 Pro                             | CRC-32 4.25x, Adler-32 5.00x, AES-128-CTR 3.69x with shared input; CRC-32 3.52x with copied chunks; outputs equal to `zlib` and `node:crypto`                                                                                        |
+| Certified stream folds             | ten stream subjects, eight task workers, three sessions, Ryzen 9 9900X          | 3.4x to 4.1x at 8 MiB and 4.7x to 6.8x at 64 MiB over the serial call (serial median over steady median, median of sessions), process CPU 1.02 to 1.10 of serial at 64 MiB, every result equal to the serial call                    |
+| Ownership certificate, slice route | frozen final corpus, 47 drivers from 10 projects                                | PENDING(readme-final-eval)                                                                                                                                                                                                           |
+| Router                             | frozen final corpus, 47 drivers from 10 projects                                | PENDING(readme-final-eval)                                                                                                                                                                                                           |
+| Unmodified external programs       | aobench, 6pack with FastLZ and llama2.c at `-O2`, Ryzen 9 9900X, seven rounds   | the automatic route stays serial on all three: 1.002 (0.999 to 1.007), 1.002 (0.996 to 1.004) and 1.001 (0.998 to 1.003) over serial Wasm; the 1.20 pass line is not met; 0 wrong outputs in 126 timed samples                       |
+| Software translation for paging    | PHP stock front page render, Ryzen 9 9900X, ten pairs per cell                  | tau 1.581 (1.537 to 1.617), translated render over native minus one, against a gate of at most 1: not met at default V8 tiering; the objective stays open                                                                            |
 
 A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The
