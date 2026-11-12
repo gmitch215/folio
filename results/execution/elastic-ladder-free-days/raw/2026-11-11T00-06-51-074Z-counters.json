@@ -1,0 +1,66 @@
+{
+  "seen": {
+    "writeRows": 6144,
+    "schemaRows": 4,
+    "cleanupRows": 6144,
+    "requests": 9,
+    "internal": 0,
+    "external": 0
+  },
+  "readRows": 12288,
+  "retries": 0,
+  "planned": {
+    "writeRows": 6144,
+    "schemaRows": 4,
+    "cleanupRows": 6144,
+    "requests": 7,
+    "cleanupRequests": 2,
+    "internal": 0,
+    "external": 0,
+    "readRows": 12288
+  },
+  "results": [
+    {
+      "variant": "v4",
+      "workload": "dense",
+      "exact": true,
+      "requests": 4,
+      "stats": {
+        "ops": 15360,
+        "frameHits": 9216,
+        "coldHits": 0,
+        "storeReads": 3072,
+        "storeWrites": 3072,
+        "compressions": 0,
+        "decompressions": 0,
+        "coldEvictions": 0,
+        "coldBytes": 0,
+        "coldPeakBytes": 0,
+        "compressMs": 0,
+        "decompressMs": 0
+      },
+      "pooled": 0
+    },
+    {
+      "variant": "v4",
+      "workload": "dense",
+      "exact": true,
+      "requests": 4,
+      "stats": {
+        "ops": 15360,
+        "frameHits": 9216,
+        "coldHits": 0,
+        "storeReads": 3072,
+        "storeWrites": 3072,
+        "compressions": 0,
+        "decompressions": 0,
+        "coldEvictions": 0,
+        "coldBytes": 0,
+        "coldPeakBytes": 0,
+        "compressMs": 0,
+        "decompressMs": 0
+      },
+      "pooled": 0
+    }
+  ]
+}

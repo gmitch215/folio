@@ -1,0 +1,62 @@
+{
+  "config": {
+    "name": "live",
+    "pages": 3072,
+    "caps": {
+      "rows": 6146,
+      "requests": 1500,
+      "planningDailyRows": 80000
+    },
+    "assumptions": {
+      "schemaRowsPerTable": 2,
+      "readyPolls": 1
+    }
+  },
+  "cells": [
+    {
+      "name": "v4",
+      "frames": 64,
+      "cold": 0,
+      "rowBytes": 65536,
+      "quantum": null,
+      "workload": "scan",
+      "repeat": 0
+    }
+  ],
+  "planned": {
+    "perCell": [
+      {
+        "writeRows": 3072,
+        "schemaRows": 2,
+        "cleanupRows": 3072,
+        "requests": 3,
+        "cleanupRequests": 1,
+        "internal": 0,
+        "external": 0,
+        "readRows": 9216
+      }
+    ],
+    "setup": {
+      "writeRows": 0,
+      "schemaRows": 0,
+      "cleanupRows": 0,
+      "requests": 1,
+      "cleanupRequests": 0,
+      "internal": 0,
+      "external": 0,
+      "readRows": 0
+    },
+    "total": {
+      "writeRows": 3072,
+      "schemaRows": 2,
+      "cleanupRows": 3072,
+      "requests": 4,
+      "cleanupRequests": 1,
+      "internal": 0,
+      "external": 0,
+      "readRows": 9216
+    }
+  },
+  "expectedSpendUsd": 0,
+  "plan": "Free"
+}

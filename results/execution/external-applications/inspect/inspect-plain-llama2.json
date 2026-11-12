@@ -1,0 +1,56 @@
+{
+  "reasons": [
+    "start function",
+    "data segments require initialization isolation",
+    "shared wasm32 memory required",
+    "unsupported expression 11",
+    "global state",
+    "unsupported expression 7"
+  ],
+  "loops": [],
+  "controlReasons": [
+    "no region reached 200000 net work (47 pure functions, none admitted)"
+  ],
+  "control": null,
+  "iterationRoute": {
+    "eligible": false,
+    "diagnostics": [
+      "refused loop in fgets: trip count is not computable before the loop starts",
+      "refused loop in vsnprintf: 51 loops, one required",
+      "refused loop in __rem_pio2_large: 25 loops, one required",
+      "refused loop in forward: 50 loops, one required",
+      "refused loop in build_tokenizer: 2 loops, one required",
+      "refused loop in encode: 6 loops, one required",
+      "refused loop in sample: 8 loops, one required",
+      "refused loop in generate: trip count is not computable before the loop starts",
+      "refused loop in chat: trip count is not computable before the loop starts",
+      "refused loop in main: 2 loops, one required",
+      "no loop calls into the worker set"
+    ]
+  }
+}
+{
+  "diagnostics": [
+    "start function",
+    "data segments require initialization isolation",
+    "shared wasm32 memory required",
+    "unsupported expression 11",
+    "global state",
+    "unsupported expression 7",
+    "no region reached 200000 net work (47 pure functions, none admitted)"
+  ],
+  "inspect": {
+    "automatic": false,
+    "nativeGuard": false,
+    "mechanism": "native",
+    "diagnostics": [
+      "start function",
+      "data segments require initialization isolation",
+      "shared wasm32 memory required",
+      "unsupported expression 11",
+      "global state",
+      "unsupported expression 7",
+      "no region reached 200000 net work (47 pure functions, none admitted)"
+    ]
+  }
+}

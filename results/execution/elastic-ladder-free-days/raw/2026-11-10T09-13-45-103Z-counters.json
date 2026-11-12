@@ -1,0 +1,32 @@
+{
+  "seen": {
+    "writeRows": 2,
+    "schemaRows": 0,
+    "cleanupRows": 0,
+    "requests": 4,
+    "internal": 0,
+    "external": 0
+  },
+  "readRows": 0,
+  "retries": 1,
+  "planned": {
+    "writeRows": 3072,
+    "schemaRows": 2,
+    "cleanupRows": 3072,
+    "requests": 4,
+    "cleanupRequests": 1,
+    "internal": 0,
+    "external": 0,
+    "readRows": 6144
+  },
+  "results": [
+    {
+      "variant": "v4",
+      "workload": "dense",
+      "exact": false,
+      "failure": "Error: init 404",
+      "requests": 2
+    }
+  ],
+  "failure": "v4 dense: Error: init 404"
+}

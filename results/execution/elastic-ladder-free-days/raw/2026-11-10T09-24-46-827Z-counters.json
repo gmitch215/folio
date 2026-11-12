@@ -1,0 +1,32 @@
+{
+  "seen": {
+    "writeRows": 3072,
+    "schemaRows": 2,
+    "cleanupRows": 3072,
+    "requests": 4,
+    "internal": 0,
+    "external": 0
+  },
+  "readRows": 0,
+  "retries": 0,
+  "planned": {
+    "writeRows": 3072,
+    "schemaRows": 2,
+    "cleanupRows": 3072,
+    "requests": 4,
+    "cleanupRequests": 1,
+    "internal": 0,
+    "external": 0,
+    "readRows": 5955
+  },
+  "results": [
+    {
+      "variant": "v6",
+      "workload": "dense",
+      "exact": false,
+      "failure": "Error: run 0 ",
+      "requests": 3
+    }
+  ],
+  "failure": "v6 dense: Error: run 0 "
+}

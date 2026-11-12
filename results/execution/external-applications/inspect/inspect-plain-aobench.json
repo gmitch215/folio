@@ -1,0 +1,47 @@
+{
+  "reasons": [
+    "start function",
+    "data segments require initialization isolation",
+    "shared wasm32 memory required",
+    "unsupported expression 11",
+    "global state"
+  ],
+  "loops": [],
+  "controlReasons": [
+    "no region reached 200000 net work (26 pure functions, none admitted)"
+  ],
+  "control": null,
+  "iterationRoute": {
+    "eligible": false,
+    "diagnostics": [
+      "refused loop in vsnprintf: 51 loops, one required",
+      "refused loop in __rem_pio2_large: 25 loops, one required",
+      "refused loop in ambient_occlusion: 2 loops, one required",
+      "refused loop in render: 4 loops, one required",
+      "no loop calls into the worker set"
+    ]
+  }
+}
+{
+  "diagnostics": [
+    "start function",
+    "data segments require initialization isolation",
+    "shared wasm32 memory required",
+    "unsupported expression 11",
+    "global state",
+    "no region reached 200000 net work (26 pure functions, none admitted)"
+  ],
+  "inspect": {
+    "automatic": false,
+    "nativeGuard": false,
+    "mechanism": "native",
+    "diagnostics": [
+      "start function",
+      "data segments require initialization isolation",
+      "shared wasm32 memory required",
+      "unsupported expression 11",
+      "global state",
+      "no region reached 200000 net work (26 pure functions, none admitted)"
+    ]
+  }
+}

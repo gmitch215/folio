@@ -1,0 +1,13 @@
+## aobench
+native  n=7 median 320.0 ms  speedup over serial 0.785 (min 0.181 max 0.787 ci 0.782 to 0.787)  wrong 0  routes -
+serial  n=7 median 251.1 ms  speedup over serial 1.000 (min 1.000 max 1.000 ci 1.000 to 1.000)  wrong 0  routes serial
+folio   n=7 median 250.8 ms  speedup over serial 0.998 (min 0.995 max 1.004 ci 0.998 to 1.001)  wrong 0  routes serial
+## sixpack
+native  n=7 median 335.3 ms  speedup over serial 0.995 (min 0.986 max 1.004 ci 0.992 to 1.000)  wrong 0  routes -
+serial  n=7 median 333.9 ms  speedup over serial 1.000 (min 1.000 max 1.000 ci 1.000 to 1.000)  wrong 0  routes serial
+folio   n=7 median 333.3 ms  speedup over serial 1.000 (min 0.995 max 1.008 ci 0.999 to 1.004)  wrong 0  routes serial
+## llama2
+native  n=7 median 612.8 ms  speedup over serial 1.024 (min 1.019 max 1.029 ci 1.021 to 1.027)  wrong 0  routes -
+serial  n=7 median 628.1 ms  speedup over serial 1.000 (min 1.000 max 1.000 ci 1.000 to 1.000)  wrong 0  routes serial
+folio   n=7 median 627.3 ms  speedup over serial 1.001 (min 0.998 max 1.004 ci 0.999 to 1.001)  wrong 0  routes serial
+errors: 0

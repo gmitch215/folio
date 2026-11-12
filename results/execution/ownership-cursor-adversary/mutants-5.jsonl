@@ -1,0 +1,1324 @@
+{"label":"cursor-base","operator":"base","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-delete-0","outcome":"read-before-write"}
+{"label":"cursor-cond-0","outcome":"ptr-deref"}
+{"label":"cursor-swap-0","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-0-35-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-0-35-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-0-35-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-0-35-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-0-35-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-0-16-$sum","outcome":"final-state"}
+{"label":"cursor-local-0-16-$len","outcome":"escape"}
+{"label":"cursor-local-0-16-$a","outcome":"escape"}
+{"label":"cursor-local-0-16-$b","outcome":"escape"}
+{"label":"cursor-local-0-16-$c","outcome":"escape"}
+{"label":"cursor-local-0-16-$n","outcome":"escape"}
+{"label":"cursor-local-0-16-$d","outcome":"escape"}
+{"label":"cursor-local-0-16-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16396 outside its own regions"}
+{"label":"cursor-local-0-16-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 12354 outside its own regions"}
+{"label":"cursor-local-0-16-$k","outcome":"final-state"}
+{"label":"cursor-delete-1","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-cond-1","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-swap-1","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-1-38-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-1-38-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-1-38-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-1-38-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-1-38-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-1-20-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-1-20-$len","outcome":"ptr-deref"}
+{"label":"cursor-local-1-20-$a","outcome":"escape"}
+{"label":"cursor-local-1-20-$b","outcome":"escape"}
+{"label":"cursor-local-1-20-$c","outcome":"escape"}
+{"label":"cursor-local-1-20-$n","outcome":"escape"}
+{"label":"cursor-local-1-20-$d","outcome":"escape"}
+{"label":"cursor-local-1-20-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16392 outside its own regions"}
+{"label":"cursor-local-1-20-$k","outcome":"ptr-deref"}
+{"label":"cursor-delete-2","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-cond-2","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-51-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-51-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-51-double","outcome":"ptr-deref"}
+{"label":"cursor-const-2-51-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-51-neg","outcome":"ptr-deref"}
+{"label":"cursor-const-2-100-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-100-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-100-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-100-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-100-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-164-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-164-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-164-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-164-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-164-neg","outcome":"ptr-deref"}
+{"label":"cursor-const-2-198-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-198-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-198-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-442-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-442-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-442-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-442-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-442-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-507-up","outcome":"ptr-deref"}
+{"label":"cursor-const-2-507-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-507-double","outcome":"ptr-deref"}
+{"label":"cursor-const-2-507-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-507-neg","outcome":"ptr-deref"}
+{"label":"cursor-const-2-574-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-574-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-574-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-574-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-574-neg","outcome":"ptr-deref"}
+{"label":"cursor-const-2-635-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-635-down","outcome":"ptr-deref"}
+{"label":"cursor-const-2-635-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-const-2-635-half","outcome":"ptr-deref"}
+{"label":"cursor-const-2-635-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-rel-2-24-lt_u","outcome":"ptr-deref"}
+{"label":"cursor-rel-2-24-le_u","outcome":"ptr-deref"}
+{"label":"cursor-rel-2-24-gt_u","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-rel-2-24-eq","outcome":"ptr-deref"}
+{"label":"cursor-rel-2-24-ne","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-rel-2-251-lt_u","outcome":"ptr-deref"}
+{"label":"cursor-rel-2-251-le_u","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-rel-2-251-gt_u","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-rel-2-251-eq","outcome":"ptr-deref"}
+{"label":"cursor-rel-2-251-ne","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-34-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$a","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$b","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$c","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$n","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$d","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$p","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$slot","outcome":"ptr-deref"}
+{"label":"cursor-local-2-34-$k","outcome":"ptr-deref"}
+{"label":"cursor-local-2-125-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-125-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-261-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-2-261-$len","outcome":"ptr-deref"}
+{"label":"cursor-local-2-261-$a","outcome":"ptr-compare"}
+{"label":"cursor-local-2-261-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-261-$n","outcome":"ptr-deref"}
+{"label":"cursor-local-2-261-$d","outcome":"ptr-deref"}
+{"label":"cursor-local-2-261-$p","outcome":"ptr-deref"}
+{"label":"cursor-local-2-261-$slot","outcome":"ptr-deref"}
+{"label":"cursor-local-2-261-$k","outcome":"ptr-deref"}
+{"label":"cursor-local-2-276-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-2-276-$a","outcome":"ptr-compare"}
+{"label":"cursor-local-2-276-$b","outcome":"ptr-deref"}
+{"label":"cursor-local-2-276-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-276-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-276-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-276-$p","outcome":"ptr-deref"}
+{"label":"cursor-local-2-276-$slot","outcome":"ptr-deref"}
+{"label":"cursor-local-2-276-$k","outcome":"ptr-deref"}
+{"label":"cursor-local-2-321-$sum","outcome":"final-state"}
+{"label":"cursor-local-2-321-$len","outcome":"escape"}
+{"label":"cursor-local-2-321-$b","outcome":"escape"}
+{"label":"cursor-local-2-321-$c","outcome":"escape"}
+{"label":"cursor-local-2-321-$n","outcome":"escape"}
+{"label":"cursor-local-2-321-$d","outcome":"escape"}
+{"label":"cursor-local-2-321-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16398 outside its own regions"}
+{"label":"cursor-local-2-321-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"differs","why":"seed 3 byte 12422"}
+{"label":"cursor-local-2-321-$k","outcome":"final-state"}
+{"label":"cursor-local-2-336-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-2-336-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-336-$a","outcome":"ptr-deref"}
+{"label":"cursor-local-2-336-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-336-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-336-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-336-$p","outcome":"ptr-deref"}
+{"label":"cursor-local-2-336-$slot","outcome":"ptr-deref"}
+{"label":"cursor-local-2-336-$k","outcome":"ptr-deref"}
+{"label":"cursor-local-2-352-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-352-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$sum","outcome":"ptr-control"}
+{"label":"cursor-local-2-410-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-410-$k","outcome":"ptr-control"}
+{"label":"cursor-local-2-425-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-425-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-425-$a","outcome":"ptr-deref"}
+{"label":"cursor-local-2-425-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-425-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-425-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-425-$p","outcome":"ptr-control"}
+{"label":"cursor-local-2-425-$slot","outcome":"ptr-control"}
+{"label":"cursor-local-2-425-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-492-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$len","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$a","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$c","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$n","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$d","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$p","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$slot","outcome":"ptr-deref"}
+{"label":"cursor-local-2-492-$k","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$len","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$a","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$c","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$n","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$d","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$p","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$slot","outcome":"ptr-deref"}
+{"label":"cursor-local-2-559-$k","outcome":"ptr-deref"}
+{"label":"cursor-local-2-620-$sum","outcome":"ptr-deref"}
+{"label":"cursor-local-2-620-$len","outcome":"ptr-deref"}
+{"label":"cursor-local-2-620-$a","outcome":"ptr-compare"}
+{"label":"cursor-local-2-620-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-620-$n","outcome":"ptr-deref"}
+{"label":"cursor-local-2-620-$d","outcome":"ptr-deref"}
+{"label":"cursor-local-2-620-$p","outcome":"ptr-control"}
+{"label":"cursor-local-2-620-$slot","outcome":"ptr-control"}
+{"label":"cursor-local-2-620-$k","outcome":"ptr-deref"}
+{"label":"cursor-local-2-690-$sum","outcome":"final-state"}
+{"label":"cursor-local-2-690-$len","outcome":"escape"}
+{"label":"cursor-local-2-690-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-690-$b","outcome":"escape"}
+{"label":"cursor-local-2-690-$c","outcome":"escape"}
+{"label":"cursor-local-2-690-$n","outcome":"escape"}
+{"label":"cursor-local-2-690-$d","outcome":"escape"}
+{"label":"cursor-local-2-690-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16388 outside its own regions"}
+{"label":"cursor-local-2-690-$k","outcome":"final-state"}
+{"label":"cursor-local-2-708-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-708-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-708-$a","outcome":"ptr-store"}
+{"label":"cursor-local-2-708-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-708-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-708-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-708-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-708-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-local-2-708-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-312-sub","outcome":"ptr-deref"}
+{"label":"cursor-op-2-312-and","outcome":"ptr-deref"}
+{"label":"cursor-op-2-312-shl","outcome":"ptr-deref"}
+{"label":"cursor-op-2-312-or","outcome":"ptr-deref"}
+{"label":"cursor-op-2-312-mul","outcome":"ptr-deref"}
+{"label":"cursor-op-2-379-add","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-379-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-379-shl","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-379-or","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-379-mul","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-401-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-401-and","outcome":"ptr-control"}
+{"label":"cursor-op-2-401-shl","outcome":"ptr-control"}
+{"label":"cursor-op-2-401-or","outcome":"ptr-control"}
+{"label":"cursor-op-2-401-mul","outcome":"ptr-control"}
+{"label":"cursor-op-2-483-sub","outcome":"ptr-deref"}
+{"label":"cursor-op-2-483-and","outcome":"ptr-deref"}
+{"label":"cursor-op-2-483-shl","outcome":"ptr-deref"}
+{"label":"cursor-op-2-483-or","outcome":"ptr-deref"}
+{"label":"cursor-op-2-483-mul","outcome":"ptr-deref"}
+{"label":"cursor-op-2-550-sub","outcome":"ptr-deref"}
+{"label":"cursor-op-2-550-and","outcome":"ptr-deref"}
+{"label":"cursor-op-2-550-shl","outcome":"ptr-deref"}
+{"label":"cursor-op-2-550-or","outcome":"ptr-deref"}
+{"label":"cursor-op-2-550-mul","outcome":"ptr-deref"}
+{"label":"cursor-op-2-611-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"cursor-op-2-611-and","outcome":"ptr-deref"}
+{"label":"cursor-op-2-611-shl","outcome":"ptr-deref"}
+{"label":"cursor-op-2-611-or","outcome":"ptr-deref"}
+{"label":"cursor-op-2-611-mul","outcome":"ptr-deref"}
+{"label":"rotated-base","operator":"base","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-delete-0","outcome":"read-before-write"}
+{"label":"rotated-cond-0","outcome":"ptr-deref"}
+{"label":"rotated-swap-0","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-0-35-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-0-35-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-0-35-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-0-35-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-0-35-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-0-16-$sum","outcome":"final-state"}
+{"label":"rotated-local-0-16-$len","outcome":"escape"}
+{"label":"rotated-local-0-16-$a","outcome":"escape"}
+{"label":"rotated-local-0-16-$b","outcome":"escape"}
+{"label":"rotated-local-0-16-$c","outcome":"escape"}
+{"label":"rotated-local-0-16-$n","outcome":"escape"}
+{"label":"rotated-local-0-16-$d","outcome":"escape"}
+{"label":"rotated-local-0-16-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16396 outside its own regions"}
+{"label":"rotated-local-0-16-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"differs","why":"record 7 wrote byte 12803 outside its own regions"}
+{"label":"rotated-local-0-16-$k","outcome":"final-state"}
+{"label":"rotated-delete-1","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-cond-1","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-swap-1","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-1-38-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-1-38-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-1-38-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-1-38-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-1-38-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-1-20-$sum","outcome":"ptr-deref"}
+{"label":"rotated-local-1-20-$len","outcome":"ptr-deref"}
+{"label":"rotated-local-1-20-$a","outcome":"escape"}
+{"label":"rotated-local-1-20-$b","outcome":"escape"}
+{"label":"rotated-local-1-20-$c","outcome":"escape"}
+{"label":"rotated-local-1-20-$n","outcome":"escape"}
+{"label":"rotated-local-1-20-$d","outcome":"escape"}
+{"label":"rotated-local-1-20-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16392 outside its own regions"}
+{"label":"rotated-local-1-20-$k","outcome":"ptr-deref"}
+{"label":"rotated-delete-2","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-cond-2","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-51-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-51-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-51-double","outcome":"ptr-deref"}
+{"label":"rotated-const-2-51-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-51-neg","outcome":"ptr-deref"}
+{"label":"rotated-const-2-100-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-100-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-100-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-100-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-100-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-191-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-191-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-191-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-191-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-191-neg","outcome":"ptr-deref"}
+{"label":"rotated-const-2-225-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-225-down","outcome":"ptr-deref"}
+{"label":"rotated-const-2-225-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-258-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-258-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-258-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-374-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-374-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-374-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-374-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-374-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-435-up","outcome":"ptr-deref"}
+{"label":"rotated-const-2-435-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-const-2-435-double","outcome":"ptr-deref"}
+{"label":"rotated-const-2-435-half","operator":"const-half","outcome":"certificate","route":"diverges"}
+{"label":"rotated-const-2-435-neg","outcome":"unsupported"}
+{"label":"rotated-const-2-471-up","outcome":"unsupported"}
+{"label":"rotated-const-2-471-down","outcome":"unsupported"}
+{"label":"rotated-const-2-471-neg","outcome":"unsupported"}
+{"label":"rotated-const-2-560-up","outcome":"unsupported"}
+{"label":"rotated-const-2-560-down","outcome":"unsupported"}
+{"label":"rotated-const-2-560-double","outcome":"unsupported"}
+{"label":"rotated-const-2-560-half","outcome":"unsupported"}
+{"label":"rotated-const-2-560-neg","outcome":"unsupported"}
+{"label":"rotated-const-2-709-up","outcome":"unsupported"}
+{"label":"rotated-const-2-709-down","outcome":"unsupported"}
+{"label":"rotated-const-2-709-double","outcome":"unsupported"}
+{"label":"rotated-const-2-709-half","outcome":"unsupported"}
+{"label":"rotated-const-2-709-neg","outcome":"unsupported"}
+{"label":"rotated-const-2-752-up","outcome":"unsupported"}
+{"label":"rotated-const-2-752-down","outcome":"unsupported"}
+{"label":"rotated-const-2-752-double","outcome":"unsupported"}
+{"label":"rotated-const-2-752-half","outcome":"unsupported"}
+{"label":"rotated-const-2-752-neg","outcome":"unsupported"}
+{"label":"rotated-const-2-832-up","outcome":"unsupported"}
+{"label":"rotated-const-2-832-down","outcome":"unsupported"}
+{"label":"rotated-const-2-832-double","outcome":"unsupported"}
+{"label":"rotated-const-2-832-half","outcome":"unsupported"}
+{"label":"rotated-const-2-832-neg","outcome":"unsupported"}
+{"label":"rotated-rel-2-24-lt_u","outcome":"unsupported"}
+{"label":"rotated-rel-2-24-le_u","outcome":"unsupported"}
+{"label":"rotated-rel-2-24-gt_u","outcome":"unsupported"}
+{"label":"rotated-rel-2-24-eq","outcome":"unsupported"}
+{"label":"rotated-rel-2-24-ne","outcome":"unsupported"}
+{"label":"rotated-rel-2-784-le_u","outcome":"unsupported"}
+{"label":"rotated-rel-2-784-gt_u","outcome":"unsupported"}
+{"label":"rotated-rel-2-784-ge_u","outcome":"unsupported"}
+{"label":"rotated-rel-2-784-eq","outcome":"unsupported"}
+{"label":"rotated-rel-2-784-ne","outcome":"unsupported"}
+{"label":"rotated-local-2-34-$sum","outcome":"unsupported"}
+{"label":"rotated-local-2-34-$a","outcome":"unsupported"}
+{"label":"rotated-local-2-34-$b","outcome":"unsupported"}
+{"label":"rotated-local-2-34-$c","outcome":"unsupported"}
+{"label":"rotated-local-2-34-$n","outcome":"unsupported"}
+{"label":"rotated-local-2-34-$d","outcome":"unsupported"}
+{"label":"rotated-local-2-34-$p","outcome":"ptr-deref"}
+{"label":"rotated-local-2-34-$slot","outcome":"ptr-deref"}
+{"label":"rotated-local-2-34-$k","outcome":"ptr-deref"}
+{"label":"rotated-local-2-125-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-125-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-150-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-295-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-343-$sum","outcome":"final-state"}
+{"label":"rotated-local-2-343-$len","outcome":"escape"}
+{"label":"rotated-local-2-343-$b","outcome":"escape"}
+{"label":"rotated-local-2-343-$c","outcome":"escape"}
+{"label":"rotated-local-2-343-$n","outcome":"escape"}
+{"label":"rotated-local-2-343-$d","outcome":"escape"}
+{"label":"rotated-local-2-343-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16403 outside its own regions"}
+{"label":"rotated-local-2-343-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-343-$k","outcome":"final-state"}
+{"label":"rotated-local-2-358-$sum","outcome":"ptr-deref"}
+{"label":"rotated-local-2-358-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-358-$a","outcome":"ptr-deref"}
+{"label":"rotated-local-2-358-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-358-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-358-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-358-$p","outcome":"ptr-deref"}
+{"label":"rotated-local-2-358-$slot","outcome":"ptr-deref"}
+{"label":"rotated-local-2-358-$k","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$sum","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$len","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$a","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$c","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$n","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$d","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$p","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$slot","outcome":"ptr-deref"}
+{"label":"rotated-local-2-420-$k","outcome":"ptr-deref"}
+{"label":"rotated-local-2-528-$sum","outcome":"ptr-control"}
+{"label":"rotated-local-2-528-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-528-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-528-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-528-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-528-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-528-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-528-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-528-$k","outcome":"ptr-control"}
+{"label":"rotated-local-2-543-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-543-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-543-$a","outcome":"ptr-deref"}
+{"label":"rotated-local-2-543-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-543-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-543-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-543-$p","outcome":"ptr-control"}
+{"label":"rotated-local-2-543-$slot","outcome":"ptr-control"}
+{"label":"rotated-local-2-543-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-615-$sum","outcome":"final-state"}
+{"label":"rotated-local-2-615-$len","outcome":"escape"}
+{"label":"rotated-local-2-615-$b","outcome":"escape"}
+{"label":"rotated-local-2-615-$c","outcome":"escape"}
+{"label":"rotated-local-2-615-$n","outcome":"escape"}
+{"label":"rotated-local-2-615-$d","outcome":"escape"}
+{"label":"rotated-local-2-615-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16398 outside its own regions"}
+{"label":"rotated-local-2-615-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-615-$k","outcome":"final-state"}
+{"label":"rotated-local-2-630-$sum","outcome":"ptr-deref"}
+{"label":"rotated-local-2-630-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-630-$a","outcome":"ptr-deref"}
+{"label":"rotated-local-2-630-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-630-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-630-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-630-$p","outcome":"ptr-deref"}
+{"label":"rotated-local-2-630-$slot","outcome":"ptr-deref"}
+{"label":"rotated-local-2-630-$k","outcome":"ptr-deref"}
+{"label":"rotated-local-2-646-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-646-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-694-$sum","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$len","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$a","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$c","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$n","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$d","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$p","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$slot","outcome":"ptr-deref"}
+{"label":"rotated-local-2-694-$k","outcome":"ptr-deref"}
+{"label":"rotated-local-2-817-$sum","outcome":"ptr-deref"}
+{"label":"rotated-local-2-817-$len","outcome":"ptr-deref"}
+{"label":"rotated-local-2-817-$a","outcome":"ptr-compare"}
+{"label":"rotated-local-2-817-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-817-$n","outcome":"ptr-deref"}
+{"label":"rotated-local-2-817-$d","outcome":"ptr-deref"}
+{"label":"rotated-local-2-817-$p","outcome":"ptr-control"}
+{"label":"rotated-local-2-817-$slot","outcome":"ptr-control"}
+{"label":"rotated-local-2-817-$k","outcome":"ptr-deref"}
+{"label":"rotated-local-2-848-$sum","outcome":"ptr-deref"}
+{"label":"rotated-local-2-848-$a","outcome":"ptr-compare"}
+{"label":"rotated-local-2-848-$b","outcome":"ptr-deref"}
+{"label":"rotated-local-2-848-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-848-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-848-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-848-$p","outcome":"ptr-deref"}
+{"label":"rotated-local-2-848-$slot","outcome":"ptr-deref"}
+{"label":"rotated-local-2-848-$k","outcome":"ptr-deref"}
+{"label":"rotated-local-2-892-$sum","outcome":"final-state"}
+{"label":"rotated-local-2-892-$len","outcome":"escape"}
+{"label":"rotated-local-2-892-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"rotated-local-2-892-$b","outcome":"escape"}
+{"label":"rotated-local-2-892-$c","outcome":"escape"}
+{"label":"rotated-local-2-892-$n","outcome":"escape"}
+{"label":"rotated-local-2-892-$d","outcome":"escape"}
+{"label":"rotated-local-2-892-$p","outcome":"unsupported"}
+{"label":"rotated-local-2-892-$k","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$sum","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$len","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$a","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$c","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$n","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$d","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$p","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$slot","outcome":"unsupported"}
+{"label":"rotated-local-2-910-$k","outcome":"unsupported"}
+{"label":"rotated-op-2-334-sub","outcome":"unsupported"}
+{"label":"rotated-op-2-334-and","outcome":"unsupported"}
+{"label":"rotated-op-2-334-shl","outcome":"unsupported"}
+{"label":"rotated-op-2-334-or","outcome":"unsupported"}
+{"label":"rotated-op-2-334-mul","outcome":"unsupported"}
+{"label":"rotated-op-2-411-sub","outcome":"unsupported"}
+{"label":"rotated-op-2-411-and","outcome":"unsupported"}
+{"label":"rotated-op-2-411-shl","outcome":"unsupported"}
+{"label":"rotated-op-2-411-or","outcome":"unsupported"}
+{"label":"rotated-op-2-411-mul","outcome":"unsupported"}
+{"label":"rotated-op-2-497-add","outcome":"unsupported"}
+{"label":"rotated-op-2-497-sub","outcome":"unsupported"}
+{"label":"rotated-op-2-497-shl","outcome":"unsupported"}
+{"label":"rotated-op-2-497-or","outcome":"unsupported"}
+{"label":"rotated-op-2-497-mul","outcome":"unsupported"}
+{"label":"rotated-op-2-519-sub","outcome":"unsupported"}
+{"label":"rotated-op-2-519-and","outcome":"unsupported"}
+{"label":"rotated-op-2-519-shl","outcome":"unsupported"}
+{"label":"rotated-op-2-519-or","outcome":"unsupported"}
+{"label":"rotated-op-2-519-mul","outcome":"unsupported"}
+{"label":"rotated-op-2-606-sub","outcome":"unsupported"}
+{"label":"rotated-op-2-606-and","outcome":"unsupported"}
+{"label":"rotated-op-2-606-shl","outcome":"unsupported"}
+{"label":"rotated-op-2-606-or","outcome":"unsupported"}
+{"label":"rotated-op-2-606-mul","outcome":"unsupported"}
+{"label":"rotated-op-2-685-sub","outcome":"unsupported"}
+{"label":"rotated-op-2-685-and","outcome":"unsupported"}
+{"label":"rotated-op-2-685-shl","outcome":"unsupported"}
+{"label":"rotated-op-2-685-or","outcome":"unsupported"}
+{"label":"rotated-op-2-685-mul","outcome":"unsupported"}
+{"label":"rotated-op-2-808-sub","outcome":"unsupported"}
+{"label":"rotated-op-2-808-and","outcome":"unsupported"}
+{"label":"rotated-op-2-808-shl","outcome":"unsupported"}
+{"label":"rotated-op-2-808-or","outcome":"unsupported"}
+{"label":"rotated-op-2-808-mul","outcome":"unsupported"}
+{"label":"stride-base","outcome":"unsupported"}
+{"label":"stride-delete-0","outcome":"read-before-write"}
+{"label":"stride-cond-0","outcome":"ptr-deref"}
+{"label":"stride-swap-0","outcome":"unsupported"}
+{"label":"stride-const-0-35-up","outcome":"unsupported"}
+{"label":"stride-const-0-35-down","outcome":"unsupported"}
+{"label":"stride-const-0-35-double","outcome":"unsupported"}
+{"label":"stride-const-0-35-half","outcome":"unsupported"}
+{"label":"stride-const-0-35-neg","outcome":"unsupported"}
+{"label":"stride-local-0-16-$sum","outcome":"final-state"}
+{"label":"stride-local-0-16-$len","outcome":"final-state"}
+{"label":"stride-local-0-16-$a","outcome":"escape"}
+{"label":"stride-local-0-16-$b","outcome":"escape"}
+{"label":"stride-local-0-16-$c","outcome":"escape"}
+{"label":"stride-local-0-16-$n","outcome":"escape"}
+{"label":"stride-local-0-16-$d","outcome":"escape"}
+{"label":"stride-local-0-16-$p","outcome":"final-state"}
+{"label":"stride-local-0-16-$slot","outcome":"final-state"}
+{"label":"stride-local-0-16-$k","outcome":"final-state"}
+{"label":"stride-delete-1","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-cond-1","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-swap-1","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-1-38-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-1-38-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-1-38-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-1-38-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-1-38-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-1-20-$sum","outcome":"ptr-deref"}
+{"label":"stride-local-1-20-$len","outcome":"ptr-deref"}
+{"label":"stride-local-1-20-$a","outcome":"escape"}
+{"label":"stride-local-1-20-$b","outcome":"escape"}
+{"label":"stride-local-1-20-$c","outcome":"escape"}
+{"label":"stride-local-1-20-$n","outcome":"escape"}
+{"label":"stride-local-1-20-$d","outcome":"escape"}
+{"label":"stride-local-1-20-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16392 outside its own regions"}
+{"label":"stride-local-1-20-$k","outcome":"ptr-deref"}
+{"label":"stride-delete-2","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-cond-2","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-49-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-49-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-49-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-49-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-49-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-66-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-66-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-66-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-66-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-66-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-176-up","outcome":"ptr-deref"}
+{"label":"stride-const-2-176-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-176-neg","outcome":"ptr-deref"}
+{"label":"stride-const-2-398-up","outcome":"ptr-deref"}
+{"label":"stride-const-2-398-down","outcome":"ptr-deref"}
+{"label":"stride-const-2-398-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-const-2-398-half","outcome":"ptr-deref"}
+{"label":"stride-const-2-398-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-rel-2-229-lt_u","outcome":"ptr-deref"}
+{"label":"stride-rel-2-229-le_u","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-rel-2-229-gt_u","outcome":"ptr-deref"}
+{"label":"stride-rel-2-229-eq","outcome":"ptr-deref"}
+{"label":"stride-rel-2-229-ne","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-32-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-32-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-32-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-32-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-32-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-32-$d","outcome":"unsupported"}
+{"label":"stride-local-2-32-$p","outcome":"unsupported"}
+{"label":"stride-local-2-32-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-32-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-113-$sum","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$len","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$a","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$b","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$c","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$d","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$p","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$slot","outcome":"ptr-deref"}
+{"label":"stride-local-2-113-$k","outcome":"ptr-deref"}
+{"label":"stride-local-2-137-$sum","outcome":"ptr-deref"}
+{"label":"stride-local-2-137-$len","outcome":"ptr-deref"}
+{"label":"stride-local-2-137-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-137-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-137-$n","outcome":"ptr-deref"}
+{"label":"stride-local-2-137-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-137-$p","outcome":"ptr-deref"}
+{"label":"stride-local-2-137-$slot","outcome":"ptr-deref"}
+{"label":"stride-local-2-137-$k","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$sum","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$len","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$a","outcome":"ptr-compare"}
+{"label":"stride-local-2-239-$b","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$n","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$d","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$p","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$slot","outcome":"ptr-deref"}
+{"label":"stride-local-2-239-$k","outcome":"ptr-deref"}
+{"label":"stride-local-2-254-$sum","outcome":"ptr-deref"}
+{"label":"stride-local-2-254-$len","outcome":"ptr-deref"}
+{"label":"stride-local-2-254-$a","outcome":"ptr-compare"}
+{"label":"stride-local-2-254-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-254-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-254-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-254-$p","outcome":"ptr-deref"}
+{"label":"stride-local-2-254-$slot","outcome":"ptr-deref"}
+{"label":"stride-local-2-254-$k","outcome":"ptr-deref"}
+{"label":"stride-local-2-306-$sum","outcome":"final-state"}
+{"label":"stride-local-2-306-$len","outcome":"final-state"}
+{"label":"stride-local-2-306-$b","outcome":"escape"}
+{"label":"stride-local-2-306-$c","outcome":"escape"}
+{"label":"stride-local-2-306-$n","outcome":"escape"}
+{"label":"stride-local-2-306-$d","outcome":"escape"}
+{"label":"stride-local-2-306-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16387 outside its own regions"}
+{"label":"stride-local-2-306-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"differs","why":"record 0 wrote byte 12355 outside its own regions"}
+{"label":"stride-local-2-306-$k","outcome":"final-state"}
+{"label":"stride-local-2-321-$sum","outcome":"ptr-deref"}
+{"label":"stride-local-2-321-$len","outcome":"ptr-deref"}
+{"label":"stride-local-2-321-$a","outcome":"ptr-deref"}
+{"label":"stride-local-2-321-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-321-$n","outcome":"ptr-deref"}
+{"label":"stride-local-2-321-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-321-$p","outcome":"ptr-deref"}
+{"label":"stride-local-2-321-$slot","outcome":"ptr-deref"}
+{"label":"stride-local-2-321-$k","outcome":"ptr-deref"}
+{"label":"stride-local-2-337-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-337-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-383-$sum","outcome":"ptr-deref"}
+{"label":"stride-local-2-383-$len","outcome":"ptr-deref"}
+{"label":"stride-local-2-383-$a","outcome":"ptr-compare"}
+{"label":"stride-local-2-383-$b","outcome":"budget"}
+{"label":"stride-local-2-383-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-383-$d","outcome":"budget"}
+{"label":"stride-local-2-383-$p","outcome":"ptr-deref"}
+{"label":"stride-local-2-383-$slot","outcome":"ptr-deref"}
+{"label":"stride-local-2-383-$k","outcome":"ptr-deref"}
+{"label":"stride-local-2-453-$sum","outcome":"final-state"}
+{"label":"stride-local-2-453-$len","outcome":"final-state"}
+{"label":"stride-local-2-453-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-453-$b","outcome":"escape"}
+{"label":"stride-local-2-453-$c","outcome":"escape"}
+{"label":"stride-local-2-453-$n","outcome":"escape"}
+{"label":"stride-local-2-453-$d","outcome":"escape"}
+{"label":"stride-local-2-453-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16388 outside its own regions"}
+{"label":"stride-local-2-453-$k","outcome":"final-state"}
+{"label":"stride-local-2-471-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-471-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-471-$a","outcome":"ptr-store"}
+{"label":"stride-local-2-471-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-471-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-471-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-471-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-471-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-local-2-471-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-14-add","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-14-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-14-and","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-14-or","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-14-mul","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-23-add","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-23-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-23-shl","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-23-or","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-23-mul","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-297-sub","outcome":"ptr-deref"}
+{"label":"stride-op-2-297-and","outcome":"ptr-deref"}
+{"label":"stride-op-2-297-shl","outcome":"ptr-deref"}
+{"label":"stride-op-2-297-or","outcome":"ptr-deref"}
+{"label":"stride-op-2-297-mul","outcome":"ptr-deref"}
+{"label":"stride-op-2-374-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"stride-op-2-374-and","outcome":"budget"}
+{"label":"stride-op-2-374-shl","outcome":"budget"}
+{"label":"stride-op-2-374-or","outcome":"budget"}
+{"label":"stride-op-2-374-mul","outcome":"budget"}
+{"label":"teesize-base","operator":"base","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-delete-0","outcome":"read-before-write"}
+{"label":"teesize-cond-0","outcome":"ptr-deref"}
+{"label":"teesize-swap-0","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-0-35-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-0-35-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-0-35-double","outcome":"ptr-deref"}
+{"label":"teesize-const-0-35-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-0-35-neg","outcome":"ptr-deref"}
+{"label":"teesize-local-0-16-$sum","outcome":"final-state"}
+{"label":"teesize-local-0-16-$len","outcome":"final-state"}
+{"label":"teesize-local-0-16-$a","outcome":"escape"}
+{"label":"teesize-local-0-16-$b","outcome":"escape"}
+{"label":"teesize-local-0-16-$c","outcome":"escape"}
+{"label":"teesize-local-0-16-$n","outcome":"escape"}
+{"label":"teesize-local-0-16-$d","outcome":"escape"}
+{"label":"teesize-local-0-16-$p","outcome":"final-state"}
+{"label":"teesize-local-0-16-$slot","outcome":"final-state"}
+{"label":"teesize-local-0-16-$k","outcome":"final-state"}
+{"label":"teesize-delete-1","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-cond-1","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-swap-1","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-1-38-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-1-38-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-1-38-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-1-38-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-1-38-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-1-20-$sum","outcome":"ptr-deref"}
+{"label":"teesize-local-1-20-$len","outcome":"ptr-deref"}
+{"label":"teesize-local-1-20-$a","outcome":"escape"}
+{"label":"teesize-local-1-20-$b","outcome":"escape"}
+{"label":"teesize-local-1-20-$c","outcome":"escape"}
+{"label":"teesize-local-1-20-$n","outcome":"escape"}
+{"label":"teesize-local-1-20-$d","outcome":"escape"}
+{"label":"teesize-local-1-20-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16392 outside its own regions"}
+{"label":"teesize-local-1-20-$k","outcome":"ptr-deref"}
+{"label":"teesize-delete-2","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-cond-2","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-2-77-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-2-77-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-2-77-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-2-77-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-2-77-neg","outcome":"unsupported"}
+{"label":"teesize-const-2-94-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-const-2-94-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-const-2-94-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-const-2-94-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-const-2-94-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-2-156-up","outcome":"ptr-deref"}
+{"label":"teesize-const-2-156-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-const-2-156-neg","outcome":"ptr-deref"}
+{"label":"teesize-const-2-374-up","outcome":"ptr-deref"}
+{"label":"teesize-const-2-374-down","outcome":"ptr-deref"}
+{"label":"teesize-const-2-374-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-const-2-374-half","outcome":"ptr-deref"}
+{"label":"teesize-const-2-374-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-rel-2-207-lt_u","outcome":"ptr-deref"}
+{"label":"teesize-rel-2-207-le_u","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-rel-2-207-gt_u","outcome":"ptr-deref"}
+{"label":"teesize-rel-2-207-eq","outcome":"ptr-deref"}
+{"label":"teesize-rel-2-207-ne","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-60-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-60-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-60-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-60-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-60-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-60-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-60-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-60-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-60-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-118-$sum","outcome":"ptr-deref"}
+{"label":"teesize-local-2-118-$len","outcome":"ptr-deref"}
+{"label":"teesize-local-2-118-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-118-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-118-$n","outcome":"ptr-deref"}
+{"label":"teesize-local-2-118-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-118-$p","outcome":"ptr-deref"}
+{"label":"teesize-local-2-118-$slot","outcome":"ptr-deref"}
+{"label":"teesize-local-2-118-$k","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$sum","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$len","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$a","outcome":"ptr-compare"}
+{"label":"teesize-local-2-217-$b","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$n","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$d","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$p","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$slot","outcome":"ptr-deref"}
+{"label":"teesize-local-2-217-$k","outcome":"ptr-deref"}
+{"label":"teesize-local-2-232-$sum","outcome":"ptr-deref"}
+{"label":"teesize-local-2-232-$len","outcome":"ptr-deref"}
+{"label":"teesize-local-2-232-$a","outcome":"ptr-compare"}
+{"label":"teesize-local-2-232-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-232-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-232-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-local-2-232-$p","outcome":"ptr-deref"}
+{"label":"teesize-local-2-232-$slot","outcome":"ptr-deref"}
+{"label":"teesize-local-2-232-$k","outcome":"ptr-deref"}
+{"label":"teesize-local-2-283-$sum","outcome":"final-state"}
+{"label":"teesize-local-2-283-$len","outcome":"final-state"}
+{"label":"teesize-local-2-283-$b","outcome":"escape"}
+{"label":"teesize-local-2-283-$c","outcome":"escape"}
+{"label":"teesize-local-2-283-$n","outcome":"escape"}
+{"label":"teesize-local-2-283-$d","outcome":"escape"}
+{"label":"teesize-local-2-283-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16387 outside its own regions"}
+{"label":"teesize-local-2-283-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"differs","why":"record 0 wrote byte 12355 outside its own regions"}
+{"label":"teesize-local-2-283-$k","outcome":"final-state"}
+{"label":"teesize-local-2-298-$sum","outcome":"ptr-deref"}
+{"label":"teesize-local-2-298-$len","outcome":"ptr-deref"}
+{"label":"teesize-local-2-298-$a","outcome":"ptr-deref"}
+{"label":"teesize-local-2-298-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-298-$n","outcome":"ptr-deref"}
+{"label":"teesize-local-2-298-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-298-$p","outcome":"ptr-deref"}
+{"label":"teesize-local-2-298-$slot","outcome":"ptr-deref"}
+{"label":"teesize-local-2-298-$k","outcome":"ptr-deref"}
+{"label":"teesize-local-2-314-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-314-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-359-$sum","outcome":"ptr-deref"}
+{"label":"teesize-local-2-359-$len","outcome":"ptr-deref"}
+{"label":"teesize-local-2-359-$a","outcome":"ptr-compare"}
+{"label":"teesize-local-2-359-$b","outcome":"budget"}
+{"label":"teesize-local-2-359-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-359-$d","outcome":"budget"}
+{"label":"teesize-local-2-359-$p","outcome":"ptr-deref"}
+{"label":"teesize-local-2-359-$slot","outcome":"ptr-deref"}
+{"label":"teesize-local-2-359-$k","outcome":"ptr-deref"}
+{"label":"teesize-local-2-427-$sum","outcome":"final-state"}
+{"label":"teesize-local-2-427-$len","outcome":"final-state"}
+{"label":"teesize-local-2-427-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-427-$b","outcome":"escape"}
+{"label":"teesize-local-2-427-$c","outcome":"escape"}
+{"label":"teesize-local-2-427-$n","outcome":"escape"}
+{"label":"teesize-local-2-427-$d","outcome":"escape"}
+{"label":"teesize-local-2-427-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"notRunnable","why":"record 0 wrote byte 16388 outside its own regions"}
+{"label":"teesize-local-2-427-$k","outcome":"final-state"}
+{"label":"teesize-local-2-445-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-445-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-445-$a","outcome":"ptr-store"}
+{"label":"teesize-local-2-445-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-445-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-445-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-local-2-445-$p","outcome":"unsupported"}
+{"label":"teesize-local-2-445-$slot","outcome":"unsupported"}
+{"label":"teesize-local-2-445-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-42-add","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-42-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-42-and","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-op-2-42-or","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-42-mul","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-51-add","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-51-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-51-shl","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-51-or","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-51-mul","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"teesize-op-2-274-sub","outcome":"ptr-deref"}
+{"label":"teesize-op-2-274-and","outcome":"ptr-deref"}
+{"label":"teesize-op-2-274-shl","outcome":"ptr-deref"}
+{"label":"teesize-op-2-274-or","outcome":"ptr-deref"}
+{"label":"teesize-op-2-274-mul","outcome":"ptr-deref"}
+{"label":"teesize-op-2-350-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"teesize-op-2-350-and","outcome":"budget"}
+{"label":"teesize-op-2-350-shl","outcome":"budget"}
+{"label":"teesize-op-2-350-or","outcome":"budget"}
+{"label":"teesize-op-2-350-mul","outcome":"budget"}
+{"label":"bottom-base","operator":"base","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-delete-0","outcome":"read-before-write"}
+{"label":"bottom-cond-0","outcome":"ptr-deref"}
+{"label":"bottom-swap-0","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-0-35-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-0-35-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-0-35-double","outcome":"ptr-deref"}
+{"label":"bottom-const-0-35-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-0-35-neg","outcome":"ptr-deref"}
+{"label":"bottom-local-0-16-$sum","outcome":"final-state"}
+{"label":"bottom-local-0-16-$len","outcome":"final-state"}
+{"label":"bottom-local-0-16-$a","outcome":"escape"}
+{"label":"bottom-local-0-16-$b","outcome":"escape"}
+{"label":"bottom-local-0-16-$c","outcome":"escape"}
+{"label":"bottom-local-0-16-$n","outcome":"escape"}
+{"label":"bottom-local-0-16-$d","outcome":"escape"}
+{"label":"bottom-local-0-16-$p","outcome":"final-state"}
+{"label":"bottom-local-0-16-$slot","outcome":"final-state"}
+{"label":"bottom-local-0-16-$k","outcome":"final-state"}
+{"label":"bottom-delete-1","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-cond-1","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-swap-1","operator":"swap","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-1-38-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-1-38-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-1-38-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-1-38-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-1-38-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-1-20-$sum","outcome":"ptr-deref"}
+{"label":"bottom-local-1-20-$len","outcome":"ptr-deref"}
+{"label":"bottom-local-1-20-$a","outcome":"escape"}
+{"label":"bottom-local-1-20-$b","outcome":"escape"}
+{"label":"bottom-local-1-20-$c","outcome":"escape"}
+{"label":"bottom-local-1-20-$n","outcome":"escape"}
+{"label":"bottom-local-1-20-$d","outcome":"escape"}
+{"label":"bottom-local-1-20-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"notRunnable","why":"record 0 wrote byte 16392 outside its own regions"}
+{"label":"bottom-local-1-20-$k","outcome":"ptr-deref"}
+{"label":"bottom-delete-2","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-cond-2","operator":"conditional","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-77-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-77-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-77-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-77-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-77-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-94-up","operator":"const-up","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-94-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-94-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-94-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-94-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-const-2-181-up","outcome":"ptr-deref"}
+{"label":"bottom-const-2-181-down","outcome":"ptr-deref"}
+{"label":"bottom-const-2-181-neg","outcome":"ptr-deref"}
+{"label":"bottom-const-2-353-up","outcome":"ptr-deref"}
+{"label":"bottom-const-2-353-down","outcome":"ptr-deref"}
+{"label":"bottom-const-2-353-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-const-2-353-half","outcome":"ptr-deref"}
+{"label":"bottom-const-2-353-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-rel-2-305-le_u","outcome":"ptr-deref"}
+{"label":"bottom-rel-2-305-gt_u","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-rel-2-305-ge_u","outcome":"ptr-deref"}
+{"label":"bottom-rel-2-305-eq","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-rel-2-305-ne","outcome":"ptr-deref"}
+{"label":"bottom-local-2-60-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-60-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-60-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-60-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-60-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-60-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-60-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-60-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-60-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-118-$sum","outcome":"ptr-deref"}
+{"label":"bottom-local-2-118-$len","outcome":"ptr-deref"}
+{"label":"bottom-local-2-118-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-118-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-118-$n","outcome":"ptr-deref"}
+{"label":"bottom-local-2-118-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-118-$p","outcome":"ptr-deref"}
+{"label":"bottom-local-2-118-$slot","outcome":"ptr-deref"}
+{"label":"bottom-local-2-118-$k","outcome":"ptr-deref"}
+{"label":"bottom-local-2-143-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-143-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-143-$a","operator":"local","outcome":"certificate","route":"diverges"}
+{"label":"bottom-local-2-143-$b","outcome":"unsupported"}
+{"label":"bottom-local-2-143-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-143-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-143-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-143-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-143-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-242-$sum","outcome":"final-state"}
+{"label":"bottom-local-2-242-$len","outcome":"final-state"}
+{"label":"bottom-local-2-242-$b","outcome":"escape"}
+{"label":"bottom-local-2-242-$c","outcome":"escape"}
+{"label":"bottom-local-2-242-$n","outcome":"escape"}
+{"label":"bottom-local-2-242-$d","outcome":"escape"}
+{"label":"bottom-local-2-242-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16387 outside its own regions"}
+{"label":"bottom-local-2-242-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"differs","why":"record 0 wrote byte 12355 outside its own regions"}
+{"label":"bottom-local-2-242-$k","outcome":"final-state"}
+{"label":"bottom-local-2-257-$sum","outcome":"ptr-deref"}
+{"label":"bottom-local-2-257-$len","outcome":"ptr-deref"}
+{"label":"bottom-local-2-257-$a","outcome":"ptr-deref"}
+{"label":"bottom-local-2-257-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-257-$n","outcome":"ptr-deref"}
+{"label":"bottom-local-2-257-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-257-$p","outcome":"ptr-deref"}
+{"label":"bottom-local-2-257-$slot","outcome":"ptr-deref"}
+{"label":"bottom-local-2-257-$k","outcome":"ptr-deref"}
+{"label":"bottom-local-2-273-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-273-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-338-$sum","outcome":"ptr-deref"}
+{"label":"bottom-local-2-338-$len","outcome":"ptr-deref"}
+{"label":"bottom-local-2-338-$a","outcome":"ptr-compare"}
+{"label":"bottom-local-2-338-$b","outcome":"budget"}
+{"label":"bottom-local-2-338-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-338-$d","outcome":"budget"}
+{"label":"bottom-local-2-338-$p","outcome":"ptr-deref"}
+{"label":"bottom-local-2-338-$slot","outcome":"ptr-deref"}
+{"label":"bottom-local-2-338-$k","outcome":"ptr-deref"}
+{"label":"bottom-local-2-369-$sum","outcome":"ptr-deref"}
+{"label":"bottom-local-2-369-$len","outcome":"ptr-deref"}
+{"label":"bottom-local-2-369-$a","outcome":"ptr-compare"}
+{"label":"bottom-local-2-369-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-369-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-369-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-local-2-369-$p","outcome":"ptr-deref"}
+{"label":"bottom-local-2-369-$slot","outcome":"ptr-deref"}
+{"label":"bottom-local-2-369-$k","outcome":"ptr-deref"}
+{"label":"bottom-local-2-410-$sum","outcome":"final-state"}
+{"label":"bottom-local-2-410-$len","outcome":"final-state"}
+{"label":"bottom-local-2-410-$a","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-410-$b","outcome":"escape"}
+{"label":"bottom-local-2-410-$c","outcome":"escape"}
+{"label":"bottom-local-2-410-$n","outcome":"escape"}
+{"label":"bottom-local-2-410-$d","outcome":"escape"}
+{"label":"bottom-local-2-410-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"notRunnable","why":"record 0 wrote byte 16388 outside its own regions"}
+{"label":"bottom-local-2-410-$k","outcome":"final-state"}
+{"label":"bottom-local-2-428-$sum","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-428-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-428-$a","outcome":"ptr-store"}
+{"label":"bottom-local-2-428-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-428-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-428-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-428-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-428-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-local-2-428-$k","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-42-add","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-42-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-42-and","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-op-2-42-or","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-42-mul","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-51-add","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-51-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-51-shl","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-51-or","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-51-mul","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"bottom-op-2-233-sub","outcome":"ptr-deref"}
+{"label":"bottom-op-2-233-and","outcome":"ptr-deref"}
+{"label":"bottom-op-2-233-shl","outcome":"ptr-deref"}
+{"label":"bottom-op-2-233-or","outcome":"ptr-deref"}
+{"label":"bottom-op-2-233-mul","outcome":"ptr-deref"}
+{"label":"bottom-op-2-329-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"bottom-op-2-329-and","outcome":"budget"}
+{"label":"bottom-op-2-329-shl","outcome":"budget"}
+{"label":"bottom-op-2-329-or","outcome":"budget"}
+{"label":"bottom-op-2-329-mul","outcome":"budget"}
+{"label":"delayed-base","outcome":"ptr-deref"}
+{"label":"delayed-delete-0","outcome":"read-before-write"}
+{"label":"delayed-cond-0","outcome":"ptr-deref"}
+{"label":"delayed-swap-0","outcome":"ptr-deref"}
+{"label":"delayed-const-0-35-up","outcome":"ptr-deref"}
+{"label":"delayed-const-0-35-down","outcome":"ptr-deref"}
+{"label":"delayed-const-0-35-double","outcome":"ptr-deref"}
+{"label":"delayed-const-0-35-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-const-0-35-neg","outcome":"ptr-deref"}
+{"label":"delayed-local-0-16-$sum","outcome":"final-state"}
+{"label":"delayed-local-0-16-$len","outcome":"escape"}
+{"label":"delayed-local-0-16-$a","outcome":"escape"}
+{"label":"delayed-local-0-16-$b","outcome":"escape"}
+{"label":"delayed-local-0-16-$c","outcome":"escape"}
+{"label":"delayed-local-0-16-$n","outcome":"escape"}
+{"label":"delayed-local-0-16-$d","outcome":"escape"}
+{"label":"delayed-local-0-16-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16396 outside its own regions"}
+{"label":"delayed-local-0-16-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"differs","why":"record 0 wrote byte 12353 outside its own regions"}
+{"label":"delayed-local-0-16-$k","outcome":"final-state"}
+{"label":"delayed-delete-1","outcome":"ptr-deref"}
+{"label":"delayed-cond-1","outcome":"ptr-deref"}
+{"label":"delayed-swap-1","outcome":"ptr-deref"}
+{"label":"delayed-const-1-38-up","outcome":"ptr-deref"}
+{"label":"delayed-const-1-38-down","outcome":"ptr-deref"}
+{"label":"delayed-const-1-38-double","outcome":"ptr-deref"}
+{"label":"delayed-const-1-38-half","outcome":"ptr-deref"}
+{"label":"delayed-const-1-38-neg","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-1-20-$k","outcome":"ptr-deref"}
+{"label":"delayed-delete-2","operator":"delete","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-cond-2","outcome":"ptr-deref"}
+{"label":"delayed-const-2-51-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-51-down","outcome":"ptr-deref"}
+{"label":"delayed-const-2-51-double","outcome":"ptr-deref"}
+{"label":"delayed-const-2-51-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-const-2-51-neg","outcome":"ptr-deref"}
+{"label":"delayed-const-2-100-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-100-down","outcome":"ptr-deref"}
+{"label":"delayed-const-2-100-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-const-2-100-half","outcome":"ptr-deref"}
+{"label":"delayed-const-2-100-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-const-2-164-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-164-down","outcome":"ptr-deref"}
+{"label":"delayed-const-2-164-double","outcome":"ptr-deref"}
+{"label":"delayed-const-2-164-half","outcome":"ptr-deref"}
+{"label":"delayed-const-2-164-neg","outcome":"ptr-deref"}
+{"label":"delayed-const-2-198-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-198-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-const-2-198-neg","outcome":"ptr-deref"}
+{"label":"delayed-const-2-442-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-442-down","operator":"const-down","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-const-2-442-double","outcome":"ptr-deref"}
+{"label":"delayed-const-2-442-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-const-2-442-neg","outcome":"ptr-deref"}
+{"label":"delayed-const-2-546-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-546-down","outcome":"ptr-deref"}
+{"label":"delayed-const-2-546-double","outcome":"ptr-deref"}
+{"label":"delayed-const-2-546-half","outcome":"ptr-deref"}
+{"label":"delayed-const-2-546-neg","outcome":"ptr-deref"}
+{"label":"delayed-const-2-611-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-611-down","outcome":"ptr-deref"}
+{"label":"delayed-const-2-611-double","outcome":"ptr-deref"}
+{"label":"delayed-const-2-611-half","operator":"const-half","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-const-2-611-neg","outcome":"ptr-deref"}
+{"label":"delayed-const-2-680-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-680-down","outcome":"ptr-deref"}
+{"label":"delayed-const-2-680-double","outcome":"ptr-deref"}
+{"label":"delayed-const-2-680-half","outcome":"ptr-deref"}
+{"label":"delayed-const-2-680-neg","outcome":"ptr-deref"}
+{"label":"delayed-const-2-741-up","outcome":"ptr-deref"}
+{"label":"delayed-const-2-741-down","outcome":"ptr-deref"}
+{"label":"delayed-const-2-741-double","operator":"const-double","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-const-2-741-half","outcome":"ptr-deref"}
+{"label":"delayed-const-2-741-neg","operator":"const-neg","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-rel-2-24-lt_u","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-24-le_u","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-24-gt_u","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-24-eq","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-24-ne","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-251-lt_u","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-251-le_u","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-rel-2-251-gt_u","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-251-eq","outcome":"ptr-deref"}
+{"label":"delayed-rel-2-251-ne","operator":"rel","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-34-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-34-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-125-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-125-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-125-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-125-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-125-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-125-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-125-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-125-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-125-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-261-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-261-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-261-$a","outcome":"ptr-compare"}
+{"label":"delayed-local-2-261-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-261-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-261-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-261-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-261-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-261-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-276-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-276-$a","outcome":"ptr-compare"}
+{"label":"delayed-local-2-276-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-2-276-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-276-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-276-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-local-2-276-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-276-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-276-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-321-$sum","outcome":"final-state"}
+{"label":"delayed-local-2-321-$len","outcome":"escape"}
+{"label":"delayed-local-2-321-$b","outcome":"escape"}
+{"label":"delayed-local-2-321-$c","outcome":"escape"}
+{"label":"delayed-local-2-321-$n","outcome":"escape"}
+{"label":"delayed-local-2-321-$d","outcome":"escape"}
+{"label":"delayed-local-2-321-$p","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"equal","why":"record 0 wrote byte 16398 outside its own regions"}
+{"label":"delayed-local-2-321-$slot","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"premise","route":"differs","why":"record 7 wrote byte 12803 outside its own regions"}
+{"label":"delayed-local-2-321-$k","outcome":"final-state"}
+{"label":"delayed-local-2-336-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-336-$len","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-336-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-336-$c","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-336-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-336-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-336-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-336-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-336-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-352-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$sum","outcome":"ptr-control"}
+{"label":"delayed-local-2-410-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-410-$k","outcome":"ptr-control"}
+{"label":"delayed-local-2-425-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-425-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-425-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-425-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-2-425-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-425-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-425-$p","outcome":"ptr-control"}
+{"label":"delayed-local-2-425-$slot","outcome":"ptr-control"}
+{"label":"delayed-local-2-425-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-482-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-482-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-482-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-482-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-2-482-$n","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-482-$d","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-482-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-482-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-482-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-531-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-596-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-665-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-726-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-726-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-726-$a","outcome":"ptr-compare"}
+{"label":"delayed-local-2-726-$b","operator":"local","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"notRunnable","why":"OwnershipRedirectError: the certificate does not re-derive"}
+{"label":"delayed-local-2-726-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-726-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-726-$p","outcome":"ptr-control"}
+{"label":"delayed-local-2-726-$slot","outcome":"ptr-control"}
+{"label":"delayed-local-2-726-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$b","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-796-$k","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$sum","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$len","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$a","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$c","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$n","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$d","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$p","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$slot","outcome":"ptr-deref"}
+{"label":"delayed-local-2-814-$k","outcome":"ptr-deref"}
+{"label":"delayed-op-2-312-sub","outcome":"ptr-deref"}
+{"label":"delayed-op-2-312-and","outcome":"ptr-deref"}
+{"label":"delayed-op-2-312-shl","outcome":"ptr-deref"}
+{"label":"delayed-op-2-312-or","outcome":"ptr-deref"}
+{"label":"delayed-op-2-312-mul","outcome":"ptr-deref"}
+{"label":"delayed-op-2-379-add","outcome":"ptr-deref"}
+{"label":"delayed-op-2-379-sub","outcome":"ptr-deref"}
+{"label":"delayed-op-2-379-shl","outcome":"ptr-deref"}
+{"label":"delayed-op-2-379-or","outcome":"ptr-deref"}
+{"label":"delayed-op-2-379-mul","outcome":"ptr-deref"}
+{"label":"delayed-op-2-401-sub","outcome":"ptr-deref"}
+{"label":"delayed-op-2-401-and","outcome":"ptr-control"}
+{"label":"delayed-op-2-401-shl","outcome":"ptr-control"}
+{"label":"delayed-op-2-401-or","outcome":"ptr-control"}
+{"label":"delayed-op-2-401-mul","outcome":"ptr-control"}
+{"label":"delayed-op-2-522-sub","outcome":"ptr-deref"}
+{"label":"delayed-op-2-522-and","outcome":"ptr-deref"}
+{"label":"delayed-op-2-522-shl","outcome":"ptr-deref"}
+{"label":"delayed-op-2-522-or","outcome":"ptr-deref"}
+{"label":"delayed-op-2-522-mul","outcome":"ptr-deref"}
+{"label":"delayed-op-2-587-sub","outcome":"ptr-deref"}
+{"label":"delayed-op-2-587-and","outcome":"ptr-deref"}
+{"label":"delayed-op-2-587-shl","outcome":"ptr-deref"}
+{"label":"delayed-op-2-587-or","outcome":"ptr-deref"}
+{"label":"delayed-op-2-587-mul","outcome":"ptr-deref"}
+{"label":"delayed-op-2-656-sub","outcome":"ptr-deref"}
+{"label":"delayed-op-2-656-and","outcome":"ptr-deref"}
+{"label":"delayed-op-2-656-shl","outcome":"ptr-deref"}
+{"label":"delayed-op-2-656-or","outcome":"ptr-deref"}
+{"label":"delayed-op-2-656-mul","outcome":"ptr-deref"}
+{"label":"delayed-op-2-717-sub","operator":"op","outcome":"certificate","relocation":"equal","extreme":"equal","wider":"equal","regions":"own","route":"equal"}
+{"label":"delayed-op-2-717-and","outcome":"ptr-deref"}
+{"label":"delayed-op-2-717-shl","outcome":"ptr-deref"}
+{"label":"delayed-op-2-717-or","outcome":"ptr-deref"}
+{"label":"delayed-op-2-717-mul","outcome":"ptr-deref"}

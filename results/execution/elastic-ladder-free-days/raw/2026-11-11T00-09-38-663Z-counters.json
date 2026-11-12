@@ -1,0 +1,45 @@
+{
+  "seen": {
+    "writeRows": 7168,
+    "schemaRows": 2,
+    "cleanupRows": 3072,
+    "requests": 6,
+    "internal": 0,
+    "external": 0
+  },
+  "readRows": 7168,
+  "retries": 1,
+  "planned": {
+    "writeRows": 7168,
+    "schemaRows": 2,
+    "cleanupRows": 3072,
+    "requests": 4,
+    "cleanupRequests": 1,
+    "internal": 0,
+    "external": 0,
+    "readRows": 7168
+  },
+  "results": [
+    {
+      "variant": "v4",
+      "workload": "chase",
+      "exact": true,
+      "requests": 4,
+      "stats": {
+        "ops": 12288,
+        "frameHits": 8192,
+        "coldHits": 0,
+        "storeReads": 4096,
+        "storeWrites": 4096,
+        "compressions": 0,
+        "decompressions": 0,
+        "coldEvictions": 0,
+        "coldBytes": 0,
+        "coldPeakBytes": 0,
+        "compressMs": 0,
+        "decompressMs": 0
+      },
+      "pooled": 0
+    }
+  ]
+}
