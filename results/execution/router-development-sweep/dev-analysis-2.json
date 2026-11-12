@@ -1,0 +1,3179 @@
+{
+	"samples": 1140,
+	"errorRows": 0,
+	"wrongOutputs": 0,
+	"rounds": 10,
+	"totals": {
+		"serial": {
+			"drivers": 38,
+			"geomean": 1,
+			"p10": 1,
+			"slowest": [
+				"lz4-compress 1.000",
+				"lz4-decompress 1.000",
+				"miniz-compress 1.000",
+				"miniz-decompress 1.000"
+			]
+		},
+		"router": {
+			"drivers": 38,
+			"geomean": 1.247003278925954,
+			"p10": 0.9784442850000302,
+			"slowest": [
+				"wyhash 0.866",
+				"qoa-decode 0.953",
+				"xxhash32 0.977",
+				"md4c-html 0.978"
+			]
+		},
+		"today": {
+			"drivers": 38,
+			"geomean": 1.0867080914820215,
+			"p10": 0.8000952996405517,
+			"slowest": [
+				"m6502 0.482",
+				"kissfft-complex 0.781",
+				"qoi-encode 0.800",
+				"miniz-decompress 0.800"
+			]
+		}
+	},
+	"variants": {
+		"router": {
+			"all": {
+				"n": 38,
+				"geomean": 1.247003278925954,
+				"p10": 0.9784442850000302,
+				"geomeanCi": [
+					1.0874420111161136,
+					1.2416928835222472,
+					1.4624059575403825
+				],
+				"p10Ci": [
+					0.9531631178016735,
+					0.9784442850000302,
+					0.9863077026497631
+				],
+				"pGeo120": 0.6768,
+				"pP10090": 0.9825
+			},
+			"without qoa-encode": {
+				"n": 37,
+				"geomean": 1.2196238326584457,
+				"p10": 0.9784442850000302,
+				"geomeanCi": [
+					1.070621659555348,
+					1.2134517301985734,
+					1.427690319471505
+				],
+				"p10Ci": [
+					0.9531631178016735,
+					0.9784442850000302,
+					0.9863077026497631
+				],
+				"pGeo120": 0.5607,
+				"pP10090": 0.985
+			},
+			"without qoa-encode and yyjson-read": {
+				"n": 36,
+				"geomean": 1.2269666661181775,
+				"p10": 0.9784442850000302,
+				"geomeanCi": [
+					1.0728692151991066,
+					1.2212660286858676,
+					1.4411870953447403
+				],
+				"p10Ci": [
+					0.9531631178016735,
+					0.9784442850000302,
+					0.9868601970734632
+				],
+				"pGeo120": 0.5913,
+				"pP10090": 0.9828
+			},
+			"sha256-shared at serial (1.0)": {
+				"n": 38,
+				"geomean": 1.187311551664716,
+				"p10": 0.9784442850000302,
+				"geomeanCi": [
+					1.0643469717779521,
+					1.1827399239450878,
+					1.3560658705071709
+				],
+				"p10Ci": [
+					0.9531631178016735,
+					0.9784442850000302,
+					0.9863077026497631
+				],
+				"pGeo120": 0.4094,
+				"pP10090": 0.9825
+			},
+			"jsmn-parse-shared at serial (1.0)": {
+				"n": 38,
+				"geomean": 1.2233684381324104,
+				"p10": 0.9784442850000302,
+				"geomeanCi": [
+					1.0700814402840775,
+					1.2177071975497804,
+					1.4330588841081313
+				],
+				"p10Ci": [
+					0.9531631178016735,
+					0.9784442850000302,
+					0.9863077026497631
+				],
+				"pGeo120": 0.5801,
+				"pP10090": 0.9825
+			},
+			"both at serial (1.0)": {
+				"n": 38,
+				"geomean": 1.1648080667339462,
+				"p10": 0.9784442850000302,
+				"geomeanCi": [
+					1.0479957581828854,
+					1.1597368105773025,
+					1.3270518939519285
+				],
+				"p10Ci": [
+					0.9531631178016735,
+					0.9784442850000302,
+					0.9863077026497631
+				],
+				"pGeo120": 0.2945,
+				"pP10090": 0.9825
+			},
+			"blake2b and sha256-shared at serial": {
+				"n": 38,
+				"geomean": 1.1872547630662127,
+				"p10": 0.9784442850000302,
+				"geomeanCi": [
+					1.0642960645221744,
+					1.1826699701823,
+					1.3560374364770946
+				],
+				"p10Ci": [
+					0.9531631178016735,
+					0.9784442850000302,
+					0.9863077026497631
+				],
+				"pGeo120": 0.4091,
+				"pP10090": 0.9825
+			}
+		},
+		"today": {
+			"all": {
+				"n": 38,
+				"geomean": 1.0867080914820215,
+				"p10": 0.8000952996405517,
+				"geomeanCi": [
+					0.9750686255630676,
+					1.0844933865551702,
+					1.2199344655981972
+				],
+				"p10Ci": [
+					0.7813161160603317,
+					0.8000952996405517,
+					0.9146953728953069
+				],
+				"pGeo120": 0.0444,
+				"pP10090": 0.0579
+			},
+			"without qoa-encode": {
+				"n": 37,
+				"geomean": 1.0589069474838861,
+				"p10": 0.8000952996405517,
+				"geomeanCi": [
+					0.9603468407481535,
+					1.057841036948281,
+					1.177044125527407
+				],
+				"p10Ci": [
+					0.7813161160603317,
+					0.8000952996405517,
+					0.9146953728953069
+				],
+				"pGeo120": 0.0103,
+				"pP10090": 0.0654
+			},
+			"without qoa-encode and yyjson-read": {
+				"n": 36,
+				"geomean": 1.0661095101082658,
+				"p10": 0.8000952996405517,
+				"geomeanCi": [
+					0.963401838292022,
+					1.0650031231388244,
+					1.1914136509561537
+				],
+				"p10Ci": [
+					0.7813161160603317,
+					0.8000952996405517,
+					0.9183876649341658
+				],
+				"pGeo120": 0.0183,
+				"pP10090": 0.1284
+			},
+			"sha256-shared at serial (1.0)": {
+				"n": 38,
+				"geomean": 1.088209502324505,
+				"p10": 0.8000952996405517,
+				"geomeanCi": [
+					0.9764080908344713,
+					1.0859125832031453,
+					1.2215910618337797
+				],
+				"p10Ci": [
+					0.7813161160603317,
+					0.8000952996405517,
+					0.9146953728953069
+				],
+				"pGeo120": 0.0467,
+				"pP10090": 0.0579
+			},
+			"jsmn-parse-shared at serial (1.0)": {
+				"n": 38,
+				"geomean": 1.0878069098989906,
+				"p10": 0.8000952996405517,
+				"geomeanCi": [
+					0.9763213133152663,
+					1.0856576410990952,
+					1.2210249326531981
+				],
+				"p10Ci": [
+					0.7813161160603317,
+					0.8000952996405517,
+					0.9146953728953069
+				],
+				"pGeo120": 0.0459,
+				"pP10090": 0.0579
+			},
+			"both at serial (1.0)": {
+				"n": 38,
+				"geomean": 1.089309838884109,
+				"p10": 0.8000952996405517,
+				"geomeanCi": [
+					0.9775344569734096,
+					1.0872578530234382,
+					1.2226152680664355
+				],
+				"p10Ci": [
+					0.7813161160603317,
+					0.8000952996405517,
+					0.9146953728953069
+				],
+				"pGeo120": 0.0475,
+				"pP10090": 0.0579
+			},
+			"blake2b and sha256-shared at serial": {
+				"n": 38,
+				"geomean": 1.0650865802693545,
+				"p10": 0.8000952996405517,
+				"geomeanCi": [
+					0.9623462932557655,
+					1.0633120526003006,
+					1.1838949869065756
+				],
+				"p10Ci": [
+					0.7813161160603317,
+					0.8000952996405517,
+					0.9146953728953069
+				],
+				"pGeo120": 0.0141,
+				"pP10090": 0.0579
+			}
+		}
+	},
+	"carry": {
+		"router": [
+			{
+				"driver": "sha256-shared",
+				"route": "window",
+				"reason": "certified-window",
+				"ratio": 6.449265933674663,
+				"min": 4.1017846227471475,
+				"max": 6.616434463230922,
+				"lo": 5.320173128033906,
+				"hi": 6.560554917443393,
+				"serialMs": 13.164691000000005,
+				"logShare": 0.04905174514732541,
+				"geomeanWithout": 1.192833850616724
+			},
+			{
+				"driver": "aes-cbc-decrypt-shared",
+				"route": "window",
+				"reason": "certified-window",
+				"ratio": 5.50628818603894,
+				"min": 3.1627402605976145,
+				"max": 6.419938711643577,
+				"lo": 3.3015279174750964,
+				"hi": 6.230438376688789,
+				"serialMs": 17.773487499999987,
+				"logShare": 0.04489186172930932,
+				"geomeanWithout": 1.1979409115377064
+			},
+			{
+				"driver": "qoa-encode",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"ratio": 2.8353732686132407,
+				"min": 2.6298967413096386,
+				"max": 3.2530326726272105,
+				"lo": 2.741913385710518,
+				"hi": 3.024728417620526,
+				"serialMs": 10.72473100000002,
+				"logShare": 0.02742562086648839,
+				"geomeanWithout": 1.2196238326584457
+			},
+			{
+				"driver": "sha256",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"ratio": 2.2934662560927226,
+				"min": 1.649129382959941,
+				"max": 2.6423036191597538,
+				"lo": 1.9567652234864104,
+				"hi": 2.5950431468448545,
+				"serialMs": 13.02552449999996,
+				"logShare": 0.021843797950080134,
+				"geomeanWithout": 1.2266356284630326
+			},
+			{
+				"driver": "miniz-crc32",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"ratio": 2.266683105862207,
+				"min": 2.0930123806381906,
+				"max": 2.384244164816777,
+				"lo": 2.1115596573530904,
+				"hi": 2.332659868118637,
+				"serialMs": 7.377375499999999,
+				"logShare": 0.02153467305457682,
+				"geomeanWithout": 1.2270251221040658
+			},
+			{
+				"driver": "jsmn-parse-shared",
+				"route": "window",
+				"reason": "certified-window",
+				"ratio": 2.0691515235661466,
+				"min": 1.3552330170783324,
+				"max": 2.6593358223750228,
+				"lo": 1.41587328373824,
+				"hi": 2.3434826480946356,
+				"serialMs": 1.5608040000000187,
+				"logShare": 0.019135227138198943,
+				"geomeanWithout": 1.230052603739388
+			},
+			{
+				"driver": "sha1",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"ratio": 1.8808810382092294,
+				"min": 1.5135712156231649,
+				"max": 2.329589951890932,
+				"lo": 1.7012520434892602,
+				"hi": 2.231340682519939,
+				"serialMs": 9.594156499999968,
+				"logShare": 0.016624744852921248,
+				"geomeanWithout": 1.233228181242681
+			},
+			{
+				"driver": "md5-slot",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"ratio": 1.6382317540211888,
+				"min": 1.5512794177490712,
+				"max": 1.836155267660313,
+				"lo": 1.6117238303541273,
+				"hi": 1.6774254454417457,
+				"serialMs": 6.525853500000011,
+				"logShare": 0.012989933194581667,
+				"geomeanWithout": 1.23784048709938
+			},
+			{
+				"driver": "md5",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"ratio": 1.592578599251374,
+				"min": 1.3753354090711172,
+				"max": 1.8123566445799302,
+				"lo": 1.4449206134222001,
+				"hi": 1.7286962971708604,
+				"serialMs": 6.590878000000004,
+				"logShare": 0.012246170082475066,
+				"geomeanWithout": 1.2387863911229808
+			},
+			{
+				"driver": "aes-ctr",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 1.1624777976274507,
+				"min": 0.958575873007867,
+				"max": 1.5091070830202005,
+				"lo": 0.9926999291347604,
+				"hi": 1.3708135486576871,
+				"serialMs": 9.585363499999971,
+				"logShare": 0.003961941038997198,
+				"geomeanWithout": 1.2493711074255702
+			},
+			{
+				"driver": "aes-cbc-encrypt-slot",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 1.0437753946485813,
+				"min": 0.9447694993293013,
+				"max": 1.3315222012343317,
+				"lo": 0.9776864511604908,
+				"hi": 1.2378201074541466,
+				"serialMs": 8.490650000000016,
+				"logShare": 0.001127482291820715,
+				"geomeanWithout": 1.2530134077690818
+			},
+			{
+				"driver": "qoi-decode",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 1.0054661500086428,
+				"min": 0.9287869640934896,
+				"max": 1.058856527464882,
+				"lo": 0.9758514748093374,
+				"hi": 1.0529422264435606,
+				"serialMs": 3.7908025000000123,
+				"logShare": 0.00014345433760869585,
+				"geomeanWithout": 1.2542803724237732
+			},
+			{
+				"driver": "kissfft-real-shared",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"ratio": 1.0029098231690345,
+				"min": 0.9722658386494755,
+				"max": 1.0567273440073686,
+				"lo": 0.9970084585140176,
+				"hi": 1.0219133801599476,
+				"serialMs": 1.964047000000022,
+				"logShare": 0.0000764631007440917,
+				"geomeanWithout": 1.2543666721534443
+			},
+			{
+				"driver": "jsmn-parse-slot",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 1.0023951508123932,
+				"min": 0.9068113772455391,
+				"max": 1.0351621185573527,
+				"lo": 0.9377774984506375,
+				"hi": 1.0287969338915108,
+				"serialMs": 1.2208565000000249,
+				"logShare": 0.00006295492133156194,
+				"geomeanWithout": 1.254384074435837
+			},
+			{
+				"driver": "blake2b",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"ratio": 1.0018192198242324,
+				"min": 0.9796888222332022,
+				"max": 1.0460317778920378,
+				"lo": 0.992405160118193,
+				"hi": 1.004034797884195,
+				"serialMs": 10.761354500000039,
+				"logShare": 0.00004783071179087233,
+				"geomeanWithout": 1.2544035588998186
+			},
+			{
+				"driver": "kissfft-real",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"ratio": 1.000443594736419,
+				"min": 0.9874302050829966,
+				"max": 1.5197123580888974,
+				"lo": 0.9963321232808461,
+				"hi": 1.0036490478966003,
+				"serialMs": 1.9427164999999889,
+				"logShare": 0.000011670957298960939,
+				"geomeanWithout": 1.2544501446064489
+			},
+			{
+				"driver": "qoi-decode-64",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9994123329442869,
+				"min": 0.9104074572052248,
+				"max": 1.0668498661815307,
+				"lo": 0.9445044041360492,
+				"hi": 1.0190827864221483,
+				"serialMs": 1.7024785000000122,
+				"logShare": -0.000015469468412576495,
+				"geomeanWithout": 1.2544851115753055
+			},
+			{
+				"driver": "brotli-compress",
+				"route": "serial",
+				"reason": "tracked-ineligible",
+				"ratio": 0.9993799671789633,
+				"min": 0.9748832156778944,
+				"max": 1.0323250738777177,
+				"lo": 0.9952432233184745,
+				"hi": 1.0139364814013618,
+				"serialMs": 59.16686349999998,
+				"logShare": -0.000016321713707330613,
+				"geomeanWithout": 1.254486209600199
+			},
+			{
+				"driver": "kissfft-complex",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"ratio": 0.998709962192606,
+				"min": 0.9243896646515238,
+				"max": 1.1169761013293917,
+				"lo": 0.9735025237660948,
+				"hi": 1.0109334766273301,
+				"serialMs": 3.093187999999998,
+				"logShare": -0.00003397027953908633,
+				"geomeanWithout": 1.2545089480639287
+			},
+			{
+				"driver": "jsmn-parse",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.997927087339652,
+				"min": 0.9299390975717634,
+				"max": 1.0486912073729449,
+				"lo": 0.9791527086725786,
+				"hi": 1.0107490975545024,
+				"serialMs": 1.212237499999972,
+				"logShare": -0.000054606950460511285,
+				"geomeanWithout": 1.2545355369337092
+			},
+			{
+				"driver": "lz4-compress",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"ratio": 0.9960623925744523,
+				"min": 0.918982730188731,
+				"max": 1.0171606410648193,
+				"lo": 0.9694537195766582,
+				"hi": 1.0077386467699094,
+				"serialMs": 6.823432000000025,
+				"logShare": -0.00010382579506574667,
+				"geomeanWithout": 1.2545989541583336
+			},
+			{
+				"driver": "xxhash64",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9952357108831006,
+				"min": 0.9626709310110338,
+				"max": 1.029459063742657,
+				"lo": 0.9769670358866289,
+				"hi": 1.0107686546606711,
+				"serialMs": 0.6203099999999893,
+				"logShare": -0.00012567564523471777,
+				"geomeanWithout": 1.2546271081598603
+			},
+			{
+				"driver": "qoi-encode",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.9951452490674382,
+				"min": 0.9620278731992632,
+				"max": 1.1309595926201108,
+				"lo": 0.9825504189986631,
+				"hi": 1.0137148848171236,
+				"serialMs": 4.602466000000021,
+				"logShare": -0.0001280677240838619,
+				"geomeanWithout": 1.2546301904432364
+			},
+			{
+				"driver": "brotli-decompress",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9925328132024744,
+				"min": 0.8194865840100716,
+				"max": 1.0664161203898426,
+				"lo": 0.9834546569538951,
+				"hi": 1.00075461234385,
+				"serialMs": 7.930630500000007,
+				"logShare": -0.00019724225805569482,
+				"geomeanWithout": 1.2547193277022883
+			},
+			{
+				"driver": "aes-cbc-decrypt",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.9915094253492802,
+				"min": 0.966085216536719,
+				"max": 1.21498334706355,
+				"lo": 0.9713930956132657,
+				"hi": 1.000387443039171,
+				"serialMs": 17.73046450000001,
+				"logShare": -0.000224390129365816,
+				"geomeanWithout": 1.2547543117693398
+			},
+			{
+				"driver": "qoi-encode-64",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9907659186102903,
+				"min": 0.9199142406653856,
+				"max": 1.0170935116514148,
+				"lo": 0.9757071500663836,
+				"hi": 1.0022652767060312,
+				"serialMs": 2.057407999999981,
+				"logShare": -0.00024413104759161126,
+				"geomeanWithout": 1.25477975148901
+			},
+			{
+				"driver": "miniz-decompress",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.9897993134862497,
+				"min": 0.9452339189416813,
+				"max": 1.0402291163080934,
+				"lo": 0.968307755095259,
+				"hi": 0.9962633438946524,
+				"serialMs": 3.263318499999997,
+				"logShare": -0.0002698176329721937,
+				"geomeanWithout": 1.2548128540411678
+			},
+			{
+				"driver": "aes-cbc-encrypt",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.9872125123673118,
+				"min": 0.9306529257939768,
+				"max": 1.0007217396935488,
+				"lo": 0.952630896707812,
+				"hi": 0.9988576019987249,
+				"serialMs": 8.268574499999971,
+				"logShare": -0.0003386829291872521,
+				"geomeanWithout": 1.254901605726646
+			},
+			{
+				"driver": "miniz-adler32",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.9868601970734632,
+				"min": 0.9425120830844655,
+				"max": 1.002703498328708,
+				"lo": 0.9624296178754332,
+				"hi": 0.9925633766771511,
+				"serialMs": 3.2864324999999894,
+				"logShare": -0.0003480761548322625,
+				"geomeanWithout": 1.2549137119420652
+			},
+			{
+				"driver": "m6502",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.9863077026497631,
+				"min": 0.7735686082092292,
+				"max": 1.0183642676687104,
+				"lo": 0.9351737730428027,
+				"hi": 1.0077244546626802,
+				"serialMs": 3.422174499999983,
+				"logShare": -0.0003628131950217839,
+				"geomeanWithout": 1.254932705629713
+			},
+			{
+				"driver": "lz4-decompress",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9860620602069481,
+				"min": 0.9508763723685041,
+				"max": 1.1534463108460684,
+				"lo": 0.9734962310278501,
+				"hi": 1.0037884031991504,
+				"serialMs": 0.8550285000000031,
+				"logShare": -0.0003693680256281709,
+				"geomeanWithout": 1.2549411538503037
+			},
+			{
+				"driver": "miniz-compress",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9831540435116022,
+				"min": 0.9646045692939215,
+				"max": 0.9985905026795667,
+				"lo": 0.9786459406870489,
+				"hi": 0.9873925891552667,
+				"serialMs": 9.736801999999983,
+				"logShare": -0.0004470911466456836,
+				"geomeanWithout": 1.2550413319523428
+			},
+			{
+				"driver": "yyjson-read",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.9826047932490618,
+				"min": 0.8043996841480726,
+				"max": 1.0761737905054753,
+				"lo": 0.9701030569618837,
+				"hi": 1.013371123812526,
+				"serialMs": 3.8599205000000154,
+				"logShare": -0.0004617968718681462,
+				"geomeanWithout": 1.2550602872071843
+			},
+			{
+				"driver": "xxhash3",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9825116062304766,
+				"min": 0.8643382706344035,
+				"max": 1.0887617204444895,
+				"lo": 0.9304874186971754,
+				"hi": 0.9970688986151737,
+				"serialMs": 0.9285784999999862,
+				"logShare": -0.00046429269345434396,
+				"geomeanWithout": 1.255063504277501
+			},
+			{
+				"driver": "md4c-html",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9784442850000302,
+				"min": 0.8974994388517575,
+				"max": 1.0004180864012142,
+				"lo": 0.939360998968504,
+				"hi": 0.9918431101067288,
+				"serialMs": 11.634011000000015,
+				"logShare": -0.0005734587620977475,
+				"geomeanWithout": 1.2552042254969948
+			},
+			{
+				"driver": "xxhash32",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9767518722575568,
+				"min": 0.967096555489772,
+				"max": 1.0755856899466318,
+				"lo": 0.9740271287512987,
+				"hi": 1.0227768824838497,
+				"serialMs": 1.204654000000005,
+				"logShare": -0.0006190165322391107,
+				"geomeanWithout": 1.2552629566983313
+			},
+			{
+				"driver": "qoa-decode",
+				"route": "serial",
+				"reason": "below-floor",
+				"ratio": 0.9531631178016735,
+				"min": 0.9302008297384888,
+				"max": 0.9843983184284091,
+				"lo": 0.9463358091729348,
+				"hi": 0.9706625218574269,
+				"serialMs": 0.9084395000000001,
+				"logShare": -0.001262348093115257,
+				"geomeanWithout": 1.256092606711283
+			},
+			{
+				"driver": "wyhash",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"ratio": 0.8664690725201352,
+				"min": 0.7143794594319799,
+				"max": 0.9217662976580382,
+				"lo": 0.8250142136142753,
+				"hi": 0.9057046104028953,
+				"serialMs": 2.762304999999998,
+				"logShare": -0.0037718121810811165,
+				"geomeanWithout": 1.2593340937397972
+			}
+		],
+		"today": [
+			{
+				"driver": "qoa-encode",
+				"route": "tracked",
+				"reason": "ran",
+				"ratio": 2.8349911905431364,
+				"min": 2.7809591834486045,
+				"max": 3.2446871977602814,
+				"lo": 2.8069093038165374,
+				"hi": 3.2151802518210157,
+				"serialMs": 10.72473100000002,
+				"logShare": 0.027422074467965674,
+				"geomeanWithout": 1.0589069474838861
+			},
+			{
+				"driver": "sha256",
+				"route": "tracked",
+				"reason": "ran",
+				"ratio": 2.3258126000432053,
+				"min": 1.8756861150212765,
+				"max": 2.5986912896069363,
+				"lo": 1.9955991136721714,
+				"hi": 2.573970654008081,
+				"serialMs": 13.02552449999996,
+				"logShare": 0.022212354825564832,
+				"geomeanWithout": 1.064587837643561
+			},
+			{
+				"driver": "blake2b",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 2.2617721003938556,
+				"min": 1.9979761658090607,
+				"max": 2.5319968358555585,
+				"lo": 2.1808350257826072,
+				"hi": 2.5127652966724656,
+				"serialMs": 10.761354500000039,
+				"logShare": 0.02147759529592061,
+				"geomeanWithout": 1.0653914978670327
+			},
+			{
+				"driver": "miniz-crc32",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 2.1828602533902055,
+				"min": 2.0277010170875127,
+				"max": 2.332947266519775,
+				"lo": 2.109312913406796,
+				"hi": 2.2866607593373716,
+				"serialMs": 7.377375499999999,
+				"logShare": 0.020543054201696574,
+				"geomeanWithout": 1.0664145504042648
+			},
+			{
+				"driver": "sha1",
+				"route": "tracked",
+				"reason": "ran",
+				"ratio": 1.845471422826499,
+				"min": 1.6404226012823684,
+				"max": 2.376632057153201,
+				"lo": 1.7594762753848723,
+				"hi": 2.259535401846224,
+				"serialMs": 9.594156499999968,
+				"logShare": 0.016124598910039933,
+				"geomeanWithout": 1.0712648007887344
+			},
+			{
+				"driver": "md5-slot",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 1.632905593402196,
+				"min": 1.416059867882176,
+				"max": 1.833951001179886,
+				"lo": 1.5398429402108667,
+				"hi": 1.7463147118097804,
+				"serialMs": 6.525853500000011,
+				"logShare": 0.012904236856868615,
+				"geomeanWithout": 1.0748137664628046
+			},
+			{
+				"driver": "md5",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 1.5473896135926024,
+				"min": 1.4235803737814432,
+				"max": 1.7069003462797856,
+				"lo": 1.486826135978123,
+				"hi": 1.6149319233824222,
+				"serialMs": 6.590878000000004,
+				"logShare": 0.011488668182725603,
+				"geomeanWithout": 1.0763774964661335
+			},
+			{
+				"driver": "aes-ctr",
+				"route": "tracked",
+				"reason": "ran",
+				"ratio": 1.4259814463610103,
+				"min": 1.1825903715347523,
+				"max": 1.5595368037384478,
+				"lo": 1.3601014252916386,
+				"hi": 1.5426814969926543,
+				"serialMs": 9.585363499999971,
+				"logShare": 0.009338429235274406,
+				"geomeanWithout": 1.0787571450780051
+			},
+			{
+				"driver": "aes-cbc-encrypt-slot",
+				"route": "tracked",
+				"reason": "ran",
+				"ratio": 1.263846789559317,
+				"min": 1.1630200726301956,
+				"max": 1.4354427675370562,
+				"lo": 1.222200101844977,
+				"hi": 1.3409176108119822,
+				"serialMs": 8.490650000000016,
+				"logShare": 0.0061621073049043275,
+				"geomeanWithout": 1.0822819787972628
+			},
+			{
+				"driver": "lz4-compress",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 1.261037239281148,
+				"min": 1.1456640006991416,
+				"max": 1.3593655956578394,
+				"lo": 1.2098000959315738,
+				"hi": 1.2830930004044125,
+				"serialMs": 6.823432000000025,
+				"logShare": 0.006103541791948343,
+				"geomeanWithout": 1.0823470782461788
+			},
+			{
+				"driver": "aes-cbc-decrypt",
+				"route": "tracked",
+				"reason": "ran",
+				"ratio": 1.1425598783106459,
+				"min": 0.9263020811179772,
+				"max": 1.2167951621297453,
+				"lo": 0.9821729917289794,
+				"hi": 1.1940836188662556,
+				"serialMs": 17.73046450000001,
+				"logShare": 0.0035071382187573884,
+				"geomeanWithout": 1.0852370911923896
+			},
+			{
+				"driver": "brotli-compress",
+				"route": "tracked",
+				"reason": "unsupported-module",
+				"ratio": 1.0038514200345952,
+				"min": 0.9976494469099508,
+				"max": 1.036824116517373,
+				"lo": 0.9997365094289962,
+				"hi": 1.0177992216767842,
+				"serialMs": 59.16686349999998,
+				"logShare": 0.00010115848170735553,
+				"geomeanWithout": 1.089039933971938
+			},
+			{
+				"driver": "md4c-html",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"ratio": 0.9932163220144217,
+				"min": 0.9195920607091558,
+				"max": 1.0100594126300881,
+				"lo": 0.9576659861589225,
+				"hi": 1.0027126251817577,
+				"serialMs": 11.634011000000015,
+				"logShare": -0.0001791260978721406,
+				"geomeanWithout": 1.089353469956481
+			},
+			{
+				"driver": "qoi-decode",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"ratio": 0.9910277861894542,
+				"min": 0.8765232648388248,
+				"max": 1.0673225126888901,
+				"lo": 0.9595502363565431,
+				"hi": 1.049095082899181,
+				"serialMs": 3.7908025000000123,
+				"logShare": -0.00023717648707738818,
+				"geomeanWithout": 1.0894184184041933
+			},
+			{
+				"driver": "brotli-decompress",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"ratio": 0.9907204931599644,
+				"min": 0.9345364649854702,
+				"max": 1.0668390064527784,
+				"lo": 0.9810220452914296,
+				"hi": 1.0023269260824097,
+				"serialMs": 7.930630500000007,
+				"logShare": -0.0002453376232013486,
+				"geomeanWithout": 1.0894275496288481
+			},
+			{
+				"driver": "miniz-compress",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"ratio": 0.9848379074897852,
+				"min": 0.9652781697519973,
+				"max": 1.0014704951648576,
+				"lo": 0.9747824920359885,
+				"hi": 0.9902435498673916,
+				"serialMs": 9.736801999999983,
+				"logShare": -0.0004020582177831222,
+				"geomeanWithout": 1.0896029139540757
+			},
+			{
+				"driver": "kissfft-real-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9774600884370215,
+				"min": 0.9259223920943731,
+				"max": 1.0085661939526243,
+				"lo": 0.9593518803616816,
+				"hi": 0.9929496167935685,
+				"serialMs": 1.964047000000022,
+				"logShare": -0.0005999425842013049,
+				"geomeanWithout": 1.0898243792828393
+			},
+			{
+				"driver": "jsmn-parse-slot",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9665363154027382,
+				"min": 0.8901420799424652,
+				"max": 1.0127906687497648,
+				"lo": 0.9349556607110371,
+				"hi": 0.9909343944931177,
+				"serialMs": 1.2208565000000249,
+				"logShare": -0.0008956949185088745,
+				"geomeanWithout": 1.0901554589665696
+			},
+			{
+				"driver": "jsmn-parse-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9623240246984767,
+				"min": 0.93407887244344,
+				"max": 1.1857026848974659,
+				"lo": 0.9435588301414093,
+				"hi": 0.9811966062416159,
+				"serialMs": 1.5608040000000187,
+				"logShare": -0.001010633184684548,
+				"geomeanWithout": 1.090284153642715
+			},
+			{
+				"driver": "qoi-encode-64",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9587712670510371,
+				"min": 0.7879353416213509,
+				"max": 1.0022815620987173,
+				"lo": 0.9047011074661679,
+				"hi": 0.9780947093409165,
+				"serialMs": 2.057407999999981,
+				"logShare": -0.0011079669601482562,
+				"geomeanWithout": 1.0903931487113598
+			},
+			{
+				"driver": "xxhash32",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9519501981656951,
+				"min": 0.9305523030367914,
+				"max": 0.9699508550070327,
+				"lo": 0.9428329892429381,
+				"hi": 0.959969181726393,
+				"serialMs": 1.204654000000005,
+				"logShare": -0.0012958568002709794,
+				"geomeanWithout": 1.0906035799379077
+			},
+			{
+				"driver": "xxhash3",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9501279232632585,
+				"min": 0.8981578466332608,
+				"max": 1.031287137475029,
+				"lo": 0.9275244985195629,
+				"hi": 0.9634502683135179,
+				"serialMs": 0.9285784999999862,
+				"logShare": -0.001346280194375711,
+				"geomeanWithout": 1.0906600596029412
+			},
+			{
+				"driver": "sha256-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9488874483837997,
+				"min": 0.8690976869749977,
+				"max": 0.9702081784689445,
+				"lo": 0.9121439145104424,
+				"hi": 0.9617021403633361,
+				"serialMs": 13.164691000000005,
+				"logShare": -0.0013806602008839847,
+				"geomeanWithout": 1.0906985706125094
+			},
+			{
+				"driver": "qoi-decode-64",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9471756878406887,
+				"min": 0.13767876711356486,
+				"max": 0.964445607817591,
+				"lo": 0.9043601548855341,
+				"hi": 0.9532329178668223,
+				"serialMs": 1.7024785000000122,
+				"logShare": -0.0014281758573613326,
+				"geomeanWithout": 1.0907517978525063
+			},
+			{
+				"driver": "qoa-decode",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9460431612576772,
+				"min": 0.9039186438332316,
+				"max": 0.9711981321845328,
+				"lo": 0.9156749768407343,
+				"hi": 0.9547575918343995,
+				"serialMs": 0.9084395000000001,
+				"logShare": -0.0014596601569192736,
+				"geomeanWithout": 1.090787068129258
+			},
+			{
+				"driver": "kissfft-real",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9442667486285072,
+				"min": 0.6596811629814486,
+				"max": 1.375701740093252,
+				"lo": 0.8866514107966134,
+				"hi": 0.9652145297475877,
+				"serialMs": 1.9427164999999889,
+				"logShare": -0.0015091205277129606,
+				"geomeanWithout": 1.090842478397349
+			},
+			{
+				"driver": "jsmn-parse",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9435873940034674,
+				"min": 0.7921525411880287,
+				"max": 0.9907912998301818,
+				"lo": 0.8827102794671828,
+				"hi": 0.9582098470264857,
+				"serialMs": 1.212237499999972,
+				"logShare": -0.0015280602896982774,
+				"geomeanWithout": 1.0908636972870267
+			},
+			{
+				"driver": "miniz-adler32",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.919767016555165,
+				"min": 0.7799053534416426,
+				"max": 0.9743753730342818,
+				"lo": 0.8861154040647337,
+				"hi": 0.9453887398360304,
+				"serialMs": 3.2864324999999894,
+				"logShare": -0.0022009179969806106,
+				"geomeanWithout": 1.0916177915901268
+			},
+			{
+				"driver": "lz4-decompress",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9183876649341658,
+				"min": 0.7567181365163459,
+				"max": 1.1010638356983187,
+				"lo": 0.8562781627949434,
+				"hi": 0.9304492648704284,
+				"serialMs": 0.8550285000000031,
+				"logShare": -0.0022404127512003903,
+				"geomeanWithout": 1.0916620708855171
+			},
+			{
+				"driver": "xxhash64",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9146953728953069,
+				"min": 0.861459046673147,
+				"max": 0.9498435727549758,
+				"lo": 0.8934303870804221,
+				"hi": 0.9285741033108261,
+				"serialMs": 0.6203099999999893,
+				"logShare": -0.002346426182531352,
+				"geomeanWithout": 1.0917809360589228
+			},
+			{
+				"driver": "aes-cbc-encrypt",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.9048370805167683,
+				"min": 0.8108185625712777,
+				"max": 0.9529565969723987,
+				"lo": 0.8664223034716745,
+				"hi": 0.9338762168791066,
+				"serialMs": 8.268574499999971,
+				"logShare": -0.002631588763591161,
+				"geomeanWithout": 1.0921007324169862
+			},
+			{
+				"driver": "wyhash",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.8640720365795456,
+				"min": 0.7920178205394435,
+				"max": 0.8854926240207955,
+				"lo": 0.8287971363558654,
+				"hi": 0.8765828676350716,
+				"serialMs": 2.762304999999998,
+				"logShare": -0.0038447141574439255,
+				"geomeanWithout": 1.0934622424286569
+			},
+			{
+				"driver": "aes-cbc-decrypt-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.8602403841866391,
+				"min": 0.7875116009885624,
+				"max": 0.9053691145548562,
+				"lo": 0.8336961918219231,
+				"hi": 0.8881080224718497,
+				"serialMs": 17.773487499999987,
+				"logShare": -0.0039616687446302505,
+				"geomeanWithout": 1.093593592105076
+			},
+			{
+				"driver": "yyjson-read",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.8296082986220386,
+				"min": 0.742821964504546,
+				"max": 0.8501379772967412,
+				"lo": 0.8133110163782471,
+				"hi": 0.8369337519115698,
+				"serialMs": 3.8599205000000154,
+				"logShare": -0.00491583207779592,
+				"geomeanWithout": 1.0946657860836069
+			},
+			{
+				"driver": "miniz-decompress",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.8000952996405517,
+				"min": 0.5779255118101205,
+				"max": 0.8666590441656051,
+				"lo": 0.7137579071166187,
+				"hi": 0.8502189601441384,
+				"serialMs": 3.263318499999997,
+				"logShare": -0.005869064048902262,
+				"geomeanWithout": 1.095737983164109
+			},
+			{
+				"driver": "qoi-encode",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.7999438810640165,
+				"min": 0.7759095397012571,
+				"max": 0.9508342225630335,
+				"lo": 0.7847373740930059,
+				"hi": 0.8540981178974387,
+				"serialMs": 4.602466000000021,
+				"logShare": -0.005874044801176899,
+				"geomeanWithout": 1.095743588280585
+			},
+			{
+				"driver": "kissfft-complex",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.7813161160603317,
+				"min": 0.6498519724230493,
+				"max": 0.8120430620132603,
+				"lo": 0.7508524732402216,
+				"hi": 0.8006177864083661,
+				"serialMs": 3.093187999999998,
+				"logShare": -0.006494090867239357,
+				"geomeanWithout": 1.0964415844747408
+			},
+			{
+				"driver": "m6502",
+				"route": "tracked",
+				"reason": "no-admission",
+				"ratio": 0.48159971755570885,
+				"min": 0.43004453968830464,
+				"max": 0.5878073048726862,
+				"lo": 0.46168704452845455,
+				"hi": 0.5238078634937905,
+				"serialMs": 3.422174499999983,
+				"logShare": -0.01922742030153689,
+				"geomeanWithout": 1.110874437142428
+			}
+		]
+	},
+	"contamination": {
+		"sampled": 1140,
+		"flaggedOtherContainerAbove10": 453,
+		"flaggedBy": [
+			"rig-kiss-slices-c10",
+			"jview-wdev"
+		],
+		"loadAtStart": {
+			"median": 2.18,
+			"min": 1.21,
+			"max": 4.84
+		},
+		"maxBusyOverSamples": 25.2,
+		"withoutFlagged": {
+			"serial": {
+				"drivers": 38,
+				"geomean": 1,
+				"p10": 1,
+				"slowest": [
+					"lz4-decompress 1.000",
+					"miniz-decompress 1.000",
+					"miniz-adler32 1.000",
+					"jsmn-parse-slot 1.000"
+				]
+			},
+			"router": {
+				"drivers": 38,
+				"geomean": 1.2625023744957455,
+				"p10": 0.9767518722575568,
+				"slowest": [
+					"wyhash 0.886",
+					"qoa-decode 0.953",
+					"aes-cbc-encrypt 0.972",
+					"xxhash32 0.977"
+				]
+			},
+			"today": {
+				"drivers": 38,
+				"geomean": 1.1032742526247148,
+				"p10": 0.8297438811016586,
+				"slowest": [
+					"m6502 0.516",
+					"kissfft-complex 0.792",
+					"miniz-decompress 0.822",
+					"yyjson-read 0.830"
+				]
+			}
+		}
+	},
+	"routeCounts": {
+		"serial": {
+			"serial/baseline": 380
+		},
+		"router": {
+			"serial/unclassified-dependency": 50,
+			"serial/below-floor": 129,
+			"serial/dispatch-lost": 87,
+			"tracked/tracked-eligible": 74,
+			"window/certified-window": 30,
+			"serial/tracked-ineligible": 10
+		},
+		"today": {
+			"tracked/no-admission": 273,
+			"tracked/log-exhausted": 40,
+			"tracked/ran": 57,
+			"tracked/unsupported-module": 10
+		}
+	},
+	"rows": {
+		"serial": [
+			{
+				"driver": "lz4-compress",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 6.823432000000025,
+				"armMs": 6.823432000000025,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "lz4-decompress",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 0.8550285000000031,
+				"armMs": 0.8550285000000031,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-compress",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 9.736801999999983,
+				"armMs": 9.736801999999983,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-decompress",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 3.263318499999997,
+				"armMs": 3.263318499999997,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-crc32",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 7.377375499999999,
+				"armMs": 7.377375499999999,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-adler32",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 3.2864324999999894,
+				"armMs": 3.2864324999999894,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 1.212237499999972,
+				"armMs": 1.212237499999972,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse-slot",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 1.2208565000000249,
+				"armMs": 1.2208565000000249,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-encrypt-slot",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 8.490650000000016,
+				"armMs": 8.490650000000016,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md5-slot",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 6.525853500000011,
+				"armMs": 6.525853500000011,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse-shared",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 1.5608040000000187,
+				"armMs": 1.5608040000000187,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-complex",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 3.093187999999998,
+				"armMs": 3.093187999999998,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-real",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 1.9427164999999889,
+				"armMs": 1.9427164999999889,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-real-shared",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 1.964047000000022,
+				"armMs": 1.964047000000022,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-encrypt",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 8.268574499999971,
+				"armMs": 8.268574499999971,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-decrypt",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 17.73046450000001,
+				"armMs": 17.73046450000001,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-decrypt-shared",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 17.773487499999987,
+				"armMs": 17.773487499999987,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-ctr",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 9.585363499999971,
+				"armMs": 9.585363499999971,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash32",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 1.204654000000005,
+				"armMs": 1.204654000000005,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash64",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 0.6203099999999893,
+				"armMs": 0.6203099999999893,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash3",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 0.9285784999999862,
+				"armMs": 0.9285784999999862,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-encode",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 4.602466000000021,
+				"armMs": 4.602466000000021,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-decode",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 3.7908025000000123,
+				"armMs": 3.7908025000000123,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-encode-64",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 2.057407999999981,
+				"armMs": 2.057407999999981,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-decode-64",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 1.7024785000000122,
+				"armMs": 1.7024785000000122,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha256",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 13.02552449999996,
+				"armMs": 13.02552449999996,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha256-shared",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 13.164691000000005,
+				"armMs": 13.164691000000005,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha1",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 9.594156499999968,
+				"armMs": 9.594156499999968,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md5",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 6.590878000000004,
+				"armMs": 6.590878000000004,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "m6502",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 3.422174499999983,
+				"armMs": 3.422174499999983,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "brotli-compress",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 59.16686349999998,
+				"armMs": 59.16686349999998,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "brotli-decompress",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 7.930630500000007,
+				"armMs": 7.930630500000007,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "wyhash",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 2.762304999999998,
+				"armMs": 2.762304999999998,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "blake2b",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 10.761354500000039,
+				"armMs": 10.761354500000039,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoa-encode",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 10.72473100000002,
+				"armMs": 10.72473100000002,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoa-decode",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 0.9084395000000001,
+				"armMs": 0.9084395000000001,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "yyjson-read",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 3.8599205000000154,
+				"armMs": 3.8599205000000154,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md4c-html",
+				"route": "serial",
+				"reason": "baseline",
+				"serialMs": 11.634011000000015,
+				"armMs": 11.634011000000015,
+				"speedup": {
+					"median": 1,
+					"min": 1,
+					"max": 1,
+					"lo": 1,
+					"hi": 1,
+					"n": 10
+				},
+				"wrong": 0
+			}
+		],
+		"router": [
+			{
+				"driver": "lz4-compress",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"serialMs": 6.823432000000025,
+				"armMs": 6.824335000000019,
+				"speedup": {
+					"median": 0.9960623925744523,
+					"min": 0.918982730188731,
+					"max": 1.0171606410648193,
+					"lo": 0.9694537195766582,
+					"hi": 1.0077386467699094,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "lz4-decompress",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 0.8550285000000031,
+				"armMs": 0.8647430000000043,
+				"speedup": {
+					"median": 0.9860620602069481,
+					"min": 0.9508763723685041,
+					"max": 1.1534463108460684,
+					"lo": 0.9734962310278501,
+					"hi": 1.0037884031991504,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-compress",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 9.736801999999983,
+				"armMs": 9.796764499999938,
+				"speedup": {
+					"median": 0.9831540435116022,
+					"min": 0.9646045692939215,
+					"max": 0.9985905026795667,
+					"lo": 0.9786459406870489,
+					"hi": 0.9873925891552667,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-decompress",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 3.263318499999997,
+				"armMs": 3.2588309999999865,
+				"speedup": {
+					"median": 0.9897993134862497,
+					"min": 0.9452339189416813,
+					"max": 1.0402291163080934,
+					"lo": 0.968307755095259,
+					"hi": 0.9962633438946524,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-crc32",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"serialMs": 7.377375499999999,
+				"armMs": 3.2777119999999798,
+				"speedup": {
+					"median": 2.266683105862207,
+					"min": 2.0930123806381906,
+					"max": 2.384244164816777,
+					"lo": 2.1115596573530904,
+					"hi": 2.332659868118637,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-adler32",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 3.2864324999999894,
+				"armMs": 3.3427170000000217,
+				"speedup": {
+					"median": 0.9868601970734632,
+					"min": 0.9425120830844655,
+					"max": 1.002703498328708,
+					"lo": 0.9624296178754332,
+					"hi": 0.9925633766771511,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 1.212237499999972,
+				"armMs": 1.2055195000000083,
+				"speedup": {
+					"median": 0.997927087339652,
+					"min": 0.9299390975717634,
+					"max": 1.0486912073729449,
+					"lo": 0.9791527086725786,
+					"hi": 1.0107490975545024,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse-slot",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 1.2208565000000249,
+				"armMs": 1.2242169999999817,
+				"speedup": {
+					"median": 1.0023951508123932,
+					"min": 0.9068113772455391,
+					"max": 1.0351621185573527,
+					"lo": 0.9377774984506375,
+					"hi": 1.0287969338915108,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-encrypt-slot",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 8.490650000000016,
+				"armMs": 8.210666500000002,
+				"speedup": {
+					"median": 1.0437753946485813,
+					"min": 0.9447694993293013,
+					"max": 1.3315222012343317,
+					"lo": 0.9776864511604908,
+					"hi": 1.2378201074541466,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md5-slot",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"serialMs": 6.525853500000011,
+				"armMs": 4.038892500000003,
+				"speedup": {
+					"median": 1.6382317540211888,
+					"min": 1.5512794177490712,
+					"max": 1.836155267660313,
+					"lo": 1.6117238303541273,
+					"hi": 1.6774254454417457,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse-shared",
+				"route": "window",
+				"reason": "certified-window",
+				"serialMs": 1.5608040000000187,
+				"armMs": 0.7727394999999433,
+				"speedup": {
+					"median": 2.0691515235661466,
+					"min": 1.3552330170783324,
+					"max": 2.6593358223750228,
+					"lo": 1.41587328373824,
+					"hi": 2.3434826480946356,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-complex",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"serialMs": 3.093187999999998,
+				"armMs": 3.119589999999988,
+				"speedup": {
+					"median": 0.998709962192606,
+					"min": 0.9243896646515238,
+					"max": 1.1169761013293917,
+					"lo": 0.9735025237660948,
+					"hi": 1.0109334766273301,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-real",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"serialMs": 1.9427164999999889,
+				"armMs": 1.9376575000000003,
+				"speedup": {
+					"median": 1.000443594736419,
+					"min": 0.9874302050829966,
+					"max": 1.5197123580888974,
+					"lo": 0.9963321232808461,
+					"hi": 1.0036490478966003,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-real-shared",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"serialMs": 1.964047000000022,
+				"armMs": 1.933842999999996,
+				"speedup": {
+					"median": 1.0029098231690345,
+					"min": 0.9722658386494755,
+					"max": 1.0567273440073686,
+					"lo": 0.9970084585140176,
+					"hi": 1.0219133801599476,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-encrypt",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 8.268574499999971,
+				"armMs": 8.522924000000017,
+				"speedup": {
+					"median": 0.9872125123673118,
+					"min": 0.9306529257939768,
+					"max": 1.0007217396935488,
+					"lo": 0.952630896707812,
+					"hi": 0.9988576019987249,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-decrypt",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 17.73046450000001,
+				"armMs": 18.145140999999995,
+				"speedup": {
+					"median": 0.9915094253492802,
+					"min": 0.966085216536719,
+					"max": 1.21498334706355,
+					"lo": 0.9713930956132657,
+					"hi": 1.000387443039171,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-decrypt-shared",
+				"route": "window",
+				"reason": "certified-window",
+				"serialMs": 17.773487499999987,
+				"armMs": 3.2631330000000958,
+				"speedup": {
+					"median": 5.50628818603894,
+					"min": 3.1627402605976145,
+					"max": 6.419938711643577,
+					"lo": 3.3015279174750964,
+					"hi": 6.230438376688789,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-ctr",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 9.585363499999971,
+				"armMs": 8.448037,
+				"speedup": {
+					"median": 1.1624777976274507,
+					"min": 0.958575873007867,
+					"max": 1.5091070830202005,
+					"lo": 0.9926999291347604,
+					"hi": 1.3708135486576871,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash32",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 1.204654000000005,
+				"armMs": 1.2099599999999953,
+				"speedup": {
+					"median": 0.9767518722575568,
+					"min": 0.967096555489772,
+					"max": 1.0755856899466318,
+					"lo": 0.9740271287512987,
+					"hi": 1.0227768824838497,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash64",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 0.6203099999999893,
+				"armMs": 0.6220275000000015,
+				"speedup": {
+					"median": 0.9952357108831006,
+					"min": 0.9626709310110338,
+					"max": 1.029459063742657,
+					"lo": 0.9769670358866289,
+					"hi": 1.0107686546606711,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash3",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 0.9285784999999862,
+				"armMs": 0.9413330000000144,
+				"speedup": {
+					"median": 0.9825116062304766,
+					"min": 0.8643382706344035,
+					"max": 1.0887617204444895,
+					"lo": 0.9304874186971754,
+					"hi": 0.9970688986151737,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-encode",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 4.602466000000021,
+				"armMs": 4.56965900000003,
+				"speedup": {
+					"median": 0.9951452490674382,
+					"min": 0.9620278731992632,
+					"max": 1.1309595926201108,
+					"lo": 0.9825504189986631,
+					"hi": 1.0137148848171236,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-decode",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 3.7908025000000123,
+				"armMs": 3.710271000000006,
+				"speedup": {
+					"median": 1.0054661500086428,
+					"min": 0.9287869640934896,
+					"max": 1.058856527464882,
+					"lo": 0.9758514748093374,
+					"hi": 1.0529422264435606,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-encode-64",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 2.057407999999981,
+				"armMs": 2.061960499999998,
+				"speedup": {
+					"median": 0.9907659186102903,
+					"min": 0.9199142406653856,
+					"max": 1.0170935116514148,
+					"lo": 0.9757071500663836,
+					"hi": 1.0022652767060312,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-decode-64",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 1.7024785000000122,
+				"armMs": 1.7270024999999691,
+				"speedup": {
+					"median": 0.9994123329442869,
+					"min": 0.9104074572052248,
+					"max": 1.0668498661815307,
+					"lo": 0.9445044041360492,
+					"hi": 1.0190827864221483,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha256",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"serialMs": 13.02552449999996,
+				"armMs": 5.77778349999997,
+				"speedup": {
+					"median": 2.2934662560927226,
+					"min": 1.649129382959941,
+					"max": 2.6423036191597538,
+					"lo": 1.9567652234864104,
+					"hi": 2.5950431468448545,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha256-shared",
+				"route": "window",
+				"reason": "certified-window",
+				"serialMs": 13.164691000000005,
+				"armMs": 2.077785500000118,
+				"speedup": {
+					"median": 6.449265933674663,
+					"min": 4.1017846227471475,
+					"max": 6.616434463230922,
+					"lo": 5.320173128033906,
+					"hi": 6.560554917443393,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha1",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"serialMs": 9.594156499999968,
+				"armMs": 5.172029000000009,
+				"speedup": {
+					"median": 1.8808810382092294,
+					"min": 1.5135712156231649,
+					"max": 2.329589951890932,
+					"lo": 1.7012520434892602,
+					"hi": 2.231340682519939,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md5",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"serialMs": 6.590878000000004,
+				"armMs": 4.113955000000004,
+				"speedup": {
+					"median": 1.592578599251374,
+					"min": 1.3753354090711172,
+					"max": 1.8123566445799302,
+					"lo": 1.4449206134222001,
+					"hi": 1.7286962971708604,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "m6502",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 3.422174499999983,
+				"armMs": 3.475581000000602,
+				"speedup": {
+					"median": 0.9863077026497631,
+					"min": 0.7735686082092292,
+					"max": 1.0183642676687104,
+					"lo": 0.9351737730428027,
+					"hi": 1.0077244546626802,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "brotli-compress",
+				"route": "serial",
+				"reason": "tracked-ineligible",
+				"serialMs": 59.16686349999998,
+				"armMs": 57.852141000000074,
+				"speedup": {
+					"median": 0.9993799671789633,
+					"min": 0.9748832156778944,
+					"max": 1.0323250738777177,
+					"lo": 0.9952432233184745,
+					"hi": 1.0139364814013618,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "brotli-decompress",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 7.930630500000007,
+				"armMs": 7.825437500000021,
+				"speedup": {
+					"median": 0.9925328132024744,
+					"min": 0.8194865840100716,
+					"max": 1.0664161203898426,
+					"lo": 0.9834546569538951,
+					"hi": 1.00075461234385,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "wyhash",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 2.762304999999998,
+				"armMs": 3.2254920000000027,
+				"speedup": {
+					"median": 0.8664690725201352,
+					"min": 0.7143794594319799,
+					"max": 0.9217662976580382,
+					"lo": 0.8250142136142753,
+					"hi": 0.9057046104028953,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "blake2b",
+				"route": "serial",
+				"reason": "unclassified-dependency",
+				"serialMs": 10.761354500000039,
+				"armMs": 10.717356000000024,
+				"speedup": {
+					"median": 1.0018192198242324,
+					"min": 0.9796888222332022,
+					"max": 1.0460317778920378,
+					"lo": 0.992405160118193,
+					"hi": 1.004034797884195,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoa-encode",
+				"route": "tracked",
+				"reason": "tracked-eligible",
+				"serialMs": 10.72473100000002,
+				"armMs": 3.8767725000000155,
+				"speedup": {
+					"median": 2.8353732686132407,
+					"min": 2.6298967413096386,
+					"max": 3.2530326726272105,
+					"lo": 2.741913385710518,
+					"hi": 3.024728417620526,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoa-decode",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 0.9084395000000001,
+				"armMs": 0.9571390000000122,
+				"speedup": {
+					"median": 0.9531631178016735,
+					"min": 0.9302008297384888,
+					"max": 0.9843983184284091,
+					"lo": 0.9463358091729348,
+					"hi": 0.9706625218574269,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "yyjson-read",
+				"route": "serial",
+				"reason": "dispatch-lost",
+				"serialMs": 3.8599205000000154,
+				"armMs": 3.9043950000000223,
+				"speedup": {
+					"median": 0.9826047932490618,
+					"min": 0.8043996841480726,
+					"max": 1.0761737905054753,
+					"lo": 0.9701030569618837,
+					"hi": 1.013371123812526,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md4c-html",
+				"route": "serial",
+				"reason": "below-floor",
+				"serialMs": 11.634011000000015,
+				"armMs": 11.999214499999994,
+				"speedup": {
+					"median": 0.9784442850000302,
+					"min": 0.8974994388517575,
+					"max": 1.0004180864012142,
+					"lo": 0.939360998968504,
+					"hi": 0.9918431101067288,
+					"n": 10
+				},
+				"wrong": 0
+			}
+		],
+		"today": [
+			{
+				"driver": "lz4-compress",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 6.823432000000025,
+				"armMs": 5.466580999999962,
+				"speedup": {
+					"median": 1.261037239281148,
+					"min": 1.1456640006991416,
+					"max": 1.3593655956578394,
+					"lo": 1.2098000959315738,
+					"hi": 1.2830930004044125,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "lz4-decompress",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 0.8550285000000031,
+				"armMs": 0.9289449999999988,
+				"speedup": {
+					"median": 0.9183876649341658,
+					"min": 0.7567181365163459,
+					"max": 1.1010638356983187,
+					"lo": 0.8562781627949434,
+					"hi": 0.9304492648704284,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-compress",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"serialMs": 9.736801999999983,
+				"armMs": 9.924173500000052,
+				"speedup": {
+					"median": 0.9848379074897852,
+					"min": 0.9652781697519973,
+					"max": 1.0014704951648576,
+					"lo": 0.9747824920359885,
+					"hi": 0.9902435498673916,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-decompress",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 3.263318499999997,
+				"armMs": 3.983062000000018,
+				"speedup": {
+					"median": 0.8000952996405517,
+					"min": 0.5779255118101205,
+					"max": 0.8666590441656051,
+					"lo": 0.7137579071166187,
+					"hi": 0.8502189601441384,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-crc32",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 7.377375499999999,
+				"armMs": 3.394146500000005,
+				"speedup": {
+					"median": 2.1828602533902055,
+					"min": 2.0277010170875127,
+					"max": 2.332947266519775,
+					"lo": 2.109312913406796,
+					"hi": 2.2866607593373716,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "miniz-adler32",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 3.2864324999999894,
+				"armMs": 3.5270174999999995,
+				"speedup": {
+					"median": 0.919767016555165,
+					"min": 0.7799053534416426,
+					"max": 0.9743753730342818,
+					"lo": 0.8861154040647337,
+					"hi": 0.9453887398360304,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 1.212237499999972,
+				"armMs": 1.2925964999999735,
+				"speedup": {
+					"median": 0.9435873940034674,
+					"min": 0.7921525411880287,
+					"max": 0.9907912998301818,
+					"lo": 0.8827102794671828,
+					"hi": 0.9582098470264857,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse-slot",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 1.2208565000000249,
+				"armMs": 1.2554225000000088,
+				"speedup": {
+					"median": 0.9665363154027382,
+					"min": 0.8901420799424652,
+					"max": 1.0127906687497648,
+					"lo": 0.9349556607110371,
+					"hi": 0.9909343944931177,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-encrypt-slot",
+				"route": "tracked",
+				"reason": "ran",
+				"serialMs": 8.490650000000016,
+				"armMs": 6.614973499999962,
+				"speedup": {
+					"median": 1.263846789559317,
+					"min": 1.1630200726301956,
+					"max": 1.4354427675370562,
+					"lo": 1.222200101844977,
+					"hi": 1.3409176108119822,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md5-slot",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 6.525853500000011,
+				"armMs": 3.969142000000005,
+				"speedup": {
+					"median": 1.632905593402196,
+					"min": 1.416059867882176,
+					"max": 1.833951001179886,
+					"lo": 1.5398429402108667,
+					"hi": 1.7463147118097804,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "jsmn-parse-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 1.5608040000000187,
+				"armMs": 1.632772000000017,
+				"speedup": {
+					"median": 0.9623240246984767,
+					"min": 0.93407887244344,
+					"max": 1.1857026848974659,
+					"lo": 0.9435588301414093,
+					"hi": 0.9811966062416159,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-complex",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 3.093187999999998,
+				"armMs": 3.989762000000013,
+				"speedup": {
+					"median": 0.7813161160603317,
+					"min": 0.6498519724230493,
+					"max": 0.8120430620132603,
+					"lo": 0.7508524732402216,
+					"hi": 0.8006177864083661,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-real",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 1.9427164999999889,
+				"armMs": 2.0719325000000026,
+				"speedup": {
+					"median": 0.9442667486285072,
+					"min": 0.6596811629814486,
+					"max": 1.375701740093252,
+					"lo": 0.8866514107966134,
+					"hi": 0.9652145297475877,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "kissfft-real-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 1.964047000000022,
+				"armMs": 1.996886499999988,
+				"speedup": {
+					"median": 0.9774600884370215,
+					"min": 0.9259223920943731,
+					"max": 1.0085661939526243,
+					"lo": 0.9593518803616816,
+					"hi": 0.9929496167935685,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-encrypt",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 8.268574499999971,
+				"armMs": 9.00630000000001,
+				"speedup": {
+					"median": 0.9048370805167683,
+					"min": 0.8108185625712777,
+					"max": 0.9529565969723987,
+					"lo": 0.8664223034716745,
+					"hi": 0.9338762168791066,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-decrypt",
+				"route": "tracked",
+				"reason": "ran",
+				"serialMs": 17.73046450000001,
+				"armMs": 15.963268000000028,
+				"speedup": {
+					"median": 1.1425598783106459,
+					"min": 0.9263020811179772,
+					"max": 1.2167951621297453,
+					"lo": 0.9821729917289794,
+					"hi": 1.1940836188662556,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-cbc-decrypt-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 17.773487499999987,
+				"armMs": 20.6130895,
+				"speedup": {
+					"median": 0.8602403841866391,
+					"min": 0.7875116009885624,
+					"max": 0.9053691145548562,
+					"lo": 0.8336961918219231,
+					"hi": 0.8881080224718497,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "aes-ctr",
+				"route": "tracked",
+				"reason": "ran",
+				"serialMs": 9.585363499999971,
+				"armMs": 6.432704999999999,
+				"speedup": {
+					"median": 1.4259814463610103,
+					"min": 1.1825903715347523,
+					"max": 1.5595368037384478,
+					"lo": 1.3601014252916386,
+					"hi": 1.5426814969926543,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash32",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 1.204654000000005,
+				"armMs": 1.2650714999999764,
+				"speedup": {
+					"median": 0.9519501981656951,
+					"min": 0.9305523030367914,
+					"max": 0.9699508550070327,
+					"lo": 0.9428329892429381,
+					"hi": 0.959969181726393,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash64",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 0.6203099999999893,
+				"armMs": 0.6799204999999802,
+				"speedup": {
+					"median": 0.9146953728953069,
+					"min": 0.861459046673147,
+					"max": 0.9498435727549758,
+					"lo": 0.8934303870804221,
+					"hi": 0.9285741033108261,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "xxhash3",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 0.9285784999999862,
+				"armMs": 0.9667264999999929,
+				"speedup": {
+					"median": 0.9501279232632585,
+					"min": 0.8981578466332608,
+					"max": 1.031287137475029,
+					"lo": 0.9275244985195629,
+					"hi": 0.9634502683135179,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-encode",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 4.602466000000021,
+				"armMs": 5.637241500000016,
+				"speedup": {
+					"median": 0.7999438810640165,
+					"min": 0.7759095397012571,
+					"max": 0.9508342225630335,
+					"lo": 0.7847373740930059,
+					"hi": 0.8540981178974387,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-decode",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"serialMs": 3.7908025000000123,
+				"armMs": 3.7971784999999727,
+				"speedup": {
+					"median": 0.9910277861894542,
+					"min": 0.8765232648388248,
+					"max": 1.0673225126888901,
+					"lo": 0.9595502363565431,
+					"hi": 1.049095082899181,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-encode-64",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 2.057407999999981,
+				"armMs": 2.123472000000021,
+				"speedup": {
+					"median": 0.9587712670510371,
+					"min": 0.7879353416213509,
+					"max": 1.0022815620987173,
+					"lo": 0.9047011074661679,
+					"hi": 0.9780947093409165,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoi-decode-64",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 1.7024785000000122,
+				"armMs": 1.817677500000002,
+				"speedup": {
+					"median": 0.9471756878406887,
+					"min": 0.13767876711356486,
+					"max": 0.964445607817591,
+					"lo": 0.9043601548855341,
+					"hi": 0.9532329178668223,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha256",
+				"route": "tracked",
+				"reason": "ran",
+				"serialMs": 13.02552449999996,
+				"armMs": 5.601612999999986,
+				"speedup": {
+					"median": 2.3258126000432053,
+					"min": 1.8756861150212765,
+					"max": 2.5986912896069363,
+					"lo": 1.9955991136721714,
+					"hi": 2.573970654008081,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha256-shared",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 13.164691000000005,
+				"armMs": 14.040319999999952,
+				"speedup": {
+					"median": 0.9488874483837997,
+					"min": 0.8690976869749977,
+					"max": 0.9702081784689445,
+					"lo": 0.9121439145104424,
+					"hi": 0.9617021403633361,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "sha1",
+				"route": "tracked",
+				"reason": "ran",
+				"serialMs": 9.594156499999968,
+				"armMs": 5.311760000000021,
+				"speedup": {
+					"median": 1.845471422826499,
+					"min": 1.6404226012823684,
+					"max": 2.376632057153201,
+					"lo": 1.7594762753848723,
+					"hi": 2.259535401846224,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md5",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 6.590878000000004,
+				"armMs": 4.208917000000014,
+				"speedup": {
+					"median": 1.5473896135926024,
+					"min": 1.4235803737814432,
+					"max": 1.7069003462797856,
+					"lo": 1.486826135978123,
+					"hi": 1.6149319233824222,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "m6502",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 3.422174499999983,
+				"armMs": 7.113839999999982,
+				"speedup": {
+					"median": 0.48159971755570885,
+					"min": 0.43004453968830464,
+					"max": 0.5878073048726862,
+					"lo": 0.46168704452845455,
+					"hi": 0.5238078634937905,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "brotli-compress",
+				"route": "tracked",
+				"reason": "unsupported-module",
+				"serialMs": 59.16686349999998,
+				"armMs": 58.05196399999977,
+				"speedup": {
+					"median": 1.0038514200345952,
+					"min": 0.9976494469099508,
+					"max": 1.036824116517373,
+					"lo": 0.9997365094289962,
+					"hi": 1.0177992216767842,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "brotli-decompress",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"serialMs": 7.930630500000007,
+				"armMs": 7.996468999999934,
+				"speedup": {
+					"median": 0.9907204931599644,
+					"min": 0.9345364649854702,
+					"max": 1.0668390064527784,
+					"lo": 0.9810220452914296,
+					"hi": 1.0023269260824097,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "wyhash",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 2.762304999999998,
+				"armMs": 3.242436500000025,
+				"speedup": {
+					"median": 0.8640720365795456,
+					"min": 0.7920178205394435,
+					"max": 0.8854926240207955,
+					"lo": 0.8287971363558654,
+					"hi": 0.8765828676350716,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "blake2b",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 10.761354500000039,
+				"armMs": 4.846876000000009,
+				"speedup": {
+					"median": 2.2617721003938556,
+					"min": 1.9979761658090607,
+					"max": 2.5319968358555585,
+					"lo": 2.1808350257826072,
+					"hi": 2.5127652966724656,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoa-encode",
+				"route": "tracked",
+				"reason": "ran",
+				"serialMs": 10.72473100000002,
+				"armMs": 3.786436999999978,
+				"speedup": {
+					"median": 2.8349911905431364,
+					"min": 2.7809591834486045,
+					"max": 3.2446871977602814,
+					"lo": 2.8069093038165374,
+					"hi": 3.2151802518210157,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "qoa-decode",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 0.9084395000000001,
+				"armMs": 0.9676810000000273,
+				"speedup": {
+					"median": 0.9460431612576772,
+					"min": 0.9039186438332316,
+					"max": 0.9711981321845328,
+					"lo": 0.9156749768407343,
+					"hi": 0.9547575918343995,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "yyjson-read",
+				"route": "tracked",
+				"reason": "no-admission",
+				"serialMs": 3.8599205000000154,
+				"armMs": 4.675580499999796,
+				"speedup": {
+					"median": 0.8296082986220386,
+					"min": 0.742821964504546,
+					"max": 0.8501379772967412,
+					"lo": 0.8133110163782471,
+					"hi": 0.8369337519115698,
+					"n": 10
+				},
+				"wrong": 0
+			},
+			{
+				"driver": "md4c-html",
+				"route": "tracked",
+				"reason": "log-exhausted",
+				"serialMs": 11.634011000000015,
+				"armMs": 12.009588499999836,
+				"speedup": {
+					"median": 0.9932163220144217,
+					"min": 0.9195920607091558,
+					"max": 1.0100594126300881,
+					"lo": 0.9576659861589225,
+					"hi": 1.0027126251817577,
+					"n": 10
+				},
+				"wrong": 0
+			}
+		]
+	}
+}

@@ -1,0 +1,102 @@
+{
+ "route": "stock:front",
+ "nativeMs": 637,
+ "checkedAccesses": 732848870,
+ "KtauPerNs": 1.1505,
+ "measured": {
+  "floor": 0.039,
+  "bcd": 1.547,
+  "r-all": 1.032,
+  "r-heap32": 1.299
+ },
+ "fit": {
+  "a": 0.039,
+  "rangeArmsSlopeTauPerUnitMiss": 0.867,
+  "rangeArmsIntercept": 1.119,
+  "cTableAfterFailedRangeTestNs": 0.754,
+  "cRangeTestNs": 0.939,
+  "cBcdLookupNs": 1.311
+ },
+ "needed": {
+  "bcd": {
+   "tau": 1.547,
+   "shareToElide": 0.363
+  },
+  "r-heap32": {
+   "tau": 1.299,
+   "shareToElide": 0.237
+  },
+  "r-all": {
+   "tau": 1.032,
+   "shareToElide": 0.032
+  }
+ },
+ "predictions": {
+  "bcd": {
+   "A sound member": {
+    "elided access free": 1.387,
+    "elided access costs one add (0.15 ns)": 1.405
+   },
+   "A+C+E (sound member, loop invariant without call, affine walk)": {
+    "elided access free": 1.282,
+    "elided access costs one add (0.15 ns)": 1.312
+   },
+   "A+R (region versioning)": {
+    "elided access free": 1.165,
+    "elided access costs one add (0.15 ns)": 1.209
+   },
+   "A+R+C+E (every class a sound scheme could take)": {
+    "elided access free": 1.058,
+    "elided access costs one add (0.15 ns)": 1.114
+   },
+   "A+R+O+C+D+E (oracle, no sound scheme reaches it)": {
+    "elided access free": 0.915,
+    "elided access costs one add (0.15 ns)": 0.987
+   }
+  },
+  "r-heap32": {
+   "A sound member": {
+    "elided access free": 1.165,
+    "elided access costs one add (0.15 ns)": 1.184
+   },
+   "A+C+E (sound member, loop invariant without call, affine walk)": {
+    "elided access free": 1.077,
+    "elided access costs one add (0.15 ns)": 1.108
+   },
+   "A+R (region versioning)": {
+    "elided access free": 0.98,
+    "elided access costs one add (0.15 ns)": 1.024
+   },
+   "A+R+C+E (every class a sound scheme could take)": {
+    "elided access free": 0.891,
+    "elided access costs one add (0.15 ns)": 0.947
+   },
+   "A+R+O+C+D+E (oracle, no sound scheme reaches it)": {
+    "elided access free": 0.771,
+    "elided access costs one add (0.15 ns)": 0.843
+   }
+  },
+  "r-all": {
+   "A sound member": {
+    "elided access free": 0.927,
+    "elided access costs one add (0.15 ns)": 0.945
+   },
+   "A+C+E (sound member, loop invariant without call, affine walk)": {
+    "elided access free": 0.857,
+    "elided access costs one add (0.15 ns)": 0.888
+   },
+   "A+R (region versioning)": {
+    "elided access free": 0.781,
+    "elided access costs one add (0.15 ns)": 0.824
+   },
+   "A+R+C+E (every class a sound scheme could take)": {
+    "elided access free": 0.71,
+    "elided access costs one add (0.15 ns)": 0.766
+   },
+   "A+R+O+C+D+E (oracle, no sound scheme reaches it)": {
+    "elided access free": 0.616,
+    "elided access costs one add (0.15 ns)": 0.688
+   }
+  }
+ }
+}

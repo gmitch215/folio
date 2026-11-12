@@ -1,0 +1,376 @@
+## serial
+lz4-compress               serial   baseline                 serial 9.845 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+lz4-decompress             serial   baseline                 serial 1.529 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+miniz-compress             serial   baseline                 serial 11.879 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+miniz-decompress           serial   baseline                 serial 4.588 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+miniz-crc32                serial   baseline                 serial 11.504 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+miniz-adler32              serial   baseline                 serial 6.212 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+jsmn-parse                 serial   baseline                 serial 2.130 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+jsmn-parse-slot            serial   baseline                 serial 2.159 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+aes-cbc-encrypt-slot       serial   baseline                 serial 8.502 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+md5-slot                   serial   baseline                 serial 9.908 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+jsmn-parse-shared          serial   baseline                 serial 2.558 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+kissfft-complex            serial   baseline                 serial 4.109 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+kissfft-real               serial   baseline                 serial 2.367 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+kissfft-real-shared        serial   baseline                 serial 2.145 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+aes-cbc-encrypt            serial   baseline                 serial 8.437 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+aes-cbc-decrypt            serial   baseline                 serial 19.264 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+aes-cbc-decrypt-shared     serial   baseline                 serial 18.637 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+aes-ctr                    serial   baseline                 serial 11.847 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+xxhash32                   serial   baseline                 serial 2.546 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+xxhash64                   serial   baseline                 serial 1.323 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+xxhash3                    serial   baseline                 serial 0.956 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+qoi-encode                 serial   baseline                 serial 5.219 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+qoi-decode                 serial   baseline                 serial 4.412 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+qoi-encode-64              serial   baseline                 serial 2.278 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+qoi-decode-64              serial   baseline                 serial 1.853 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+sha256                     serial   baseline                 serial 31.365 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+sha256-shared              serial   baseline                 serial 24.328 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+sha1                       serial   baseline                 serial 15.553 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+md5                        serial   baseline                 serial 9.879 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+m6502                      serial   baseline                 serial 5.155 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+brotli-compress            serial   baseline                 serial 63.302 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+brotli-decompress          serial   baseline                 serial 10.822 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+wyhash                     serial   baseline                 serial 2.049 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+blake2b                    serial   baseline                 serial 16.908 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+qoa-encode                 serial   baseline                 serial 16.657 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+qoa-decode                 serial   baseline                 serial 0.880 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+yyjson-read                serial   baseline                 serial 7.881 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+md4c-html                  serial   baseline                 serial 13.145 ms  1.000 (1.000 to 1.000; ci 1.000 to 1.000)
+geomean 1.000 p10 1.000 slowest lz4-compress 1.000, lz4-decompress 1.000, miniz-compress 1.000, miniz-decompress 1.000
+## today
+lz4-compress               tracked  ran                      serial 9.845 ms  1.089 (0.992 to 1.530; ci 0.992 to 1.530)
+lz4-decompress             tracked  no-admission             serial 1.529 ms  0.920 (0.449 to 1.131; ci 0.449 to 1.131)
+miniz-compress             tracked  log-exhausted            serial 11.879 ms  1.019 (0.992 to 1.047; ci 0.992 to 1.047)
+miniz-decompress           tracked  no-admission             serial 4.588 ms  0.684 (0.557 to 0.770; ci 0.557 to 0.770)
+miniz-crc32                tracked  ran                      serial 11.504 ms  4.174 (1.870 to 4.472; ci 1.870 to 4.472)
+miniz-adler32              tracked  no-admission             serial 6.212 ms  0.945 (0.364 to 1.019; ci 0.364 to 1.019)
+jsmn-parse                 tracked  no-admission             serial 2.130 ms  0.951 (0.718 to 1.254; ci 0.718 to 1.254)
+jsmn-parse-slot            tracked  no-admission             serial 2.159 ms  0.955 (0.697 to 0.993; ci 0.697 to 0.993)
+aes-cbc-encrypt-slot       tracked  ran                      serial 8.502 ms  1.073 (0.947 to 1.265; ci 0.947 to 1.265)
+md5-slot                   tracked  ran                      serial 9.908 ms  2.628 (1.759 to 2.982; ci 1.759 to 2.982)
+jsmn-parse-shared          tracked  no-admission             serial 2.558 ms  0.698 (0.457 to 0.808; ci 0.457 to 0.808)
+kissfft-complex            tracked  no-admission             serial 4.109 ms  0.727 (0.555 to 0.963; ci 0.555 to 0.963)
+kissfft-real               tracked  no-admission             serial 2.367 ms  0.859 (0.382 to 0.979; ci 0.382 to 0.979)
+kissfft-real-shared        tracked  no-admission             serial 2.145 ms  0.902 (0.640 to 0.965; ci 0.640 to 0.965)
+aes-cbc-encrypt            tracked  no-admission             serial 8.437 ms  0.937 (0.400 to 0.952; ci 0.400 to 0.952)
+aes-cbc-decrypt            tracked  ran                      serial 19.264 ms  1.225 (0.988 to 1.394; ci 0.988 to 1.394)
+aes-cbc-decrypt-shared     tracked  no-admission             serial 18.637 ms  0.940 (0.929 to 0.989; ci 0.929 to 0.989)
+aes-ctr                    tracked  ran                      serial 11.847 ms  1.335 (1.119 to 2.511; ci 1.119 to 2.511)
+xxhash32                   tracked  no-admission             serial 2.546 ms  0.910 (0.692 to 1.071; ci 0.692 to 1.071)
+xxhash64                   tracked  no-admission             serial 1.323 ms  1.006 (0.968 to 1.605; ci 0.968 to 1.605)
+xxhash3                    tracked  no-admission             serial 0.956 ms  0.910 (0.649 to 1.069; ci 0.649 to 1.069)
+qoi-encode                 tracked  no-admission             serial 5.219 ms  0.861 (0.798 to 1.235; ci 0.798 to 1.235)
+qoi-decode                 tracked  log-exhausted            serial 4.412 ms  1.040 (0.911 to 1.236; ci 0.911 to 1.236)
+qoi-encode-64              tracked  no-admission             serial 2.278 ms  0.853 (0.265 to 1.059; ci 0.265 to 1.059)
+qoi-decode-64              tracked  no-admission             serial 1.853 ms  0.985 (0.557 to 1.079; ci 0.557 to 1.079)
+sha256                     tracked  ran                      serial 31.365 ms  3.002 (2.835 to 4.038; ci 2.835 to 4.038)
+sha256-shared              tracked  ran                      serial 24.328 ms  1.494 (1.332 to 1.572; ci 1.332 to 1.572)
+sha1                       tracked  ran                      serial 15.553 ms  2.418 (2.220 to 3.354; ci 2.220 to 3.354)
+md5                        tracked  ran                      serial 9.879 ms  2.622 (2.470 to 3.039; ci 2.470 to 3.039)
+m6502                      tracked  no-admission             serial 5.155 ms  0.625 (0.146 to 0.758; ci 0.146 to 0.758)
+brotli-compress            tracked  unsupported-module       serial 63.302 ms  0.947 (0.778 to 2.215; ci 0.778 to 2.215)
+brotli-decompress          tracked  log-exhausted            serial 10.822 ms  1.004 (0.345 to 1.062; ci 0.345 to 1.062)
+wyhash                     tracked  no-admission             serial 2.049 ms  0.787 (0.633 to 0.866; ci 0.633 to 0.866)
+blake2b                    tracked  ran                      serial 16.908 ms  2.634 (2.227 to 3.123; ci 2.227 to 3.123)
+qoa-encode                 tracked  dependency               serial 16.657 ms  0.999 (0.922 to 1.063; ci 0.922 to 1.063)
+qoa-decode                 tracked  dependency               serial 0.880 ms  0.977 (0.912 to 1.132; ci 0.912 to 1.132)
+yyjson-read                tracked  no-admission             serial 7.881 ms  1.113 (1.079 to 1.159; ci 1.079 to 1.159)
+md4c-html                  tracked  log-exhausted            serial 13.145 ms  1.003 (0.964 to 1.038; ci 0.964 to 1.038)
+geomean 1.127 p10 0.727 slowest m6502 0.625, miniz-decompress 0.684, jsmn-parse-shared 0.698, kissfft-complex 0.727
+## w1
+lz4-compress               serial   no-route-in-mode         serial 9.845 ms  0.998 (0.914 to 1.415; ci 0.914 to 1.415)
+lz4-decompress             serial   no-route-in-mode         serial 1.529 ms  0.935 (0.883 to 1.188; ci 0.883 to 1.188)
+miniz-compress             serial   no-route-in-mode         serial 11.879 ms  1.025 (1.016 to 1.037; ci 1.016 to 1.037)
+miniz-decompress           serial   no-route-in-mode         serial 4.588 ms  1.025 (0.991 to 1.060; ci 0.991 to 1.060)
+miniz-crc32                serial   no-route-in-mode         serial 11.504 ms  0.993 (0.223 to 1.011; ci 0.223 to 1.011)
+miniz-adler32              serial   no-route-in-mode         serial 6.212 ms  0.967 (0.912 to 1.016; ci 0.912 to 1.016)
+jsmn-parse                 serial   no-route-in-mode         serial 2.130 ms  1.044 (0.948 to 3.018; ci 0.948 to 3.018)
+jsmn-parse-slot            serial   no-route-in-mode         serial 2.159 ms  0.983 (0.414 to 1.062; ci 0.414 to 1.062)
+aes-cbc-encrypt-slot       serial   no-route-in-mode         serial 8.502 ms  0.994 (0.893 to 1.265; ci 0.893 to 1.265)
+md5-slot                   serial   no-route-in-mode         serial 9.908 ms  0.990 (0.881 to 1.020; ci 0.881 to 1.020)
+jsmn-parse-shared          serial   no-route-in-mode         serial 2.558 ms  0.989 (0.929 to 1.068; ci 0.929 to 1.068)
+kissfft-complex            serial   no-route-in-mode         serial 4.109 ms  1.016 (0.668 to 2.099; ci 0.668 to 2.099)
+kissfft-real               serial   no-route-in-mode         serial 2.367 ms  0.982 (0.613 to 1.077; ci 0.613 to 1.077)
+kissfft-real-shared        serial   no-route-in-mode         serial 2.145 ms  0.995 (0.904 to 1.040; ci 0.904 to 1.040)
+aes-cbc-encrypt            serial   no-route-in-mode         serial 8.437 ms  0.986 (0.950 to 1.014; ci 0.950 to 1.014)
+aes-cbc-decrypt            serial   no-route-in-mode         serial 19.264 ms  0.992 (0.584 to 1.008; ci 0.584 to 1.008)
+aes-cbc-decrypt-shared     serial   no-route-in-mode         serial 18.637 ms  0.990 (0.989 to 1.165; ci 0.989 to 1.165)
+aes-ctr                    serial   no-route-in-mode         serial 11.847 ms  1.048 (1.001 to 1.718; ci 1.001 to 1.718)
+xxhash32                   serial   no-route-in-mode         serial 2.546 ms  0.984 (0.965 to 1.142; ci 0.965 to 1.142)
+xxhash64                   serial   no-route-in-mode         serial 1.323 ms  0.986 (0.616 to 1.769; ci 0.616 to 1.769)
+xxhash3                    serial   no-route-in-mode         serial 0.956 ms  0.979 (0.837 to 1.058; ci 0.837 to 1.058)
+qoi-encode                 serial   no-route-in-mode         serial 5.219 ms  1.024 (0.776 to 1.541; ci 0.776 to 1.541)
+qoi-decode                 serial   no-route-in-mode         serial 4.412 ms  0.984 (0.447 to 1.282; ci 0.447 to 1.282)
+qoi-encode-64              serial   no-route-in-mode         serial 2.278 ms  1.037 (0.956 to 1.453; ci 0.956 to 1.453)
+qoi-decode-64              serial   no-route-in-mode         serial 1.853 ms  0.963 (0.556 to 1.082; ci 0.556 to 1.082)
+sha256                     serial   no-route-in-mode         serial 31.365 ms  1.038 (0.968 to 1.415; ci 0.968 to 1.415)
+sha256-shared              serial   no-route-in-mode         serial 24.328 ms  0.996 (0.813 to 1.046; ci 0.813 to 1.046)
+sha1                       serial   no-route-in-mode         serial 15.553 ms  1.057 (0.970 to 1.187; ci 0.970 to 1.187)
+md5                        serial   no-route-in-mode         serial 9.879 ms  0.995 (0.979 to 1.055; ci 0.979 to 1.055)
+m6502                      serial   no-route-in-mode         serial 5.155 ms  1.035 (0.893 to 1.268; ci 0.893 to 1.268)
+brotli-compress            serial   no-route-in-mode         serial 63.302 ms  1.000 (0.538 to 2.888; ci 0.538 to 2.888)
+brotli-decompress          serial   no-route-in-mode         serial 10.822 ms  1.000 (0.909 to 1.038; ci 0.909 to 1.038)
+wyhash                     serial   no-route-in-mode         serial 2.049 ms  1.005 (0.921 to 1.072; ci 0.921 to 1.072)
+blake2b                    serial   no-route-in-mode         serial 16.908 ms  0.966 (0.906 to 1.425; ci 0.906 to 1.425)
+qoa-encode                 serial   no-route-in-mode         serial 16.657 ms  0.989 (0.488 to 1.066; ci 0.488 to 1.066)
+qoa-decode                 serial   no-route-in-mode         serial 0.880 ms  0.978 (0.933 to 1.110; ci 0.933 to 1.110)
+yyjson-read                serial   no-route-in-mode         serial 7.881 ms  1.017 (0.977 to 1.447; ci 0.977 to 1.447)
+md4c-html                  serial   no-route-in-mode         serial 13.145 ms  0.996 (0.954 to 1.036; ci 0.954 to 1.036)
+geomean 0.999 p10 0.967 slowest lz4-decompress 0.935, qoi-decode-64 0.963, blake2b 0.966, miniz-adler32 0.967
+## w2
+lz4-compress               serial   unclassified-dependency  serial 9.845 ms  1.028 (0.984 to 1.394; ci 0.984 to 1.394)
+lz4-decompress             serial   no-certificate           serial 1.529 ms  1.040 (0.975 to 1.188; ci 0.975 to 1.188)
+miniz-compress             serial   allocator-state          serial 11.879 ms  1.017 (0.966 to 1.076; ci 0.966 to 1.076)
+miniz-decompress           serial   allocator-state          serial 4.588 ms  1.006 (0.956 to 1.048; ci 0.956 to 1.048)
+miniz-crc32                serial   no-certificate           serial 11.504 ms  1.001 (0.993 to 1.013; ci 0.993 to 1.013)
+miniz-adler32              serial   no-certificate           serial 6.212 ms  0.972 (0.644 to 1.019; ci 0.644 to 1.019)
+jsmn-parse                 serial   no-certificate           serial 2.130 ms  1.026 (0.985 to 2.282; ci 0.985 to 2.282)
+jsmn-parse-slot            serial   no-certificate           serial 2.159 ms  0.924 (0.838 to 1.051; ci 0.838 to 1.051)
+aes-cbc-encrypt-slot       serial   no-certificate           serial 8.502 ms  1.019 (0.994 to 1.356; ci 0.994 to 1.356)
+md5-slot                   serial   no-certificate           serial 9.908 ms  1.008 (0.847 to 1.025; ci 0.847 to 1.025)
+jsmn-parse-shared          serial   shared-state             serial 2.558 ms  0.962 (0.928 to 1.083; ci 0.928 to 1.083)
+kissfft-complex            serial   unclassified-dependency  serial 4.109 ms  1.003 (0.947 to 2.048; ci 0.947 to 2.048)
+kissfft-real               serial   unclassified-dependency  serial 2.367 ms  0.896 (0.634 to 1.118; ci 0.634 to 1.118)
+kissfft-real-shared        serial   unclassified-dependency  serial 2.145 ms  0.956 (0.931 to 1.023; ci 0.931 to 1.023)
+aes-cbc-encrypt            serial   no-certificate           serial 8.437 ms  1.005 (0.986 to 1.027; ci 0.986 to 1.027)
+aes-cbc-decrypt            serial   no-certificate           serial 19.264 ms  1.021 (0.842 to 1.044; ci 0.842 to 1.044)
+aes-cbc-decrypt-shared     window   certified-window         serial 18.637 ms  3.213 (1.725 to 4.236; ci 1.725 to 4.236)
+aes-ctr                    serial   no-certificate           serial 11.847 ms  1.058 (0.931 to 1.556; ci 0.931 to 1.556)
+xxhash32                   serial   no-certificate           serial 2.546 ms  1.053 (0.986 to 1.187; ci 0.986 to 1.187)
+xxhash64                   serial   no-certificate           serial 1.323 ms  1.084 (0.990 to 1.674; ci 0.990 to 1.674)
+xxhash3                    serial   no-certificate           serial 0.956 ms  0.960 (0.417 to 1.176; ci 0.417 to 1.176)
+qoi-encode                 serial   allocator-state          serial 5.219 ms  1.041 (0.420 to 1.317; ci 0.420 to 1.317)
+qoi-decode                 serial   allocator-state          serial 4.412 ms  1.015 (0.751 to 1.233; ci 0.751 to 1.233)
+qoi-encode-64              serial   allocator-state          serial 2.278 ms  0.993 (0.952 to 1.445; ci 0.952 to 1.445)
+qoi-decode-64              serial   allocator-state          serial 1.853 ms  0.980 (0.937 to 1.060; ci 0.937 to 1.060)
+sha256                     serial   no-certificate           serial 31.365 ms  0.973 (0.868 to 1.420; ci 0.868 to 1.420)
+sha256-shared              serial   shared-state             serial 24.328 ms  1.023 (0.948 to 1.042; ci 0.948 to 1.042)
+sha1                       serial   no-certificate           serial 15.553 ms  1.100 (0.818 to 1.161; ci 0.818 to 1.161)
+md5                        serial   no-certificate           serial 9.879 ms  0.997 (0.888 to 1.326; ci 0.888 to 1.326)
+m6502                      serial   no-certificate           serial 5.155 ms  1.037 (0.993 to 1.298; ci 0.993 to 1.298)
+brotli-compress            serial   allocator-state          serial 63.302 ms  1.086 (0.935 to 2.303; ci 0.935 to 2.303)
+brotli-decompress          serial   allocator-state          serial 10.822 ms  1.014 (0.724 to 1.022; ci 0.724 to 1.022)
+wyhash                     serial   no-certificate           serial 2.049 ms  1.007 (0.955 to 1.083; ci 0.955 to 1.083)
+blake2b                    serial   unclassified-dependency  serial 16.908 ms  0.991 (0.879 to 1.562; ci 0.879 to 1.562)
+qoa-encode                 serial   allocator-state          serial 16.657 ms  0.964 (0.196 to 1.027; ci 0.196 to 1.027)
+qoa-decode                 serial   allocator-state          serial 0.880 ms  0.974 (0.757 to 1.019; ci 0.757 to 1.019)
+yyjson-read                serial   allocator-state          serial 7.881 ms  1.014 (0.969 to 1.496; ci 0.969 to 1.496)
+md4c-html                  serial   allocator-state          serial 13.145 ms  1.010 (0.964 to 1.045; ci 0.964 to 1.045)
+geomean 1.037 p10 0.960 slowest kissfft-real 0.896, jsmn-parse-slot 0.924, kissfft-real-shared 0.956, xxhash3 0.960
+## independent
+lz4-compress               serial   unclassified-dependency  serial 9.845 ms  0.975 (0.925 to 1.413; ci 0.925 to 1.413)
+lz4-decompress             serial   no-certificate           serial 1.529 ms  1.028 (0.977 to 1.127; ci 0.977 to 1.127)
+miniz-compress             serial   allocator-state          serial 11.879 ms  1.035 (0.982 to 1.050; ci 0.982 to 1.050)
+miniz-decompress           serial   allocator-state          serial 4.588 ms  1.017 (0.881 to 1.128; ci 0.881 to 1.128)
+miniz-crc32                serial   no-certificate           serial 11.504 ms  0.989 (0.928 to 0.998; ci 0.928 to 0.998)
+miniz-adler32              serial   no-certificate           serial 6.212 ms  0.984 (0.611 to 1.006; ci 0.611 to 1.006)
+jsmn-parse                 serial   no-certificate           serial 2.130 ms  1.045 (0.954 to 3.063; ci 0.954 to 3.063)
+jsmn-parse-slot            serial   no-certificate           serial 2.159 ms  1.033 (0.918 to 1.046; ci 0.918 to 1.046)
+aes-cbc-encrypt-slot       serial   no-certificate           serial 8.502 ms  1.019 (0.982 to 1.231; ci 0.982 to 1.231)
+md5-slot                   serial   no-certificate           serial 9.908 ms  0.991 (0.951 to 1.017; ci 0.951 to 1.017)
+jsmn-parse-shared          serial   shared-state             serial 2.558 ms  1.010 (0.923 to 1.091; ci 0.923 to 1.091)
+kissfft-complex            serial   unclassified-dependency  serial 4.109 ms  1.042 (0.862 to 2.020; ci 0.862 to 2.020)
+kissfft-real               serial   unclassified-dependency  serial 2.367 ms  0.992 (0.938 to 1.059; ci 0.938 to 1.059)
+kissfft-real-shared        serial   unclassified-dependency  serial 2.145 ms  0.987 (0.953 to 1.017; ci 0.953 to 1.017)
+aes-cbc-encrypt            serial   no-certificate           serial 8.437 ms  0.994 (0.938 to 1.032; ci 0.938 to 1.032)
+aes-cbc-decrypt            serial   no-certificate           serial 19.264 ms  1.023 (0.994 to 1.056; ci 0.994 to 1.056)
+aes-cbc-decrypt-shared     window   certified-window         serial 18.637 ms  2.941 (1.514 to 4.582; ci 1.514 to 4.582)
+aes-ctr                    serial   no-certificate           serial 11.847 ms  1.007 (0.981 to 1.709; ci 0.981 to 1.709)
+xxhash32                   serial   no-certificate           serial 2.546 ms  0.975 (0.927 to 1.098; ci 0.927 to 1.098)
+xxhash64                   serial   no-certificate           serial 1.323 ms  0.993 (0.764 to 1.702; ci 0.764 to 1.702)
+xxhash3                    serial   no-certificate           serial 0.956 ms  0.925 (0.867 to 1.245; ci 0.867 to 1.245)
+qoi-encode                 serial   allocator-state          serial 5.219 ms  1.007 (0.965 to 1.536; ci 0.965 to 1.536)
+qoi-decode                 serial   allocator-state          serial 4.412 ms  0.990 (0.729 to 1.235; ci 0.729 to 1.235)
+qoi-encode-64              serial   allocator-state          serial 2.278 ms  1.016 (0.964 to 1.434; ci 0.964 to 1.434)
+qoi-decode-64              serial   allocator-state          serial 1.853 ms  1.045 (0.827 to 1.066; ci 0.827 to 1.066)
+sha256                     serial   no-certificate           serial 31.365 ms  0.975 (0.807 to 1.387; ci 0.807 to 1.387)
+sha256-shared              serial   shared-state             serial 24.328 ms  0.976 (0.928 to 1.037; ci 0.928 to 1.037)
+sha1                       serial   no-certificate           serial 15.553 ms  1.017 (0.683 to 1.141; ci 0.683 to 1.141)
+md5                        serial   no-certificate           serial 9.879 ms  0.977 (0.945 to 1.303; ci 0.945 to 1.303)
+m6502                      serial   no-certificate           serial 5.155 ms  0.986 (0.530 to 1.267; ci 0.530 to 1.267)
+brotli-compress            serial   allocator-state          serial 63.302 ms  1.005 (0.527 to 2.935; ci 0.527 to 2.935)
+brotli-decompress          serial   allocator-state          serial 10.822 ms  0.995 (0.841 to 1.066; ci 0.841 to 1.066)
+wyhash                     serial   no-certificate           serial 2.049 ms  1.004 (0.231 to 1.027; ci 0.231 to 1.027)
+blake2b                    serial   unclassified-dependency  serial 16.908 ms  0.969 (0.904 to 1.374; ci 0.904 to 1.374)
+qoa-encode                 serial   allocator-state          serial 16.657 ms  0.971 (0.873 to 1.016; ci 0.873 to 1.016)
+qoa-decode                 serial   allocator-state          serial 0.880 ms  0.980 (0.958 to 1.167; ci 0.958 to 1.167)
+yyjson-read                serial   allocator-state          serial 7.881 ms  1.017 (0.958 to 1.443; ci 0.958 to 1.443)
+md4c-html                  serial   allocator-state          serial 13.145 ms  0.953 (0.693 to 0.990; ci 0.693 to 0.990)
+geomean 1.027 p10 0.971 slowest xxhash3 0.925, md4c-html 0.953, blake2b 0.969, qoa-encode 0.971
+## shared
+lz4-compress               serial   unclassified-dependency  serial 9.845 ms  0.982 (0.824 to 1.294; ci 0.824 to 1.294)
+lz4-decompress             serial   no-certificate           serial 1.529 ms  1.025 (0.694 to 1.092; ci 0.694 to 1.092)
+miniz-compress             serial   allocator-state          serial 11.879 ms  0.999 (0.696 to 1.021; ci 0.696 to 1.021)
+miniz-decompress           serial   allocator-state          serial 4.588 ms  1.006 (0.556 to 1.062; ci 0.556 to 1.062)
+miniz-crc32                serial   no-certificate           serial 11.504 ms  0.994 (0.986 to 1.019; ci 0.986 to 1.019)
+miniz-adler32              serial   no-certificate           serial 6.212 ms  1.020 (1.006 to 1.052; ci 1.006 to 1.052)
+jsmn-parse                 serial   no-certificate           serial 2.130 ms  1.004 (0.905 to 3.144; ci 0.905 to 3.144)
+jsmn-parse-slot            serial   no-certificate           serial 2.159 ms  0.930 (0.898 to 1.037; ci 0.898 to 1.037)
+aes-cbc-encrypt-slot       serial   no-certificate           serial 8.502 ms  1.023 (0.974 to 1.202; ci 0.974 to 1.202)
+md5-slot                   serial   no-certificate           serial 9.908 ms  0.988 (0.575 to 0.989; ci 0.575 to 0.989)
+jsmn-parse-shared          serial   shared-state             serial 2.558 ms  1.002 (0.943 to 1.053; ci 0.943 to 1.053)
+kissfft-complex            serial   unclassified-dependency  serial 4.109 ms  1.037 (0.699 to 1.123; ci 0.699 to 1.123)
+kissfft-real               serial   unclassified-dependency  serial 2.367 ms  0.973 (0.884 to 1.044; ci 0.884 to 1.044)
+kissfft-real-shared        serial   unclassified-dependency  serial 2.145 ms  0.977 (0.911 to 1.074; ci 0.911 to 1.074)
+aes-cbc-encrypt            serial   no-certificate           serial 8.437 ms  0.927 (0.437 to 1.013; ci 0.437 to 1.013)
+aes-cbc-decrypt            serial   no-certificate           serial 19.264 ms  1.009 (0.974 to 1.033; ci 0.974 to 1.033)
+aes-cbc-decrypt-shared     window   certified-window         serial 18.637 ms  3.673 (2.940 to 4.149; ci 2.940 to 4.149)
+aes-ctr                    serial   no-certificate           serial 11.847 ms  1.018 (0.938 to 1.729; ci 0.938 to 1.729)
+xxhash32                   serial   no-certificate           serial 2.546 ms  1.058 (0.962 to 1.206; ci 0.962 to 1.206)
+xxhash64                   serial   no-certificate           serial 1.323 ms  1.073 (0.664 to 1.751; ci 0.664 to 1.751)
+xxhash3                    serial   no-certificate           serial 0.956 ms  1.022 (0.918 to 1.058; ci 0.918 to 1.058)
+qoi-encode                 serial   allocator-state          serial 5.219 ms  1.040 (0.605 to 1.521; ci 0.605 to 1.521)
+qoi-decode                 serial   allocator-state          serial 4.412 ms  0.996 (0.864 to 1.325; ci 0.864 to 1.325)
+qoi-encode-64              serial   allocator-state          serial 2.278 ms  0.970 (0.923 to 1.287; ci 0.923 to 1.287)
+qoi-decode-64              serial   allocator-state          serial 1.853 ms  0.996 (0.813 to 1.078; ci 0.813 to 1.078)
+sha256                     serial   no-certificate           serial 31.365 ms  0.986 (0.913 to 1.374; ci 0.913 to 1.374)
+sha256-shared              serial   shared-state             serial 24.328 ms  0.990 (0.871 to 1.075; ci 0.871 to 1.075)
+sha1                       serial   no-certificate           serial 15.553 ms  1.013 (0.788 to 1.133; ci 0.788 to 1.133)
+md5                        serial   no-certificate           serial 9.879 ms  1.005 (0.840 to 1.314; ci 0.840 to 1.314)
+m6502                      serial   no-certificate           serial 5.155 ms  1.024 (0.944 to 1.199; ci 0.944 to 1.199)
+brotli-compress            serial   allocator-state          serial 63.302 ms  1.025 (0.738 to 2.939; ci 0.738 to 2.939)
+brotli-decompress          serial   allocator-state          serial 10.822 ms  0.993 (0.886 to 1.038; ci 0.886 to 1.038)
+wyhash                     serial   no-certificate           serial 2.049 ms  0.958 (0.593 to 1.074; ci 0.593 to 1.074)
+blake2b                    serial   unclassified-dependency  serial 16.908 ms  0.968 (0.919 to 1.380; ci 0.919 to 1.380)
+qoa-encode                 serial   allocator-state          serial 16.657 ms  0.940 (0.855 to 0.988; ci 0.855 to 0.988)
+qoa-decode                 serial   allocator-state          serial 0.880 ms  0.956 (0.940 to 1.000; ci 0.940 to 1.000)
+yyjson-read                serial   allocator-state          serial 7.881 ms  1.016 (0.956 to 1.445; ci 0.956 to 1.445)
+md4c-html                  serial   allocator-state          serial 13.145 ms  0.998 (0.955 to 1.019; ci 0.955 to 1.019)
+geomean 1.033 p10 0.956 slowest aes-cbc-encrypt 0.927, jsmn-parse-slot 0.930, qoa-encode 0.940, qoa-decode 0.956
+## router
+lz4-compress               serial   unclassified-dependency  serial 9.845 ms  1.016 (0.968 to 1.361; ci 0.968 to 1.361)
+lz4-decompress             serial   below-floor              serial 1.529 ms  1.014 (0.589 to 1.132; ci 0.589 to 1.132)
+miniz-compress             serial   allocator-state          serial 11.879 ms  1.015 (0.964 to 1.070; ci 0.964 to 1.070)
+miniz-decompress           serial   allocator-state          serial 4.588 ms  1.004 (0.995 to 1.099; ci 0.995 to 1.099)
+miniz-crc32                tracked  tracked-eligible         serial 11.504 ms  3.279 (0.996 to 4.158; ci 0.996 to 4.158)
+miniz-adler32              serial   dispatch-lost            serial 6.212 ms  0.981 (0.741 to 1.023; ci 0.741 to 1.023)
+jsmn-parse                 serial   below-floor              serial 2.130 ms  1.002 (0.940 to 2.999; ci 0.940 to 2.999)
+jsmn-parse-slot            serial   below-floor              serial 2.159 ms  0.995 (0.690 to 1.000; ci 0.690 to 1.000)
+aes-cbc-encrypt-slot       serial   dispatch-lost            serial 8.502 ms  0.906 (0.745 to 1.240; ci 0.745 to 1.240)
+md5-slot                   tracked  tracked-eligible         serial 9.908 ms  2.479 (1.978 to 2.739; ci 1.978 to 2.739)
+jsmn-parse-shared          serial   shared-state             serial 2.558 ms  0.969 (0.949 to 1.041; ci 0.949 to 1.041)
+kissfft-complex            serial   unclassified-dependency  serial 4.109 ms  0.959 (0.489 to 2.099; ci 0.489 to 2.099)
+kissfft-real               serial   unclassified-dependency  serial 2.367 ms  1.040 (0.956 to 1.096; ci 0.956 to 1.096)
+kissfft-real-shared        serial   unclassified-dependency  serial 2.145 ms  0.996 (0.949 to 1.070; ci 0.949 to 1.070)
+aes-cbc-encrypt            tracked  tracked-eligible         serial 8.437 ms  0.916 (0.855 to 0.945; ci 0.855 to 0.945)
+aes-cbc-decrypt            tracked  tracked-eligible         serial 19.264 ms  1.163 (0.810 to 1.388; ci 0.810 to 1.388)
+aes-cbc-decrypt-shared     window   certified-window         serial 18.637 ms  4.006 (3.515 to 4.415; ci 3.515 to 4.415)
+aes-ctr                    tracked  tracked-eligible         serial 11.847 ms  1.435 (0.996 to 2.644; ci 0.996 to 2.644)
+xxhash32                   serial   below-floor              serial 2.546 ms  0.989 (0.837 to 1.147; ci 0.837 to 1.147)
+xxhash64                   serial   below-floor              serial 1.323 ms  1.014 (0.971 to 1.536; ci 0.971 to 1.536)
+xxhash3                    serial   below-floor              serial 0.956 ms  0.983 (0.929 to 1.268; ci 0.929 to 1.268)
+qoi-encode                 serial   allocator-state          serial 5.219 ms  0.915 (0.900 to 1.553; ci 0.900 to 1.553)
+qoi-decode                 serial   allocator-state          serial 4.412 ms  1.007 (0.961 to 1.188; ci 0.961 to 1.188)
+qoi-encode-64              serial   allocator-state          serial 2.278 ms  0.943 (0.815 to 1.118; ci 0.815 to 1.118)
+qoi-decode-64              serial   allocator-state          serial 1.853 ms  1.006 (0.987 to 1.033; ci 0.987 to 1.033)
+sha256                     tracked  tracked-eligible         serial 31.365 ms  3.502 (2.758 to 4.848; ci 2.758 to 4.848)
+sha256-shared              serial   shared-state             serial 24.328 ms  0.977 (0.887 to 1.034; ci 0.887 to 1.034)
+sha1                       tracked  tracked-eligible         serial 15.553 ms  2.752 (1.557 to 3.152; ci 1.557 to 3.152)
+md5                        tracked  tracked-eligible         serial 9.879 ms  1.893 (0.935 to 3.001; ci 0.935 to 3.001)
+m6502                      serial   dispatch-lost            serial 5.155 ms  0.984 (0.892 to 1.172; ci 0.892 to 1.172)
+brotli-compress            serial   allocator-state          serial 63.302 ms  1.005 (0.956 to 1.889; ci 0.956 to 1.889)
+brotli-decompress          serial   allocator-state          serial 10.822 ms  0.998 (0.978 to 1.033; ci 0.978 to 1.033)
+wyhash                     tracked  tracked-eligible         serial 2.049 ms  0.762 (0.695 to 0.841; ci 0.695 to 0.841)
+blake2b                    serial   unclassified-dependency  serial 16.908 ms  0.969 (0.880 to 1.529; ci 0.880 to 1.529)
+qoa-encode                 serial   allocator-state          serial 16.657 ms  0.842 (0.533 to 1.015; ci 0.533 to 1.015)
+qoa-decode                 serial   allocator-state          serial 0.880 ms  0.998 (0.983 to 1.191; ci 0.983 to 1.191)
+yyjson-read                serial   allocator-state          serial 7.881 ms  1.047 (0.960 to 1.432; ci 0.960 to 1.432)
+md4c-html                  serial   allocator-state          serial 13.145 ms  0.992 (0.971 to 1.006; ci 0.971 to 1.006)
+geomean 1.173 p10 0.915 slowest wyhash 0.762, qoa-encode 0.842, aes-cbc-encrypt-slot 0.906, qoi-encode 0.915
+wrong outputs: 0
+## refusal overhead (time over serial, drivers today did not dispatch)
+lz4-decompress             today 1.088 (0.884 to 2.226; ci 0.884 to 2.226)  router[serial] 0.986 (0.883 to 1.698; ci 0.883 to 1.698)
+miniz-compress             today 0.981 (0.955 to 1.009; ci 0.955 to 1.009)  router[serial] 0.985 (0.935 to 1.037; ci 0.935 to 1.037)
+jsmn-parse-slot            today 1.047 (1.007 to 1.435; ci 1.007 to 1.435)  router[serial] 1.005 (1.000 to 1.449; ci 1.000 to 1.449)
+kissfft-real               today 1.164 (1.021 to 2.617; ci 1.021 to 2.617)  router[serial] 0.962 (0.913 to 1.046; ci 0.913 to 1.046)
+kissfft-real-shared        today 1.108 (1.036 to 1.561; ci 1.036 to 1.561)  router[serial] 1.004 (0.935 to 1.054; ci 0.935 to 1.054)
+xxhash64                   today 0.994 (0.623 to 1.033; ci 0.623 to 1.033)  router[serial] 0.986 (0.651 to 1.030; ci 0.651 to 1.030)
+xxhash3                    today 1.099 (0.936 to 1.542; ci 0.936 to 1.542)  router[serial] 1.018 (0.789 to 1.077; ci 0.789 to 1.077)
+qoi-decode                 today 0.961 (0.809 to 1.098; ci 0.809 to 1.098)  router[serial] 0.993 (0.842 to 1.041; ci 0.842 to 1.041)
+qoi-encode-64              today 1.172 (0.945 to 3.768; ci 0.945 to 3.768)  router[serial] 1.061 (0.894 to 1.227; ci 0.894 to 1.227)
+qoi-decode-64              today 1.015 (0.926 to 1.796; ci 0.926 to 1.796)  router[serial] 0.994 (0.968 to 1.013; ci 0.968 to 1.013)
+brotli-compress            today 1.056 (0.451 to 1.285; ci 0.451 to 1.285)  router[serial] 0.995 (0.529 to 1.046; ci 0.529 to 1.046)
+brotli-decompress          today 0.996 (0.942 to 2.898; ci 0.942 to 2.898)  router[serial] 1.002 (0.968 to 1.023; ci 0.968 to 1.023)
+qoa-encode                 today 1.001 (0.941 to 1.084; ci 0.941 to 1.084)  router[serial] 1.188 (0.985 to 1.877; ci 0.985 to 1.877)
+qoa-decode                 today 1.023 (0.884 to 1.097; ci 0.884 to 1.097)  router[serial] 1.002 (0.840 to 1.017; ci 0.840 to 1.017)
+md4c-html                  today 0.997 (0.963 to 1.038; ci 0.963 to 1.038)  router[serial] 1.008 (0.994 to 1.030; ci 0.994 to 1.030)
+geomean today 1.045 router 1.011
+## cost (router arm)
+lz4-compress               serial   certify 24.4 ms  setup 1.8 ms  first-run extra 2.41 ms  steady 9.801 ms  serial 9.845 ms  break-even 646.7 calls
+lz4-decompress             serial   certify 12.2 ms  setup 64.8 ms  first-run extra 1.10 ms  steady 1.587 ms  serial 1.529 ms  break-even Infinity calls
+miniz-compress             serial   certify 66.0 ms  setup 1.7 ms  first-run extra 3.51 ms  steady 11.813 ms  serial 11.879 ms  break-even 1080.0 calls
+miniz-decompress           serial   certify 36.7 ms  setup 1.2 ms  first-run extra 3.47 ms  steady 4.488 ms  serial 4.588 ms  break-even 411.8 calls
+miniz-crc32                tracked  certify 4.1 ms  setup 54.3 ms  first-run extra 124.60 ms  steady 4.745 ms  serial 11.504 ms  break-even 27.1 calls
+miniz-adler32              serial   certify 519.8 ms  setup 62.5 ms  first-run extra 96.15 ms  steady 6.683 ms  serial 6.212 ms  break-even Infinity calls
+jsmn-parse                 serial   certify 66.6 ms  setup 85.5 ms  first-run extra 116.47 ms  steady 2.156 ms  serial 2.130 ms  break-even Infinity calls
+jsmn-parse-slot            serial   certify 60.9 ms  setup 91.6 ms  first-run extra 154.48 ms  steady 2.168 ms  serial 2.159 ms  break-even Infinity calls
+aes-cbc-encrypt-slot       serial   certify 139.3 ms  setup 89.3 ms  first-run extra 117.87 ms  steady 9.517 ms  serial 8.502 ms  break-even Infinity calls
+md5-slot                   tracked  certify 41.0 ms  setup 79.7 ms  first-run extra 94.47 ms  steady 3.962 ms  serial 9.908 ms  break-even 36.2 calls
+jsmn-parse-shared          serial   certify 548.3 ms  setup 1.1 ms  first-run extra 2.25 ms  steady 2.663 ms  serial 2.558 ms  break-even Infinity calls
+kissfft-complex            serial   certify 10.3 ms  setup 3.5 ms  first-run extra 2.07 ms  steady 3.714 ms  serial 4.109 ms  break-even 40.1 calls
+kissfft-real               serial   certify 11.4 ms  setup 13.4 ms  first-run extra 2.20 ms  steady 2.402 ms  serial 2.367 ms  break-even Infinity calls
+kissfft-real-shared        serial   certify 11.2 ms  setup 2.4 ms  first-run extra 1.80 ms  steady 2.158 ms  serial 2.145 ms  break-even Infinity calls
+aes-cbc-encrypt            tracked  certify 142.1 ms  setup 82.6 ms  first-run extra 126.04 ms  steady 9.291 ms  serial 8.437 ms  break-even Infinity calls
+aes-cbc-decrypt            tracked  certify 232.9 ms  setup 85.3 ms  first-run extra 122.23 ms  steady 23.057 ms  serial 19.264 ms  break-even Infinity calls
+aes-cbc-decrypt-shared     window   certify 493.5 ms  setup 1026.0 ms  first-run extra 4.40 ms  steady 5.303 ms  serial 18.637 ms  break-even 114.3 calls
+aes-ctr                    tracked  certify 38.0 ms  setup 91.7 ms  first-run extra 127.71 ms  steady 8.783 ms  serial 11.847 ms  break-even 84.0 calls
+xxhash32                   serial   certify 7.0 ms  setup 71.3 ms  first-run extra 110.06 ms  steady 2.270 ms  serial 2.546 ms  break-even 684.4 calls
+xxhash64                   serial   certify 8.4 ms  setup 75.9 ms  first-run extra 139.90 ms  steady 1.182 ms  serial 1.323 ms  break-even 1597.5 calls
+xxhash3                    serial   certify 412.9 ms  setup 101.6 ms  first-run extra 95.65 ms  steady 0.966 ms  serial 0.956 ms  break-even Infinity calls
+qoi-encode                 serial   certify 5.1 ms  setup 1.8 ms  first-run extra 1.80 ms  steady 5.591 ms  serial 5.219 ms  break-even Infinity calls
+qoi-decode                 serial   certify 4.9 ms  setup 1.4 ms  first-run extra 1.73 ms  steady 4.250 ms  serial 4.412 ms  break-even 49.8 calls
+qoi-encode-64              serial   certify 5.3 ms  setup 1.4 ms  first-run extra 1.52 ms  steady 2.402 ms  serial 2.278 ms  break-even Infinity calls
+qoi-decode-64              serial   certify 4.7 ms  setup 1.1 ms  first-run extra 1.41 ms  steady 1.865 ms  serial 1.853 ms  break-even Infinity calls
+sha256                     tracked  certify 107.1 ms  setup 71.9 ms  first-run extra 141.69 ms  steady 6.935 ms  serial 31.365 ms  break-even 13.1 calls
+sha256-shared              serial   certify 210.6 ms  setup 2.7 ms  first-run extra 0.69 ms  steady 23.612 ms  serial 24.328 ms  break-even 298.9 calls
+sha1                       tracked  certify 85.2 ms  setup 75.2 ms  first-run extra 106.07 ms  steady 7.434 ms  serial 15.553 ms  break-even 32.8 calls
+md5                        tracked  certify 43.4 ms  setup 115.5 ms  first-run extra 144.84 ms  steady 5.185 ms  serial 9.879 ms  break-even 64.7 calls
+m6502                      serial   certify 4771.4 ms  setup 13769.8 ms  first-run extra 379.15 ms  steady 5.112 ms  serial 5.155 ms  break-even 432060.9 calls
+brotli-compress            serial   certify 1028.3 ms  setup 2.9 ms  first-run extra 7.26 ms  steady 58.192 ms  serial 63.302 ms  break-even 203.2 calls
+brotli-decompress          serial   certify 155.5 ms  setup 1.3 ms  first-run extra 2.81 ms  steady 10.617 ms  serial 10.822 ms  break-even 777.7 calls
+wyhash                     tracked  certify 15.2 ms  setup 81.8 ms  first-run extra 110.29 ms  steady 2.691 ms  serial 2.049 ms  break-even Infinity calls
+blake2b                    serial   certify 91.1 ms  setup 3.9 ms  first-run extra 2.97 ms  steady 17.882 ms  serial 16.908 ms  break-even Infinity calls
+qoa-encode                 serial   certify 7.5 ms  setup 1.1 ms  first-run extra 0.81 ms  steady 19.448 ms  serial 16.657 ms  break-even Infinity calls
+qoa-decode                 serial   certify 7.1 ms  setup 1.0 ms  first-run extra 1.05 ms  steady 0.881 ms  serial 0.880 ms  break-even Infinity calls
+yyjson-read                serial   certify 362.4 ms  setup 2.0 ms  first-run extra 4.72 ms  steady 7.651 ms  serial 7.881 ms  break-even 1606.4 calls
+md4c-html                  serial   certify 257.8 ms  setup 1.4 ms  first-run extra 12.05 ms  steady 13.234 ms  serial 13.145 ms  break-even Infinity calls
+## shared against independent
+lz4-compress               independent 24.44 ms  shared 26.60 ms  same decision true  same route true  wrong 0
+lz4-decompress             independent 12.21 ms  shared 12.31 ms  same decision true  same route true  wrong 0
+miniz-compress             independent 65.99 ms  shared 73.33 ms  same decision true  same route true  wrong 0
+miniz-decompress           independent 36.73 ms  shared 39.99 ms  same decision true  same route true  wrong 0
+miniz-crc32                independent 4.05 ms  shared 3.00 ms  same decision true  same route true  wrong 0
+miniz-adler32              independent 519.80 ms  shared 504.94 ms  same decision true  same route true  wrong 0
+jsmn-parse                 independent 66.59 ms  shared 62.44 ms  same decision true  same route true  wrong 0
+jsmn-parse-slot            independent 60.86 ms  shared 61.54 ms  same decision true  same route true  wrong 0
+aes-cbc-encrypt-slot       independent 139.30 ms  shared 138.14 ms  same decision true  same route true  wrong 0
+md5-slot                   independent 40.98 ms  shared 40.84 ms  same decision true  same route true  wrong 0
+jsmn-parse-shared          independent 548.26 ms  shared 544.34 ms  same decision true  same route true  wrong 0
+kissfft-complex            independent 10.29 ms  shared 11.29 ms  same decision true  same route true  wrong 0
+kissfft-real               independent 11.42 ms  shared 12.95 ms  same decision true  same route true  wrong 0
+kissfft-real-shared        independent 11.18 ms  shared 13.50 ms  same decision true  same route true  wrong 0
+aes-cbc-encrypt            independent 142.10 ms  shared 140.83 ms  same decision true  same route true  wrong 0
+aes-cbc-decrypt            independent 232.91 ms  shared 230.98 ms  same decision true  same route true  wrong 0
+aes-cbc-decrypt-shared     independent 493.50 ms  shared 492.19 ms  same decision true  same route true  wrong 0
+aes-ctr                    independent 37.95 ms  shared 39.29 ms  same decision true  same route true  wrong 0
+xxhash32                   independent 6.96 ms  shared 7.30 ms  same decision true  same route true  wrong 0
+xxhash64                   independent 8.40 ms  shared 8.83 ms  same decision true  same route true  wrong 0
+xxhash3                    independent 412.93 ms  shared 414.24 ms  same decision true  same route true  wrong 0
+qoi-encode                 independent 5.14 ms  shared 6.06 ms  same decision true  same route true  wrong 0
+qoi-decode                 independent 4.94 ms  shared 5.66 ms  same decision true  same route true  wrong 0
+qoi-encode-64              independent 5.33 ms  shared 6.40 ms  same decision true  same route true  wrong 0
+qoi-decode-64              independent 4.74 ms  shared 5.43 ms  same decision true  same route true  wrong 0
+sha256                     independent 107.12 ms  shared 106.40 ms  same decision true  same route true  wrong 0
+sha256-shared              independent 210.59 ms  shared 211.95 ms  same decision true  same route true  wrong 0
+sha1                       independent 85.23 ms  shared 86.09 ms  same decision true  same route true  wrong 0
+md5                        independent 43.37 ms  shared 42.76 ms  same decision true  same route true  wrong 0
+m6502                      independent 4771.39 ms  shared 4790.29 ms  same decision true  same route true  wrong 0
+brotli-compress            independent 1028.34 ms  shared 1108.81 ms  same decision true  same route true  wrong 0
+brotli-decompress          independent 155.48 ms  shared 167.93 ms  same decision true  same route true  wrong 0
+wyhash                     independent 15.21 ms  shared 16.08 ms  same decision true  same route true  wrong 0
+blake2b                    independent 91.13 ms  shared 93.30 ms  same decision true  same route true  wrong 0
+qoa-encode                 independent 7.55 ms  shared 8.70 ms  same decision true  same route true  wrong 0
+qoa-decode                 independent 7.09 ms  shared 8.07 ms  same decision true  same route true  wrong 0
+yyjson-read                independent 362.43 ms  shared 402.42 ms  same decision true  same route true  wrong 0
+md4c-html                  independent 257.79 ms  shared 277.71 ms  same decision true  same route true  wrong 0

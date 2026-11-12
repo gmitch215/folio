@@ -1,0 +1,239 @@
+{
+ "checkedDynamic": 732846367,
+ "totalAccessesAssumed": 1907990706,
+ "checkedPctOfAll": 38.4,
+ "rows": [
+  {
+   "class": "A sound member",
+   "staticSites": 119540,
+   "dynamic": 77460011,
+   "pctOfChecked": 10.6,
+   "pctOfAll": 4.1
+  },
+  {
+   "class": "R region-only member",
+   "staticSites": 5849,
+   "dynamic": 108201771,
+   "pctOfChecked": 14.8,
+   "pctOfAll": 5.7
+  },
+  {
+   "class": "O oracle-only member",
+   "staticSites": 38172,
+   "dynamic": 53620433,
+   "pctOfChecked": 7.3,
+   "pctOfAll": 2.8
+  },
+  {
+   "class": "C loop invariant, no call or inner loop",
+   "staticSites": 1656,
+   "dynamic": 750169,
+   "pctOfChecked": 0.1,
+   "pctOfAll": 0
+  },
+  {
+   "class": "D loop invariant, loop has a call or inner loop",
+   "staticSites": 12013,
+   "dynamic": 16049997,
+   "pctOfChecked": 2.2,
+   "pctOfAll": 0.8
+  },
+  {
+   "class": "E affine pointer walk in a loop",
+   "staticSites": 578,
+   "dynamic": 50951025,
+   "pctOfChecked": 7,
+   "pctOfAll": 2.7
+  },
+  {
+   "class": "F other grouped shape, leader or alone",
+   "staticSites": 54453,
+   "dynamic": 57623712,
+   "pctOfChecked": 7.9,
+   "pctOfAll": 3
+  },
+  {
+   "class": "G pointer is not local or local plus constant",
+   "staticSites": 239718,
+   "dynamic": 368189249,
+   "pctOfChecked": 50.2,
+   "pctOfAll": 19.3
+  }
+ ],
+ "cumulativePctOfChecked": {
+  "A sound member": 10.6,
+  "A+R region member": 25.3,
+  "A+R+O any group member": 32.7,
+  "A+R+O+C+D+E every class with a possible elision": 41.9,
+  "A+C+E sound member, bcd-style hoist, affine walk": 17.6
+ },
+ "leaderShare": {
+  "soundLeaders": 39.2,
+  "regionLeaders": 24.4,
+  "oracleLeaders": 17.1
+ },
+ "loopRelation": {
+  "invariant": 15,
+  "affine": 21.5,
+  "varies": 7.2,
+  "none": 6
+ },
+ "ungroupedShapes": [
+  {
+   "ptr": "load(l)",
+   "sites": 185856,
+   "pctOfChecked": 37.7
+  },
+  {
+   "ptr": "tee(load(l))",
+   "sites": 12265,
+   "pctOfChecked": 2.1
+  },
+  {
+   "ptr": "add(shl(load(l),c),c)",
+   "sites": 1621,
+   "pctOfChecked": 2
+  },
+  {
+   "ptr": "load(load(l))",
+   "sites": 13119,
+   "pctOfChecked": 2
+  },
+  {
+   "ptr": "load(c)",
+   "sites": 3120,
+   "pctOfChecked": 1.5
+  },
+  {
+   "ptr": "add(load(l),c)",
+   "sites": 121,
+   "pctOfChecked": 0.7
+  },
+  {
+   "ptr": "tee(sub(globalget,c))",
+   "sites": 1444,
+   "pctOfChecked": 0.5
+  },
+  {
+   "ptr": "add(load(l),shl(load(l),c))",
+   "sites": 1269,
+   "pctOfChecked": 0.3
+  },
+  {
+   "ptr": "add(load(l),shl(sub(c,load),c))",
+   "sites": 3,
+   "pctOfChecked": 0.3
+  },
+  {
+   "ptr": "add(l,l)",
+   "sites": 471,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "add(load(load(l)),shl(load(l),c))",
+   "sites": 1210,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "sub(l,c)",
+   "sites": 89,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "load(load(load(l)))",
+   "sites": 760,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "add(load(l),load(l))",
+   "sites": 519,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "add(load(l),load(load(l)))",
+   "sites": 743,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "add(shl(op12(load,c),c),c)",
+   "sites": 61,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "tee(load(load(l)))",
+   "sites": 408,
+   "pctOfChecked": 0.2
+  },
+  {
+   "ptr": "tee(add(l,l))",
+   "sites": 62,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "add(add(load(l),c),shl(load(l),c))",
+   "sites": 457,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "sub(load(l),c)",
+   "sites": 709,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "add(load(load(l)),load(load(l)))",
+   "sites": 108,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "add(load(l),add(load(l),c))",
+   "sites": 1404,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "tee(add(l,tee(binary)))",
+   "sites": 10,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "tee(load(add(l,c)))",
+   "sites": 2,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "add(load(c),shl(load(l),c))",
+   "sites": 22,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "add(shl(and(load,c),c),c)",
+   "sites": 25,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "add(load(c),shl(load(load),c))",
+   "sites": 36,
+   "pctOfChecked": 0.1
+  },
+  {
+   "ptr": "add(shl(load(load),c),c)",
+   "sites": 94,
+   "pctOfChecked": 0
+  },
+  {
+   "ptr": "load(add(load(load),shl(load,c)))",
+   "sites": 227,
+   "pctOfChecked": 0
+  },
+  {
+   "ptr": "add(l,shl(l,c))",
+   "sites": 503,
+   "pctOfChecked": 0
+  }
+ ],
+ "byBytes": {
+  "1": 20.4,
+  "2": 4,
+  "4": 73.2,
+  "8": 2.4
+ }
+}

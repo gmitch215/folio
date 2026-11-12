@@ -1,0 +1,728 @@
+[
+ {
+  "route": "stock:flush",
+  "nativeN": 3,
+  "nativeMedianMs": 909,
+  "renderHashesDistinct": 0,
+  "arms": {
+   "bcd": {
+    "n": 3,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.189,
+    "ms": [
+     2005,
+     1994,
+     1940
+    ],
+    "medianMs": 1994,
+    "ratios": [
+     2.189,
+     2.194,
+     2.168
+    ],
+    "medianRatio": 2.189,
+    "minRatio": 2.168,
+    "maxRatio": 2.194,
+    "tau": 1.189,
+    "tauMin": 1.168,
+    "tauMax": 1.194,
+    "tauCi": null,
+    "samples": 8,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "cfn": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.058,
+    "ms": [
+     1821,
+     1905
+    ],
+    "medianMs": 1863,
+    "ratios": [
+     1.988,
+     2.128
+    ],
+    "medianRatio": 2.058,
+    "minRatio": 1.988,
+    "maxRatio": 2.128,
+    "tau": 1.058,
+    "tauMin": 0.988,
+    "tauMax": 1.128,
+    "tauCi": null,
+    "samples": 8,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "csite": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.091,
+    "ms": [
+     1915
+    ],
+    "medianMs": 1915,
+    "ratios": [
+     2.091
+    ],
+    "medianRatio": 2.091,
+    "minRatio": 2.091,
+    "maxRatio": 2.091,
+    "tau": 1.091,
+    "tauMin": 1.091,
+    "tauMax": 1.091,
+    "tauCi": null,
+    "samples": 5,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-stack": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.068,
+    "ms": [
+     1894
+    ],
+    "medianMs": 1894,
+    "ratios": [
+     2.068
+    ],
+    "medianRatio": 2.068,
+    "minRatio": 2.068,
+    "maxRatio": 2.068,
+    "tau": 1.068,
+    "tauMin": 1.068,
+    "tauMax": 1.068,
+    "tauCi": null,
+    "samples": 5,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-all": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.439,
+    "ms": [
+     1318
+    ],
+    "medianMs": 1318,
+    "ratios": [
+     1.439
+    ],
+    "medianRatio": 1.439,
+    "minRatio": 1.439,
+    "maxRatio": 1.439,
+    "tau": 0.439,
+    "tauMin": 0.439,
+    "tauMax": 0.439,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.848,
+    "ms": [
+     1680
+    ],
+    "medianMs": 1680,
+    "ratios": [
+     1.848
+    ],
+    "medianRatio": 1.848,
+    "minRatio": 1.848,
+    "maxRatio": 1.848,
+    "tau": 0.848,
+    "tauMin": 0.848,
+    "tauMax": 0.848,
+    "tauCi": null,
+    "samples": 4,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  },
+  "cpuArms": {
+   "bcd": {
+    "n": 3,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.185,
+    "ms": [
+     2004,
+     1992,
+     1939
+    ],
+    "medianMs": 1992,
+    "ratios": [
+     2.185,
+     2.194,
+     2.169
+    ],
+    "medianRatio": 2.185,
+    "minRatio": 2.169,
+    "maxRatio": 2.194,
+    "tau": 1.185,
+    "tauMin": 1.169,
+    "tauMax": 1.194,
+    "tauCi": null,
+    "samples": 8,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "cfn": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.057,
+    "ms": [
+     1820,
+     1904
+    ],
+    "medianMs": 1862,
+    "ratios": [
+     1.985,
+     2.13
+    ],
+    "medianRatio": 2.057,
+    "minRatio": 1.985,
+    "maxRatio": 2.13,
+    "tau": 1.057,
+    "tauMin": 0.985,
+    "tauMax": 1.13,
+    "tauCi": null,
+    "samples": 8,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "csite": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.086,
+    "ms": [
+     1913
+    ],
+    "medianMs": 1913,
+    "ratios": [
+     2.086
+    ],
+    "medianRatio": 2.086,
+    "minRatio": 2.086,
+    "maxRatio": 2.086,
+    "tau": 1.086,
+    "tauMin": 1.086,
+    "tauMax": 1.086,
+    "tauCi": null,
+    "samples": 5,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-stack": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.063,
+    "ms": [
+     1892
+    ],
+    "medianMs": 1892,
+    "ratios": [
+     2.063
+    ],
+    "medianRatio": 2.063,
+    "minRatio": 2.063,
+    "maxRatio": 2.063,
+    "tau": 1.063,
+    "tauMin": 1.063,
+    "tauMax": 1.063,
+    "tauCi": null,
+    "samples": 5,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-all": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.437,
+    "ms": [
+     1318
+    ],
+    "medianMs": 1318,
+    "ratios": [
+     1.437
+    ],
+    "medianRatio": 1.437,
+    "minRatio": 1.437,
+    "maxRatio": 1.437,
+    "tau": 0.437,
+    "tauMin": 0.437,
+    "tauMax": 0.437,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.848,
+    "ms": [
+     1678
+    ],
+    "medianMs": 1678,
+    "ratios": [
+     1.848
+    ],
+    "medianRatio": 1.848,
+    "minRatio": 1.848,
+    "maxRatio": 1.848,
+    "tau": 0.848,
+    "tauMin": 0.848,
+    "tauMax": 0.848,
+    "tauCi": null,
+    "samples": 4,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "stock:front",
+  "nativeN": 2,
+  "nativeMedianMs": 610,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "bcd": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.645,
+    "ms": [
+     1620,
+     1606
+    ],
+    "medianMs": 1613,
+    "ratios": [
+     2.7,
+     2.59
+    ],
+    "medianRatio": 2.645,
+    "minRatio": 2.59,
+    "maxRatio": 2.7,
+    "tau": 1.645,
+    "tauMin": 1.59,
+    "tauMax": 1.7,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  },
+  "cpuArms": {
+   "bcd": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.638,
+    "ms": [
+     1617,
+     1603
+    ],
+    "medianMs": 1610,
+    "ratios": [
+     2.691,
+     2.585
+    ],
+    "medianRatio": 2.638,
+    "minRatio": 2.585,
+    "maxRatio": 2.691,
+    "tau": 1.638,
+    "tauMin": 1.585,
+    "tauMax": 1.691,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "thunder:admin",
+  "nativeN": 2,
+  "nativeMedianMs": 1368.5,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "bcd": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.101,
+    "ms": [
+     2879
+    ],
+    "medianMs": 2879,
+    "ratios": [
+     2.101
+    ],
+    "medianRatio": 2.101,
+    "minRatio": 2.101,
+    "maxRatio": 2.101,
+    "tau": 1.101,
+    "tauMin": 1.101,
+    "tauMax": 1.101,
+    "tauCi": null,
+    "samples": 5,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  },
+  "cpuArms": {
+   "bcd": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.368,
+    "ms": [
+     2600
+    ],
+    "medianMs": 2600,
+    "ratios": [
+     2.368
+    ],
+    "medianRatio": 2.368,
+    "minRatio": 2.368,
+    "maxRatio": 2.368,
+    "tau": 1.368,
+    "tauMin": 1.368,
+    "tauMax": 1.368,
+    "tauCi": null,
+    "samples": 5,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "thunder:ladder",
+  "nativeN": 2,
+  "nativeMedianMs": 1818.5,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "bcd": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.185,
+    "ms": [
+     3986,
+     3960
+    ],
+    "medianMs": 3973,
+    "ratios": [
+     2.184,
+     2.185
+    ],
+    "medianRatio": 2.185,
+    "minRatio": 2.184,
+    "maxRatio": 2.185,
+    "tau": 1.185,
+    "tauMin": 1.184,
+    "tauMax": 1.185,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "cfn": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.187,
+    "ms": [
+     3991
+    ],
+    "medianMs": 3991,
+    "ratios": [
+     2.187
+    ],
+    "medianRatio": 2.187,
+    "minRatio": 2.187,
+    "maxRatio": 2.187,
+    "tau": 1.187,
+    "tauMin": 1.187,
+    "tauMax": 1.187,
+    "tauCi": null,
+    "samples": 4,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  },
+  "cpuArms": {
+   "bcd": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.401,
+    "ms": [
+     3685,
+     3671
+    ],
+    "medianMs": 3678,
+    "ratios": [
+     2.394,
+     2.407
+    ],
+    "medianRatio": 2.401,
+    "minRatio": 2.394,
+    "maxRatio": 2.407,
+    "tau": 1.401,
+    "tauMin": 1.394,
+    "tauMax": 1.407,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "cfn": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.401,
+    "ms": [
+     3695
+    ],
+    "medianMs": 3695,
+    "ratios": [
+     2.401
+    ],
+    "medianRatio": 2.401,
+    "minRatio": 2.401,
+    "maxRatio": 2.401,
+    "tau": 1.401,
+    "tauMin": 1.401,
+    "tauMax": 1.401,
+    "tauCi": null,
+    "samples": 4,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "thunder:login",
+  "nativeN": 3,
+  "nativeMedianMs": 497,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "bcd": {
+    "n": 3,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.239,
+    "ms": [
+     1097,
+     1170,
+     1113
+    ],
+    "medianMs": 1113,
+    "ratios": [
+     2.234,
+     2.34,
+     2.239
+    ],
+    "medianRatio": 2.239,
+    "minRatio": 2.234,
+    "maxRatio": 2.34,
+    "tau": 1.239,
+    "tauMin": 1.234,
+    "tauMax": 1.34,
+    "tauCi": null,
+    "samples": 8,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "cfn": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.48,
+    "ms": [
+     1273,
+     1200
+    ],
+    "medianMs": 1236.5,
+    "ratios": [
+     2.546,
+     2.414
+    ],
+    "medianRatio": 2.48,
+    "minRatio": 2.414,
+    "maxRatio": 2.546,
+    "tau": 1.48,
+    "tauMin": 1.414,
+    "tauMax": 1.546,
+    "tauCi": null,
+    "samples": 7,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap8": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.372,
+    "ms": [
+     1186
+    ],
+    "medianMs": 1186,
+    "ratios": [
+     2.372
+    ],
+    "medianRatio": 2.372,
+    "minRatio": 2.372,
+    "maxRatio": 2.372,
+    "tau": 1.372,
+    "tauMin": 1.372,
+    "tauMax": 1.372,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.132,
+    "ms": [
+     1066
+    ],
+    "medianMs": 1066,
+    "ratios": [
+     2.132
+    ],
+    "medianRatio": 2.132,
+    "minRatio": 2.132,
+    "maxRatio": 2.132,
+    "tau": 1.132,
+    "tauMin": 1.132,
+    "tauMax": 1.132,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  },
+  "cpuArms": {
+   "bcd": {
+    "n": 3,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.389,
+    "ms": [
+     1044,
+     1118,
+     1063
+    ],
+    "medianMs": 1063,
+    "ratios": [
+     2.389,
+     2.479,
+     2.373
+    ],
+    "medianRatio": 2.389,
+    "minRatio": 2.373,
+    "maxRatio": 2.479,
+    "tau": 1.389,
+    "tauMin": 1.373,
+    "tauMax": 1.479,
+    "tauCi": null,
+    "samples": 8,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "cfn": {
+    "n": 2,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.642,
+    "ms": [
+     1221,
+     1154
+    ],
+    "medianMs": 1187.5,
+    "ratios": [
+     2.707,
+     2.576
+    ],
+    "medianRatio": 2.642,
+    "minRatio": 2.576,
+    "maxRatio": 2.707,
+    "tau": 1.642,
+    "tauMin": 1.576,
+    "tauMax": 1.707,
+    "tauCi": null,
+    "samples": 7,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap8": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.51,
+    "ms": [
+     1132
+    ],
+    "medianMs": 1132,
+    "ratios": [
+     2.51
+    ],
+    "medianRatio": 2.51,
+    "minRatio": 2.51,
+    "maxRatio": 2.51,
+    "tau": 1.51,
+    "tauMin": 1.51,
+    "tauMax": 1.51,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 1,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.255,
+    "ms": [
+     1017
+    ],
+    "medianMs": 1017,
+    "ratios": [
+     2.255
+    ],
+    "medianRatio": 2.255,
+    "minRatio": 2.255,
+    "maxRatio": 2.255,
+    "tau": 1.255,
+    "tauMin": 1.255,
+    "tauMax": 1.255,
+    "tauCi": null,
+    "samples": 6,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ }
+]

@@ -1,0 +1,77 @@
+{
+ "checkedDynamic": 732846785,
+ "totalAccessesAssumed": 1907990706,
+ "checkedPctOfAll": 38.4,
+ "rows": [
+  {
+   "class": "A sound member",
+   "staticSites": 119540,
+   "dynamic": 77460826,
+   "pctOfChecked": 10.6,
+   "pctOfAll": 4.1
+  },
+  {
+   "class": "B oracle-only member",
+   "staticSites": 44018,
+   "dynamic": 161818717,
+   "pctOfChecked": 22.1,
+   "pctOfAll": 8.5
+  },
+  {
+   "class": "C loop invariant, no call or inner loop",
+   "staticSites": 1656,
+   "dynamic": 750169,
+   "pctOfChecked": 0.1,
+   "pctOfAll": 0
+  },
+  {
+   "class": "D loop invariant, loop has a call or inner loop",
+   "staticSites": 12014,
+   "dynamic": 16049997,
+   "pctOfChecked": 2.2,
+   "pctOfAll": 0.8
+  },
+  {
+   "class": "E affine pointer walk in a loop",
+   "staticSites": 578,
+   "dynamic": 50949992,
+   "pctOfChecked": 7,
+   "pctOfAll": 2.7
+  },
+  {
+   "class": "F other grouped shape, leader or alone",
+   "staticSites": 54455,
+   "dynamic": 57621859,
+   "pctOfChecked": 7.9,
+   "pctOfAll": 3
+  },
+  {
+   "class": "G pointer is not local or local plus constant",
+   "staticSites": 239718,
+   "dynamic": 368195225,
+   "pctOfChecked": 50.2,
+   "pctOfAll": 19.3
+  }
+ ],
+ "cumulativePctOfChecked": {
+  "A sound member": 10.6,
+  "A+B any group member": 32.7,
+  "A+B+C+D+E every class with a possible elision": 41.9
+ },
+ "leaderShare": {
+  "soundLeaders": 39.2,
+  "oracleLeaders": 17.1
+ },
+ "loopRelation": {
+  "invariant": 15,
+  "affine": 21.5,
+  "varies": 7.2,
+  "none": 6
+ },
+ "byBytes": {
+  "1": 20.4,
+  "2": 4,
+  "4": 73.2,
+  "8": 2.4
+ }
+}
