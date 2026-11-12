@@ -1,0 +1,52 @@
+{
+ "mutants": 2357,
+ "accepted": 1393,
+ "refused": 964,
+ "acceptedAndWrongRelocation": 0,
+ "acceptedAndWrongRoute": 0,
+ "premiseViolated": 14,
+ "routes": [
+  [
+   "equal",
+   1379
+  ],
+  [
+   "premise",
+   14
+  ]
+ ],
+ "topReasons": [
+  [
+   "read-before-write",
+   438
+  ],
+  [
+   "isolation",
+   328
+  ],
+  [
+   "ptr-deref",
+   148
+  ],
+  [
+   "escape",
+   30
+  ],
+  [
+   "ptr-store",
+   13
+  ],
+  [
+   "final-state",
+   4
+  ],
+  [
+   "no-window",
+   2
+  ],
+  [
+   "aliasing",
+   1
+  ]
+ ]
+}

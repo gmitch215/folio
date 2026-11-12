@@ -1,0 +1,43 @@
+RIG START 21:23:41 nproc=24 node=v26.10.0
+c821940b3f6277040a5a39154c4f331576473fd757efd63f14b10d7af55c5f57  src/ownership.ts
+51c78d03078335ea16a80db18d8cb0a23986835ebfb3ed640d4d730109bff4d2  src/ownership-redirect.ts
+79f9be10a8bb4904f5dc6d6d8b7c439112dcf5b515ce53e1faf67e826090ad8b  src/ownership-slices.ts
+18fca62153bbf077ca7e3089d7f088f41cec2a7d5d4bb57573cf08a16a1c308d  src/router.ts
+FREEZE cc8544d0c61c40e2b5d0fa3cb918611bbc32b16ee9c36af2085f5f3ea66b9d60
+START adv-cursor 21:23:41 load=0.00 0.00 0.08
+START adv-kissfft 21:23:41 load=0.00 0.00 0.08
+START adv-cap 21:23:41 load=0.00 0.00 0.08
+START adv-alloc-yyjson 21:23:41 load=0.00 0.00 0.08
+END adv-kissfft rc=0 21:41:20 wall=1059s
+{"rows":391,"accepted":233,"wrong":0,"premise":2,"timeout":0,"refused":158}
+PREMISE kissfft-real-shared-delete-66 kissfft-real-shared-conditional-66
+START adv-kissfft-driver 21:41:21 load=8.42 6.80 4.54
+END adv-cap rc=0 21:45:49 wall=1328s
+{"rows":2357,"accepted":1393,"wrong":0,"premise":0,"timeout":14,"refused":964}
+START adv-bytes 21:45:49 load=4.82 6.01 4.82
+END adv-cursor rc=0 21:48:37 wall=1496s
+{"rows":1324,"accepted":549,"wrong":0,"premise":30,"timeout":0,"refused":775}
+PREMISE cursor-local-0-16-$p cursor-local-0-16-$slot cursor-local-1-20-$p cursor-local-2-321-$p cursor-local-2-321-$slot cursor-local-2-690-$p rotated-local-0-16-$p rotated-local-0-16-$slot rotated-local-1-20-$p rotated-local-2-343-$p rotated-local-2-343-$slot rotated-local-2-615-$p rotated-local-2-615-$slot rotated-local-2-892-$p stride-local-1-20-$p stride-local-2-306-$p stride-local-2-306-$slot stride-local-2-453-$p teesize-local-1-20-$p teesize-local-2-283-$p teesize-local-2-283-$slot teesize-local-2-427-$p bottom-local-1-20-$p bottom-local-2-242-$p bottom-local-2-242-$slot bottom-local-2-410-$p delayed-local-0-16-$p delayed-local-0-16-$slot delayed-local-2-321-$p delayed-local-2-321-$slot
+START adv-prefix 21:48:37 load=7.43 6.55 5.21
+END adv-alloc-yyjson rc=0 21:49:34 wall=1553s
+{"rows":5187,"accepted":1162,"wrong":0,"premise":0,"timeout":4,"refused":4025}
+START adv-stackidx 21:49:34 load=8.89 7.11 5.47
+END adv-kissfft-driver rc=0 21:55:45 wall=864s
+{"rows":81,"accepted":50,"wrong":0,"premise":2,"timeout":0,"refused":31}
+PREMISE kissfft-real-shared-delete-66 kissfft-real-shared-conditional-66
+START adv-relational 21:55:45 load=6.26 5.77 5.42
+END adv-bytes rc=0 21:57:13 wall=684s
+{"rows":1364,"accepted":790,"wrong":0,"premise":0,"timeout":0,"refused":574}
+END adv-relational rc=0 21:58:54 wall=189s
+{"rows":366,"accepted":187,"wrong":0,"premise":0,"timeout":0,"refused":179}
+END adv-prefix rc=0 21:59:20 wall=643s
+{"rows":418,"accepted":178,"wrong":0,"premise":2,"timeout":0,"refused":240}
+PREMISE sha-const-15-plus tail-const-15-plus
+START adv-extent 21:59:20 load=5.13 6.18 5.71
+END adv-stackidx rc=0 22:00:37 wall=663s
+{"rows":2863,"accepted":813,"wrong":0,"premise":0,"timeout":61,"refused":2050}
+END adv-extent rc=0 22:01:21 wall=121s
+{"rows":114,"accepted":71,"wrong":0,"premise":0,"timeout":0,"refused":43}
+START adv-counter 22:01:21 load=3.06 5.17 5.41
+END adv-counter rc=0 22:01:23 wall=2s
+RIG DONE 22:01:23

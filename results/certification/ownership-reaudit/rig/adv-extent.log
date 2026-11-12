@@ -1,0 +1,38 @@
+{
+ "mutants": 114,
+ "accepted": 71,
+ "refused": 43,
+ "acceptedAndWrong": 0,
+ "routes": [
+  [
+   "equal",
+   67
+  ],
+  [
+   "diverges",
+   4
+  ]
+ ],
+ "topReasons": [
+  [
+   "ptr-deref",
+   26
+  ],
+  [
+   "final-state",
+   6
+  ],
+  [
+   "ptr-compare",
+   5
+  ],
+  [
+   "ptr-store",
+   5
+  ],
+  [
+   "read-before-write",
+   1
+  ]
+ ]
+}

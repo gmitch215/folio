@@ -1,0 +1,360 @@
+{"rows":20000,"accepted":4301,"verdicts":[["ok",3406],["stack",552],["false",254],["premise",86],["timeout",2],["wild",1]],"routes":[["equal",3418],["differs",881],["notRunnable",1],["refused",1]],"refusals":[["read-before-write",7827],["isolation",3898],["final-state",2213],["failure",1110],["no-window",429],["unsupported",202],["aliasing",19],["timeout",1]]}
+3465 read-before-write: a window byte is read before this record writes it
+3199 read-before-write: counter-as-data: a branch condition depends on a loop counter of the entry
+2277 isolation: call to import env.f
+2213 final-state: a window byte is written on some paths and not on all
+1110 failure: a trap is reachable after a window write
+519 isolation: the stack pointer is stored as data in N
+499 read-before-write: counter-as-data: a stored value depends on a loop counter of the entry
+485 isolation: the stack pointer is not restored on every path
+430 read-before-write: local N of the entry holds a value from the previous record
+429 no-window: no store outside the record regions has a bounded address
+347 isolation: the closure calls through a table
+202 unsupported: expression kind N
+181 read-before-write: counter-as-data: a store address that is not record-derived depends on a loop counter of the entry
+92 isolation: the stack pointer is set to a value that is not a stack address
+89 isolation: the stack pointer is given to the host in N
+89 isolation: the closure writes global global$N
+53 read-before-write: counter-as-data: an argument given to the host depends on a loop counter of the entry
+19 aliasing: a bulk operation reads part of a window
+1 timeout: 
+FALSE 47 indexed base-param private byte 12352
+PREMISE 123 callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+PREMISE 161 indexed read-prev-slot slice seed 1 byte 262140; record 0 reads another slot or slice
+FALSE 225 indexed return-early private byte 12592
+FALSE 233 indexed index-data private byte 12380
+FALSE 239 bottom return-early private byte 4132
+FALSE 293 callee memsize slice seed 1 byte 12300
+FALSE 327 indexed return-early private byte 12576
+FALSE 384 indexed base-param private byte 12396
+FALSE 409 callee base-param private byte 12380
+PREMISE 474 indexed read-prev-slot slice seed 1 byte 12420; record 2 reads another slot or slice
+PREMISE 528 callee read-prev-slot slice seed 2 byte 262136; record 0 reads another slot or slice
+FALSE 532 callee base-param private byte 12380
+FALSE 579 indexed index-data private byte 12352
+FALSE 595 callee memsize slice seed 1 byte 12344
+FALSE 611 indexed base-param private byte 12392
+FALSE 761 bottom base-param private byte 12396
+FALSE 865 bottom return-early private byte 12544
+FALSE 896 indexed memsize slice seed 1 byte 12320
+FALSE 1009 indexed base-param private byte 12372
+PREMISE 1018 indexed out-of-slot slice seed 1 byte 262080; record 0 wrote 12356
+FALSE 1025 indexed-callee base-param private byte 12404
+FALSE 1393 indexed memsize slice seed 1 byte 12304
+FALSE 1407 callee base-param private byte 12408
+FALSE 1492 bottom return-early private byte 4164
+FALSE 1494 indexed return-early private byte 12572
+FALSE 1522 indexed return-early private byte 12548
+FALSE 1534 indexed memsize slice seed 1 byte 12300
+FALSE 1558 callee memsize slice seed 1 byte 12324
+PREMISE 1561 callee out-of-slot slice seed 1 byte 262124; record 0 wrote 12356
+FALSE 1563 indexed base-param private byte 12352
+FALSE 1639 indexed return-early private byte 12552
+FALSE 1653 bottom break-data private byte 4164
+FALSE 1698 callee index-data private byte 12380
+FALSE 1819 callee index-data private byte 12375
+FALSE 1842 indexed base-param private byte 12388
+FALSE 1942 indexed-callee memsize slice seed 1 byte 12344
+FALSE 1970 indexed base-param private byte 12368
+FALSE 2089 bottom out-of-slot slice seed 1 byte 12548
+FALSE 2142 indexed base-param private byte 12396
+FALSE 2218 indexed memsize slice seed 1 byte 12324
+FALSE 2343 bottom break-data private byte 12560
+FALSE 2359 bottom memsize slice seed 1 byte 12292
+FALSE 2361 indexed return-early private byte 4188
+FALSE 2372 indexed-callee index-data private byte 12376
+FALSE 2422 callee memsize slice seed 1 byte 12336
+FALSE 2451 indexed return-early private byte 12598
+FALSE 2477 indexed return-early private byte 12576
+FALSE 2561 indexed index-data private byte 12396
+FALSE 2679 bottom memsize slice seed 1 byte 12324
+PREMISE 2870 callee out-of-slot slice seed 1 byte 262100; record 3 wrote 12476
+FALSE 2907 bottom memsize slice seed 1 byte 12332
+FALSE 2919 bottom base-param private byte 12368
+FALSE 2994 indexed memsize slice seed 1 byte 12328
+FALSE 3133 bottom return-early private byte 12596
+FALSE 3147 bottom base-param private byte 12388
+FALSE 3177 indexed return-early private byte 12544
+FALSE 3281 indexed memsize slice seed 1 byte 12320
+PREMISE 3314 callee out-of-slot slice seed 1 byte 262124; record 0 wrote 12284
+FALSE 3346 indexed base-param private byte 12408
+PREMISE 3352 indexed out-of-slot slice seed 1 byte 12544; record 1 wrote 12416
+FALSE 3374 callee memsize slice seed 1 byte 12320
+PREMISE 3429 indexed read-prev-slot slice seed 1 byte 12444; record 1 reads another slot or slice
+FALSE 3614 indexed base-param private byte 12352
+FALSE 3657 indexed-callee base-param private byte 12384
+FALSE 3662 indexed base-param private byte 12396
+PREMISE 3758 indexed out-of-slot slice seed 1 byte 262116; record 1 wrote 12348
+FALSE 3954 indexed-callee memsize slice seed 1 byte 12324
+FALSE 3971 callee base-param private byte 12352
+FALSE 3973 indexed-callee base-param private byte 12352
+FALSE 4006 indexed-callee index-data private byte 12376
+FALSE 4135 callee memsize slice seed 1 byte 12344
+FALSE 4184 indexed break-data private byte 12552
+FALSE 4318 callee base-param private byte 12360
+PREMISE 4434 indexed read-prev-slot slice seed 1 byte 12384; record 0 reads another slot or slice
+FALSE 4557 indexed index-data private byte 12364
+FALSE 4614 indexed-callee base-param private byte 12352
+FALSE 4699 callee index-data private byte 12396
+FALSE 4724 bottom return-early private byte 12560
+FALSE 4756 callee memsize slice seed 1 byte 12296
+FALSE 4810 indexed index-data private byte 12394
+FALSE 4843 bottom return-early private byte 12544
+FALSE 4878 bottom return-early private byte 12584
+FALSE 4909 bottom break-data private byte 12592
+PREMISE 4958 callee read-prev-slot slice seed 1 byte 12368; record 0 reads another slot or slice
+PREMISE 4993 indexed-callee read-prev-slot slice seed 1 byte 12460; record 1 reads another slot or slice
+FALSE 5146 indexed memsize slice seed 1 byte 12288
+FALSE 5315 indexed base-param private byte 12376
+FALSE 5448 indexed-callee base-param private byte 12352
+FALSE 5460 bottom memsize slice seed 1 byte 12324
+FALSE 5556 callee base-param private byte 12396
+FALSE 5572 indexed-callee memsize slice seed 1 byte 12340
+FALSE 5683 indexed return-early private byte 12546
+FALSE 5695 indexed-callee memsize slice seed 1 byte 12340
+FALSE 5767 indexed base-param private byte 12352
+PREMISE 5800 bottom out-of-slot slice seed 3 byte 12423; record 0 wrote 12356
+FALSE 6074 indexed-callee index-data private byte 12387
+PREMISE 6152 indexed-callee out-of-slot slice seed 1 byte 262140; record 1 wrote 12423
+PREMISE 6182 indexed read-prev-slot slice seed 1 byte 262088; record 1 reads another slot or slice
+FALSE 6193 indexed index-data private byte 12400
+PREMISE 6258 callee out-of-slot slice seed 1 byte 12542; record 1 wrote 12350
+PREMISE 6334 bottom out-of-slot slice seed 1 byte 262142; record 0 wrote 12356
+PREMISE 6344 indexed arena-store+read-prev-slot slice seed 1 byte 12652; record 0 reads another slot or slice
+FALSE 6414 indexed base-param private byte 12408
+FALSE 6440 indexed base-param private byte 12444
+PREMISE 6553 indexed-callee read-prev-slot slice seed 1 byte 262116; record 1 reads another slot or slice
+FALSE 6667 callee memsize slice seed 1 byte 12292
+FALSE 6687 bottom base-param private byte 12376
+FALSE 6732 bottom index-data private byte 12380
+FALSE 6757 indexed-callee base-param private byte 12352
+FALSE 6877 bottom break-data private byte 12552
+FALSE 6891 callee index-data+break-data private byte 12389
+FALSE 7011 indexed memsize slice seed 1 byte 12336
+PREMISE 7117 indexed out-of-slot slice seed 1 byte 262140; record 0 wrote 12284
+FALSE 7164 indexed-callee index-data private byte 12380
+FALSE 7166 callee index-data private byte 12388
+FALSE 7335 callee index-data private byte 12364
+PREMISE 7505 bottom read-prev-slot slice seed 1 byte 262128; record 1 reads another slot or slice
+PREMISE 7522 callee out-of-slot slice seed 1 byte 12548; record 0 wrote 12356
+PREMISE 7613 callee read-prev-slot slice seed 1 byte 262120; record 0 reads another slot or slice
+PREMISE 7697 bottom read-prev-slot slice seed 5 byte 12600; record 1 reads another slot or slice
+FALSE 7713 callee memsize slice seed 1 byte 12300
+FALSE 7733 indexed memsize slice seed 1 byte 12336
+FALSE 7767 indexed-callee memsize slice seed 1 byte 12304
+FALSE 7775 callee index-data private byte 12480
+FALSE 7788 callee index-data private byte 12396
+FALSE 8034 indexed return-early private byte 12552
+FALSE 8083 indexed index-data private byte 12388
+FALSE 8120 indexed-callee base-param private byte 12372
+FALSE 8254 indexed-callee index-data private byte 12400
+FALSE 8260 bottom return-early private byte 12552
+FALSE 8279 indexed base-param private byte 12440
+FALSE 8344 indexed-callee base-param private byte 12352
+FALSE 8581 bottom base-param private byte 12352
+PREMISE 8606 callee out-of-slot slice seed 1 byte 12544; record 0 wrote 12352
+FALSE 8635 callee memsize slice seed 1 byte 12324
+PREMISE 8669 bottom read-prev-slot slice seed 5 byte 12572; record 1 reads another slot or slice
+PREMISE 8688 indexed-callee out-of-slot slice seed 1 byte 12544; record 0 wrote 12352
+FALSE 8813 indexed index-data private byte 12352
+FALSE 8823 callee memsize slice seed 1 byte 12332
+PREMISE 8842 callee read-prev-slot slice seed 1 byte 12500; record 0 reads another slot or slice
+FALSE 9065 indexed break-data private byte 12592
+FALSE 9090 callee memsize slice seed 1 byte 12304
+PREMISE 9120 callee read-prev-slot slice seed 5 byte 12596; record 1 reads another slot or slice
+PREMISE 9141 indexed out-of-slot slice seed 5 byte 12544; record 0 wrote slot byte 12352
+FALSE 9183 indexed return-early private byte 4140
+FALSE 9221 indexed return-early private byte 12556
+FALSE 9232 callee memsize slice seed 1 byte 12300
+FALSE 9241 indexed memsize slice seed 1 byte 12312
+FALSE 9300 callee memsize slice seed 1 byte 12304
+PREMISE 9336 indexed out-of-slot slice seed 3 byte 12544; record 0 wrote slot byte 12352
+FALSE 9381 indexed base-param private byte 12356
+FALSE 9459 callee base-param private byte 12380
+FALSE 9471 bottom base-param private byte 12408
+FALSE 9476 indexed index-data private byte 12392
+FALSE 9480 bottom break-data private byte 4128
+PREMISE 9484 indexed read-prev-slot slice seed 1 byte 262100; record 1 reads another slot or slice
+FALSE 9517 indexed base-param private byte 12408
+FALSE 9593 indexed index-data private byte 12407
+FALSE 9597 indexed return-early private byte 12552
+FALSE 9702 callee base-param private byte 12352
+FALSE 9706 indexed index-data private byte 12404
+FALSE 9707 indexed break-data private byte 12602
+PREMISE 9777 callee read-prev-slot slice seed 2 byte 262140; record 1 reads another slot or slice
+FALSE 9833 indexed-callee memsize slice seed 1 byte 12312
+PREMISE 9857 indexed read-prev-slot slice seed 1 byte 12684; record 1 reads another slot or slice
+PREMISE 9915 indexed read-prev-slot slice seed 1 byte 12368; record 0 reads another slot or slice
+FALSE 10001 indexed memsize slice seed 1 byte 12292
+FALSE 10127 callee index-data private byte 12392
+PREMISE 10149 indexed read-prev-slot slice seed 1 byte 12580; record 1 reads another slot or slice
+PREMISE 10168 indexed memsize+read-prev-slot+read-prev-slot slice seed 1 byte 12316; record 0 reads another slot or slice
+PREMISE 10196 callee out-of-slot slice seed 1 byte 262140; record 0 wrote slot byte 12352
+PREMISE 10290 bottom read-prev-slot slice seed 1 byte 12528; record 0 reads another slot or slice
+FALSE 10293 callee base-param private byte 12400
+FALSE 10324 bottom memsize slice seed 1 byte 12340
+FALSE 10331 indexed memsize slice seed 1 byte 12304
+FALSE 10345 indexed base-param private byte 12360
+PREMISE 10353 indexed out-of-slot slice seed 1 byte 12420; record 0 wrote slot byte 12356
+FALSE 10366 indexed break-data private byte 4172
+FALSE 10370 bottom return-early private byte 4124
+FALSE 10433 bottom base-param private byte 12352
+FALSE 10455 indexed memsize slice seed 1 byte 12296
+PREMISE 10501 indexed-callee read-prev-slot slice seed 4 byte 12592; record 1 reads another slot or slice
+PREMISE 10699 callee read-prev-slot slice seed 1 byte 12432; record 1 reads another slot or slice
+FALSE 10710 bottom break-data private byte 4176
+PREMISE 10739 indexed-callee out-of-slot slice seed 1 byte 262128; record 1 wrote slot byte 12348
+FALSE 10872 bottom index-data private byte 12372
+FALSE 10886 indexed return-early private byte 12544
+FALSE 10905 indexed index-data private byte 12364
+FALSE 10961 bottom base-param private byte 12352
+FALSE 11036 bottom break-data private byte 4161
+FALSE 11100 bottom memsize slice seed 1 byte 12328
+FALSE 11190 indexed memsize slice seed 1 byte 12304
+PREMISE 11285 indexed read-prev-slot slice seed 1 byte 12424; record 1 reads another slot or slice
+PREMISE 11291 indexed read-prev-slot slice seed 2 byte 12464; record 1 reads another slot or slice
+PREMISE 11342 indexed exotic+out-of-slot slice seed 1 byte 12323; record 0 wrote slot byte 12356
+PREMISE 11351 indexed-callee out-of-slot slice seed 1 byte 12416; record 0 wrote slot byte 12352
+FALSE 11381 indexed first-flag+return-early private byte 12544
+FALSE 11387 bottom return-early private byte 4104
+PREMISE 11390 indexed read-prev-slot slice seed 1 byte 12564; record 1 reads another slot or slice
+FALSE 11405 indexed break-data private byte 4164
+FALSE 11444 callee base-param private byte 12388
+PREMISE 11527 callee out-of-slot slice seed 1 byte 262112; record 1 wrote slot byte 12348
+FALSE 11628 callee base-param private byte 12352
+PREMISE 11653 callee read-prev-slot slice seed 2 byte 12664; record 0 reads another slot or slice
+PREMISE 11686 bottom read-prev-slot slice seed 1 byte 262132; record 0 reads another slot or slice
+FALSE 11742 callee memsize slice seed 1 byte 12312
+FALSE 11836 indexed-callee memsize slice seed 1 byte 12292
+FALSE 11849 indexed break-data private byte 4217
+FALSE 11883 bottom index-data private byte 12376
+FALSE 11941 callee memsize slice seed 1 byte 12332
+PREMISE 12044 indexed-callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+FALSE 12225 bottom index-data private byte 12409
+PREMISE 12255 callee partial-width+read-prev-slot slice seed 1 byte 12532; record 0 reads another slot or slice
+FALSE 12256 callee base-param private byte 12384
+FALSE 12279 indexed index-data private byte 12377
+FALSE 12372 callee index-data private byte 12372
+FALSE 12413 indexed memsize slice seed 1 byte 12292
+FALSE 12567 indexed memsize slice seed 1 byte 12288
+FALSE 12615 callee memsize slice seed 1 byte 12292
+FALSE 12667 indexed base-param private byte 12352
+PREMISE 12711 callee read-prev-slot slice seed 1 byte 262120; record 0 reads another slot or slice
+PREMISE 12754 callee read-prev-slot slice seed 1 byte 12381; record 0 reads another slot or slice
+PREMISE 12837 indexed-callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+PREMISE 12839 indexed read-prev-slot slice seed 1 byte 12652; record 0 reads another slot or slice
+FALSE 12847 indexed break-data private byte 4100
+FALSE 12872 indexed base-param private byte 12352
+FALSE 12907 indexed return-early private byte 4204
+FALSE 12995 bottom base-param private byte 12352
+FALSE 13029 callee base-param private byte 12352
+FALSE 13097 bottom base-param private byte 12400
+FALSE 13192 callee memsize slice seed 1 byte 12308
+FALSE 13311 callee index-data private byte 12400
+FALSE 13340 indexed memsize slice seed 1 byte 12328
+FALSE 13412 callee index-data private byte 12360
+PREMISE 13599 indexed-callee out-of-slot slice seed 1 byte 12544; record 0 wrote slot byte 12352
+PREMISE 13609 indexed-callee read-prev-slot slice seed 1 byte 262116; record 1 reads another slot or slice
+FALSE 13624 callee base-param private byte 12352
+PREMISE 13642 callee read-prev-slot slice seed 1 byte 12424; record 1 reads another slot or slice
+PREMISE 13648 bottom out-of-slot slice seed 3 byte 12804; record 0 wrote slot byte 12356
+FALSE 13668 bottom base-param private byte 12380
+PREMISE 13814 bottom read-prev-slot slice seed 1 byte 262140; record 0 reads another slot or slice
+PREMISE 13992 bottom out-of-slot slice seed 1 byte 262108; record 0 wrote 12284
+FALSE 14060 callee base-param private byte 12352
+FALSE 14129 indexed return-early private byte 12592
+FALSE 14153 indexed break-data private byte 12576
+PREMISE 14160 callee read-prev-slot slice seed 1 byte 12472; record 1 reads another slot or slice
+PREMISE 14170 bottom out-of-slot slice seed 1 byte 12548; record 0 wrote slot byte 12356
+FALSE 14263 callee base-param private byte 12384
+FALSE 14267 callee base-param private byte 12352
+FALSE 14274 indexed return-early private byte 4300
+PREMISE 14324 indexed-callee tee-carry+read-prev-slot slice seed 1 byte 262128; record 1 reads another slot or slice
+PREMISE 14408 indexed-callee read-prev-slot slice seed 1 byte 262120; record 1 reads another slot or slice
+FALSE 14477 bottom index-data private byte 12364
+FALSE 14518 indexed break-data private byte 4136
+FALSE 14552 indexed-callee index-data private byte 12360
+FALSE 14624 bottom memsize slice seed 1 byte 12312
+PREMISE 14719 indexed read-prev-slot slice seed 3 byte 262140; record 0 reads another slot or slice
+PREMISE 14783 callee out-of-slot+base-param private byte 12396; record 0 wrote slot byte 12356
+FALSE 14824 indexed memsize slice seed 1 byte 12336
+FALSE 14996 callee memsize slice seed 1 byte 12324
+FALSE 15099 indexed-callee index-data private byte 12392
+PREMISE 15255 callee read-prev-slot slice seed 4 byte 12416; record 1 reads another slot or slice
+FALSE 15261 indexed index-data private byte 12410
+FALSE 15425 indexed-callee base-param private byte 12376
+PREMISE 15523 bottom read-prev-slot slice seed 1 byte 12580; record 1 reads another slot or slice
+FALSE 15773 indexed memsize slice seed 1 byte 12304
+FALSE 15861 indexed memsize slice seed 1 byte 12436
+FALSE 15896 indexed index-data private byte 12364
+PREMISE 15922 indexed read-prev-slot+base-param private byte 12392; record 0 reads another slot or slice
+FALSE 15925 indexed index-data private byte 12395
+FALSE 15934 callee index-data private byte 12408
+PREMISE 16019 bottom out-of-slot slice seed 3 byte 12540; record 0 wrote 12284
+FALSE 16020 bottom base-param private byte 12384
+FALSE 16025 bottom base-param private byte 12352
+FALSE 16233 indexed memsize slice seed 1 byte 12328
+FALSE 16247 indexed index-data private byte 12389
+FALSE 16286 indexed-callee memsize slice seed 1 byte 12288
+FALSE 16304 callee base-param private byte 12364
+FALSE 16316 indexed break-data private byte 12568
+FALSE 16346 indexed base-param private byte 12352
+FALSE 16366 bottom index-data private byte 12367
+FALSE 16387 indexed memsize slice seed 1 byte 12328
+FALSE 16396 callee partial-width+base-param private byte 12352
+FALSE 16492 indexed return-early private byte 4168
+FALSE 16517 callee base-param private byte 12352
+FALSE 16578 callee index-data private byte 12377
+FALSE 16659 indexed base-param private byte 12416
+PREMISE 16662 indexed read-prev-slot slice seed 1 byte 12664; record 0 reads another slot or slice
+FALSE 16723 indexed memsize slice seed 1 byte 12328
+FALSE 16787 indexed-callee base-param private byte 12352
+FALSE 16905 indexed index-data private byte 12388
+PREMISE 16978 indexed out-of-slot slice seed 1 byte 262120; record 1 wrote slot byte 12348
+PREMISE 16979 indexed read-prev-slot+partial-width+return-early private byte 12584; record 0 reads another slot or slice
+FALSE 17011 callee index-data private byte 12400
+FALSE 17032 indexed-callee base-param private byte 12352
+FALSE 17094 indexed base-param private byte 12352
+FALSE 17129 bottom return-early private byte 12548
+FALSE 17132 indexed base-param private byte 12352
+FALSE 17212 bottom break-data private byte 12584
+FALSE 17223 callee base-param private byte 12376
+FALSE 17291 bottom break-data private byte 4136
+FALSE 17332 callee base-param private byte 12352
+FALSE 17356 indexed break-data private byte 12552
+FALSE 17371 indexed return-early private byte 4156
+FALSE 17414 indexed memsize slice seed 1 byte 12304
+FALSE 17443 indexed return-early private byte 4136
+PREMISE 17601 indexed-callee read-prev-slot slice seed 2 byte 12436; record 1 reads another slot or slice
+FALSE 17621 callee base-param private byte 12356
+PREMISE 17689 indexed out-of-slot slice seed 1 byte 12544; record 0 wrote slot byte 12352
+FALSE 18020 callee index-data private byte 12376
+PREMISE 18029 callee read-prev-slot slice seed 1 byte 12472; record 1 reads another slot or slice
+FALSE 18048 indexed memsize slice seed 1 byte 12312
+FALSE 18077 indexed break-data private byte 12588
+FALSE 18134 indexed memsize slice seed 1 byte 12304
+PREMISE 18219 callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+PREMISE 18325 callee out-of-slot slice seed 1 byte 12420; record 0 wrote slot byte 12356
+FALSE 18357 indexed break-data private byte 4300
+FALSE 18374 indexed-callee memsize slice seed 1 byte 12296
+FALSE 18377 bottom base-param private byte 12352
+FALSE 18425 indexed memsize slice seed 1 byte 12316
+PREMISE 18431 indexed read-prev-slot slice seed 1 byte 12431; record 1 reads another slot or slice
+FALSE 18474 indexed return-early private byte 12578
+FALSE 18553 indexed return-early private byte 12568
+FALSE 18665 bottom base-param private byte 12352
+FALSE 18810 indexed return-early private byte 12564
+FALSE 18889 bottom index-data private byte 12363
+FALSE 18916 indexed-callee base-param private byte 12368
+FALSE 19236 indexed base-param private byte 12352
+FALSE 19299 bottom index-data private byte 12398
+FALSE 19384 bottom index-data private byte 12368
+PREMISE 19393 callee out-of-slot slice seed 1 byte 262120; record 0 wrote 12284
+FALSE 19423 indexed break-data private byte 4152
+FALSE 19457 callee base-param private byte 12384
+PREMISE 19551 indexed out-of-slot+read-prev-slot slice seed 1 byte 12568; record 0 wrote slot byte 12352
+FALSE 19637 indexed base-param private byte 12352
+FALSE 19747 callee base-param private byte 12408
+FALSE 19785 callee base-param private byte 12376
+FALSE 19876 indexed-callee index-data private byte 12400
+FALSE 19997 callee base-param private byte 12380

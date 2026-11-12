@@ -1,0 +1,38 @@
+{
+ "mutants": 366,
+ "accepted": 187,
+ "refused": 179,
+ "acceptedAndWrong": 0,
+ "routes": [
+  [
+   "equal",
+   179
+  ],
+  [
+   "refused",
+   7
+  ],
+  [
+   "diverges",
+   1
+  ]
+ ],
+ "topReasons": [
+  [
+   "read-before-write",
+   151
+  ],
+  [
+   "final-state",
+   17
+  ],
+  [
+   "escape",
+   9
+  ],
+  [
+   "budget",
+   2
+  ]
+ ]
+}

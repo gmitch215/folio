@@ -1,0 +1,42 @@
+MAC START 16:24:28
+c821940b3f6277040a5a39154c4f331576473fd757efd63f14b10d7af55c5f57  src/ownership.ts
+51c78d03078335ea16a80db18d8cb0a23986835ebfb3ed640d4d730109bff4d2  src/ownership-redirect.ts
+79f9be10a8bb4904f5dc6d6d8b7c439112dcf5b515ce53e1faf67e826090ad8b  src/ownership-slices.ts
+18fca62153bbf077ca7e3089d7f088f41cec2a7d5d4bb57573cf08a16a1c308d  src/router.ts
+FREEZE cc8544d0c61c40e2b5d0fa3cb918611bbc32b16ee9c36af2085f5f3ea66b9d60
+START census-1 16:24:28 { 4.37 4.81 4.90 }
+END census-1 rc=0 16:24:32 wall=4s
+START census-sha256 16:24:32 { 4.50 4.83 4.91 }
+END census-sha256 rc=0 16:24:35 wall=3s
+START census-kissfft 16:24:35 { 4.50 4.83 4.91 }
+END census-kissfft rc=0 16:24:43 wall=8s
+START gate-slices-drivers 16:24:43 { 6.00 5.14 5.01 }
+END gate-slices-drivers rc=0 16:24:48 wall=5s
+START gate-slices-control 16:24:48 { 6.24 5.20 5.04 }
+END gate-slices-control rc=0 16:24:50 wall=2s
+START gate-prefix-drivers 16:24:50 { 6.54 5.28 5.07 }
+END gate-prefix-drivers rc=0 16:25:11 wall=21s
+START gate-prefix-control 16:25:11 { 9.91 6.12 5.37 }
+END gate-prefix-control rc=0 16:25:18 wall=7s
+START gate-relational-drivers 16:25:18 { 9.92 6.19 5.40 }
+END gate-relational-drivers rc=0 16:25:29 wall=11s
+START gate-relational-control 16:25:29 { 10.31 6.39 5.48 }
+END gate-relational-control rc=0 16:25:33 wall=4s
+START gate-kissfft-drivers 16:25:33 { 10.45 6.48 5.52 }
+END gate-kissfft-drivers rc=0 16:26:36 wall=63s
+WAIT load=13.52 16:26:36
+START gate-kissfft-control 16:27:06 { 11.67 8.21 6.30 }
+END gate-kissfft-control rc=0 16:27:23 wall=17s
+START gate-cursor-qoi-encode-drivers 16:27:23 { 10.44 8.11 6.29 }
+END gate-cursor-qoi-encode-drivers rc=0 16:27:33 wall=10s
+START gate-cursor-qoi-encode-control 16:27:33 { 11.63 8.45 6.44 }
+END gate-cursor-qoi-encode-control rc=0 16:27:36 wall=3s
+START gate-cursor-qoi-decode-drivers 16:27:36 { 11.98 8.57 6.49 }
+END gate-cursor-qoi-decode-drivers rc=0 16:27:44 wall=8s
+WAIT load=12.38 16:27:44
+START gate-cursor-qoi-decode-control 16:28:14 { 10.59 8.61 6.59 }
+END gate-cursor-qoi-decode-control rc=0 16:28:15 wall=1s
+GATES DONE 16:28:15
+START adv-base-split 16:28:15 { 10.31 8.59 6.59 }
+END adv-base-split rc=0 16:53:11 wall=1496s
+MAC DONE 16:53:11

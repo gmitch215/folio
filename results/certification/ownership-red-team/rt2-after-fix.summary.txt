@@ -1,0 +1,107 @@
+{"rows":20000,"accepted":3939,"verdicts":[["ok",3314],["stack",537],["premise",86],["timeout",1],["wild",1]],"routes":[["equal",3314],["differs",623],["notRunnable",1],["refused",1]],"refusals":[["read-before-write",8648],["isolation",3843],["final-state",1954],["failure",1033],["no-window",364],["unsupported",202],["aliasing",17]]}
+3326 read-before-write: counter-as-data: a branch condition depends on a loop counter or a base parameter of the entry
+3224 read-before-write: a window byte is read before this record writes it
+2108 isolation: call to import env.f
+1954 final-state: a window byte is written on some paths and not on all
+1033 failure: a trap is reachable after a window write
+589 read-before-write: counter-as-data: a stored value depends on a loop counter or a base parameter of the entry
+511 isolation: the stack pointer is stored as data in N
+465 isolation: the stack pointer is not restored on every path
+430 read-before-write: local N of the entry holds a value from the previous record
+364 no-window: no store outside the record regions has a bounded address
+342 read-before-write: counter-as-data: a store address that is not a record pointer depends on a loop counter or a base pa
+338 isolation: the closure calls through a table
+327 read-before-write: counter-as-data: a load address depends on a loop counter or a base parameter of the entry
+202 unsupported: expression kind N
+180 read-before-write: data-exit: the entry returns inside its record loop on a path that is not a loop test
+176 read-before-write: data-exit: the entry branches to its loop or out of it inside its record loop on a path that is not 
+155 isolation: memory.size reads a value that depends on how far the route grew memory
+91 isolation: the stack pointer is set to a value that is not a stack address
+88 isolation: the closure writes global global$N
+87 isolation: the stack pointer is given to the host in N
+PREMISE 123 callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+PREMISE 161 indexed read-prev-slot slice seed 1 byte 262140; record 0 reads another slot or slice
+PREMISE 474 indexed read-prev-slot slice seed 1 byte 12420; record 2 reads another slot or slice
+PREMISE 528 callee read-prev-slot slice seed 2 byte 262136; record 0 reads another slot or slice
+PREMISE 1018 indexed out-of-slot slice seed 1 byte 262080; record 0 wrote slot byte 12356
+PREMISE 1561 callee out-of-slot slice seed 1 byte 262124; record 0 wrote slot byte 12356
+PREMISE 1959 indexed-callee out-of-slot slice seed 1 byte 262112; record 1 wrote slot byte 12348
+PREMISE 2089 bottom out-of-slot slice seed 1 byte 12548; record 0 wrote slot byte 12356
+PREMISE 2870 callee out-of-slot slice seed 1 byte 262100; record 3 wrote slot byte 12476
+PREMISE 3314 callee out-of-slot slice seed 1 byte 262124; record 0 wrote 12284
+PREMISE 3352 indexed out-of-slot slice seed 3 byte 12416; record 0 wrote slot byte 12352
+PREMISE 3429 indexed read-prev-slot slice seed 1 byte 12444; record 1 reads another slot or slice
+PREMISE 3758 indexed out-of-slot slice seed 1 byte 262116; record 1 wrote slot byte 12348
+PREMISE 4434 indexed read-prev-slot slice seed 2 byte 12512; record 0 reads another slot or slice
+PREMISE 4958 callee read-prev-slot slice seed 1 byte 12496; record 0 reads another slot or slice
+PREMISE 4993 indexed-callee read-prev-slot slice seed 1 byte 12460; record 1 reads another slot or slice
+PREMISE 5800 bottom out-of-slot slice seed 3 byte 12423; record 0 wrote slot byte 12356
+PREMISE 6152 indexed-callee out-of-slot slice seed 1 byte 262140; record 0 wrote slot byte 12356
+PREMISE 6182 indexed read-prev-slot slice seed 1 byte 262088; record 1 reads another slot or slice
+PREMISE 6258 callee out-of-slot slice seed 1 byte 12542; record 1 wrote slot byte 12348
+PREMISE 6334 bottom out-of-slot slice seed 1 byte 262142; record 0 wrote slot byte 12356
+PREMISE 6344 indexed arena-store+read-prev-slot slice seed 1 byte 12652; record 0 reads another slot or slice
+PREMISE 6553 indexed-callee read-prev-slot slice seed 1 byte 262116; record 1 reads another slot or slice
+PREMISE 6847 indexed out-of-slot+exotic slice seed 1 byte 262108; record 0 wrote slot byte 12352
+PREMISE 7117 indexed out-of-slot slice seed 1 byte 262140; record 0 wrote 12284
+PREMISE 7505 bottom read-prev-slot slice seed 1 byte 262128; record 1 reads another slot or slice
+PREMISE 7522 callee out-of-slot slice seed 1 byte 12420; record 0 wrote slot byte 12356
+PREMISE 7613 callee read-prev-slot slice seed 1 byte 262120; record 0 reads another slot or slice
+PREMISE 7697 bottom read-prev-slot slice seed 1 byte 12600; record 1 reads another slot or slice
+PREMISE 7706 indexed read-prev-slot slice seed 1 byte 12436; record 1 reads another slot or slice
+PREMISE 8606 callee out-of-slot slice seed 3 byte 12672; record 0 wrote slot byte 12352
+PREMISE 8669 bottom read-prev-slot slice seed 5 byte 12572; record 1 reads another slot or slice
+PREMISE 8688 indexed-callee out-of-slot slice seed 1 byte 12544; record 0 wrote slot byte 12352
+PREMISE 8842 callee read-prev-slot slice seed 2 byte 12500; record 0 reads another slot or slice
+PREMISE 9120 callee read-prev-slot slice seed 5 byte 12596; record 1 reads another slot or slice
+PREMISE 9141 indexed out-of-slot slice seed 5 byte 12416; record 0 wrote slot byte 12352
+PREMISE 9336 indexed out-of-slot slice seed 3 byte 12544; record 0 wrote slot byte 12352
+PREMISE 9484 indexed read-prev-slot slice seed 1 byte 262100; record 1 reads another slot or slice
+PREMISE 9777 callee read-prev-slot slice seed 2 byte 262140; record 1 reads another slot or slice
+PREMISE 9857 indexed read-prev-slot slice seed 1 byte 12684; record 1 reads another slot or slice
+PREMISE 9915 indexed read-prev-slot slice seed 1 byte 262096; record 0 reads another slot or slice
+PREMISE 10149 indexed read-prev-slot slice seed 1 byte 262112; record 1 reads another slot or slice
+PREMISE 10196 callee out-of-slot slice seed 1 byte 262140; record 0 wrote slot byte 12352
+PREMISE 10290 bottom read-prev-slot slice seed 1 byte 12400; record 0 reads another slot or slice
+PREMISE 10353 indexed out-of-slot slice seed 1 byte 12548; record 0 wrote slot byte 12356
+PREMISE 10699 callee read-prev-slot slice seed 1 byte 12432; record 1 reads another slot or slice
+PREMISE 10739 indexed-callee out-of-slot slice seed 1 byte 262128; record 1 wrote slot byte 12348
+PREMISE 11285 indexed read-prev-slot slice seed 1 byte 12424; record 1 reads another slot or slice
+PREMISE 11291 indexed read-prev-slot slice seed 1 byte 12720; record 1 reads another slot or slice
+PREMISE 11342 indexed exotic+out-of-slot slice seed 1 byte 12323; record 0 wrote slot byte 12356
+PREMISE 11351 indexed-callee out-of-slot slice seed 1 byte 12416; record 0 wrote slot byte 12352
+PREMISE 11390 indexed read-prev-slot slice seed 1 byte 12436; record 1 reads another slot or slice
+PREMISE 11527 callee out-of-slot slice seed 1 byte 262112; record 1 wrote slot byte 12348
+PREMISE 11653 callee read-prev-slot slice seed 1 byte 12536; record 0 reads another slot or slice
+PREMISE 11686 bottom read-prev-slot slice seed 1 byte 262132; record 0 reads another slot or slice
+PREMISE 12044 indexed-callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+PREMISE 12255 callee partial-width+read-prev-slot slice seed 1 byte 12404; record 0 reads another slot or slice
+PREMISE 12711 callee read-prev-slot slice seed 1 byte 262120; record 0 reads another slot or slice
+PREMISE 12754 callee read-prev-slot slice seed 1 byte 12381; record 0 reads another slot or slice
+PREMISE 12837 indexed-callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+PREMISE 12839 indexed read-prev-slot slice seed 1 byte 12652; record 0 reads another slot or slice
+PREMISE 13084 indexed read-prev-slot slice seed 6 byte 12576; record 1 reads another slot or slice
+PREMISE 13599 indexed-callee out-of-slot slice seed 1 byte 12544; record 0 wrote slot byte 12352
+PREMISE 13609 indexed-callee read-prev-slot slice seed 1 byte 262116; record 1 reads another slot or slice
+PREMISE 13642 callee read-prev-slot slice seed 1 byte 12424; record 1 reads another slot or slice
+PREMISE 13648 bottom out-of-slot slice seed 3 byte 12804; record 0 wrote slot byte 12356
+PREMISE 13814 bottom read-prev-slot slice seed 1 byte 262140; record 0 reads another slot or slice
+PREMISE 13992 bottom out-of-slot slice seed 1 byte 262108; record 0 wrote 12284
+PREMISE 14160 callee read-prev-slot slice seed 1 byte 12472; record 1 reads another slot or slice
+PREMISE 14170 bottom out-of-slot slice seed 1 byte 12676; record 0 wrote slot byte 12356
+PREMISE 14324 indexed-callee tee-carry+read-prev-slot slice seed 1 byte 262128; record 1 reads another slot or slice
+PREMISE 14408 indexed-callee read-prev-slot slice seed 1 byte 262120; record 1 reads another slot or slice
+PREMISE 14719 indexed read-prev-slot slice seed 3 byte 262140; record 0 reads another slot or slice
+PREMISE 15523 bottom read-prev-slot slice seed 1 byte 12580; record 1 reads another slot or slice
+PREMISE 16019 bottom out-of-slot slice seed 3 byte 12540; record 0 wrote 12284
+PREMISE 16662 indexed read-prev-slot slice seed 1 byte 12536; record 0 reads another slot or slice
+PREMISE 16978 indexed out-of-slot slice seed 1 byte 262120; record 1 wrote slot byte 12348
+PREMISE 16989 callee out-of-slot slice seed 5 byte 12540; record 1 wrote slot byte 12348
+PREMISE 17601 indexed-callee read-prev-slot slice seed 1 byte 12564; record 2 reads another slot or slice
+PREMISE 17689 indexed out-of-slot slice seed 1 byte 12544; record 0 wrote slot byte 12352
+PREMISE 18029 callee read-prev-slot slice seed 1 byte 12600; record 1 reads another slot or slice
+PREMISE 18219 callee read-prev-slot slice seed 1 byte 262132; record 1 reads another slot or slice
+PREMISE 18325 callee out-of-slot slice seed 1 byte 12420; record 0 wrote slot byte 12356
+PREMISE 18431 indexed read-prev-slot slice seed 1 byte 12431; record 1 reads another slot or slice
+PREMISE 19393 callee out-of-slot slice seed 1 byte 262120; record 0 wrote 12284
+PREMISE 19551 indexed out-of-slot+read-prev-slot slice seed 1 byte 12568; record 0 wrote slot byte 12352

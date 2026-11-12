@@ -1,0 +1,53 @@
+{
+ "mutants": 1324,
+ "accepted": 549,
+ "refused": 775,
+ "acceptedAndWrong": 0,
+ "premiseViolated": 30,
+ "premiseRegionsAndRouteDiffers": 7,
+ "diverges": 0,
+ "routes": [
+  [
+   "equal",
+   542
+  ],
+  [
+   "differs",
+   7
+  ]
+ ],
+ "topReasons": [
+  [
+   "ptr-deref",
+   537
+  ],
+  [
+   "escape",
+   112
+  ],
+  [
+   "final-state",
+   51
+  ],
+  [
+   "ptr-control",
+   30
+  ],
+  [
+   "budget",
+   18
+  ],
+  [
+   "ptr-compare",
+   16
+  ],
+  [
+   "read-before-write",
+   6
+  ],
+  [
+   "ptr-store",
+   5
+  ]
+ ]
+}

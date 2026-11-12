@@ -1,0 +1,134 @@
+rows 20000 seeds unique 20000
+accepted 3070 15.3%
+verdicts [["ok",2594],["stack",451],["premise",14],["premise-stride",11]]
+refusals [["read-before-write",13953],["final-state",1200],["unsupported",750],["isolation",668],["no-window",218],["failure",115],["allocator",16],["aliasing",10]]
+modes [["single",8061],["safe",7043],["free",4896]]
+safe 7043 accepted 2455 [["ok",2090],["stack",365]]
+single 8061 accepted 498 [["ok",407],["stack",71],["premise",11],["premise-stride",9]]
+free 4896 accepted 117 [["ok",97],["stack",15],["premise",3],["premise-stride",2]]
+top refusal details
+  4127 read-before-write: counter-as-data: a branch condition depends on a loop counter or a base parameter of the e
+  2361 read-before-write: data-exit: the record loop of the entry does not end in a branch back to itself
+  2304 read-before-write: local N of the entry holds a value from the previous record
+  1308 read-before-write: counter-as-data: a load address depends on a loop counter or a base parameter of the entry
+  1200 final-state: a window byte is written on some paths and not on all
+  773 read-before-write: counter-as-data: a store address that is not a record pointer depends on a loop counter or
+  616 read-before-write: data-exit: the entry branches to its loop or out of it inside its record loop on a path th
+  559 read-before-write: counter-as-data: a stored value depends on a loop counter or a base parameter of the entry
+  449 read-before-write: a window byte that the entry wrote before this record loop is read, and a record loop writ
+  411 unsupported: expression kind N
+  271 read-before-write: a window byte is read before this record writes it
+  267 read-before-write: counter-as-data: a copy address that is not a record pointer depends on a loop counter or 
+  254 isolation: the closure calls through a table
+  218 no-window: no store outside the record regions has a bounded address
+  203 read-before-write: counter-as-data: a fill address that is not a record pointer depends on a loop counter or 
+  191 read-before-write: counter-as-data: a bulk init operand depends on a loop counter or a base parameter of the 
+  162 unsupported: recursion through N
+  160 isolation: the stack pointer is set to a value that is not a stack address
+  154 read-before-write: counter-as-data: a fill size depends on a loop counter or a base parameter of the entry
+  134 read-before-write: data-exit: the entry returns inside its record loop on a path that is not a loop test
+  115 failure: a trap is reachable after a window write
+  99 unsupported: internal: Cannot convert undefined or null to object
+  99 isolation: the stack pointer is not restored on every path
+  96 read-before-write: counter-as-data: a copy size depends on a loop counter or a base parameter of the entry
+  87 read-before-write: counter-as-data: a fill value depends on a loop counter or a base parameter of the entry
+  78 unsupported: atomic store
+  73 isolation: the stack pointer is stored as data in N
+  53 read-before-write: stride: the entry steps the table pointer by N, not by the record size N
+  50 isolation: call to import env.f
+  32 isolation: the closure writes global global$N
+  16 allocator: a record-derived pointer is written to global global$N
+  9 aliasing: a bulk operation reads part of a window
+  1 aliasing: a bulk operation overlaps part of a window
+by frame (rows / accepted / ok / stack / premise / premise-stride / false) and top refusal
+  bottom        1288 184 151 31 2 0 0 500 read-before-write: data-exit: the record loop of the entry does not end in
+  continue      2877 749 638 111 0 0 0 411 read-before-write: counter-as-data: a branch condition depends on a loop c
+  count-call    1726 425 360 62 3 0 0 418 read-before-write: counter-as-data: a branch condition depends on a loop c
+  countdown     1768 218 186 31 1 0 0 836 read-before-write: local N of the entry holds a value from the previous re
+  down-ptr      251 0 0 0 0 0 0 246 read-before-write: counter-as-data: a load address depends on a loop count
+  i64           210 0 0 0 0 0 0 195 read-before-write: local N of the entry holds a value from the previous re
+  i64-mix       669 0 0 0 0 0 0 655 read-before-write: counter-as-data: a branch condition depends on a loop c
+  i64-ptr       241 0 0 0 0 0 0 224 read-before-write: local N of the entry holds a value from the previous re
+  outer-repeat  199 0 0 0 0 0 0 197 read-before-write: counter-as-data: a branch condition depends on a loop c
+  peeled        229 0 0 0 0 0 0 182 read-before-write: local N of the entry holds a value from the previous re
+  peeled-last   215 0 0 0 0 0 0 148 read-before-write: local N of the entry holds a value from the previous re
+  ptr           231 0 0 0 0 0 0 110 read-before-write: local N of the entry holds a value from the previous re
+  rec           223 0 0 0 0 0 0 222 read-before-write: counter-as-data: a branch condition depends on a loop c
+  rec-mutual    233 0 0 0 0 0 0 230 read-before-write: counter-as-data: a branch condition depends on a loop c
+  rec-post      228 0 0 0 0 0 0 224 read-before-write: counter-as-data: a branch condition depends on a loop c
+  reverse       700 0 0 0 0 0 0 643 read-before-write: counter-as-data: a load address depends on a loop count
+  stride        1350 173 134 27 1 11 0 609 read-before-write: local N of the entry holds a value from the previous re
+  tail          2309 178 150 28 0 0 0 1578 read-before-write: data-exit: the record loop of the entry does not end in
+  top           3303 942 800 136 6 0 0 656 read-before-write: counter-as-data: a branch condition depends on a loop c
+  two-loops     1750 201 175 25 1 0 0 368 read-before-write: a window byte that the entry wrote before this record l
+by insert (modules carrying it / accepted / ok / stack / premise / premise-stride / false) and top refusal
+  addr-copy      433 0 0 0 0 0 0 | alone 216 acc 0 61 read-before-write: counter-as-data: a store address that is not a record p
+  addr-mix       461 8 6 2 0 0 0 | alone 250 acc 7 61 read-before-write: counter-as-data: a branch condition depends on a loop c
+  addr-n         464 1 1 0 0 0 0 | alone 235 acc 0 50 read-before-write: counter-as-data: a store address that is not a record p
+  addr-o         455 9 6 2 1 0 0 | alone 223 acc 7 59 read-before-write: counter-as-data: a branch condition depends on a loop c
+  addr-t         469 6 3 3 0 0 0 | alone 251 acc 5 55 read-before-write: counter-as-data: a branch condition depends on a loop c
+  alias          490 87 65 7 14 1 0 | alone 258 acc 77 38 read-before-write: counter-as-data: a branch condition depends on a loop c
+  atomic         463 0 0 0 0 0 0 | alone 233 acc 0 85 unsupported: expression kind N
+  bound-loop     484 1 1 0 0 0 0 | alone 249 acc 1 169 read-before-write: counter-as-data: a branch condition depends on a loop c
+  continue-data  56 0 0 0 0 0 0 | alone 30 acc 0 21 read-before-write: data-exit: the entry branches to its loop or out of it 
+  copy-size      450 6 5 1 0 0 0 | alone 235 acc 3 109 read-before-write: counter-as-data: a copy address that is not a record po
+  div-zero       449 79 79 0 0 0 0 | alone 234 acc 77 37 read-before-write: counter-as-data: a branch condition depends on a loop c
+  drop-init      465 74 74 0 0 0 0 | alone 221 acc 69 38 read-before-write: counter-as-data: a branch condition depends on a loop c
+  exit-block     332 0 0 0 0 0 0 | alone 175 acc 0 98 read-before-write: data-exit: the entry branches to its loop or out of it 
+  exit-const     307 6 5 0 0 1 0 | alone 162 acc 4 110 read-before-write: counter-as-data: a branch condition depends on a loop c
+  exit-done      299 0 0 0 0 0 0 | alone 159 acc 0 102 read-before-write: data-exit: the entry branches to its loop or out of it 
+  exit-inner     334 0 0 0 0 0 0 | alone 170 acc 0 104 read-before-write: data-exit: the entry branches to its loop or out of it 
+  exit-return    469 10 8 2 0 0 0 | alone 233 acc 8 95 read-before-write: data-exit: the entry returns inside its record loop on 
+  exit-table     308 1 1 0 0 0 0 | alone 162 acc 1 62 read-before-write: counter-as-data: a branch condition depends on a loop c
+  fill-size      434 2 1 1 0 0 0 | alone 218 acc 1 53 read-before-write: counter-as-data: a fill address that is not a record po
+  global         495 19 17 2 0 0 0 | alone 259 acc 19 85 isolation: the stack pointer is set to a value that is not a stack
+  grow           472 0 0 0 0 0 0 | alone 230 acc 0 137 unsupported: expression kind N
+  i64-addr       453 0 0 0 0 0 0 | alone 236 acc 0 130 read-before-write: counter-as-data: a store address that is not a record p
+  indirect       470 1 1 0 0 0 0 | alone 257 acc 1 133 isolation: the closure calls through a table
+  loaded-addr    431 4 2 0 0 2 0 | alone 232 acc 3 126 read-before-write: counter-as-data: a stored value depends on a loop count
+  mem-init       457 30 26 4 0 0 0 | alone 247 acc 27 93 read-before-write: counter-as-data: a bulk init operand depends on a loop 
+  oob-load       463 6 5 0 0 1 0 | alone 220 acc 5 93 read-before-write: counter-as-data: a load address depends on a loop count
+  pingpong       488 1 1 0 0 0 0 | alone 265 acc 1 117 unsupported: recursion through N
+  post-carry     450 78 66 11 0 1 0 | alone 231 acc 72 33 read-before-write: local N of the entry holds a value from the previous re
+  post-store     517 30 24 5 0 1 0 | alone 274 acc 27 62 read-before-write: counter-as-data: a store address that is not a record p
+  pre-carry      456 36 27 8 0 1 0 | alone 250 acc 35 83 read-before-write: a window byte that the entry wrote before this record l
+  select         491 3 3 0 0 0 0 | alone 260 acc 3 72 read-before-write: counter-as-data: a stored value depends on a loop count
+  sp-saved       440 33 1 31 0 1 0 | alone 239 acc 33 49 isolation: the stack pointer is not restored on every path
+  table-state    481 0 0 0 0 0 0 | alone 256 acc 0 65 unsupported: expression kind N
+  trap-first     467 86 84 2 0 0 0 | alone 252 acc 79 44 read-before-write: counter-as-data: a branch condition depends on a loop c
+  un-bound       476 7 4 3 0 0 0 | alone 242 acc 5 165 read-before-write: counter-as-data: a branch condition depends on a loop c
+  un-exit        270 0 0 0 0 0 0 | alone 141 acc 0 99 read-before-write: counter-as-data: a branch condition depends on a loop c
+  un-offset      497 5 5 0 0 0 0 | alone 276 acc 5 57 read-before-write: counter-as-data: a store address that is not a record p
+  un-size        424 5 3 1 0 1 0 | alone 212 acc 4 43 read-before-write: counter-as-data: a bulk init operand depends on a loop 
+  un-value       478 5 4 0 0 1 0 | alone 244 acc 4 74 read-before-write: counter-as-data: a stored value depends on a loop count
+hostile frame variants: rows 1819 accepted 6 [["two-loops:ok",4],["two-loops:stack",2]]
+odd strides: rows 372 accepted 15 [["premise-stride",11],["ok",4]]
+viaCallee accepted 847 wrap accepted 0
+false/wild/premise rows:
+  premise-stride 402 stride alias private byte 12352
+  premise-stride 1325 stride sp-saved private byte 12360
+  premise-stride 1639 stride oob-load private byte 12348
+  premise 2426 bottom alias slice seed 1 byte 262116; record 1 wrote slot byte 12304
+  premise-stride 3681 stride pre-carry private byte 12334
+  premise 3787 top alias slice seed 1 byte 262132; record 0 wrote 12224
+  premise 5098 top alias slice seed 5 byte 12321; record 1 wrote slot byte 12304
+  premise 5896 top alias slice seed 1 byte 262116; record 0 wrote 8196
+  premise 6756 bottom alias slice seed 1 byte 262112; record 0 wrote 8196
+  premise-stride 8863 stride exit-const private byte 12364
+  premise 9917 top alias slice seed 1 byte 262136; record 0 wrote 12224
+  premise 10243 countdown addr-o+alias slice seed 1 byte 12352; record 1 wrote slot byte 12304
+  premise 11420 count-call alias slice seed 1 byte 262116; record 1 wrote slot byte 12304
+  premise-stride 11656 stride loaded-addr private byte 12388
+  premise 11821 count-call alias slice seed 1 byte 12480; record 0 wrote 12224
+  premise 12286 stride alias slice seed 1 byte 12354; record 0 wrote 12224
+  premise 13673 count-call alias slice seed 3 byte 262132; record 0 wrote 12224
+  premise-stride 14411 stride un-size private byte 12329
+  premise-stride 15507 stride loaded-addr private byte 12388
+  premise 16556 top alias slice seed 1 byte 262132; record 1 wrote slot byte 12304
+  premise 17317 top alias slice seed 1 byte 12480; record 0 wrote 12224
+  premise-stride 17415 stride un-value private byte 12362
+  premise-stride 17494 stride post-carry private byte 12364
+  premise-stride 18256 stride post-store private byte 12386
+  premise 19832 two-loops alias slice seed 1 byte 12352; record 0 wrote 12224
+traps among accepted 241
+invalid 0

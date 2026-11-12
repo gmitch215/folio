@@ -13,3 +13,5 @@ study runs the same corpora and two further rounds of review.
 - [stream-certifier](stream-certifier/README.md)
 - [stream-verifier](stream-verifier/README.md)
 - [adversary-round-four](adversary-round-four/README.md)
+- [ownership-red-team](ownership-red-team/README.md)
+- [ownership-reaudit](ownership-reaudit/README.md)

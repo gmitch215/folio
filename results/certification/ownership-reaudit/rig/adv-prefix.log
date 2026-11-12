@@ -1,0 +1,65 @@
+{
+ "mutants": 418,
+ "hand": 298,
+ "driver": 120,
+ "accepted": 178,
+ "acceptedHand": 121,
+ "acceptedDriver": 57,
+ "refused": 240,
+ "acceptedAndWrong": 0,
+ "acceptedPremiseViolated": 2,
+ "acceptedNotRun": 1,
+ "acceptedRunTrapping": 175,
+ "unexplainedAccepted": 12,
+ "unexplainedRefused": 5,
+ "topReasons": [
+  [
+   "prefix-store",
+   65
+  ],
+  [
+   "read-before-write",
+   50
+  ],
+  [
+   "escape",
+   40
+  ],
+  [
+   "failure",
+   38
+  ],
+  [
+   "prefix-cover",
+   34
+  ],
+  [
+   "final-state",
+   7
+  ],
+  [
+   "budget",
+   6
+  ]
+ ]
+}
+premise violated sha-const-15-plus case 0 depends on the memory size
+premise violated tail-const-15-plus case 0 depends on the memory size
+accepted, not run sha256-shared-conditional-0 refused wild store
+unexplained accepted sha-stale-local-store-5
+unexplained accepted sha-read-first-byte-5
+unexplained accepted sha-peek-call-5
+unexplained accepted sha-stale-sum-2
+unexplained accepted sha-stale-sum-5
+unexplained accepted sha-stale-address-2
+unexplained accepted sha-stale-address-5
+unexplained accepted tail-stale-local-store-6
+unexplained accepted tail-read-first-byte-6
+unexplained accepted tail-stale-sum-6
+unexplained accepted tail-stale-address-6
+unexplained accepted named-stale-local
+unexplained refused sha-stale-local-store-0 prefix-store expected prefix-cover|read-before-write|final-state
+unexplained refused sha-stale-address-0 prefix-store expected prefix-cover|read-before-write|final-state
+unexplained refused tail-stale-local-store-0 prefix-store expected prefix-cover|read-before-write|final-state
+unexplained refused tail-stale-address-0 prefix-store expected prefix-cover|read-before-write|final-state
+unexplained refused named-cursor-twice prefix-store expected prefix-cover

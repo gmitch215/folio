@@ -1,0 +1,41 @@
+{
+ "mutants": 81,
+ "hand": 0,
+ "config": 0,
+ "driver": 81,
+ "accepted": 50,
+ "acceptedByFamily": {
+  "hand": 0,
+  "config": 0,
+  "driver": 50
+ },
+ "acceptedAndRun": 48,
+ "refused": 31,
+ "acceptedAndWrong": 0,
+ "acceptedPremiseViolated": 2,
+ "acceptedNotRun": 0,
+ "notRunWhy": [],
+ "acceptedRunTrapping": 48,
+ "unexplainedAccepted": 0,
+ "unexplainedRefused": 0,
+ "topReasons": [
+  [
+   "read-before-write",
+   21
+  ],
+  [
+   "escape",
+   4
+  ],
+  [
+   "config-store",
+   4
+  ],
+  [
+   "failure",
+   2
+  ]
+ ]
+}
+premise violated kissfft-real-shared-delete-66 case 0 record 1 wrote byte 1126499 of another record
+premise violated kissfft-real-shared-conditional-66 case 0 record 1 wrote byte 1126499 of another record

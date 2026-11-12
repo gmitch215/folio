@@ -1,0 +1,62 @@
+{
+ "mutants": 391,
+ "hand": 197,
+ "config": 113,
+ "driver": 81,
+ "accepted": 233,
+ "acceptedByFamily": {
+  "hand": 107,
+  "config": 76,
+  "driver": 50
+ },
+ "acceptedAndRun": 222,
+ "refused": 158,
+ "acceptedAndWrong": 0,
+ "acceptedPremiseViolated": 2,
+ "acceptedNotRun": 9,
+ "notRunWhy": [
+  [
+   "refused: the router premise check fails",
+   9
+  ]
+ ],
+ "acceptedRunTrapping": 222,
+ "unexplainedAccepted": 0,
+ "unexplainedRefused": 0,
+ "topReasons": [
+  [
+   "read-before-write",
+   63
+  ],
+  [
+   "config-store",
+   27
+  ],
+  [
+   "escape",
+   26
+  ],
+  [
+   "failure",
+   20
+  ],
+  [
+   "budget",
+   14
+  ],
+  [
+   "unsupported",
+   5
+  ],
+  [
+   "invalid",
+   2
+  ],
+  [
+   "no-window",
+   1
+  ]
+ ]
+}
+premise violated kissfft-real-shared-delete-66 case 0 record 1 wrote byte 1126499 of another record
+premise violated kissfft-real-shared-conditional-66 case 0 record 1 wrote byte 1126499 of another record

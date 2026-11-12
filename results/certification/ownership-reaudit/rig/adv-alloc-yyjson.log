@@ -1,0 +1,75 @@
+{
+ "mutants": 5187,
+ "hand": 5187,
+ "accepted": 1162,
+ "refused": 4025,
+ "acceptedAndWrongRelocation": 0,
+ "acceptedAndWrongRoute": 0,
+ "acceptedNotRun": 4,
+ "unexplainedAccepted": 0,
+ "unexplainedRefused": 15,
+ "routes": [
+  [
+   "equal",
+   1158
+  ],
+  [
+   "skipped",
+   4
+  ]
+ ],
+ "topReasons": [
+  [
+   "ptr-deref",
+   3670
+  ],
+  [
+   "ptr-compare",
+   121
+  ],
+  [
+   "escape",
+   75
+  ],
+  [
+   "ptr-control",
+   60
+  ],
+  [
+   "ptr-store",
+   30
+  ],
+  [
+   "read-before-write",
+   29
+  ],
+  [
+   "isolation",
+   27
+  ],
+  [
+   "budget",
+   13
+  ]
+ ],
+ "drivers": []
+}
+accepted, not run dispatchentry-const-down-1-21
+accepted, not run dispatchentry-constant-1-119
+accepted, not run dispatchentrydata-const-down-1-22
+accepted, not run dispatchentrydata-constant-1-127
+unexplained refused wordsummaryother base ptr-deref expected none
+unexplained refused trailup base ptr-deref expected none
+unexplained refused trailpast base ptr-deref expected none
+unexplained refused trailreset base ptr-deref expected none
+unexplained refused trailcopyup base ptr-deref expected none
+unexplained refused dispatchdata base ptr-deref expected none
+unexplained refused dispatchfromdata base ptr-deref expected none
+unexplained refused dispatchoutside base ptr-deref expected none
+unexplained refused dispatch5 base ptr-deref expected none
+unexplained refused dispatch6 base ptr-deref expected none
+unexplained refused dispatchnoreset base ptr-deref expected none
+unexplained refused dispatchpast base ptr-deref expected none
+unexplained refused dispatchfallbad base ptr-deref expected none
+unexplained refused dispatchentrybad base ptr-deref expected none
+unexplained refused dispatchentrydata base ptr-deref expected none

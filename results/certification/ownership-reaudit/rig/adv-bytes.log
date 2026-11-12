@@ -1,0 +1,44 @@
+{
+ "mutants": 1364,
+ "accepted": 790,
+ "refused": 574,
+ "acceptedAndWrongRelocation": 0,
+ "acceptedAndWrongRoute": 0,
+ "premiseViolated": 0,
+ "routes": [
+  [
+   "equal",
+   790
+  ]
+ ],
+ "topReasons": [
+  [
+   "ptr-deref",
+   483
+  ],
+  [
+   "read-before-write",
+   41
+  ],
+  [
+   "isolation",
+   17
+  ],
+  [
+   "escape",
+   13
+  ],
+  [
+   "ptr-compare",
+   12
+  ],
+  [
+   "ptr-store",
+   4
+  ],
+  [
+   "final-state",
+   4
+  ]
+ ]
+}
