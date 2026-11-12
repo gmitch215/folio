@@ -47,7 +47,9 @@ jobs:
       - name: Unit Suite
         run: bun run test
       - name: Integration Suite
-        run: bun run test:integration
+        run: |
+          export FOLIO_SQLITE_SOURCE="$(sh scripts/build/sqlite-source.sh)"
+          bun run test:integration
       - name: Build
         run: bun run build
 
