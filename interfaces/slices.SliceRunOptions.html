@@ -16,7 +16,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SliceRunOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#audit">audit</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#grain">grain</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#snapshotlimit">snapshotLimit</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#writes">writes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L38">src/slices.ts:38</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/76ead5e01807226c03bbb2bb09737e98d0f0132d/src/slices.ts#L38">src/slices.ts:38</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -40,29 +40,31 @@ result and every byte below the stacks. A difference throws <code>SliceConflictE
 a serial execution and a memory copy, and is meant for tests and canaries.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L53">src/slices.ts:53</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/76ead5e01807226c03bbb2bb09737e98d0f0132d/src/slices.ts#L55">src/slices.ts:55</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="grain"><code class="tsd-tag">Optional</code><span>grain</span><a href="#grain" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">grain</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Calls per slice. The default splits the range evenly over the workers.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L40">src/slices.ts:40</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/76ead5e01807226c03bbb2bb09737e98d0f0132d/src/slices.ts#L40">src/slices.ts:40</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="snapshotlimit"><code class="tsd-tag">Optional</code><span>snapshot<wbr/>Limit</span><a href="#snapshotlimit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">snapshotLimit</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Largest copy of <code>writes</code> in bytes. Past it the calls run serially in place. Default 64 MiB.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L47">src/slices.ts:47</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/76ead5e01807226c03bbb2bb09737e98d0f0132d/src/slices.ts#L49">src/slices.ts:49</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="writes"><code class="tsd-tag">Optional</code><span>writes</span><a href="#writes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">writes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Byte ranges the calls write outside the windows, such as the output slots. A pool opened with
-<code>ownership</code> needs them: they are copied before the run and put back when a slice traps.</p>
+<code>ownership</code> needs them: they are copied before the run and put back when a slice traps. The
+list must name every range the calls write: a range left out keeps the writes of the calls
+after the trap, and the serial replay does not undo them.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/c9a85b76ac7ce6ec3117be9e2cfefe25ed797bf9/src/slices.ts#L45">src/slices.ts:45</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/76ead5e01807226c03bbb2bb09737e98d0f0132d/src/slices.ts#L47">src/slices.ts:47</a></li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

@@ -31,6 +31,8 @@ the same engine.</p>
 <li><a href="#-task-pool">Task Pool</a></li>
 <li><a href="#-slice-pool">Slice Pool</a></li>
 <li><a href="#-certified-stream-folds">Certified Stream Folds</a></li>
+<li><a href="#-ownership-certificates">Ownership Certificates</a></li>
+<li><a href="#-router">Router</a></li>
 <li><a href="#-context-checkpoints">Context Checkpoints</a></li>
 <li><a href="#-baked-boot-images">Baked Boot Images</a></li>
 <li><a href="#-execution-and-memory">Execution and Memory</a></li>
@@ -78,8 +80,14 @@ joins and an optional differential audit.</li>
 stack per worker and an optional serial audit, for calls the caller declares independent.</li>
 <li>🧮 <strong>Exact chunked recurrences</strong> that split one CRC-32, Adler-32 or AES-CTR stream across the
 task pool and join the chunk states into the serial result.</li>
-<li>🛑 <strong>Stall guard</strong> that stops an iteration batch that does not return and finishes the loop
-serially, for programs whose iterations can loop on state another iteration is changing.</li>
+<li>🔏 <strong>Ownership certificates</strong> that check whether the fixed-address scratch of a record function is
+private to each record, so a certified loop of records runs in place on the slice pool. Each
+certificate lists the premises it relies on.</li>
+<li>🚦 <strong>Router</strong> that picks the certified summary, the certified window, tracked speculation or
+serial for each call, caches certificates and refusals, and names the reason for every refusal.</li>
+<li>🛑 <strong>Stall guard</strong> (<code>iterationStall</code>, off by default) that stops an iteration batch that does not
+return and finishes the loop serially, for programs whose iterations can loop on state another
+iteration is changing.</li>
 <li>🧊 <strong>Baked boot images</strong> that write a booted memory into the module as data segments.</li>
 <li>📊 <strong>Opt-in profiling</strong> of worker time, validation, commit and replay cost.</li>
 </ul>
@@ -117,6 +125,39 @@ runs on the owner, and its measured time and the time of each batch decide wheth
 loop that writes more per iteration than the undo log holds, or whose batches lose to the serial time,
 finishes serially. With an unshared memory, or one the library cannot grow by the arena it needs, the run
 stays serial and the report names the reason.</p>
+<p>Five <code>Folio.open</code> options adjust the iteration route. All five are off by default.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>iterationReadWindows</code></td>
+<td>Learns read windows from the first batch that finishes without a conflict, so loads of the input the iterations stream through set no per-access mark. A window can cost a false conflict, never a different result.</td>
+</tr>
+<tr>
+<td><code>iterationReadSummary</code></td>
+<td>Keeps a summary of the 64-word blocks of each read bitmap that a read touched, so workers scan those blocks and not the whole bitmap. The conflicts found do not change. It adds a few instructions to every tracked read.</td>
+</tr>
+<tr>
+<td><code>iterationSecondChance</code></td>
+<td>Judges a loop a little under the dispatch floor on one timed batch, and lets the batches a running loop has shown decide whether the rest pays. A probe that loses ends the dispatch and the loop runs serially for the next 16 calls. The result is the same either way.</td>
+</tr>
+<tr>
+<td><code>iterationLogCeiling</code></td>
+<td>A number of undo entries per iteration. When a batch exhausts the default log, the logs grow to this size and the batch retries once. Unset, that batch finishes serially. On padded LZ4 the retry cost more than the dispatch gained, because ordered validation is quadratic in the logged entries.</td>
+</tr>
+<tr>
+<td><code>iterationStall</code></td>
+<td><code>true</code> or <code>{ factor, floorMs }</code>. Workers poll a stop word at every loop start. A batch that runs past <code>factor</code> times the serial time of its iterations (50 by default), and at least <code>floorMs</code> (2000 ms), traps and rolls back from the undo logs, and the loop finishes serially with <code>iteration.stopped</code> set to <code>stalled</code>. The poll cost 0.9% to 11.2% of worker time on the four programs measured.</td>
+</tr>
+</tbody>
+</table>
+<p>A program whose iterations can read state another iteration is changing and then loop on it, such as
+a linked structure two iterations rewrite, needs <code>iterationStall</code>.</p>
 <h2 id="🧩-examples" class="tsd-anchor-link">🧩 Examples<a href="#🧩-examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>The <a href="media/examples">examples</a> run against the built package with <code>node examples/&lt;name&gt;.ts</code> after <code>bun run build:c</code> and <code>bun run build</code>: <code>basic</code> runs one entry, <code>routing</code> reads the report and shows capped and adaptive routing, <code>iteration</code> runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, <code>context-reset</code> resets a private instance between jobs, <code>task-pool</code> joins independent jobs in order, <code>slice-pool</code> fills one shared memory from several threads and audits the run against the serial one, and <code>boot-image</code> bakes captured memory into a module.</p>
 <h2 id="⏳-asynchronous-host-effects" class="tsd-anchor-link">⏳ Asynchronous Host Effects<a href="#⏳-asynchronous-host-effects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
@@ -272,6 +313,96 @@ length used as data, state kept in memory or globals, stores other than the in-p
 imports, a start function and passive data segments. A function that depends on the alignment of its pointer or reads
 past its input is refused. <code>zeroLength</code> in the certificate says what a call over no bytes returns, and
 <code>foldCertified</code> runs an empty input as the serial call.</p>
+<h2 id="🔏-ownership-certificates" class="tsd-anchor-link">🔏 Ownership Certificates<a href="#🔏-ownership-certificates" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@gmitch215/folio/ownership</code> checks whether a function that loops over records keeps its scratch
+memory private to each record. Compiled drivers often write a fixed address (a scratch buffer, a
+static table, a cursor) before they read it back, and records that run on several threads over one
+memory collide there. <code>certifyOwnership(bytes, options)</code> takes an entry that is <code>bulk(table, count, out, ...)</code> by default (<code>entry</code> and <code>convention</code> name another function and record layout), finds the
+fixed-address windows the records write, and returns a certificate or a refusal. A certificate
+covers six obligations: state isolation, read before write, aliasing through indirect pointers and
+bulk operations, the final state the owner must rebuild, escaping addresses, and failure (a trap or
+aborted iteration publishes nothing). The <code>prefix</code>, <code>config</code>, <code>recursion</code> and <code>allocator</code> options
+widen the domain the checker handles, and each adds premises that the certificate lists.</p>
+<p>A refusal carries a <code>reason</code> from the closed list <code>OWNERSHIP_REASONS</code>, the <code>obligation</code> it belongs
+to, a <code>detail</code> and, where there is one, an <code>address</code>. The reasons are one per obligation
+(<code>isolation</code>, <code>read-before-write</code>, <code>aliasing</code>, <code>final-state</code>, <code>escape</code>, <code>failure</code>), the pointer
+rules of the allocator mode (<code>ptr-store</code>, <code>ptr-return</code>, <code>ptr-import</code>, <code>ptr-compare</code>, <code>ptr-control</code>,
+<code>ptr-deref</code>, <code>allocator</code>), <code>prefix-store</code>, <code>prefix-cover</code>, <code>config-store</code>, and four about scope:
+<code>no-window</code>, <code>unsupported</code>, <code>budget</code> and <code>invalid</code>. <code>budget</code> means the analysis hit its step limit
+(4,000,000 by default) and says nothing about the program. Any refusal says what the checker could
+not establish, and the function runs serially or on another route. On the 10 development drivers
+that fail the plain slice pool, 6 certify.</p>
+<p><code>verifyOwnership(bytes, certificate)</code> re-derives the certificate from the module and compares
+everything except the work counters. A certificate names the module digest and the checker version
+(<code>OWNERSHIP_CHECKER</code>).</p>
+<p>Two routes run a certified driver. <code>ownershipSlices</code> from <code>@gmitch215/folio/ownership-slices</code>
+redirects every window access to a private copy per worker and runs the records in place on the
+slice pool. A trap in any slice puts <code>writes</code> back and runs the calls serially in place, so the
+serial run decides the memory and the trap. <code>ownershipSlices</code> throws <code>OwnershipSlicesError</code> with
+code <code>wild-store</code> for a certificate that records stores no record owns. <code>run</code> throws it with code
+<code>layout</code> when a record region overlaps a window, and with <code>config</code> when the memory differs from a
+configuration the certificate assumed. <code>redirectOwnership</code> and <code>ownershipRoute</code> from
+<code>@gmitch215/folio/ownership-redirect</code> make the same rewrite and hand it to the iteration pool,
+which tracks every access and paid less on the module measured.</p>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">certifyOwnership</span><span class="hl-1">, </span><span class="hl-5">verifyOwnership</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/ownership&#39;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">ownershipSlices</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/ownership-slices&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">certificate</span><span class="hl-1"> = </span><span class="hl-0">certifyOwnership</span><span class="hl-1">(</span><span class="hl-5">bytes</span><span class="hl-1">, { </span><span class="hl-5">entry:</span><span class="hl-1"> </span><span class="hl-2">&#39;bulk&#39;</span><span class="hl-1"> });</span><br/><span class="hl-4">if</span><span class="hl-1"> (</span><span class="hl-5">certificate</span><span class="hl-1">.</span><span class="hl-5">kind</span><span class="hl-1"> === </span><span class="hl-2">&#39;refusal&#39;</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">`</span><span class="hl-6">${</span><span class="hl-5">certificate</span><span class="hl-10">.</span><span class="hl-5">reason</span><span class="hl-6">}</span><span class="hl-2"> (</span><span class="hl-6">${</span><span class="hl-5">certificate</span><span class="hl-10">.</span><span class="hl-5">obligation</span><span class="hl-6">}</span><span class="hl-2">): </span><span class="hl-6">${</span><span class="hl-5">certificate</span><span class="hl-10">.</span><span class="hl-5">detail</span><span class="hl-6">}</span><span class="hl-2">`</span><span class="hl-1">);</span><br/><span class="hl-1">}</span><br/><span class="hl-4">if</span><span class="hl-1"> (!</span><span class="hl-0">verifyOwnership</span><span class="hl-1">(</span><span class="hl-5">bytes</span><span class="hl-1">, </span><span class="hl-5">certificate</span><span class="hl-1">)) </span><span class="hl-4">throw</span><span class="hl-1"> </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Error</span><span class="hl-1">(</span><span class="hl-2">&#39;the certificate does not re-derive&#39;</span><span class="hl-1">);</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">memory</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Memory</span><span class="hl-1">({ </span><span class="hl-5">initial:</span><span class="hl-1"> </span><span class="hl-8">8</span><span class="hl-1">, </span><span class="hl-5">maximum:</span><span class="hl-1"> </span><span class="hl-8">40</span><span class="hl-1">, </span><span class="hl-5">shared:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1"> });</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">pool</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-0">ownershipSlices</span><span class="hl-1">(</span><span class="hl-5">bytes</span><span class="hl-1">, </span><span class="hl-5">certificate</span><span class="hl-1">, { </span><span class="hl-5">memory</span><span class="hl-1">, </span><span class="hl-5">workers:</span><span class="hl-1"> </span><span class="hl-8">4</span><span class="hl-1"> });</span><br/><span class="hl-4">try</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-3">// write the record table, the inputs and the output area into pool.memory here</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-5">count</span><span class="hl-1">,</span><br/><span class="hl-1">    (</span><span class="hl-5">from</span><span class="hl-1">, </span><span class="hl-5">to</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> [</span><span class="hl-5">table</span><span class="hl-1"> + </span><span class="hl-8">16</span><span class="hl-1"> * </span><span class="hl-5">from</span><span class="hl-1">, </span><span class="hl-5">to</span><span class="hl-1"> - </span><span class="hl-5">from</span><span class="hl-1">, </span><span class="hl-5">out</span><span class="hl-1"> + </span><span class="hl-8">64</span><span class="hl-1"> * </span><span class="hl-5">from</span><span class="hl-1">],</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">      </span><span class="hl-5">regions:</span><span class="hl-1"> [</span><br/><span class="hl-1">        [</span><span class="hl-5">table</span><span class="hl-1">, </span><span class="hl-5">table</span><span class="hl-1"> + </span><span class="hl-8">16</span><span class="hl-1"> * </span><span class="hl-5">count</span><span class="hl-1">],</span><br/><span class="hl-1">        [</span><span class="hl-5">input</span><span class="hl-1">, </span><span class="hl-5">input</span><span class="hl-1"> + </span><span class="hl-5">inputBytes</span><span class="hl-1">],</span><br/><span class="hl-1">        [</span><span class="hl-5">out</span><span class="hl-1">, </span><span class="hl-5">out</span><span class="hl-1"> + </span><span class="hl-8">64</span><span class="hl-1"> * </span><span class="hl-5">count</span><span class="hl-1">]</span><br/><span class="hl-1">      ],</span><br/><span class="hl-1">      </span><span class="hl-5">writes:</span><span class="hl-1"> [[</span><span class="hl-5">out</span><span class="hl-1">, </span><span class="hl-5">out</span><span class="hl-1"> + </span><span class="hl-8">64</span><span class="hl-1"> * </span><span class="hl-5">count</span><span class="hl-1">]]</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  );</span><br/><span class="hl-1">  </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">report</span><span class="hl-1">.</span><span class="hl-5">ownership</span><span class="hl-1">?.</span><span class="hl-5">replayed</span><span class="hl-1">);</span><br/><span class="hl-1">} </span><span class="hl-4">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">pool</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>A certificate rests on premises that the checker does not prove, and a run that breaks one can
+return a different result than the serial program:</p>
+<ul>
+<li>The record regions (table, output slots, inputs, auxiliary data, arena slices and stack slots)
+do not overlap a window. <code>OwnershipSlices.run</code> checks the <code>regions</code> and <code>writes</code> the caller
+passes, so they must be complete.</li>
+<li>Record-derived pointers stay inside their regions. The library does not check this one.</li>
+<li>The entry branches on its loop counters and the record count only to end or repeat its loop.</li>
+<li>A trap discards the private copies and the serial path decides what happens next.</li>
+<li>The start function and the host leave the window bytes the private copies start from.</li>
+<li>The stack pointer discipline and the stack residue are not proved.</li>
+</ul>
+<p>The <code>allocator</code>, <code>prefix</code> and <code>config</code> modes add their own premises, which the certificate lists in
+<code>allocator.assumptions</code>, <code>prefix.rules</code> and <code>config.rules</code>. The checker has produced false
+certificates. A red team round found three classes of them that earlier mutation testing had not
+found, and the fixes are part of this release. PENDING(readme-audit-status)</p>
+<h2 id="🚦-router" class="tsd-anchor-link">🚦 Router<a href="#🚦-router" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>@gmitch215/folio/router</code> picks one route for a call from the module bytes and a description of
+the call, runs it and says why. A call is <code>{ kind: 'stream', entry, ptr, len }</code> for one function
+<code>entry(state, ptr, len)</code> over a byte stream, or <code>{ kind: 'records', entry, count, args, regions, writes }</code> for a loop of independent calls, where <code>args(from, to)</code> returns the arguments of a slice.
+<code>Router.open(bytes, call, options)</code> decides and builds the memory and pools its route needs, and
+<code>router.run()</code> executes the call. <code>decide(bytes, call, options)</code> returns the decision without
+running anything. A parallel route over a records call needs a module that imports its memory,
+which the router allocates shared.</p>
+<p>The order is fixed. A stream takes the certified summary when <code>certifyStream</code> returns a
+certificate. A loop of records takes the certified window when the ownership certificate exists,
+records no wild stores and the regions clear its windows, then the explicit runner in
+<code>options.explicit</code> if the caller supplied one, then tracked speculation, then serial. Tracked
+speculation runs only after an ownership refusal for allocator state or a missing window, and only
+when <code>assume</code> states that imports are deterministic (or absent) and that nothing reads the stack
+zone afterwards. <code>mode</code> limits the routes: <code>router</code> is the whole chain, <code>serial</code> never leaves the
+owner, <code>w1</code> is the summary only and <code>w2</code> the window only, and <code>independent</code> and <code>shared</code> try the
+summary and then the window, with the module analyses made independently or shared. The last
+four are the arms of the development ablation.</p>
+<p>Certificates and refusals go into a <code>CertificateCache</code>, keyed by the module's SHA-256 and by the
+backend, the checker versions, <code>ROUTER_VERSION</code> (<code>folio-router-2</code>) and the options that change a
+certificate. A refused module costs a map lookup after the first call, and <code>serialize()</code> and
+<code>load()</code> move the cache between processes. A route has a floor: the window route stays serial below
+0.8 ms of remaining serial work and the summary route below 1 MiB, both in <code>routerConstants</code>, and
+the tracked and explicit routes use the admission floor of the iteration route. The router runs the
+first records of a call serially to estimate that time, and it stops dispatching after two losing
+dispatches in a row. The constants were fitted on development data, so a result on the development
+drivers describes the fit, and the figure on the frozen final corpus is in Measured Results.</p>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Router</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio/router&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">router</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Router</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><br/><span class="hl-1">  </span><span class="hl-5">bytes</span><span class="hl-1">,</span><br/><span class="hl-1">  {</span><br/><span class="hl-1">    </span><span class="hl-5">kind:</span><span class="hl-1"> </span><span class="hl-2">&#39;records&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">entry:</span><span class="hl-1"> </span><span class="hl-2">&#39;bulk&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">count</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">args</span><span class="hl-5">:</span><span class="hl-1"> (</span><span class="hl-5">from</span><span class="hl-1">, </span><span class="hl-5">to</span><span class="hl-1">) </span><span class="hl-6">=&gt;</span><span class="hl-1"> [</span><span class="hl-5">table</span><span class="hl-1"> + </span><span class="hl-8">16</span><span class="hl-1"> * </span><span class="hl-5">from</span><span class="hl-1">, </span><span class="hl-5">to</span><span class="hl-1"> - </span><span class="hl-5">from</span><span class="hl-1">, </span><span class="hl-5">out</span><span class="hl-1"> + </span><span class="hl-8">64</span><span class="hl-1"> * </span><span class="hl-5">from</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-5">regions:</span><span class="hl-1"> [</span><br/><span class="hl-1">      [</span><span class="hl-5">table</span><span class="hl-1">, </span><span class="hl-5">table</span><span class="hl-1"> + </span><span class="hl-8">16</span><span class="hl-1"> * </span><span class="hl-5">count</span><span class="hl-1">],</span><br/><span class="hl-1">      [</span><span class="hl-5">input</span><span class="hl-1">, </span><span class="hl-5">input</span><span class="hl-1"> + </span><span class="hl-5">inputBytes</span><span class="hl-1">],</span><br/><span class="hl-1">      [</span><span class="hl-5">out</span><span class="hl-1">, </span><span class="hl-5">out</span><span class="hl-1"> + </span><span class="hl-8">64</span><span class="hl-1"> * </span><span class="hl-5">count</span><span class="hl-1">]</span><br/><span class="hl-1">    ],</span><br/><span class="hl-1">    </span><span class="hl-5">writes:</span><span class="hl-1"> [[</span><span class="hl-5">out</span><span class="hl-1">, </span><span class="hl-5">out</span><span class="hl-1"> + </span><span class="hl-8">64</span><span class="hl-1"> * </span><span class="hl-5">count</span><span class="hl-1">]]</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  { </span><span class="hl-5">mode:</span><span class="hl-1"> </span><span class="hl-2">&#39;router&#39;</span><span class="hl-1">, </span><span class="hl-5">pages:</span><span class="hl-1"> </span><span class="hl-8">8</span><span class="hl-1">, </span><span class="hl-5">maxPages:</span><span class="hl-1"> </span><span class="hl-8">40</span><span class="hl-1">, </span><span class="hl-5">workers:</span><span class="hl-1"> </span><span class="hl-8">4</span><span class="hl-1"> }</span><br/><span class="hl-1">);</span><br/><span class="hl-4">try</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">router</span><span class="hl-1">.</span><span class="hl-5">decision</span><span class="hl-1">.</span><span class="hl-5">route</span><span class="hl-1">, </span><span class="hl-5">router</span><span class="hl-1">.</span><span class="hl-5">decision</span><span class="hl-1">.</span><span class="hl-5">reason</span><span class="hl-1">, </span><span class="hl-5">router</span><span class="hl-1">.</span><span class="hl-5">decision</span><span class="hl-1">.</span><span class="hl-5">detail</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-4">for</span><span class="hl-1"> (</span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">step</span><span class="hl-1"> </span><span class="hl-6">of</span><span class="hl-1"> </span><span class="hl-5">router</span><span class="hl-1">.</span><span class="hl-5">decision</span><span class="hl-1">.</span><span class="hl-5">considered</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">step</span><span class="hl-1">.</span><span class="hl-5">route</span><span class="hl-1">, </span><span class="hl-5">step</span><span class="hl-1">.</span><span class="hl-5">verdict</span><span class="hl-1">, </span><span class="hl-5">step</span><span class="hl-1">.</span><span class="hl-5">reason</span><span class="hl-1">);</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">  </span><span class="hl-3">// write the record table, the inputs and the output area into router.memory here</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">run</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">router</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">();</span><br/><span class="hl-1">  </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">run</span><span class="hl-1">.</span><span class="hl-5">route</span><span class="hl-1">, </span><span class="hl-5">run</span><span class="hl-1">.</span><span class="hl-5">reason</span><span class="hl-1">, </span><span class="hl-5">run</span><span class="hl-1">.</span><span class="hl-5">wallMs</span><span class="hl-1">);</span><br/><span class="hl-1">} </span><span class="hl-4">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">router</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>A refusal is a decision with <code>route: 'serial'</code> and a <code>reason</code> from the closed list
+<code>ROUTER_REASONS</code>. The first four reasons are routes taken (<code>certified-summary</code>,
+<code>certified-window</code>, <code>explicit-runner</code>, <code>tracked-eligible</code>) and the rest are refusals, such as
+<code>allocator-state</code>, <code>shared-state</code>, <code>wild-store</code>, <code>layout-overlap</code>, <code>assumption-unasserted</code>,
+<code>memory-not-imported</code> and <code>below-floor</code>. <code>decision.considered</code> lists each route in the order the
+router looked at it, with a <code>verdict</code> of <code>taken</code>, <code>refused</code> or <code>skipped</code>, its reason and a <code>detail</code>
+that quotes the certifier's refusal. <code>decision.cacheHit</code> and <code>certifyMs</code> say whether the analysis
+was paid for on this call. The <code>route</code> that <code>run()</code> returns is the route that executed, which
+differs from the decision when a floor sends the call to the owner (<code>below-floor</code>) or the loss rule
+stops a dispatch (<code>dispatch-lost</code>).</p>
 <h2 id="🔄-context-checkpoints" class="tsd-anchor-link">🔄 Context Checkpoints<a href="#🔄-context-checkpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>@gmitch215/folio/context</code> resets a private Wasm instance between independent jobs.
 <code>prepareContext(bytes)</code> from <code>@gmitch215/folio/compiler</code> adds exports for every memory, mutable
@@ -443,6 +574,44 @@ worker.</p>
 and replay time, and tracked read and write bytes. On generalized batches <code>workerWallMs</code> and
 <code>workerCpuMs</code> hold per-region observations. Measure process CPU once at the coordinator, because
 summing overlapping process-wide counters double counts.</p>
+<p>Subpaths added in 1.1 for certified and routed execution, with their runtime exports and the types
+that go with them:</p>
+<table>
+<thead>
+<tr>
+<th>Subpath</th>
+<th>Exports</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>affine</code></td>
+<td><code>probeAffine</code>, <code>foldAffine</code>, <code>foldExact</code>, <code>serveAffine</code>, <code>affineSerial</code>, <code>advance</code>, <code>predictEnd</code>, <code>AFFINE_TASK</code>, <code>gfApply</code>, <code>gfMul</code>, <code>mask</code>, <code>mulberry</code></td>
+<td>Sampled affine model of a stream function and its chunked fold, with the GF(2) helpers the model uses; <code>exact</code> mode validates every boundary</td>
+</tr>
+<tr>
+<td><code>ownership</code></td>
+<td><code>certifyOwnership</code>, <code>verifyOwnership</code>, <code>guardRecords</code>, <code>checkConfig</code>, <code>memoryAccesses</code>, <code>OWNERSHIP_REASONS</code>, <code>OWNERSHIP_CHECKER</code></td>
+<td>Window certificate or typed refusal, its re-derivation, and the layout and configuration checks a router runs</td>
+</tr>
+<tr>
+<td><code>ownership-redirect</code></td>
+<td><code>redirectOwnership</code>, <code>ownershipRoute</code>, <code>OwnershipRedirectError</code></td>
+<td>Rewrites a certified module so each window access adds a per-worker delta</td>
+</tr>
+<tr>
+<td><code>ownership-slices</code></td>
+<td><code>OwnershipSlices</code>, <code>ownershipSlices</code>, <code>OwnershipSlicesError</code></td>
+<td>The slice pool over a certified module, with serial replay after a trap</td>
+</tr>
+<tr>
+<td><code>router</code></td>
+<td><code>Router</code>, <code>openRouter</code>, <code>decide</code>, <code>analyzeModule</code>, <code>CertificateCache</code>, <code>defaultBackend</code>, <code>routerConstants</code>, <code>ROUTER_VERSION</code>, <code>ROUTER_REASONS</code></td>
+<td>Route choice per call, certificate cache and the decision record</td>
+</tr>
+</tbody>
+</table>
 <p>The generated API reference is published to GitHub Pages from <code>bun run docs:build</code>.</p>
 <h2 id="🧪-consumer-harness" class="tsd-anchor-link">🧪 Consumer Harness<a href="#🧪-consumer-harness" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p><code>scripts/probe/consumer.ts</code> measures any Wasm module against a native instance of itself. A consumer
@@ -559,6 +728,31 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 <td>one 64 MiB stream, eight task workers, Apple M2 Pro</td>
 <td>CRC-32 4.25x, Adler-32 5.00x, AES-128-CTR 3.69x with shared input; CRC-32 3.52x with copied chunks; outputs equal to <code>zlib</code> and <code>node:crypto</code></td>
 </tr>
+<tr>
+<td>Certified stream folds</td>
+<td>ten stream subjects, eight task workers, three sessions, Ryzen 9 9900X</td>
+<td>3.4x to 4.1x at 8 MiB and 4.7x to 6.8x at 64 MiB over the serial call (serial median over steady median, median of sessions), process CPU 1.02 to 1.10 of serial at 64 MiB, every result equal to the serial call</td>
+</tr>
+<tr>
+<td>Ownership certificate, slice route</td>
+<td>frozen final corpus, 47 drivers from 10 projects</td>
+<td>PENDING(readme-final-eval)</td>
+</tr>
+<tr>
+<td>Router</td>
+<td>frozen final corpus, 47 drivers from 10 projects</td>
+<td>PENDING(readme-final-eval)</td>
+</tr>
+<tr>
+<td>Unmodified external programs</td>
+<td>aobench, 6pack with FastLZ and llama2.c at <code>-O2</code>, Ryzen 9 9900X, seven rounds</td>
+<td>the automatic route stays serial on all three: 1.002 (0.999 to 1.007), 1.002 (0.996 to 1.004) and 1.001 (0.998 to 1.003) over serial Wasm; the 1.20 pass line is not met; 0 wrong outputs in 126 timed samples</td>
+</tr>
+<tr>
+<td>Software translation for paging</td>
+<td>PHP stock front page render, Ryzen 9 9900X, ten pairs per cell</td>
+<td>tau 1.581 (1.537 to 1.617), translated render over native minus one, against a gate of at most 1: not met at default V8 tiering; the objective stays open</td>
+</tr>
 </tbody>
 </table>
 <p>A streaming workload stops improving near four workers, and <code>maximumWorkers</code> caps the pool per run.
@@ -612,6 +806,8 @@ samples.</p>
 <li><a href="#🧰-task-pool"><span>🧰 <wbr/>Task <wbr/>Pool</span></a></li>
 <li><a href="#🍰-slice-pool"><span>🍰 <wbr/>Slice <wbr/>Pool</span></a></li>
 <li><a href="#🧮-certified-stream-folds"><span>🧮 <wbr/>Certified <wbr/>Stream <wbr/>Folds</span></a></li>
+<li><a href="#🔏-ownership-certificates"><span>🔏 <wbr/>Ownership <wbr/>Certificates</span></a></li>
+<li><a href="#🚦-router"><span>🚦 <wbr/>Router</span></a></li>
 <li><a href="#🔄-context-checkpoints"><span>🔄 <wbr/>Context <wbr/>Checkpoints</span></a></li>
 <li><a href="#🧊-baked-boot-images"><span>🧊 <wbr/>Baked <wbr/>Boot <wbr/>Images</span></a></li>
 <li><a href="#🧱-execution-and-memory"><span>🧱 <wbr/>Execution and <wbr/>Memory</span></a></li>
