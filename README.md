@@ -39,7 +39,9 @@ the same engine.
 A Worker, a Linux machine in a Durable Object and a PHP interpreter all end up as one Wasm
 instance on one thread. Folio spreads the work of that instance across cores without asking the
 program to be rewritten. The caller passes one ordinary entry point. The compiler discovers the
-regions, so on the automatic route there are no access annotations and no caller-created chunks. The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report says which checks each route runs.
+regions, so on the automatic route there are no access annotations and no caller-created chunks.
+The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report
+says which checks each route runs.
 
 - **Native Sharing.** Isolates map the same backing allocation, so a 256 MiB arena costs about 4 MiB
   to attach to another isolate instead of a copy.
@@ -154,7 +156,18 @@ a linked structure two iterations rewrite, needs `iterationStall`.
 
 ## 🧩 Examples
 
-The [examples](examples) run against the built package with `node examples/<name>.ts` after `bun run build:c` and `bun run build`: `basic` runs one entry, `routing` reads the report and shows capped and adaptive routing, `iteration` runs a loop of per-record calls on workers over a shared memory and compares the digests with the serial run, `context-reset` resets a private instance between jobs, `task-pool` joins independent jobs in order, `slice-pool` fills one shared memory from several threads and audits the run against the serial one, and `boot-image` bakes captured memory into a module.
+The [examples](examples) run against the built package with `node examples/<name>.ts` after
+`bun run build:c` and `bun run build`:
+
+- `basic` runs one entry.
+- `routing` reads the report and shows capped and adaptive routing.
+- `iteration` runs a loop of per-record calls on workers over a shared memory and compares the
+  digests with the serial run.
+- `context-reset` resets a private instance between jobs.
+- `task-pool` joins independent jobs in order.
+- `slice-pool` fills one shared memory from several threads and audits the run against the serial
+  one.
+- `boot-image` bakes captured memory into a module.
 
 ## ⏳ Asynchronous Host Effects
 
@@ -215,11 +228,12 @@ whose `execute(frame)` returns a binary response, and `FolioLane` runs the track
 The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
 ordered byte validation connect independent lanes. A transport failure falls back to native owner
 execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
-must fit the owner runtime. Frames carry the whole snapshot by default. `snapshotEncoding: 'auto'` omits pages
-that are all zero, which saves traffic for sparse arenas, and lanes older than 1.0.1 reject its
-frames. The snapshot limit is 31 MiB by default. A frame over `maximumFrameBytes` (the snapshot limit
-plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that call runs at the
-owner and `diagnostics` names the frame size and the limit. See [the managed procedure](experiments/managed/METHOD.md).
+must fit the owner runtime. Frames carry the whole snapshot by default. `snapshotEncoding: 'auto'`
+omits pages that are all zero, which saves traffic for sparse arenas, and lanes older than 1.0.1
+reject its frames. The snapshot limit is 31 MiB by default. A frame over `maximumFrameBytes` (the
+snapshot limit plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that
+call runs at the owner and `diagnostics` names the frame size and the limit. See
+[the managed procedure](experiments/managed/METHOD.md).
 
 Four options change what a call costs. `ranges` ships the byte ranges a region reads and writes,
 learned from earlier calls, instead of a snapshot: an 8 MiB arena sends about 0.2% of the bytes.
@@ -422,8 +436,8 @@ throws for a certificate with `output`: chunks that start from state zero would 
 A refusal describes the checker and not the function: a function it cannot prove runs serially or through
 `foldAffine` in exact mode. The checker refuses a branch on input data or on the state, a pointer or
 length used as data, state kept in memory or globals, stores other than the in-place byte rewrite,
-imports, a start function and passive data segments. A function that depends on the alignment of its pointer or reads
-past its input is refused. `zeroLength` in the certificate says what a call over no bytes returns, and
+imports, a start function and passive data segments. A function that depends on the alignment of
+its pointer or reads past its input is refused. `zeroLength` in the certificate says what a call over no bytes returns, and
 `foldCertified` runs an empty input as the serial call.
 
 ## 🔏 Ownership Certificates
@@ -660,8 +674,8 @@ zeros, and pages that are zero in both are left out. Pass the global values and 
 the same instance's table references to `captureImage` as `globals` and `table`; it records what boot
 changed. `bakeModule` writes changed i32, i64, f32 and f64 globals into their initial values and
 refuses changed table slots unless `allowTableChanges` is set. It throws `ImageMismatchError`, which
-has a `code`, for a wrong module digest, a start function, no memory, an image over the memory maximum and a global it
-cannot rewrite. Adjacent pages become one segment of at most `maxSegmentBytes` (64 MiB).
+has a `code`, for a wrong module digest, a start function, no memory, an image over the memory
+maximum and a global it cannot rewrite. Adjacent pages become one segment of at most `maxSegmentBytes` (64 MiB).
 
 `applyImage(memory, image)` copies the pages into a fresh instance's memory without baking. It
 cannot set a module's globals or table slots, so an image that records changed ones is refused with
@@ -777,8 +791,8 @@ Pool options are `workers` (up to four by default), `memory`, `imports`, `minimu
 apply when `open` prepares raw bytes), `fuel` (100,000,000), `maxTransactionBytes` (262,144),
 `promising`, `profile` and `adaptiveRouting`. With `adaptiveRouting`, a call shape (entry, width,
 memory size and numeric arguments) whose last two runs mostly replayed or fell back runs natively
-for the next 16 calls and is then probed again. It is off by default. A one-worker pool uses its native entry and creates no idle
-worker.
+for the next 16 calls and is then probed again. It is off by default. A one-worker pool uses its
+native entry and creates no idle worker.
 
 Profiling is opt-in. `report.profile` holds elapsed time, worker observations, validation, commit
 and replay time, and tracked read and write bytes. On generalized batches `workerWallMs` and
