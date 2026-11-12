@@ -1,0 +1,20 @@
+bm-text shard 1/2: ran 6, left 384, of 390 {"accepted-correct":6}
+bm-text shard 1/2: ran 16, left 368, of 384 {"accepted-correct":2,"refused":14}
+FINDING FALSE-ACCEPT-VERIFIER bm-text/crc16/1-const 
+bm-text shard 1/2: ran 10, left 358, of 368 {"refused":7,"accepted-correct":2,"FALSE-ACCEPT-VERIFIER":1}
+bm-text shard 1/2: ran 7, left 351, of 358 {"refused":3,"accepted-correct":4}
+FINDING FALSE-ACCEPT-VERIFIER bm-text/crc16/43-dup-stmt 
+bm-text shard 1/2: ran 13, left 338, of 351 {"refused":11,"accepted-correct":1,"FALSE-ACCEPT-VERIFIER":1}
+bm-text shard 1/2: ran 12, left 326, of 338 {"accepted-correct":6,"refused":6}
+bm-text shard 1/2: ran 5, left 321, of 326 {"accepted-correct":5}
+bm-text shard 1/2: ran 13, left 308, of 321 {"refused":10,"accepted-correct":3}
+bm-text shard 1/2: ran 4, left 304, of 308 {"refused":2,"accepted-correct":2}
+bm-text shard 1/2: ran 13, left 291, of 304 {"refused":9,"accepted-correct":4}
+bm-text shard 1/2: ran 56, left 235, of 291 {"refused":48,"accepted-correct":8}
+bm-text shard 1/2: ran 63, left 172, of 235 {"refused":57,"accepted-correct":6}
+bm-text shard 1/2: ran 20, left 152, of 172 {"refused":16,"accepted-correct":4}
+bm-text shard 1/2: ran 23, left 129, of 152 {"refused":20,"accepted-correct":3}
+FINDING HANG-CHECKER bm-text/miniz-crc32/23-localswap no certifier answer in 80000 ms
+bm-text shard 1/2: ran 51, left 78, of 129 {"refused":47,"accepted-correct":3,"HANG-CHECKER":1}
+bm-text shard 1/2: ran 78, left 0, of 78 {"accepted-correct":1,"refused":77}
+finished

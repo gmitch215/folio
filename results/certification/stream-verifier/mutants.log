@@ -1,0 +1,309 @@
+{"name":"crc32c","id":"ring-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"the multiplier is not a bigint"}
+{"name":"crc32c","id":"ring-only-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"crc32c","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"crc32c","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"crc32c","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"crc32c","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"crc32c","id":"operator-0-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"operator-0-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"operator-1-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"operator-1-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"operator-16-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"operator-16-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"operator-31-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"operator-31-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc32c","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc32c","id":"output-add","field":"output","claim":"changes","verifier":"rejects","reason":"the certificate has an output the call does not produce"}
+{"name":"crc32c","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"crc32c","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"crc32c","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"crc32c","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"step limit"}
+{"name":"crc32c","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"crc32c","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"crc32c","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc32c","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc32c","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc32c","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc16","id":"ring-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"the multiplier is not a bigint"}
+{"name":"crc16","id":"ring-only-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"crc16","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"crc16","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"crc16","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"crc16","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"crc16","id":"operator-0-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"operator-0-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"operator-1-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"operator-1-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"operator-16-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"operator-16-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"operator-31-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"operator-31-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc16","id":"image-digest","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"crc16","id":"image-drop","field":"image","claim":"changes","verifier":"rejects","reason":"the call reads byte 65552, which no image range holds"}
+{"name":"crc16","id":"image-address","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"crc16","id":"init-byte","field":"initialization","claim":"changes","verifier":"rejects","reason":"initialization differs from the bytes the first call writes"}
+{"name":"crc16","id":"init-drop","field":"initialization","claim":"changes","verifier":"rejects","reason":"initialization differs from the bytes the first call writes"}
+{"name":"crc16","id":"init-address","field":"initialization","claim":"changes","verifier":"rejects","reason":"initialization differs from the bytes the first call writes"}
+{"name":"crc16","id":"excl-drop","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65552, which no exclusion covers"}
+{"name":"crc16","id":"excl-shorter","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"crc16","id":"excl-later","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"crc16","id":"excl-wider","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc16","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc16","id":"output-add","field":"output","claim":"changes","verifier":"rejects","reason":"the certificate has an output the call does not produce"}
+{"name":"crc16","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"crc16","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"crc16","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"crc16","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"step limit"}
+{"name":"crc16","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"crc16","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"crc16","id":"zero-identity","field":"zeroLength","claim":"changes","verifier":"rejects","reason":"a call over zero bytes is not the identity"}
+{"name":"crc16","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc16","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc16","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc64","id":"ring-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"the multiplier is not a bigint"}
+{"name":"crc64","id":"ring-only-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"crc64","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"crc64","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"crc64","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"crc64","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"crc64","id":"operator-0-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"operator-0-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"operator-1-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"operator-1-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"operator-32-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"operator-32-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"operator-63-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"operator-63-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"crc64","id":"image-digest","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"crc64","id":"image-drop","field":"image","claim":"changes","verifier":"rejects","reason":"the call reads byte 65552, which no image range holds"}
+{"name":"crc64","id":"image-address","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"crc64","id":"init-byte","field":"initialization","claim":"changes","verifier":"rejects","reason":"initialization differs from the bytes the first call writes"}
+{"name":"crc64","id":"init-drop","field":"initialization","claim":"changes","verifier":"rejects","reason":"initialization differs from the bytes the first call writes"}
+{"name":"crc64","id":"init-address","field":"initialization","claim":"changes","verifier":"rejects","reason":"initialization differs from the bytes the first call writes"}
+{"name":"crc64","id":"excl-drop","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65552, which no exclusion covers"}
+{"name":"crc64","id":"excl-shorter","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"crc64","id":"excl-later","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"crc64","id":"excl-wider","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc64","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc64","id":"output-add","field":"output","claim":"changes","verifier":"rejects","reason":"the certificate has an output the call does not produce"}
+{"name":"crc64","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"crc64","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"crc64","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"crc64","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"step limit"}
+{"name":"crc64","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"the entry signature differs from the layout"}
+{"name":"crc64","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"crc64","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc64","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc64","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"crc64","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"poly31","id":"ring-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"poly31","id":"ring-only-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"poly31","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"poly31","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"poly31","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the entry signature differs from the layout"}
+{"name":"poly31","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"poly31","id":"operator-plus1","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"poly31","id":"operator-xor","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"poly31","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"poly31","id":"output-add","field":"output","claim":"changes","verifier":"rejects","reason":"the certificate has an output the call does not produce"}
+{"name":"poly31","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"poly31","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"poly31","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"poly31","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"step limit"}
+{"name":"poly31","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"poly31","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"poly31","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"poly31","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"poly31","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"poly31","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"lcg","id":"ring-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"lcg","id":"ring-only-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"lcg","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"lcg","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"lcg","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the entry signature differs from the layout"}
+{"name":"lcg","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"lcg","id":"operator-plus1","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"lcg","id":"operator-xor","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"lcg","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"lcg","id":"output-add","field":"output","claim":"changes","verifier":"rejects","reason":"the certificate has an output the call does not produce"}
+{"name":"lcg","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"lcg","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"lcg","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"lcg","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"step limit"}
+{"name":"lcg","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"lcg","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"lcg","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"lcg","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"lcg","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"lcg","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"miniz-crc32","id":"ring-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"the multiplier is not a bigint"}
+{"name":"miniz-crc32","id":"ring-only-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"miniz-crc32","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"miniz-crc32","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"miniz-crc32","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"miniz-crc32","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"miniz-crc32","id":"operator-0-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"operator-0-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"operator-1-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"operator-1-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"operator-16-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"operator-16-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"operator-31-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"operator-31-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"miniz-crc32","id":"image-digest","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"miniz-crc32","id":"image-drop","field":"image","claim":"changes","verifier":"rejects","reason":"the call reads byte 65536, which no image range holds"}
+{"name":"miniz-crc32","id":"image-shorter","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"miniz-crc32","id":"image-address","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"miniz-crc32","id":"excl-drop","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"miniz-crc32","id":"excl-shorter","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 66559, which no exclusion covers"}
+{"name":"miniz-crc32","id":"excl-later","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"miniz-crc32","id":"excl-wider","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"miniz-crc32","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"miniz-crc32","id":"output-add","field":"output","claim":"changes","verifier":"rejects","reason":"the certificate has an output the call does not produce"}
+{"name":"miniz-crc32","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"miniz-crc32","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"miniz-crc32","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"miniz-crc32","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"step limit"}
+{"name":"miniz-crc32","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"miniz-crc32","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"miniz-crc32","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"miniz-crc32","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"miniz-crc32","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"miniz-crc32","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"adler32","id":"ring-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"adler32","id":"ring-only-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"adler32","id":"ring-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"the multiplier is not a bigint"}
+{"name":"adler32","id":"ring-only-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"adler32","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"residue model needs two digits of a 32-bit state"}
+{"name":"adler32","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"adler32","id":"operator-0-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"adler32","id":"operator-1-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"adler32","id":"operator-2-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"adler32","id":"operator-3-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"adler32","id":"operator-plus-p","field":"model.operator","claim":"same","verifier":"accepts","reason":""}
+{"name":"adler32","id":"modulus","field":"model.modulus","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"adler32","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"adler32","id":"output-add","field":"output","claim":"changes","verifier":"rejects","reason":"the certificate has an output the call does not produce"}
+{"name":"adler32","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"adler32","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"adler32","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"adler32","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"step limit"}
+{"name":"adler32","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"adler32","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"adler32","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"adler32","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"adler32","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"adler32","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"xlcg","id":"ring-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"xlcg","id":"ring-only-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xlcg","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"xlcg","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xlcg","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the entry signature differs from the layout"}
+{"name":"xlcg","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"xlcg","id":"operator-plus1","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xlcg","id":"operator-xor","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xlcg","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"xlcg","id":"output-drop","field":"output","claim":"changes","verifier":"rejects","reason":"the call rewrites its input but the certificate has no output"}
+{"name":"xlcg","id":"output-flag","field":"output","claim":"changes","verifier":"rejects","reason":"bad output field"}
+{"name":"xlcg","id":"step-plus1","field":"output.step","claim":"changes","verifier":"rejects","reason":"the step does not reproduce the byte-free fold at length 1"}
+{"name":"xlcg","id":"step-drop","field":"output.step","claim":"same","verifier":"accepts","reason":""}
+{"name":"xlcg","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"xlcg","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"xlcg","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"xlcg","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"symbolic data written outside the input"}
+{"name":"xlcg","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"xlcg","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"xlcg","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"xlcg","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"xlcg","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"xlcg","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"xshift","id":"ring-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"the multiplier is not a bigint"}
+{"name":"xshift","id":"ring-only-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xshift","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"xshift","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xshift","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"xshift","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"xshift","id":"operator-0-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"operator-0-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"operator-1-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"operator-1-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"operator-16-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"operator-16-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"operator-31-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"operator-31-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xshift","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"xshift","id":"output-drop","field":"output","claim":"changes","verifier":"rejects","reason":"the call rewrites its input but the certificate has no output"}
+{"name":"xshift","id":"output-flag","field":"output","claim":"changes","verifier":"rejects","reason":"bad output field"}
+{"name":"xshift","id":"step-plus1","field":"output.step","claim":"changes","verifier":"rejects","reason":"the step does not reproduce the byte-free fold at length 1"}
+{"name":"xshift","id":"step-drop","field":"output.step","claim":"same","verifier":"accepts","reason":""}
+{"name":"xshift","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"xshift","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"xshift","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"xshift","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"symbolic data written outside the input"}
+{"name":"xshift","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"xshift","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"xshift","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"xshift","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"xshift","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"xshift","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"xsbox","id":"ring-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"the multiplier is not a bigint"}
+{"name":"xsbox","id":"ring-only-z2w","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xsbox","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"xsbox","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xsbox","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"xsbox","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"xsbox","id":"operator-0-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"operator-0-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"operator-1-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"operator-1-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"operator-16-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"operator-16-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"operator-31-0","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"operator-31-5","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xsbox","id":"image-digest","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"xsbox","id":"image-drop","field":"image","claim":"changes","verifier":"rejects","reason":"the call reads byte 65536, which no image range holds"}
+{"name":"xsbox","id":"image-shorter","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"xsbox","id":"image-address","field":"image","claim":"changes","verifier":"rejects","reason":"an image digest differs from the memory"}
+{"name":"xsbox","id":"excl-drop","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"xsbox","id":"excl-shorter","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65791, which no exclusion covers"}
+{"name":"xsbox","id":"excl-later","field":"exclusions","claim":"changes","verifier":"rejects","reason":"the call touches byte 65536, which no exclusion covers"}
+{"name":"xsbox","id":"excl-wider","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"xsbox","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"xsbox","id":"output-drop","field":"output","claim":"changes","verifier":"rejects","reason":"the call rewrites its input but the certificate has no output"}
+{"name":"xsbox","id":"output-flag","field":"output","claim":"changes","verifier":"rejects","reason":"bad output field"}
+{"name":"xsbox","id":"step-plus1","field":"output.step","claim":"changes","verifier":"rejects","reason":"the step does not reproduce the byte-free fold at length 1"}
+{"name":"xsbox","id":"step-drop","field":"output.step","claim":"same","verifier":"accepts","reason":""}
+{"name":"xsbox","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"xsbox","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"xsbox","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"xsbox","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"symbolic data written outside the input"}
+{"name":"xsbox","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"xsbox","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"xsbox","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"xsbox","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"xsbox","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"xsbox","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"name":"xfeed","id":"ring-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"the operator is not a column list"}
+{"name":"xfeed","id":"ring-only-gf2","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xfeed","id":"ring-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"the residue operator is not a 2 by 2 matrix with a modulus"}
+{"name":"xfeed","id":"ring-only-zp","field":"ring","claim":"changes","verifier":"rejects","reason":"model ring differs"}
+{"name":"xfeed","id":"bits","field":"bits","claim":"changes","verifier":"rejects","reason":"the entry signature differs from the layout"}
+{"name":"xfeed","id":"align","field":"model.align","claim":"changes","verifier":"rejects","reason":"model width or alignment differs"}
+{"name":"xfeed","id":"operator-plus1","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xfeed","id":"operator-xor","field":"model.operator","claim":"changes","verifier":"rejects","reason":"the model operator does not match the fold at length 1"}
+{"name":"xfeed","id":"excl-extra","field":"exclusions","claim":"same","verifier":"accepts","reason":""}
+{"name":"xfeed","id":"output-drop","field":"output","claim":"changes","verifier":"rejects","reason":"the call rewrites its input but the certificate has no output"}
+{"name":"xfeed","id":"output-flag","field":"output","claim":"changes","verifier":"rejects","reason":"bad output field"}
+{"name":"xfeed","id":"step-add","field":"output.step","claim":"changes","verifier":"rejects","reason":"the state step reads the input bytes but the certificate has a step"}
+{"name":"xfeed","id":"module-digest","field":"moduleSha256","claim":"changes","verifier":"rejects","reason":"the certificate describes a different module"}
+{"name":"xfeed","id":"entry-name","field":"entry","claim":"changes","verifier":"rejects","reason":"no such function export"}
+{"name":"xfeed","id":"entry-only","field":"entry","claim":"changes","verifier":"rejects","reason":"layout differs"}
+{"name":"xfeed","id":"layout-swap","field":"layout","claim":"changes","verifier":"rejects","reason":"symbolic data written outside the input"}
+{"name":"xfeed","id":"layout-state","field":"layout","claim":"changes","verifier":"rejects","reason":"a branch depends on a symbolic value"}
+{"name":"xfeed","id":"schema","field":"schema","claim":"changes","verifier":"rejects","reason":"not a certificate of this schema"}
+{"name":"xfeed","id":"zero-transforms","field":"zeroLength","claim":"same","verifier":"accepts","reason":""}
+{"name":"xfeed","id":"block","field":"block","claim":"same","verifier":"accepts","reason":""}
+{"name":"xfeed","id":"checker","field":"checker","claim":"same","verifier":"accepts","reason":""}
+{"name":"xfeed","id":"stats","field":"stats","claim":"same","verifier":"accepts","reason":""}
+{"total":{"mutants":307,"changes":245,"rejected":245,"same":62,"acceptedSame":62}}
+exit=0

@@ -1,0 +1,7 @@
+redo shard 0/1: ran 10, left 9, of 19 {"accepted-correct":10}
+redo shard 0/1: ran 8, left 1, of 9 {"accepted-correct":4,"refused":4}
+FINDING raw-worker bm-byte/xsbox/9-p160 Error [ERR_WORKER_OUT_OF_MEMORY]: Worker terminated due to reaching memory limit: JS heap out of memory
+    at [kOnExit] (node:internal/worker:401:26)
+    at Worker.<computed>.onexit (node:internal/worker:298:20)
+redo shard 0/1: ran 1, left 0, of 1 {"raw-worker":1}
+finished
