@@ -34,4 +34,5 @@
 - [router-development-sweep](router-development-sweep/README.md)
 - [router-memory-equality](router-memory-equality/README.md)
 - [router-ablation-development](router-ablation-development/README.md)
+- [final-evaluation](final-evaluation/README.md)
 - [external-applications](external-applications/README.md)
