@@ -9,7 +9,10 @@ import { Sqlite, sharedMemory } from './sqlite.ts';
 const here = dirname(fileURLToPath(import.meta.url));
 export const MODULE_PATH = join(here, 'build', 'sqlite-lanes.wasm');
 export const FIXTURE_DIR = join(here, 'build', 'fixture');
-const CLANG = '/opt/homebrew/opt/llvm/bin/clang';
+const llvm =
+	process.env.LLVM ??
+	(existsSync('/opt/homebrew/opt/llvm/bin/clang') ? '/opt/homebrew/opt/llvm/bin' : '');
+const CLANG = llvm ? join(llvm, 'clang') : 'clang';
 const MAX_SHARD_BYTES = 14 * 1024 * 1024;
 const WIDTHS = [4, 8];
 const SCHEMA =

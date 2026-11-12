@@ -31,7 +31,12 @@ jobs:
         with:
           node-version: '26'
       - name: Install clang and lld
-        run: sudo apt-get install -y clang lld
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get update && sudo apt-get install -y clang lld && exit 0
+            sleep 15
+          done
+          exit 1
       - name: Install Dependencies
         run: bun install --frozen-lockfile
       - name: Typecheck
@@ -39,7 +44,9 @@ jobs:
       - name: Unit Suite
         run: bun run test
       - name: Integration Suite on Local workerd
-        run: bun run test:integration
+        run: |
+          export FOLIO_SQLITE_SOURCE="$(sh scripts/build/sqlite-source.sh)"
+          bun run test:integration
       - name: Build the Library
         run: bun run build
       - name: Run the Example
