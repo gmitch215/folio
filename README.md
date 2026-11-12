@@ -510,7 +510,11 @@ return a different result than the serial program:
 The `allocator`, `prefix` and `config` modes add their own premises, which the certificate lists in
 `allocator.assumptions`, `prefix.rules` and `config.rules`. The checker has produced false
 certificates. A red team round found three classes of them that earlier mutation testing had not
-found, and the fixes are part of this release. PENDING(readme-audit-status)
+found, and the fixes are part of this release. Red team round 3 found four more classes before the
+checker was frozen, and those are closed too. On the frozen checker, the adversary families and two
+generators of 20,000 modules each found no module whose certificate was wrong. The adversary
+families accept the same number of modules as before the fixes, so they do not exercise the new
+refusals, and the generators have blind spots. The premises above still apply.
 
 ## 🚦 Router
 
@@ -852,8 +856,8 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 | Record-level corpus                | 30 bulk drivers, Ryzen 9 9900X, three sessions of five rounds                   | default admission wins on 7 drivers (SHA-256 2.01x, MD5 1.46x, SHA-1 1.55x, miniz CRC-32 1.52x, AES-CTR 1.21x, LZ4 compress 1.06x); explicit private contexts win on 26 (1.48x to 3.64x on 25); every output equal to the serial one |
 | Exact chunked recurrences          | one 64 MiB stream, eight task workers, Apple M2 Pro                             | CRC-32 4.25x, Adler-32 5.00x, AES-128-CTR 3.69x with shared input; CRC-32 3.52x with copied chunks; outputs equal to `zlib` and `node:crypto`                                                                                        |
 | Certified stream folds             | ten stream subjects, eight task workers, three sessions, Ryzen 9 9900X          | 3.4x to 4.1x at 8 MiB and 4.7x to 6.8x at 64 MiB over the serial call (serial median over steady median, median of sessions), process CPU 1.02 to 1.10 of serial at 64 MiB, every result equal to the serial call                    |
-| Ownership certificate, slice route | frozen final corpus, 47 drivers from 10 projects                                | PENDING(readme-final-eval)                                                                                                                                                                                                           |
-| Router                             | frozen final corpus, 47 drivers from 10 projects                                | PENDING(readme-final-eval)                                                                                                                                                                                                           |
+| Ownership certificate, slice route | frozen final corpus, 47 drivers from 10 projects                                | window certificate on 1 of 47 drivers (`minimp3-mp3dec_init`), run on the window in 21 of 30 arm64 rounds and 0 of 30 x86_64 rounds; router geomean stays 0.90, gate missed (`router-ablation-final.ts`, rig and Mac)                |
+| Router                             | frozen final corpus, 47 drivers from 10 projects                                | geomean 0.899 (0.861 to 0.935) on the Ryzen 9 9900X rig and 0.900 (0.858 to 0.941) on the Apple M2 Pro, three sessions each, against 1.20; slowest of the five slowest 0.594 and 0.561 against 0.90; 17,484 rows, 0 wrong; not met   |
 | Unmodified external programs       | aobench, 6pack with FastLZ and llama2.c at `-O2`, Ryzen 9 9900X, seven rounds   | the automatic route stays serial on all three: 1.002 (0.999 to 1.007), 1.002 (0.996 to 1.004) and 1.001 (0.998 to 1.003) over serial Wasm; the 1.20 pass line is not met; 0 wrong outputs in 126 timed samples                       |
 | Software translation for paging    | PHP stock front page render, Ryzen 9 9900X, ten pairs per cell                  | tau 1.581 (1.537 to 1.617), translated render over native minus one, against a gate of at most 1: not met at default V8 tiering; the objective stays open                                                                            |
 

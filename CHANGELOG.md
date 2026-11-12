@@ -49,8 +49,11 @@
 - `@gmitch215/folio/router` with `Router`, `CertificateCache`, `decide` and `analyzeModule`. The router picks
   the certified summary, the certified window, tracked speculation or serial per call, caches certificates
   and refusals by module digest, backend, checker versions and options, and ends a dispatch after two losing
-  dispatches. The ownership and router results are development results: 6 of 10 drivers certify and the
-  router's development interval does not exclude 1.0 (see the report).
+  dispatches. The ownership and router results on the development drivers are development results: 6 of
+  10 drivers certify and the router's development interval does not exclude 1.0. On the frozen final
+  corpus of 47 drivers the router missed its gates: geomean 0.899 on x86_64 and 0.900 on arm64 against
+  1.20, slowest of the five slowest drivers 0.594 and 0.561 against 0.90, no wrong output in 17,484 rows
+  (see the report).
 - A second verifier for stream certificates (`scripts/research/certify-verify*.ts`), a counts script
   (`certify-counts.ts`) and the four adversary rounds, with their raw rows under `results/certification/`.
 - Research tooling for the elastic-memory study under `scripts/research/` and `experiments/elastic*`: the
