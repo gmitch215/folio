@@ -71,6 +71,9 @@
   it checks.
 - `ContextResetReport` has a new field, `skippedBytes`, always present and zero without `overwrite`.
 
+The evaluation behind this release, including the gates it missed, is in the
+[technical report](TECHNICAL_REPORT.md) and under [results/](results).
+
 ## 1.0.1
 
 ### Added
