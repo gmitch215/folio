@@ -11,7 +11,7 @@ Nothing here runs live by default. `live.ts` without `--approved` prints the pri
 - `service.ts` is the object (`init`, `run`, `verify`, `clear`) and the front-Worker `route`. `worker.ts` is the only Cloudflare-specific file.
 - `programs.ts` defines the four workloads, their page contents and their oracles. `trace-build.ts` builds the skewed, scan and chase module. The dense program is the frozen Codex `fixture.wasm`.
 - `plan.ts` holds the variants and the price function. `predictions.ts` writes the model's counts before a sweep. `driver.ts` is the client loop, `live.ts` the deploy driver, `local.ts` the in-process world, `sweep.ts` the full-scale local sweep, `workerd.ts` a smoke test on local workerd.
-- `lz4.ts` and `wasm/` are the LZ4 block codec: `lz4_wasm.c` over the vendored LZ4 1.10.0 source in `wasm/lz4/`. `lz4-build.ts` builds `build/lz4.wasm` with clang when an input is newer, and `wasm/source.json` pins the source and the output.
+- `lz4.ts` and `wasm/` are the LZ4 block codec: `lz4_wasm.c` over the vendored LZ4 1.10.0 source in `wasm/lz4/`. `lz4-build.ts` builds `build/lz4.wasm` with clang when an input is newer, and `wasm/source.json` pins the source files and one output digest per compiler version, because the module bytes change with the compiler.
 
 ## Variants
 

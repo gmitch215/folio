@@ -4,7 +4,12 @@
 		"tarball": "https://github.com/lz4/lz4/archive/refs/tags/v1.10.0.tar.gz",
 		"tarballSha256": "537512904744b35e232912055ccf8ec66d768639ff3abe5788d90d792ec5f48b",
 		"libLz4cSha256": "9396f7de527bc8435de9c7569fb7998e56545a84b4f3c2d808c0235c01774539",
+		"libLz4hSha256": "26b82efc53d1570f3b54eef02e9c4764c1ad374ff03cac04e2ced5ea4d4c552f",
+		"wrapperSha256": "387eb5433422c025f76c2f174e8bfdb2c76511bbc15cd018e495d2d8cc1c459a",
 		"licence": "BSD-2-Clause for lib/"
 	},
-	"lz4WasmSha256": "2863b477913b1a3b8688a12e669a82e795cb74e13cc90c48e41bd61c3cfcdd1b"
+	"lz4WasmByCompiler": {
+		"Homebrew clang version 23.1.0": "2863b477913b1a3b8688a12e669a82e795cb74e13cc90c48e41bd61c3cfcdd1b",
+		"Ubuntu clang version 21.1.8 (6ubuntu1)": "2b83f71e33ce31a5e68e67eb6791ce1bb7472ea9e3b3ba052ea329a6d066b3a8"
+	}
 }

@@ -23,6 +23,9 @@ const env = {
 		.join(delimiter)
 };
 
+export const compilerVersion = () =>
+	execFileSync(clang(), ['--version'], { env, encoding: 'utf8' }).split('\n')[0]!;
+
 // build/lz4.wasm is rebuilt when any vendored input is newer; the module name in the output is the file name, so the name stays lz4.wasm
 export function ensureLz4(): string {
 	const target = join(out, 'lz4.wasm');

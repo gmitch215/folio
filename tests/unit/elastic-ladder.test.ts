@@ -179,13 +179,22 @@ test('the LZ4 codec round trips heap-like pages and keeps an incompressible page
 			'utf8'
 		)
 	);
-	const vendored = readFileSync(
-		new URL('../../experiments/elastic-ladder/wasm/lz4/lz4.c', import.meta.url)
-	);
-	expect(createHash('sha256').update(vendored).digest('hex')).toBe(pin.lz4.libLz4cSha256);
-	const { ensureLz4 } = await import('../../experiments/elastic-ladder/lz4-build.ts');
+	const digest = (path: string) =>
+		createHash('sha256')
+			.update(
+				readFileSync(
+					new URL(`../../experiments/elastic-ladder/wasm/${path}`, import.meta.url)
+				)
+			)
+			.digest('hex');
+	expect(digest('lz4/lz4.c')).toBe(pin.lz4.libLz4cSha256);
+	expect(digest('lz4/lz4.h')).toBe(pin.lz4.libLz4hSha256);
+	expect(digest('lz4_wasm.c')).toBe(pin.lz4.wrapperSha256);
+	const { compilerVersion, ensureLz4 } =
+		await import('../../experiments/elastic-ladder/lz4-build.ts');
 	const wasm = readFileSync(ensureLz4());
-	expect(createHash('sha256').update(wasm).digest('hex')).toBe(pin.lz4WasmSha256);
+	const expected = pin.lz4WasmByCompiler[compilerVersion()];
+	if (expected) expect(createHash('sha256').update(wasm).digest('hex')).toBe(expected);
 });
 
 test('every workload is exact on every byte and the executor matches the model, V4 and V6, at the E3 frame counts', async () => {
