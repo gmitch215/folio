@@ -59,7 +59,7 @@ Folio has three execution backends. They were measured separately and are not on
 The corpus holds library kernels and no full application. See
 [Independent Corpus](#-independent-corpus).
 
-The v1.1 work added an ownership certificate and a router, a second verifier and fourth adversary round for stream certificates, and an elastic-memory study. Every gate measured so far is unmet. The ownership certificate covers 6 of 10 drivers against a locked line of 8. The router's development geomean is 1.209 with an interval that does not exclude 1.0, and the final-corpus gate is not yet measured. Three unmodified outside programs gain nothing. Software translation at default tiering misses its gate on every PHP route, the managed page plane misses its gates on days 1 and 2, and no deployed fix completes the failing Thunder routes. Each section names the mechanism that closed and the objective that stays open.
+The v1.1 work added an ownership certificate and a router, a second verifier and fourth adversary round for stream certificates, and an elastic-memory study. Every gate measured so far is unmet. The ownership certificate covers 6 of 10 drivers against a locked line of 8. The router's development geomean is 1.209 with an interval that does not exclude 1.0, and on the frozen final corpus it misses both speed gates: geomean 0.899 on x86_64 and 0.900 on arm64 against 1.20, slowest of the five slowest drivers 0.594 and 0.561 against 0.90, with no wrong output. Three unmodified outside programs gain nothing. Software translation at default tiering misses its gate on every PHP route, the managed page plane misses its gates on days 1 and 2, and no deployed fix completes the failing Thunder routes. Each section names the mechanism that closed and the objective that stays open.
 
 ### What Decides the Design
 
@@ -89,8 +89,8 @@ Copying whole arenas will not scale past the owner's memory.
 The acceptance answer is "Arbitrary input; preserve serial dependencies." It means Folio accepts
 any valid program the host engine accepts, with its required host bindings, and on the routes that
 validate keeps the serial result. The routes that take a caller declaration (task pool, slice pool,
-chunked recurrences, declared merge) keep the contract in Correctness Boundary. It does not make an unknown dependency a proved serial one, and it does not promise that
-every program speeds up.
+chunked recurrences, declared merge) keep the contract in Correctness Boundary. It does not make
+an unknown dependency a proved serial one, and it does not promise that every program speeds up.
 
 The input domain is WebAssembly supported by the host engine. It is not arbitrary JavaScript, and
 it is not machine code without an adapter. A JS runtime compiled to Wasm can own its guest heap,
@@ -475,8 +475,8 @@ improvement 1.291x, with a slower paired sample in the 0.739 to 1.552 range). Th
 slower eight-worker pair, but seven pairs do not establish a universal improvement. Per-core procfs
 counters use 10 ms ticks, so no scheduler or hardware-stall attribution is claimed.
 
-Pinning is a verified Linux probe mechanism, not a portable default. Node's Worker API has no
-affinity parameter. A production host can apply native thread placement under its own scheduler.
+Pinning is a verified Linux probe mechanism. Node's Worker API has no affinity parameter, so it
+cannot be a portable default. A production host can apply native thread placement under its own scheduler.
 Worker caps, batching, singleton routing and shared arenas do not depend on affinity.
 
 Final run: peak RSS 1699.129 MiB, minimum free RAM 24293.6 MiB, one-minute load 0 to 0.37. Source
@@ -553,14 +553,14 @@ capability, same-process placement, retained backing-store lifetime, growth coor
 cancellation and explicit physical and private accounting. It must reject remote and cross-tenant
 attachments, and revocation stops new attachments while existing native references run down.
 Managed JS cannot install this registry through the tested RPC interface. That is a missing host
-capability, not evidence that V8 cannot share memory.
+capability and says nothing about whether V8 can share memory.
 
 ### Managed Coherent Backend
 
 `src/managed.ts` with `src/frames.ts` (`@gmitch215/folio/managed`) runs entirely in managed Workers
 and Durable Objects. The coordinator and its JSPI stack stay in a Durable Object. It sends bounded
 binary region batches and a frozen memory snapshot to named lane objects, and validates results in
-order. This is copied coherent memory, not shared memory. Neither route depends on Node
+order. The memory is copied and kept coherent, and none of it is shared. Neither route depends on Node
 compatibility creating operating-system threads.
 
 Final run `experiments/managed/runs/cfw-folio-managed-a627504d/`: all 39 rows pass (13 warmups,
@@ -584,8 +584,8 @@ aggregate CPU claim is made, and every raw sample and byte count stays in the re
 The backend copies a whole frozen arena per lane batch, with a default snapshot limit of 31 MiB.
 The request frame limit defaults to the snapshot limit plus 1 MiB, capped 4 KiB below the 32 MiB
 Workers RPC argument limit, and a frame over it is not sent: the call falls back to the owner and
-the diagnostics name the frame size and the limit (see Costs, Snapshot Limits and State Loss). It has no distributed page ownership, residency leases or native memory larger than the
-owner's budget. WebSocket events need `binaryType = 'arraybuffer'`; the default blob events produced
+the diagnostics name the frame size and the limit (see Costs, Snapshot Limits and State Loss). It has no distributed page ownership, residency
+leases or native memory larger than the owner's budget. WebSocket events need `binaryType = 'arraybuffer'`; the default blob events produced
 invalid frames and correctly triggered native fallback.
 
 Earlier attempts stay in their own cleaned-up run directories. The first hit route propagation
@@ -614,8 +614,8 @@ limit, every lane call fails: the serialized frame is 33,554,540 bytes against t
 limit for RPC arguments, so all four operations complete exact through native fallback. The usable
 snapshot on this backend is below 32 MiB by the frame header, so a 32 MiB default could not be
 used. The default is 31 MiB, the encoded frame size is checked before a frame is sent, and unit
-tests cover a frame at the limit and one byte over it for two program shapes with different header sizes and for sparse encoding.
-A deployed run at the 31 MiB default is not measured. CPU for the width-four and large-snapshot runs
+tests cover a frame at the limit and one byte over it for two program shapes with different header
+sizes and for sparse encoding. A deployed run at the 31 MiB default is not measured. CPU for the width-four and large-snapshot runs
 was not recovered.
 
 **Operation cost.** The [operations study](results/managed/operations/README.md) removes the oracle,
@@ -655,8 +655,8 @@ feasibility probe with a known kernel, and no Folio code ran.
 
 **Overlap.** Four concurrent lanes ran CPU work with a serialization index of 1.42 (1.0 is full
 overlap and 4.0 fully serialized), an observed wall overlap of about 2.8x on a Free account. That is
-a measurement of what this account did over 14 rounds, and it is not a guarantee of parallel CPU
-execution across Workers. The platform documentation says service-bound Workers run on the same
+what this account did over 14 rounds; it does not guarantee parallel CPU execution across
+Workers. The platform documentation says service-bound Workers run on the same
 thread by default, and a local workerd process gave 0.99 to 1.01 for a similar shape (see One workerd
 process runs CPU-bound requests one at a time). The cause of the disagreement was not isolated. A
 later run with calls of about 100 ms and 380 ms (Lane Concurrency) does not reproduce the 1.42: four
@@ -666,8 +666,8 @@ longer calls.
 **Transfer.** Four partitions of 16 KiB in an arena of 128 KiB, 1 MiB or 8 MiB compared a full-arena
 copy per lane with a range-only copy and a retained copy. The full copy fell from 2.64x over one
 resident lane at 128 KiB to 1.03x at 1 MiB and 0.22x at 8 MiB. Range-only and retained stayed at 2.6x
-to 3.1x, with 0.2% and 0.05% of the full copy's payload at 8 MiB and digests equal. Bytes sent are
-the lever for the copy cost of the managed backend on this route.
+to 3.1x, with 0.2% and 0.05% of the full copy's payload at 8 MiB and digests equal. Bytes sent
+drive the copy cost of the managed backend on this route.
 
 The kernel declared its ranges. Folio knows a footprint before a call only for guard-proven kernels,
 so general programs still need a way to bound what a region touches, plus ordered validation,
@@ -726,8 +726,8 @@ Medians over zero and random fill, three measured rounds, and the 65,536-round r
 (Speculative Fuel). On Durable Object lanes the speedup grows with the kernel's length, and the
 owner's CPU fell to 78 to 81 ms against 6.5 s for the serial arm. The 65,536-round row is the first
 managed result in this report where lanes beat serial execution of the same program by a wide
-margin, and it covers a kernel that touches two memory words per 4,096 rounds of arithmetic, so it
-measures transport and overlap and carries no tracking cost. Corpus kernels behave differently
+margin. The kernel touches two memory words per 4,096 rounds of arithmetic, so the row measures
+transport and overlap and carries no tracking cost. Corpus kernels behave differently
 (Managed Corpus Transfer). Four Durable Object lanes could overlap up to about 2.8 times by the
 concurrency run, and 2.0 times was observed; the gap is not explained. Lane CPU for Durable Object
 calls did not arrive through `wrangler tail`, so those rows carry owner CPU and wall only.
@@ -879,7 +879,7 @@ gives no termination acknowledgement.
 | Native kernel                  | 119.250 ms | 128.695 ms | 63.620 ms | 30.785 ms | 36.790 ms |
 
 Four workers give 3.874x over the owner. The kernel partitions are explicit, so this proves the
-memory and CPU mechanism and not automatic extraction. No native aggregate CPU meter exists; the
+memory and CPU mechanism and says nothing about automatic extraction. No native aggregate CPU meter exists; the
 whole session reports 5257 ms and its page 2487.435 ms. Browser JSPI is absent, so the generalized
 controller needs a fallback or another configuration before it can use this arena. A compiler-proved
 countdown adapter without JSPI bridges it for the guarded subset (Browser Automatic Extraction
@@ -966,8 +966,8 @@ The generalized implementation repeats the comparisons in
 `results/compatibility/integration/admitted.json`. tinyimg image creation runs three regions on two
 workers; fill finds 24576 singleton regions that stay local after the singleton routing fix; invert
 stays native. No image speedup is claimed. The machine core queue stays serial through `runAll` with its
-imported global and table state. This is artifact compatibility and observed extraction, not a full
-consumer adapter. SHA256: tinyimg
+imported global and table state. This shows artifact compatibility and observed extraction; no full
+consumer adapter exists. SHA256: tinyimg
 `b6b52b8c2b9341191795d589d2bf8590f728539766c9914f900ae0fe96a914bb`, machine core
 `0a92cb8087557b71c763e5aa38c72d17b3cf47fafa67352150df30f2a1340a22`.
 
@@ -1138,7 +1138,7 @@ not trace read and write sets. The native guard
 planner (`nativePlan`) accepts none of the 32 defined functions of the AES-CBC decrypt, AES-CTR and
 SHA-256 artifacts, for reasons such as computed addresses, 64-bit accesses, stack-pointer globals and
 calls. That closes coarsening and the unmodified prover as mechanisms for these kernels. The
-objective stays open, and the [single-call grain study](results/corpus/single-call-grain/README.md)
+[single-call grain study](results/corpus/single-call-grain/README.md)
 takes the next step on the explicit route: with the chaining value passed per grain, one 64 KiB call
 of AES-CBC decrypt reaches 2.1x to 2.7x at eight workers when the private context is 1 MiB, and
 0.7x to 0.9x with the corpus layout of 8 MiB, because the checkpoint compares every page of the
@@ -1286,7 +1286,7 @@ dispatch lost was refused. Four refusals gave up a speedup of 1.26x to 1.49x on 
 serial wall. The decision follows the measured time of iteration 0, so a loop whose first iteration is much
 cheaper or dearer than the rest can be misjudged, and mixed-size loops were not swept.
 
-Its limits matter. The route accepts one loop shape: pointer and counter updates may sit at any top-level
+The route accepts one loop shape: pointer and counter updates may sit at any top-level
 position of the body, with a constant step or a step held in a local that the loop does not write, and an
 accumulator that the code after the loop reads is refused. The route needs a shared host memory and
 refuses a module that executes `memory.size` or `memory.grow`. An iteration that writes more than 2,048
@@ -1458,9 +1458,9 @@ measured 3.52x that way against 4.25x shared. AES chunks
 must be multiples of 16 bytes except the last, because the kernel restarts its partial block on
 every call, and the helper refuses other boundaries.
 
-This is a speedup of one input to a program that was never written to run in parallel, with no
-change to its result. It is a different mechanism from the record-level wins: the chunks are not
-independent iterations, they are a monoid homomorphism over the input. A recurrence with no such
+This speeds up one input to a program that was never written to run in parallel, with no change
+to its result. The mechanism differs from the record-level wins: the chunks are a monoid
+homomorphism over the input and are not independent iterations. A recurrence with no such
 structure stays serial under this route (Architectural Boundaries).
 
 ### Affine State Recovery
@@ -1799,7 +1799,7 @@ per size, and no width or size sweep for state in memory or recorded boundaries.
 
 The 30 drivers ran through `SlicePool` at their default record counts (`results/corpus/slice-pool-census/`, eight workers, three sessions of five rounds, fresh process per cell, quiet rig). Twenty run exact at 1.94x to 3.88x: all five hashes and checksums of independent messages (SHA-256 3.43x, SHA-1 3.56x, MD5 3.75x, CRC-32 3.34x, Adler-32 2.58x), the AES modes, LZ4 compress and decompress, JSMN, the KissFFT complex and real drivers, xxHash32, xxHash64, xxHash3, the 6502 emulator over independent images, and the slot variants of MD5, JSMN and AES-CBC encrypt. Ten fail the output check in at least one session: miniz compress and decompress, the four QOI drivers, and the `-shared` variants of JSMN, KissFFT real, AES-CBC decrypt and SHA-256, which are the file-scope statics and allocator cursors that earlier sections isolate. Four of the ten passed in some sessions and failed in others, which is what a race on shared state looks like. With `audit: true` the pool threw `SliceConflictError` on seven of eight failing drivers tried, agreed with the serial run on the four passing drivers tried, and trapped on the eighth (a Mac run for correctness only, `audit-check.txt`). Over all 30 loops, with a failed or inapplicable mode counted as serial, the geometric mean speedup is 0.98 for automatic admission, 0.56 for forced, 1.89 for the explicit private contexts, 2.10 for the slice pool and 2.72 for the best exact mode per loop. These are the baselines the route is judged against: the serial program, the tracked automatic and forced routes, the copying explicit route and the in-place declared route. The source-level baseline is the same driver compiled natively with a parallel-for over the records (`results/corpus/native-baseline/`, eight threads, same split as the slice pool): its output equals serial on 37 of 38 drivers (a KissFFT config that holds scratch is a race by design) at a geometric mean of 3.46x with 36 above 2x, against 2.80x and 31 above 2x for the best exact wasm mode per driver, which is 0.81 of native. Wasm is ahead only where records are tiny and thread hand-off dominates (wyhash 3.12x against 1.44x) and behind on digests of large records (xxHash64 1.94x against 6.39x, SHA-256 3.43x against 5.43x). The native code has no sandbox, bounds checks or linear memory, so it is an upper reference; no library's own threaded API was run.
 
-Admission quality was scored against the measured modes (`scripts/research/admission-quality.mjs`). A loop is labeled winnable when a tracked route beats serial in at least two thirds of sessions. Automatic admission admitted 17 of 30 loops and won on 7, refused all 13 loops where no tracked route wins and refused none that could win. It also admitted 10 loops where no tracked route wins, which is the wrong-admit cost. Regret is the extra time against the best measured tracked mode: 0.172 on average, 0.329 at the 90th percentile and 0.157 weighted by serial time, against 1.565 for always dispatching and 0.186 for never dispatching; with the median estimator now the default the equal-size figure is 0.186, the same as never dispatching, so automatic admission buys little on the 30 loops beyond avoiding the large losses of forcing. A fixed rule that admits when the serial work is at least 5 ms, fitted on 20 loops and tested on the other 10 (every third loop in sorted order), admitted 13 loops including all 7 winners, and its test regret was 0.070 against 0.124 for automatic admission, though its regret weighted by serial time on the train loops was 0.398 against 0.182. That accounting favored the rule: it was charged serial time for the loops it refused, while the loops automatic refused pay a refusal path (0.87x to 0.97x on xxHash64, JSMN and QOI encode). With the same refusal cost charged to the gate, and the protected route behind it, a gate of at least 4 ms of serial work and at least 50 us per record has test regret 0.103 against 0.124 and train regret 0.110 against 0.196; the gain comes from refusing five losing loops of 3.3 to 4.5 ms. The comparison is weaker than it looks. Every driver has 128 or 64 records, so serial work is a per-record cost cut at about 39 us; no loop has serial work between 4.5 and 6.5 ms, so every threshold in that gap makes identical decisions; and the 30 drivers are 12 families, with the seven winners from six. The first tracked batch does limit the loss of a wrong admit: on the 10 loops automatic admitted where no tracked route wins, it ran at 0.81x on average (worst 0.53x) against 0.59x (worst 0.17x) for forced, which has neither the batch nor the bound stop. The supported claim is therefore that the first batch and the bound stop cap the downside of a serial-work gate. The claim that the first batch selects winners the serial time cannot is not supported on these 30 loops, and the held-out drivers below give one case where it does. One pair carries information the serial time lacks: SHA-256 and its shared-state variant have 13.1 and 13.0 ms of serial work, and automatic admitted both and got 2.01x and 0.89x. A crude count of constant-address stores and global writes does not separate them (`results/corpus/slice-pool-census/static-footprint.md`). The gate parameters, and the rule for adopting them (it misses no loop that automatic wins by more than 1.05x and its mean regret is not above automatic's), were written down before the held-out drivers of the broader workload set ran; those drivers rejected the gate. The comparison uses the measured serial work, which Folio estimates from its first iteration, so it does not cover a rule that must work from static cost.
+Admission quality was scored against the measured modes (`scripts/research/admission-quality.mjs`). A loop is labeled winnable when a tracked route beats serial in at least two thirds of sessions. Automatic admission admitted 17 of 30 loops and won on 7, refused all 13 loops where no tracked route wins and refused none that could win. It also admitted 10 loops where no tracked route wins, which is the wrong-admit cost. Regret is the extra time against the best measured tracked mode: 0.172 on average, 0.329 at the 90th percentile and 0.157 weighted by serial time, against 1.565 for always dispatching and 0.186 for never dispatching; with the median estimator now the default the equal-size figure is 0.186, the same as never dispatching, so automatic admission buys little on the 30 loops beyond avoiding the large losses of forcing. A fixed rule that admits when the serial work is at least 5 ms, fitted on 20 loops and tested on the other 10 (every third loop in sorted order), admitted 13 loops including all 7 winners, and its test regret was 0.070 against 0.124 for automatic admission, though its regret weighted by serial time on the train loops was 0.398 against 0.182. That accounting favored the rule: it was charged serial time for the loops it refused, while the loops automatic refused pay a refusal path (0.87x to 0.97x on xxHash64, JSMN and QOI encode). With the same refusal cost charged to the gate, and the protected route behind it, a gate of at least 4 ms of serial work and at least 50 us per record has test regret 0.103 against 0.124 and train regret 0.110 against 0.196; the gain comes from refusing five losing loops of 3.3 to 4.5 ms. The comparison has three limits. Every driver has 128 or 64 records, so serial work is a per-record cost cut at about 39 us; no loop has serial work between 4.5 and 6.5 ms, so every threshold in that gap makes identical decisions; and the 30 drivers are 12 families, with the seven winners from six. The first tracked batch does limit the loss of a wrong admit: on the 10 loops automatic admitted where no tracked route wins, it ran at 0.81x on average (worst 0.53x) against 0.59x (worst 0.17x) for forced, which has neither the batch nor the bound stop. The supported claim is therefore that the first batch and the bound stop cap the downside of a serial-work gate. The claim that the first batch selects winners the serial time cannot is not supported on these 30 loops, and the held-out drivers below give one case where it does. One pair carries information the serial time lacks: SHA-256 and its shared-state variant have 13.1 and 13.0 ms of serial work, and automatic admitted both and got 2.01x and 0.89x. A crude count of constant-address stores and global writes does not separate them (`results/corpus/slice-pool-census/static-footprint.md`). The gate parameters, and the rule for adopting them (it misses no loop that automatic wins by more than 1.05x and its mean regret is not above automatic's), were written down before the held-out drivers of the broader workload set ran; those drivers rejected the gate. The comparison uses the measured serial work, which Folio estimates from its first iteration, so it does not cover a rule that must work from static cost.
 
 Unequal record sizes were tested on the eight programs whose records can be cut to any length, with sizes of 1, 1/2, 1/4, 1/8 and 1/16 of the largest in a fixed pattern that makes the first record the smallest of its cycle. Automatic admission lost two of its seven winners: MD5 fell from 1.46x to 0.98x and CRC-32 from 1.52x to 0.98x. The admission record shows why. For MD5 iteration 0 took 0.0072 ms, the estimate of the remaining work was 0.92 ms against the 2.5 ms floor, and the loop ran all 128 iterations serially, while the forced route reached 1.21x. The serial probe that re-admits a refused loop takes the minimum of the recent per-iteration times, which a mix of sizes pulls low. The second-chance option did not recover them (0.98x and 0.99x) and cost SHA-256 (2.01x to 1.00x). The explicit route kept 2.5x to 3.2x on the hashes and checksums, and the slice pool kept 3.1x to 3.6x at the even grain; at a grain of four records it fell to 2.7x to 3.2x, and xxHash64 to 1.0x, because each slice is a task round trip. The probe now takes the median of its block means instead of the lower of the last two (`results/corpus/admission-estimator/`). On the same mixed sizes the median gives MD5 1.03x and CRC-32 1.10x (forced 1.21x and 1.56x), SHA-256 1.50x and SHA-1 1.23x, with no new loss. The mean and the 75th percentile do as well on MD5 and CRC-32 but admit Adler-32 and lose it (0.49x and 0.44x), so they were rejected. On the 30 equal-size drivers all four estimators admit 17 loops and win on the same 7, with regret inside the run-to-run noise (0.150 to 0.186). The median does not reach the forced route, because admission still waits for the probe blocks, and a refused loop still pays a call into the replay function per iteration, 3 to 13 percent on cheap records. The median was chosen on the same eight mixed-size programs it is scored on, with one size pattern and one machine, and sizes that change inside one running pool were tested only for MD5, SHA-256, SHA-1, miniz CRC-32 and xxHash32 with one alternation of two sizes: a call with larger records dispatches at once after calls with small ones, with no verdict carried over, and speedup rises over the next calls as the workers warm up.
 
@@ -1823,7 +1823,7 @@ The certificates rest on premises the checker does not prove: `writes` names eve
 
 Speedup on the slice route, `aes-cbc-decrypt-shared`, 256 records, 15 paired rounds with a fresh process per arm, on a quiet x86_64 Ryzen 9 9900X in a container with six CPUs and again with ten (`results/execution/ownership-slice-rig/`). Median over serial: 8 workers 4.07x (range 1.92 to 5.96) with six CPUs and 5.64x (3.38 to 6.20) with ten, 4 workers 3.19x in both, 2 workers 1.70x and 1.68x, 1 worker 0.84x and 0.83x. All 240 rows of the two slice files have correct output. The 8-worker arms are noisy: a six-CPU quota serves eight workers and the main thread. Redirecting the window costs 1.16x per thread on this machine. The redirect route on the iteration pool does not pay on the same module: at 8 workers it reads 0.76x of serial (six CPUs) and 1.10x (ten CPUs), and one worker reads 0.16x, because that route tracks every access and validates in order. The slice route is the one that pays. The speedup covers one driver.
 
-**Audit state.** The six certificates were audited on one tree before red team round 2: census 6 of 6, the six gates and ten adversary families gave 0 accepted-and-wrong over about 15,900 mutants. The audit prompted fixes for three false-certificate classes before it ran clean: a local carried across records, a loop counter read as data, and loop tests on derived limits. Red team round 2 then found classes the audit did not: a `memory.size` read, a data-dependent early exit from the record loop, and slice base parameters read as data. Its counts are 20,000 generated modules, of which 4,301 were accepted and 253 of those accepted modules gave output that differed from serial (`memory.size` 62, data-dependent exit 59, base parameters read as data 132), and 960 router cases over 208 modules, which showed one routing hazard that comes from an incomplete `writes` list in the call and not from a certificate. Each class reproduces on a hand-written module with no random statement and is pinned by a regression test in `tests/unit/ownership.test.ts`. The checker now refuses all three classes, and `OWNERSHIP_CHECKER` moved to `folio-ownership-2`. Hand attacks on that first fix found five more accepted shapes that the generator cannot produce (a loop that falls off its end, and base or count values read as an address, a size or a loop bound), and red team round 3 found four more classes before the freeze: two record loops that carry a value, reverse record order, a cell read before the loop and rewritten inside it, and a record pointer plus a flagged offset. All are closed in the frozen checker. The round 2 generator rerun on an earlier state of the fixed checker accepted 3,939 of 20,000 modules and none differed from serial. The round 3 batch on the frozen tree accepted 3,070 of 20,000 and none differed, but 2,455 of those acceptances carry no attack statement and 8 of the 20 round 3 frame shapes were never accepted, so the batch does not show that the tree is free of such classes. The re-audit on the frozen tree, split across the Mac and the rig, certified all six drivers (census 6 of 6), passed the twelve gates with their negative controls and found no accepted-and-wrong module in any adversary family or in the base split. Its accepted counts equal the old tree's in every family, so those families do not exercise the new refusals, and seven base split jobs timed out at 60 s on a loaded Mac with the accepted count unchanged (cause not measured). Three rounds each found classes the one before missed, so this report calls the six certificates tested by three red team rounds and a re-audit, and does not call them audited or proved. The out-pointer stride, the premise that record pointers stay inside their regions and the stack residue stay premises. The generator rows are in `results/certification/ownership-red-team` and the re-audit logs in `results/certification/ownership-reaudit`. Rules added late in the work (summary hulls, `refineSum`, the plain cursor, relative branches and differences, `curClose`, soft caps) have had no adversary run of their own, and `curClose`, the ordering widening and the soft caps have had no rule-removal run. Tables that used qoi modules built at ARENA 65536 carry the label of the Limits table until they are remeasured. The final corpus uses the shim's arena allocator for every driver, so the window route is expected to certify none of them and the ablation will show the ownership work contributing about zero there. That outcome describes the corpus.
+**Audit state.** The six certificates were audited on one tree before red team round 2: census 6 of 6, the six gates and ten adversary families gave 0 accepted-and-wrong over about 15,900 mutants. The audit prompted fixes for three false-certificate classes before it ran clean: a local carried across records, a loop counter read as data, and loop tests on derived limits. Red team round 2 then found classes the audit did not: a `memory.size` read, a data-dependent early exit from the record loop, and slice base parameters read as data. Its counts are 20,000 generated modules, of which 4,301 were accepted and 253 of those accepted modules gave output that differed from serial (`memory.size` 62, data-dependent exit 59, base parameters read as data 132), and 960 router cases over 208 modules, which showed one routing hazard that comes from an incomplete `writes` list in the call and not from a certificate. Each class reproduces on a hand-written module with no random statement and is pinned by a regression test in `tests/unit/ownership.test.ts`. The checker now refuses all three classes, and `OWNERSHIP_CHECKER` moved to `folio-ownership-2`. Hand attacks on that first fix found five more accepted shapes that the generator cannot produce (a loop that falls off its end, and base or count values read as an address, a size or a loop bound), and red team round 3 found four more classes before the freeze: two record loops that carry a value, reverse record order, a cell read before the loop and rewritten inside it, and a record pointer plus a flagged offset. All are closed in the frozen checker. The round 2 generator rerun on an earlier state of the fixed checker accepted 3,939 of 20,000 modules and none differed from serial. The round 3 batch on the frozen tree accepted 3,070 of 20,000 and none differed, but 2,455 of those acceptances carry no attack statement and 8 of the 20 round 3 frame shapes were never accepted, so the batch does not show that the tree is free of such classes. The re-audit on the frozen tree, split across the Mac and the rig, certified all six drivers (census 6 of 6), passed the twelve gates with their negative controls and found no accepted-and-wrong module in any adversary family or in the base split. Its accepted counts equal the old tree's in every family, so those families do not exercise the new refusals, and seven base split jobs timed out at 60 s on a loaded Mac with the accepted count unchanged (cause not measured). Three rounds each found classes the one before missed, so this report calls the six certificates tested by three red team rounds and a re-audit, and does not call them audited or proved. The out-pointer stride, the premise that record pointers stay inside their regions and the stack residue stay premises. The generator rows are in `results/certification/ownership-red-team` and the re-audit logs in `results/certification/ownership-reaudit`. Rules added late in the work (summary hulls, `refineSum`, the plain cursor, relative branches and differences, `curClose`, soft caps) have had no adversary run of their own, and `curClose`, the ordering widening and the soft caps have had no rule-removal run. Tables that used qoi modules built at ARENA 65536 carry the label of the Limits table until they are remeasured. The final corpus uses the shim's arena allocator for every driver, so the window route is expected to certify none of them and the ablation will show the ownership work contributing about zero there.
 
 ### Router and Development Ablation
 
@@ -1840,6 +1840,8 @@ For the 12 development allocator drivers, whole linear memory outside the stack 
 The five-mode ablation exists as a harness (`scripts/research/router-ablation.ts`). On the development corpus the certification decisions of the independent analyses and the shared analysis are identical on 38 of 38 drivers, and the certification times overlap across three repetitions (independent 9.9 to 10.7 s, shared 10.1 to 10.4 s), so no benefit of one shared analysis is shown or claimed. The earlier development table (Mac, load 5 to 19, router before two changes) gave geomeans of 1.127 for the unrouted route, 0.999 for the certified summary alone, 1.037 for the window alone, 1.027 for the two analyses run independently and 1.033 for one shared analysis (`results/execution/router-ablation-development/`).
 
 Not measured. The qoi pair now certifies, and the sweep ran before the rebuild with both routed to `serial/allocator-state`. The tracked route for `allocator-state` refusals is a policy choice for the maintainer: soundness there rests on the iteration route's window and ordered validation and not on a certificate. The five modes were not rerun over the 38 drivers after the router changed. The gate on the frozen final corpus is NOT MET on both architectures. The router geomean over the 47 drivers is 0.899 on x86_64 (sessions 0.897, 0.900, 0.900) and 0.900 on arm64 (0.894, 0.906, 0.898), against the line 1.20. The slowest of the five slowest drivers, the prereg reading of the slowest tenth, is 0.594 on x86_64 and 0.561 on arm64, against 0.90; the harness `p10`, the fifth smallest, is 0.722 and 0.715 and would not pass either. The driver-level bootstrap (10,000 resamples, seed 12345) gives 0.861 to 0.935 on x86_64 and 0.858 to 0.941 on arm64, and the probability of reaching 1.20 is 0.00 on both. Pooled geomean per mode, x86_64 then arm64: serial 1.000 (control), `w1` 0.895 and 0.905, `w2` 0.910 and 0.902, `independent` 0.908 and 0.903, `shared` 0.857 and 0.875, `router` 0.899 and 0.900. In the timed rows the router ran serial for 46 of 47 drivers on both architectures: 23 refused as `unclassified-dependency` and 23 below the route floor. The one window certificate, `minimp3-mp3dec_init`, ran the window route in 21 of 30 arm64 rounds and in none on x86_64, where dispatch was lost. 41 drivers read below 1.00 on x86_64 and 42 on arm64, led by `mpack`, `nanopb`, `ryu` and `tinycbor` drivers whose serial call takes 0.002 to 0.04 ms. The cause of the serial-path overhead was not examined in this study.
+
+**Post hoc readings.** These were computed after the outcome. They are not the pre-registered verdict, and by the pre-registration's own rule they are development readings. No geomean threshold at or above 1.00 is met: the router's best driver on x86_64 reads 1.049, and on arm64 three drivers read above 1.05 (best 1.220). Split at a serial call of 0.05 ms, the 21 drivers below it have a geomean of 0.797 on x86_64 and 0.802 on arm64 (slowest 0.594 and 0.561). The 26 drivers at or above it have a geomean of 0.991 on x86_64, with the slowest at 0.957 and none below 0.95. On arm64 their geomean is 0.988, and `cjson-cJSON_ParseWithLength` (0.828), `minimp3-mp3dec_init` (0.854) and `cjson-cJSON_ParseWithLengthOpts` (0.860) fall below 0.90. A gate of at most 10 percent slowdown on calls above 0.05 ms would be met on x86_64 and not on arm64, and it would measure harm avoided, not speedup. The 0.05 ms cut was chosen after the data.
 
 ### Final Corpus and Baselines
 
@@ -1922,7 +1924,7 @@ the import proxy rebuilt all 57,038 internal region bindings per namespace looku
 caches only Folio's own namespace once. Caller namespace effects remain uncached. A regression
 counts exactly one suspension wrapper per region plus the two join/poll wrappers.
 
-With both fixes, the actual prepared coordinator admits `pib_run` and passes:
+With both fixes, the prepared coordinator admits `pib_run` and passes:
 
 | Observation                                      | Native and Folio                                                                    |
 | ------------------------------------------------ | ----------------------------------------------------------------------------------- |
@@ -1949,7 +1951,7 @@ top-level calls report control-flow extraction, one region, **zero dispatched wo
 replays/fallbacks and `single-region`. Two worker threads were admitted and joined at cleanup;
 their presence does not prove parallel PHP execution. The ordinary PHP heap is not proved
 physically shared, and no PHP speedup, deployed Drupal distribution capacity or exhaustive callback/longjmp
-coverage is claimed. This closes actual local boot/render compatibility. Larger useful regions,
+coverage is claimed. This closes local boot and render compatibility. Larger useful regions,
 consumer effects validation and a shared-heap or paged-memory build remain the route to acceleration.
 
 The harness is `scripts/probe/php-render.ts`, with `FOLIO_CONSUMER` naming a checkout of the
@@ -1960,7 +1962,7 @@ The record holds no timing comparison, and one uncontrolled rerun is not one.
 
 ### Machine-Core Coverage and the Process Boundary
 
-`scripts/probe/artifact-coverage.ts` collects `inspect()` from actual Linux-on-Wasm machine artifacts. `automatic`
+`scripts/probe/artifact-coverage.ts` collects `inspect()` from Linux-on-Wasm machine artifacts. `automatic`
 means an admitted static plan; it does not measure dynamic coverage or guarantee concurrency.
 None has a native direct-write guard.
 
@@ -1972,8 +1974,8 @@ None has a native direct-write guard.
 
 The artifact coverage record in `results/` holds the hashes, every exported function's inspection,
 imports and run reports. Both process `memset` calls execute four speculative regions on two
-workers; `memcpy` is serial. Unexpected syscall imports throw. These are real process-memory
-functions, not a Linux boot, process main, syscall test or speedup measurement. The lifted module's
+workers; `memcpy` is serial. Unexpected syscall imports throw. These are process-memory
+functions only; no Linux boot, process main, syscall test or speedup measurement ran. The lifted module's
 host access helpers, mutable GOT global and i64 result leave its sole export native.
 
 The adapter seam for such a machine is its user-instance constructor and environment, plus
@@ -2118,7 +2120,6 @@ same module by plain JavaScript no-ops cost 14.1 ms of the 251 ms (the helper ca
 call, 5.6%); making them `WebAssembly.Suspending` imports that return undefined cost the rest, about
 53 ns per crossing (94%), against 0.63 ms native. The serial recurrence enqueued 500,000 regions of one
 store each: 1.7 to 2.8 us per region for queueing, batching and validation against about 1 ns of work.
-These are different problems and have different fixes.
 
 **Changes.**
 
@@ -2199,7 +2200,7 @@ process ABI calls, the serial recurrence (3.1% to 3.7%), the lone-region kernel 
 first n=20 set read 0.949 at eight workers and 0.969 at two, and the rerun does not reproduce it), the ten PHP
 workloads and the Drupal render. Missed: **machine core ready queue**, 302 calls of about 33 ns each,
 where `Folio.run` itself adds about 0.65 us per call (0.20 ms against 0.010 ms for the 302 calls), so
-0.052x of native. The admission path adds nothing there (0 workers, 0 regions), the cost fell from 37x to 17.6x of
+0.052x of native. The admission path adds nothing there (0 workers, 0 regions), and the cost fell from 37x to 17.6x of
 native CPU. `Folio.runAll` over the same calls reads 0.17x. No other workload misses.
 
 ### Independent PHP Requests and the Drupal Render Breakdown
@@ -2272,9 +2273,8 @@ for the Drupal render and 5.1x to 7.7x for CPU-heavy endpoints, with tail latenc
 single-request latency at eight for Drupal. Folio adds nothing to that. The Folio arms are within a
 median of 1.00 of the native arms in every cell and the spread is noise (the largest ratios,
 `preg-text` at eight, run 0.54 to 1.46 in single rounds because eight workers leave two cores for
-the main thread and V8's compile threads). Folio cannot take credit for this scaling and it does not
-make a request faster: the Folio route here is the original module. Request-level concurrency
-needs no Folio.
+the main thread and V8's compile threads). The Folio route here is the original module, so Folio takes
+no credit for this scaling, and request-level concurrency needs no Folio.
 
 **Where the 790 ms render goes** (level C, `drupal-breakdown.ts`, 10 fresh processes per arm, five
 contexts each, instance 0 cold and instances 2 to 4 warm; the cold render is what one request pays
@@ -2337,13 +2337,13 @@ output equals the plain output in all 840 samples. n=20 per arm per workload.
 | 8 mixed operations (323 ms)                  | 0.99x | 1.45x | 2.25x | 3.99x (3.60) |   81.0 ms, 85.8 |                          1.03 |
 | 8 Drupal render arrays through Twig (447 ms) | 0.98x | 1.87x | 3.55x | 4.51x (3.76) |  99.2 ms, 117.9 |                          1.06 |
 
-Overlap is shown by the workers and not inferred from the speedup. In every api-W sample with W of 2 or
+Overlap is measured in the workers. In every api-W sample with W of 2 or
 more, the in-worker task intervals overlapped (20 of 20 samples in every cell, `maxConcurrentTasks` median
 W in every cell), each task ran on its own worker thread, and the summed task thread CPU matches the
 plain request's CPU (320 ms against 316 ms for the sha256 chains at api-8). Where the arguments are small,
-the owner thread uses 0 to 1 ms of CPU while it waits. The spread is real: the api-8 minimum is 5.09x for the sha256 chains
-(median 7.58x) and its p95 wall is 40% above the median, the same eight-wide stalls the concurrent request runs show with two spare
-cores. The cells that scale least show the serial part of the request: in the preg workload the request
+the owner thread uses 0 to 1 ms of CPU while it waits. The api-8 minimum is 5.09x for the sha256 chains
+(median 7.58x) and its p95 wall is 40% above the median, the same eight-wide stalls the concurrent
+request runs show with two spare cores. The cells that scale least show the serial part of the request: in the preg workload the request
 itself builds the eight documents in 187 ms of owner CPU (37% of the request), which bounds the speedup
 at 2.7x, and it reached 2.14x. Copy and join costs are small next to the work: serializing and encoding
 6.3 MB of arguments takes 2.8 ms and posting them 1.6 ms, the other workloads copy 256 bytes to 1.2 MB
@@ -2425,7 +2425,7 @@ tested), which a memory copy cannot carry. Closed mechanism: forking a Drupal co
 memory.
 
 Decision. An automatic mechanism would first have to find independent PHP operations, and the explicit
-API result shows the execution side is not the obstacle: eight private contexts overlapped real PHP
+API result shows the execution side is not the obstacle: eight private contexts overlapped PHP
 runtime work at 7.58x. What remains untested is the recognizer: a PHP-source or bytecode-level pass that
 identifies independent pure calls (such as a `foreach` of `hash()` over independent items) and routes them
 through the same task contexts. It is not built, and the objective stays open.
@@ -2496,7 +2496,7 @@ to 1.4 for allocator and host on the Drupal render).
 **Cross-check with the explicit task result.** For the sha256 chains the explicit task API measured
 7.58x at 8 workers (rig, n=20). The ladder predicts 7.97 only at M0, where every data dependence is
 ignored, and 1.0 at every rung that keeps the recorded conflicts, with static and heap binding after
-M6. The two do not agree and the disagreement is a result. Private contexts remove every class at once,
+M6. The two do not agree. Private contexts remove every class at once,
 including shared heap and static words that this model keeps. At segment granularity a call reads
 shared interpreter state at its start and writes it at its end (for example `executor_globals`), so
 one such word serializes whole calls even when a finer model would see a short critical section.
@@ -2569,8 +2569,7 @@ pairs per case, 70 s of session wall time, Chromium reporting four hardware thre
 measured: CPU, because a page exposes no process CPU. The browser path uses its own
 `minimumParallelWork` gate and not the static admission rule in `extract.ts`; the process ABI and tinyimg
 have no counted-loop plan at all (`host or non-memory imports`, `one imported memory required`), so
-they take the serial path and the rows below show that path costs nothing measurable, not that Folio
-speeds them up.
+they take the serial path, and the rows below show that path costs nothing measurable.
 
 | Consumer and case                                | Native median (min, max) ms | Folio arm | Folio median ms  | Paired speedup, median (min, max)  | Dispatch (messages, JSON bytes) |
 | ------------------------------------------------ | --------------------------- | --------- | ---------------- | ---------------------------------- | ------------------------------- |
@@ -2605,9 +2604,9 @@ SHA-256 chain Node computes. The summaries are `results/php/deployment/original.
 The relayed risk that 55.3 MiB of prepared modules cannot deploy, and the risk that startup would
 pass 1 s, are both refuted by deployment. What the platform refuses is co-residence: the booted
 interpreter and the prepared set do not fit one isolate, and the headroom left by the prepared bundle
-is smaller than the original's. This is a platform measurement and not a PHP speedup: Folio's PHP
-route is the untouched original module, which already runs on FREE (the consumer's own deployment records a
-195 MiB plateau and 3 to 6 ms startup on the same plan). A deployed parallel PHP result waits for an
+is smaller than the original's. This is a platform measurement with no PHP speedup in it. Folio's PHP
+route is the untouched original module, which already runs on FREE (the consumer's own deployment
+records a 195 MiB plateau and 3 to 6 ms startup on the same plan). A deployed parallel PHP result waits for an
 admitted region.
 
 ### Regeneration and Concurrent Execution on workerd
@@ -2865,8 +2864,7 @@ flight at a time, each written into memory as it arrives:
 | baked, four in flight |                   945 |             581 |          951 |
 
 Four in flight brings the baked re-boot wall to the control's level (951 against 1,086 ms, ranges
-877 to 1,369 and 949 to 1,265, faster in 3 of 4 rounds), so at this n the two are level, not
-different. The first request saves 72% of cpuTime. The boot floor is not lower in cpuTime with
+877 to 1,369 and 949 to 1,265, faster in 3 of 4 rounds), so at this n the two are level. The first request saves 72% of cpuTime. The boot floor is not lower in cpuTime with
 more fetches in flight (407 against 392 ms, one object each); the gain is wall time. Eight and 13
 in flight were not run on the edge, and each in-flight chunk is 4 MiB of isolate memory.
 
@@ -2991,7 +2989,7 @@ image and four fetches in flight (72.0%, wall 4,283 and 1,855 ms), against 3,368
 8.5.2. The body hash and the CSRF token are the same in both arms and no object reset memory (142
 invocations, all `ok`). The first `/bootphase` takes 1,034 ms of cpuTime and 1,152 ms of wall on
 the plain boot and 1,128 and 1,613 on the baked arm (9% and 40% more), where on 8.5.2 the baked arm
-took 581 ms. The cause is the instrument described under Re-boot, not the image: the baked arm
+took 581 ms. The cause is the instrument described under Re-boot. The baked arm
 did use the image on that request, and the 8.5.2 module on the same host commit moves the same
 bridge bytes. All ten idle probes
 (30 to 150 s) found the object instance rebuilt and the module state intact, so no eviction was
@@ -3073,7 +3071,7 @@ about the PHP image, whose saving comes from a much larger initialization.
 four arms (52 executions). A strict configuration key admits 7 of 13, and a module key plus the
 consumer's configuration and entity reset admits 12 of 13. Enabling a module falls back to a fresh
 boot. All 39 safe-arm first responses match native status and normalized HTML, and the deliberately
-unguarded arm serves stale site-name and theme-color output. These are selected cases and not a
+unguarded arm serves stale site-name and theme-color output. These selected cases give no
 production eligibility rate.
 
 **Lifecycle.** The [lifecycle study](results/boot/lifecycle/README.md) measures 45 Drupal
@@ -3088,7 +3086,7 @@ executions in 15 paired rounds on the M2 Pro, from compile through first render:
 
 Generating the image costs 10.4 s elapsed and 11.4 s CPU. Taking the difference of the medians, the
 image pays for itself after 27 boots in elapsed time and 19 in CPU, excluding shipping, storage and
-retention. That is a model and not measured fleet amortization. The current image uploads and
+retention. That is a model; fleet amortization was not measured. The current image uploads and
 instantiates on the Free plan (60,406.52 KiB uncompressed, 2 ms reported startup) with stubbed
 imports: Durable Object CPU is 14 ms for the original module, 49 ms baked into the module and 92 to
 98.5 ms when the image is copied from assets, which also takes 432 to 543 ms of wall time. This
@@ -3159,7 +3157,7 @@ owner failure, cleanup bounds, growth, missing pages and stale scopes. The actua
 with an untouched native oracle: 6 MiB materialized over four owners with 2 MiB credit each,
 512 KiB charged residence including commit snapshots, 256 KiB native region memory and 24 span
 executions. Every byte and the scalar result agree. Final leases, resident bytes and garbage are
-zero. This is local protocol evidence with copied pages and explicit spans, not deployed aggregate
+zero. This is local protocol evidence with copied pages and explicit spans. It does not cover deployed aggregate
 capacity or transparent native Wasm paging.
 
 The directory/ownership approach follows shared virtual memory [18]; fences follow generation
@@ -3179,8 +3177,8 @@ locals, labels, calls, traps and ordered effects. Counted-loop dispatch does not
 
 **PHP and Drupal distributions.** A census found 1,183,236 scalar memory sites in the 13,401,751-byte
 PHP 8.5 artifact (active data ended at 4,206,482), plus 260 HEAP references and 21 invoke or
-JS-longjmp trampolines in the 400,452-byte glue. These are artifact-specific measurements, not a
-new census. A paged or shared integration must preserve initialization, stack and TLS, typed
+JS-longjmp trampolines in the 400,452-byte glue. These measurements are specific to that
+artifact. A paged or shared integration must preserve initialization, stack and TLS, typed
 accesses, growth, libc bulk operations and every glue HEAP access. A wasm-SjLj build removes the
 JS longjmp trampolines, but synchronous vrzno Proxy callbacks still need an explicit value-based
 boundary before suspension [15][4]. An earlier re-entry interpreter loaded the real PHP module and
@@ -3205,7 +3203,7 @@ Elastic memory asks whether a Wasm guest whose linear memory exceeds the platfor
 
 On a quiet Ryzen rig, 400 rows, ten pairs per cell, tau for the full path is 1.581 (interval 1.537 to 1.617) on the stock front, 1.287 on Thunder login, 1.088 on Thunder admin, 1.184 on the repeated-render ladder and 1.155 on the flush route, which returns no HTML and is not gated (`results/execution/translation-tau-rig/`). A per-site cache reads 1.817 on the front and a per-function cache 1.709. A stack-only range check reads 1.674, and heap-prefix arenas read 1.516 (8 MiB) and 1.396 (32 MiB). The idealized bound, in which every access is in range and costs one range test, reads 1.111 (1.036 to 1.182) on the front and 1.023 on login, so a perfect hit rate that keeps a per-access range test cannot reach 1 on the stock front. Every arm's normalized HTML equals native.
 
-The optimizing-tier arm reads tau 0.874 (5 pairs, range 0.858 to 2.043) on the Mac and 1.07 to 1.17 across the Thunder ladder. That arm was added after the default result, and Workers expose no setting for the tier, so it is an exploratory observation and not a pass. The generator of `summary.json` marks it `exploratory` and writes no `pass` field.
+The optimizing-tier arm reads tau 0.874 (5 pairs, range 0.858 to 2.043) on the Mac and 1.07 to 1.17 across the Thunder ladder. That arm was added after the default result, and Workers expose no setting for the tier, so it is exploratory and gives no pass. The generator of `summary.json` marks it `exploratory` and writes no `pass` field.
 
 Request length does not rescue it. On the Thunder ladder at default tiering tau is 1.188 at 2.4 s native, 1.357 at 7.7 s, 1.197 at 9.6 s and 1.178 at 11.0 s, with login at 1.363, admin at 1.283, the stock front at 1.015 (9 pairs, 1 stalled) and flush at 0.885. The pre-set rule drops pairs over 50 times native as machine stalls. The ladder repeats one route (render 1 runs 851 queries, renders 2 to 7 run 164 or 196), so it is not one long request (`results/execution/translation-tax/duration/`).
 
@@ -3233,7 +3231,7 @@ Thunder is a Drupal distribution that runs on Drupflare, Drupal on Cloudflare Du
 
 **Paged PHP: exact, with a measured price.** A paged module with a real eviction store ran 47 Mac cells exactly at resident caps down to 33 percent of the touched size. With SQLite page rows and a pure dirty bit at a 50 percent cap, Thunder cold admin reads tau 1.958 (interval 1.930 to 1.977) and flush 1.162, exact on all 720 rig samples. Sizing the cap to the meter offset, only Thunder flush ever evicts at the high offset (63 pages, 3.9 MiB). Flush at 94.86 percent of touched pages reads tau 0.875 (0.869 to 0.888) against 0.865 for an all-resident paged control, with 355 page-row write-backs a request, and admin reads 1.313 against a control of 1.313. The store was in-memory `node:sqlite`, so the Durable Object storage cost and the row bill are not measured, and every platform time here is inferred from local tau. The earlier gap model, which needed 16.8 MiB of spill for flush, used the wrong basis. Nothing paged was deployed.
 
-**Guarded stack arm on the platform: neither shown nor refuted.** With one deploy per arm the savings against the control were 17.9 MiB (4 MiB stack) and 33.3 MiB (4 MiB plus 256 import pages) for cold admin, against 27.7 predicted. Spread between arms exceeded the effect, and all three arms were killed above the line, with meter peaks of 222 to 248 MiB. A repeat with two or three deploys per arm counted reset markers on cold admin of 2 of 2 (control), 1 of 3 (guarded 4 MiB) and 0 of 3 (guarded 4 MiB with 256 pages), and on flush 2 of 2, 0 of 3 and 0 of 3. Every arm crossed 203 MiB on the meter, the guard never fired, and the intervals overlap in every row. In a later pair of deploys the guarded arm with the directory cache had one drive with no exceeded-memory minute and one that could not be classified because a meter row was missing (control 0 of 2). One of two is an observation and not a shown effect.
+**Guarded stack arm on the platform: neither shown nor refuted.** With one deploy per arm the savings against the control were 17.9 MiB (4 MiB stack) and 33.3 MiB (4 MiB plus 256 import pages) for cold admin, against 27.7 predicted. Spread between arms exceeded the effect, and all three arms were killed above the line, with meter peaks of 222 to 248 MiB. A repeat with two or three deploys per arm counted reset markers on cold admin of 2 of 2 (control), 1 of 3 (guarded 4 MiB) and 0 of 3 (guarded 4 MiB with 256 pages), and on flush 2 of 2, 0 of 3 and 0 of 3. Every arm crossed 203 MiB on the meter, the guard never fired, and the intervals overlap in every row. In a later pair of deploys the guarded arm with the directory cache had one drive with no exceeded-memory minute and one that could not be classified because a meter row was missing (control 0 of 2). One of two is an observation and does not establish an effect.
 
 **Open.** The meter peaks above the line fall inside requests, as live allocation, which is where a paged heap or a smaller linear window could act. The stack-limit pass, the paged runtime and the governor exist and are tested locally. Whether the guarded shrink lowers the kill rate on the platform needs more deploys than were run, and no deployed fix completes the failing routes.
 
@@ -3241,7 +3239,7 @@ Thunder is a Drupal distribution that runs on Drupflare, Drupal on Cloudflare Du
 
 ## 📜 Historical Copied-Memory Results
 
-These predate physical sharing and serve as evidence for a managed capacity workaround. They are
+These predate physical sharing and are evidence for a managed capacity workaround. They are
 not shared backing.
 
 | Experiment                                                     | Result                                                                                             |
@@ -3262,7 +3260,7 @@ The stencil work uses explicit partitions and epoch barriers. The paging prototy
 fencing or recovery and no coherent arbitrary concurrent writers. Fast spans need complete range,
 residency and permission proofs, no escaping physical views, and no remapping or yield inside the
 lease. Burrow's earlier deployed eight 96 MiB isolates show aggregate capacity; resets near 190 to
-200 MiB are empirical and not an entitlement, so admission follows the provider's published memory
+200 MiB are empirical and carry no entitlement, so admission follows the provider's published memory
 contract [16]. A copied ownership backend needs bounded frames and credits, tenant and epoch checks
 at every owner, acknowledged dirty writeback before eviction, explicit missing-page errors,
 zero-page manifests, growth semantics and checkpoints for owner loss, with no SQL write per load,
@@ -3305,7 +3303,7 @@ need the algebra written down. For a streaming update function whose state is af
 over Z/2^w, Folio now recovers the operator from the binary by probing (Affine State Recovery), and
 refuses Adler-32, FNV-1a and a SHA-256 compression because they are affine over neither ring. xxHash32
 and xxHash64 are a rotate and multiply recurrence with no combine known to this work, so a long single
-xxHash stream stays serial. That is open, not closed.
+xxHash stream stays serial. That stays open.
 
 **A choice that needs a measurement.** No signal available before the first batch separates the
 loops that win from the loops that lose. With the tracked iteration timed alone on one worker the
@@ -3333,7 +3331,7 @@ Coarsening several records into one unit did not help: it lowered the dispatch c
 per-iteration tracking term unchanged.
 
 The single-call corpus arm that reaches 2.48x on xxHash32 runs repeated calls of one input embedded in the module, so no input crosses a thread and it pays no copy. The explicit route with private contexts is also below 1.0 for xxHash and LZ4 decompress at the record level, and
-the reason is the route, not the programs. A private context needs every task's records copied into
+the reason lies in the route. A private context needs every task's records copied into
 the worker's memory, and three terms stacked on that copy. `TaskPool.submit` copied each
 `SharedArrayBuffer` input, which `{ share: true }` removes. The checkpoint restore compared and then
 copied back the previous task's input pages, bytes the task rewrites anyway, which the `overwrite`
@@ -3342,9 +3340,9 @@ it: at 4,096 records of 128 KiB the workers spend 219 ms summed in the write aga
 kernel, and a copy microbenchmark on the same machine moves about 17 GB/s with one thread and
 about 18 GB/s with eight, so the copy does not scale with workers. Native xxHash32 reads the same
 512 MiB at about 14 GB/s and xxHash64 at about 26 GB/s (the native wall of each rig cell), so a route that first copies the data cannot
-beat serial on these kernels: the copy does not scale with workers. The kernels themselves do scale
+beat serial on these kernels. The kernels themselves do scale
 when they read in place (the slice pool below reaches 3.6x on xxHash32 reading the same bytes), so
-the limit is the copy and not the read bandwidth of the kernels. On the rig (eight workers, three sessions of five rounds,
+the limit is the copy. On the rig (eight workers, three sessions of five rounds,
 fresh process per cell, every sample exact), going from the default copy to shared input to shared
 input with skipped restore moved xxHash32 at 4,096 records from 0.22 to 0.53 to 0.92, xxHash3 from
 0.17 to 0.42 to 0.72, xxHash64 from 0.11 to 0.29 to 0.50 and Adler-32 from 0.56 to 1.34 to 2.15.
@@ -3389,8 +3387,8 @@ aggregate, and a merge it cannot prove equal to the serial computation would bre
 Queries with a dependence between rows, a recursive CTE or a `CREATE INDEX`, do not decompose.
 The declared merge is the limit of what the route can accept without semantic knowledge.
 
-**The managed plane.** Four limits come from the platform and are reported rather than worked
-around. A service-bound Worker lane shares a thread with its caller, so lanes serialize
+**The managed plane.** Four limits come from the platform, and Folio reports them without working
+around them. A service-bound Worker lane shares a thread with its caller, so lanes serialize
 (Lane Concurrency); Durable Object lanes overlap and are the route. A lane that tracks every access
 costs 17 to 29 times the serial time per record with run-encoded sets and 43 to 1,000 times with
 tuples, so per-record dispatch does not pay on a lane, and the managed wins are coarse explicit
@@ -3559,7 +3557,7 @@ complete run on the release tree, on 2026-11-12 on Node 26.8.2 with `vitest run 
 An earlier full run on 2026-11-03 (911 tests) had one timing-sensitive iteration probe test fail, and
 two of five later runs of its file failed one such test, a different one each time; the other three
 passed all 125 tests. They failed while the machine was running other work and the cause was not
-isolated. The integration project
+isolated. The integration project ran
 **23 tests** in 6 files, against the local workerd (892 in 61 files under `vitest run --project unit
 --project integration --coverage` on 2026-11-02, with 869 unit tests then). Coverage on that run is
 91.89% of statements, 87.57% of branches, 94.83% of functions and 93.79% of lines; `slices-worker.ts`
@@ -3617,7 +3615,7 @@ Two surveys read the closest systems and one searched three of the mechanisms. T
 | profitability     | compile time, fixed-cost planner                                   | compile time, from a profile                   | abstract interpretation of the loop    | model build and code generation succeed  | measured at run time from the first tracked batch                        |
 | reported headline | 23.0x geometric mean, 12 programs, 28 cores                        | 11.4x, 5 programs, 24 cores                    | 2x to 3x, three Polybench kernels      | no headline speedup read                 | see the corpus sections                                                  |
 
-Perspective is the direct pressure on the tracked route. It reports 23.0x on 28 cores against 11.5x for Privateer in the same run (the Privateer paper itself gives 11.4x on 24 cores) and attributes the gain to minimizing unnecessary memory access monitoring and checks through planning, selected transforms and a lightweight runtime, with cheap speculative assertions also named as a source. Folio tracks every access of an unmodified binary during the run and validates each region once, in order, at commit, so a planner that proves a loop private would remove most of what Folio pays. The slot-private windows and the in-place slice pool are small steps toward that, and the 7 of 30 automatic winners show how far the tracked route is from it. Privateer already used a shadow byte for every private byte, so the per-byte tracking is not new; what Folio adds is the binary input, the undo log with replay in iteration order, and the Wasm and V8 setting. Yusuf et al. speculate on binaries and validate by loop exit, with no memory check seen in the pages read, so binary speculation is not new in kind; the surviving claim is unmodified Wasm over isolates with one shared memory and byte-exact validation. Perspective has public [CPF source](https://github.com/PrincetonUniversity/cpf) and an archived [evaluation artifact](https://zenodo.org/records/3606885). Their source instructions and archive listing were verified, but neither was built or run for this evaluation. There is no head-to-head run against Perspective, Privateer or the binary work here; the native parallel-for baseline is the only source-level comparator.
+Perspective is the direct pressure on the tracked route. It reports 23.0x on 28 cores against 11.5x for Privateer in the same run (the Privateer paper itself gives 11.4x on 24 cores) and attributes the gain to minimizing unnecessary memory access monitoring and checks through planning, selected transforms and a lightweight runtime, with cheap speculative assertions also named as a source. Folio tracks every access of an unmodified binary during the run and validates each region once, in order, at commit, so a planner that proves a loop private would remove most of what Folio pays. The slot-private windows and the in-place slice pool are small steps toward that, and the 7 of 30 automatic winners show how far the tracked route is from it. Privateer already used a shadow byte for every private byte, so the per-byte tracking is not new. Folio adds the binary input, the undo log with replay in iteration order, and the Wasm and V8 setting. Yusuf et al. speculate on binaries and validate by loop exit, with no memory check seen in the pages read, so binary speculation is not new in kind; the surviving claim is unmodified Wasm over isolates with one shared memory and byte-exact validation. Perspective has public [CPF source](https://github.com/PrincetonUniversity/cpf) and an archived [evaluation artifact](https://zenodo.org/records/3606885). Their source instructions and archive listing were verified, but neither was built or run for this evaluation. There is no head-to-head run against Perspective, Privateer or the binary work here; the native parallel-for baseline is the only source-level comparator.
 
 APOLLO profiles its first chunk of iterations for addresses and trip counts, not time, and its next step is whether a model builds. Perspective and Privateer decide at compile time. The closest run-time decision that measures time is an Oracle patent [34] that compares measured parallel and serial times per iteration; it was read through its description and the start of its claims, which normalize measured times per iteration across invocations, and its claims were not read in full. No work found measures a first tracked batch and decides on the ratio. The admission-quality scoring in the corpus section shows that claim is weak on this corpus: a threshold on measured serial work picks the same winners.
 
