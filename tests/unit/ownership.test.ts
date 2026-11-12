@@ -13,6 +13,11 @@ import {
 	wasmOf
 } from '../../scripts/research/ownership-modules.ts';
 import {
+	build as redteamBuild,
+	wat as redteamWat,
+	type Plan
+} from '../../scripts/research/ownership-redteam.ts';
+import {
 	mutate,
 	relWat,
 	TOKEN_BASES
@@ -326,6 +331,392 @@ describe('ownership certificate', () => {
 			assert.ok(mutant, name);
 			refusal(assemble(mutant), 'read-before-write');
 		}
+	});
+
+	// the red-team skeletons: one record body between a window store and an output store
+	const handModule = (skeleton: Plan['skeleton'], ...statements: string[]) =>
+		redteamBuild({
+			seed: 0,
+			mode: 'single',
+			skeleton,
+			limit: '(local.get $n)',
+			statements: [
+				'(i32.store (i32.const 4096) (local.get $sum))',
+				'(i32.store (local.get $slot) (i32.add (local.get $sum) (i32.const 1)))',
+				...statements
+			],
+			attacks: [],
+			flags: { stack: false, global: false, indirect: 'none', host: false, table: false },
+			constTable: []
+		});
+	const dataByte = '(i32.eq (i32.load8_u (local.get $p)) (i32.const 255))';
+
+	test('memory.size is refused because the slice pool grows memory', () => {
+		const size = '(i32.store offset=4 (local.get $slot) (memory.size))';
+		for (const skeleton of ['indexed', 'callee'] as const) {
+			certificate(handModule(skeleton));
+			const r = refusal(handModule(skeleton, size), 'isolation');
+			assert.match(r.detail, /memory\.size/);
+		}
+	});
+
+	test('a return or a branch out of the record loop on a data condition is refused, a loop test is not', () => {
+		for (const exit of [
+			`(if ${dataByte} (then (return)))`,
+			`(br_if $done ${dataByte})`,
+			`(br_if $each ${dataByte})`,
+			`(if ${dataByte} (then (br $done)))`
+		])
+			assert.match(
+				refusal(handModule('indexed', exit), 'read-before-write').detail,
+				/data-exit/
+			);
+		for (const exit of ['(br $done)', '(return)'])
+			refusal(handModule('indexed', exit), 'read-before-write');
+		refusal(handModule('pointer', `(br_if $done ${dataByte})`), 'read-before-write');
+		certificate(
+			handModule('indexed', '(br_if $done (i32.ge_u (local.get $i) (local.get $n)))')
+		);
+		certificate(handModule('indexed', `(if ${dataByte} (then (nop)))`));
+		certificate(handModule('indexed', `(block $skip (br_if $skip ${dataByte}) (nop))`));
+		certificate(handModule('callee', `(if ${dataByte} (then (return)))`));
+	});
+
+	test('a record loop that can fall off its end on a data path is refused, a flagged repeat is not', () => {
+		const step = '(local.set $i (i32.add (local.get $i) (i32.const 1))) (br $each)';
+		const test = '(br_if $done (i32.ge_u (local.get $i) (local.get $n)))';
+		const inc = '(local.set $i (i32.add (local.get $i) (i32.const 1)))';
+		const loop = (top: string, end: string) =>
+			assemble(
+				driverWat({ body: BASES.scratch!.join('\n') })
+					.replace(test, top)
+					.replace(step, end)
+			);
+		certificate(loop(test, step));
+		certificate(loop('(nop)', `${inc} (br_if $each (i32.lt_u (local.get $i) (local.get $n)))`));
+		certificate(loop(test, `(block $s (br_if $s ${dataByte}) (nop)) ${inc} (br $each)`));
+		for (const [top, end] of [
+			['(nop)', `${inc} (if ${dataByte} (then (br $each)))`],
+			['(nop)', `${inc} (block $s (br_if $s ${dataByte}) (br $each))`],
+			['(nop)', `${inc} (br_if $each ${dataByte})`],
+			[test, `${inc} (if ${dataByte} (then (br $each)))`],
+			[test, inc]
+		] as const)
+			assert.match(refusal(loop(top, end), 'read-before-write').detail, /data-exit/, end);
+	});
+
+	test('the table and out base parameters read as data are refused, a record pointer is not', () => {
+		const copies = [
+			['indexed', '(i32.store offset=4 (local.get $slot) (local.get $bt))'],
+			['indexed', '(i32.store offset=4 (local.get $slot) (local.get $t))'],
+			[
+				'indexed',
+				'(i32.store offset=4 (local.get $slot) (i32.sub (local.get $bo) (local.get $slot)))'
+			],
+			['callee', '(i32.store offset=4 (local.get $slot) (local.get $bt))'],
+			[
+				'callee',
+				'(i32.store offset=4 (local.get $slot) (i32.sub (local.get $bo) (local.get $slot)))'
+			],
+			[
+				'callee',
+				'(if (i32.eq (local.get $bt) (i32.const 8192)) (then (i32.store offset=8 (local.get $slot) (i32.const 5))))'
+			],
+			[
+				'indexed',
+				'(if (i32.eq (local.get $t) (i32.const 8192)) (then (i32.store offset=8 (local.get $slot) (i32.const 5))))'
+			],
+			// a base or the count used as an address or a size reaches another record in a slice
+			['indexed', '(i32.store offset=4 (local.get $slot) (i32.load (local.get $t)))'],
+			['indexed', '(i32.store offset=4 (local.get $slot) (i32.load (local.get $bt)))'],
+			['callee', '(i32.store offset=4 (local.get $slot) (i32.load (local.get $bo)))'],
+			['callee', '(i32.store offset=8 (local.get $bo) (local.get $sum))'],
+			[
+				'indexed',
+				'(memory.copy (i32.add (local.get $slot) (i32.const 8)) (local.get $bt) (i32.const 4))'
+			],
+			[
+				'indexed',
+				'(memory.fill (i32.add (local.get $slot) (i32.const 8)) (i32.const 7) (i32.and (local.get $bt) (i32.const 63)))'
+			],
+			[
+				'callee',
+				'(memory.fill (i32.add (local.get $slot) (i32.const 8)) (i32.const 7) (i32.and (local.get $cnt) (i32.const 3)))'
+			],
+			[
+				'indexed',
+				'(i32.store offset=4 (local.get $slot) (i32.load8_u (i32.load (i32.add (local.get $t) (i32.shl (local.get $n) (i32.const 4))))))'
+			]
+		] as const;
+		for (const [skeleton, use] of copies) {
+			const r = refusal(handModule(skeleton, use), 'read-before-write');
+			assert.match(r.detail, /counter-as-data/, use);
+		}
+		certificate(handModule('indexed'));
+		certificate(handModule('callee'));
+		certificate(
+			handModule(
+				'indexed',
+				'(memory.fill (i32.add (local.get $slot) (i32.const 8)) (i32.const 7) (i32.const 4))'
+			)
+		);
+		certificate(
+			handModule(
+				'indexed',
+				'(i32.store offset=8 (local.get $slot) (i32.load offset=8 (i32.add (local.get $t) (i32.shl (local.get $i) (i32.const 4)))))'
+			)
+		);
+		certificate(
+			handModule(
+				'callee',
+				'(i32.store offset=8 (local.get $slot) (i32.load offset=8 (local.get $rp)))'
+			)
+		);
+	});
+
+	test('a pointer copied from the base and stepped is a record pointer, one started from the count is not', () => {
+		const rec = `(func $rec (param $t i32) (param $o i32)
+			(local $p i32) (local $len i32) (local $k i32) (local $sum i32)
+			(local.set $p (i32.load (local.get $t)))
+			(local.set $len (i32.load offset=4 (local.get $t)))
+			(block $sd (loop $sl
+				(br_if $sd (i32.ge_u (local.get $k) (local.get $len)))
+				(local.set $sum (i32.add (local.get $sum) (i32.load8_u (i32.add (local.get $p) (local.get $k)))))
+				(local.set $k (i32.add (local.get $k) (i32.const 1))) (br $sl)))
+			(i32.store (i32.const 4120) (local.get $sum))
+			(i32.store (local.get $o) (i32.load (i32.const 4120))))`;
+		const walk = (start: string, step: string) =>
+			assemble(`(module (import "env" "memory" (memory 8 40))
+				${rec}
+				(func $bulk (export "bulk") (param $t i32) (param $n i32) (param $o i32) (local $cur i32) (local $oc i32)
+					${start} (local.set $oc (local.get $o))
+					(loop $each
+						(call $rec (local.get $cur) (local.get $oc))
+						(local.set $cur (i32.${step} (local.get $cur) (i32.const 16)))
+						(local.set $oc (i32.add (local.get $oc) (i32.const 64)))
+						(br_if $each (local.tee $n (i32.sub (local.get $n) (i32.const 1))))))
+			)`);
+		certificate(walk('(local.set $cur (local.get $t))', 'add'));
+		assert.match(
+			refusal(
+				walk(
+					'(local.set $cur (i32.add (local.get $t) (i32.shl (local.get $n) (i32.const 4))))',
+					'sub'
+				),
+				'read-before-write'
+			).detail,
+			/counter-as-data/
+		);
+	});
+
+	test('a table pointer stepped by other than the record size is refused', () => {
+		const text = redteamWat({
+			seed: 0,
+			mode: 'single',
+			skeleton: 'callee',
+			limit: '(local.get $n)',
+			statements: [
+				'(i32.store (i32.const 4096) (local.get $sum))',
+				'(i32.store (local.get $slot) (i32.add (local.get $sum) (i32.const 1)))'
+			],
+			attacks: [],
+			flags: { stack: false, global: false, indirect: 'none', host: false, table: false },
+			constTable: []
+		});
+		const step = '(local.set $t (i32.add (local.get $t) (i32.const 16)))';
+		assert.ok(text.includes(step));
+		const c = certificate(assemble(text));
+		assert.ok(c.assumptions.some((a) => a.includes('record sizes the caller')));
+		const r = refusal(
+			assemble(text.replace(step, step.replace('16', '8'))),
+			'read-before-write'
+		);
+		assert.match(r.detail, /stride/);
+	});
+
+	test('a record pointer plus an offset made from a base or a counter is no record pointer', () => {
+		const field = (v: string, shift: number) =>
+			`(i32.and (i32.shr_u (local.get $${v}) (i32.const ${shift})) (i32.const 7))`;
+		const at = (v: string, shift = 6) =>
+			`(i32.add (local.get $slot) (i32.shl ${field(v, shift)} (i32.const 2)))`;
+		const store = (addr: string) => `(i32.store ${addr} (local.get $sum))`;
+		const refused: [Plan['skeleton'], string][] = [
+			['indexed', store(at('t'))],
+			['indexed', store(at('bt'))],
+			['indexed', store(at('i', 0))],
+			['indexed', store(at('idx', 0))],
+			['indexed', `(memory.fill ${at('o')} (i32.const 9) (i32.const 4))`],
+			['indexed', `(memory.copy ${at('t')} (local.get $p) (i32.const 4))`],
+			[
+				'indexed',
+				`(i32.store offset=8 (local.get $slot) (i32.load8_u (i32.add (local.get $rp) ${field('t', 6)})))`
+			],
+			['indexed', store(`(i32.sub (local.get $slot) ${field('bt', 6)})`)],
+			[
+				'indexed',
+				store(
+					`(select (local.get $slot) ${at('bt')} (i32.and (local.get $sum) (i32.const 1)))`
+				)
+			],
+			['callee', store(at('bt'))],
+			['callee', store(at('bo'))]
+		];
+		for (const [skeleton, use] of refused)
+			assert.match(
+				refusal(handModule(skeleton, use), 'read-before-write').detail,
+				/counter-as-data/,
+				use
+			);
+		for (const [skeleton, use] of [
+			['indexed', store('(i32.add (local.get $slot) (i32.const 8))')],
+			['indexed', store('(i32.add (local.get $slot) (i32.shl (i32.const 3) (i32.const 2)))')],
+			[
+				'indexed',
+				'(i32.store offset=8 (local.get $slot) (i32.load8_u (i32.add (local.get $rp) (i32.const 16))))'
+			],
+			['callee', store('(i32.add (local.get $slot) (i32.const 8))')]
+		] as const)
+			certificate(handModule(skeleton, use));
+	});
+
+	// one record loop of the entry: the record body sits after the sum of the record's bytes
+	const sumLoop = `(local.set $k (i32.const 0)) (local.set $sum (i32.const 0))
+		(block $sd (loop $sl
+			(br_if $sd (i32.ge_u (local.get $k) (local.get $len)))
+			(local.set $sum (i32.add (local.get $sum) (i32.load8_u (i32.add (local.get $p) (local.get $k)))))
+			(local.set $k (i32.add (local.get $k) (i32.const 1))) (br $sl)))`;
+	const recordHead = (index: string) => `
+		(local.set $p (i32.load (i32.add (local.get $t) (i32.shl ${index} (i32.const 4)))))
+		(local.set $len (i32.load offset=4 (i32.add (local.get $t) (i32.shl ${index} (i32.const 4)))))
+		(local.set $slot (i32.add (local.get $o) (i32.shl ${index} (i32.const 6))))
+		${sumLoop}`;
+	const up = (body: string) => `(block $done (loop $each
+		(br_if $done (i32.ge_u (local.get $i) (local.get $n)))
+		${recordHead('(local.get $i)')}
+		${body}
+		(local.set $i (i32.add (local.get $i) (i32.const 1))) (br $each)))`;
+	const entry = (loops: string) =>
+		assemble(`(module (import "env" "memory" (memory 8 40))
+			(func $bulk (export "bulk") (param $t i32) (param $n i32) (param $o i32)
+				(local $i i32) (local $p i32) (local $len i32) (local $k i32) (local $sum i32)
+				(local $slot i32) (local $c i32)
+				${loops}))`);
+	const win = '(i32.store (i32.const 4096) (local.get $sum))';
+	const slot = '(i32.store (local.get $slot) (i32.add (local.get $sum) (i32.const 1)))';
+	const cell = (at: number) => `(i32.const ${at})`;
+
+	test('a later record loop that reads what an earlier loop wrote is refused, loops with their own cells are not', () => {
+		const reset = '(local.set $i (i32.const 0))';
+		const carry = entry(
+			`${up(`${win} ${slot} (i32.store ${cell(4356)} (local.get $sum))`)} ${reset}
+			${up(`(i32.store offset=60 (local.get $slot) (i32.load ${cell(4356)}))`)}`
+		);
+		assert.match(refusal(carry, 'read-before-write').detail, /before this record loop/);
+		// each loop writes a cell before it reads it
+		certificate(
+			entry(
+				`${up(`${win} ${slot}`)} ${reset}
+				${up(
+					`(i32.store ${cell(4104)} (local.get $sum))
+					(i32.store offset=60 (local.get $slot) (i32.load ${cell(4104)}))`
+				)}`
+			)
+		);
+		// the second loop rewrites the cell the first loop wrote before it reads it
+		certificate(
+			entry(
+				`${up(`${win} ${slot} (i32.store ${cell(4356)} (local.get $sum))`)} ${reset}
+				${up(
+					`(i32.store ${cell(4356)} (local.get $sum))
+					(i32.store offset=60 (local.get $slot) (i32.load ${cell(4356)}))`
+				)}`
+			)
+		);
+	});
+
+	test('a cell stored before the record loop is a baseline only when no record writes it', () => {
+		const pre = `(i32.store ${cell(4328)} (i32.const 5))`;
+		const rewrite = `(i32.store offset=60 (local.get $slot) (i32.load ${cell(4328)}))
+			(i32.store ${cell(4328)} (i32.add (i32.load ${cell(4328)}) (i32.const 1)))`;
+		assert.match(
+			refusal(entry(`${pre} ${up(`${slot} ${rewrite}`)}`), 'read-before-write').detail,
+			/before this record loop/
+		);
+		certificate(
+			entry(
+				`${pre} ${up(`${slot} (i32.store offset=60 (local.get $slot) (i32.load ${cell(4328)}))`)}`
+			)
+		);
+		certificate(
+			entry(
+				`${pre} ${up(`${slot} (i32.store ${cell(4328)} (local.get $sum))
+					(i32.store offset=60 (local.get $slot) (i32.load ${cell(4328)}))`)}`
+			)
+		);
+	});
+
+	test('a record loop that visits records in decreasing order is refused, a countdown that indexes none is not', () => {
+		const down = (body: string) => `(local.set $i (local.get $n))
+			(block $done (loop $each
+				(br_if $done (i32.eqz (local.get $i)))
+				(local.set $i (i32.sub (local.get $i) (i32.const 1)))
+				${recordHead('(local.get $i)')}
+				${body}
+				(br $each)))`;
+		assert.match(
+			refusal(entry(down(`${win} ${slot}`)), 'read-before-write').detail,
+			/counter-as-data/
+		);
+		const rec = `(func $rec (param $rp i32) (param $ro i32)
+			(local $p i32) (local $len i32) (local $k i32) (local $sum i32)
+			(local.set $p (i32.load (local.get $rp)))
+			(local.set $len (i32.load offset=4 (local.get $rp)))
+			${sumLoop}
+			${win}
+			(i32.store (local.get $ro) (i32.add (local.get $sum) (i32.const 1))))`;
+		const viaCallee = assemble(`(module (import "env" "memory" (memory 8 40))
+			${rec}
+			(func $bulk (export "bulk") (param $t i32) (param $n i32) (param $o i32) (local $i i32)
+				(local.set $i (local.get $n))
+				(block $done (loop $each
+					(br_if $done (i32.eqz (local.get $i)))
+					(local.set $i (i32.sub (local.get $i) (i32.const 1)))
+					(call $rec (i32.add (local.get $t) (i32.shl (local.get $i) (i32.const 4)))
+						(i32.add (local.get $o) (i32.shl (local.get $i) (i32.const 6))))
+					(br $each)))))`);
+		refusal(viaCallee, 'read-before-write');
+		// a countdown of the record count that no address uses, next to an ascending record index
+		certificate(
+			entry(`(local.set $c (local.get $n))
+				(block $done (loop $each
+					(br_if $done (i32.eqz (local.get $c)))
+					(local.set $c (i32.sub (local.get $c) (i32.const 1)))
+					${recordHead('(local.get $i)')}
+					${win} ${slot}
+					(local.set $i (i32.add (local.get $i) (i32.const 1))) (br $each)))`)
+		);
+	});
+
+	test('a loop test against a base parameter is refused, against the record count it is not', () => {
+		const step = '(local.set $i (i32.add (local.get $i) (i32.const 1))) (br $each)';
+		const test = '(br_if $done (i32.ge_u (local.get $i) (local.get $n)))';
+		const against = (limit: string) =>
+			assemble(
+				driverWat({ body: BASES.scratch!.join('\n') })
+					.replace(test, '(nop)')
+					.replace(
+						step,
+						`(local.set $i (i32.add (local.get $i) (i32.const 1)))
+						(br_if $each (i32.lt_u (local.get $i) ${limit}))`
+					)
+			);
+		certificate(against('(local.get $n)'));
+		for (const base of ['$o', '$t'])
+			assert.match(
+				refusal(against(`(local.get ${base})`), 'read-before-write').detail,
+				/counter-as-data/,
+				base
+			);
 	});
 
 	test('unsupported input is refused with a reason', () => {
