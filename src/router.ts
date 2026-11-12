@@ -80,7 +80,11 @@ export interface RecordsCall {
 	args: (from: number, to: number) => (number | bigint)[];
 	/** Every region the records touch, for the window guard. */
 	regions: [number, number][];
-	/** The regions the records write outside any window. */
+	/**
+	 * The regions the records write outside any window. The list must name every range the records
+	 * write: a range left out keeps the writes of the records after a trap, and the serial replay does
+	 * not undo them.
+	 */
 	writes: [number, number][];
 }
 
@@ -627,9 +631,23 @@ export class Router {
 			const wantsMemory = WebAssembly.Module.imports(compiled).find(
 				(i) => i.kind === 'memory'
 			);
+			// a program that imports its memory shared links only to a shared one
+			const sharedImport =
+				!!wantsMemory &&
+				(() => {
+					try {
+						return Buffer.compare(sharedMemoryImport(module), module) === 0;
+					} catch {
+						return false;
+					}
+				})();
 			const own =
 				memory ??
-				new WebAssembly.Memory({ initial: options.pages, maximum: options.pages });
+				new WebAssembly.Memory({
+					initial: options.pages,
+					maximum: options.pages,
+					...(sharedImport ? { shared: true } : {})
+				});
 			const imports: WebAssembly.Imports = {
 				...extra,
 				...(wantsMemory

@@ -279,6 +279,31 @@ describe('shared and independent analyses', () => {
 });
 
 describe('running a route', () => {
+	test('a program that imports its memory shared runs on the serial route, an unshared one still does', async () => {
+		const text = iterWat({ body: BASES.scratch!.join('\n'), max: MAX });
+		const sharedProgram = assemble(text.replace('(memory 8 40)', '(memory 8 40 shared)'));
+		const want = serialBytes(window, 3);
+		for (const [name, bytes, mode] of [
+			['shared', sharedProgram, 'serial'],
+			['shared', sharedProgram, 'w2'],
+			['unshared', window, 'serial']
+		] as const) {
+			const router = await Router.open(bytes, records(), { ...options(mode), maxPages: MAX });
+			try {
+				assert.equal(router.decision.route, 'serial', `${name} ${mode}`);
+				fill(router.memory, 3);
+				await router.run();
+				assert.deepEqual(
+					new Uint8Array(router.memory.buffer).slice(OUT, OUT + 64 * RECORDS),
+					want,
+					`${name} ${mode}`
+				);
+			} finally {
+				await router.close();
+			}
+		}
+	});
+
 	test('the window route leaves the serial bytes, and a loop under the floor stays serial', async () => {
 		const forced = await Router.open(window, records(), {
 			...options('w2'),
