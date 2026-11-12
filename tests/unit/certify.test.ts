@@ -805,7 +805,8 @@ describe('certified execution on shared memory', () => {
 				.split('\n')
 				.filter((l) => !/\(memory|\(import|producers|features|\(module|\(export/.test(l))
 				.join('\n')
-				.replace(/\(func \$[^\s)]+/g, '(func $f');
+				.replace(/\(func \$[^\s)]+/g, '(func $f')
+				.replace(/\(global \$[^\s)]+/g, '(global $g');
 		assert.equal(body(derived), body(original));
 		original.dispose();
 		derived.dispose();
@@ -814,5 +815,23 @@ describe('certified execution on shared memory', () => {
 		const memory = new WebAssembly.Memory({ initial: 41, maximum: 41, shared: true });
 		assert.throws(() => installPrefill(subject, memory), RangeError);
 		assert.ok(typeof serveCertified === 'function');
+	});
+
+	test('a module that declares a global before its memory is shared with the import first', () => {
+		const module = binaryen.parseText(`(module (global $sp (mut i32) (i32.const 66560))
+			(memory (export "memory") 32 512)
+			(func $update (export "update") (param i32 i32 i32) (result i32) (local i32)
+				(block $g (br_if $g (i32.eqz (local.get 2)))
+					(loop $l (local.set 3 (i32.load8_u (local.get 1)))
+						(local.set 0 (i32.xor (local.get 0) (local.get 3)))
+						(local.set 1 (i32.add (local.get 1) (i32.const 1)))
+						(br_if $l (local.tee 2 (i32.add (local.get 2) (i32.const -1))))))
+				(local.get 0)))`);
+		const bytes = Uint8Array.from(module.emitBinary());
+		module.dispose();
+		const c = certifyStream(bytes, 'update');
+		assert.equal(c.kind, 'certificate');
+		const subject = shareCertified(bytes, c as StreamCertificate, 40);
+		assert.ok(WebAssembly.validate(subject.bytes));
 	});
 });

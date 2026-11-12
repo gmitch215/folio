@@ -57,10 +57,10 @@ export function shareCertified(
 		let text = module.emitText();
 		const declared = /\(memory (\$\S+) (\d+)(?: (\d+))?\)/.exec(text);
 		if (!declared) throw new Error('the module has no plain memory declaration');
-		text = text.replace(
-			declared[0],
-			`(import "env" "memory" (memory ${declared[1]} ${declared[2]} ${pages} shared))`
-		);
+		const imported = `(import "env" "memory" (memory ${declared[1]} ${declared[2]} ${pages} shared))`;
+		text = text
+			.replace(declared[0], '')
+			.replace(/^\(module[^\n]*\n/, (head) => `${head} ${imported}\n`);
 		text = text.replace(/\(data (\$\S+) \(i32\.const \d+\) /g, '(data $1 ');
 		const shared = binaryen.parseText(text);
 		try {
