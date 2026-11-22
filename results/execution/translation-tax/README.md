@@ -43,4 +43,4 @@ The shadow stack takes 68.5% to 75.5% of accesses and a single page holds half. 
 
 ## Limits
 
-One interpreter, one site, one machine under load. The six gmux census programs were not run: they are not built locally. Atomics, memory.copy, memory.fill, memory.init, SIMD memory access and exception handling are refused, not lowered. Frames equal pages in every run, so no fill or eviction cost is measured.
+One interpreter, one site, one machine under load. The six census programs were not run: they are not built locally. Atomics, memory.copy, memory.fill, memory.init, SIMD memory access and exception handling are refused, not lowered. Frames equal pages in every run, so no fill or eviction cost is measured.

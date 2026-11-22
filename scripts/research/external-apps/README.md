@@ -1,6 +1,6 @@
 # External Applications
 
-Build and timing harness for W4b: upstream C programs run unchanged through Folio's automatic route. Nothing here edits an application. The programs are aobench (`ao.c`), FastLZ `6pack` and llama2.c `run.c`, cloned under `scratchpad/v11/w4/src/` at the revisions in `scratchpad/v11/w4/W4B-PREREG.md`.
+Build and timing harness for the upstream C programs run unchanged through Folio's automatic route. Nothing here edits an application. The programs are aobench (`ao.c`), FastLZ `6pack` and llama2.c `run.c`, cloned from upstream at the revisions named in the pre-registration, which is not part of this repo.
 
 ## Files
 

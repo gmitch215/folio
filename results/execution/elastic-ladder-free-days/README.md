@@ -19,4 +19,4 @@ The dense p90 rule (under 10 s, failed attempts counted as over) fails because t
 
 ## Limits
 
-The Free plan allows 100,000 Durable Object rows a day, and the platform meter undercounts, so the counter is the budget. The extra repeats of day 2 (UTC 11 November, after 03:00) and the STUDENT account's repeats raise the dense repeat count per arm. They are not exported here and do not change a NOT MET reading. The Paid account series on 11 November is a supplementary record of a different plan and is not part of this study. Day 3 was pre-registered and not run, so the gate stays open.
+The Free plan allows 100,000 Durable Object rows a day, and the platform meter undercounts, so the counter is the budget. The extra repeats of day 2 (UTC 11 November, after 03:00) and the Paid plan account's repeats raise the dense repeat count per arm. They are not exported here and do not change a NOT MET reading. The Paid account series on 11 November is a supplementary record of a different plan and is not part of this study. Day 3 was pre-registered and not run, so the gate stays open.

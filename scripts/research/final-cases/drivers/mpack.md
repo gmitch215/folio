@@ -8,8 +8,7 @@ public headers and six translation units, verbatim).
 Rule 1 gives 102 unique names. The window is the first 12 names in enumeration order that have a definition in
 the default build (rule 1b). Twelve names before the window's end are not linkable and are listed with reason
 `compiled-out`: ten guarded by `MPACK_DEBUG && MPACK_STDIO` or `MPACK_INTERNAL` (both 0 with `-DNDEBUG`), plus
-`mpack_write_ext` and `mpack_start_ext`, which are not declared in the default configuration. The check is
-`scratchpad/v11/w4/batchD/linkable.mjs`.
+`mpack_write_ext` and `mpack_start_ext`, which are not declared in the default configuration. The check is a linkable-name script that is not part of this repo.
 
 The window is:
 
