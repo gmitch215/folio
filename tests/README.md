@@ -41,3 +41,9 @@ The Free plan allows 100,000 Durable Object rows written per UTC day across the 
 first deploy the suite reads the account's rows written today and skips with a notice that names the
 reset time when a run would not fit; a deploy that the platform refuses for the same reason skips
 too, instead of failing. The meter can under-read on Free, so the refusal text is the second check.
+
+## Continuation
+
+`tests/unit/continuation.test.ts` covers `src/continuation.ts` on a fake storage and a memory
+seam, with no Durable Object. The continuation experiments are not tests; they are described in
+[experiments/continuation](../experiments/continuation/README.md).

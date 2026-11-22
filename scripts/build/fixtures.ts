@@ -24,11 +24,18 @@ const link = [
 	'-Wl,--max-memory=536870912'
 ];
 
-export const fixtures = [
+export const fixtures: { source: string; output: string; flags: string[]; link?: string[] }[] = [
 	{ source: 'fixture.c', output: 'fixture.wasm', flags: ['-fno-inline', '-fno-unroll-loops', '-fno-vectorize'] },
 	{ source: 'sharing.c', output: 'sharing.wasm', flags: [] },
 	{ source: 'records.c', output: 'records.wasm', flags: ['-fno-unroll-loops', '-fno-vectorize'] },
-	{ source: 'generalized.c', output: 'generalized.wasm', flags: ['-fno-unroll-loops', '-fno-vectorize'] }
+	{ source: 'generalized.c', output: 'generalized.wasm', flags: ['-fno-unroll-loops', '-fno-vectorize'] },
+	{
+		source: 'continuation.c',
+		output: 'continuation.wasm',
+		flags: [],
+		// its own memory and the exported signal word, not the shared imported memory above
+		link: ['-Wl,--no-entry,--export=__instance_signal']
+	}
 ];
 
 function clang(): string {
@@ -48,11 +55,11 @@ const env = {
 
 export function buildFixtures(outDir = join(root, 'build')): string[] {
 	mkdirSync(outDir, { recursive: true });
-	return fixtures.map(({ source, output, flags }) => {
+	return fixtures.map(({ source, output, flags, link: own }) => {
 		const target = join(outDir, output);
 		execFileSync(
 			clang(),
-			[...common, ...flags, join(root, 'tests/c', source), '-o', target, ...link],
+			[...common, ...flags, join(root, 'tests/c', source), '-o', target, ...(own ?? link)],
 			{ stdio: 'inherit', env }
 		);
 		return target;
