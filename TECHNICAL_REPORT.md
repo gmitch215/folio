@@ -3235,6 +3235,178 @@ Thunder is a Drupal distribution that runs on Drupflare, Drupal on Cloudflare Du
 
 **Open.** The meter peaks above the line fall inside requests, as live allocation, which is where a paged heap or a smaller linear window could act. The stack-limit pass, the paged runtime and the governor exist and are tested locally. Whether the guarded shrink lowers the kill rate on the platform needs more deploys than were run, and no deployed fix completes the failing routes.
 
+### Storage Resets and the Growth Governor
+
+This section records checks of the Durable Object storage reset ("Internal error in Durable Object storage ... caused object to be reset") on a Drupal site running on Durable Objects, and a guard for linear-memory growth. None of them identifies the cause of every reset. Several close a mechanism, and one adds a tested guard.
+
+**Where the resets fall.** In the tails of five drives of the site and one fresh fixture, 464 requests used more than 300 ms of CPU. When an alarm handler overlapped the request, 1 of 319 ended in "Internal error in Durable Object storage ... caused object to be reset"; when none did, 25 of 145 did. A second sample of 430 requests from a later drive split 1 of 361 against 3 of 69. Among heavy requests that never waited on I/O for a full second, 22 of 220 reset, and none of 56 that did. The page matters less than the shape: status 14 of 93, modules 6 of 48, performance 3 of 65, content 0 of 33, flat across CPU bins. These are tail counts from drives that were not designed as experiments, so they locate the failures without isolating a cause.
+
+**Bare Durable Object arms.** The platform's SQLite actor takes a synchronous alarm-manager call before any commit that moves the alarm earlier, and a failure there breaks the output gate for every write in that commit, so an alarm set `+1 ms` on every render was the leading suspect. Eight runs on a small SQLite object, with the render's write shape (2,000 small rows and a 30,000-row read) and 4 s to 6 s of synchronous CPU, reproduced a reset only when `setAlarm(+1 ms)` preceded an awaited fetch: 5 of 142 requests against 0 of 166 across the other alarm-bearing arms (hypergeometric p about 0.02, a rate of 3.5%). A 4.5 MB single commit (0 of 120), the same commit split with `sync()` every ten blobs (0 of 60) and an awaited fetch in the middle (0 of 60) did not reset ([alarm-discipline](experiments/alarm-discipline/README.md)).
+
+**Deployed A/B: committing first did not help.** The treatment commits the event with `storage.sync()` before an alarm moves earlier, so the move travels in a commit of its own. On one deployed site on a paid account, 50 blocks alternated the treatment with the old path by request header, 150 requests per arm, each block clearing the caches and then visiting four admin pages. Storage resets read 1 of 150 for the old path and 11 of 150 for the treatment (Fisher exact p = 0.005). Memory resets read 9 and 6 (p = 0.6). The old path made 72 earlier alarm moves with no reset on any of them; ten of the treatment's 11 resets came on requests that made an isolated move, 10 of 66. So an earlier alarm move did not reset this object, and committing first made resets more frequent. The mechanism "commit the event first, then move the alarm" is closed as a fix. The family of designs in which request paths never move the alarm earlier was not an arm, and the old path reset 1 of 150, which is too few for a removal to show. The site ran a frozen copy of the application without the request-only PHP reuse of the earlier drives, so its baseline rate differs from theirs. The cause of the resets remains unidentified; the awaited durability of a large write batch, which an earlier diagnostic (a `sync()` that reached its call and never returned on failing invocations) points at, is the open lead.
+
+**Growth governor.** `@gmitch215/folio/growth-governor` caps `WebAssembly.Memory.grow`. The cap has to sit on `grow`, because the Emscripten glue tries the current size times 1.2, 1.1 and 1.05, floored at the request, and a cap on the requested size let a 107,548,672-byte request take linear memory to 115.25 MiB under a 104 MiB cap. On a PHP 8.5 module built with Emscripten, with a 100 MiB cap, a 64 MiB string request had all three glue attempts refused (each twice in one run, six refusals), PHP printed `[error] Out of memory`, `_run` threw `ExitStatus` with status 1 and PHP's own `catch` never ran, memory stayed at its 96 MiB boot size, and shutdown, startup and `1+1` still worked. At a 104 MiB cap the request fit after the first two attempts were refused and completed at 107,610,112 bytes; at 160 MiB it completed with a matching sha256. Every run repeated byte for byte ([growth-governor](experiments/growth-governor/README.md)). The governor guards linear memory only, so it turns a platform memory reset into a failed request and does not bound the JS-side charge. What the cap value should be for a given build is unmeasured: the request-reuse arm of one earlier build held 113.9 MiB after the full workload, which a 112 MiB cap would refuse.
+
+**Retirement and alarm shape.** On a bare SQLite object, chains of 24 events (0.25 s of counted CPU each, 0.5 s apart, 20 chains per arm) showed the platform retiring an isolate near event 20 to 23, silently when nothing was pending. With an alarm due within about a second at that boundary, every retirement was the exact storage reset: `start-near-awaited` 9 of 20 chains, `end-near-unawaited` 6 of 20, `end-near-unawaited-no-gap` 11 of 20, and a reset on every chain that retired. With no alarm, an alarm 60 s out (`end-far-unawaited`), `sync()` followed by the near alarm at the end of the event (`end-sync-then-near`), or a start-of-event move to 5 s (`start-5s-awaited`), no chain reset in 20. A `sync()` at the end of the start shape did not avoid it (9 of 20), and a burn-only event with the same alarm move reset as often (10 of 20), so unsynced writes are not required. On first events of fresh objects an alarm 1 ms, 10 ms, 100 ms and 1 s ahead reset 14, 13, 14 and 16 of 20, and 5 s and 60 s ahead reset 0 of 20. The count of chains that retire within 24 events differs from run to run, so the per-chain rate is not a constant. All of this is on bare objects, n = 20 per arm, with nominal CPU, and shows no mechanism ([alarm-retirement](experiments/alarm-retirement/README.md)). A control of 10 idle objects waking every 3 min for four hours completed 800 of 800 light alarm runs with no failure (upper bound 0.48% at 95%, [idle-floor](experiments/idle-floor/README.md)).
+
+Closed here: alarm isolation by `sync()` as a fix on the deployed site, and the earlier alarm move by itself as the cause of admin-page resets (a move 5 s ahead did not reset on bare objects). Open: the cause of the generic storage reset, whether the retirement result holds on the deployed site, the host charge per build that sets a governor cap, and whether request-only reuse changes the reset rate at the same drive.
+
+---
+
+## 🔁 Continuation Across Invocations
+
+Each Durable Object alarm event gets its own CPU budget, and the platform ends an event that runs past it. A Wasm guest that needs more CPU than one event allows must stop at a clean point, keep its state, and resume in a later event. The `continuation` subpath does this for any Wasm guest that meets the model below. PHP is the first guest measured with it.
+
+This section separates two kinds of stop. A planned stop is a return the guest makes at a point it chose, and the host checkpoints it and resumes it. An unplanned loss is a reset the platform causes. Claims C1 to C9 cover planned stops. Boundaries B1 to B9 cover what no design removes. The design limits the cost of an unplanned loss to the work since the last commit.
+
+### Platform Facts
+
+The platform raises a CPU warning when an event's budget nears its end. The warning is a u32 word in the guest's memory, and the guest exports its address as the i32 global `__instance_signal`. A guest that polls the word can return before the budget ends.
+
+The signal study ran 30 events on deployed objects. Twenty returned, and the signal had fired in each of the 20. Ten reset before returning, and all ten were the first event of their object ([signal](results/continuation/signal/README.md)). The probe left a write pending while the guest ran, and the study attributes those first-event resets to that write, held across a long synchronous stretch.
+
+The durable chain study ran 30 burn events, and none reset before returning. All 30 stopped on the signal, and the events that returned ended between 29.998 s and 32.476 s of CPU ([durable-chain](results/continuation/durable-chain/README.md)). The durable worker awaited its bookkeeping writes before it ran the guest, so no write was pending during the run, and it wrote the checkpoint after the guest stopped. The signal probe inserted a slice row and ran its synchronous burn without awaiting that write. That difference is a candidate explanation for the 10 resets, not a tested one. It compares two studies with different guests and different arms. It is not a controlled arm.
+
+A suspended JSPI stack does not survive an isolate change. In the JSPI study, four chains each changed isolate, and none of them finished ([jspi-chain](results/continuation/jspi-chain/README.md)).
+
+The isolate-life study ran five objects in each of four arms under a continuous CPU chain. The arms used slices of 0.1 s, 1 s and 5 s, and 1 s slices with a 10 s pause after 3 s of isolate CPU. Each arm recorded five isolate changes. The summary does not give the CPU at each move, so this report does not estimate a move rate ([isolate-life](results/continuation/isolate-life/README.md)).
+
+### Model
+
+A job is a deterministic Wasm guest with imports. Its execution is cut by safe points, where the guest polls the signal word or calls an import. A quiescent point is a safe point where the guest's state lives entirely in linear memory, the mutable globals and a small host state record.
+
+The platform delivers events to one actor, and each event has a CPU budget `B`. The signal arrives `L` before the budget ends, where `L` is the lead. `P` is the largest CPU between two polls, `c_y` the CPU to stop and end an event, `c_r` the CPU to start and resume, `C_k` the CPU of one checkpoint, and `G_q` the largest CPU between quiescent points. The published studies do not measure `L`, so each claim that depends on it is conditional.
+
+### Claims
+
+**C1 (planned continuation is exact).** If a guest stops only at a safe point and resumes in a later event of the same isolate, with its memory, globals and table untouched, its run matches an uninterrupted run apart from the timing of import results.
+
+_Proof._ Nothing runs between the stop and the resume, and the guest is deterministic, so every instruction sees the state it would have seen. A suspended JSPI stack keeps its frames in the engine. A parked interpreter keeps every live value in linear memory. The local exactness run covers 200 events, and its value and memory SHA-256 match the reference ([checkpoint-cost](results/continuation/checkpoint-cost/README.md)).
+
+**C2 (no CPU termination).** If `P + c_y < L`, no event exceeds `B`.
+
+_Proof._ The signal arrives at consumption `B - L`. The next poll comes within `P`, and stopping costs `c_y`, so the event ends by `B - L + P + c_y`, which is below `B`. A new event starts a new count, because the platform tops up the budget and does not add to it. `runSlice` clears the signal word at the start of each slice. The condition is part of the claim. The studies do not measure `L`, and 10 of 30 signal-study events reset before returning, so C2 states a condition the design depends on and not a measured guarantee.
+
+**C3 (unbounded total CPU).** By induction on C2, each event ends below `B` and hands the job to the next event. A job of total CPU `J` therefore completes in `N` events:
+
+```math
+N = \left\lceil \frac{J}{B - L - c_y} \right\rceil
+```
+
+**C4 (native speed).** The guest runs ordinary compiled code. The added cost is the polls plus the handoff at each event:
+
+```math
+T = T_{\text{native}}(1 + \pi) + N(c_y + c_r)
+```
+
+Here `π` is the share of guest time spent in polls. In the PHP build each poll site reads the signal word, decrements a tick countdown, and branches once on the two together, so a poll is two loads, one store and one branch. For a generic C guest, `π` is one load and branch per loop back edge that is not proved short. Imports poll for free, because the host reads the word when the guest calls one. The measured poll cost is in the PHP section below.
+
+**C5 (durable checkpoint is exact).** At a quiescent point the host writes the changed pages, the mutable globals and the host state record as one manifest, committed in one storage transaction. Every restore returns the bytes of the last committed checkpoint, or it is refused.
+
+_Proof._ The manifest holds a hash for each page. `loadCheckpoint` checks every page against its hash before it writes any page into memory, and a failed check throws `CheckpointError` with code `hash`. The commit writes the group rows, then the manifest, then prunes old rows, all inside one synchronous span. A partial write therefore leaves the previous manifest whole.
+
+**C6 (checkpoint cost scales with change).** Linear memory has no write barrier, so the host hashes every page against the last checkpoint and writes only the pages whose hash changed. With `M` bytes of memory, hash rate `H`, `D` changed bytes and write rate `W`:
+
+```math
+C_k = \frac{M}{H} + \frac{D}{W} + c_0
+```
+
+The hash pass costs `O(M)`, which is the price of having no page protection. The writes cost `O(D)`. Rows are the running cost of a checkpoint, so the default groups 16 pages in one row, 1 MiB.
+
+The measured costs are as follows. On a local Node 26 runtime, a Wasm page hash ran at 3.83 to 3.95 GiB/s on 32, 64 and 128 MiB, and SHA-256 at 2.25 to 2.31 GiB/s ([checkpoint-cost](results/continuation/checkpoint-cost/README.md)). On a deployed object, a checkpoint took 7.3 ms with no change, 23.7 ms with 4 MiB changed and 78 ms with 16 MiB changed ([durable-chain](results/continuation/durable-chain/README.md)). The module's own `hashPages` is pure JavaScript, so it runs wherever the module does. In paired Node 26 runs on one machine, which is not named, `hashPages` had a median of 1.26 GiB/s on 32 MiB and 1.01 GiB/s on 128 MiB, which puts the hash pass at about 0.13 s at 128 MiB. Each run also times SHA-256 on the same buffer. The 128 MiB runs split: three ran at 1.01 to 1.32 GiB/s and two near 0.25 GiB/s, and the cause is not measured. Each run's values are in [checkpoint-cost](results/continuation/checkpoint-cost/raw-hashpages.jsonl), and the medians are in [its summary](results/continuation/checkpoint-cost/summary.json). `scripts/probe/hashpages-bench.ts` measures again, and a rerun gives new samples, not the recorded ones.
+
+**C7 (checkpoint interval).** With unplanned losses at a mean of `M_f` CPU-seconds apart, Young's first-order interval is `tau* = sqrt(2 C_k M_f)`, and the overhead is about `sqrt(2 C_k / M_f)`. The formula sets how often a checkpoint should run inside an event. Under C9 the default commits at every budget stop, so the formula serves as a check on that default and not as a schedule. The deferred chain study bounds `M_f` from below at 261 s, and no study estimates it.
+
+**C8 (safe replay).** Effects fall into three classes. Pure compute replays for free. A write to the object's own SQLite happens exactly once when the guest logs each import result in the same synchronous span as the write it reports, because the output gate holds outbound messages until both are durable. An external effect happens at least once, and an idempotency key derived from the job, the checkpoint epoch and the sequence makes it safe when the far side honours the key. The module does not log imports, so a guest that performs effects keeps its own log. No study in this section measures C8.
+
+**C9 (boundary commits).** Suppose isolate moves land only between events, and every event that stops on its budget commits a checkpoint before it returns. Then a move loses no work.
+
+_Proof._ After a move the host restores the last committed manifest, which is exact by C5. The commit covers every guest step the event ran. Between the commit and the boundary only the re-arm runs, and it is not guest state. So the restored state equals the state at the boundary.
+
+The boundary-commit study tested this on three deployed objects running 120,000 steps, and on one local object running 30,000 steps. The local run had a simulated signal at step 5,000 and a cut in the commit of event 6. In the deployed arm the three moves each followed a commit and lost 0 steps. Final value and memory SHA-256 matched the reference in 3 of 3 deployed objects and in 1 of 1 local object. The driver stored those two match results as booleans, not as values, so the study records whether each object matched and not the values it matched on. No move in the study followed a signal stop, so C9 is not tested at that boundary ([boundary-commit](results/continuation/boundary-commit/README.md)).
+
+The deferred protocol checkpoints only on the isolate that holds the state, and it stops each event on the signal. It lost work at its moves. In the deferred chain study, seven moves followed a signal-ended event, and each lost the whole slice since the last commit, between 33,831 and 36,456 steps. One of the seven is the `f2` move. It follows slice 1, which ran to the signal, and it is not a move after a forced abort. The forced aborts in that arm follow slices 2 and 4, and the post-signal write did not land at either one. Two of the seven are the `f4` moves. That arm checkpointed every 500 steps up to 4,000 steps and then stopped on the signal, so those moves lost the steps past 4,000. The study records this as the design as run, not a fix. The third `f4` object was reset by a deploy with 0 steps lost. That reset is not a placement move ([deferred-chain](results/continuation/deferred-chain/README.md)).
+
+**Cost under C9.** Each event pays one commit and one handoff. A move after a signal stop loses the signal-first event's CPU. The overhead per event is
+
+```math
+\frac{C_k + h}{E} + \frac{S / M_f}{N}
+```
+
+Here `C_k` is the CPU of one commit, `h` the handoff between events, `E` the CPU of one event, `S` the CPU of the signal-first event, and `N` the number of events between signal stops, so each loss is spread over `N` events. The deferred-only protocol has `N = 1`, because every event ends on the signal. The inputs are these. `C_k` is 0.078 s, the 16 MiB checkpoint median ([durable-chain](results/continuation/durable-chain/summary.json)). `h` is 51 to 71 ms. `E` and `S` are both the signal-first event CPU, 32.475 CPU-s median over 27 events ([deferred-chain](results/continuation/deferred-chain/summary.json)). `M_f` is at least 261.2 s, the lower bound on mean CPU between moves ([deferred-chain](results/continuation/deferred-chain/summary.json)). The handoff range comes from an earlier measurement text, and no results study holds it. The budget rule in Event Budget (0.7 after a signal stop, then +2% per commit) gives `N = ln(1/0.7) / ln(1.02) = 18.01` for a full cycle. The text's range of 13 to 18 events is shown as well.
+
+Under these inputs C9 costs 1.088 to 1.149% per event at `N = 18.01`, and 1.354 to 1.415% at `N = 13`. The deferred-only protocol costs 12.83 to 12.89% per event. The commit term is 0.397 to 0.459%, the loss term is 12.43% for deferred-only, and 0.69% and 0.96% for the two AIMD cycle lengths. Because `M_f` is a lower bound, every loss term here is an upper bound. The values come from the `eventCost` fields of [checkpoint-cost](results/continuation/checkpoint-cost/summary.json).
+
+### Event Budget
+
+`runSlice` gives each event a step budget `b`, which starts at 2,000 steps. Before the first signal stop, each committed budget stop doubles `b`. After a signal stop in which the guest ran `s` steps, `b` becomes the larger of the starting budget and `0.7 s`. After each later committed budget stop, `b` grows by 2%.
+
+Each commit saves the budget and the step count in a state envelope, `{budget, measured, steps, host}`, so a restore after a move brings the budget back. A signal stop writes nothing. If the object moves before the next commit, its new budget is lost, and the next signal re-measures it at the cost of one event.
+
+### PHP Park
+
+**Theorem P (an interrupt park is exact).** The setup is a PHP build with the interrupt-park patch. The patch places a poll at the interrupt check of the interpreter loop. A park saves the current execute data and opline, then jumps back to the host. A resume re-enters the interpreter with the saved execute data at the saved opline.
+
+_Lemma 1 (local completeness)._ The execute data, the opline and the heap form a complete continuation of the running activation. The Zend VM keeps its frames on the heap, so a jump out of the interpreter loop keeps every live value in linear memory.
+
+_Lemma 2 (one activation)._ Every frame on the chain is user code, the walk reaches the host entry frame, and exactly one frame carries the flag the VM sets on a frame entered from C (`ZEND_CALL_TOP`): the outermost, the root the host entered. A poll that fails this test is refused, and the next admissible poll is tried.
+
+_Lemma 3 (host frames)._ The resume replaces the host entry frames with the same epilogue that the trapped-call resume already uses.
+
+_Proof._ By Lemma 2, the C frames between the poll and the host entry belong to one interpreter activation; by Lemma 1 they hold no live state; Lemma 3 reproduces the host frames. The resumed interpreter therefore runs the same instruction sequence as a run that never parked, by determinism. A parked state is a quiescent point, so C5 covers its checkpoint.
+
+A refused stretch delays the park until the next admissible poll. The interpreter retries at every poll, not at a fixed period. A fixed period aliases with a loop whose iteration holds a number of polls that divides the period, so such a loop never reaches an admissible poll at the retry. The cost is one walk of the call chain per poll inside a refused stretch.
+
+The PHP park study ran a workload with two refused regions, an `array_map` with a closure and a generator loop, under a local event protocol. The uninterrupted reference is P0. Each arm stopped on its budget or on the signal, committed, and restored from its store.
+
+- P1, in memory: 49 events, 46 budget parks, 2 signal parks, 4 restores, no cut, and the stack check passed in every event. The arm counted 77,860,147 refusals ([php-park](results/continuation/php-park/README.md)).
+- P2, in a local Durable Object: 50 events, 47 budget parks, 2 signal parks, 4 restores, one cut, and the stack check passed in every event. The arm counted 71,195,287 refusals ([php-park](results/continuation/php-park/README.md)).
+
+In the generator loop, the first admissible poll is the consumer's `foreach` iteration, inside the loop. The park landed there at event 42 in both P1 and P2, as the theorem predicts. Each of those parks was a budget stop after 26 refusals ([php-park](results/continuation/php-park/README.md)). P1's and P2's output has the same SHA-256 as P0's ([php-park](results/continuation/php-park/README.md)).
+
+**Poll cost.** The poll's cost is the paired ratio of the park build to a build whose poll does nothing, with the rest of the patch unchanged. The workloads ran on a Linux x86-64 machine in 11 rotated rounds, with 22 samples per workload. The median ratio was 1.018 for `fib(35)`, with a range of 1.012 to 1.079, and 1.020 for a string-array workload, with a range of 1.010 to 1.036. That is an overhead of about 1.8% and 2.0%. For a loop of 60 million iterations the median ratio was 1.002, with a range of 0.974 to 1.045, which does not resolve the cost ([php-poll-cost](results/continuation/php-poll-cost/README.md), [summary](results/continuation/php-poll-cost/summary.json)).
+
+### Boundaries
+
+**B1 (no preemption without a poll).** Wasm has no asynchronous interrupt except termination. A loop with no poll and no import can only be killed, so the guest needs a poll on every loop not proved short.
+
+**B2 (JSPI stacks do not serialize).** A planned stop through JSPI ends when the isolate ends. Only a quiescent point can be checkpointed durably. The JSPI study lost all four of its chains at an isolate change ([jspi-chain](results/continuation/jspi-chain/README.md)).
+
+**B3 (signal timing is platform policy).** The platform sets when the warning arrives, and that policy can change. The signal study recorded the signal on 20 of its 30 events ([signal](results/continuation/signal/README.md)). If the warning stopped arriving, the fallback is a wall-clock bound. That bound is safe, but it stops compute-bound slices early.
+
+**B4 (memory cost).** A checkpoint copies only changed pages, and it hashes the whole memory to find them. The hash pass costs `O(M)` at every checkpoint.
+
+**B5 (wall time).** Alarm handlers have a wall-clock limit set by the platform. A slice that waits on I/O reaches that limit as well as the CPU budget.
+
+**B6 (connections do not move).** An inbound client connection cannot move to a new isolate. A job starts from a request and then belongs to the object.
+
+**B7 (replacement is platform behavior).** The platform replaces isolates between events. The module schedules its commits around the replacement and cannot prevent it.
+
+**B8 (deploys reset running objects).** A deploy can reset a running object in the middle of an event. Work since the last commit is lost, which is at most one event's budget under C9. No study in `results/continuation/` measures this reset.
+
+**B9 (a refused stretch longer than one event does not complete).** For PHP, a refused region longer than one event's CPU never reaches an admissible poll inside that event. The php-park study states this as its scope limit ([php-park](results/continuation/php-park/README.md)). The design predicts that each event restarts the region from the last commit. That replay is stated from the design and was not measured. The walk that retries at every poll is the cost of this design, and it has not been profiled.
+
+### Limits
+
+Several results are open, and the report states each one where it applies.
+
+- `finalMatch` is false for all 3 sync chains in the signal study. This probe carried only a block count across events, not the guest's state, so its final value is not expected to match after a reset. The study tests signal stops and completion, not state continuity; the durable-chain and boundary-commit studies test continuity ([signal](results/continuation/signal/README.md)).
+- The boundary-commit driver stored its final-value and SHA-256 matches as booleans, not values. The study shows whether each object matched and not what it matched on ([boundary-commit](results/continuation/boundary-commit/README.md)).
+- The local poll cost is not resolved. In the checkpoint study, the seven pairs had a median ratio of 0.965 with a range of 0.816 to 1.165 ([checkpoint-cost](results/continuation/checkpoint-cost/README.md)). A generic C guest's poll cost has no study here.
+- The 10 resets in the signal study are attributed to a pending write by contrast with the durable chain. That contrast spans two studies and is not a controlled arm.
+- The JavaScript hash rate comes from five paired runs per size on one unnamed Node 26 machine. The 128 MiB runs split between about 1 and about 0.25 GiB/s, and the cause is not measured ([checkpoint-cost](results/continuation/checkpoint-cost/README.md)).
+- `M_f` is bounded below at 261.2 s, and `L` is not measured, because the kill line is not in the raw ([deferred-chain](results/continuation/deferred-chain/summary.json), [durable-chain](results/continuation/durable-chain/summary.json)). The move rate is bounded above at 3.83e-3 per CPU-s at 95% ([deferred-chain](results/continuation/deferred-chain/summary.json)). C2, C3 and C7 therefore rest on a bound or an unmeasured input.
+
+### Reproduce
+
+Each study README gives its own commands. The shared steps are these:
+
+```sh
+node experiments/continuation/export.ts
+node scripts/analyze/continuation.ts
+node scripts/research/evidence.ts
+```
+
 ---
 
 ## 📜 Historical Copied-Memory Results
@@ -3478,7 +3650,7 @@ Limits added by the v1.1 work:
 | Is software translation a usable paging mechanism for the PHP render?                                                    | No at default tiering. Per route tau is 1.581 (front), 1.287 (login), 1.088 (admin) and 1.184 (ladder) on a quiet rig, and 1.578 on the Mac. The optimizing tier reads 0.874 and cannot be set on Workers, so it is exploratory. Closed as mechanisms: per-access translation and static check elision on this module. Open: late switching with retry on kill, and designs that remove the test                                                                                                                                                                                                                                                                          |
 | Does the managed page plane meet G-E2?                                                                                   | No on days 1 and 2: dense p90 fails because failed attempts and a 1,012 s call count as over, the unpaged pair reads 5.8x, and the time model misses chase. Day 3 was pre-registered and not run, and the supplementary Paid day misses Model C on 3 of 8 cells. The 1,012 s call has no found cause. Open                                                                                                                                                                                                                                                                                                                                                                |
 | What is the translated module's memory fit on Workers?                                                                   | Unmeasured. The documented 128 MB and the measured kill line of about 203 MiB are unreconciled, and the platform meter reading is the measured one. Open                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Does any deployed fix complete the failing Thunder routes?                                                               | No. Closed mechanisms: the idle module charge, retained buffers, boot garbage with a directory cache, and committed heap as the meter's basis. The guarded 4 MiB stack is safe locally and not shown on the platform at n = 2 to 3 per arm. Paged PHP is exact and priced locally and was not deployed. The objective is NOT MET and open                                                                                                                                                                                                                                                                                                                                 |
+| Does any deployed fix complete the failing Thunder routes?                                                               | No. Closed mechanisms: the idle module charge, retained buffers, boot garbage with a directory cache, and committed heap as the meter's basis. The guarded 4 MiB stack is safe locally and not shown on the platform at n = 2 to 3 per arm. Paged PHP is exact and priced locally and was not deployed. On 21 November a deployed A/B of committing before an alarm move showed more storage resets than the old path (11 of 150 against 1 of 150), and a `memory.grow` governor turns an oversized request into a failed one with the memory unchanged. The objective is NOT MET and open                                                                                |
 | Do the unit counts of this report describe the release tree?                                                             | The unit project has 101 spec files. The last complete run on the release tree, on 12 November, passed 1,496 tests in 101 files. The run on 10 November passed 1,151 tests in 72 files, before the final ownership changes                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 Work that the evidence points to and no row above closes: general browser extraction without JSPI,
@@ -3524,6 +3696,7 @@ FREE consumer harness: `node experiments/consumer/prepare.ts` and `node experime
 stage the assets, `node experiments/consumer/local.ts CONSUMER PAIRS OUT.json` runs the page in a local
 Chromium, `node experiments/deploy.ts consumer|php|prepared` deploys, measures and tears down, and
 `experiments/consumer/analyze.ts` and `experiments/consumer/php/analyze.ts RUN OUT.json` write the summaries.
+Storage-reset arms: `experiments/alarm-discipline/` (`bare.ts` against the deployed `worker.mjs`, and `ab.ts` with `analyze.ts` on a Drupal site that meets the contract in its README). Growth governor: `PHP_WASM=... PHP_GLUE=... PHP_BASE=... node experiments/growth-governor/php-grow-cap-check.mjs ARM LABEL`.
 Real-artifact comparison: `node scripts/probe/integration-probe.ts TINYIMG.wasm MACHINE-CORE.wasm`.
 Consumer harness: `node scripts/probe/consumer.ts scripts/probe/consumers/tinyimg.ts OUT.jsonl 20 1,2,4,8`
 (`FOLIO_OLD_BUILD=1` adds the archived pre-admission build), then `bun scripts/analyze/paired.ts SET FILE.jsonl`.

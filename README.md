@@ -1,12 +1,14 @@
 # 🚋 Folio
 
-> ⚡ Shared WebAssembly memory and ordered speculative execution across isolates
+> ⚡ WebAssembly tooling for Node, Workers and browsers
 
-Folio runs native WebAssembly across several V8 isolates that share one physical memory allocation.
-It finds inline memory regions and pure calls in ordinary programs, validates the ones it cannot
-prove independent, and keeps the serial result. Scalar results, control flow and opaque state stay
-in the original Wasm instance. A portable client connects workerd and managed Cloudflare Workers to
-the same engine.
+Folio is a toolkit for running, resetting and bounding WebAssembly modules in JavaScript runtimes.
+Its core runs native WebAssembly across several V8 isolates that share one physical memory
+allocation. It finds inline memory regions and pure calls in ordinary programs, validates the ones
+it cannot prove independent, and keeps the serial result. Around the core sit task and slice pools,
+exact stream folds, instance checkpoints that reset a private instance between jobs, baked boot
+images that start a module from a booted heap, and a growth governor that caps a guest's memory. A
+portable client connects workerd and managed Cloudflare Workers to the same engine.
 
 ## Table of Contents
 
@@ -26,6 +28,8 @@ the same engine.
 - [Router](#-router)
 - [Context Checkpoints](#-context-checkpoints)
 - [Baked Boot Images](#-baked-boot-images)
+- [Growth Governor](#-growth-governor)
+- [Continuations](#-continuations)
 - [Execution and Memory](#-execution-and-memory)
 - [API Reference](#-api-reference)
 - [Consumer Harness](#-consumer-harness)
@@ -41,7 +45,8 @@ instance on one thread. Folio spreads the work of that instance across cores wit
 program to be rewritten. The caller passes one ordinary entry point. The compiler discovers the
 regions, so on the automatic route there are no access annotations and no caller-created chunks.
 The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report
-says which checks each route runs.
+says which checks each route runs. The same package manages the instance itself: it resets a private
+instance between jobs, starts a module from a booted heap and refuses memory growth past a cap.
 
 - **Native Sharing.** Isolates map the same backing allocation, so a 256 MiB arena costs about 4 MiB
   to attach to another isolate instead of a copy.
@@ -50,7 +55,11 @@ says which checks each route runs.
   preceding writes. Routes where the caller declares independence keep that contract and offer an
   audit.
 - **Original Stack.** JSPI suspends the program's own Wasm stack at joins, so branches, scalar
-  carry and host effects behave as they do natively.
+  carry and host effects behave as they do natively. Scalar results, control flow and opaque state
+  stay in the original Wasm instance.
+- **Instance Control.** Checkpoints restore a private instance between jobs, boot images start a
+  module from a booted memory, and the growth governor turns an oversized allocation into a failure
+  the guest can report.
 - **Portable.** The client and the managed backend use fetch, WebSockets and Durable Objects, with
   no Node imports and no request-time Wasm compilation.
 
@@ -59,6 +68,8 @@ and a small job loses to dispatch overhead.
 
 ## ✨ Features
 
+### Parallel Execution
+
 - 🧵 **Automatic region discovery** across branches, loops, switches, nested calls and reductions.
 - 🧠 **Ordered validation** with byte-granular conflict detection, replay and budget fallback.
 - 🛡️ **Native guards** that prove footprints, bounds and finite loops, then run on plain native
@@ -66,9 +77,12 @@ and a small job loses to dispatch overhead.
 - 🔌 **Arbitrary Wasm input** as bytes, `ArrayBuffer`, `WebAssembly.Module` or a prepared plan,
   with imported memories, tables, globals and host functions bound as in native instantiation.
 - ⏳ **Asynchronous host effects** through JSPI, executed once and in call order.
-- 🌐 **Execution host and portable client** for workerd, with sessions, quotas and joined cleanup.
-- ☁️ **Managed backend** that runs entirely in Workers and Durable Objects, with binary frames and
-  copied snapshots or learned byte ranges between lanes.
+- 🛑 **Stall guard** (`iterationStall`, off by default) that stops an iteration batch that does not
+  return and finishes the loop serially, for programs whose iterations can loop on state another
+  iteration is changing.
+
+### Pools and Folds
+
 - 🧰 **Task pool** that runs named functions in private contexts on other threads, with ordered
   joins and an optional differential audit.
 - 🍰 **Slice pool** that runs slices of a call range in place on one shared memory, with a private
@@ -80,11 +94,28 @@ and a small job loses to dispatch overhead.
   certificate lists the premises it relies on.
 - 🚦 **Router** that picks the certified summary, the certified window, tracked speculation or
   serial for each call, caches certificates and refusals, and names the reason for every refusal.
-- 🛑 **Stall guard** (`iterationStall`, off by default) that stops an iteration batch that does not
-  return and finishes the loop serially, for programs whose iterations can loop on state another
-  iteration is changing.
+
+### Instance Control
+
+- 🔄 **Context checkpoints** that restore a private instance's memories, globals and tables
+  between independent jobs, rewriting only the pages that changed.
 - 🧊 **Baked boot images** that write a booted memory into the module as data segments.
+- 🚧 **Growth governor** that refuses `memory.grow` past a byte cap, so a guest reports out of
+  memory and keeps its size.
+
+### Runtimes
+
+- 🌐 **Execution host and portable client** for workerd, with sessions, quotas and joined cleanup.
+- ☁️ **Managed backend** that runs entirely in Workers and Durable Objects, with binary frames and
+  copied snapshots or learned byte ranges between lanes.
+- 🔗 **Browser backend** that attaches Web Workers to one shared memory, with page leases for
+  transports that copy bytes.
+
+### Measurement
+
 - 📊 **Opt-in profiling** of worker time, validation, commit and replay cost.
+- 🧪 **Consumer harness** that times any Wasm module against a native instance of itself and stops
+  on the first mismatch.
 
 ## 📦 Install
 
@@ -168,6 +199,7 @@ The [examples](examples) run against the built package with `node examples/<name
 - `slice-pool` fills one shared memory from several threads and audits the run against the serial
   one.
 - `boot-image` bakes captured memory into a module.
+- `growth-governor` caps `memory.grow` on a guest's memory and shows the guest's failed allocation.
 
 ## ⏳ Asynchronous Host Effects
 
@@ -728,6 +760,75 @@ each request still needs the salt and the random seed, and needs the key step fo
 before the first request. The measured effect for a PHP interpreter is in the Baked Boot Images
 section of the technical report.
 
+## 🚧 Growth Governor
+
+`@gmitch215/folio/growth-governor` caps `memory.grow` on one `WebAssembly.Memory`.
+`governGrowth(memory, { capBytes, onRefuse })` wraps the memory's `grow` method and throws a
+`RangeError` for any grow whose final size would pass `capBytes`. An Emscripten guest then sees
+`emscripten_resize_heap` fail and reports out of memory, with its memory left at its size. The cap
+sits on `grow` because the glue first tries the current size times 1.2, which a cap on the requested
+size would let through.
+
+```ts
+import { governGrowth } from '@gmitch215/folio/growth-governor';
+
+const memory = new WebAssembly.Memory({ initial: 64, maximum: 4096 });
+const governor = governGrowth(memory, {
+  capBytes: 8 * 1024 * 1024,
+  onRefuse: ({ fromBytes, toBytes }) => console.log('refused', fromBytes, toBytes)
+});
+
+// run the guest; governor.refused counts the grows it turned away
+governor.restore();
+```
+
+Governors stack. A later one calls the one it replaced, so both caps hold, and `restore()` must run
+in reverse install order. A cap below the memory's current size refuses every grow and does not
+shrink the memory. The [growth-governor example](examples/growth-governor.ts) drives the Emscripten
+resize loop by hand, and the [experiment](experiments/growth-governor/README.md) runs a PHP guest
+under a cap.
+
+## 🔁 Continuations
+
+`@gmitch215/folio/continuation` runs a Wasm guest across Durable Object alarm events. Each event runs the guest for a step budget. When the budget runs out, the event commits the pages that changed, the mutable globals and a small host state record to the object's SQLite storage, then arms the next alarm. When the platform raises the CPU warning, the event stops without a commit, and the next event commits before it runs the guest. If the isolate changed, the next event restores the last commit first.
+
+The guest exports `memory`, a `run(budget)` function that returns a nonzero value when the job is finished, and a `get_steps` counter. It returns from `run` only at a point where its state lives in linear memory and its globals. A guest that polls the `__instance_signal` word returns early when the platform raises it.
+
+```ts
+import { cpuSignal, runSlice, type DurableObjectStorage } from '@gmitch215/folio/continuation';
+
+export class Job {
+  private readonly storage: DurableObjectStorage;
+  private readonly module: WebAssembly.Module;
+  private instance?: WebAssembly.Instance;
+
+  constructor(storage: DurableObjectStorage, module: WebAssembly.Module) {
+    this.storage = storage;
+    this.module = module;
+  }
+
+  async alarm(): Promise<void> {
+    const instance = (this.instance ??= new WebAssembly.Instance(this.module));
+    const memory = instance.exports.memory as WebAssembly.Memory;
+    const run = instance.exports.run as (budget: number) => number;
+    const steps = instance.exports.get_steps as () => number;
+    const signal = cpuSignal(instance, memory);
+    await runSlice({
+      storage: this.storage,
+      memory,
+      signal,
+      run(budget) {
+        if (run(budget)) return 'finished';
+        return signal?.raised ? 'signal' : 'budget';
+      },
+      steps
+    });
+  }
+}
+```
+
+`runSlice` is called from `alarm()`. It re-arms the alarm unless the job finished. The [technical report](TECHNICAL_REPORT.md#-continuation-across-invocations) gives the model, the proofs, the measurements and the boundaries of this approach.
+
 ## 🧱 Execution and Memory
 
 Proved finite, nontrapping i32 kernels use runtime bounds and cross-region overlap checks, then
@@ -810,6 +911,13 @@ that go with them:
 | `ownership-slices`   | `OwnershipSlices`, `ownershipSlices`, `OwnershipSlicesError`                                                                                            | The slice pool over a certified module, with serial replay after a trap                                                                      |
 | `router`             | `Router`, `openRouter`, `decide`, `analyzeModule`, `CertificateCache`, `defaultBackend`, `routerConstants`, `ROUTER_VERSION`, `ROUTER_REASONS`          | Route choice per call, certificate cache and the decision record                                                                             |
 
+Subpaths added in 1.2:
+
+| Subpath           | Exports                                                                                                                                                    | Contract                                                                                                                                           |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `growth-governor` | `governGrowth`, `GrowthGovernor`, `GrowthGovernorOptions`                                                                                                  | Caps `memory.grow` on one `WebAssembly.Memory`; a refused grow throws `RangeError`, so an Emscripten guest fails the allocation and keeps its size |
+| `continuation`    | `cpuSignal`, `hashPages`, `changedPages`, `sqlCheckpointStore`, `memoryCheckpointStore`, `saveCheckpoint`, `loadCheckpoint`, `runSlice`, `CheckpointError` | Runs a Wasm guest across Durable Object alarm events, with page-hash checkpoints in Durable Object SQLite                                          |
+
 The generated API reference is published to GitHub Pages from `bun run docs:build`.
 
 ## 🧪 Consumer Harness
@@ -874,6 +982,13 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 | Router                             | frozen final corpus, 47 drivers from 10 projects                                | geomean 0.899 (0.861 to 0.935) on the Ryzen 9 9900X rig and 0.900 (0.858 to 0.941) on the Apple M2 Pro, three sessions each, against 1.20; slowest of the five slowest 0.594 and 0.561 against 0.90; 17,484 rows, 0 wrong; not met   |
 | Unmodified external programs       | aobench, 6pack with FastLZ and llama2.c at `-O2`, Ryzen 9 9900X, seven rounds   | the automatic route stays serial on all three: 1.002 (0.999 to 1.007), 1.002 (0.996 to 1.004) and 1.001 (0.998 to 1.003) over serial Wasm; the 1.20 pass line is not met; 0 wrong outputs in 126 timed samples                       |
 | Software translation for paging    | PHP stock front page render, Ryzen 9 9900X, ten pairs per cell                  | tau 1.581 (1.537 to 1.617), translated render over native minus one, against a gate of at most 1: not met at default V8 tiering; the objective stays open                                                                            |
+
+Two memory checks from 1.2, run on a Drupal site on Durable Objects, have their own pages. The growth governor refuses every
+glue attempt past a cap and the guest reports out of memory with its memory unchanged
+([growth-governor](experiments/growth-governor/README.md)). Committing an event with `storage.sync()`
+before an alarm moves earlier did not remove Durable Object storage resets on a deployed site:
+11 resets in 150 requests against 1 in 150 for the old path (Fisher exact p = 0.005), the opposite of
+what the change predicts ([alarm-discipline](experiments/alarm-discipline/README.md)).
 
 A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
 Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The

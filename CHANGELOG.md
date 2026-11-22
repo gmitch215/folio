@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+
+- `@gmitch215/folio/growth-governor` with `governGrowth(memory, { capBytes, onRefuse })`. It refuses any
+  `memory.grow` whose final size would pass `capBytes` by throwing `RangeError`, so an Emscripten guest's
+  `emscripten_resize_heap` returns failure and the guest reports out of memory, with the memory left at its
+  size. The cap sits on `grow` because the glue tries 1.2 times the current size first, which a cap on the
+  requested size would let through.
+  Governors stack, and `restore()` runs in reverse install order.
+- `@gmitch215/folio/continuation` runs a Wasm guest across Durable Object alarm events. `runSlice`
+  restores the last checkpoint when the isolate changed, commits at the end of every budget-stopped
+  event and re-arms the alarm. `saveCheckpoint` and `loadCheckpoint` write only the 64 KiB pages whose
+  hashes changed, into `sqlCheckpointStore` (one row per 1 MiB group by default) or
+  `memoryCheckpointStore`. `cpuSignal` reads the platform CPU warning from an exported
+  `__instance_signal` word. A checkpoint that fails its hash check throws `CheckpointError`.
+- Experiments for Durable Object storage resets and memory accounting: `alarm-discipline` (alarm moves
+  inside an event), `alarm-retirement` (which alarm shapes turn an isolate retirement into a reset),
+  `commit-ladder` (commit size), `idle-floor` (idle restart rate), `memory-ladder` (which allocations
+  count toward the memory limit) and `growth-governor` (the cap on a PHP guest). Each README states its
+  instrument, sample counts and limits.
+
+### Changed
+
+- The package description and README describe folio as WebAssembly tooling for Node, Workers and
+  browsers: shared-memory parallelism, instance resets, boot images and memory caps.
+
 ## 1.1.0
 
 ### Added

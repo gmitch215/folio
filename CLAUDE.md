@@ -1,7 +1,9 @@
 # folio - repo guide
 
-Native WebAssembly across several V8 isolates over one physical memory allocation, with a compiler
-that discovers independent regions and an ordered validator that keeps the serial result. Bun for
+WebAssembly tooling for Node, Workers and browsers. Its core runs native WebAssembly across several
+V8 isolates over one physical memory allocation, with a compiler that discovers independent regions
+and an ordered validator that keeps the serial result. Around it sit the pools, the instance
+checkpoints, the baked boot images and the growth governor. Bun for
 tooling, Node 26 for anything that needs `worker_threads` or JSPI, strict ESM TypeScript with
 erasable syntax only.
 
@@ -22,14 +24,17 @@ claiming anything about speed, isolates, accounts or consumers.
   `frames.ts`, `pages.ts` and `lease.ts` are the Workers and Durable Object backend and its page
   owner, `tasks.ts` is the Node task pool for work a program names itself (private contexts,
   copied values, optional differential audit), and `bake.ts` captures a booted memory, bakes it
-  into a module and checks it (`./bake` subpath).
+  into a module and checks it (`./bake` subpath), `growth-governor.ts` caps `memory.grow` on a
+  guest's memory (`./growth-governor` subpath), and `continuation.ts` runs a guest across
+  Durable Object alarm events with page-hash checkpoints in SQLite (`./continuation` subpath).
 - `tests/c/` freestanding C fixtures, `tests/unit/` the gate, `tests/integration/` local workerd,
   `tests/e2e/` live deploys. See `tests/README.md`.
 - `scripts/` build, analysis, probes and the timing rig. The folder decides the runtime. See
   `scripts/README.md`.
 - `experiments/` the Cloudflare and browser probes (`cloud`, `managed`, `elastic`, `elastic-limits`,
   `elastic-ladder`, `browser`, `consumer`, `bootimage`, `rpc`, `ranges`, `concurrency`,
-  `sqlite-lanes`, `corpus-lanes`). See `experiments/README.md`.
+  `sqlite-lanes`, `corpus-lanes`, `alarm-discipline`, `alarm-retirement`, `commit-ladder`,
+  `idle-floor`, `memory-ladder`, `growth-governor`, `continuation`, `continuation-php`). See `experiments/README.md`.
 - `results/` raw samples, source snapshots and summaries, one directory per study
   (`results/<topic>/<study>/` with a README, `raw/` and a manifest). Never edit a summary by hand.
   `scripts/research/evidence.ts` verifies every manifest.
@@ -68,3 +73,5 @@ their own. `build:c` needs `clang` and `wasm-ld` (the `lld` package) on `PATH`.
   Raw deploy records under `experiments/*/runs/` stay ignored.
 - Live deploys snapshot the account first and must leave it equal to the baseline.
 - Style: tabs, 100 columns, single quotes, no trailing commas. Comments are short and lowercase.
+- A write left pending while a guest runs synchronously for about 30 s resets the object; commit
+  before running the guest.
