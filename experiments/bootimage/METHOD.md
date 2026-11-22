@@ -1,4 +1,4 @@
-# Baked Boot Images on a FREE Backend
+# Baked Boot Images on a Free plan Backend
 
 The question: what does the deployed plane do with a 13.4 MB PHP Wasm module that carries its booted
 memory as initial data? Two baked modules come from `scripts/probe/boot-image.ts`: 20.7 MB with the

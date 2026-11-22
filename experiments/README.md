@@ -4,30 +4,30 @@ Executable probes for runtime capabilities, native sharing, managed execution an
 Sanitized records live under [results](../results/README.md). Each harness keeps its METHOD.md;
 raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup and recovery.
 
-| Harness                                        | Question                                                                                                  | Environment                                |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| [Cloud](cloud/README.md)                       | Which runtime capabilities and host transports are available?                                             | workerd and deployed isolates              |
-| [Managed](managed/README.md)                   | What do copied snapshots and ordered validation cost?                                                     | Durable Objects                            |
-| [Browser](browser/README.md)                   | Can agents share an arena and extract counted loops without JSPI?                                         | Chromium and Browser Run                   |
-| [Consumer](consumer/README.md)                 | How do unchanged applications route and compare with native execution?                                    | Chromium, isolates and Node                |
-| [Boot Images](bootimage/README.md)             | How do captured images behave during delivery, startup and replay?                                        | workerd and Durable Objects                |
-| [Ordinary Worker Lanes](rpc/README.md)         | Do service-bound Workers overlap CPU work, and what does range transfer save?                             | Deployed Workers (Free)                    |
-| [Range Lanes](ranges/README.md)                | Do learned byte ranges over service bindings cut bytes and wall against snapshots?                        | workerd and Workers (Free)                 |
-| [Concurrent Lane Calls](concurrency/README.md) | Do four lane calls issued at once overlap, and which lane type or placement restores it?                  | Deployed Workers (paid)                    |
-| [SQLite Lanes](sqlite-lanes/README.md)         | Does sharding a SQLite table across Durable Object lanes speed up queries with an exact merge?            | Durable Objects (paid)                     |
-| [Corpus Lanes](corpus-lanes/README.md)         | Do corpus kernels run as range lanes over Durable Objects, and at what cost per record?                   | workerd and Durable Objects                |
-| [Elastic](elastic/README.md)                   | Can the dense 192 MiB fixture complete on the Free managed plan with a 64 KiB executor memory?            | Durable Objects (Free)                     |
-| [Elastic Limits](elastic-limits/README.md)     | What do the platform's storage calls, stub hops, CPU caps and memory meter cost?                          | Workers and Durable Objects (Free)         |
-| [Elastic Ladder](elastic-ladder/README.md)     | Can one Durable Object run the 192 MiB dense program with its pages in its own SQLite, and at what cost?  | Durable Objects, Free and STUDENT accounts |
-| [Alarm Discipline](alarm-discipline/README.md) | Does moving an alarm earlier inside an event reset the object, and does committing first stop it?         | Durable Objects (paid)                     |
-| [Alarm Retirement](alarm-retirement/README.md) | Which alarm shapes turn an isolate retirement into a storage reset, and which avoid it?                   | Durable Objects (paid)                     |
-| [Idle Floor](idle-floor/README.md)             | What fraction of small commits on an idle SQLite Durable Object fail with a reset over several hours?     | Durable Objects (paid)                     |
-| [Memory Ladder](memory-ladder/README.md)       | Which allocations count toward the Durable Object memory limit, and does a dropped one still count?       | Durable Objects (paid)                     |
-| [Commit Ladder](commit-ladder/README.md)       | Does one event's commit size reset a SQLite Durable Object, and does a blocked event lower the threshold? | Durable Objects (paid)                     |
-| [Growth Governor](growth-governor/README.md)   | Does capping `memory.grow` make an oversized guest request fail cleanly instead of overgrowing?           | Node and the shipped php-wasm module       |
-| [Continuation](continuation/README.md)         | Do alarm events, JSPI chains, SQLite checkpoints and boundary commits keep a Wasm guest exact?            | Durable Objects, Node 26                   |
-| [Continuation PHP](continuation-php/README.md) | Does an interrupt park in a PHP build keep the stack, memory and output exact across stops and restores?  | Node 26 and a local Durable Object         |
-| [Shared Tools](lib/README.md)                  | Account access, metering, bundling and lifecycle helpers                                                  | Node 26                                    |
+| Harness                                        | Question                                                                                                  | Environment                                       |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| [Cloud](cloud/README.md)                       | Which runtime capabilities and host transports are available?                                             | workerd and deployed isolates                     |
+| [Managed](managed/README.md)                   | What do copied snapshots and ordered validation cost?                                                     | Durable Objects                                   |
+| [Browser](browser/README.md)                   | Can agents share an arena and extract counted loops without JSPI?                                         | Chromium and Browser Run                          |
+| [Consumer](consumer/README.md)                 | How do unchanged applications route and compare with native execution?                                    | Chromium, isolates and Node                       |
+| [Boot Images](bootimage/README.md)             | How do captured images behave during delivery, startup and replay?                                        | workerd and Durable Objects                       |
+| [Ordinary Worker Lanes](rpc/README.md)         | Do service-bound Workers overlap CPU work, and what does range transfer save?                             | Deployed Workers (Free)                           |
+| [Range Lanes](ranges/README.md)                | Do learned byte ranges over service bindings cut bytes and wall against snapshots?                        | workerd and Workers (Free)                        |
+| [Concurrent Lane Calls](concurrency/README.md) | Do four lane calls issued at once overlap, and which lane type or placement restores it?                  | Deployed Workers (paid)                           |
+| [SQLite Lanes](sqlite-lanes/README.md)         | Does sharding a SQLite table across Durable Object lanes speed up queries with an exact merge?            | Durable Objects (paid)                            |
+| [Corpus Lanes](corpus-lanes/README.md)         | Do corpus kernels run as range lanes over Durable Objects, and at what cost per record?                   | workerd and Durable Objects                       |
+| [Elastic](elastic/README.md)                   | Can the dense 192 MiB fixture complete on the Free managed plan with a 64 KiB executor memory?            | Durable Objects (Free)                            |
+| [Elastic Limits](elastic-limits/README.md)     | What do the platform's storage calls, stub hops, CPU caps and memory meter cost?                          | Workers and Durable Objects (Free)                |
+| [Elastic Ladder](elastic-ladder/README.md)     | Can one Durable Object run the 192 MiB dense program with its pages in its own SQLite, and at what cost?  | Durable Objects, Free plan and Paid plan accounts |
+| [Alarm Discipline](alarm-discipline/README.md) | Does moving an alarm earlier inside an event reset the object, and does committing first stop it?         | Durable Objects (paid)                            |
+| [Alarm Retirement](alarm-retirement/README.md) | Which alarm shapes turn an isolate retirement into a storage reset, and which avoid it?                   | Durable Objects (paid)                            |
+| [Idle Floor](idle-floor/README.md)             | What fraction of small commits on an idle SQLite Durable Object fail with a reset over several hours?     | Durable Objects (paid)                            |
+| [Memory Ladder](memory-ladder/README.md)       | Which allocations count toward the Durable Object memory limit, and does a dropped one still count?       | Durable Objects (paid)                            |
+| [Commit Ladder](commit-ladder/README.md)       | Does one event's commit size reset a SQLite Durable Object, and does a blocked event lower the threshold? | Durable Objects (paid)                            |
+| [Growth Governor](growth-governor/README.md)   | Does capping `memory.grow` make an oversized guest request fail cleanly instead of overgrowing?           | Node and the shipped php-wasm module              |
+| [Continuation](continuation/README.md)         | Do alarm events, JSPI chains, SQLite checkpoints and boundary commits keep a Wasm guest exact?            | Durable Objects, Node 26                          |
+| [Continuation PHP](continuation-php/README.md) | Does an interrupt park in a PHP build keep the stack, memory and output exact across stops and restores?  | Node 26 and a local Durable Object                |
+| [Shared Tools](lib/README.md)                  | Account access, metering, bundling and lifecycle helpers                                                  | Node 26                                           |
 
 ## Local Runs
 

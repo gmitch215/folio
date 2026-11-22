@@ -1,6 +1,6 @@
 # Growth Governor
 
-`governGrowth` in `src/growth-governor.ts` wraps the `grow` method of one `WebAssembly.Memory` and refuses any grow whose final size would pass a byte cap. This experiment checks whether that cap makes an oversized request fail cleanly in an Emscripten guest, instead of letting the memory grow past its budget.
+`governGrowth` in `src/memory/growth-governor.ts` wraps the `grow` method of one `WebAssembly.Memory` and refuses any grow whose final size would pass a byte cap. This experiment checks whether that cap makes an oversized request fail cleanly in an Emscripten guest, instead of letting the memory grow past its budget.
 
 The guest is a PHP 8.5 interpreter built with Emscripten (the module and glue are inputs). Each arm boots it with opcache off, `memory_limit=96M` and a `disable_functions` list, runs a 64 MiB string allocation, and records the outcome. The `open` arm is the control.
 

@@ -12,21 +12,24 @@ claiming anything about speed, isolates, accounts or consumers.
 
 ## Layout
 
-- `src/` the library. `compiler.ts` and `extract.ts` find regions, `guards.ts` proves native
-  kernels, `transaction.ts` and `coordinator.ts` run and validate them, `node.ts` is the Node pool,
-  `iteration*.ts` and `inline.ts` run the iterations of a loop of calls on workers (private stack
-  slots, inline marks, ordered validation, measured admission), `ownership*.ts` is the ownership
-  certificate with its stack-redirect and slice routes, `router.ts` and `router-worker.ts` choose a
-  route per call, `slices.ts` is the slice pool for records the caller declares independent,
-  `affine*.ts`, `fold.ts`, `certify.ts` and `certified.ts` are the chunked recurrences and the
-  certified stream folds, `ranges.ts`, `runs.ts`, `read-*.ts` and `memo.ts` track footprints,
-  `remote.ts` and `host.ts` are the portable client and the execution host, `managed.ts`,
-  `frames.ts`, `pages.ts` and `lease.ts` are the Workers and Durable Object backend and its page
-  owner, `tasks.ts` is the Node task pool for work a program names itself (private contexts,
-  copied values, optional differential audit), and `bake.ts` captures a booted memory, bakes it
-  into a module and checks it (`./bake` subpath), `growth-governor.ts` caps `memory.grow` on a
-  guest's memory (`./growth-governor` subpath), and `continuation.ts` runs a guest across
-  Durable Object alarm events with page-hash checkpoints in SQLite (`./continuation` subpath).
+- `src/` the library. `index.ts` at the root is the `.` entry. One folder per concern:
+  - `execution/` finds regions and proves native kernels (`compiler`, `extract`, `guards`), runs
+    and validates them (`transaction`, `coordinator`), and holds `fold`, `runs` and `import-order`.
+  - `footprints/` read and write footprints: `ranges`, `memo`, `read-scan`, `read-windows`.
+  - `iteration/` runs the iterations of a loop of calls on workers: the pool and its worker,
+    admission, owner memory and inline lowering (private stack slots, measured admission).
+  - `folds/` the chunked affine recurrences, the stream certifier and the certified folds.
+  - `ownership/` the ownership certificate with its stack-redirect and slice routes.
+  - `routing/` chooses a route per call (`index.ts`, `worker.ts`).
+  - `slices/` the slice pool for records the caller declares independent.
+  - `node/` the Node pool (`index.ts`, `worker.ts`), the task pool for work a program names itself
+    (`tasks`), instance checkpoints (`context`) and the execution host (`host`).
+  - `remote/` the portable client, frame codec and value codec (`remote`, `frames`, `values`).
+  - `managed/` the Workers and Durable Object backend.
+  - `memory/` elastic memory: pages and leases, the growth governor, memory imports and the
+    iteration arena layout; boot images (`bake`, `./boot` subpath); continuations across Durable
+    Object alarm events with page-hash checkpoints in SQLite (`continuation`, `./continuation`).
+  - `browser/` the browser pool and its worker.
 - `tests/c/` freestanding C fixtures, `tests/unit/` the gate, `tests/integration/` local workerd,
   `tests/e2e/` live deploys. See `tests/README.md`.
 - `scripts/` build, analysis, probes and the timing rig. The folder decides the runtime. See
@@ -61,7 +64,7 @@ their own. `build:c` needs `clang` and `wasm-ld` (the `lld` package) on `PATH`.
 - Node 26 or later for tests. Node 24 has no usable JSPI for the managed paths.
 - Run vitest through the package scripts or pass `--project`. A bare `vitest run` includes the
   `e2e` project, which deploys when the Cloudflare credentials are in the environment.
-- `src/managed.ts`, `src/frames.ts`, `src/remote.ts` and `src/values.ts` stay portable: no Node
+- `src/managed/index.ts`, `src/remote/frames.ts`, `src/remote/index.ts` and `src/remote/values.ts` stay portable: no Node
   imports and no runtime Wasm compilation in the client.
 - Fixture bytes must not depend on `PATH`. `scripts/build/fixtures.ts` removes `node_modules/.bin`
   before it calls clang, because binaryen's `wasm-opt` there changes the output.

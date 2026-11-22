@@ -2,9 +2,38 @@
 
 ## 1.2.0
 
+### Breaking
+
+The 1.1 subpaths are replaced by six: `@gmitch215/folio`, `@gmitch215/folio/workers`,
+`@gmitch215/folio/browser`, `@gmitch215/folio/memory`, `@gmitch215/folio/boot` and
+`@gmitch215/folio/continuation`. The removed subpaths have no aliases. Every name keeps its spelling.
+`@gmitch215/folio/browser` and `@gmitch215/folio/continuation` keep their paths. Update each import
+with this table:
+
+| Old subpath                           | New subpath                | Names                                                                                                                                 |
+| ------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `@gmitch215/folio/node`               | `@gmitch215/folio`         | `Call`, `ExecutionProfile`, `ExecutionReport`, `Folio`, `FolioOptions`, `ProgramInput`, `RunOptions`, `suspending`                    |
+| `@gmitch215/folio/compiler`           | `@gmitch215/folio`         | `LoopPlan`, `PrepareOptions`, `PreparedContext`, `PreparedProgram`, `prepare`, `prepareContext`                                       |
+| `@gmitch215/folio/remote`             | `@gmitch215/folio/workers` | all 9 names                                                                                                                           |
+| `@gmitch215/folio/host`               | `@gmitch215/folio`         | `FolioHost`, `HostArtifact`, `HostLimits`                                                                                             |
+| `@gmitch215/folio/managed`            | `@gmitch215/folio/workers` | `FolioLane`, `ManagedArtifact`, `ManagedFolio`, `ManagedLaneTransport`, `ManagedReport`                                               |
+| `@gmitch215/folio/pages`              | `@gmitch215/folio/memory`  | `MemoryPageOwner`, `PageDirectory`, `PageDirectoryOptions`, `PageOwner`, `PageScope`, `PageVersion`, `ResidentPageLease`, `pageBytes` |
+| `@gmitch215/folio/bake`               | `@gmitch215/folio/boot`    | all 25 names                                                                                                                          |
+| `@gmitch215/folio/tasks`              | `@gmitch215/folio`         | all 13 names                                                                                                                          |
+| `@gmitch215/folio/slices`             | `@gmitch215/folio`         | all 9 names                                                                                                                           |
+| `@gmitch215/folio/fold`               | `@gmitch215/folio`         | `FoldChunk`, `FoldOptions`, `adler32Combine`, `chunkRanges`, `crc32Combine`, `ctrAdvance`, `foldChunks`                               |
+| `@gmitch215/folio/context`            | `@gmitch215/folio`         | `ContextRange`, `ContextResetError`, `ContextResetReport`, `InstanceCheckpoint`                                                       |
+| `@gmitch215/folio/affine`             | `@gmitch215/folio`         | all 24 names                                                                                                                          |
+| `@gmitch215/folio/certify`            | `@gmitch215/folio`         | all 11 names                                                                                                                          |
+| `@gmitch215/folio/ownership`          | `@gmitch215/folio`         | all 19 names                                                                                                                          |
+| `@gmitch215/folio/ownership-redirect` | `@gmitch215/folio`         | `OwnershipRedirect`, `OwnershipRedirectError`, `RedirectErrorCode`, `RedirectStats`, `ownershipRoute`, `redirectOwnership`            |
+| `@gmitch215/folio/ownership-slices`   | `@gmitch215/folio`         | `OwnershipSliceRunOptions`, `OwnershipSlices`, `OwnershipSlicesError`, `ownershipSlices`                                              |
+| `@gmitch215/folio/router`             | `@gmitch215/folio`         | all 24 names                                                                                                                          |
+| `@gmitch215/folio/certified`          | `@gmitch215/folio`         | all 9 names                                                                                                                           |
+
 ### Added
 
-- `@gmitch215/folio/growth-governor` with `governGrowth(memory, { capBytes, onRefuse })`. It refuses any
+- `@gmitch215/folio/memory` with `governGrowth(memory, { capBytes, onRefuse })`. It refuses any
   `memory.grow` whose final size would pass `capBytes` by throwing `RangeError`, so an Emscripten guest's
   `emscripten_resize_heap` returns failure and the guest reports out of memory, with the memory left at its
   size. The cap sits on `grow` because the glue tries 1.2 times the current size first, which a cap on the
@@ -61,7 +90,7 @@
   `iterationLogCeiling` and `iterationStall`, all off by default. Slot windows, verdict memory and
   cold-start admission were added to the route. A module-local `call_indirect` table no longer refuses a loop.
 - `ManagedFolio` options `ranges`, `runs`, `memo` and `inline`, and the paged, hash-verified `Lease`
-  (`src/lease.ts`, with `LeaseMismatch`) for immutable content. Managed lanes ship learned byte ranges,
+  (`src/memory/lease.ts`, with `LeaseMismatch`) for immutable content. Managed lanes ship learned byte ranges,
   answer in runs, track inline in a lane and reuse recorded region results.
 - `@gmitch215/folio/ownership` with `certifyOwnership` and `verifyOwnership`. `certifyOwnership` proves
   that a record's scratch window is private under six obligations (state isolation, read before write,

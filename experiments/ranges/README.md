@@ -13,7 +13,7 @@ FOLIO_RANGES_LANES=do node experiments/ranges/run.ts --dry-run # Durable Object 
 
 `lane.ts` is the lane Worker, `coordinator.ts` the owner, `plan.ts` the schedule, bounds and
 decision rules, `kernel.ts` and `layout.ts` the kernel, the arena fill and the digest.
-`tests/integration/ranges.test.ts` runs the real service-binding transport on local workerd.
+`tests/integration/experiments/ranges/ranges.test.ts` runs the real service-binding transport on local workerd.
 
 `FOLIO_RANGES_LANES=do` swaps the four lane Workers for four SQLite-backed Durable Object lanes
 (`LaneObject` in `coordinator.ts`, bound as `LANEOBJ`), named from the run so each run gets new

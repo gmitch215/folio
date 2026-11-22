@@ -226,12 +226,12 @@ joins a suspended native call; it cannot cancel an arbitrary external Promise.
 
 ## 🌉 Execution Host
 
-`@gmitch215/folio/host` registers trusted artifacts, bindings and export allowlists through
-`FolioHost`. Its authenticated fetch handler exposes ordered run, read, write and close operations
-with joined disposal and bounded admission. `@gmitch215/folio/remote` is the client for it.
+`FolioHost` in `@gmitch215/folio` registers trusted artifacts, bindings and export allowlists. Its
+authenticated fetch handler exposes ordered run, read, write and close operations with joined
+disposal and bounded admission. `RemoteFolio` in `@gmitch215/folio/workers` is the client for it.
 
 ```ts
-import { RemoteFolio } from '@gmitch215/folio/remote';
+import { RemoteFolio } from '@gmitch215/folio/workers';
 
 const remote = await RemoteFolio.open(endpoint, 'fixture', {
   headers: { authorization: `Bearer ${token}` },
@@ -254,7 +254,7 @@ backing, and trusted artifact factories enforce growth maxima and private-memory
 
 ## 📡 Managed Workers
 
-`@gmitch215/folio/managed` exports `ManagedFolio` and `FolioLane` for execution entirely in managed
+`@gmitch215/folio/workers` exports `ManagedFolio` and `FolioLane` for execution entirely in managed
 Workers and Durable Objects. `ManagedFolio` takes precompiled artifact modules and lane transports
 whose `execute(frame)` returns a binary response, and `FolioLane` runs the tracked region module.
 The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
@@ -294,7 +294,7 @@ before it returns, with no snapshot and no runtime compiler. Other entries use t
 The caller keeps exclusive ownership of the arena. A failure after native writes closes the pool,
 and the application restores a checkpoint before retrying.
 
-`@gmitch215/folio/pages` exports `PageDirectory`, `MemoryPageOwner`, `ResidentPageLease` and the
+`@gmitch215/folio/memory` exports `PageDirectory`, `MemoryPageOwner`, `ResidentPageLease` and the
 `PageOwner` transport contract. `acquire({ read, write })` obtains bounded resident pages and
 `lease.view(page)` returns a private view of one. `commit()` stages immutable versions and
 atomically publishes their manifest, `abort()` discards local changes, and `collect()` reclaims
@@ -306,7 +306,7 @@ the limits of both modules.
 
 ## 🧰 Task Pool
 
-`@gmitch215/folio/tasks` runs independent work that a program names itself. A `TaskPool` owns one
+`TaskPool` and `serveTasks` in `@gmitch215/folio` run independent work that a program names itself. A `TaskPool` owns one
 channel per worker. The caller starts each worker with `pool.link(index)` and calls `serveTasks`
 there with a function that runs a named task. The owner calls `submit(name, input)` and keeps going,
 then `join(handle)` blocks until the output arrives, or `joinAsync(handle)` waits without blocking
@@ -320,7 +320,7 @@ bytes until the task is joined.
 
 ```ts
 import { Worker } from 'node:worker_threads';
-import { TaskPool } from '@gmitch215/folio/tasks';
+import { TaskPool } from '@gmitch215/folio';
 
 const pool = new TaskPool(4);
 for (let index = 0; index < pool.size; index++) {
@@ -340,7 +340,7 @@ console.log(results.map((result) => result.text()));
 
 ```ts
 import { workerData } from 'node:worker_threads';
-import { serveTasks } from '@gmitch215/folio/tasks';
+import { serveTasks } from '@gmitch215/folio';
 
 serveTasks(workerData.link, (name, input) => {
   // run the task called `name` on `input` and return its output
@@ -359,7 +359,7 @@ tasks ran at the same time.
 The pool does not discover independent work. Region discovery and ordered validation stay in the
 core engine, and the task pool covers programs that can say which calls are independent.
 
-`@gmitch215/folio/fold` covers one case where a single call is not independent but still splits
+The fold helpers in `@gmitch215/folio` cover one case where a single call is not independent but still splits
 exactly. A CRC-32, an Adler-32 or an AES-CTR stream over one input is a recurrence with an exact
 combine, so chunks run on separate tasks and join into the serial result. `chunkRanges(length,
 count, align)` cuts the input, `foldChunks(pool, input, { task, initial, combine })` runs one task
@@ -370,7 +370,7 @@ to `zlib.crc32`. A recurrence with no known combine, such as one SHA-256 message
 
 ## 🍰 Slice Pool
 
-`@gmitch215/folio/slices` runs an exported function over a range of calls on several threads, on one
+`SlicePool` in `@gmitch215/folio` runs an exported function over a range of calls on several threads, on one
 shared memory, with no copy and no tracking. The caller declares that the calls are independent. A
 `SlicePool` compiles the module once, marks its imported memory shared, grows the memory by one
 private stack per worker when the module keeps a stack pointer global, and starts the workers.
@@ -379,7 +379,7 @@ of the call for a slice. The records go into `pool.memory` after `open`, because
 module's data segments, and the results are read from it afterwards.
 
 ```ts
-import { SlicePool } from '@gmitch215/folio/slices';
+import { SlicePool } from '@gmitch215/folio';
 
 const memory = new WebAssembly.Memory({ initial: 256, maximum: 4096, shared: true });
 const pool = await SlicePool.open(bytes, { memory, workers: 8 });
@@ -411,9 +411,9 @@ to 4.9x faster than serial on eight workers (see the technical report).
 
 ## 🧮 Certified Stream Folds
 
-`@gmitch215/folio/certify` decides whether an exported function `entry(state, ptr, len)` over a byte
-stream is the left fold of one affine byte step, for every length of at least one byte, and
-`@gmitch215/folio/certified` runs such a function on workers. `certifyStream(bytes, entry)` returns a
+`certifyStream` in `@gmitch215/folio` decides whether an exported function `entry(state, ptr, len)`
+over a byte stream is the left fold of one affine byte step, for every length of at least one byte,
+and `foldCertified` in the same package runs such a function on workers. `certifyStream(bytes, entry)` returns a
 certificate or the reason it refused. The proof executes the function symbolically, so it covers the
 unrolled main loop and tail that clang emits, tables the module carries or builds on its first call,
 64-bit states and internal calls. The step is affine in the state over GF(2) (bit operations), over
@@ -429,9 +429,8 @@ has a sampled model.
 
 ```ts
 import { Worker } from 'node:worker_threads';
-import { certifyStream } from '@gmitch215/folio/certify';
-import { foldCertified, installPrefill, shareCertified } from '@gmitch215/folio/certified';
-import { TaskPool } from '@gmitch215/folio/tasks';
+import { certifyStream, foldCertified, installPrefill, shareCertified } from '@gmitch215/folio';
+import { TaskPool } from '@gmitch215/folio';
 
 const certificate = certifyStream(bytes, 'crc32c');
 if (certificate.kind === 'refusal') throw new Error(certificate.reason);
@@ -474,7 +473,7 @@ its pointer or reads past its input is refused. `zeroLength` in the certificate 
 
 ## 🔏 Ownership Certificates
 
-`@gmitch215/folio/ownership` checks whether a function that loops over records keeps its scratch
+`certifyOwnership` in `@gmitch215/folio` checks whether a function that loops over records keeps its scratch
 memory private to each record. Compiled drivers often write a fixed address (a scratch buffer, a
 static table, a cursor) before they read it back, and records that run on several threads over one
 memory collide there. `certifyOwnership(bytes, options)` takes an entry that is `bulk(table, count,
@@ -499,19 +498,18 @@ that fail the plain slice pool, 6 certify.
 everything except the work counters. A certificate names the module digest and the checker version
 (`OWNERSHIP_CHECKER`).
 
-Two routes run a certified driver. `ownershipSlices` from `@gmitch215/folio/ownership-slices`
+Two routes run a certified driver. `ownershipSlices` from `@gmitch215/folio`
 redirects every window access to a private copy per worker and runs the records in place on the
 slice pool. A trap in any slice puts `writes` back and runs the calls serially in place, so the
 serial run decides the memory and the trap. `ownershipSlices` throws `OwnershipSlicesError` with
 code `wild-store` for a certificate that records stores no record owns. `run` throws it with code
 `layout` when a record region overlaps a window, and with `config` when the memory differs from a
 configuration the certificate assumed. `redirectOwnership` and `ownershipRoute` from
-`@gmitch215/folio/ownership-redirect` make the same rewrite and hand it to the iteration pool,
+`@gmitch215/folio` make the same rewrite and hand it to the iteration pool,
 which tracks every access and paid less on the module measured.
 
 ```ts
-import { certifyOwnership, verifyOwnership } from '@gmitch215/folio/ownership';
-import { ownershipSlices } from '@gmitch215/folio/ownership-slices';
+import { certifyOwnership, ownershipSlices, verifyOwnership } from '@gmitch215/folio';
 
 const certificate = certifyOwnership(bytes, { entry: 'bulk' });
 if (certificate.kind === 'refusal') {
@@ -564,7 +562,7 @@ refusals, and the generators have blind spots. The premises above still apply.
 
 ## 🚦 Router
 
-`@gmitch215/folio/router` picks one route for a call from the module bytes and a description of
+`Router` in `@gmitch215/folio` picks one route for a call from the module bytes and a description of
 the call, runs it and says why. A call is `{ kind: 'stream', entry, ptr, len }` for one function
 `entry(state, ptr, len)` over a byte stream, or `{ kind: 'records', entry, count, args, regions,
 writes }` for a loop of independent calls, where `args(from, to)` returns the arguments of a slice.
@@ -595,7 +593,7 @@ dispatches in a row. The constants were fitted on development data, so a result 
 drivers describes the fit, and the figure on the frozen final corpus is in Measured Results.
 
 ```ts
-import { Router } from '@gmitch215/folio/router';
+import { Router } from '@gmitch215/folio';
 
 const router = await Router.open(
   bytes,
@@ -639,8 +637,8 @@ stops a dispatch (`dispatch-lost`).
 
 ## 🔄 Context Checkpoints
 
-`@gmitch215/folio/context` resets a private Wasm instance between independent jobs.
-`prepareContext(bytes)` from `@gmitch215/folio/compiler` adds exports for every memory, mutable
+`InstanceCheckpoint` in `@gmitch215/folio` resets a private Wasm instance between independent jobs.
+`prepareContext(bytes)` from the same package adds exports for every memory, mutable
 numeric global and table, and leaves function bodies and start sections as they are. An
 `InstanceCheckpoint` copies that state once after initialization. `restore()` compares each 64 KiB
 page with the copy, rewrites the pages that differ, and puts back globals and table references.
@@ -648,8 +646,7 @@ page with the copy, rewrites the pages that differ, and puts back globals and ta
 checkpoint learns no page set from an earlier run.
 
 ```ts
-import { prepareContext } from '@gmitch215/folio/compiler';
-import { InstanceCheckpoint } from '@gmitch215/folio/context';
+import { InstanceCheckpoint, prepareContext } from '@gmitch215/folio';
 
 const plan = prepareContext(bytes);
 const instance = new WebAssembly.Instance(new WebAssembly.Module(plan.bytes), imports);
@@ -679,14 +676,14 @@ throws a `RangeError` before anything changes.
 
 ## 🧊 Baked Boot Images
 
-`@gmitch215/folio/bake` moves a booted memory into the module. `captureImage(booted, fresh)` compares
+`@gmitch215/folio/boot` moves a booted memory into the module. `captureImage(booted, fresh)` compares
 a booted memory with a fresh instance of the same module and keeps the 64 KiB pages that differ.
 `bakeModule(bytes, image)` returns the module with those pages as active data segments after its own,
 so instantiating it starts from the booted memory. It uses binaryen, loaded on the first bake, and
 writes memory 0.
 
 ```ts
-import { bakeModule, captureImage, imagePages, moduleDigest } from '@gmitch215/folio/bake';
+import { bakeModule, captureImage, imagePages, moduleDigest } from '@gmitch215/folio/boot';
 
 const fresh = new WebAssembly.Memory({ initial: 1024 });
 const booted = new WebAssembly.Memory({ initial: 1024 });
@@ -762,7 +759,7 @@ section of the technical report.
 
 ## 🚧 Growth Governor
 
-`@gmitch215/folio/growth-governor` caps `memory.grow` on one `WebAssembly.Memory`.
+`@gmitch215/folio/memory` caps `memory.grow` on one `WebAssembly.Memory`.
 `governGrowth(memory, { capBytes, onRefuse })` wraps the memory's `grow` method and throws a
 `RangeError` for any grow whose final size would pass `capBytes`. An Emscripten guest then sees
 `emscripten_resize_heap` fail and reports out of memory, with its memory left at its size. The cap
@@ -770,7 +767,7 @@ sits on `grow` because the glue first tries the current size times 1.2, which a 
 size would let through.
 
 ```ts
-import { governGrowth } from '@gmitch215/folio/growth-governor';
+import { governGrowth } from '@gmitch215/folio/memory';
 
 const memory = new WebAssembly.Memory({ initial: 64, maximum: 4096 });
 const governor = governGrowth(memory, {
@@ -900,23 +897,20 @@ and replay time, and tracked read and write bytes. On generalized batches `worke
 `workerCpuMs` hold per-region observations. Measure process CPU once at the coordinator, because
 summing overlapping process-wide counters double counts.
 
-Subpaths added in 1.1 for certified and routed execution, with their runtime exports and the types
-that go with them:
+Folio has six subpaths. Each one names a runtime boundary or a feature, and the sections above show
+the exports in use.
 
-| Subpath              | Exports                                                                                                                                                 | Contract                                                                                                                                     |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `affine`             | `probeAffine`, `foldAffine`, `foldExact`, `serveAffine`, `affineSerial`, `advance`, `predictEnd`, `AFFINE_TASK`, `gfApply`, `gfMul`, `mask`, `mulberry` | Sampled affine model of a stream function and its chunked fold, with the GF(2) helpers the model uses; `exact` mode validates every boundary |
-| `ownership`          | `certifyOwnership`, `verifyOwnership`, `guardRecords`, `checkConfig`, `memoryAccesses`, `OWNERSHIP_REASONS`, `OWNERSHIP_CHECKER`                        | Window certificate or typed refusal, its re-derivation, and the layout and configuration checks a router runs                                |
-| `ownership-redirect` | `redirectOwnership`, `ownershipRoute`, `OwnershipRedirectError`                                                                                         | Rewrites a certified module so each window access adds a per-worker delta                                                                    |
-| `ownership-slices`   | `OwnershipSlices`, `ownershipSlices`, `OwnershipSlicesError`                                                                                            | The slice pool over a certified module, with serial replay after a trap                                                                      |
-| `router`             | `Router`, `openRouter`, `decide`, `analyzeModule`, `CertificateCache`, `defaultBackend`, `routerConstants`, `ROUTER_VERSION`, `ROUTER_REASONS`          | Route choice per call, certificate cache and the decision record                                                                             |
+| Import                          | Runs on                     | Contents                                                                                                                                   |
+| ------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@gmitch215/folio`              | Node                        | `Folio`, the compiler and analysis, folds, certification, ownership certificates, the router, task and slice pools, and the execution host |
+| `@gmitch215/folio/workers`      | Workers and Durable Objects | `ManagedFolio`, `FolioLane`, the remote client `RemoteFolio`, and the frame and value codecs                                               |
+| `@gmitch215/folio/browser`      | Browsers without JSPI       | `BrowserFolio`, which runs one counted-loop call on shared memory                                                                          |
+| `@gmitch215/folio/memory`       | Portable                    | Page directories and leases (`PageDirectory`, `MemoryPageOwner`, `ResidentPageLease`) and the growth governor (`governGrowth`)             |
+| `@gmitch215/folio/boot`         | Portable                    | Boot images: `bakeModule`, `captureImage`, `applyImage`, `checkBaked` and the image errors                                                 |
+| `@gmitch215/folio/continuation` | Portable                    | Wasm guests across Durable Object alarm events, with page-hash checkpoints in Durable Object SQLite                                        |
 
-Subpaths added in 1.2:
-
-| Subpath           | Exports                                                                                                                                                    | Contract                                                                                                                                           |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `growth-governor` | `governGrowth`, `GrowthGovernor`, `GrowthGovernorOptions`                                                                                                  | Caps `memory.grow` on one `WebAssembly.Memory`; a refused grow throws `RangeError`, so an Emscripten guest fails the allocation and keeps its size |
-| `continuation`    | `cpuSignal`, `hashPages`, `changedPages`, `sqlCheckpointStore`, `memoryCheckpointStore`, `saveCheckpoint`, `loadCheckpoint`, `runSlice`, `CheckpointError` | Runs a Wasm guest across Durable Object alarm events, with page-hash checkpoints in Durable Object SQLite                                          |
+Subpaths from 1.1 that are not in this table are no longer exported. The CHANGELOG lists where
+each of their names moved.
 
 The generated API reference is published to GitHub Pages from `bun run docs:build`.
 
@@ -967,7 +961,7 @@ one queue and aborts if any page differs from the serial render. On ten cores it
 | Node, Drupal regeneration          | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                             | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render                                                                                                                                             |
 | Managed Workers                    | deployed Durable Object lanes                                                   | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes                                                                                                                                          |
 | Browser Run                        | deployed Chromium, eight workers on one 256 MiB allocation                      | 3.87x with four workers on explicit partitions                                                                                                                                                                                       |
-| Browser automatic extraction       | FREE account, no JSPI, one ordinary counted-loop call over 256 MiB              | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                                                                                      |
+| Browser automatic extraction       | Free plan account, no JSPI, one ordinary counted-loop call over 256 MiB         | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                                                                                      |
 | Baked boot image                   | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm                 | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime                                                                                                                                          |
 | Independent corpus                 | 21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro          | default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native                                                                              |
 | Explicit tasks on private contexts | the same 21 kernels, eight batched `TaskPool` workers                           | 18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs                                                                  |

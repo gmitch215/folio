@@ -5,7 +5,7 @@
 The consumer supplies PHP 8.5.12 Wasm (14,011,467 bytes), its matching tuned glue,
 the seed pack, mount/shim/kernel code, host bridge and `rekey.php`. Their recorded
 digests identify the tested input. No interpreter rebuild or source-cache change
-was made. `src/bake.ts` supplies capture, encoding, baking and memory application.
+was made. `src/memory/bake.ts` supplies capture, encoding, baking and memory application.
 
 Preparation exports the interpreter's four existing mutable globals without
 changing their bodies, boots Drupal, renders `/`, and captures the heap delta,

@@ -14,4 +14,4 @@ node experiments/concurrency/run.ts --analyze NAME # re-summarize a saved run
 
 `lane.ts` is the lane Worker, `coordinator.ts` the coordinator and the Durable Object class,
 `spin.ts` the shared kernel call, `plan.ts` the schedule, arithmetic, price and decision rule.
-`tests/integration/concurrency.test.ts` runs the arms on local workerd.
+`tests/integration/experiments/concurrency/concurrency.test.ts` runs the arms on local workerd.

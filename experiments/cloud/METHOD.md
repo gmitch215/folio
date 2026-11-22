@@ -102,7 +102,7 @@ cannot implement the missing backing-store registry through the tested RPC inter
 
 ## Implemented Execution Host
 
-`src/remote.ts` supplies the portable `RemoteFolio` client; `src/host.ts` supplies
+`src/remote/index.ts` supplies the portable `RemoteFolio` client; `src/node/host.ts` supplies
 the Node `FolioHost` fetch handler. The host registers trusted artifacts and
 bindings, authorizes requests, and creates real shared-memory worker groups.
 Session capabilities, monotonic sequences and an exact duplicate-response cache

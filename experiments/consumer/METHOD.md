@@ -1,4 +1,4 @@
-# Consumer Harness on a FREE Backend
+# Consumer Harness on a Free plan Backend
 
 `harness.ts` runs in Chromium under Browser Run. For each consumer it opens one native instance and
 one `BrowserFolio` per width on fresh private memories, then runs rounds that rotate the arm order.

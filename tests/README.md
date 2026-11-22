@@ -1,12 +1,12 @@
 # `tests/`
 
-| where                | what                                                                                                                                           | runs                                            |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`                                                                | compiled to `build/*.wasm` by `bun run build:c` |
-| `tests/unit/`        | the gate: compiler, coordinator, transactions, memory, boot image baking, context checkpoints, host, remote, managed, probes, research tooling | `bun run test`, about 40 seconds in all         |
-| `tests/helpers/`     | worker entry points the unit tests spawn: the browser bridge and the task pool                                                                 | imported by `tests/unit/`                       |
-| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                                                             | `bun run test:integration`, about 25 seconds    |
-| `tests/e2e/`         | live deploys to a Cloudflare account                                                                                                           | `bun run test:e2e`, skipped without credentials |
+| where                | what                                                                                                     | runs                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`                          | compiled to `build/*.wasm` by `bun run build:c` |
+| `tests/unit/`        | the gate, in folders that mirror `src/`; `scripts/` and `experiments/` tests sit under their own folders | `bun run test`, about 40 seconds in all         |
+| `tests/helpers/`     | worker entry points the task tests and `scripts/probe/tasks-runtime.ts` spawn: the task pool             | spawned by `tests/unit/node/` and `scripts/`    |
+| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                       | `bun run test:integration`, about 25 seconds    |
+| `tests/e2e/`         | live deploys to a Cloudflare account                                                                     | `bun run test:e2e`, skipped without credentials |
 
 `tests/setup.ts` rebuilds the C fixtures when a source file is newer than its output, so a fresh
 checkout runs the gate after installing `clang` and `lld`.
@@ -18,16 +18,19 @@ holds the counted-loop kernels. `generalized.c` builds with ordinary inlining an
 entry with a scalar carried across iterations. `sharing.c` holds the atomic and aliasing controls.
 `records.c` holds one loop that calls a function per record, the shape the iteration route runs on
 workers, and backs `examples/iteration.ts`.
-Fixture bytes must not depend on the machine's `PATH`; `tests/unit/fixtures.test.ts` checks that.
+Fixture bytes must not depend on the machine's `PATH`; `tests/unit/scripts/build/fixtures.test.ts` checks that.
 
 ## Conventions
 
-- One spec file per domain. Extend `managed.test.ts` rather than adding a second managed spec.
+- `tests/unit/` and `tests/integration/` mirror `src/`: `src/<folder>/<file>.ts` is tested by
+  `<folder>/<file>.test.ts`, and a folder's `index.ts` by `index.test.ts`.
+- One spec file per domain. Extend `tests/unit/managed/index.test.ts` rather than adding a second
+  managed spec.
 - The gate is hermetic. Nothing in `unit/` opens a network connection or a real Cloudflare binding.
 - Each unit spec file is meant to run in under 2 seconds on an idle machine. Under load some files take
   longer.
 - Probe workers run in `experiments/`, and their logic is tested here by importing the exports with
-  the platform modules mocked (`browser-probe.test.ts`).
+  the platform modules mocked (`tests/unit/experiments/browser/probe.test.ts`).
 - A bug fix lands with the regression test that would have caught it.
 
 ## Live Deploys
@@ -44,6 +47,6 @@ too, instead of failing. The meter can under-read on Free, so the refusal text i
 
 ## Continuation
 
-`tests/unit/continuation.test.ts` covers `src/continuation.ts` on a fake storage and a memory
+`tests/unit/memory/continuation.test.ts` covers `src/memory/continuation.ts` on a fake storage and a memory
 seam, with no Durable Object. The continuation experiments are not tests; they are described in
 [experiments/continuation](../experiments/continuation/README.md).
