@@ -1,0 +1,12 @@
+{
+	"extends": "../../tsconfig.json",
+	"include": [
+		"build.ts",
+		"export.ts",
+		"signal/run.ts",
+		"durable/run.ts",
+		"life/run.ts",
+		"deferred/run.ts"
+	],
+	"exclude": []
+}

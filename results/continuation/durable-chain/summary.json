@@ -1,0 +1,22 @@
+{
+  "schema": "folio.continuation.summary.v1",
+  "study": "durable-chain",
+  "rows": 54,
+  "initEvents": 10,
+  "burnEvents": 30,
+  "stoppedOnSignal": 30,
+  "resetBeforeReturn": 0,
+  "okCpuMs": [29998, 32476],
+  "readAfterBurn": 6,
+  "pollReturnCpuMs": {
+    "2": [32475, 32476],
+    "3": [31975, 31976],
+    "4": [29998, 30000]
+  },
+  "leadMs": "not measured: the kill line is not in the raw",
+  "checkpointCostMsByDirtyMiB": {
+    "0": 7.300000000000001,
+    "4": 23.700000000000003,
+    "16": 78
+  }
+}

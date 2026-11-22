@@ -36,6 +36,12 @@ outputs match the summaries recorded on the Ryzen rig byte for byte, with one ex
 `results/memory/sharing/summary.json` lists its input files in sorted order, because directory
 listing order differed between the two machines.
 
+`scripts/analyze/continuation.ts` writes `summary.json` and `manifest.json` for each study in
+`results/continuation/`, from that study's `raw.jsonl`. Two studies also read a second raw file:
+`boundary-commit/raw-driver.jsonl` and `checkpoint-cost/raw-hashpages.jsonl`. The rows come from
+`experiments/continuation/export.ts`, which reads the git-ignored `runs/` directories of the
+continuation experiments; see [experiments/continuation](../experiments/continuation/README.md).
+
 ## Research
 
 `scripts/research/` holds the studies behind the Independent Corpus and boot image sections of `TECHNICAL_REPORT.md`. Every
@@ -257,6 +263,7 @@ rewriting it might, so change one only with a paired run against the old version
 | `php-preparation.ts`       | shipping PHP original/emitted function counts and generated helper census                                                                                                                                                   |
 | `php-render.ts`            | shipping PHP boot and uncached Drupal render, native against prepared Folio                                                                                                                                                 |
 | `pages-probe.ts`           | actual native Wasm over bounded page leases against a complete native oracle                                                                                                                                                |
+| `hashpages-bench.ts`       | `hashPages` GiB/s at 32 and 128 MiB, paired with a SHA-256 control; one JSON row per run, new samples on each run                                                                                                           |
 | `consumer.ts`              | any Wasm consumer, native against 1/2/4/8 workers, whole memory compared                                                                                                                                                    |
 | `php-workloads.ts`         | ten PHP userland workloads on the shipping artifact, native against Folio                                                                                                                                                   |
 | `php-render-pairs.ts`      | the uncached Drupal render in alternating native and Folio processes                                                                                                                                                        |

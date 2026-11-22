@@ -1,0 +1,237 @@
+{
+  "schema": "folio.continuation.summary.v1",
+  "study": "deferred-chain",
+  "rows": 84,
+  "f0": {
+    "chains": 1,
+    "finished": 1,
+    "finalAndShaMatch": 1,
+    "restores": 3,
+    "isolateMoves": 0,
+    "slices": 33,
+    "signalWrites": {
+      "total": 0,
+      "landed": 0,
+      "slices": [],
+      "landedBySlice": []
+    }
+  },
+  "f1": {
+    "chains": 3,
+    "finished": 3,
+    "finalAndShaMatch": 3,
+    "restores": 0,
+    "isolateMoves": 3,
+    "slices": 15,
+    "signalWrites": {
+      "total": 0,
+      "landed": 0,
+      "slices": [],
+      "landedBySlice": []
+    }
+  },
+  "f2": {
+    "chains": 1,
+    "finished": 1,
+    "finalAndShaMatch": 1,
+    "restores": 2,
+    "isolateMoves": 1,
+    "slices": 5,
+    "signalWrites": {
+      "total": 2,
+      "landed": 0,
+      "slices": [2, 4],
+      "landedBySlice": [false, false]
+    }
+  },
+  "f3": {
+    "chains": 1,
+    "finished": 1,
+    "finalAndShaMatch": 1,
+    "restores": 0,
+    "isolateMoves": 1,
+    "slices": 4,
+    "signalWrites": {
+      "total": 0,
+      "landed": 0,
+      "slices": [],
+      "landedBySlice": []
+    }
+  },
+  "f4": {
+    "chains": 3,
+    "finished": 3,
+    "finalAndShaMatch": 3,
+    "restores": 3,
+    "isolateMoves": 3,
+    "slices": 15,
+    "signalWrites": {
+      "total": 0,
+      "landed": 0,
+      "slices": [],
+      "landedBySlice": []
+    },
+    "movesLost": [35311, 33831, 0]
+  },
+  "moves": [
+    {
+      "arm": "f1",
+      "object": 0,
+      "k": 2,
+      "followedSignal": true,
+      "reset": false,
+      "lostStepsComputed": 35579,
+      "lostStepsRaw": 35579
+    },
+    {
+      "arm": "f1",
+      "object": 1,
+      "k": 2,
+      "followedSignal": true,
+      "reset": false,
+      "lostStepsComputed": 36050,
+      "lostStepsRaw": 36050
+    },
+    {
+      "arm": "f1",
+      "object": 2,
+      "k": 2,
+      "followedSignal": true,
+      "reset": false,
+      "lostStepsComputed": 35050,
+      "lostStepsRaw": 35050
+    },
+    {
+      "arm": "f2",
+      "object": 0,
+      "k": 2,
+      "followedSignal": true,
+      "reset": false,
+      "lostStepsComputed": 34668,
+      "lostStepsRaw": 34668
+    },
+    {
+      "arm": "f3",
+      "object": 0,
+      "k": 2,
+      "followedSignal": true,
+      "reset": false,
+      "lostStepsComputed": 36456,
+      "lostStepsRaw": 36456
+    },
+    {
+      "arm": "f4",
+      "object": 0,
+      "k": 2,
+      "followedSignal": true,
+      "reset": false,
+      "lostStepsComputed": 35311,
+      "lostStepsRaw": 35311
+    },
+    {
+      "arm": "f4",
+      "object": 1,
+      "k": 2,
+      "followedSignal": true,
+      "reset": false,
+      "lostStepsComputed": 33831,
+      "lostStepsRaw": 33831
+    },
+    {
+      "arm": "f4",
+      "object": 2,
+      "k": 2,
+      "followedSignal": false,
+      "reset": true,
+      "lostStepsComputed": null,
+      "lostStepsRaw": 0
+    }
+  ],
+  "moveRate": {
+    "inputs": "deferred-chain slices only; isolate-life and boundary-commit rows carry no per-slice cpu",
+    "objects": [
+      {
+        "arm": "f1",
+        "object": 0,
+        "firstMoveK": 2,
+        "resetFirstMove": false,
+        "cpuS": 114.045,
+        "skippedSlices": 0,
+        "laterMoves": 0
+      },
+      {
+        "arm": "f1",
+        "object": 1,
+        "firstMoveK": 2,
+        "resetFirstMove": false,
+        "cpuS": 109.812,
+        "skippedSlices": 0,
+        "laterMoves": 0
+      },
+      {
+        "arm": "f1",
+        "object": 2,
+        "firstMoveK": 2,
+        "resetFirstMove": false,
+        "cpuS": 97.426,
+        "skippedSlices": 1,
+        "laterMoves": 0
+      },
+      {
+        "arm": "f2",
+        "object": 0,
+        "firstMoveK": 2,
+        "resetFirstMove": false,
+        "cpuS": 108.064,
+        "skippedSlices": 0,
+        "laterMoves": 0
+      },
+      {
+        "arm": "f3",
+        "object": 0,
+        "firstMoveK": 2,
+        "resetFirstMove": false,
+        "cpuS": 32.476,
+        "skippedSlices": 2,
+        "laterMoves": 0
+      },
+      {
+        "arm": "f4",
+        "object": 0,
+        "firstMoveK": 2,
+        "resetFirstMove": false,
+        "cpuS": 105.848,
+        "skippedSlices": 0,
+        "laterMoves": 0
+      },
+      {
+        "arm": "f4",
+        "object": 1,
+        "firstMoveK": 2,
+        "resetFirstMove": false,
+        "cpuS": 107.721,
+        "skippedSlices": 0,
+        "laterMoves": 0
+      },
+      {
+        "arm": "f4",
+        "object": 2,
+        "firstMoveK": 2,
+        "resetFirstMove": true,
+        "cpuS": 107.208,
+        "skippedSlices": 0,
+        "laterMoves": 0
+      }
+    ],
+    "exposureCpuS": 782.6,
+    "laterMoves": 0,
+    "upperMu95": 2.996,
+    "upperRatePerCpuS": 0.003828,
+    "mfLowerCpuS": 261.2
+  },
+  "signalEventCpuS": {
+    "n": 27,
+    "median": 32.475,
+    "range": [31.976, 32.476]
+  }
+}

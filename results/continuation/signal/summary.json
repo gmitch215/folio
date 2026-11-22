@@ -1,0 +1,31 @@
+{
+  "schema": "folio.continuation.summary.v1",
+  "study": "signal",
+  "rows": 62,
+  "calibration": {
+    "calls": 15,
+    "outcomes": {
+      "ok": 12,
+      "exceededCpu": 3
+    }
+  },
+  "signalEvents": {
+    "events": 30,
+    "ok": 20,
+    "resetBeforeReturn": 10,
+    "fired": 20,
+    "okCpuMs": [29998, 31977]
+  },
+  "syncChains": {
+    "chains": 3,
+    "finished": 3,
+    "finalMatch": 0,
+    "finalMatchNote": "finalMatch is false for all 3 sync chains. This probe carried only a block count across events, not the guest's state (worker.mjs), so its final value is not expected to match after a reset. The study tests signal stops and completion, not state continuity; the durable-chain and boundary-commit studies test continuity.",
+    "slices": 13,
+    "slicesByOutcome": {
+      "null": 3,
+      "exceededWallTime": 8,
+      "ok": 2
+    }
+  }
+}

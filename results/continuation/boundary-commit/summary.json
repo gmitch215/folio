@@ -1,0 +1,86 @@
+{
+  "schema": "folio.continuation.summary.v1",
+  "study": "boundary-commit",
+  "rows": 35,
+  "g0": {
+    "events": 11,
+    "stopCounts": {
+      "commit": 8,
+      "signal": 1,
+      "cut": 1,
+      "final": 1
+    },
+    "restores": 2,
+    "isolateMoves": 0,
+    "movesAfterCommit": 0,
+    "finalMatch": {
+      "objects": 1,
+      "finalAndShaMatch": 1,
+      "referenceSteps": [30000],
+      "perObject": [
+        {
+          "object": 0,
+          "steps": 30000,
+          "finalAndShaMatch": true
+        }
+      ]
+    },
+    "moves": []
+  },
+  "g1": {
+    "events": 24,
+    "stopCounts": {
+      "commit": 18,
+      "signal": 3,
+      "final": 3
+    },
+    "restores": 3,
+    "isolateMoves": 3,
+    "movesAfterCommit": 3,
+    "finalMatch": {
+      "objects": 3,
+      "finalAndShaMatch": 3,
+      "referenceSteps": [120000],
+      "perObject": [
+        {
+          "object": 0,
+          "steps": 120000,
+          "finalAndShaMatch": true
+        },
+        {
+          "object": 1,
+          "steps": 120000,
+          "finalAndShaMatch": true
+        },
+        {
+          "object": 2,
+          "steps": 120000,
+          "finalAndShaMatch": true
+        }
+      ]
+    },
+    "moves": [
+      {
+        "object": 0,
+        "k": 2,
+        "lostSteps": 0,
+        "previousStop": "commit",
+        "previousEndSource": "checkpoint-note"
+      },
+      {
+        "object": 1,
+        "k": 2,
+        "lostSteps": 0,
+        "previousStop": "commit",
+        "previousEndSource": "end-note"
+      },
+      {
+        "object": 2,
+        "k": 2,
+        "lostSteps": 0,
+        "previousStop": "commit",
+        "previousEndSource": "checkpoint-note"
+      }
+    ]
+  }
+}

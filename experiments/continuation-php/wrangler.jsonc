@@ -1,0 +1,8 @@
+{
+	"name": "folio-continuation-php",
+	"main": "worker.mjs",
+	"compatibility_date": "2026-10-20",
+	"workers_dev": false,
+	"durable_objects": { "bindings": [{ "name": "P", "class_name": "Job" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["Job"] }]
+}

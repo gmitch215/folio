@@ -18,6 +18,7 @@ parameters and sample counts are recorded in the data.
 | [Portability](portability/README.md)     | Host bridge, runtime capabilities and concurrency                                                       |
 | [Analysis](analysis/README.md)           | Work/span models and their controls                                                                     |
 | [Certification](certification/README.md) | Stream checkers: split sensitivity, red team, real loops, verifier, adversary rounds                    |
+| [Continuation](continuation/README.md)   | Alarm-event signals, JSPI and checkpointed chains, isolate lifetimes, boundary commits and PHP parks    |
 | [Verification](verification/README.md)   | Historical test and verification records                                                                |
 
 ## Provenance
