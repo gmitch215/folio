@@ -1,0 +1,8 @@
+{
+	"name": "folio-alarm-retirement",
+	"main": "worker.mjs",
+	"compatibility_date": "2026-09-20",
+	"workers_dev": true,
+	"durable_objects": { "bindings": [{ "name": "M", "class_name": "Retire" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["Retire"] }]
+}

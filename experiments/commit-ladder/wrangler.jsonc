@@ -1,0 +1,8 @@
+{
+	"name": "folio-commit-ladder",
+	"main": "worker.mjs",
+	"compatibility_date": "2026-09-20",
+	"workers_dev": true,
+	"durable_objects": { "bindings": [{ "name": "L", "class_name": "Ladder" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["Ladder"] }]
+}
