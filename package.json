@@ -1,15 +1,20 @@
 {
 	"name": "@gmitch215/folio",
 	"version": "1.2.0",
-	"description": "Shared WASM memory and ordered speculative execution across isolates",
+	"description": "WebAssembly tooling for Node, Workers and browsers: shared-memory parallelism, instance resets, boot images and memory caps",
 	"keywords": [
 		"webassembly",
 		"wasm",
+		"tooling",
 		"parallel",
 		"worker_threads",
 		"sharedarraybuffer",
+		"checkpoint",
+		"snapshot",
+		"memory",
 		"cloudflare-workers",
-		"workerd"
+		"workerd",
+		"browser"
 	],
 	"license": "MIT",
 	"author": "Gregory Mitchell <me@gmitch215.xyz>",
@@ -98,6 +103,14 @@
 			"types": "./dist/certified.d.ts",
 			"import": "./dist/certified.js"
 		},
+		"./growth-governor": {
+			"types": "./dist/growth-governor.d.ts",
+			"import": "./dist/growth-governor.js"
+		},
+		"./continuation": {
+			"types": "./dist/continuation.d.ts",
+			"import": "./dist/continuation.js"
+		},
 		"./package.json": "./package.json"
 	},
 	"files": [
@@ -113,7 +126,7 @@
 		"build:c": "bun scripts/build/fixtures.ts",
 		"build:prepared": "bun scripts/build/prepare.ts",
 		"build:experiments": "node experiments/managed/prepare.ts && node experiments/browser/prepare.ts && node experiments/browser/extraction/prepare.ts && node experiments/consumer/prepare.ts kernel-control && node experiments/ranges/prepare.ts && node experiments/elastic-ladder/prepare.ts",
-		"typecheck": "bun run build:c && bun run build:experiments && tsc --noEmit -p tsconfig.json && tsc --noEmit -p experiments/cloud/tsconfig.json && tsc --noEmit -p experiments/managed/tsconfig.json && tsc --noEmit -p experiments/elastic/tsconfig.json && tsc --noEmit -p experiments/elastic-limits/tsconfig.json && tsc --noEmit -p experiments/elastic-ladder/tsconfig.json && tsc --noEmit -p experiments/browser/tsconfig.json && tsc --noEmit -p experiments/consumer/tsconfig.json && tsc --noEmit -p experiments/rpc/tsconfig.json && tsc --noEmit -p experiments/ranges/tsconfig.json && tsc --noEmit -p experiments/concurrency/tsconfig.json && tsc --noEmit -p experiments/sqlite-lanes/tsconfig.json",
+		"typecheck": "bun run build:c && bun run build:experiments && tsc --noEmit -p tsconfig.json && tsc --noEmit -p experiments/cloud/tsconfig.json && tsc --noEmit -p experiments/managed/tsconfig.json && tsc --noEmit -p experiments/elastic/tsconfig.json && tsc --noEmit -p experiments/elastic-limits/tsconfig.json && tsc --noEmit -p experiments/elastic-ladder/tsconfig.json && tsc --noEmit -p experiments/browser/tsconfig.json && tsc --noEmit -p experiments/consumer/tsconfig.json && tsc --noEmit -p experiments/rpc/tsconfig.json && tsc --noEmit -p experiments/ranges/tsconfig.json && tsc --noEmit -p experiments/concurrency/tsconfig.json && tsc --noEmit -p experiments/sqlite-lanes/tsconfig.json && tsc --noEmit -p experiments/continuation/tsconfig.json",
 		"typecheck:php": "node experiments/consumer/php/prepare.ts && tsc --noEmit -p experiments/consumer/php/tsconfig.json",
 		"typecheck:bootimage": "node experiments/bootimage/prepare.ts && tsc --noEmit -p experiments/bootimage/tsconfig.json",
 		"test": "vitest run --project unit",
