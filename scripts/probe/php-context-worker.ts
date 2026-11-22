@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parentPort, workerData } from 'node:worker_threads';
-import type { TaskLink } from '../../src/tasks.ts';
+import type { TaskLink } from '../../src/node/tasks.ts';
 import { ownerBridge, serveTasks } from './php-task-bridge.ts';
 import { createHooks, type HookConfig } from './worksp-hooks.ts';
 
@@ -60,7 +60,7 @@ async function open() {
 	const { PhpBase } = await import(
 		pathToFileURL(join(data.consumer, 'node_modules/php-wasm/PhpBase.mjs')).href
 	);
-	const { Folio } = await import(new URL('node.ts', data.srcUrl).href);
+	const { Folio } = await import(new URL('node/index.ts', data.srcUrl).href);
 	const t1 = now();
 	php = new PhpBase(
 		Promise.resolve({ default: Factory }) as any,

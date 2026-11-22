@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream } from '../../../src/certify.ts';
+import { certifyStream } from '../../../src/folds/certify.ts';
 import { clang, env } from '../affine-build.ts';
 import { mulberry, sha256, workDir } from './lib.ts';
 

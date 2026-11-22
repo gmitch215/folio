@@ -1,4 +1,4 @@
-import type { StreamCertificate } from '../../src/certify.ts';
+import type { StreamCertificate } from '../../src/folds/certify.ts';
 
 export interface Mutant {
 	id: string;

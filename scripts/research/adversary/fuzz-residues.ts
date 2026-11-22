@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { certifyStream } from '../../../src/certify.ts';
+import { certifyStream } from '../../../src/folds/certify.ts';
 import { groundTruth } from '../certify-ground.ts';
 import { build } from '../split-sensitivity.ts';
 

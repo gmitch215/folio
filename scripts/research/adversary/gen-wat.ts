@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream } from '../../../src/certify.ts';
+import { certifyStream } from '../../../src/folds/certify.ts';
 import { buildWat, mulberry, sha256, workDir } from './lib.ts';
 
 // usage: node gen-wat.ts [DIR]; random, adversarial and mutant WAT modules under DIR/modules

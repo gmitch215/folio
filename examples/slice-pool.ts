@@ -1,4 +1,4 @@
-import { SlicePool } from '@gmitch215/folio/slices';
+import { SlicePool } from '@gmitch215/folio';
 import binaryen from 'binaryen';
 
 // Fill one shared memory in place from several threads. The caller says the slices are

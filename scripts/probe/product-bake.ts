@@ -2,7 +2,13 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { inflateRawSync } from 'node:zlib';
-import { bakeModule, captureImage, checkBaked, encodeImage, moduleDigest } from '../../src/bake.ts';
+import {
+	bakeModule,
+	captureImage,
+	checkBaked,
+	encodeImage,
+	moduleDigest
+} from '../../src/memory/bake.ts';
 
 /** a descriptor the image must reopen */
 export interface StreamRow {
@@ -395,7 +401,7 @@ export function chunkImage(
 }
 
 if (import.meta.main && process.argv[2] === 'assets') {
-	const { decodeImage } = await import('../../src/bake.ts');
+	const { decodeImage } = await import('../../src/memory/bake.ts');
 	const [, , , imageFile, outDir, chunkPages] = process.argv;
 	const image = decodeImage(new Uint8Array(readFileSync(imageFile!)));
 	const { index, files } = chunkImage(image, Number(chunkPages ?? 64));

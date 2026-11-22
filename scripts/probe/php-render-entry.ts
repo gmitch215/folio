@@ -23,7 +23,7 @@ import { join, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { pathToFileURL } from 'node:url';
 import { deserialize, serialize } from 'node:v8';
-import type { Folio as FolioPool } from '../../src/node.ts';
+import type { Folio as FolioPool } from '../../src/node/index.ts';
 
 // bundled and run by scripts/probe/php-render.ts: node scripts/probe/php-render.ts native|folio [OUTPUT.json] [PREPARED.bin]
 // FOLIO_WORKERS sets the folio pool width, two by default; FOLIO_SRC_DIR points at another src/ tree
@@ -36,8 +36,8 @@ const outPath = process.argv[3] ?? join(build, 'php-render-' + mode + '.json');
 const planPath = process.argv[4] ?? join(build, 'php-prepared.bin');
 // the library loads at run time, so the bundle never carries a second copy of it
 const source = process.env.FOLIO_SRC_DIR ?? new URL('../src/', import.meta.url).href;
-const { Folio } = await import(new URL('node.ts', source).href);
-const { prepare } = await import(new URL('compiler.ts', source).href);
+const { Folio } = await import(new URL('node/index.ts', source).href);
+const { prepare } = await import(new URL('execution/compiler.ts', source).href);
 
 const result: any = { mode, node: process.version, stages: [], reports: [] };
 const hash = (data: Uint8Array | string) => createHash('sha256').update(data).digest('hex');

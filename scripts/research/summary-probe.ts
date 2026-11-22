@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { isMainThread, Worker, workerData } from 'node:worker_threads';
-import { foldExact, predictEnd, type AffineModel } from '../../src/affine.ts';
-import { chunkRanges } from '../../src/fold.ts';
-import { serveTasks, TaskPool } from '../../src/tasks.ts';
+import { chunkRanges } from '../../src/execution/fold.ts';
+import { foldExact, predictEnd, type AffineModel } from '../../src/folds/affine.ts';
+import { serveTasks, TaskPool } from '../../src/node/tasks.ts';
 import { checkStream, toSharedImport } from './stream-check.ts';
 
 // usage: summary-probe.ts OUTPUT.json ; FOLIO_SUMMARY_BINARY names the compiled stream module

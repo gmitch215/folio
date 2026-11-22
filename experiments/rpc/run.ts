@@ -45,7 +45,7 @@ const median = (values: number[]) => {
 
 const baseline = await snapshot(api);
 await save('baseline.json', baseline);
-assert.equal(creds.label, 'FREE', 'run only on the Free account');
+assert.equal(creds.label, 'Free plan', 'run only on the Free account');
 const subdomain = (await api('/workers/subdomain')).subdomain;
 const publicUrl = (script: string) => `https://${script}.${subdomain}.workers.dev`;
 const coordinatorUrl = publicUrl(name);

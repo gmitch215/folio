@@ -1,8 +1,8 @@
 import binaryen from 'binaryen';
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
-import type { IterationRoute } from '../../src/extract.ts';
-import { ownershipRoute } from '../../src/ownership-redirect.ts';
-import { certifyOwnership } from '../../src/ownership.ts';
+import type { IterationRoute } from '../../src/execution/extract.ts';
+import { certifyOwnership } from '../../src/ownership/index.ts';
+import { ownershipRoute } from '../../src/ownership/redirect.ts';
 import { hostMath, moduleBytes, recordsOf, writeRecords, type Record_ } from './c21-common.ts';
 import { layoutOf, outDir, rng, specs } from './c21-kernels.ts';
 import { sameError } from './iteration-diff.ts';

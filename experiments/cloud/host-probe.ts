@@ -5,8 +5,8 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { FolioHost } from '../../src/host.ts';
-import { decodeBytes } from '../../src/remote.ts';
+import { FolioHost } from '../../src/node/host.ts';
+import { decodeBytes } from '../../src/remote/index.ts';
 
 const workerModule = `
 import { RemoteFolio, encodeBytes } from './remote.mjs';
@@ -41,7 +41,10 @@ export default {
 // no deployment: the portable client runs in stock workerd and reaches a real Node execution host
 export async function runHostProbe(output?: string) {
 	const source = await readFile(new URL('../../build/fixture.wasm', import.meta.url));
-	const remoteSource = await readFile(new URL('../../src/remote.ts', import.meta.url), 'utf8');
+	const remoteSource = await readFile(
+		new URL('../../src/remote/index.ts', import.meta.url),
+		'utf8'
+	);
 	const remoteModule = ts.transpileModule(remoteSource, {
 		compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext }
 	}).outputText;

@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { Worker } from 'node:worker_threads';
 import { clang, env } from '../../../scripts/research/affine-build.ts';
-import { prepare } from '../../../src/compiler.ts';
+import { prepare } from '../../../src/execution/compiler.ts';
 
 const study = resolve(
 	process.env.FOLIO_ELASTIC_STUDY ?? 'results/execution/elastic-memory/capacity-local'

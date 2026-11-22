@@ -1,7 +1,7 @@
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { DEFAULT_MINIMUM_REGION_WORK, extract, netWork } from '../../src/extract.ts';
+import { DEFAULT_MINIMUM_REGION_WORK, extract, netWork } from '../../src/execution/extract.ts';
 import type { Consumer } from './consumer.ts';
 
 // usage: node scripts/probe/admission-sites.ts OUTPUT.jsonl CONSUMER.ts...

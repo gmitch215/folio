@@ -1,5 +1,9 @@
-import type { IterationRoute } from '../../src/extract.ts';
-import { IterationPool, iterationArguments, type IterationReport } from '../../src/iteration.ts';
+import type { IterationRoute } from '../../src/execution/extract.ts';
+import {
+	IterationPool,
+	iterationArguments,
+	type IterationReport
+} from '../../src/iteration/index.ts';
 import { booted, entryValues, fit } from './iteration-diff.ts';
 
 // shared by the redirect gate and its timing: a pool over a route, the serial program, the same call routed

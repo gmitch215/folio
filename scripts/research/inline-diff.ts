@@ -2,9 +2,9 @@ import binaryen from 'binaryen';
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { prepare } from '../../src/compiler.ts';
-import { inlineEntryBytes, lowerInline } from '../../src/inline.ts';
-import { transaction } from '../../src/transaction.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { transaction } from '../../src/execution/transaction.ts';
+import { inlineEntryBytes, lowerInline } from '../../src/iteration/inline.ts';
 
 const root = new URL('../../', import.meta.url).pathname;
 const READ = 64,

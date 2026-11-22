@@ -4,8 +4,8 @@ import { cpus, loadavg } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { deserialize, serialize } from 'node:v8';
-import { prepare } from '../../src/compiler.ts';
-import { Folio } from '../../src/node.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { Folio } from '../../src/node/index.ts';
 import { consumerRoot } from './consumer-root.ts';
 import { openOldBuild } from './old-build.ts';
 

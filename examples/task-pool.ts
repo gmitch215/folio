@@ -1,4 +1,4 @@
-import { TaskPool, peakConcurrency, serveTasks } from '@gmitch215/folio/tasks';
+import { TaskPool, peakConcurrency, serveTasks } from '@gmitch215/folio';
 import { createHash } from 'node:crypto';
 import { Worker, isMainThread, workerData } from 'node:worker_threads';
 

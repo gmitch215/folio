@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { initialContext } from '../../src/affine-state.ts';
+import { initialContext } from '../../src/folds/affine-state.ts';
 import { cases, clang, defaultOut, env, link, root, stale } from './affine-build.ts';
 
 const source = join(cases, 'affine/context-subjects.c');

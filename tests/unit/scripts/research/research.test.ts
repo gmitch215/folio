@@ -1,0 +1,499 @@
+import binaryen from 'binaryen';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { expect, test } from 'vitest';
+import { distribution, summarizeResearch } from '../../../../scripts/research/analyze.ts';
+import {
+	kernelResults,
+	kernelTable,
+	speedupCounts
+} from '../../../../scripts/research/denominators.ts';
+import {
+	blockerHistogram,
+	operationCosts,
+	sessionSpread,
+	stateLoss
+} from '../../../../scripts/research/derive.ts';
+import { generatedProgram, runDifferential } from '../../../../scripts/research/differential.ts';
+import { digest } from '../../../../scripts/research/environment.ts';
+import { verifyStudies } from '../../../../scripts/research/evidence.ts';
+import { exportStudy, writeManifest } from '../../../../scripts/research/export.ts';
+import { addresses } from '../../../../scripts/research/graded.ts';
+
+const sample = (
+	arm: string,
+	round: number,
+	wallMs: number,
+	extra: Record<string, unknown> = {}
+) => ({
+	kind: 'sample',
+	case: 'cell',
+	arm,
+	round,
+	wallMs,
+	cpuMs: wallMs * 2,
+	outputSha256: 'same',
+	passed: true,
+	...extra
+});
+
+test('the analyzer divides native by each arm inside the same round and counts routing reasons', () => {
+	const rows = [
+		sample('native', 0, 10),
+		sample('folio', 0, 5, {
+			report: { mode: 'speculative', workers: 4, replayed: 2, reason: 'dependency' }
+		}),
+		sample('native', 1, 12),
+		sample('folio', 1, 4, {
+			report: { mode: 'serial', workers: 0, replayed: 0, reason: 'dependency' }
+		})
+	];
+	const summary = summarizeResearch(rows, 'hash') as any;
+	const arm = summary.groups.cell.folio;
+	expect(arm.pairedSpeedup.median).toBe(2.5);
+	expect(arm.cpuRatio.median).toBeCloseTo((0.5 + 4 / 12) / 2, 10);
+	expect(arm.reasons).toEqual({ dependency: 2 });
+	expect(arm.replayed).toBe(2);
+	expect(arm.modes).toEqual(['speculative', 'serial']);
+});
+
+test('repeated calls inside one round pair by call index, and bad samples are refused', () => {
+	const rows = [0, 1].flatMap((call) => [
+		sample('native', 0, 10, { call }),
+		sample('adaptive', 0, call === 0 ? 20 : 5, {
+			call,
+			reason: call ? 'previous-conflicts' : undefined
+		})
+	]);
+	const arm = (summarizeResearch(rows, 'hash') as any).groups.cell.adaptive;
+	expect(arm.pairedSpeedup.n).toBe(2);
+	expect(arm.pairedSpeedup.max).toBe(2);
+	expect(arm.reasons).toEqual({ 'previous-conflicts': 1 });
+	expect(() =>
+		summarizeResearch(
+			[sample('native', 0, 1), sample('folio', 0, 1, { outputSha256: 'other' })],
+			'h'
+		)
+	).toThrow(/different outputs/);
+	expect(() => summarizeResearch([sample('native', 0, 1), sample('native', 0, 1)], 'h')).toThrow(
+		/duplicate/
+	);
+	expect(() => summarizeResearch([sample('native', 0, 1, { passed: false })], 'h')).toThrow();
+	expect(distribution([3, 1, 2])).toMatchObject({ n: 3, median: 2, min: 1, max: 3 });
+});
+
+test('the generated grammar reaches all seven shapes and every shape is valid Wasm', () => {
+	const shapes = new Map<number, string>();
+	for (let seed = 1; shapes.size < 7 && seed < 500; seed++) {
+		const program = generatedProgram(seed);
+		if (!shapes.has(program.shape)) shapes.set(program.shape, program.wat);
+	}
+	expect([...shapes.keys()].sort()).toEqual([0, 1, 2, 3, 4, 5, 6]);
+	for (const wat of shapes.values()) {
+		const module = binaryen.parseText(wat);
+		module.setFeatures(binaryen.Features.All);
+		expect(module.validate()).toBeTruthy();
+		module.dispose();
+	}
+});
+
+test('the differential campaign exercises guard refusal, traps and host exceptions with equal results', async () => {
+	const rows: Record<string, unknown>[] = [];
+	const totals = await runDifferential({
+		seed: 12648430,
+		programs: 1,
+		widths: [2],
+		emit: (row) => rows.push(row)
+	});
+	expect(totals.guardFallback).toBeGreaterThan(0);
+	expect(totals.traps).toBeGreaterThan(0);
+	expect(totals.hostThrows).toBeGreaterThan(0);
+	const comparisons = rows.filter((row) => row.kind === 'comparison');
+	expect(comparisons.length).toBe(totals.comparisons);
+	expect(comparisons.every((row) => row.passed)).toBe(true);
+});
+
+test('graded conflict batches send the chosen fraction of calls to one shared address', () => {
+	const hotCount = (fraction: number) =>
+		addresses(fraction).filter((address) => address === 1024).length;
+	expect(hotCount(0)).toBe(0);
+	expect(hotCount(1 / 4)).toBe(16);
+	expect(hotCount(1)).toBe(64);
+	expect(new Set(addresses(0)).size).toBe(64);
+});
+
+test('study verification checks manifest bytes and hashes and refuses escaping paths', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-studies-'));
+	try {
+		const study = join(root, 'results', 'topic', 'study');
+		mkdirSync(study, { recursive: true });
+		writeFileSync(join(root, 'results', 'outside.txt'), 'outside');
+		writeFileSync(join(study, 'README.md'), '# Study\n');
+		writeFileSync(join(study, 'raw.jsonl'), '{"a":1}\n');
+		const entry = (path: string, data: string) => ({
+			path,
+			bytes: Buffer.byteLength(data),
+			sha256: digest(data)
+		});
+		const manifest = (artifacts: unknown[]) =>
+			writeFileSync(
+				join(study, 'manifest.json'),
+				JSON.stringify({ schema: 'folio.study.v1', artifacts })
+			);
+		manifest([entry('raw.jsonl', '{"a":1}\n')]);
+		expect(verifyStudies(root)).toEqual({ studies: 1, artifacts: 1, bytes: 8 });
+		manifest([entry('raw.jsonl', '{"a":2}\n')]);
+		expect(() => verifyStudies(root)).toThrow(/artifact hash/);
+		manifest([entry('../../outside.txt', 'outside')]);
+		expect(() => verifyStudies(root)).toThrow(/escapes study/);
+		manifest([entry('raw.jsonl', '{"a":1}\n'), entry('raw.jsonl', '{"a":1}\n')]);
+		expect(() => verifyStudies(root)).toThrow(/duplicate/);
+		manifest([]);
+		rmSync(join(study, 'README.md'));
+		expect(() => verifyStudies(root)).toThrow(/missing study README/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('the analyzer skips pairs whose native process CPU reads zero', () => {
+	const rows = [
+		sample('native', 0, 1, { cpuMs: 0 }),
+		sample('folio', 0, 2, { cpuMs: 4 }),
+		sample('native', 1, 1, { cpuMs: 2 }),
+		sample('folio', 1, 2, { cpuMs: 4 })
+	];
+	const arm = (summarizeResearch(rows, 'hash') as any).groups.cell.folio;
+	expect(arm.cpuRatio.n).toBe(1);
+	expect(arm.cpuRatioPairs).toBe(1);
+	expect(arm.cpuRatio.median).toBe(2);
+});
+
+test('blocker counts merge numbers and state-loss counts compare setup identities', () => {
+	const coverage = (reasons: string[]) => ({
+		kind: 'coverage',
+		original: {
+			reasons,
+			controlReasons: ['no region reached 200000 net work (5 pure functions)']
+		},
+		sharedDiagnostic: { reasons: reasons.slice(1) },
+		checkpointRefusals: []
+	});
+	const blockers = blockerHistogram([
+		coverage([
+			'shared wasm32 memory required',
+			'unsupported expression 11',
+			'unsupported expression 7'
+		]),
+		coverage(['shared wasm32 memory required', 'unsupported expression 7'])
+	]);
+	expect(blockers.originalModule).toEqual({
+		'shared wasmN memory required': 2,
+		'unsupported expression N': 2
+	});
+	expect(blockers.admission).toEqual({ 'no region reached N net work': 2 });
+	const row = (action: string, module: string, object = 'o') => ({
+		key: 'cell',
+		action,
+		result: { module, object }
+	});
+	const loss = stateLoss({
+		study: {
+			rows: [
+				row('setup', 'm1'),
+				row('operation', 'm1'),
+				row('operation', 'm2'),
+				{
+					key: 'cell',
+					action: 'operation',
+					passed: false,
+					serial: true,
+					error: 'Error: owner was evicted'
+				}
+			]
+		}
+	}) as any;
+	expect(loss.studies.study).toMatchObject({
+		failures: 1,
+		failuresInNativeCells: 1,
+		failuresInAutomaticCells: 0,
+		laterOperationsSameModule: 1,
+		laterOperationsOtherModule: 1,
+		laterOperationsOtherObject: 0
+	});
+});
+
+test('exporting a study summarizes every sampled record and writes a verifiable manifest', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-export-'));
+	try {
+		const source = join(root, 'input.jsonl');
+		writeFileSync(
+			source,
+			[sample('native', 0, 2), sample('folio', 0, 1)]
+				.map((row) => JSON.stringify(row))
+				.join('\n') + '\n'
+		);
+		const study = join(root, 'results', 'topic', 'study');
+		mkdirSync(study, { recursive: true });
+		writeFileSync(join(study, 'README.md'), '# Study\n');
+		expect(exportStudy(study, [`${source}:raw.jsonl`, `${source}:second.jsonl`])).toBe(5);
+		expect(verifyStudies(root).studies).toBe(1);
+		expect(() => exportStudy(study, [`${source}:raw.jsonl`])).toThrow(/refusing to overwrite/);
+		const summary = JSON.parse(readFileSync(join(study, 'second.summary.json'), 'utf8'));
+		expect(summary.groups.cell.folio.pairedSpeedup.median).toBe(2);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('a manifest lists subdirectories only when asked and the verifier catches a changed file', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-manifest-'));
+	try {
+		const study = join(root, 'results', 'topic', 'study');
+		mkdirSync(join(study, 'run'), { recursive: true });
+		writeFileSync(join(study, 'README.md'), '# Study\n');
+		writeFileSync(join(study, 'run', 'raw.jsonl'), '{"kind":"environment"}\n');
+		expect(writeManifest(study)).toBe(1);
+		expect(writeManifest(study, true)).toBe(2);
+		const manifest = JSON.parse(readFileSync(join(study, 'manifest.json'), 'utf8'));
+		expect(manifest.artifacts.map((item: { path: string }) => item.path)).toEqual([
+			'README.md',
+			'run/raw.jsonl'
+		]);
+		expect(verifyStudies(root)).toEqual({ studies: 1, artifacts: 2, bytes: 8 + 23 });
+		writeFileSync(join(study, 'run', 'raw.jsonl'), '{"kind":"environmenT"}\n');
+		expect(() => verifyStudies(root)).toThrow(/artifact hash/);
+		rmSync(join(study, 'README.md'));
+		expect(() => writeManifest(study, true)).toThrow(/write the study README/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('speedup counts compare each kernel median with every bar', () => {
+	const group = (median: number) => ({ 'tasks-8-batched': { pairedSpeedup: { median } } });
+	const summary = { groups: { a: group(0.9), b: group(2), c: group(3.5) } };
+	expect(speedupCounts(summary, 'tasks-8-batched', [1, 2, 3])).toEqual({
+		kernels: 3,
+		atLeast1x: 2,
+		atLeast2x: 2,
+		atLeast3x: 1
+	});
+});
+
+test('kernel results join the default, forced and reset summaries into one table', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-kernels-'));
+	try {
+		const write = (path: string, value: unknown) => {
+			mkdirSync(join(root, path, '..'), { recursive: true });
+			writeFileSync(join(root, path), JSON.stringify(value));
+		};
+		const arm = (speedup: number, extra: Record<string, unknown> = {}) => ({
+			pairedSpeedup: { median: speedup },
+			cpuRatio: { median: 1.5 },
+			modes: [],
+			...extra
+		});
+		const summary = (kernel: string, arms: Record<string, unknown>) => ({
+			groups: { [kernel]: { native: { wallMs: { median: 0.25 } }, ...arms } }
+		});
+		for (const machine of ['ryzen', 'm2']) {
+			write(
+				`default-entry-repeat/${machine}.summary.json`,
+				summary('sha256', { 'folio-8': arm(machine === 'ryzen' ? 0.97 : 0.98) })
+			);
+			for (const [policy, speedup] of [
+				['whole', 0.9],
+				['pages', 3.8],
+				['checkpoint', 2.5]
+			] as const)
+				write(
+					`reset-policies/${machine}-${policy}.summary.json`,
+					summary('sha256', { 'tasks-8-batched': arm(speedup) })
+				);
+		}
+		write(
+			'forced-admission-complete/summary.json',
+			summary('sha256', { 'folio-8': arm(0.001, { modes: ['speculative'] }) })
+		);
+		const result = kernelResults(root);
+		expect(result.kernels).toHaveLength(1);
+		expect(result.kernels[0]).toMatchObject({
+			label: 'SHA-256',
+			forcedAdmission: { route: 'speculative', speedup: 0.001 },
+			tasks: { 'ryzen-pages': { speedup: 3.8, cpuRatio: 1.5 } }
+		});
+		expect(kernelTable(result).split('\n')[2]).toBe(
+			'| SHA-256 | 0.25 | 0.97 / 0.98 | 1,000x slower | 0.90 / 0.90 | 3.80 / 3.80 | 2.50 / 2.50 |'
+		);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('session spread reports each cell across sessions and the idle pool effect', () => {
+	const cell = (median: number) => ({ folio: { pairedSpeedup: { median } } });
+	const session = (clean: number, idle: number) => ({
+		groups: { 'k/whole/tasks-8': cell(clean), 'k/whole/tasks-8-idle': cell(idle) }
+	});
+	const result = sessionSpread([session(4, 3), session(6, 3), session(5, 3)]);
+	expect(result.sessions).toBe(3);
+	expect(result.cells['k/whole/tasks-8']).toMatchObject({
+		perSession: [4, 6, 5],
+		median: 5,
+		maxOverMin: 1.5
+	});
+	expect(result.idleEffect['k/whole/tasks-8']).toEqual({
+		cleanMedian: 5,
+		idleMedian: 3,
+		idleOverClean: 0.6
+	});
+});
+
+test('operation costs separate setup, the first operation and later ones by differencing counts', () => {
+	const op = { ownerAwaitMs: 10, sent: 100, received: 5, frames: 4 };
+	const cohort = (operations: number, cpuMs: number | null, wallMs: number) => ({
+		pages: 2,
+		serial: false,
+		operations,
+		cpuMs,
+		wallMs,
+		setupAwaitMs: 1,
+		ops: Array.from({ length: operations }, (_, index) => ({
+			...op,
+			ownerAwaitMs: index === 0 ? 30 : 10
+		}))
+	});
+	const costs = operationCosts([
+		cohort(0, 100, 500),
+		cohort(0, 120, 520),
+		cohort(1, 400, 800),
+		cohort(5, 1000, 1400),
+		cohort(5, null, 1500)
+	])['2/false']!;
+	expect(costs.cpuMs).toEqual({ setup: 110, firstUse: 290, steady: 150 });
+	expect(costs.wallMs.steady).toBe(162.5);
+	expect(costs.invocationsWithCpu).toBe(4);
+	expect(costs.ownerAwaitMs).toEqual({ firstOperation: 30, laterOperation: 10 });
+	expect(costs.bytesPerOperation).toEqual({ sent: 100, received: 5 });
+});
+
+test('the one-pass table takes the median over sessions of the paired per-round medians', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-onepass-'));
+	try {
+		const cell = (
+			serialWall: number,
+			arms: Record<string, [number, number][]>
+		): { rows: object[] } => ({
+			rows: [0, 1].flatMap((round) => [
+				{ arm: 'serial', round, wallMs: serialWall, cpuMs: 100 },
+				...Object.entries(arms).map(([arm, rounds]) => ({
+					arm,
+					round,
+					wallMs: rounds[round]![0],
+					cpuMs: rounds[round]![1]
+				}))
+			])
+		});
+		const cells = join(root, 'cells');
+		mkdirSync(cells);
+		writeFileSync(
+			join(cells, 's1-m8-w2.json'),
+			JSON.stringify(
+				cell(100, {
+					'one-shared': [
+						[50, 101],
+						[40, 103]
+					],
+					'one-copy': [
+						[80, 120],
+						[80, 120]
+					],
+					'two-shared': [
+						[200, 100],
+						[200, 100]
+					]
+				})
+			)
+		);
+		writeFileSync(
+			join(cells, 's2-m8-w2.json'),
+			JSON.stringify(
+				cell(140, {
+					'one-shared': [
+						[40, 110],
+						[35, 110]
+					],
+					'one-copy': [
+						[80, 100],
+						[80, 100]
+					],
+					'two-shared': [
+						[140, 150],
+						[140, 150]
+					]
+				})
+			)
+		);
+		writeFileSync(join(cells, 'notes.json'), '{}');
+		const script = 'scripts/research/summary-onepass-table.mjs';
+		const summary = join(root, 'summary.json');
+		const text = execFileSync(process.execPath, [script, cells, summary], { encoding: 'utf8' });
+		expect(JSON.parse(readFileSync(summary, 'utf8'))).toEqual([
+			{
+				mib: 8,
+				width: 2,
+				serialMs: 120,
+				'one-shared': { speed: 3, cpu: 1.06, sessions: 2, speedRange: [2.25, 3.75] },
+				'one-copy': { speed: 1.5, cpu: 1.1, sessions: 2, speedRange: [1.25, 1.75] },
+				'two-shared': { speed: 0.75, cpu: 1.25, sessions: 2, speedRange: [0.5, 1] }
+			}
+		]);
+		expect(text).toContain('8 MiB w2 serial 120 ms (70 MB/s) | one-shared 3x cpu 1.06');
+		expect(() =>
+			execFileSync(process.execPath, [script, cells, summary], { stdio: 'pipe' })
+		).toThrow(/refusing to overwrite/);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});
+
+test('the break-even table repays certification and first use against the saving per call', () => {
+	const root = mkdtempSync(join(tmpdir(), 'folio-breakeven-'));
+	try {
+		const files = [64, 1, 8].map((mib) => {
+			const [serialMs, secondCallMs, firstCallMs] =
+				mib === 1 ? [7, 2, 500] : mib === 8 ? [60, 10, 100] : [5, 8, 100];
+			const path = join(root, `coldstart-w8-m${mib}.json`);
+			writeFileSync(
+				path,
+				JSON.stringify({
+					width: 8,
+					mib,
+					probeMs: 10,
+					checkMs: 40,
+					firstCallMs,
+					secondCallMs,
+					serialMs
+				})
+			);
+			return path;
+		});
+		const lines = execFileSync(
+			process.execPath,
+			['scripts/research/summary-breakeven-table.mjs', ...files],
+			{ encoding: 'utf8' }
+		)
+			.trim()
+			.split('\n');
+		expect(lines.slice(2)).toEqual([
+			'| 1 | 10.00 | 40.00 | 50.00 | 498.00 | 7.00 | 2.00 | 5.00 | 10.0 | 109.6 |',
+			'| 8 | 10.00 | 40.00 | 50.00 | 90.00 | 60.00 | 10.00 | 50.00 | 1.0 | 2.8 |',
+			'| 64 | 10.00 | 40.00 | 50.00 | 92.00 | 5.00 | 8.00 | -3.00 | never | never |'
+		]);
+	} finally {
+		rmSync(root, { recursive: true, force: true });
+	}
+});

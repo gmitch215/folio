@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { prepare } from '../../src/compiler.ts';
+import { prepare } from '../../src/execution/compiler.ts';
 import { fit, generate, iterationRun, openRig, serialRun } from './iteration-diff.ts';
 
 const PAGE = 65536;

@@ -1,5 +1,5 @@
-import type { BrowserProgram } from '../../../src/browser.ts';
-import { BrowserFolio } from '../../../src/browser.ts';
+import type { BrowserProgram } from '../../../src/browser/index.ts';
+import { BrowserFolio } from '../../../src/browser/index.ts';
 
 /** Exercises a whole ordinary entry; the library, rather than the probe, derives every partition. */
 export async function runBrowserExtractionProbe() {

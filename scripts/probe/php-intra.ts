@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { peakConcurrency } from '../../src/tasks.ts';
+import { peakConcurrency } from '../../src/node/tasks.ts';
 import { consumerRoot } from './consumer-root.ts';
 import { type Contexts, overlapMs } from './php-contexts.ts';
 import { costCode, defaultSizes, openTaskContexts, requestCode, workloads } from './php-tasks.ts';

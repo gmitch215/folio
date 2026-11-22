@@ -1,6 +1,6 @@
 import binaryen from 'binaryen';
 import { existsSync, readFileSync } from 'node:fs';
-import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership.ts';
+import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership/index.ts';
 import { hostMath, recordsOf, writeRecords } from './c21-common.ts';
 import { layoutOf, outDir, specs } from './c21-kernels.ts';
 import { BASES, INSERTS, moduleOf, routeMatches } from './ownership-modules.ts';

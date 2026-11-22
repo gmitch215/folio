@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream } from '../../../../src/certify.ts';
+import { certifyStream } from '../../../../src/folds/certify.ts';
 import { modDir, outDir } from './lib.ts';
 
 // recertifies every distinct module of a manifest with the current checker

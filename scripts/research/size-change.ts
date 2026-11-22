@@ -1,6 +1,6 @@
 import { appendFileSync, writeFileSync } from 'node:fs';
-import { admissionSeam } from '../../src/iteration-admission.ts';
-import { Folio } from '../../src/node.ts';
+import { admissionSeam } from '../../src/iteration/admission.ts';
+import { Folio } from '../../src/node/index.ts';
 import {
 	clearOutput,
 	instantiate,

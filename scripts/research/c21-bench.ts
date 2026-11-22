@@ -2,11 +2,11 @@ import assert from 'node:assert/strict';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
 import { Worker } from 'node:worker_threads';
-import { prepare, prepareContext } from '../../src/compiler.ts';
-import { admissionSeam } from '../../src/iteration-admission.ts';
-import { Folio } from '../../src/node.ts';
-import { SlicePool } from '../../src/slices.ts';
-import { TaskPool } from '../../src/tasks.ts';
+import { prepare, prepareContext } from '../../src/execution/compiler.ts';
+import { admissionSeam } from '../../src/iteration/admission.ts';
+import { Folio } from '../../src/node/index.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
+import { SlicePool } from '../../src/slices/index.ts';
 import {
 	clearOutput,
 	hostMath,

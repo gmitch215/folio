@@ -5,16 +5,16 @@ import binaryen from 'binaryen';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { prepare } from '../../src/compiler.ts';
-import type { IterationRoute } from '../../src/extract.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import type { IterationRoute } from '../../src/execution/extract.ts';
 import type {
 	IterationArenaOptions,
 	IterationJob,
 	IterationPoolOptions,
 	IterationReport
-} from '../../src/iteration.ts';
-import { IterationPool, iterationArena, iterationArguments } from '../../src/iteration.ts';
-import { Folio } from '../../src/node.ts';
+} from '../../src/iteration/index.ts';
+import { IterationPool, iterationArena, iterationArguments } from '../../src/iteration/index.ts';
+import { Folio } from '../../src/node/index.ts';
 
 const PAGE = 65536;
 const align = (value: number, to: number) => Math.ceil(value / to) * to;

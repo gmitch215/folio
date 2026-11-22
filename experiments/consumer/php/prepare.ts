@@ -4,7 +4,7 @@ import { copyFileSync, mkdirSync, readFileSync, statSync, writeFileSync } from '
 import { join } from 'node:path';
 import { deserialize } from 'node:v8';
 import { consumerRoot } from '../../../scripts/probe/consumer-root.ts';
-import { memoryImports } from '../../../src/memory.ts';
+import { memoryImports } from '../../../src/memory/imports.ts';
 import { bundleFit } from '../plan.ts';
 
 const root = new URL('../../../', import.meta.url);

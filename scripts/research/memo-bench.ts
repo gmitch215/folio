@@ -7,10 +7,10 @@ import {
 	PARTITIONS,
 	seedPartitions
 } from '../../experiments/ranges/layout.ts';
-import { prepare } from '../../src/compiler.ts';
-import type { ManagedArtifact, ManagedLaneTransport } from '../../src/managed.ts';
-import { FolioLane, ManagedFolio } from '../../src/managed.ts';
-import { memoryImports } from '../../src/memory.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import type { ManagedArtifact, ManagedLaneTransport } from '../../src/managed/index.ts';
+import { FolioLane, ManagedFolio } from '../../src/managed/index.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
 
 // in-process measurement on one machine: lanes run on the main thread, so these numbers
 // compare work per record, not parallel wall time. usage: node memo-bench.ts <out.jsonl>

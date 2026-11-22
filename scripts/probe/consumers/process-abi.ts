@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { memoryImports } from '../../../src/memory.ts';
+import { memoryImports } from '../../../src/memory/imports.ts';
 import type { Consumer } from '../consumer.ts';
 
 const path = process.env.FOLIO_PROCESS_ABI;

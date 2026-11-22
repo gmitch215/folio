@@ -1,7 +1,12 @@
 import { spawn } from 'node:child_process';
 import { appendFileSync, existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { certifyOwnership } from '../../src/ownership.ts';
-import { Router, type RecordsCall, type RouterMode, type RouterOptions } from '../../src/router.ts';
+import { certifyOwnership } from '../../src/ownership/index.ts';
+import {
+	Router,
+	type RecordsCall,
+	type RouterMode,
+	type RouterOptions
+} from '../../src/routing/index.ts';
 import { ARENAS, DATA, OUT, RECORDS, SLICE, STACK_TOP, TABLE } from './ownership-alloc-modules.ts';
 import { image, layout, recordsOwnOf, type Row } from './ownership-redteam-run.ts';
 import { build, plan } from './ownership-redteam.ts';

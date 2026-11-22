@@ -18,7 +18,7 @@ const config = 'experiments/managed/phases/wrangler.jsonc';
 const account = process.env.FREE_CLOUDFLARE_ACCOUNT_ID;
 const token = process.env.FREE_CLOUDFLARE_API_TOKEN;
 assert.ok(account && token, 'Free account credentials are required');
-const creds = { account, token, label: 'FREE' as const };
+const creds = { account, token, label: 'Free plan' as const };
 const api = createApi(creds);
 const name = `cfw-folio-phases-${crypto.randomUUID().slice(0, 8)}`;
 const secret = crypto.randomUUID();
@@ -69,7 +69,7 @@ execFileSync(
 await save('run.json', {
 	name,
 	startedAt: new Date().toISOString(),
-	account: 'FREE',
+	account: 'Free plan',
 	budget: {
 		maximumRequests: 1200,
 		sqlCalls: 0,

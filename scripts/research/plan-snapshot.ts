@@ -8,7 +8,7 @@ import { pathToFileURL } from 'node:url';
 // default admission and at minimumRegionWork 0, with module bytes replaced by their digests
 const [root, out, ...extra] = process.argv.slice(2);
 if (!root || !out) throw new Error('usage: plan-snapshot.ts ROOT OUT [extra.wasm ...]');
-const { prepare } = await import(pathToFileURL(join(root, 'src/compiler.ts')).href);
+const { prepare } = await import(pathToFileURL(join(root, 'src/execution/compiler.ts')).href);
 
 const wasmIn = (dir: string) =>
 	existsSync(dir)

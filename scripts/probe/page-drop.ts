@@ -11,7 +11,7 @@ import {
 	encodeImage,
 	moduleDigest,
 	type MemoryImage
-} from '../../src/bake.ts';
+} from '../../src/memory/bake.ts';
 import { judge, scanImage, type Secret } from '../analyze/bakesecrets.ts';
 import {
 	bisectPoison,

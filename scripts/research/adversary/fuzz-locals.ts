@@ -1,4 +1,4 @@
-import { certifyStream } from '../../../src/certify.ts';
+import { certifyStream } from '../../../src/folds/certify.ts';
 import { buildModule, chunkCheck } from './lib.ts';
 
 // usage: node fuzz-locals.ts [SEED] [PROGRAMS]; differential fuzz of the loop summary: random

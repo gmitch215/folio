@@ -1,5 +1,5 @@
 import { writeFileSync } from 'node:fs';
-import { predictEnd } from '../../../src/affine.ts';
+import { predictEnd } from '../../../src/folds/affine.ts';
 import { buildWat, runLoop, runStream } from './lib.ts';
 
 // bulk differential fuzz of the shared evaluator: random supported-grammar trees, accepted ones are run on all byte values

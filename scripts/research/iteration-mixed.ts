@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { admissionSeam, iterationAdmissionConstants } from '../../src/iteration-admission.ts';
-import { Folio } from '../../src/node.ts';
+import { admissionSeam, iterationAdmissionConstants } from '../../src/iteration/admission.ts';
+import { Folio } from '../../src/node/index.ts';
 import { researchEnvironment } from './environment.ts';
 
 // pairs a serial native run, the library's decision (`automatic`) and a pool that always dispatches

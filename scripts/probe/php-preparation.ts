@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import { serialize } from 'node:v8';
-import { prepare } from '../../src/compiler.ts';
+import { prepare } from '../../src/execution/compiler.ts';
 
 /** Counts emitted functions independently of Binaryen's internal function list. */
 function census(bytes: Uint8Array) {

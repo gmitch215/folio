@@ -10,9 +10,13 @@ import {
 	stateSerial,
 	type ContextSubject,
 	type StateModel
-} from '../../src/affine-state.ts';
-import { recordBoundaries, verifyBoundaries, type BoundaryLog } from '../../src/boundaries.ts';
-import { TaskPool } from '../../src/tasks.ts';
+} from '../../src/folds/affine-state.ts';
+import {
+	recordBoundaries,
+	verifyBoundaries,
+	type BoundaryLog
+} from '../../src/folds/boundaries.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import {
 	buildContextSubjects,
 	buildCorpusContextSubjects,

@@ -1,7 +1,7 @@
 import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import type { AffineModel } from '../../src/affine.ts';
+import type { AffineModel } from '../../src/folds/affine.ts';
 
 // spike: certify a real clang loop (step inlined, conditioning pair) as a GF(2) byte stream
 export class Refusal extends Error {}

@@ -1,5 +1,5 @@
-import { predictEnd } from '../../src/affine.ts';
-import type { StreamCertificate } from '../../src/certify.ts';
+import { predictEnd } from '../../src/folds/affine.ts';
+import type { StreamCertificate } from '../../src/folds/certify.ts';
 
 // ground truth for a stream certificate: execution on real instances, never the certifier's own arithmetic
 

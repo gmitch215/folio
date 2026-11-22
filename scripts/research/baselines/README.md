@@ -25,4 +25,4 @@ Random testing on one byte is the paper's validation. The tool adds one check th
 
 Not covered: XOR and modular state (the paper's prototype has no such semiring), more than one reduction variable, loop decomposition, nested loops, array index inference.
 
-`morihata-drivers.ts OUTPUT.json` writes the per-driver table for the 38 development drivers and the hand kernels. The unit test is `tests/unit/baselines-morihata.test.ts`.
+`morihata-drivers.ts OUTPUT.json` writes the per-driver table for the 38 development drivers and the hand kernels. The unit test is `tests/unit/scripts/research/baselines/morihata.test.ts`.

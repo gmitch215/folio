@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
 import { join } from 'node:path';
-import { prepareContext, type PreparedContext } from '../../src/compiler.ts';
+import { prepareContext, type PreparedContext } from '../../src/execution/compiler.ts';
 import { ordinary, tasks } from './corpus-mechanisms.ts';
 import { kernelContext, type ResetMode } from './corpus-worker.ts';
 import { corpusManifest } from './corpus.ts';

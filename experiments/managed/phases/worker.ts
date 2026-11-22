@@ -1,6 +1,6 @@
 import { DurableObject } from 'cloudflare:workers';
-import { decodeFrame, encodeFrame } from '../../../src/frames.ts';
-import { FolioLane, ManagedFolio } from '../../../src/managed.ts';
+import { FolioLane, ManagedFolio } from '../../../src/managed/index.ts';
+import { decodeFrame, encodeFrame } from '../../../src/remote/frames.ts';
 import artifact, { metadata } from '../artifact.ts';
 
 interface Env {

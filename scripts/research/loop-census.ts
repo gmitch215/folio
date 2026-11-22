@@ -1,7 +1,7 @@
 import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { predictEnd, probeAffine } from '../../src/affine.ts';
+import { predictEnd, probeAffine } from '../../src/folds/affine.ts';
 import { buildMiniz, buildSubjects } from './affine-build.ts';
 import { checkLoop, refusalOf } from './loop-check.ts';
 

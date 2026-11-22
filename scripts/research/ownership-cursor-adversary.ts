@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
-import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership.ts';
+import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership/index.ts';
 import { sameError } from './iteration-diff.ts';
 import {
 	allocModuleOf,

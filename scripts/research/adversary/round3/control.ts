@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream, type StreamCertificate } from '../../../../src/certify.ts';
+import { certifyStream, type StreamCertificate } from '../../../../src/folds/certify.ts';
 import { defaultOut } from '../../affine-build.ts';
 import { groundTruth } from '../../certify-ground.ts';
 import { buildC, buildWat, ground2, outDir, pickBase } from './lib.ts';

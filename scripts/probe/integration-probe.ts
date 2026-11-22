@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { memoryImports } from '../../src/memory.ts';
-import { Folio } from '../../src/node.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
+import { Folio } from '../../src/node/index.ts';
 
 const [tinyPath, corePath] = process.argv.slice(2);
 if (!tinyPath || !corePath)

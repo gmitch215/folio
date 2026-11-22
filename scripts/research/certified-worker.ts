@@ -1,7 +1,7 @@
 import { workerData } from 'node:worker_threads';
-import type { AffineLayout } from '../../src/affine.ts';
-import { serveCertified } from '../../src/certified.ts';
-import type { TaskLink } from '../../src/tasks.ts';
+import type { AffineLayout } from '../../src/folds/affine.ts';
+import { serveCertified } from '../../src/folds/certified.ts';
+import type { TaskLink } from '../../src/node/tasks.ts';
 
 const { link, module, memory, layout } = workerData as {
 	link: TaskLink;

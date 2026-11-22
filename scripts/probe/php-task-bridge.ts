@@ -1,8 +1,8 @@
-import { TaskError, TaskPool, serveTasks as serve, type TaskLink } from '../../src/tasks.ts';
+import { TaskError, TaskPool, serveTasks as serve, type TaskLink } from '../../src/node/tasks.ts';
 
 // explicit parallel API, not automatic extraction: PHP submits a named function plus serialized
 // arguments to a private PHP context in another thread and joins the serialized result.
-// The transport is src/tasks.ts; this file adds the PHP shim shapes and the per-task log.
+// The transport is src/node/tasks.ts; this file adds the PHP shim shapes and the per-task log.
 export interface TaskLog {
 	id: string;
 	worker: number;

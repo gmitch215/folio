@@ -6,7 +6,7 @@ import { cpus, loadavg } from 'node:os';
 import { basename, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { gzipSync } from 'node:zlib';
-import { bakeModule, captureImage, checkBaked, type MemoryImage } from '../../src/bake.ts';
+import { bakeModule, captureImage, checkBaked, type MemoryImage } from '../../src/memory/bake.ts';
 import { consumerRoot, resolveConsumer } from './consumer-root.ts';
 
 // can a booted Drupal heap reach a new instance faster than the interpreter boots? One script, two

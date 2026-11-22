@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import type { PreparedProgram } from '../../src/compiler.ts';
-import type { Folio } from '../../src/node.ts';
+import type { PreparedProgram } from '../../src/execution/compiler.ts';
+import type { Folio } from '../../src/node/index.ts';
 
 const archive = new URL('../../results/execution/admission/old-build-src.tar.gz', import.meta.url);
 const target = new URL('../../build/old-build/', import.meta.url);

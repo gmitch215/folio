@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { appendFileSync, copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { digest } from '../../../scripts/research/environment.ts';
-import { decodeImage } from '../../../src/bake.ts';
+import { decodeImage } from '../../../src/memory/bake.ts';
 import { createApi, credentials, retire, snapshot, spawnWrangler } from '../../lib/cloudflare.ts';
 import { parseDeployLog } from '../analyze.ts';
 
@@ -13,7 +13,7 @@ const selected = credentials({
 	FREE_CLOUDFLARE_ACCOUNT_ID: process.env.FREE_CLOUDFLARE_ACCOUNT_ID,
 	FREE_CLOUDFLARE_API_TOKEN: process.env.FREE_CLOUDFLARE_API_TOKEN
 });
-assert.equal(selected.label, 'FREE');
+assert.equal(selected.label, 'Free plan');
 const api = createApi(selected),
 	nonce = crypto.randomUUID().slice(0, 8),
 	directory = resolve(`experiments/bootimage/runs/folio-image-cost-${nonce}`);

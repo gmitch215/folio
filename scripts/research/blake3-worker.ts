@@ -1,7 +1,7 @@
 import { parentPort, workerData } from 'node:worker_threads';
-import type { PreparedContext } from '../../src/compiler.ts';
-import { InstanceCheckpoint } from '../../src/context.ts';
-import { serveTasks, type TaskLink } from '../../src/tasks.ts';
+import type { PreparedContext } from '../../src/execution/compiler.ts';
+import { InstanceCheckpoint } from '../../src/node/context.ts';
+import { serveTasks, type TaskLink } from '../../src/node/tasks.ts';
 
 export const BASE = 1 << 20;
 export const DATA = BASE + 65536;

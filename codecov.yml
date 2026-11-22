@@ -36,19 +36,25 @@ component_management:
   individual_components:
     - component_id: compiler
       name: folio/compiler
-      paths: ['src/compiler.ts', 'src/extract.ts', 'src/guards.ts']
+      paths: ['src/execution/compiler.ts', 'src/execution/extract.ts', 'src/execution/guards.ts']
     - component_id: execution
       name: folio/execution
-      paths: ['src/node.ts', 'src/coordinator.ts', 'src/transaction.ts', 'src/worker.ts']
+      paths:
+        [
+          'src/node/index.ts',
+          'src/execution/coordinator.ts',
+          'src/execution/transaction.ts',
+          'src/node/worker.ts'
+        ]
     - component_id: host
       name: folio/host
-      paths: ['src/host.ts', 'src/remote.ts']
+      paths: ['src/node/host.ts', 'src/remote/index.ts']
     - component_id: managed
       name: folio/managed
-      paths: ['src/managed.ts', 'src/frames.ts']
+      paths: ['src/managed/index.ts', 'src/remote/frames.ts']
     - component_id: support
       name: folio/support
-      paths: ['src/memory.ts', 'src/values.ts']
+      paths: ['src/memory/imports.ts', 'src/remote/values.ts']
 
 ignore:
   - 'tests/**/*'

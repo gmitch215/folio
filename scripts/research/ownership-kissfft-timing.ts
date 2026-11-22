@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { redirectOwnership } from '../../src/ownership-redirect.ts';
-import { certifyOwnership } from '../../src/ownership.ts';
+import { certifyOwnership } from '../../src/ownership/index.ts';
+import { redirectOwnership } from '../../src/ownership/redirect.ts';
 import { hostMath, moduleBytes, recordsOf, specOf, writeRecords } from './c21-common.ts';
 import { layoutOf } from './c21-kernels.ts';
 import { bootedImage, closeSliceRig, openSliceRig, slicesRun } from './ownership-slices-rig.ts';

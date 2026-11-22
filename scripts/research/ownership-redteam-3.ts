@@ -8,7 +8,7 @@ import {
 	statSync,
 	writeFileSync
 } from 'node:fs';
-import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership.ts';
+import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership/index.ts';
 import { sameError } from './iteration-diff.ts';
 import { ARENAS, DATA, OUT, RECORDS, SLICE, STACK_TOP, TABLE } from './ownership-alloc-modules.ts';
 import { assemble } from './ownership-modules.ts';
@@ -1460,12 +1460,15 @@ export async function evaluate3(p: Plan3, strip = true): Promise<Row3> {
 // #region runner
 
 const here = new URL(import.meta.url).pathname;
-const FREEZE = new URL('../../scratchpad/v11/w2/FREEZE.txt', import.meta.url).pathname;
+const FREEZE = new URL(
+	'../../results/certification/ownership-reaudit/mac/FREEZE.txt',
+	import.meta.url
+).pathname;
 const SOURCES = [
-	'src/ownership.ts',
-	'src/ownership-redirect.ts',
-	'src/ownership-slices.ts',
-	'src/router.ts'
+	'src/ownership/index.ts',
+	'src/ownership/redirect.ts',
+	'src/ownership/slices.ts',
+	'src/routing/index.ts'
 ];
 
 export function hashes() {

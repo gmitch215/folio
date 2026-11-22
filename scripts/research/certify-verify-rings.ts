@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-// one implementation per ring, none shared with src/certify.ts
+// one implementation per ring, none shared with src/folds/certify.ts
 
 export type W = 32 | 64;
 

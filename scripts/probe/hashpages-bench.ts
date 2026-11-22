@@ -1,4 +1,4 @@
-import { hashPages } from '../../src/continuation.ts';
+import { hashPages } from '../../src/memory/continuation.ts';
 
 const RUNS = 5;
 const rate = (mib: number, ms: number) => Number((mib / 1024 / (ms / 1000)).toFixed(3));

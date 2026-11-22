@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream, type StreamCertificate } from '../../src/certify.ts';
+import { certifyStream, type StreamCertificate } from '../../src/folds/certify.ts';
 import { buildMiniz, buildOutputSubjects, buildSubjects } from './affine-build.ts';
 import { mutants } from './certify-verify-mutants.ts';
 import { verifyCertificate, type VerifyOptions } from './certify-verify.ts';

@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import type { MemoryImage } from '../../src/bake.ts';
+import type { MemoryImage } from '../../src/memory/bake.ts';
 import { parseRows, readRaw, resultsRoot, stats, writeSummary, type Row } from './lib.ts';
 
 // page drop summary: which pages of a baked image hold dlmalloc free memory, and what a render

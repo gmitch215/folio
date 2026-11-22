@@ -3,8 +3,8 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { delimiter, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { prepare } from '../../src/compiler.ts';
-import { Folio } from '../../src/node.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { Folio } from '../../src/node/index.ts';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const adapters = join(root, 'scripts/research/cases');

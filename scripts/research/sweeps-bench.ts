@@ -1,7 +1,7 @@
 import { appendFileSync, existsSync, readFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
 import { Worker } from 'node:worker_threads';
-import { TaskPool } from '../../src/tasks.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import { researchEnvironment } from './environment.ts';
 import { buildSubjects, subjects, type SubjectName } from './sweeps-build.ts';
 import { bounds, fixedPoint, Instance, type Exec, type Guess } from './sweeps-engine.ts';

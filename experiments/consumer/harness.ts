@@ -1,5 +1,9 @@
-import { BrowserFolio, type BrowserProgram, type BrowserWorkerPort } from '../../src/browser.ts';
-import type { MemoryImport } from '../../src/memory.ts';
+import {
+	BrowserFolio,
+	type BrowserProgram,
+	type BrowserWorkerPort
+} from '../../src/browser/index.ts';
+import type { MemoryImport } from '../../src/memory/imports.ts';
 import { consumers } from './cases.ts';
 import { measureConsumer, type Arm, type Report, type Row } from './measure.ts';
 

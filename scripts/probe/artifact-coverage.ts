@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
-import { prepare } from '../../src/compiler.ts';
-import { memoryImports } from '../../src/memory.ts';
-import { Folio } from '../../src/node.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
+import { Folio } from '../../src/node/index.ts';
 
 // Coverage is artifact-specific. Host imports deliberately fail if an unexpected effect executes.
 const [output, ...paths] = process.argv.slice(2);

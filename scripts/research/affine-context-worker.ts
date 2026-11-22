@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { workerData } from 'node:worker_threads';
-import { serveContext, type ContextLayout } from '../../src/affine-state.ts';
-import type { TaskLink } from '../../src/tasks.ts';
+import { serveContext, type ContextLayout } from '../../src/folds/affine-state.ts';
+import type { TaskLink } from '../../src/node/tasks.ts';
 
 const { link, wasm, layout, context, state } = workerData as {
 	link: TaskLink;

@@ -3,7 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership.ts';
+import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership/index.ts';
 import { layoutOf, outDir, specs } from './c21-kernels.ts';
 import { sameError } from './iteration-diff.ts';
 import {

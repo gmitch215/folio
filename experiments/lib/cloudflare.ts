@@ -8,7 +8,7 @@ import { dirname, join } from 'node:path';
 export interface Credentials {
 	account: string;
 	token: string;
-	label: 'FREE' | 'SELECTED';
+	label: 'Free plan' | 'SELECTED';
 }
 
 export interface Snapshot {
@@ -43,7 +43,7 @@ export const isKind = (value: unknown): value is Kind =>
 export function credentials(env: Record<string, string | undefined> = process.env): Credentials {
 	for (const [prefix, label] of [
 		['FOLIO', 'SELECTED'],
-		['FREE', 'FREE']
+		['FREE', 'Free plan']
 	] as const) {
 		const account = env[`${prefix}_CLOUDFLARE_ACCOUNT_ID`];
 		const token = env[`${prefix}_CLOUDFLARE_API_TOKEN`];

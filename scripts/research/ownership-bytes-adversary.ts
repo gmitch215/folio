@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import type { OwnershipCertificate } from '../../src/ownership.ts';
+import type { OwnershipCertificate } from '../../src/ownership/index.ts';
 import { sameError } from './iteration-diff.ts';
 import {
 	allocModuleOf,
@@ -46,8 +46,8 @@ interface Row {
 
 // BYTES_CHECKER names another copy of the checker, to tell what a rule changed
 const { certifyOwnership } = (await import(
-	process.env.BYTES_CHECKER ?? '../../src/ownership.ts'
-)) as typeof import('../../src/ownership.ts');
+	process.env.BYTES_CHECKER ?? '../../src/ownership/index.ts'
+)) as typeof import('../../src/ownership/index.ts');
 const SEEDS = [1, 2, 3, 4, 5, 6];
 const probe = new URL('./ownership-stackidx-probe.ts', import.meta.url);
 const rows: Row[] = [];

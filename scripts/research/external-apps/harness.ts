@@ -4,9 +4,9 @@ import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs
 import { loadavg } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { prepare } from '../../../src/compiler.ts';
-import { Folio } from '../../../src/node.ts';
-import { CertificateCache, decide } from '../../../src/router.ts';
+import { prepare } from '../../../src/execution/compiler.ts';
+import { Folio } from '../../../src/node/index.ts';
+import { CertificateCache, decide } from '../../../src/routing/index.ts';
 
 export const median = (values: number[]) => {
 	const sorted = [...values].sort((a, b) => a - b);

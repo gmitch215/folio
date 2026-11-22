@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
-import { certifyOwnership, guardRecords } from '../../src/ownership.ts';
+import { certifyOwnership, guardRecords } from '../../src/ownership/index.ts';
 import { hostMath, moduleBytes, recordsOf, writeRecords } from './c21-common.ts';
 import { layoutOf, outDir, specs } from './c21-kernels.ts';
 

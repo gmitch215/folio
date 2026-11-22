@@ -1,6 +1,6 @@
-import { ownershipSlices, type OwnershipSlices } from '../../src/ownership-slices.ts';
-import type { OwnershipCertificate } from '../../src/ownership.ts';
-import type { OwnedSliceReport } from '../../src/slices.ts';
+import type { OwnershipCertificate } from '../../src/ownership/index.ts';
+import { ownershipSlices, type OwnershipSlices } from '../../src/ownership/slices.ts';
+import type { OwnedSliceReport } from '../../src/slices/index.ts';
 
 // shared by the slices gate and its timing: a pool over a certified module and the serial program to compare with
 export const importsUrl = new URL('./ownership-slices-imports.ts', import.meta.url);

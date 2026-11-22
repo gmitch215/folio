@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { prepare } from '../../src/compiler.ts';
-import { inlineLane } from '../../src/inline.ts';
-import { memoryImports } from '../../src/memory.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { inlineLane } from '../../src/iteration/inline.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
 import { helperSource, kernelSource } from './kernel.ts';
 
 const root = new URL('./build/', import.meta.url);
@@ -26,7 +26,7 @@ writeFileSync(new URL('metadata.json', root), `${JSON.stringify(metadata, null, 
 writeFileSync(
 	new URL('./artifact.ts', import.meta.url),
 	[
-		"import type { ManagedArtifact } from '../../src/managed.ts';",
+		"import type { ManagedArtifact } from '../../src/managed/index.ts';",
 		"import original from './build/original.wasm';",
 		"import coordinator from './build/coordinator.wasm';",
 		"import transactional from './build/transactional.wasm';",

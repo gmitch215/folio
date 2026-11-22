@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { certifyStream } from '../../src/certify.ts';
+import { certifyStream } from '../../src/folds/certify.ts';
 import { buildMiniz, buildOutputSubjects, buildSubjects } from './affine-build.ts';
 import { groundTruth } from './certify-ground.ts';
 import { build, mutants } from './split-sensitivity.ts';

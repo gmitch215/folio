@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream } from '../../src/certify.ts';
+import { certifyStream } from '../../src/folds/certify.ts';
 import { groundTruth } from './certify-ground.ts';
 
 // the stream certifier over a red team run directory (see redteam/run.ts), with ground truth by execution

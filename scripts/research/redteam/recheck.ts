@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { predictEnd } from '../../../src/affine.ts';
+import { predictEnd } from '../../../src/folds/affine.ts';
 import { moduleBytes, runLoop, runStream, type Row } from './lib.ts';
 
 // second ground truth for accepted modules: every byte value, random states, odd addresses, short lengths

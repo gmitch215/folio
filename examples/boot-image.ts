@@ -1,4 +1,4 @@
-import { bakeModule, captureImage } from '@gmitch215/folio/bake';
+import { bakeModule, captureImage } from '@gmitch215/folio/boot';
 import binaryen from 'binaryen';
 
 // Capture the memory a boot function leaves behind and bake it into the module, so a new instance

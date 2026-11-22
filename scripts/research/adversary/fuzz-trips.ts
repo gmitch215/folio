@@ -1,4 +1,4 @@
-import { certifyStream } from '../../../src/certify.ts';
+import { certifyStream } from '../../../src/folds/certify.ts';
 import { buildModule, chunkCheck } from './lib.ts';
 
 // usage: node fuzz-trips.ts; differential fuzz of the loop trip count: a counter i stepping by D

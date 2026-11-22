@@ -1,8 +1,8 @@
 import { DurableObject } from 'cloudflare:workers';
-import type { FrameIdentity } from '../../src/frames.ts';
-import { decodeFrame } from '../../src/frames.ts';
-import type { ManagedLaneTransport } from '../../src/managed.ts';
-import { FolioLane, ManagedFolio } from '../../src/managed.ts';
+import type { ManagedLaneTransport } from '../../src/managed/index.ts';
+import { FolioLane, ManagedFolio } from '../../src/managed/index.ts';
+import type { FrameIdentity } from '../../src/remote/frames.ts';
+import { decodeFrame } from '../../src/remote/frames.ts';
 import artifact, { metadata } from './artifact.ts';
 
 interface Env {

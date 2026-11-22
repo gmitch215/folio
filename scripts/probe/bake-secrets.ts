@@ -14,7 +14,7 @@ import {
 	ImageMismatchError,
 	type ApplyOptions,
 	type MemoryImage
-} from '../../src/bake.ts';
+} from '../../src/memory/bake.ts';
 import {
 	clusterSweep,
 	compareSweeps,

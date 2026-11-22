@@ -1,4 +1,4 @@
-import type { OwnershipOptions } from '../../src/ownership.ts';
+import type { OwnershipOptions } from '../../src/ownership/index.ts';
 import {
 	assemble,
 	iterWat,

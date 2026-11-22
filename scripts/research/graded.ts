@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
 import { join } from 'node:path';
-import { Folio } from '../../src/node.ts';
+import { Folio } from '../../src/node/index.ts';
 import { digest, researchEnvironment } from './environment.ts';
 
 const calls = 64;

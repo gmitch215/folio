@@ -1,4 +1,4 @@
-import { createTaskLinks } from '../../src/tasks.ts';
+import { createTaskLinks } from '../../src/node/tasks.ts';
 import { type ContextOptions, type Contexts, openContexts } from './php-contexts.ts';
 
 // explicit parallel API, not automatic extraction. The owner context (index 0) runs the request and

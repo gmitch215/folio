@@ -1,5 +1,5 @@
 import { parentPort, workerData } from 'node:worker_threads';
-import { serveTasks, type TaskInput, type TaskLink } from '../../src/tasks.ts';
+import { serveTasks, type TaskInput, type TaskLink } from '../../src/node/tasks.ts';
 
 const { index, link } = workerData as { index: number; link: TaskLink };
 const gate = new Int32Array(new SharedArrayBuffer(4));

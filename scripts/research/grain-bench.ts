@@ -4,8 +4,8 @@ import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
 import { join } from 'node:path';
 import { Worker } from 'node:worker_threads';
-import { prepareContext } from '../../src/compiler.ts';
-import { TaskPool } from '../../src/tasks.ts';
+import { prepareContext } from '../../src/execution/compiler.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import { grainContext } from './grain-worker.ts';
 
 const root = new URL('../../', import.meta.url).pathname;

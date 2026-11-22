@@ -1,8 +1,8 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { Worker } from 'node:worker_threads';
-import { predictEnd, probeAffine } from '../../src/affine.ts';
-import { chunkRanges } from '../../src/fold.ts';
-import { TaskPool } from '../../src/tasks.ts';
+import { chunkRanges } from '../../src/execution/fold.ts';
+import { predictEnd, probeAffine } from '../../src/folds/affine.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import { checkStream, toSharedImport } from './stream-check.ts';
 
 // usage: summary-coldstart.ts STREAM.wasm OUTPUT.json ; FOLIO_WIDTH and FOLIO_MIB size the run

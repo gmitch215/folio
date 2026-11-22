@@ -1,5 +1,5 @@
-import { decodeFrame } from '../../src/frames.ts';
-import type { ManagedLaneTransport } from '../../src/managed.ts';
+import type { ManagedLaneTransport } from '../../src/managed/index.ts';
+import { decodeFrame } from '../../src/remote/frames.ts';
 
 /** `FolioLane` takes at most this many calls in one request; the owner flushes at width x this. */
 export const callsPerRequest = 16;

@@ -5,7 +5,7 @@ import {
 	checkConfig,
 	type OwnershipCertificate,
 	type OwnershipOptions
-} from '../../src/ownership.ts';
+} from '../../src/ownership/index.ts';
 import { hostMath, moduleBytes, recordsOf, writeRecords } from './c21-common.ts';
 import { layoutOf, rng, specs } from './c21-kernels.ts';
 import { sameError } from './iteration-diff.ts';

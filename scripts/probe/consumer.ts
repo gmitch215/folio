@@ -3,8 +3,8 @@ import { appendFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { prepare } from '../../src/compiler.ts';
-import { Folio } from '../../src/node.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { Folio } from '../../src/node/index.ts';
 import { openOldBuild } from './old-build.ts';
 
 export interface Call {

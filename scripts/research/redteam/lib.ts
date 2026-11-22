@@ -1,7 +1,7 @@
 import binaryen from 'binaryen';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { predictEnd, probeAffine, type AffineModel } from '../../../src/affine.ts';
+import { predictEnd, probeAffine, type AffineModel } from '../../../src/folds/affine.ts';
 import { checkLoop } from '../loop-check.ts';
 import { checkStream } from '../stream-check.ts';
 

@@ -10,7 +10,7 @@ import {
 	checkBaked,
 	encodeImage,
 	ImageMismatchError
-} from '../../src/bake.ts';
+} from '../../src/memory/bake.ts';
 import { corpusManifest } from './corpus.ts';
 import { digest, researchEnvironment } from './environment.ts';
 

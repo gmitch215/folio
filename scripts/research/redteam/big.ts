@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { predictEnd } from '../../../src/affine.ts';
+import { predictEnd } from '../../../src/folds/affine.ts';
 import { moduleBytes, runLoop, runStream, type Row } from './lib.ts';
 
 // lengths above 2^20: every accepted module at 1048576 bytes (the whole 2 MiB memory above the 1 MiB offset)

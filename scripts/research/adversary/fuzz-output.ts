@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream, type StreamCertificate } from '../../../src/certify.ts';
+import { certifyStream, type StreamCertificate } from '../../../src/folds/certify.ts';
 import { groundTruth } from '../certify-ground.ts';
 import { buildWat, MEMORY32, mulberry, workDir } from './lib.ts';
 

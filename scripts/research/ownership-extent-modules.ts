@@ -12,7 +12,7 @@ import {
 	type AllocBase
 } from './ownership-alloc-modules.ts';
 
-// the shim byte loops as clang emits them for support-bulk.c; src/ownership.ts recognises their printed bodies
+// the shim byte loops as clang emits them for support-bulk.c; src/ownership/index.ts recognises their printed bodies
 export const SHIM_FUNCS = `
  (func $memcpy (param $0 i32) (param $1 i32) (param $2 i32) (result i32)
   (local $3 i32)

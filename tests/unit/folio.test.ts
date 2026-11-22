@@ -2,9 +2,9 @@ import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'vitest';
-import { prepare } from '../../src/compiler.ts';
-import { Folio } from '../../src/node.ts';
-import { SpeculationLimit, transaction } from '../../src/transaction.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { SpeculationLimit, transaction } from '../../src/execution/transaction.ts';
+import { Folio } from '../../src/node/index.ts';
 
 const source = readFileSync(new URL('../../build/fixture.wasm', import.meta.url));
 const program = prepare(source, { minimumRegionWork: 0 });

@@ -25,7 +25,7 @@ import {
 // addresses or loop bounds as controls; each certificate runs the private route and the in-place slice pool against serial
 // CHECKER=path loads another copy of the checker, and with it the route is not run (rule removal count)
 const { certifyOwnership } = await import(
-	process.env.CHECKER ?? new URL('../../src/ownership.ts', import.meta.url).href
+	process.env.CHECKER ?? new URL('../../src/ownership/index.ts', import.meta.url).href
 );
 const output = process.argv[2];
 if (output) writeFileSync(output, '', { flag: 'wx' });

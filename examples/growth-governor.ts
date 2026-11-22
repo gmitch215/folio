@@ -1,4 +1,4 @@
-import { governGrowth } from '@gmitch215/folio/growth-governor';
+import { governGrowth } from '@gmitch215/folio/memory';
 
 // Cap an Emscripten-style guest at 8 MiB. The glue tries the current size times 1.2, 1.1 and 1.05,
 // never below the request; the governor refuses every attempt that would pass the cap, so the

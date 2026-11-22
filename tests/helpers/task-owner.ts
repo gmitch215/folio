@@ -1,5 +1,5 @@
 import { parentPort, workerData } from 'node:worker_threads';
-import { TaskPool, peakConcurrency, type TaskLink } from '../../src/tasks.ts';
+import { TaskPool, peakConcurrency, type TaskLink } from '../../src/node/tasks.ts';
 
 const pool = new TaskPool(workerData.links as TaskLink[]);
 const results = pool.runSync([

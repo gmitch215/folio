@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Worker, parentPort, workerData } from 'node:worker_threads';
-import { prepareContext, type PreparedContext } from '../../src/compiler.ts';
-import { ContextResetError, InstanceCheckpoint } from '../../src/context.ts';
-import { TaskPool, serveTasks, type TaskLink } from '../../src/tasks.ts';
+import { prepareContext, type PreparedContext } from '../../src/execution/compiler.ts';
+import { ContextResetError, InstanceCheckpoint } from '../../src/node/context.ts';
+import { TaskPool, serveTasks, type TaskLink } from '../../src/node/tasks.ts';
 import { buildCorpus, corpusImports, corpusManifest, type BuiltKernel } from './corpus.ts';
 import { digest, researchEnvironment } from './environment.ts';
 

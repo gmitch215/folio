@@ -7,7 +7,7 @@ export const PAGES_PER_MIB = 16;
 
 const elasticDir = new URL('../../experiments/elastic-ladder/', import.meta.url);
 
-// sha256 of each prediction file, pinned in scratchpad/v11/w5/E2-LIVE-3.md before any day 3 run
+// sha256 of each prediction file, pinned before any day 3 run
 const prereg = {
 	C: {
 		file: 'day3-predictions.json',
@@ -88,9 +88,9 @@ export const routes: Route[] = [
 ];
 
 // platform meter minus linear memory, booted interpreter, Thunder (the stock probe gives 37, one deploy)
-// low: M1 ratcheted isolate stage S6, 163 at linear 106 (14-thunder-baseline-62.notes.md, M1 column)
-// central: B4 quiet probe, 185-186 at linear 99 (14-thunder-baseline-62.notes.md:82)
-// high: M2 stage S1 after a drop, 190 at linear 64 (14-thunder-baseline-62.notes.md, M2 column)
+// low: M1 ratcheted isolate stage S6, 163 at linear 106 (thunder baseline, M1 column)
+// central: B4 quiet probe, 185-186 at linear 99 (thunder baseline, B4 probe)
+// high: M2 stage S1 after a drop, 190 at linear 64 (thunder baseline, M2 column)
 export const meterOffsetMiB = {
 	low: 57,
 	central: 86.5,
@@ -100,7 +100,7 @@ export const meterOffsetMiB = {
 export type Scenario = keyof typeof meterOffsetMiB;
 export const scenarios = Object.keys(meterOffsetMiB) as Scenario[];
 
-// day 2 steps 4 and 9: 768 pages, 768 frames against 64 frames (E2-LIVE-2-RESULT.md, steps 4 and 9)
+// day 2 steps 4 and 9: 768 pages, 768 frames against 64 frames
 export const spillReadMs = (978.3 - 736.3) / 766;
 
 export function meterMiB(route: Route, scenario: Scenario) {

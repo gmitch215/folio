@@ -3,7 +3,7 @@ import {
 	type DurableObjectStorage,
 	runSlice,
 	type StopReason
-} from '../src/continuation.ts';
+} from '../src/memory/continuation.ts';
 
 // Runs the tests/c/continuation.c guest across alarm slices. The module is a wrangler binding:
 //   wasm_modules = { GUEST = "build/continuation.wasm" }

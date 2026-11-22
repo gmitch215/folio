@@ -1,6 +1,6 @@
 import { appendFileSync, existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { certifyStream } from '../../../../src/certify.ts';
+import { certifyStream } from '../../../../src/folds/certify.ts';
 import { mulberry } from '../lib.ts';
 import { modDir, placed, pointerSpots, resultDir, type Row } from './lib.ts';
 

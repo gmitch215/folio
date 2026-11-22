@@ -2,15 +2,15 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { admissionSeam, iterationAdmissionConstants } from '../../src/iteration-admission.ts';
-import { Folio } from '../../src/node.ts';
+import { admissionSeam, iterationAdmissionConstants } from '../../src/iteration/admission.ts';
+import { Folio } from '../../src/node/index.ts';
 import { researchEnvironment } from './environment.ts';
 
 // sweeps iteration size by trip count on the BLAKE3 consumer and pairs the library's own decision
 // (`automatic`) and a pool that always dispatches (`forced`) with a serial native run in the same
 // round. timings cover the call only; copying the inputs in is outside them, as it is for a
 // program whose memory already holds its data. `summary` flags every cell where the decision was
-// wrong and prints the numbers the two constants of src/iteration-admission.ts are fitted to.
+// wrong and prints the numbers the two constants of src/iteration/admission.ts are fitted to.
 
 const root = new URL('../../', import.meta.url).pathname;
 const BASE = 1 << 20;

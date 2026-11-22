@@ -83,7 +83,7 @@ export function describePlan(
 const paid = /workers.*(paid|standard|bundled|unbound)/i;
 
 /** Throws unless the account shows no paid Workers plan; an unreadable plan is accepted only for the Free pair. */
-export async function verifyFree(api: Api, label: 'FREE' | 'SELECTED') {
+export async function verifyFree(api: Api, label: 'Free plan' | 'SELECTED') {
 	try {
 		const subscriptions: any[] = await api('/subscriptions');
 		assert.ok(
@@ -95,7 +95,7 @@ export async function verifyFree(api: Api, label: 'FREE' | 'SELECTED') {
 		return { checked: true, products: subscriptions.map((row) => row.rate_plan?.id) };
 	} catch (error) {
 		if (!String(error).includes('Authentication error')) throw error;
-		assert.equal(label, 'FREE', 'cannot verify the Free plan for this account');
+		assert.equal(label, 'Free plan', 'cannot verify the Free plan for this account');
 		return {
 			checked: false,
 			reason: 'token lacks billing scope; account came from the Free pair'

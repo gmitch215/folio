@@ -4,9 +4,9 @@ import { appendFileSync, existsSync, readFileSync, realpathSync, writeFileSync }
 import { loadavg } from 'node:os';
 import { join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { prepare } from '../../src/compiler.ts';
-import { admissionSeam } from '../../src/iteration-admission.ts';
-import { Folio } from '../../src/node.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { admissionSeam } from '../../src/iteration/admission.ts';
+import { Folio } from '../../src/node/index.ts';
 import {
 	CertificateCache,
 	decide,
@@ -16,7 +16,7 @@ import {
 	type RouterCall,
 	type RouterMode,
 	type RouterOptions
-} from '../../src/router.ts';
+} from '../../src/routing/index.ts';
 import { assemble } from './ownership-modules.ts';
 
 // usage:

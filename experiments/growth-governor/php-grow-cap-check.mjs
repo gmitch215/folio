@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { governGrowth } from '../../src/growth-governor.ts';
+import { governGrowth } from '../../src/memory/growth-governor.ts';
 
 const ARMS = ['open', 'capped', 'capped-fit', 'capped-trycatch'];
 const arm = process.argv[2];

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { workerData } from 'node:worker_threads';
-import { serveTasks, type TaskLink } from '../../src/tasks.ts';
+import { serveTasks, type TaskLink } from '../../src/node/tasks.ts';
 import { base } from './sweeps-engine.ts';
 
 const { link, wasm, entry } = workerData as { link: TaskLink; wasm: string; entry: string };

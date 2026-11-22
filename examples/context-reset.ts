@@ -1,5 +1,4 @@
-import { prepareContext } from '@gmitch215/folio/compiler';
-import { InstanceCheckpoint } from '@gmitch215/folio/context';
+import { InstanceCheckpoint, prepareContext } from '@gmitch215/folio';
 import { readFileSync } from 'node:fs';
 
 // Run independent jobs on one private instance and reset it between them. The checkpoint compares

@@ -1,7 +1,7 @@
 import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import type { AffineModel } from '../../src/affine.ts';
+import type { AffineModel } from '../../src/folds/affine.ts';
 
 // binaryen throws a raw TypeError for kinds it cannot describe, such as nop
 const info = (expr: number) => {

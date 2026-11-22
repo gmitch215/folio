@@ -2,10 +2,10 @@ import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { prepare } from '../../src/compiler.ts';
-import { admissionSeam } from '../../src/iteration-admission.ts';
-import { iterationLogCeiling } from '../../src/iteration-layout.ts';
-import { Folio, type ExecutionReport } from '../../src/node.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { admissionSeam } from '../../src/iteration/admission.ts';
+import { iterationLogCeiling } from '../../src/memory/iteration-layout.ts';
+import { Folio, type ExecutionReport } from '../../src/node/index.ts';
 import { digest, researchEnvironment } from './environment.ts';
 
 export function random(seed: number) {

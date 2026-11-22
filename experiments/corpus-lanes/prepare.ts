@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { prepare } from '../../src/compiler.ts';
-import { memoryImports } from '../../src/memory.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
 import { drivers } from './drivers.ts';
 import { syntheticSource } from './synthetic.ts';
 
@@ -56,7 +56,7 @@ const entries = present.map(
 writeFileSync(
 	new URL('./artifact.ts', import.meta.url),
 	[
-		"import type { ManagedArtifact } from '../../src/managed.ts';",
+		"import type { ManagedArtifact } from '../../src/managed/index.ts';",
 		...imports,
 		`const metadata: Record<string, Required<Pick<ManagedArtifact, 'control' | 'memories'>> & { sourceSha256: string }> = ${JSON.stringify(built)};`,
 		'export const artifacts: Record<string, ManagedArtifact & { sourceSha256: string }> = {',

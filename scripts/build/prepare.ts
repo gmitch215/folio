@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
-import { prepare } from '../../src/compiler.ts';
+import { prepare } from '../../src/execution/compiler.ts';
 
 const build = (name: string) => new URL(`../../build/${name}`, import.meta.url);
 const encode = (value: unknown) =>

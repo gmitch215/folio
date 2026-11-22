@@ -3,11 +3,11 @@ import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import type { Tally, TimedTransport } from '../../experiments/corpus-lanes/measure.ts';
 import { emptyTally, measuring } from '../../experiments/corpus-lanes/measure.ts';
-import { prepare } from '../../src/compiler.ts';
-import { inlineLane } from '../../src/inline.ts';
-import type { ManagedArtifact, ManagedReport } from '../../src/managed.ts';
-import { FolioLane, ManagedFolio } from '../../src/managed.ts';
-import { memoryImports } from '../../src/memory.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { inlineLane } from '../../src/iteration/inline.ts';
+import type { ManagedArtifact, ManagedReport } from '../../src/managed/index.ts';
+import { FolioLane, ManagedFolio } from '../../src/managed/index.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
 import { clearOutput, hostMath, outputOf, recordsOf, specOf, writeRecords } from './c21-common.ts';
 import { layoutOf } from './c21-kernels.ts';
 

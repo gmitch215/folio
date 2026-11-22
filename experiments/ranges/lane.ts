@@ -1,5 +1,5 @@
 import { WorkerEntrypoint } from 'cloudflare:workers';
-import { FolioLane } from '../../src/managed.ts';
+import { FolioLane } from '../../src/managed/index.ts';
 import artifact from './artifact.ts';
 
 interface Env {

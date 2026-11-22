@@ -27,85 +27,21 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
-		"./node": {
-			"types": "./dist/node.d.ts",
-			"import": "./dist/node.js"
-		},
-		"./compiler": {
-			"types": "./dist/compiler.d.ts",
-			"import": "./dist/compiler.js"
-		},
-		"./remote": {
-			"types": "./dist/remote.d.ts",
-			"import": "./dist/remote.js"
-		},
-		"./host": {
-			"types": "./dist/host.d.ts",
-			"import": "./dist/host.js"
-		},
-		"./managed": {
-			"types": "./dist/managed.d.ts",
-			"import": "./dist/managed.js"
+		"./workers": {
+			"types": "./dist/workers.d.ts",
+			"import": "./dist/workers.js"
 		},
 		"./browser": {
 			"types": "./dist/browser.d.ts",
 			"import": "./dist/browser.js"
 		},
-		"./pages": {
-			"types": "./dist/pages.d.ts",
-			"import": "./dist/pages.js"
+		"./memory": {
+			"types": "./dist/memory.d.ts",
+			"import": "./dist/memory.js"
 		},
-		"./bake": {
-			"types": "./dist/bake.d.ts",
-			"import": "./dist/bake.js"
-		},
-		"./tasks": {
-			"types": "./dist/tasks.d.ts",
-			"import": "./dist/tasks.js"
-		},
-		"./slices": {
-			"types": "./dist/slices.d.ts",
-			"import": "./dist/slices.js"
-		},
-		"./fold": {
-			"types": "./dist/fold.d.ts",
-			"import": "./dist/fold.js"
-		},
-		"./context": {
-			"types": "./dist/context.d.ts",
-			"import": "./dist/context.js"
-		},
-		"./affine": {
-			"types": "./dist/affine.d.ts",
-			"import": "./dist/affine.js"
-		},
-		"./certify": {
-			"types": "./dist/certify.d.ts",
-			"import": "./dist/certify.js"
-		},
-		"./ownership": {
-			"types": "./dist/ownership.d.ts",
-			"import": "./dist/ownership.js"
-		},
-		"./ownership-redirect": {
-			"types": "./dist/ownership-redirect.d.ts",
-			"import": "./dist/ownership-redirect.js"
-		},
-		"./ownership-slices": {
-			"types": "./dist/ownership-slices.d.ts",
-			"import": "./dist/ownership-slices.js"
-		},
-		"./router": {
-			"types": "./dist/router.d.ts",
-			"import": "./dist/router.js"
-		},
-		"./certified": {
-			"types": "./dist/certified.d.ts",
-			"import": "./dist/certified.js"
-		},
-		"./growth-governor": {
-			"types": "./dist/growth-governor.d.ts",
-			"import": "./dist/growth-governor.js"
+		"./boot": {
+			"types": "./dist/boot.d.ts",
+			"import": "./dist/boot.js"
 		},
 		"./continuation": {
 			"types": "./dist/continuation.d.ts",

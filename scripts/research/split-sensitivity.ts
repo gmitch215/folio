@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { existsSync, writeFileSync } from 'node:fs';
 import { Worker, isMainThread, workerData } from 'node:worker_threads';
-import { foldAffine, probeAffine, serveAffine } from '../../src/affine.ts';
-import { TaskPool } from '../../src/tasks.ts';
+import { foldAffine, probeAffine, serveAffine } from '../../src/folds/affine.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import { checkStream } from './stream-check.ts';
 
 if (!isMainThread && workerData?.link)

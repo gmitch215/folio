@@ -6,9 +6,9 @@ import {
 	installPrefill,
 	reconstructCertified,
 	shareCertified
-} from '../../src/certified.ts';
-import { certifyStream, type StreamCertificate } from '../../src/certify.ts';
-import { TaskPool } from '../../src/tasks.ts';
+} from '../../src/folds/certified.ts';
+import { certifyStream, type StreamCertificate } from '../../src/folds/certify.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 
 // what it costs to make one artifact usable on the certified route, and what each call then saves
 // usage: certify-cost.ts MODULE.wasm ENTRY OUTPUT.json

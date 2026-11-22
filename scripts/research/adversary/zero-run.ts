@@ -1,5 +1,5 @@
-import { predictEnd } from '../../../src/affine.ts';
-import { certifyStream, type StreamCertificate } from '../../../src/certify.ts';
+import { predictEnd } from '../../../src/folds/affine.ts';
+import { certifyStream, type StreamCertificate } from '../../../src/folds/certify.ts';
 import { groundTruth } from '../certify-ground.ts';
 import { buildWat, MEMORY32, zeroRun } from './lib.ts';
 

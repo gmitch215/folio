@@ -1,6 +1,6 @@
 import { DurableObject } from 'cloudflare:workers';
-import type { ManagedLaneTransport, ManagedReport } from '../../src/managed.ts';
-import { FolioLane, ManagedFolio } from '../../src/managed.ts';
+import type { ManagedLaneTransport, ManagedReport } from '../../src/managed/index.ts';
+import { FolioLane, ManagedFolio } from '../../src/managed/index.ts';
 import { artifacts } from './artifact.ts';
 import { driverOf, entryOf, fill, layoutFor, outputBytes } from './drivers.ts';
 import type { Tally } from './measure.ts';

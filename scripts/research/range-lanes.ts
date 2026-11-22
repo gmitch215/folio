@@ -1,9 +1,9 @@
 import binaryen from 'binaryen';
 import { performance } from 'node:perf_hooks';
-import { prepare } from '../../src/compiler.ts';
-import type { ManagedArtifact, ManagedLaneTransport } from '../../src/managed.ts';
-import { FolioLane, ManagedFolio } from '../../src/managed.ts';
-import { memoryImports } from '../../src/memory.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import type { ManagedArtifact, ManagedLaneTransport } from '../../src/managed/index.ts';
+import { FolioLane, ManagedFolio } from '../../src/managed/index.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
 
 const partitionWords = 4096;
 const base = 65536;

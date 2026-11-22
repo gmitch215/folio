@@ -2,12 +2,12 @@ import binaryen from 'binaryen';
 import { createHash } from 'node:crypto';
 import { readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { predictEnd } from '../../../src/affine.ts';
+import { predictEnd } from '../../../src/folds/affine.ts';
 import {
 	certifyStream,
 	type CertificateRefusal,
 	type StreamCertificate
-} from '../../../src/certify.ts';
+} from '../../../src/folds/certify.ts';
 
 export const PAGE = 65536;
 export const BASE = 1 << 20;

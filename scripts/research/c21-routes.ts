@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { iterationRoute, stackRoute } from '../../src/extract.ts';
+import { iterationRoute, stackRoute } from '../../src/execution/extract.ts';
 import { specs } from './c21-kernels.ts';
 
 // what the stack route and the iteration route say about each corpus module as built

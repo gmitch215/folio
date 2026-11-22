@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { Folio } from '../../src/node.ts';
+import { Folio } from '../../src/node/index.ts';
 
 const encoded = JSON.parse(
 	readFileSync(new URL('../../build/probe.json', import.meta.url), 'utf8')

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { Folio } from '../../src/node.ts';
+import { Folio } from '../../src/node/index.ts';
 
 // one cold process per sample: Folio.open, then the first and second run of the BLAKE3 consumer
 // over `files` equal inputs of `size` bytes, each paired with a serial native run in the same

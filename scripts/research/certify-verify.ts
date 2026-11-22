@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import type { StreamCertificate } from '../../src/certify.ts';
+import type { StreamCertificate } from '../../src/folds/certify.ts';
 import { Machine, Mem, type Val } from './certify-verify-machine.ts';
 import {
 	MASK,

@@ -8,7 +8,7 @@ import {
 	peakConcurrency,
 	type TaskInput,
 	type TaskPoolOptions
-} from '../../src/tasks.ts';
+} from '../../src/node/tasks.ts';
 
 export interface Check {
 	name: string;

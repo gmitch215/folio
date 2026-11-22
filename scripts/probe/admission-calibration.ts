@@ -1,8 +1,8 @@
 import binaryen from 'binaryen';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { cpus, loadavg } from 'node:os';
-import { estimateWork } from '../../src/extract.ts';
-import { Folio } from '../../src/node.ts';
+import { estimateWork } from '../../src/execution/extract.ts';
+import { Folio } from '../../src/node/index.ts';
 
 interface Cell {
 	shape: 'compute' | 'stream';

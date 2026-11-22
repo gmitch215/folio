@@ -1,6 +1,6 @@
 import { DurableObject } from 'cloudflare:workers';
-import type { ManagedLaneTransport } from '../../src/managed.ts';
-import { FolioLane, ManagedFolio } from '../../src/managed.ts';
+import type { ManagedLaneTransport } from '../../src/managed/index.ts';
+import { FolioLane, ManagedFolio } from '../../src/managed/index.ts';
 import artifact, { helpers as helperModule, metadata } from './artifact.ts';
 import type { Fill, Helpers } from './layout.ts';
 import {

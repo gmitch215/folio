@@ -5,7 +5,7 @@ import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { predictEnd } from '../../src/affine.ts';
+import { predictEnd } from '../../src/folds/affine.ts';
 import { clang, env } from './affine-build.ts';
 import { checkStream, toSharedImport } from './stream-check.ts';
 

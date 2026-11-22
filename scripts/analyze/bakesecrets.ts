@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
-import { findInImage, type MemoryImage } from '../../src/bake.ts';
+import { findInImage, type MemoryImage } from '../../src/memory/bake.ts';
 import { parseRows, readRaw, resultsRoot, stats, writeSummary, type Row } from './lib.ts';
 
 // bake secrets summary from bake-secrets.ts rows: what a baked heap holds, whether a replay site's

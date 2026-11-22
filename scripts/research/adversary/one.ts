@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { certifyStream } from '../../../src/certify.ts';
+import { certifyStream } from '../../../src/folds/certify.ts';
 import { judge } from './lib.ts';
 
 // usage: node one.ts certify|judge FILE; one module per process so a parent can kill a wasm call

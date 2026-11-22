@@ -4,9 +4,9 @@ import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs
 import { loadavg } from 'node:os';
 import { join } from 'node:path';
 import { Worker } from 'node:worker_threads';
-import { prepare, prepareContext } from '../../src/compiler.ts';
-import { Folio } from '../../src/node.ts';
-import { TaskPool } from '../../src/tasks.ts';
+import { prepare, prepareContext } from '../../src/execution/compiler.ts';
+import { Folio } from '../../src/node/index.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import { BASE, DATA, contextPages } from './blake3-worker.ts';
 import { researchEnvironment } from './environment.ts';
 

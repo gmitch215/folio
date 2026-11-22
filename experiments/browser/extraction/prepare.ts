@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import ts from 'typescript';
-import { prepare } from '../../../src/compiler.ts';
-import { memoryImports } from '../../../src/memory.ts';
+import { prepare } from '../../../src/execution/compiler.ts';
+import { memoryImports } from '../../../src/memory/imports.ts';
 
 /** Builds browser-native assets with the repository's pinned TypeScript and Binaryen tooling. */
 export function browserExtractionAssets() {
@@ -15,14 +15,14 @@ export function browserExtractionAssets() {
 			compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext }
 		}).outputText;
 	return {
-		'/browser.js': ['application/javascript', compile('../../../src/browser.ts')],
+		'/browser.js': ['application/javascript', compile('../../../src/browser/index.ts')],
 		'/extraction-lane.js': [
 			'application/javascript',
-			compile('../../../src/browser-worker.ts')
+			compile('../../../src/browser/worker.ts')
 		],
 		'/extraction.js': [
 			'application/javascript',
-			compile('./probe.ts').replace("'../../../src/browser.ts'", "'/browser.js'")
+			compile('./probe.ts').replace("'../../../src/browser/index.ts'", "'/browser.js'")
 		],
 		'/extraction.json': [
 			'application/json',

@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { predictEnd } from '../../../../src/affine.ts';
-import { certifyStream, type StreamCertificate } from '../../../../src/certify.ts';
+import { predictEnd } from '../../../../src/folds/affine.ts';
+import { certifyStream, type StreamCertificate } from '../../../../src/folds/certify.ts';
 import { clang, env } from '../../affine-build.ts';
 import { groundTruth } from '../../certify-ground.ts';
 import { buildModule, MEMORY32, mulberry, sha256, zeroRun } from '../lib.ts';

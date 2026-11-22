@@ -3,8 +3,8 @@ import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { loadavg } from 'node:os';
 import { join } from 'node:path';
 import { Worker } from 'node:worker_threads';
-import { prepare, prepareContext, type PreparedContext } from '../../src/compiler.ts';
-import { TaskPool } from '../../src/tasks.ts';
+import { prepare, prepareContext, type PreparedContext } from '../../src/execution/compiler.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import { census } from '../probe/purity-census.ts';
 import { kernelContext, type ResetMode } from './corpus-worker.ts';
 import { corpusManifest } from './corpus.ts';

@@ -1,8 +1,8 @@
 import { build } from 'esbuild';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { prepare } from '../../src/compiler.ts';
-import { memoryImports } from '../../src/memory.ts';
+import { prepare } from '../../src/execution/compiler.ts';
+import { memoryImports } from '../../src/memory/imports.ts';
 
 const root = new URL('../../', import.meta.url);
 
@@ -55,7 +55,7 @@ export async function consumerAssets(names: string[]) {
 		},
 		'/lane.js': {
 			type: 'application/javascript',
-			text: await bundle('src/browser-worker.ts')
+			text: await bundle('src/browser/worker.ts')
 		}
 	};
 	for (const name of names) {

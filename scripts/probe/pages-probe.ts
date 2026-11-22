@@ -1,6 +1,11 @@
 import binaryen from 'binaryen';
 import assert from 'node:assert/strict';
-import { MemoryPageOwner, PageDirectory, pageBytes, type PageOwner } from '../../src/pages.ts';
+import {
+	MemoryPageOwner,
+	PageDirectory,
+	pageBytes,
+	type PageOwner
+} from '../../src/memory/pages.ts';
 
 // explicit bounded spans, not transparent wasm paging or a deployment benchmark
 const logicalPages = 128,

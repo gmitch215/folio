@@ -1,8 +1,8 @@
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
-import { redirectOwnership } from '../../src/ownership-redirect.ts';
-import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership.ts';
-import { SlicePool } from '../../src/slices.ts';
+import { certifyOwnership, type OwnershipCertificate } from '../../src/ownership/index.ts';
+import { redirectOwnership } from '../../src/ownership/redirect.ts';
+import { SlicePool } from '../../src/slices/index.ts';
 import { hostMath, moduleBytes, recordsOf, writeRecords, type Record_ } from './c21-common.ts';
 import { layoutOf, rng, specs } from './c21-kernels.ts';
 import { sameError } from './iteration-diff.ts';

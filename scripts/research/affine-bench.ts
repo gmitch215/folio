@@ -1,15 +1,15 @@
 import { appendFileSync, readFileSync } from 'node:fs';
 import { loadavg } from 'node:os';
 import { Worker } from 'node:worker_threads';
+import { crc32Combine, foldChunks } from '../../src/execution/fold.ts';
 import {
 	affineSerial,
 	foldAffine,
 	probeAffine,
 	type AffineLayout,
 	type AffineModel
-} from '../../src/affine.ts';
-import { crc32Combine, foldChunks } from '../../src/fold.ts';
-import { TaskPool } from '../../src/tasks.ts';
+} from '../../src/folds/affine.ts';
+import { TaskPool } from '../../src/node/tasks.ts';
 import { buildAdversarial, buildMiniz, buildSubjects } from './affine-build.ts';
 import { researchEnvironment } from './environment.ts';
 

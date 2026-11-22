@@ -19,7 +19,7 @@ import {
 	captureImage,
 	decodeImage,
 	encodeImage
-} from '../../../src/bake.ts';
+} from '../../../src/memory/bake.ts';
 import { imageDecision, normalizeHtml } from './policy.ts';
 
 const root = process.env.FOLIO_BOOTIMAGE_ROOT;

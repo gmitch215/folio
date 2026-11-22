@@ -14,7 +14,7 @@ import {
 	type RouterDecision,
 	type RouterMode,
 	type RouterOptions
-} from '../../../src/router.ts';
+} from '../../../src/routing/index.ts';
 import {
 	ARMS,
 	FINAL_DIR,
