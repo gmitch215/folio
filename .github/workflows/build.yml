@@ -41,6 +41,8 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Typecheck
         run: bun run typecheck
+      - name: Fetch the Miniz Source
+        run: sh scripts/build/miniz-source.sh
       - name: Unit Suite
         run: bun run test
       - name: Integration Suite on Local workerd
@@ -49,6 +51,8 @@ jobs:
           bun run test:integration
       - name: Build the Library
         run: bun run build
+      - name: Check the Worker Entry URLs
+        run: node scripts/build/api-surface.ts workers
       - name: Run the Example
         run: bun run example
       - name: Regenerate the Result Summaries

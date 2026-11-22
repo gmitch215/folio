@@ -44,6 +44,8 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Typecheck
         run: bun run typecheck
+      - name: Fetch the Miniz Source
+        run: sh scripts/build/miniz-source.sh
       - name: Unit Suite
         run: bun run test
       - name: Integration Suite

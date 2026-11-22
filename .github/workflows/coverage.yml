@@ -44,6 +44,7 @@ jobs:
         run: bun run build:c && bun run build:experiments
       - name: Run the Suites with Coverage
         run: |
+          sh scripts/build/miniz-source.sh
           export FOLIO_SQLITE_SOURCE="$(sh scripts/build/sqlite-source.sh)"
           bun run test:report
       - name: Upload Coverage to Codecov
