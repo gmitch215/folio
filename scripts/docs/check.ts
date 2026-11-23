@@ -107,7 +107,7 @@ const tokens = (theme: 'light' | 'dark') => {
 	const map = new Map<string, string>();
 	for (const file of [join(out, 'assets/style.css'), 'scripts/docs/render.css'])
 		for (const m of readFileSync(file, 'utf8').matchAll(
-			new RegExp(`--${theme}-([a-z-]+):\\s*(#[0-9a-fA-F]{3,6})\\s*;`, 'g')
+			new RegExp(`--${theme}-([a-z0-9-]+):\\s*(#[0-9a-fA-F]{3,6})\\s*;`, 'g')
 		))
 			map.set(m[1] ?? '', m[2] ?? '');
 	return map;
@@ -130,6 +130,12 @@ const pairs: [string, string, number, string][] = [
 	['color-focus-outline', 'color-background', 3, 'focus ring'],
 	['color-focus-outline', 'color-background-secondary', 3, 'focus ring on the tint'],
 	['color-focus-outline', 'color-accent', 3, 'focus ring on the active link'],
+	...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n): [string, string, number, string] => [
+		`hl-${n}`,
+		'code-background',
+		4.5,
+		'code highlight token'
+	]),
 	['docs-rule', 'color-background', 0, 'dividers and inactive link rail (decorative, no minimum)']
 ];
 let failed = 0;

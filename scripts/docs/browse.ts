@@ -218,14 +218,19 @@ const pages = {
 	module: 'documents/docs_modules_core.html',
 	advanced: 'documents/ADVANCED_USAGE.html',
 	report: 'documents/TECHNICAL_REPORT.html',
+	study: 'documents/docs_studies_continuation-across-events.html',
 	api: 'classes/index.Folio.html'
 };
 const widths = [360, 768, 1280];
 const say = (line: string) => console.log(line);
 
 for (const [name, path] of Object.entries(pages)) {
-	for (const width of widths) {
+	for (const [width, scheme] of widths.flatMap((w) => [
+		[w, 'light'] as const,
+		[w, 'dark'] as const
+	])) {
 		const page = await open(width, 900);
+		await page.scheme(scheme);
 		await page.goto(path);
 		await page.waitFor(
 			() =>
@@ -255,9 +260,15 @@ for (const [name, path] of Object.entries(pages)) {
 				.map((e) => `${e.tagName.toLowerCase()}[${(e.textContent ?? '').slice(0, 40)}]`)
 				.join(' ')
 		}));
-		await page.shot(`${name}-${width}.png`);
+		await page.evaluate(() =>
+			document
+				.querySelector('.docs-render, pre:has([class^="hl-"], span[style*="--hl-"])')
+				?.scrollIntoView({ behavior: 'instant', block: 'center' })
+		);
+		await sleep(300);
+		await page.shot(`${name}-${width}-${scheme}.png`);
 		say(
-			`shot ${name} ${width}: scrollWidth ${m.scroll} innerWidth ${m.inner} overflow ${m.scroll > m.inner} sidebar x,w ${m.sidebar} toc ${m.toc} diagrams ${m.diagrams} math ${m.math} fences ${m.source}${m.scroll > m.inner ? ` wide ${m.wide}` : ''} errors ${page.errors.length}${page.errors.length ? ` ${page.errors[0]}` : ''}`
+			`shot ${name} ${width} ${scheme}: scrollWidth ${m.scroll} innerWidth ${m.inner} overflow ${m.scroll > m.inner} sidebar x,w ${m.sidebar} toc ${m.toc} diagrams ${m.diagrams} math ${m.math} fences ${m.source}${m.scroll > m.inner ? ` wide ${m.wide}` : ''} errors ${page.errors.length}${page.errors.length ? ` ${page.errors[0]}` : ''}`
 		);
 		await page.close();
 	}
