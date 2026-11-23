@@ -1,7 +1,14 @@
 import binaryen from 'binaryen';
 import { expect, test } from 'vitest';
 import {
+	Pager,
+	physicalPagesFor,
+	type Layout,
+	type PageStore
+} from '../../../../scripts/research/elastic-pager.ts';
+import {
 	initTable,
+	SETTLE_BOUND_BYTES,
 	translate,
 	TranslateRefusal,
 	translationHost,
@@ -261,6 +268,100 @@ test('hoist lifts the lookup of a loop-invariant base out of a call-free loop', 
 	const moved = instantiate(hoisted.bytes, true);
 	expect(moved.exports.sum!(PAGE - 8, 5)).toBe(native.exports.sum!(PAGE - 8, 5));
 	expect(() => moved.exports.sum!(6 * PAGE, 2)).toThrow('page miss');
+});
+
+const evictLayout: Layout = {
+	tableBase: 4 * PAGE,
+	identity: [[0, 5]],
+	heapStart: 16,
+	frameRuns: [
+		[5, 9],
+		[12, Infinity]
+	]
+};
+
+class SpillStore implements PageStore {
+	pages = new Map<number, Uint8Array>();
+	storedBytes = 0;
+	read(page: number, into: Uint8Array) {
+		into.set(this.pages.get(page)!);
+	}
+	write(page: number, bytes: Uint8Array) {
+		this.pages.set(page, bytes.slice());
+	}
+}
+
+function hoistModule() {
+	const sum = (keys: number) => {
+		const params = Array.from({ length: keys }, (_, i) => `(param $p${i} i32)`).join(' ');
+		const reads = Array.from(
+			{ length: keys },
+			(_, i) => `(i32.load offset=8 (local.get $p${i}))`
+		);
+		return `(func (export "sum${keys}") ${params} (param $n i32) (result i32) (local $s i32)
+			(loop $l
+				(local.set $s (i32.add (local.get $s) ${reads.reduce((a, b) => `(i32.add ${a} ${b})`)}))
+				(local.set $n (i32.sub (local.get $n) (i32.const 1)))
+				(br_if $l (local.get $n)))
+			(local.get $s))`;
+	};
+	return assemble(
+		`(func (export "poke") (param i32 i32) (i32.store (local.get 0) (local.get 1)))${sum(2)}${sum(3)}`,
+		'(import "env" "memory" (memory 40))'
+	);
+}
+
+// a distinct word on each key page, `touch` pages written in between, then one run of the loop
+function hoistRun(frames: number, keys: number[], touch: number[], translated: boolean) {
+	const bytes = hoistModule();
+	const memory = new WebAssembly.Memory({
+		initial: Math.max(40, physicalPagesFor(evictLayout, frames))
+	});
+	const imports: WebAssembly.Imports = { env: { memory } };
+	let code = bytes;
+	let pager: Pager | undefined;
+	if (translated) {
+		pager = new Pager({
+			memory,
+			layout: evictLayout,
+			frames,
+			store: new SpillStore(),
+			logicalBytes: 64 * PAGE
+		});
+		code = translate(bytes, { tableBase: evictLayout.tableBase, hoist: true }).bytes;
+		imports.folio = pager.imports.folio;
+	}
+	const ex = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(code)), imports)
+		.exports as Record<string, (...args: number[]) => number>;
+	keys.forEach((page, i) => ex.poke!(page * PAGE + 8, 10 ** i));
+	for (const page of touch) ex.poke!(page * PAGE + 4, page);
+	const evictions = pager?.stats.evictions ?? 0;
+	try {
+		const value = ex[`sum${keys.length}`]!(...keys.map((page) => page * PAGE), 7);
+		return { value, evictions: (pager?.stats.evictions ?? 0) - evictions };
+	} catch (error) {
+		return {
+			trap: (error as Error).message,
+			evictions: (pager?.stats.evictions ?? 0) - evictions
+		};
+	}
+}
+
+test('hoisted loop keys that evict each other settle on frames that hold them all', () => {
+	const native = hoistRun(64, [20, 21], [], false);
+	expect(native.value).toBe(7 * 11);
+	const moved = hoistRun(2, [20, 21], [18, 20, 19], true);
+	expect(moved.evictions).toBeGreaterThan(0);
+	expect(moved.value).toBe(native.value);
+});
+
+test('a hoisted loop with more keys than frames traps and never reads a stale frame', () => {
+	const native = hoistRun(64, [20, 21, 22], [], false);
+	expect(native.value).toBe(7 * 111);
+	const moved = hoistRun(2, [20, 21, 22], [], true);
+	expect(moved.value).toBeUndefined();
+	expect(moved.trap).toContain(`(${SETTLE_BOUND_BYTES} bytes)`);
+	expect(hoistRun(3, [20, 21, 22], [], true).value).toBe(native.value);
 });
 
 test('floor checks no access, so a page the table does not hold reads like the original', () => {

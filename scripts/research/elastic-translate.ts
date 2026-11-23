@@ -8,6 +8,9 @@ export * from './elastic-translate-host.ts';
 const LAST_BYTE_OF_PAGE = 0x10000;
 // the last page of a 4 GiB space, which a 32-bit memory cannot hold
 const CACHE_EMPTY = -LAST_BYTE_OF_PAGE;
+const SETTLE_ROUNDS = 8;
+// byte count of the wrapped slow call that traps a hoisted loop whose keys never stay resident together
+export const SETTLE_BOUND_BYTES = 7770001;
 
 export interface TranslateOptions {
 	/** `call` sends every checked access through one shared helper, `inline` expands the lookup */
@@ -641,6 +644,55 @@ function run(
 			return keys.size ? { keys } : undefined;
 		};
 
+		// a later key's fault can evict the frame an earlier key took, so the deltas are compared with
+		// the table and every key is looked up again until they agree; nothing runs the pager in the loop
+		let settleCount = 0;
+		const settle = (keys: Key[]): number => {
+			const rounds = named('hn', i32);
+			const again = `folio_settle${settleCount++}`;
+			const baseOf = (key: Key) =>
+				key.add ? mod.i32.add(get(key.base), mod.i32.const(key.add)) : get(key.base);
+			const entryAt = (key: Key, extra: number) =>
+				tableLoad(() =>
+					mod.i32.add(get(key.base), mod.i32.const((key.add + key.offset + extra) | 0))
+				);
+			const agrees = (key: Key) => {
+				const first = mod.i32.eq(entryAt(key, 0), get(key.local));
+				return key.straddle
+					? mod.i32.and(first, mod.i32.eq(entryAt(key, key.bytes - 1), get(key.local)))
+					: first;
+			};
+			const all = keys.map(agrees).reduce((a, b) => mod.i32.and(a, b));
+			return mod.block(null, [
+				mod.local.set(rounds, mod.i32.const(0)),
+				mod.loop(
+					again,
+					mod.if(
+						mod.i32.eqz(all),
+						mod.block(null, [
+							mod.local.set(rounds, mod.i32.add(get(rounds), mod.i32.const(1))),
+							mod.if(
+								mod.i32.gt_u(get(rounds), mod.i32.const(SETTLE_ROUNDS)),
+								mod.block(null, [
+									mod.drop(
+										slowCall(() => mod.i32.const(-1), 1, SETTLE_BOUND_BYTES)
+									),
+									mod.unreachable()
+								])
+							),
+							...keys.map((key) =>
+								mod.local.set(
+									key.local,
+									slowCall(() => baseOf(key), key.offset, key.bytes)
+								)
+							),
+							mod.br(again)
+						])
+					)
+				)
+			]);
+		};
+
 		const stackBound = (e: number, set: Setter) => {
 			// pinned stack window: the new stack pointer must stay at or above the floor
 			const value = binaryen.GlobalSet.getValue(e);
@@ -779,6 +831,7 @@ function run(
 						);
 						stats.hoistedKeys++;
 					}
+					if (found.keys.size > 1) pre.push(settle([...found.keys.values()]));
 					stats.hoistedLoops++;
 					const level = rewrite(binaryen.Loop.getBody(e), (x) =>
 						binaryen.Loop.setBody(e, x)
