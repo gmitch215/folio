@@ -9,6 +9,7 @@ parameters and sample counts are recorded in the data.
 | [Execution](execution/README.md)         | Automatic extraction, scaling, placement, admission, ownership, routing, translation and elastic memory |
 | [Memory](memory/README.md)               | Shared backing, large arenas and page leases                                                            |
 | [Compatibility](compatibility/README.md) | Consumer modules, PHP rendering and source archives                                                     |
+| [Corpus](corpus/README.md)               | Independent kernels and drivers: admission, forced and explicit routes, outside programs, baselines     |
 | [Compiler](compiler/README.md)           | Preparation and generated-function counts                                                               |
 | [Tasks](tasks/README.md)                 | Explicit task pools, runtime compatibility and CPU topology                                             |
 | [PHP](php/README.md)                     | Requests, render work, SQL effects and deployment                                                       |

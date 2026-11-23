@@ -4,6 +4,8 @@ Corpus kernels as managed range lanes over Durable Objects. One owner Worker run
 with the `ranges` option and reaches four `LaneObject` instances per driver. See
 [METHOD.md](METHOD.md) for the question and the decision rules.
 
+## Running
+
 ```sh
 node experiments/corpus-lanes/prepare.ts                    # build and pin the artifacts
 node experiments/corpus-lanes/run.ts --dry-run              # plan, owner CPU estimate, list-rate price
@@ -18,5 +20,13 @@ skipped when absent. `FOLIO_CORPUS_ONLY` limits a live run to some driver ids, a
 
 `drivers.ts` holds the records and memory layout, `measure.ts` the batch sizing and the lane
 meter, `plan.ts` the schedule, price and decision rules, `coordinator.ts` the owner and lane
-object, and `local.ts` the local workerd harness. No live run is recorded for this project yet, and
-its typecheck needs the generated `artifact.ts`, so it is outside `bun run typecheck`.
+object, and `local.ts` the local workerd harness.
+
+## Output
+
+A live run writes its raw rows to the ignored `runs/` folder. No sanitized record exists.
+
+## Limits
+
+- No live run is recorded for this project.
+- Its typecheck needs the generated `artifact.ts`, so it is outside `bun run typecheck`.

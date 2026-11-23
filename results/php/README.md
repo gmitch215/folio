@@ -1,4 +1,6 @@
-# Php
+# PHP
+
+Requests, render work, SQL effects and deployment. See [Results](../README.md) for the layout and the verification command.
 
 - [deployment](deployment/README.md)
 - [serial](serial/README.md)

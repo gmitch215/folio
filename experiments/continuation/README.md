@@ -2,7 +2,8 @@
 
 Probes for running a Wasm guest across Durable Object alarm events: the CPU signal, JSPI chains,
 checkpoints into SQLite, isolate lifetimes, boundary commits and deferred checkpoints. Each arm is a
-Worker or a Node driver. Sanitized records are in [results/continuation](../../results/continuation/).
+Worker or a Node driver. Sanitized records are in [results/continuation](../../results/continuation/README.md).
+The PHP variant is [Continuation PHP](../continuation-php/README.md).
 
 | Arm                   | Question                                                                                                       | Environment     |
 | --------------------- | -------------------------------------------------------------------------------------------------------------- | --------------- |
@@ -32,7 +33,7 @@ The signal word is `__instance_signal` (1024). The runtime writes 24 to it short
 Local arms need no account:
 
 ```sh
-PATH=/opt/homebrew/opt/node/bin:$PATH node experiments/continuation/local/run.mjs
+node experiments/continuation/local/run.mjs
 node experiments/continuation/build.ts
 npx wrangler dev --config experiments/continuation/durable/wrangler.jsonc --port 8788
 node experiments/continuation/deferred/run.ts f0

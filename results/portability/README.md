@@ -1,5 +1,7 @@
 # Portability
 
+Host bridge, runtime capabilities and concurrency. See [Results](../README.md) for the layout and the verification command.
+
 - [host](host/README.md)
 - [capabilities](capabilities/README.md)
 - [site-concurrency](site-concurrency/README.md)

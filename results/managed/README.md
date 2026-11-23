@@ -1,5 +1,7 @@
 # Managed
 
+Copied-snapshot lane validation, lane concurrency, range lanes and SQLite lanes. See [Results](../README.md) for the layout and the verification command.
+
 - [validation](validation/README.md)
 - [phases](phases/README.md)
 - [state-loss](state-loss/README.md)

@@ -1,4 +1,4 @@
-# folds
+# Folds
 
 Chunked folds of a native kernel over a task pool, with the probes that establish the fold is
 valid. Node only: the pool runs on `worker_threads` through `node/tasks.ts`, and the certificates

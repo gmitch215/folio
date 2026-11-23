@@ -1,7 +1,8 @@
 # Experiments
 
-Executable probes for runtime capabilities, native sharing, managed execution and boot images.
-Sanitized records live under [results](../results/README.md). Each harness keeps its METHOD.md;
+Executable probes for runtime capabilities, native sharing, managed execution, boot images, storage
+resets, memory accounting and continuation across alarm events. Each folder has a README with its
+question, how to run it, what it produces and its limits. Sanitized records live under [results](../results/README.md). Each harness keeps its METHOD.md;
 raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup and recovery.
 
 | Harness                                        | Question                                                                                                  | Environment                                       |
@@ -20,7 +21,7 @@ raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup a
 | [Elastic Limits](elastic-limits/README.md)     | What do the platform's storage calls, stub hops, CPU caps and memory meter cost?                          | Workers and Durable Objects (Free)                |
 | [Elastic Ladder](elastic-ladder/README.md)     | Can one Durable Object run the 192 MiB dense program with its pages in its own SQLite, and at what cost?  | Durable Objects, Free plan and Paid plan accounts |
 | [Alarm Discipline](alarm-discipline/README.md) | Does moving an alarm earlier inside an event reset the object, and does committing first stop it?         | Durable Objects (paid)                            |
-| [Alarm Retirement](alarm-retirement/README.md) | Which alarm shapes turn an isolate retirement into a storage reset, and which avoid it?                   | Durable Objects (paid)                            |
+| [Alarm Retirement](alarm-retirement/README.md) | Which alarm shapes turn an isolate retirement into a storage reset, and does an alarm floor avoid it?     | Durable Objects (paid)                            |
 | [Idle Floor](idle-floor/README.md)             | What fraction of small commits on an idle SQLite Durable Object fail with a reset over several hours?     | Durable Objects (paid)                            |
 | [Memory Ladder](memory-ladder/README.md)       | Which allocations count toward the Durable Object memory limit, and does a dropped one still count?       | Durable Objects (paid)                            |
 | [Commit Ladder](commit-ladder/README.md)       | Does one event's commit size reset a SQLite Durable Object, and does a blocked event lower the threshold? | Durable Objects (paid)                            |

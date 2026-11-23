@@ -1,4 +1,4 @@
-# routing
+# Routing
 
 Chooses the route for each call: serial, a window of the shared memory, an explicit records split, a tracked
 region, or an iteration dispatch. `Router` runs the chosen route and records why it chose it. `decide` returns

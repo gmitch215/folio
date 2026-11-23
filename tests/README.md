@@ -2,10 +2,10 @@
 
 | where                | what                                                                                                     | runs                                            |
 | -------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`                          | compiled to `build/*.wasm` by `bun run build:c` |
+| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`, `continuation.c`        | compiled to `build/*.wasm` by `bun run build:c` |
 | `tests/unit/`        | the gate, in folders that mirror `src/`; `scripts/` and `experiments/` tests sit under their own folders | `bun run test`, about 40 seconds in all         |
 | `tests/helpers/`     | worker entry points the task tests and `scripts/probe/tasks-runtime.ts` spawn: the task pool             | spawned by `tests/unit/node/` and `scripts/`    |
-| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                       | `bun run test:integration`, about 25 seconds    |
+| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes, continuation         | `bun run test:integration`, about 25 seconds    |
 | `tests/e2e/`         | live deploys to a Cloudflare account                                                                     | `bun run test:e2e`, skipped without credentials |
 
 `tests/setup.ts` rebuilds the C fixtures when a source file is newer than its output, so a fresh
@@ -17,14 +17,15 @@ Each C file is a separate artifact and a separate claim. `fixture.c` builds with
 holds the counted-loop kernels. `generalized.c` builds with ordinary inlining and holds the branchy
 entry with a scalar carried across iterations. `sharing.c` holds the atomic and aliasing controls.
 `records.c` holds one loop that calls a function per record, the shape the iteration route runs on
-workers, and backs `examples/iteration.ts`.
+workers, and backs `examples/iteration.ts`. `continuation.c` holds a checkpointable chain guest that
+exports `__instance_signal`.
 Fixture bytes must not depend on the machine's `PATH`; `tests/unit/scripts/build/fixtures.test.ts` checks that.
 
 ## Conventions
 
 - `tests/unit/` and `tests/integration/` mirror `src/`: `src/<folder>/<file>.ts` is tested by
   `<folder>/<file>.test.ts`, and a folder's `index.ts` by `index.test.ts`.
-- One spec file per domain. Extend `tests/unit/managed/index.test.ts` rather than adding a second
+- One spec file per domain. Extend `tests/unit/managed/index.test.ts` instead of adding a second
   managed spec.
 - The gate is hermetic. Nothing in `unit/` opens a network connection or a real Cloudflare binding.
 - Each unit spec file is meant to run in under 2 seconds on an idle machine. Under load some files take
@@ -48,5 +49,14 @@ too, instead of failing. The meter can under-read on Free, so the refusal text i
 ## Continuation
 
 `tests/unit/memory/continuation.test.ts` covers `src/memory/continuation.ts` on a fake storage and a memory
-seam, with no Durable Object. The continuation experiments are not tests; they are described in
+seam, with no Durable Object, including the loss detection of `runSlice`.
+`tests/integration/memory/continuation.test.ts` runs the same module in a Durable Object on local workerd.
+The continuation experiments are not tests; they are described in
 [experiments/continuation](../experiments/continuation/README.md).
+
+## Limits
+
+- `unit/` needs `clang` and `lld` for the C fixtures and Node 26 for the worker and JSPI tests.
+- `integration/` runs on local workerd. It does not show platform CPU overlap or deployed limits; the
+  report records those from live runs.
+- `e2e/` deploys only with the Cloudflare credentials in the environment.

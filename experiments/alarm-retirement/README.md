@@ -8,6 +8,9 @@ fresh object and on chains of up to 24 events.
 The measurements show which alarm shapes reset and which do not. They do not show the mechanism. The
 storage layer is closed source, so the arms describe behavior only.
 
+The `floor-*` files in this folder are a second set of harnesses for the alarm floor, the CPU dose
+and the idle-request questions. [Floor Harnesses](#floor-harnesses) lists them.
+
 ## Layout
 
 | Path                           | What it is                                                    |
@@ -66,6 +69,44 @@ bun experiments/alarm-retirement/summarize.ts runs/chain
 `summarize.ts` takes one directory. Point it at a directory that holds `first-event.jsonl`, `chain.jsonl`,
 or both. Run the first-event driver and the chain driver into the same directory to get both tables
 from one run. Remove the Worker with `npx wrangler delete` when the run ends.
+
+## Floor Harnesses
+
+These harnesses ask how a request of length `L` seconds that arms an alarm `F` seconds ahead behaves
+on a fresh object, and what the CPU and storage waits inside the request change. Every driver reads
+`WORKER_URL` and `OUT` from the environment and refuses to run without them. Each `.sh` script
+snapshots the account's Worker names, deploys one named Worker, tails it, runs a smoke check, runs the
+driver, copies the records, deletes the Worker and snapshots again. They expect a directory holding
+copies of these files (`RIG_DIR`, default `$HOME/floor-rig`), `wrangler` on `PATH` and the account
+variables in the environment. Run them detached, because a run lasts hours.
+
+| Path                                             | What it is                                                                                        |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `floor-worker.mjs`, `floor-wrangler.jsonc`       | the Durable Object that burns nominal 250 ms slices for `L` seconds with an alarm `F` seconds out |
+| `floor-driver.mjs`                               | 12 cells of `L` (2, 4, 8) by `F` (1, 5, 10, 15), one fresh object per trial, shuffled             |
+| `floor-run.sh`                                   | deploys, smokes, drives and tears down the grid above                                             |
+| `floor-smoke.mjs`                                | three `L=2`, `F=15` requests that must finish within 1 s of 2 s                                   |
+| `floor-versions.mjs`                             | checks that the smoke requests ran one script version                                             |
+| `floor-tail.mjs`                                 | reads the pretty-printed `wrangler tail --format json` stream back into events                    |
+| `floor-analyze.mjs`                              | resets with Wilson intervals from `trials.jsonl`, `chains.jsonl` and `tail.jsonl`                 |
+| `floor-snap.mjs`                                 | writes the Worker script and namespace names of the account to `snap-<label>.json`                |
+| `floor-worker-idle.mjs`, `floor-idle-run.sh`     | the idle-request grid: `L` is wall time in 250 ms timer waits with no burn                        |
+| `floor-probe.mjs`, `floor-worker-probe.mjs`      | three requests per loop mode (`get`, `wait`, `both`) on fresh objects                             |
+| `floor-probe-run.sh`                             | one deploy that runs the loop-mode probe                                                          |
+| `floor-probe2.mjs`, `floor-worker-probe2.mjs`    | three requests for each pre-loop variant `A` to `E`                                               |
+| `floor-probe2-report.mjs`, `floor-probe2-run.sh` | one row per request with the error text, the first Floor frame and the tail alarm line            |
+| `floor-probe3.mjs`, `floor-worker-probe3.mjs`    | idle requests on three fresh objects per cell, with `(2,1)` as a positive control                 |
+| `floor-probe3-run.sh`                            | one deploy that runs the idle probe                                                               |
+| `floor-cpu-driver.mjs`, `floor-worker-cpu.mjs`   | CPU dose: no alarm, alarm armed before the loop, and warm back-to-back requests                   |
+| `floor-cpu-analyze.mjs`, `floor-cpu-run.sh`      | resets per cell and the measured CPU of each request from the tail                                |
+| `floor-cpu-smoke.mjs`                            | the smoke check for the CPU worker                                                                |
+| `floor-cpu2-driver.mjs`, `floor-worker-cpu2.mjs` | storage-yield arm and alarm-cadence arm, ten fresh objects per cell                               |
+| `floor-cpu2-analyze.mjs`, `floor-cpu2-run.sh`    | resets per cell and the sorted CPU of reset and ok requests per `C`                               |
+| `floor-cpu2-smoke.mjs`                           | the smoke check for the second CPU worker                                                         |
+| `floor-wrangler-*.jsonc`                         | one Wrangler config per worker above                                                              |
+
+The deployed results of the floor are in [Storage Resets and the Growth Governor](../../TECHNICAL_REPORT.md#storage-resets-and-the-growth-governor).
+The per-request rows of these runs are not exported to `results/`.
 
 ## Results
 

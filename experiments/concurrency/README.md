@@ -4,6 +4,8 @@ Whether four lane calls issued at once overlap on the platform, across service-b
 Worker, Durable Objects with and without location hints, and independent top-level requests. See
 [METHOD.md](METHOD.md) for the question, the predictions and the decision rule.
 
+## Running
+
 ```sh
 node experiments/concurrency/prepare.ts            # build the kernel
 node experiments/concurrency/local.ts [rounds]     # the arms on local workerd, harness check only
@@ -15,3 +17,13 @@ node experiments/concurrency/run.ts --analyze NAME # re-summarize a saved run
 `lane.ts` is the lane Worker, `coordinator.ts` the coordinator and the Durable Object class,
 `spin.ts` the shared kernel call, `plan.ts` the schedule, arithmetic, price and decision rule.
 `tests/integration/experiments/concurrency/concurrency.test.ts` runs the arms on local workerd.
+
+## Output
+
+A live run writes its raw rows to the ignored `runs/` folder. The sanitized record is
+[lane-concurrency](../../results/managed/lane-concurrency/README.md).
+
+## Limits
+
+- The local run checks the harness. Local workerd does not show platform overlap.
+- A live run needs a paid account and spends requests that the dry run prices first.

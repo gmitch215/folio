@@ -1,4 +1,4 @@
-# execution
+# Execution
 
 The compiler and run-time core of the parallel path. Everything here is portable: at run time the
 files import `binaryen` and each other, with no Node builtins.
@@ -12,3 +12,4 @@ files import `binaryen` and each other, with no Node builtins.
 - `transaction.ts` and `runs.ts`: speculative writes and their run encoding.
 - `import-order.ts`: restores the original import section after extraction.
 - `fold.ts`: chunked folds over a task pool. Exported from the root entry.
+- `types.ts`: the report and admission types shared by the routes, including `IterationAdmission`.

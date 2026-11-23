@@ -1,4 +1,4 @@
-# iteration
+# Iteration
 
 Runs the iterations of a loop of calls on worker threads, with ordered validation. Node only: the
 workers use `node:worker_threads`. Reached from `Folio` (the `.` entry) through `src/node/index.ts`;

@@ -1,5 +1,7 @@
 # Boot
 
+Boot images, delivery, eligibility, replay and residency. See [Results](../README.md) for the layout and the verification command.
+
 - [deployment](deployment/README.md)
 - [asset-delivery](asset-delivery/README.md)
 - [deployed-open](deployed-open/README.md)

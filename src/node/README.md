@@ -1,4 +1,4 @@
-# node
+# Node
 
 The Node execution layer: the `Folio` worker pool, the task pool, instance checkpoints and the execution host.
 
