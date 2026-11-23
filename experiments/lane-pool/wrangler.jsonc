@@ -1,0 +1,14 @@
+{
+	"name": "cfw-folio-lanepool",
+	"main": "worker.ts",
+	"compatibility_date": "2026-10-20",
+	"workers_dev": true,
+	"limits": { "cpu_ms": 5000 },
+	"durable_objects": {
+		"bindings": [
+			{ "name": "COORD", "class_name": "PoolCoordinator" },
+			{ "name": "LANES", "class_name": "PoolLane" }
+		]
+	},
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["PoolCoordinator", "PoolLane"] }]
+}
