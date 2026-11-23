@@ -1,0 +1,738 @@
+--- elastic-translate.ts (per-access translator)
++++ elastic-translate.ts (epoch groups)
+@@ -30,12 +30,23 @@
+ 	staticLimit?: number;
+ 	/** lowest stack pointer value the pinned stack window allows when `exempt` is set */
+ 	stackFloor?: number;
++	/** group checked accesses by base local: one residency check per group, a global epoch re-check after calls */
++	epoch?: boolean;
++	/** address of the i32 epoch word, default one entry past the table */
++	epochAddr?: number;
++	/** widest byte span one group check may cover */
++	maxSpan?: number;
+ }
+ 
+ export interface TranslateStats {
+ 	loads: number;
+ 	stores: number;
+-	sites: Record<'stack' | 'static' | 'hoisted' | 'checked', number>;
++	sites: Record<'stack' | 'static' | 'hoisted' | 'checked' | 'group', number>;
++	groups: number;
++	groupMembers: number;
++	groupSingletonsDropped: number;
++	groupReasons: Record<string, number>;
++	epochSites: number;
+ 	prologueChecks: number;
+ 	hoistedLoops: number;
+ 	hoistedKeys: number;
+@@ -161,8 +172,43 @@
+ 	}
+ }
+ 
+-type Class = 'stack' | 'static' | 'hoisted' | 'checked';
++type Class = 'stack' | 'static' | 'hoisted' | 'checked' | 'group';
+ 
++// the bound trap goes through the slow import with a pointer and offset that wrap, so the message
++// reads "address wrap ... (7770001 bytes)" on a host that has only the two original imports
++export const EPOCH_BOUND_BYTES = 7770001;
++const EPOCH_BOUND = 8;
++
++interface Member {
++	e: number;
++	D: number;
++	bytes: number;
++	store: boolean;
++	seq: number;
++}
++
++interface LoopRange {
++	start: number;
++	end: number;
++}
++
++interface Inst {
++	base: number;
++	members: Member[];
++	minD: number;
++	maxEnd: number;
++	seq: number;
++	t: number;
++	pre: Inst[];
++	preLoops: LoopRange[];
++}
++
++interface Pos {
++	seq: number;
++	avail: Inst[];
++	loops: LoopRange[];
++}
++
+ interface Key {
+ 	base: number;
+ 	add: number;
+@@ -184,7 +230,12 @@
+ 	const stats: TranslateStats = {
+ 		loads: 0,
+ 		stores: 0,
+-		sites: { stack: 0, static: 0, hoisted: 0, checked: 0 },
++		sites: { stack: 0, static: 0, hoisted: 0, checked: 0, group: 0 },
++		groups: 0,
++		groupMembers: 0,
++		groupSingletonsDropped: 0,
++		groupReasons: {},
++		epochSites: 0,
+ 		prologueChecks: 0,
+ 		hoistedLoops: 0,
+ 		hoistedKeys: 0,
+@@ -236,12 +287,25 @@
+ 		binaryen.none
+ 	);
+ 	const counters: Record<string, string> = {};
++	const epochMode = !!options.epoch;
++	if (epochMode && options.cache) throw new TranslateRefusal(['epoch groups with a cache']);
++	const epochAddr = options.epochAddr ?? tableBase + 4 * 65536;
++	const maxSpan = options.maxSpan ?? 4096;
+ 	if (options.count)
+-		for (const cls of ['stack', 'static', 'hoisted', 'checked', 'miss']) {
++		for (const cls of [
++			'stack',
++			'static',
++			'hoisted',
++			'checked',
++			'miss',
++			...(epochMode ? ['group', 'gchk', 'garena', 'gtable', 'epoch'] : [])
++		]) {
+ 			counters[cls] = `__folio_n_${cls}`;
+ 			mod.addGlobal(counters[cls]!, i32, true, mod.i32.const(0));
+ 			mod.addGlobalExport(counters[cls]!, counters[cls]!);
+ 		}
++	const bump = (name: string): number =>
++		mod.global.set(name, mod.i32.add(mod.global.get(name, i32), mod.i32.const(1)));
+ 
+ 	const tableLoad = (a: () => number) =>
+ 		mod.i32.load(
+@@ -283,6 +347,53 @@
+ 		mod.addFunction('folio_xl', binaryen.createType([i32, i32, i32]), i32, [i32, i32], body);
+ 	}
+ 
++	// arenas a group check may test: wide enough that size - span + 1 stays positive
++	const groupArenas = arenas.filter((a) => a.size >= maxSpan);
++	const groupMinLo = arenas.length ? Math.min(...arenas.map((a) => a.lo)) : 65536;
++
++	if (epochMode) {
++		// (b, m, span) -> delta of the page holding [b + m, b + m + span), or 0 inside an arena;
++		// the table path of a group check and every re-check go through it
++		const get = (k: number) => mod.local.get(k, i32);
++		let inside: number | undefined;
++		for (const { lo, size } of groupArenas) {
++			const hit = mod.i32.lt_u(
++				mod.i32.sub(get(3), mod.i32.const(lo | 0)),
++				mod.i32.sub(mod.i32.const((size + 1) | 0), get(2))
++			);
++			inside = inside === undefined ? hit : mod.i32.or(inside, hit);
++		}
++		const wrapped = mod.select(
++			mod.i32.ge_s(get(1), mod.i32.const(0)),
++			mod.i32.lt_u(get(3), get(0)),
++			mod.i32.gt_u(get(3), get(0))
++		);
++		const body = mod.block(
++			null,
++			[
++				mod.local.set(3, mod.i32.add(get(0), get(1))),
++				...(inside ? [mod.if(inside, mod.return(mod.i32.const(0)))] : []),
++				mod.local.set(
++					4,
++					tableLoad(() => get(3))
++				),
++				mod.if(
++					mod.i32.or(
++						mod.i32.or(mod.i32.eq(get(4), mod.i32.const(MISS_ENTRY)), wrapped),
++						mod.i32.gt_u(
++							mod.i32.and(get(3), mod.i32.const(0xffff)),
++							mod.i32.sub(mod.i32.const(LAST_BYTE_OF_PAGE), get(2))
++						)
++					),
++					mod.local.set(4, mod.call(imports.slow, [get(0), get(1), get(2)], i32))
++				),
++				get(4)
++			],
++			i32
++		);
++		mod.addFunction('folio_gt', binaryen.createType([i32, i32, i32]), i32, [i32, i32], body);
++	}
++
+ 	const spValue = (e: number): boolean =>
+ 		binaryen.getExpressionId(e) === binaryen.GlobalGetId &&
+ 		binaryen.GlobalGet.getName(e) === spName;
+@@ -297,7 +408,7 @@
+ 		const body = binaryen.Function.getBody(fn);
+ 		if (!body) continue;
+ 		const fname = binaryen.Function.getName(fn);
+-		if (fname === 'folio_xl') continue;
++		if (fname === 'folio_xl' || fname === 'folio_gt') continue;
+ 		const numParams = binaryen.expandType(binaryen.Function.getParams(fn)).length;
+ 
+ 		// locals whose every assignment is the stack pointer plus or minus a constant
+@@ -371,13 +482,95 @@
+ 		const E = () => named('e', i32);
+ 		const get = (k: number, type = i32) => mod.local.get(k, type);
+ 
++		// epoch groups: state shared between the analysis pass and the rewrite
++		const memberOf = new Map<number, Inst>();
++		const posOf = new Map<number, Pos>();
++		const keptSet = new Set<Inst>();
++		let needEs = false;
++		let curPos: number | undefined;
++		let labelCount = 0;
++		const epochNow = () => mod.i32.load(epochAddr, 4, mod.i32.const(0));
++		const liveOf = (p: Pos | undefined): Inst[] =>
++			p
++				? p.avail.filter(
++						(g) =>
++							keptSet.has(g) &&
++							(g.members.some((m) => m.seq > p.seq) ||
++								p.loops.some(
++									(l) =>
++										g.seq <= l.start &&
++										g.members.some((m) => m.seq > l.start && m.seq <= l.end)
++								))
++					)
++				: [];
++		// re-run the checks of the live groups, and `own` (the translation the caller is about to use),
++		// until the epoch holds still; a distinct trap past the bound
++		const recheck = (live: Inst[], own: (() => number)[] = []): number => {
++			needEs = true;
++			stats.epochSites++;
++			const es = named('es', i32);
++			const n = named('en', i32);
++			const again = `folio_ep${labelCount++}`;
++			const body = mod.block(null, [
++				mod.local.set(n, mod.i32.const(0)),
++				mod.loop(
++					again,
++					mod.block(null, [
++						mod.local.set(es, epochNow()),
++						...live.map((g) =>
++							mod.local.set(
++								g.t,
++								mod.i32.add(
++									get(g.base),
++									mod.call(
++										'folio_gt',
++										[get(g.base), mod.i32.const(g.minD), mod.i32.const(g.maxEnd - g.minD)],
++										i32
++									)
++								)
++							)
++						),
++						...own.map((f) => f()),
++						...(options.count ? [bump(counters.epoch!)] : []),
++						mod.if(
++							mod.i32.ne(epochNow(), get(es)),
++							mod.block(null, [
++								mod.local.set(n, mod.i32.add(get(n), mod.i32.const(1))),
++								mod.if(
++									mod.i32.gt_u(get(n), mod.i32.const(EPOCH_BOUND)),
++									mod.block(null, [
++										mod.drop(
++											mod.call(
++												imports.slow,
++												[
++													mod.i32.const(-1),
++													mod.i32.const(1),
++													mod.i32.const(EPOCH_BOUND_BYTES)
++												],
++												i32
++											)
++										),
++										mod.unreachable()
++									])
++								),
++								mod.br(again)
++							])
++						)
++					])
++				)
++			]);
++			return mod.if(mod.i32.ne(epochNow(), get(es)), body);
++		};
++
+ 		// the lookup of the address held in local P, offset o, into local `dest`
+ 		const lookup = (
+ 			o: number,
+ 			bytes: number,
+ 			straddle: boolean,
+ 			dest: number,
+-			pLocal: number
++			pLocal: number,
++			// lookups taken earlier that this one's fault can evict (the earlier keys of a hoisted loop)
++			earlier: (() => number)[] = []
+ 		): number[] => {
+ 			const out: number[] = [];
+ 			let a: () => number = () => get(pLocal);
+@@ -398,13 +591,20 @@
+ 					)
+ 				);
+ 			out.push(mod.local.set(dest, tableLoad(a)));
++			const after =
++				epochMode && curPos !== undefined ? liveOf(posOf.get(curPos)) : ([] as Inst[]);
++			const fault = () =>
++				mod.local.set(
++					dest,
++					slowCall(() => get(pLocal), o, bytes)
++				);
++			// the re-check can evict the frame this access just got, so it re-runs the lookup too
+ 			out.push(
+ 				mod.if(
+ 					slow,
+-					mod.local.set(
+-						dest,
+-						slowCall(() => get(pLocal), o, bytes)
+-					)
++					after.length || earlier.length
++						? mod.block(null, [fault(), recheck(after, [...earlier, fault])])
++						: fault()
+ 				)
+ 			);
+ 			return out;
+@@ -617,6 +817,243 @@
+ 			return keys.size ? { keys } : undefined;
+ 		};
+ 
++		// pass 1 of epoch groups: walk in evaluation order with the set of groups whose check has run
++		// on every path to the current point. A group is the first access to a base local after the
++		// last set of that local; later accesses it dominates join it. Anything else keeps the
++		// per-access code.
++		const writesIn = (e: number, out: Set<number>) => {
++			const id = binaryen.getExpressionId(e);
++			if (id === binaryen.LocalSetId) out.add(binaryen.LocalSet.getIndex(e));
++			children(e, id, (c) => writesIn(c, out), unknown);
++		};
++		const analyze = (root: number): Inst[] => {
++			type State = Map<number, Inst> | null;
++			let seq = 0;
++			let state: State = new Map();
++			const pending = new Map<string, Map<number, Inst>>();
++			const loopStack: LoopRange[] = [];
++			const insts: Inst[] = [];
++			const created = new Set<number>();
++			const copy = (s: State): State => (s ? new Map(s) : null);
++			const join = (a: State, b: State): State => {
++				if (!a) return copy(b);
++				if (!b) return copy(a);
++				const out = new Map<number, Inst>();
++				for (const [k, v] of a) if (b.get(k) === v) out.set(k, v);
++				return out;
++			};
++			const toLabel = (name: string) => {
++				if (!state || !name) return;
++				const prior = pending.get(name);
++				pending.set(name, prior ? (join(prior, state) as Map<number, Inst>) : new Map(state));
++			};
++			const snapshot = (): Pos => ({
++				seq,
++				avail: state ? [...state.values()] : [],
++				loops: [...loopStack]
++			});
++			const event = (e: number, isStore: boolean) => {
++				const s = ++seq;
++				const ptr = isStore ? binaryen.Store.getPtr(e) : binaryen.Load.getPtr(e);
++				const atomic = isStore ? binaryen.Store.isAtomic(e) : binaryen.Load.isAtomic(e);
++				const valueType = isStore
++					? binaryen.getExpressionType(binaryen.Store.getValue(e))
++					: binaryen.getExpressionType(e);
++				if (
++					binaryen.getExpressionType(ptr) === binaryen.unreachable ||
++					atomic ||
++					valueType === binaryen.v128 ||
++					(isStore && valueType === binaryen.unreachable)
++				)
++					return;
++				const o = isStore ? binaryen.Store.getOffset(e) : binaryen.Load.getOffset(e);
++				const bytes = isStore ? binaryen.Store.getBytes(e) : binaryen.Load.getBytes(e);
++				if (classify(ptr, o, bytes) !== 'checked') return;
++				posOf.set(e, snapshot());
++				const why = (r: string) => {
++					stats.groupReasons[r] = (stats.groupReasons[r] ?? 0) + 1;
++				};
++				const k = keyOf(ptr, o);
++				if (!k) return why('notBase');
++				if (!state) return why('unreachable');
++				const { base, add } = k;
++				if (o >= groupMinLo || add < -65536 || add > 65535 || (add < 0 && o > 0))
++					return why('offsetRange');
++				const D = add + o;
++				if (D >= groupMinLo || D < -65536) return why('offsetRange');
++				if (isStore) {
++					const value = binaryen.Store.getValue(e);
++					const vid = binaryen.getExpressionId(value);
++					const simple =
++						vid === binaryen.ConstId ||
++						vid === binaryen.LocalGetId ||
++						vid === binaryen.GlobalGetId;
++					if (!simple) {
++						const w = new Set<number>();
++						writesIn(value, w);
++						// the pointer was read before the value ran, so a value that moves the base cannot share
++						if (w.has(base)) return why('valueWritesBase');
++					}
++				}
++				const member: Member = { e, D, bytes, store: isStore, seq: s };
++				const inst = state.get(base);
++				if (inst) {
++					const minD = Math.min(inst.minD, D);
++					const maxEnd = Math.max(inst.maxEnd, D + bytes);
++					if (maxEnd - minD > maxSpan) return why('span');
++					inst.minD = minD;
++					inst.maxEnd = maxEnd;
++					inst.members.push(member);
++					memberOf.set(e, inst);
++				} else if (!created.has(base)) {
++					const fresh: Inst = {
++						base,
++						members: [member],
++						minD: D,
++						maxEnd: D + bytes,
++						seq: s,
++						t: -1,
++						pre: [...state.values()],
++						preLoops: [...loopStack]
++					};
++					created.add(base);
++					state.set(base, fresh);
++					insts.push(fresh);
++					memberOf.set(e, fresh);
++				} else why('notDominated');
++			};
++			const an = (e: number): void => {
++				const id = binaryen.getExpressionId(e);
++				switch (id) {
++					case binaryen.BlockId: {
++						const name = binaryen.Block.getName(e);
++						for (let k = 0, n = binaryen.Block.getNumChildren(e); k < n; k++)
++							an(binaryen.Block.getChildAt(e, k));
++						if (name && pending.has(name)) {
++							state = join(state, pending.get(name)!);
++							pending.delete(name);
++						}
++						return;
++					}
++					case binaryen.IfId: {
++						an(binaryen.If.getCondition(e));
++						const entry = copy(state);
++						an(binaryen.If.getIfTrue(e));
++						const afterThen = state;
++						state = entry;
++						const ifFalse = binaryen.If.getIfFalse(e);
++						if (ifFalse) an(ifFalse);
++						state = join(afterThen, state);
++						return;
++					}
++					case binaryen.LoopId: {
++						const range: LoopRange = { start: seq, end: seq };
++						if (state) {
++							const w = new Set<number>();
++							writesIn(binaryen.Loop.getBody(e), w);
++							for (const b of w) state.delete(b);
++						}
++						let planned = false;
++						if (options.hoist && !plan) {
++							const found = analyzeLoop(e);
++							if (found) {
++								plan = found;
++								planned = true;
++								posOf.set(e, snapshot());
++							}
++						}
++						loopStack.push(range);
++						an(binaryen.Loop.getBody(e));
++						loopStack.pop();
++						range.end = seq;
++						if (planned) plan = undefined;
++						return;
++					}
++					case binaryen.BreakId: {
++						const value = binaryen.Break.getValue(e);
++						const cond = binaryen.Break.getCondition(e);
++						if (value) an(value);
++						if (cond) an(cond);
++						toLabel(binaryen.Break.getName(e));
++						if (!cond) state = null;
++						return;
++					}
++					case binaryen.SwitchId: {
++						const value = binaryen.Switch.getValue(e);
++						if (value) an(value);
++						an(binaryen.Switch.getCondition(e));
++						for (let k = 0, n = binaryen.Switch.getNumNames(e); k < n; k++)
++							toLabel(binaryen.Switch.getNameAt(e, k));
++						toLabel(binaryen.Switch.getDefaultName(e));
++						state = null;
++						return;
++					}
++					case binaryen.ReturnId:
++						if (binaryen.Return.getValue(e)) an(binaryen.Return.getValue(e));
++						state = null;
++						return;
++					case binaryen.UnreachableId:
++						state = null;
++						return;
++					case binaryen.CallId:
++						for (let k = 0, n = binaryen.Call.getNumOperands(e); k < n; k++)
++							an(binaryen.Call.getOperandAt(e, k));
++						seq++;
++						posOf.set(e, snapshot());
++						return;
++					case binaryen.CallIndirectId:
++						for (let k = 0, n = binaryen.CallIndirect.getNumOperands(e); k < n; k++)
++							an(binaryen.CallIndirect.getOperandAt(e, k));
++						an(binaryen.CallIndirect.getTarget(e));
++						seq++;
++						posOf.set(e, snapshot());
++						return;
++					case binaryen.LocalSetId: {
++						an(binaryen.LocalSet.getValue(e));
++						const index = binaryen.LocalSet.getIndex(e);
++						state?.delete(index);
++						created.delete(index);
++						return;
++					}
++					case binaryen.GlobalSetId:
++						an(binaryen.GlobalSet.getValue(e));
++						return;
++					case binaryen.LoadId:
++						an(binaryen.Load.getPtr(e));
++						event(e, false);
++						return;
++					case binaryen.StoreId:
++						an(binaryen.Store.getPtr(e));
++						an(binaryen.Store.getValue(e));
++						event(e, true);
++						return;
++					case binaryen.UnaryId:
++						an(binaryen.Unary.getValue(e));
++						return;
++					case binaryen.BinaryId:
++						an(binaryen.Binary.getLeft(e));
++						an(binaryen.Binary.getRight(e));
++						return;
++					case binaryen.SelectId:
++						an(binaryen.Select.getIfTrue(e));
++						an(binaryen.Select.getIfFalse(e));
++						an(binaryen.Select.getCondition(e));
++						return;
++					case binaryen.DropId:
++						an(binaryen.Drop.getValue(e));
++						return;
++					case binaryen.MemoryGrowId:
++						an(binaryen.MemoryGrow.getDelta(e));
++						return;
++					default:
++						if (leaves.has(id)) return;
++						unknown.add(refused[id] ?? `expression kind ${id}`);
++				}
++			};
++			an(root);
++			return insts;
++		};
++
+ 		const stackBound = (e: number, set: Setter) => {
+ 			// pinned stack window: the new stack pointer must stay at or above the floor
+ 			const value = binaryen.GlobalSet.getValue(e);
+@@ -639,6 +1076,63 @@
+ 			);
+ 		};
+ 
++		// the check of a group: the translated base, from the arena compare or, outside every arena,
++		// from the shared table lookup
++		const checkExpr = (g: Inst): number => {
++			const b = () => get(g.base);
++			const m = g.minD;
++			const span = g.maxEnd - g.minD;
++			let outside: number | undefined;
++			for (const { lo, size } of groupArenas) {
++				const out = mod.i32.ge_u(
++					mod.i32.add(b(), mod.i32.const((m - lo) | 0)),
++					mod.i32.const((size - span + 1) | 0)
++				);
++				outside = outside === undefined ? out : mod.i32.and(outside, out);
++			}
++			const pre = liveOf({ seq: g.seq, avail: g.pre, loops: g.preLoops });
++			const table = mod.block(
++				null,
++				[
++					...(options.count ? [bump(counters.gtable!)] : []),
++					mod.local.set(
++						g.t,
++						mod.i32.add(
++							b(),
++							mod.call(
++								'folio_gt',
++								[b(), mod.i32.const(m), mod.i32.const(span)],
++								i32
++							)
++						)
++					),
++					...(pre.length ? [recheck([...pre, g])] : []),
++					get(g.t)
++				],
++				i32
++			);
++			const checked =
++				outside === undefined
++					? table
++					: mod.if(
++							outside,
++							table,
++							options.count ? mod.block(null, [bump(counters.garena!), b()], i32) : b()
++						);
++			return options.count
++				? mod.block(null, [bump(counters.gchk!), checked], i32)
++				: checked;
++		};
++		// the pointer of a group member: the translated base, plus the constant it already had
++		const memberPtr = (g: Inst, e: number, ptr: number): number => {
++			const plain = binaryen.getExpressionId(ptr) === binaryen.LocalGetId;
++			const first = g.members[0]!.e === e;
++			const base = first ? mod.local.tee(g.t, checkExpr(g), i32) : get(g.t);
++			return plain
++				? base
++				: mod.i32.add(base, mod.i32.const(constOf(binaryen.Binary.getRight(ptr))!));
++		};
++
+ 		const rewrite = (e: number, set: Setter): number => {
+ 			const id = binaryen.getExpressionId(e);
+ 			if (id === binaryen.LoadId) {
+@@ -657,6 +1151,13 @@
+ 				}
+ 				const o = binaryen.Load.getOffset(e);
+ 				const bytes = binaryen.Load.getBytes(e);
++				const member = memberOf.get(e);
++				if (member) {
++					stats.sites.group++;
++					binaryen.Load.setPtr(e, counted('group', memberPtr(member, e, ptr)));
++					return level;
++				}
++				curPos = e;
+ 				const cls = classify(ptr, o, bytes);
+ 				stats.sites[cls]++;
+ 				if (cls === 'checked')
+@@ -695,6 +1196,28 @@
+ 				}
+ 				const o = binaryen.Store.getOffset(e);
+ 				const bytes = binaryen.Store.getBytes(e);
++				const member = memberOf.get(e);
++				if (member) {
++					stats.sites.group++;
++					const grouped = counted('group', memberPtr(member, e, ptr));
++					const mid = binaryen.getExpressionId(value);
++					if (
++						mid === binaryen.ConstId ||
++						mid === binaryen.LocalGetId ||
++						mid === binaryen.GlobalGetId
++					) {
++						binaryen.Store.setPtr(e, grouped);
++						return level;
++					}
++					// the base is read after the value, so a re-check inside the value is seen
++					const depth = valueLevel + 1;
++					const tv = named(`sv${depth}`, valueType);
++					binaryen.Store.setPtr(e, grouped);
++					binaryen.Store.setValue(e, get(tv, valueType));
++					set(mod.block(null, [mod.local.set(tv, value), e]));
++					return depth;
++				}
++				curPos = e;
+ 				const cls = classify(ptr, o, bytes);
+ 				stats.sites[cls]++;
+ 				if (cls === 'stack' || cls === 'static') {
+@@ -730,7 +1253,9 @@
+ 				const found = analyzeLoop(e);
+ 				if (found) {
+ 					plan = found;
++					curPos = e;
+ 					const pre: number[] = [];
++					const taken: (() => number)[] = [];
+ 					for (const key of found.keys.values()) {
+ 						key.local = binaryen._BinaryenFunctionAddVar(fn, i32);
+ 						const p = P();
+@@ -740,8 +1265,22 @@
+ 								p,
+ 								key.add ? mod.i32.add(base, mod.i32.const(key.add)) : base
+ 							),
+-							...lookup(key.offset, key.bytes, key.straddle, key.local, p)
++							...lookup(key.offset, key.bytes, key.straddle, key.local, p, [...taken])
+ 						);
++						if (epochMode)
++							taken.push(() =>
++								mod.local.set(
++									key.local,
++									slowCall(
++										() =>
++											key.add
++												? mod.i32.add(get(key.base), mod.i32.const(key.add))
++												: get(key.base),
++										key.offset,
++										key.bytes
++									)
++								)
++							);
+ 						stats.hoistedKeys++;
+ 					}
+ 					stats.hoistedLoops++;
+@@ -762,10 +1301,54 @@
+ 			}
+ 			let level = 0;
+ 			children(e, id, (c, s) => (level = Math.max(level, rewrite(c, s))), unknown);
++			if (epochMode && (id === binaryen.CallId || id === binaryen.CallIndirectId)) {
++				const live = liveOf(posOf.get(e));
++				const type = binaryen.getExpressionType(e);
++				if (live.length && type !== binaryen.unreachable) {
++					const check = recheck(live);
++					if (type === binaryen.none) set(mod.block(null, [e, check]));
++					else {
++						if (binaryen.expandType(type).length !== 1)
++							throw new TranslateRefusal(['multivalue call with live groups']);
++						const r = named('cr', type);
++						set(
++							mod.block(
++								null,
++								[mod.local.set(r, e), check, mod.local.get(r, type)],
++								type
++							)
++						);
++					}
++				}
++			}
+ 			return level;
+ 		};
+ 
++		if (epochMode) {
++			for (const g of analyze(body)) {
++				if (g.members.length < 2) {
++					for (const m of g.members) memberOf.delete(m.e);
++					stats.groupSingletonsDropped++;
++					continue;
++				}
++				keptSet.add(g);
++				g.t = binaryen._BinaryenFunctionAddVar(fn, i32);
++				stats.groups++;
++				stats.groupMembers += g.members.length;
++			}
++		}
+ 		rewrite(body, (x) => binaryen.Function.setBody(fn, x));
++		if (needEs) {
++			const rewritten = binaryen.Function.getBody(fn);
++			binaryen.Function.setBody(
++				fn,
++				mod.block(
++					null,
++					[mod.local.set(named('es', i32), epochNow()), rewritten],
++					binaryen.getExpressionType(rewritten)
++				)
++			);
++		}
+ 		if (fnCache) {
+ 			const rewritten = binaryen.Function.getBody(fn);
+ 			binaryen.Function.setBody(

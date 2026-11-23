@@ -1,0 +1,34 @@
+--- harness/bench.orig.mjs	2026-11-22 23:45:16
++++ harness/bench.epcount.mjs	2026-11-22 23:45:35
+@@ -25245,0 +25246,15 @@
++var countersNow = () => {
++  if (!instanceExports) return null;
++  const out = {};
++  for (const [k, v] of Object.entries(instanceExports)) {
++    if (k.startsWith("q_")) out[k] = Number(v.value);
++    else if (k.startsWith("__folio_n_")) out[k.slice(10)] = v.value >>> 0;
++  }
++  return Object.keys(out).length ? out : null;
++};
++var countersDelta = (a, b) => {
++  if (!a || !b) return null;
++  const out = {};
++  for (const k of Object.keys(b)) out[k] = b[k] >= a[k] ? b[k] - a[k] : b[k] + 4294967296 - a[k];
++  return out;
++};
+@@ -25330 +25345 @@
+-var wasmPath = mode === "native" ? join(worker, ".interp/php8.5.tuned.wasm") : mode === "bcd" ? join(e2bArms, "bcd.wasm") : join(armsRoot, `${mode}.wasm`);
++var wasmPath = mode === "native" ? (process.env.COUNT_WASM ?? join(worker, ".interp/php8.5.tuned.wasm")) : mode === "bcd" ? join(e2bArms, "bcd.wasm") : join(armsRoot, `${mode}.wasm`);
+@@ -25489,0 +25505 @@
++    const counts0 = countersNow();
+@@ -25490,0 +25507 @@
++    const counts1 = countersNow();
+@@ -25508,0 +25526 @@
++      counts: countersDelta(counts0, counts1),
+@@ -25584,0 +25603 @@
++    const flushCounts0 = countersNow();
+@@ -25585,0 +25605 @@
++    const flushCounts1 = countersNow();
+@@ -25589 +25609 @@
+-    const out = { label: "request", ok: parsed.ok, flushed: parsed.flushed, wallMs: Math.round(performance.now() - t0), cpuMs: Math.round((cpu1.user + cpu1.system - cpu0.user - cpu0.system) / 1e3), queries: bridge.queryCount, memoryBytes: memory.buffer.byteLength };
++    const out = { label: "request", ok: parsed.ok, flushed: parsed.flushed, wallMs: Math.round(performance.now() - t0), cpuMs: Math.round((cpu1.user + cpu1.system - cpu0.user - cpu0.system) / 1e3), queries: bridge.queryCount, counts: countersDelta(flushCounts0, flushCounts1), memoryBytes: memory.buffer.byteLength };

@@ -1,0 +1,932 @@
+[
+ {
+  "route": "flush",
+  "nativeN": 10,
+  "nativeMedianMs": 917.5,
+  "renderHashesDistinct": 0,
+  "arms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.806,
+    "ms": [
+     1619,
+     1641,
+     1668,
+     1653,
+     1668,
+     1689,
+     1672,
+     1725,
+     1627,
+     1696
+    ],
+    "medianMs": 1668,
+    "ratios": [
+     1.722,
+     1.72,
+     1.851,
+     1.725,
+     1.811,
+     1.868,
+     1.856,
+     1.801,
+     1.78,
+     1.884
+    ],
+    "medianRatio": 1.806,
+    "minRatio": 1.72,
+    "maxRatio": 1.884,
+    "tau": 0.806,
+    "tauMin": 0.72,
+    "tauMax": 0.884,
+    "tauCi": [
+     0.722,
+     0.868
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": true
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.786,
+    "ms": [
+     1642,
+     1623,
+     1674,
+     1735,
+     1639,
+     1621,
+     1632,
+     1688,
+     1623,
+     1640
+    ],
+    "medianMs": 1639.5,
+    "ratios": [
+     1.747,
+     1.701,
+     1.858,
+     1.811,
+     1.78,
+     1.793,
+     1.811,
+     1.762,
+     1.776,
+     1.822
+    ],
+    "medianRatio": 1.786,
+    "minRatio": 1.701,
+    "maxRatio": 1.858,
+    "tau": 0.786,
+    "tauMin": 0.701,
+    "tauMax": 0.858,
+    "tauCi": [
+     0.747,
+     0.822
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": true
+   }
+  },
+  "cpuArms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.805,
+    "ms": [
+     1619,
+     1641,
+     1668,
+     1652,
+     1667,
+     1687,
+     1671,
+     1724,
+     1626,
+     1695
+    ],
+    "medianMs": 1667.5,
+    "ratios": [
+     1.724,
+     1.724,
+     1.853,
+     1.724,
+     1.81,
+     1.868,
+     1.857,
+     1.8,
+     1.779,
+     1.883
+    ],
+    "medianRatio": 1.805,
+    "minRatio": 1.724,
+    "maxRatio": 1.883,
+    "tau": 0.805,
+    "tauMin": 0.724,
+    "tauMax": 0.883,
+    "tauCi": [
+     0.724,
+     0.868
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.787,
+    "ms": [
+     1640,
+     1623,
+     1673,
+     1733,
+     1639,
+     1620,
+     1632,
+     1686,
+     1621,
+     1640
+    ],
+    "medianMs": 1639.5,
+    "ratios": [
+     1.747,
+     1.705,
+     1.859,
+     1.809,
+     1.78,
+     1.794,
+     1.813,
+     1.76,
+     1.774,
+     1.822
+    ],
+    "medianRatio": 1.787,
+    "minRatio": 1.705,
+    "maxRatio": 1.859,
+    "tau": 0.787,
+    "tauMin": 0.705,
+    "tauMax": 0.859,
+    "tauCi": [
+     0.747,
+     0.822
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "front",
+  "nativeN": 10,
+  "nativeMedianMs": 627,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.013,
+    "ms": [
+     1297,
+     1246,
+     1243,
+     1261,
+     1332,
+     1262,
+     1219,
+     1298,
+     1298,
+     1291
+    ],
+    "medianMs": 1276.5,
+    "ratios": [
+     2.072,
+     2.006,
+     1.97,
+     2.008,
+     2.078,
+     2.016,
+     1.935,
+     2.009,
+     2.145,
+     2.076
+    ],
+    "medianRatio": 2.013,
+    "minRatio": 1.935,
+    "maxRatio": 2.145,
+    "tau": 1.013,
+    "tauMin": 0.935,
+    "tauMax": 1.145,
+    "tauCi": [
+     0.97,
+     1.078
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.354,
+    "ms": [
+     1492,
+     1489,
+     1495,
+     1471,
+     1500,
+     1406,
+     1475,
+     1494,
+     1489,
+     1471
+    ],
+    "medianMs": 1489,
+    "ratios": [
+     2.383,
+     2.398,
+     2.369,
+     2.342,
+     2.34,
+     2.246,
+     2.341,
+     2.313,
+     2.461,
+     2.365
+    ],
+    "medianRatio": 2.354,
+    "minRatio": 2.246,
+    "maxRatio": 2.461,
+    "tau": 1.354,
+    "tauMin": 1.246,
+    "tauMax": 1.461,
+    "tauCi": [
+     1.313,
+     1.398
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": false
+   }
+  },
+  "cpuArms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.009,
+    "ms": [
+     1295,
+     1245,
+     1240,
+     1259,
+     1330,
+     1260,
+     1217,
+     1295,
+     1297,
+     1288
+    ],
+    "medianMs": 1274,
+    "ratios": [
+     2.069,
+     2.005,
+     1.965,
+     2.002,
+     2.078,
+     2.013,
+     1.929,
+     2.005,
+     2.144,
+     2.071
+    ],
+    "medianRatio": 2.009,
+    "minRatio": 1.929,
+    "maxRatio": 2.144,
+    "tau": 1.009,
+    "tauMin": 0.929,
+    "tauMax": 1.144,
+    "tauCi": [
+     0.965,
+     1.078
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.351,
+    "ms": [
+     1491,
+     1488,
+     1490,
+     1469,
+     1498,
+     1404,
+     1473,
+     1493,
+     1487,
+     1469
+    ],
+    "medianMs": 1487.5,
+    "ratios": [
+     2.382,
+     2.396,
+     2.361,
+     2.335,
+     2.341,
+     2.243,
+     2.334,
+     2.311,
+     2.458,
+     2.362
+    ],
+    "medianRatio": 2.351,
+    "minRatio": 2.243,
+    "maxRatio": 2.458,
+    "tau": 1.351,
+    "tauMin": 1.243,
+    "tauMax": 1.458,
+    "tauCi": [
+     1.311,
+     1.396
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "admin",
+  "nativeN": 10,
+  "nativeMedianMs": 1399.5,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.783,
+    "ms": [
+     2491,
+     2431,
+     2474,
+     2470,
+     2575,
+     2458,
+     2530,
+     2456,
+     2480,
+     2473
+    ],
+    "medianMs": 2473.5,
+    "ratios": [
+     1.788,
+     1.667,
+     1.748,
+     1.777,
+     1.828,
+     1.748,
+     1.858,
+     1.747,
+     1.795,
+     1.797
+    ],
+    "medianRatio": 1.783,
+    "minRatio": 1.667,
+    "maxRatio": 1.858,
+    "tau": 0.783,
+    "tauMin": 0.667,
+    "tauMax": 0.858,
+    "tauCi": [
+     0.747,
+     0.828
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": true
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.834,
+    "ms": [
+     2508,
+     2544,
+     2478,
+     2566,
+     2557,
+     2637,
+     2530,
+     2563,
+     2563,
+     2576
+    ],
+    "medianMs": 2560,
+    "ratios": [
+     1.8,
+     1.745,
+     1.751,
+     1.846,
+     1.815,
+     1.876,
+     1.858,
+     1.823,
+     1.855,
+     1.872
+    ],
+    "medianRatio": 1.834,
+    "minRatio": 1.745,
+    "maxRatio": 1.876,
+    "tau": 0.834,
+    "tauMin": 0.745,
+    "tauMax": 0.876,
+    "tauCi": [
+     0.751,
+     0.872
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": true
+   }
+  },
+  "cpuArms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.981,
+    "ms": [
+     2185,
+     2155,
+     2199,
+     2193,
+     2285,
+     2182,
+     2254,
+     2175,
+     2198,
+     2188
+    ],
+    "medianMs": 2190.5,
+    "ratios": [
+     1.968,
+     1.921,
+     1.981,
+     1.986,
+     2.028,
+     1.929,
+     2.053,
+     1.925,
+     1.989,
+     1.982
+    ],
+    "medianRatio": 1.981,
+    "minRatio": 1.921,
+    "maxRatio": 2.053,
+    "tau": 0.981,
+    "tauMin": 0.921,
+    "tauMax": 1.053,
+    "tauCi": [
+     0.925,
+     1.028
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.041,
+    "ms": [
+     2232,
+     2235,
+     2207,
+     2283,
+     2290,
+     2359,
+     2251,
+     2273,
+     2290,
+     2290
+    ],
+    "medianMs": 2278,
+    "ratios": [
+     2.011,
+     1.992,
+     1.988,
+     2.068,
+     2.032,
+     2.086,
+     2.05,
+     2.012,
+     2.072,
+     2.074
+    ],
+    "medianRatio": 2.041,
+    "minRatio": 1.988,
+    "maxRatio": 2.086,
+    "tau": 1.041,
+    "tauMin": 0.988,
+    "tauMax": 1.086,
+    "tauCi": [
+     0.992,
+     1.074
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "ladder",
+  "nativeN": 10,
+  "nativeMedianMs": 1840,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.853,
+    "ms": [
+     3447,
+     4205,
+     3350,
+     3394,
+     3323,
+     3421,
+     3437,
+     3393,
+     3461,
+     3361
+    ],
+    "medianMs": 3407.5,
+    "ratios": [
+     1.882,
+     2.283,
+     1.82,
+     1.865,
+     1.802,
+     1.833,
+     1.888,
+     1.842,
+     1.882,
+     1.839
+    ],
+    "medianRatio": 1.853,
+    "minRatio": 1.802,
+    "maxRatio": 2.283,
+    "tau": 0.853,
+    "tauMin": 0.802,
+    "tauMax": 1.283,
+    "tauCi": [
+     0.82,
+     0.888
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": true
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.83,
+    "ms": [
+     3324,
+     3299,
+     3293,
+     3494,
+     3351,
+     3418,
+     3442,
+     3427,
+     3398,
+     3341
+    ],
+    "medianMs": 3374.5,
+    "ratios": [
+     1.814,
+     1.791,
+     1.789,
+     1.92,
+     1.817,
+     1.832,
+     1.891,
+     1.86,
+     1.848,
+     1.828
+    ],
+    "medianRatio": 1.83,
+    "minRatio": 1.789,
+    "maxRatio": 1.92,
+    "tau": 0.83,
+    "tauMin": 0.789,
+    "tauMax": 0.92,
+    "tauCi": [
+     0.791,
+     0.891
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": true
+   }
+  },
+  "cpuArms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.991,
+    "ms": [
+     3144,
+     2907,
+     3049,
+     3098,
+     3022,
+     3113,
+     3140,
+     3094,
+     3157,
+     3063
+    ],
+    "medianMs": 3096,
+    "ratios": [
+     2.028,
+     1.872,
+     1.96,
+     2.025,
+     1.938,
+     1.985,
+     2.046,
+     1.992,
+     2.041,
+     1.99
+    ],
+    "medianRatio": 1.991,
+    "minRatio": 1.872,
+    "maxRatio": 2.046,
+    "tau": 0.991,
+    "tauMin": 0.872,
+    "tauMax": 1.046,
+    "tauCi": [
+     0.938,
+     1.041
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.984,
+    "ms": [
+     3036,
+     3014,
+     3007,
+     3191,
+     3055,
+     3125,
+     3150,
+     3132,
+     3105,
+     3041
+    ],
+    "medianMs": 3080,
+    "ratios": [
+     1.959,
+     1.941,
+     1.933,
+     2.086,
+     1.96,
+     1.993,
+     2.052,
+     2.017,
+     2.007,
+     1.976
+    ],
+    "medianRatio": 1.984,
+    "minRatio": 1.933,
+    "maxRatio": 2.086,
+    "tau": 0.984,
+    "tauMin": 0.933,
+    "tauMax": 1.086,
+    "tauCi": [
+     0.941,
+     1.052
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ },
+ {
+  "route": "login",
+  "nativeN": 10,
+  "nativeMedianMs": 499,
+  "renderHashesDistinct": 1,
+  "arms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.8,
+    "ms": [
+     912,
+     927,
+     875,
+     872,
+     878,
+     901,
+     911,
+     870,
+     918,
+     903
+    ],
+    "medianMs": 902,
+    "ratios": [
+     1.778,
+     1.847,
+     1.815,
+     1.751,
+     1.756,
+     1.873,
+     1.871,
+     1.776,
+     1.832,
+     1.785
+    ],
+    "medianRatio": 1.8,
+    "minRatio": 1.751,
+    "maxRatio": 1.873,
+    "tau": 0.8,
+    "tauMin": 0.751,
+    "tauMax": 0.873,
+    "tauCi": [
+     0.756,
+     0.871
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": true
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.038,
+    "ms": [
+     1005,
+     1019,
+     1014,
+     1049,
+     1023,
+     1006,
+     1017,
+     993,
+     973,
+     1016
+    ],
+    "medianMs": 1015,
+    "ratios": [
+     1.959,
+     2.03,
+     2.104,
+     2.106,
+     2.046,
+     2.091,
+     2.088,
+     2.027,
+     1.942,
+     2.008
+    ],
+    "medianRatio": 2.038,
+    "minRatio": 1.942,
+    "maxRatio": 2.106,
+    "tau": 1.038,
+    "tauMin": 0.942,
+    "tauMax": 1.106,
+    "tauCi": [
+     0.959,
+     1.104
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": true,
+    "meetsGate": false
+   }
+  },
+  "cpuArms": {
+   "ep-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 1.887,
+    "ms": [
+     858,
+     877,
+     825,
+     822,
+     828,
+     852,
+     861,
+     822,
+     864,
+     854
+    ],
+    "medianMs": 853,
+    "ratios": [
+     1.882,
+     1.927,
+     1.892,
+     1.827,
+     1.836,
+     1.972,
+     1.957,
+     1.856,
+     1.903,
+     1.861
+    ],
+    "medianRatio": 1.887,
+    "minRatio": 1.827,
+    "maxRatio": 1.972,
+    "tau": 0.887,
+    "tauMin": 0.827,
+    "tauMax": 0.972,
+    "tauCi": [
+     0.836,
+     0.957
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   },
+   "r-heap32": {
+    "n": 10,
+    "stalledPairs": 0,
+    "unfilteredMedianRatio": 2.143,
+    "ms": [
+     956,
+     971,
+     966,
+     999,
+     970,
+     960,
+     968,
+     946,
+     923,
+     964
+    ],
+    "medianMs": 965,
+    "ratios": [
+     2.096,
+     2.134,
+     2.216,
+     2.22,
+     2.151,
+     2.222,
+     2.2,
+     2.135,
+     2.033,
+     2.1
+    ],
+    "medianRatio": 2.143,
+    "minRatio": 2.033,
+    "maxRatio": 2.222,
+    "tau": 1.143,
+    "tauMin": 1.033,
+    "tauMax": 1.222,
+    "tauCi": [
+     1.096,
+     1.22
+    ],
+    "samples": 20,
+    "samplesAtLoadLimit": 0,
+    "claimGrade": false,
+    "meetsGate": false
+   }
+  }
+ }
+]

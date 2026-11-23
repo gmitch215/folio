@@ -30,6 +30,7 @@ Automatic extraction, scaling, placement, admission, ownership, routing, transla
 - [translation-tau-rig](translation-tau-rig/README.md)
 - [translation-check-elision](translation-check-elision/README.md)
 - [guard-count](guard-count/README.md)
+- [epoch-arm](epoch-arm/README.md)
 - [elastic-ladder-free-days](elastic-ladder-free-days/README.md)
 - [ownership-slice-gates](ownership-slice-gates/README.md)
 - [ownership-slice-rig](ownership-slice-rig/README.md)
