@@ -1,0 +1,8 @@
+{
+	"name": "folio-floor-b-1122",
+	"main": "floor-worker-idle.mjs",
+	"compatibility_date": "2026-09-20",
+	"workers_dev": true,
+	"durable_objects": { "bindings": [{ "name": "FLOOR", "class_name": "Floor" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["Floor"] }]
+}
