@@ -1,0 +1,38 @@
+--- bench.orig.mjs	2026-11-22 23:04:56
++++ bench.count.mjs	2026-11-22 23:05:10
+@@ -25243,6 +25243,8 @@
+ var TABLE_BASE = 4456448;
+ var hostCounts;
+ var instanceExports;
++var countersNow = () => instanceExports?.q_access ? { access: instanceExports.q_access.value, check: instanceExports.q_check.value, call: instanceExports.q_call.value } : null;
++var countersDelta = (a, b) => a && b && { access: Number(b.access - a.access), check: Number(b.check - a.check), call: Number(b.call - a.call) };
+ var curPhase = "boot";
+ var mark = (name) => {
+   curPhase = name;
+@@ -25327,7 +25329,7 @@
+ g.location ??= new URL("https://census.invalid/worker.mjs");
+ var { default: Factory } = await import(pathToFileURL(join(worker, ".interp/php8.5-worker.tuned.mjs")).href);
+ var translated = mode !== "native" && mode !== "emit" && mode !== "native-zma";
+-var wasmPath = mode === "native" ? join(worker, ".interp/php8.5.tuned.wasm") : mode === "bcd" ? join(e2bArms, "bcd.wasm") : join(armsRoot, `${mode}.wasm`);
++var wasmPath = mode === "native" ? (process.env.COUNT_WASM ?? join(worker, ".interp/php8.5.tuned.wasm")) : mode === "bcd" ? join(e2bArms, "bcd.wasm") : join(armsRoot, `${mode}.wasm`);
+ var bytes = readFileSync(wasmPath);
+ result.module = { arm: mode, bytes: bytes.length, sha256: hash(bytes) };
+ var module = new WebAssembly.Module(bytes);
+@@ -25487,7 +25489,9 @@
+     const t0 = performance.now();
+     const cpu0 = process.threadCpuUsage();
+     const queries0 = bridge.queryCount;
++    const counts0 = countersNow();
+     const raw = await run2(renderPage(path, bins, false, { origin: "https://census.invalid", ...request }));
++    const counts1 = countersNow();
+     const rendered = JSON.parse(raw.slice(raw.indexOf("{")));
+     const wallMs = Math.round(performance.now() - t0);
+     const cpu1 = process.threadCpuUsage();
+@@ -25506,6 +25510,7 @@
+         String(rendered.html ?? "").replace(/js-view-dom-id-[0-9a-f]{64}/g, "js-view-dom-id-X").replace(/"permissionsHash":"[0-9a-f]{64}"/g, '"permissionsHash":"X"').replace(/-\d{6,10}(?=["'\s])/g, "-N").replace(/token=[A-Za-z0-9_-]{43}/g, "token=X").replace(/form-[A-Za-z0-9_-]{40,45}/gi, "form-X").replace(/name="form_token" value="[^"]*"/g, 'name="form_token" value="X"').replace(/"theme_token":"[^"]*"/g, '"theme_token":"X"')
+       ),
+       queries: bridge.queryCount - queries0,
++      counts: countersDelta(counts0, counts1),
+       wallMs,
+       cpuMs,
+       memoryBytes: memory.buffer.byteLength

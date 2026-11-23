@@ -1,0 +1,109 @@
+{
+ "hashMatchesPlainArm": true,
+ "plainNormalizedSha256": {
+  "admin/request": "075d2ff46df9d9e99b38c8ce6f9c6327ae6ee1935ee07472e561456666a8b80c",
+  "front/request": "607acccc80413af3de38246caa3e77fb4fbac37359652c7254dd615cf75ad08d",
+  "front/request2": "607acccc80413af3de38246caa3e77fb4fbac37359652c7254dd615cf75ad08d",
+  "front/request3": "607acccc80413af3de38246caa3e77fb4fbac37359652c7254dd615cf75ad08d"
+ },
+ "perRep": [
+  {
+   "route": "admin",
+   "label": "request",
+   "rep": "a2",
+   "accesses": 4404477769,
+   "checks": 1273034314,
+   "calls": 84735206,
+   "q": 0.3082702629483972,
+   "checksPerAccess": 0.28903184004241933,
+   "callsPerAccess": 0.01923842290597789
+  },
+  {
+   "route": "front",
+   "label": "request",
+   "rep": "a2",
+   "accesses": 1907973973,
+   "checks": 587832697,
+   "calls": 35754530,
+   "q": 0.32683214541941763,
+   "checksPerAccess": 0.3080926183053337,
+   "callsPerAccess": 0.01873952711408396
+  },
+  {
+   "route": "front",
+   "label": "request2",
+   "rep": "a2",
+   "accesses": 117009980,
+   "checks": 30893017,
+   "calls": 2333781,
+   "q": 0.28396550448089986,
+   "checksPerAccess": 0.26402035963086223,
+   "callsPerAccess": 0.019945144850037577
+  },
+  {
+   "route": "front",
+   "label": "request3",
+   "rep": "a2",
+   "accesses": 110657199,
+   "checks": 29524149,
+   "calls": 2233212,
+   "q": 0.28698865764711795,
+   "checksPerAccess": 0.26680730460202595,
+   "callsPerAccess": 0.02018135304509199
+  },
+  {
+   "route": "admin",
+   "label": "request",
+   "rep": "a3",
+   "accesses": 4404634455,
+   "checks": 1273135000,
+   "calls": 84735240,
+   "q": 0.3082821636784386,
+   "checksPerAccess": 0.28904441742146797,
+   "callsPerAccess": 0.0192377462569706
+  },
+  {
+   "route": "front",
+   "label": "request",
+   "rep": "a3",
+   "accesses": 1907982783,
+   "checks": 587834152,
+   "calls": 35754513,
+   "q": 0.32683138996647854,
+   "checksPerAccess": 0.3080919582910094,
+   "callsPerAccess": 0.01873943167546916
+  },
+  {
+   "route": "front",
+   "label": "request2",
+   "rep": "a3",
+   "accesses": 117011452,
+   "checks": 30895044,
+   "calls": 2333820,
+   "q": 0.2839795885961658,
+   "checksPerAccess": 0.2640343613546476,
+   "callsPerAccess": 0.019945227241518208
+  },
+  {
+   "route": "front",
+   "label": "request3",
+   "rep": "a3",
+   "accesses": 110643728,
+   "checks": 29515310,
+   "calls": 2233106,
+   "q": 0.28694275377272177,
+   "checksPerAccess": 0.266759901654796,
+   "callsPerAccess": 0.020182852117925743
+  }
+ ],
+ "static": {
+  "functions": 12310,
+  "accesses": 1243219,
+  "bases": 312673,
+  "calls": 95100,
+  "basesPerAccess": 0.252,
+  "callsPerAccess": 0.076,
+  "guardsPerAccess": 0.328
+ },
+ "staticQ": 0.32799772204253635
+}
