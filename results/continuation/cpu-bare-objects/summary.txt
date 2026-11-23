@@ -1,0 +1,116 @@
+fresh objects: reset rate per C, Wilson 95%
+arm    C     n  resets  other  rate    interval         median DO cpuMs  cpuMs/slice
+none   0     10  0       0      0.0%    0.0% to 27.8%    1                -
+none   0.25  10  0       0      0.0%    0.0% to 27.8%    315              315.0
+none   0.5   10  0       0      0.0%    0.0% to 27.8%    492              246.0
+none   1     10  2       0      20.0%   5.7% to 51.0%    559              139.8
+none   2     10  0       0      0.0%    0.0% to 27.8%    658              82.3
+none   4     10  5       0      50.0%   23.7% to 76.3%   1045             65.3
+alarm  0     5   0       0      0.0%    0.0% to 43.4%    0                -
+alarm  0.25  5   0       0      0.0%    0.0% to 43.4%    227              227.0
+alarm  0.5   5   0       0      0.0%    0.0% to 43.4%    498              249.0
+alarm  1     5   0       0      0.0%    0.0% to 43.4%    526              131.5
+alarm  2     5   0       0      0.0%    0.0% to 43.4%    664              83.0
+alarm  4     5   3       0      60.0%   23.1% to 88.2%   1038             64.9
+
+fresh requests: class, slices, actualMs, error, DO outcome, DO frame
+order=0 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=85 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=1 arm=alarm C=0.5 cls=ok slices=2 actualMs=17 codeUpdated=false | cpuMs=708 wallMs=755 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=2 arm=none C=0.25 cls=ok slices=1 actualMs=2 codeUpdated=false | cpuMs=315 wallMs=359 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=3 arm=none C=0.25 cls=ok slices=1 actualMs=1 codeUpdated=false | cpuMs=223 wallMs=268 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=4 arm=alarm C=2 cls=ok slices=8 actualMs=13 codeUpdated=false | cpuMs=664 wallMs=704 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=5 arm=alarm C=1 cls=ok slices=4 actualMs=11 codeUpdated=false | cpuMs=510 wallMs=566 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=6 arm=alarm C=0.5 cls=ok slices=2 actualMs=5 codeUpdated=false | cpuMs=483 wallMs=527 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=7 arm=none C=0.5 cls=ok slices=2 actualMs=4 codeUpdated=false | cpuMs=485 wallMs=518 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=8 arm=alarm C=2 cls=ok slices=8 actualMs=11 codeUpdated=false | cpuMs=808 wallMs=851 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=9 arm=none C=0.25 cls=ok slices=1 actualMs=2 codeUpdated=false | cpuMs=248 wallMs=294 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=10 arm=alarm C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1188 wallMs=1294 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=11 arm=none C=4 cls=ok slices=16 actualMs=19 codeUpdated=false | cpuMs=929 wallMs=978 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=12 arm=none C=2 cls=ok slices=8 actualMs=10 codeUpdated=false | cpuMs=607 wallMs=660 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=13 arm=alarm C=1 cls=ok slices=4 actualMs=6 codeUpdated=false | cpuMs=522 wallMs=575 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=14 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=1 wallMs=68 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=15 arm=alarm C=0.25 cls=ok slices=1 actualMs=2 codeUpdated=false | cpuMs=225 wallMs=305 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=16 arm=none C=0.25 cls=ok slices=1 actualMs=2 codeUpdated=false | cpuMs=229 wallMs=272 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=17 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=1 wallMs=95 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=18 arm=alarm C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=73 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=19 arm=none C=0.25 cls=ok slices=1 actualMs=3 codeUpdated=false | cpuMs=252 wallMs=279 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=20 arm=none C=0.5 cls=ok slices=2 actualMs=41 codeUpdated=false | cpuMs=956 wallMs=1014 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=21 arm=alarm C=4 cls=ok slices=16 actualMs=22 codeUpdated=false | cpuMs=973 wallMs=1022 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=22 arm=none C=0.25 cls=ok slices=1 actualMs=12 codeUpdated=false | cpuMs=433 wallMs=484 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=23 arm=alarm C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1184 wallMs=1217 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=24 arm=none C=1 cls=ok slices=4 actualMs=7 codeUpdated=false | cpuMs=738 wallMs=771 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=25 arm=none C=0.25 cls=ok slices=1 actualMs=11 codeUpdated=false | cpuMs=438 wallMs=478 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=26 arm=none C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1416 wallMs=1453 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=27 arm=none C=4 cls=ok slices=16 actualMs=21 codeUpdated=false | cpuMs=997 wallMs=1051 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=28 arm=none C=1 cls=ok slices=4 actualMs=12 codeUpdated=false | cpuMs=730 wallMs=834 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=29 arm=none C=0.5 cls=ok slices=2 actualMs=3 codeUpdated=false | cpuMs=480 wallMs=512 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=30 arm=none C=0.5 cls=ok slices=2 actualMs=4 codeUpdated=false | cpuMs=501 wallMs=533 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=31 arm=none C=2 cls=ok slices=8 actualMs=11 codeUpdated=false | cpuMs=698 wallMs=742 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=32 arm=alarm C=0.25 cls=ok slices=1 actualMs=4 codeUpdated=false | cpuMs=256 wallMs=333 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=33 arm=none C=2 cls=ok slices=8 actualMs=12 codeUpdated=false | cpuMs=658 wallMs=708 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=34 arm=none C=0.5 cls=ok slices=2 actualMs=3 codeUpdated=false | cpuMs=670 wallMs=707 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=35 arm=alarm C=1 cls=ok slices=4 actualMs=6 codeUpdated=false | cpuMs=540 wallMs=575 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=36 arm=alarm C=0.25 cls=ok slices=1 actualMs=3 codeUpdated=false | cpuMs=232 wallMs=280 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=37 arm=none C=0.25 cls=ok slices=1 actualMs=3 codeUpdated=false | cpuMs=315 wallMs=340 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=38 arm=alarm C=2 cls=ok slices=8 actualMs=10 codeUpdated=false | cpuMs=433 wallMs=497 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=39 arm=none C=1 cls=ok slices=4 actualMs=7 codeUpdated=false | cpuMs=335 wallMs=428 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=40 arm=alarm C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=1 wallMs=55 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=41 arm=none C=1 cls=ok slices=4 actualMs=10 codeUpdated=false | cpuMs=551 wallMs=733 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=42 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=104 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=43 arm=alarm C=2 cls=ok slices=8 actualMs=11 codeUpdated=false | cpuMs=649 wallMs=699 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=44 arm=none C=1 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=128 wallMs=167 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=45 arm=none C=1 cls=ok slices=4 actualMs=7 codeUpdated=false | cpuMs=189 wallMs=254 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=46 arm=none C=1 cls=ok slices=4 actualMs=8 codeUpdated=false | cpuMs=559 wallMs=601 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=47 arm=none C=4 cls=ok slices=16 actualMs=24 codeUpdated=false | cpuMs=988 wallMs=1047 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=48 arm=none C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1045 wallMs=1164 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=49 arm=none C=2 cls=ok slices=8 actualMs=12 codeUpdated=false | cpuMs=642 wallMs=765 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=50 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=58 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=51 arm=alarm C=0.25 cls=ok slices=1 actualMs=2 codeUpdated=false | cpuMs=227 wallMs=285 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=52 arm=none C=2 cls=ok slices=8 actualMs=10 codeUpdated=false | cpuMs=620 wallMs=673 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=53 arm=none C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1498 wallMs=1549 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=54 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=1 wallMs=90 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=55 arm=none C=4 cls=ok slices=16 actualMs=26 codeUpdated=false | cpuMs=896 wallMs=1052 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=56 arm=alarm C=2 cls=ok slices=8 actualMs=17 codeUpdated=false | cpuMs=909 wallMs=961 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=57 arm=none C=2 cls=ok slices=8 actualMs=10 codeUpdated=false | cpuMs=696 wallMs=752 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=58 arm=none C=0.5 cls=ok slices=2 actualMs=9 codeUpdated=false | cpuMs=983 wallMs=1010 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=59 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=1 wallMs=50 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=60 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=90 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=61 arm=alarm C=0.25 cls=ok slices=1 actualMs=2 codeUpdated=false | cpuMs=221 wallMs=304 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=62 arm=alarm C=1 cls=ok slices=4 actualMs=7 codeUpdated=false | cpuMs=526 wallMs=603 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=63 arm=none C=2 cls=ok slices=8 actualMs=9 codeUpdated=false | cpuMs=225 wallMs=301 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=64 arm=none C=4 cls=ok slices=16 actualMs=20 codeUpdated=false | cpuMs=882 wallMs=944 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=65 arm=none C=1 cls=ok slices=4 actualMs=6 codeUpdated=false | cpuMs=530 wallMs=583 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=66 arm=none C=2 cls=ok slices=8 actualMs=12 codeUpdated=false | cpuMs=717 wallMs=765 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=67 arm=none C=0.5 cls=ok slices=2 actualMs=4 codeUpdated=false | cpuMs=483 wallMs=510 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=68 arm=none C=1 cls=ok slices=4 actualMs=21 codeUpdated=false | cpuMs=794 wallMs=828 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=69 arm=alarm C=4 cls=ok slices=16 actualMs=19 codeUpdated=false | cpuMs=925 wallMs=979 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=70 arm=alarm C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=1 wallMs=74 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=71 arm=alarm C=0.5 cls=ok slices=2 actualMs=5 codeUpdated=false | cpuMs=498 wallMs=529 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=72 arm=none C=2 cls=ok slices=8 actualMs=10 codeUpdated=false | cpuMs=222 wallMs=351 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=73 arm=none C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1374 wallMs=1390 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=74 arm=alarm C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1038 wallMs=1081 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=75 arm=none C=4 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1847 wallMs=1988 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=76 arm=none C=0.5 cls=ok slices=2 actualMs=4 codeUpdated=false | cpuMs=492 wallMs=539 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=77 arm=none C=1 cls=reset slices=null actualMs=null codeUpdated=true | cpuMs=1017 wallMs=1037 outcome=exception loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 |Error: Durable Object reset because its code was updated. | at Floor.fetch (floor-worker-cpu.mjs:56:7)
+order=78 arm=none C=0.25 cls=ok slices=1 actualMs=2 codeUpdated=false | cpuMs=320 wallMs=362 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=79 arm=none C=0.5 cls=ok slices=2 actualMs=3 codeUpdated=false | cpuMs=458 wallMs=500 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=80 arm=none C=0.5 cls=ok slices=2 actualMs=3 codeUpdated=false | cpuMs=66 wallMs=126 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=81 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=96 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=82 arm=none C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=1 wallMs=199 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=83 arm=alarm C=0.5 cls=ok slices=2 actualMs=3 codeUpdated=false | cpuMs=474 wallMs=514 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=84 arm=alarm C=0.5 cls=ok slices=2 actualMs=5 codeUpdated=false | cpuMs=679 wallMs=719 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=85 arm=alarm C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=80 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=86 arm=alarm C=1 cls=ok slices=4 actualMs=5 codeUpdated=false | cpuMs=550 wallMs=593 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=87 arm=none C=2 cls=ok slices=8 actualMs=12 codeUpdated=false | cpuMs=723 wallMs=763 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=88 arm=none C=0.25 cls=ok slices=1 actualMs=4 codeUpdated=false | cpuMs=346 wallMs=383 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+order=89 arm=alarm C=0 cls=ok slices=0 actualMs=0 codeUpdated=false | cpuMs=0 wallMs=85 outcome=ok loopEnd=true version=1babd4e2-5485-4347-8e99-aee36aff86d2 | | -
+
+warm chains (C = 1 s, no alarm): events in order, cls and isolate id
+c=0 resets=1 at=[3] 1:ok:5018c9ce:cpu714 2:ok:5018c9ce:cpu188 3:reset:-:cpu701 4:ok:33d36ee8:cpu158 5:ok:33d36ee8:cpu- 6:ok:33d36ee8:cpu-
+c=4 resets=1 at=[3] 1:ok:6abe943c:cpu740 2:ok:6abe943c:cpu180 3:reset:-:cpu159 4:ok:c8e8caaf:cpu749 5:ok:c8e8caaf:cpu173 6:ok:c8e8caaf:cpu161
+c=2 resets=1 at=[4] 1:ok:853137ec:cpu560 2:ok:853137ec:cpu152 3:ok:853137ec:cpu159 4:reset:-:cpu129 5:ok:4db8674b:cpu551 6:ok:4db8674b:cpu131
+c=1 resets=1 at=[2] 1:ok:fbc7d8e4:cpu146 2:reset:-:cpu149 3:ok:e5be2403:cpu163 4:ok:e5be2403:cpu- 5:ok:e5be2403:cpu- 6:ok:e5be2403:cpu-
+c=3 resets=1 at=[4] 1:ok:982a5599:cpu561 2:ok:982a5599:cpu145 3:ok:982a5599:cpu180 4:reset:-:cpu140 5:ok:98e41ad5:cpu- 6:ok:98e41ad5:cpu-
+
+non-ok error texts and counts
+15 x reset: Error: Durable Object reset because its code was updated.

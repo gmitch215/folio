@@ -1,0 +1,22 @@
+rows of the killed event after the reset, by flush arm (read from a fresh stub)
+none: n=10 injected=false 0; rows (none):10; 3 s later (none):10
+  both rows kept 0/10 [0.0%, 27.8%]; no rows 10/10 [72.2%, 100.0%]
+  by pass: p0 (none):5 | p1 (none):5
+  event result at the caller: storage_timeout:10
+  tail: exceededWallTime|Durable Object exceeded its CPU time limit and was reset.:10
+  read-back failures before the first ok: 0:10
+  isolate ids on the first read-back: 10 distinct of 10
+sync: n=10 injected=false 0; rows my:10; 3 s later my:10
+  both rows kept 10/10 [72.2%, 100.0%]; no rows 0/10 [0.0%, 27.8%]
+  by pass: p0 my:5 | p1 my:5
+  event result at the caller: cpu:10
+  tail: exceededCpu|Durable Object exceeded its CPU time limit and was reset.:10
+  read-back failures before the first ok: 0:10
+  isolate ids on the first read-back: 10 distinct of 10
+syncyield: n=10 injected=false 0; rows my:10; 3 s later my:10
+  both rows kept 10/10 [72.2%, 100.0%]; no rows 0/10 [0.0%, 27.8%]
+  by pass: p0 my:5 | p1 my:5
+  event result at the caller: cpu:10
+  tail: exceededCpu|Durable Object exceeded its CPU time limit and was reset.:10
+  read-back failures before the first ok: 0:10
+  isolate ids on the first read-back: 10 distinct of 10

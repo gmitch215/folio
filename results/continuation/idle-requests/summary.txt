@@ -1,0 +1,41 @@
+code-updated trials excluded: 0 of 120
+## Fresh arm (trials: 120; tail records: 1214)
+L F n respReset tailReset anyReset anyReset 95% margin(F-L) pred_margin pred_F<5 alarmInRequest(median ms) readCls
+2 1 10 0 0 0 0/10 [0.0%, 27.8%] -1 reset reset 10/10 (1000) ok
+2 10 10 0 0 0 0/10 [0.0%, 27.8%] 8 none none 0/9 (10000) ok
+2 15 10 0 0 0 0/10 [0.0%, 27.8%] 13 none none 0/10 (15001) ok
+2 5 10 0 0 0 0/10 [0.0%, 27.8%] 3 reset none 0/10 (5000) ok
+4 1 10 0 0 0 0/10 [0.0%, 27.8%] -3 reset reset 10/10 (1000) ok
+4 10 10 0 0 0 0/10 [0.0%, 27.8%] 6 none none 0/9 (10000) ok
+4 15 10 0 0 0 0/10 [0.0%, 27.8%] 11 none none 0/9 (15000) ok
+4 5 10 0 0 0 0/10 [0.0%, 27.8%] 1 reset none 0/8 (5000) ok
+8 1 10 0 0 0 0/10 [0.0%, 27.8%] -7 reset reset 10/10 (1000) ok
+8 10 10 0 0 0 0/10 [0.0%, 27.8%] 2 reset none 0/10 (10001) ok
+8 15 10 0 0 0 0/10 [0.0%, 27.8%] 7 none none 0/8 (15001) ok
+8 5 10 0 0 0 0/10 [0.0%, 27.8%] -3 reset none 10/10 (5000) ok
+
+## Fresh: Fisher exact (two-sided) against F = 15 at the same L
+L=2 F=1 0/10 vs F=15 0/10: p=1.0000
+L=2 F=5 0/10 vs F=15 0/10: p=1.0000
+L=2 F=10 0/10 vs F=15 0/10: p=1.0000
+L=4 F=1 0/10 vs F=15 0/10: p=1.0000
+L=4 F=5 0/10 vs F=15 0/10: p=1.0000
+L=4 F=10 0/10 vs F=15 0/10: p=1.0000
+L=8 F=1 0/10 vs F=15 0/10: p=1.0000
+L=8 F=5 0/10 vs F=15 0/10: p=1.0000
+L=8 F=10 0/10 vs F=15 0/10: p=1.0000
+
+Fresh cells agreeing (observed reset rate >= 50% vs prediction): margin rule 5/12, F < 5 rule 9/12
+code-updated chains excluded: 0 of 45
+
+## Warm arm (chains of 24 back-to-back events; retirement = ok event with a new isolate id)
+L F margin(F-L) pred_margin chains chainsWithReset resets retirements resets/retirement tailChainsReset events
+2 10 8 none 5 0 0 0 n/a 0 120
+2 15 13 none 5 0 0 0 n/a 0 120
+2 5 3 reset 5 0 0 0 n/a 0 120
+4 10 6 none 5 0 0 0 n/a 0 120
+4 15 11 none 5 0 0 0 n/a 0 120
+4 5 1 reset 5 0 0 0 n/a 0 120
+8 10 2 reset 5 0 0 0 n/a 0 120
+8 15 7 none 5 0 0 0 n/a 0 120
+8 5 -3 reset 5 0 0 0 n/a 0 120

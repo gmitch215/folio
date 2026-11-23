@@ -1,0 +1,53 @@
+rows of the event after the reset, by kind and variant (read from a fresh stub)
+kind    variant n   event class            rows after (count)           3 s later (count)
+cpu     after   10  storage_timeout:4 cpu:6 my:10                        my:10
+cpu     during  10  storage_timeout:10     (none):10                    (none):10
+memory  after   10  memory:10              mxyz:10                      mxyz:10
+memory  during  10  memory:10              my:10                        my:10
+
+tail view of the killed events (outcome and exception of the DO invocation)
+cpu after: exceededWallTime|Durable Object exceeded its CPU time limit and was reset.|cpu32000:4 exceededCpu|Durable Object exceeded its CPU time limit and was reset.|cpu32000:6
+cpu during: exceededWallTime|Durable Object exceeded its CPU time limit and was reset.|cpu32000:10
+memory after: exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu85:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu143:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu139:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu137:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu300:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu197:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu209:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu128:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu188:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu163:1
+memory during: exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu121:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu141:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu192:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu203:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu196:2 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu129:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu198:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu124:1 exceededMemory|Durable Object's isolate exceeded its memory limit and was r|cpu133:1
+
+storage chains: resets with Wilson 95%
+m1: chains with a reset 0/20 [0.0%, 16.1%]; other stops 18; events 331 (ok 313); isolate changes on ok events 0
+  reset event number: 
+  rows of the reset event: 
+  ok events before a stop whose rows are not mxyz: 0
+  stop events that are not storage resets: code_update:Error: Durable Object reset because its code was updated.:18
+  rows of those stop events: my:18
+  stop event number: 21,21,21,8,8,13,20,5,11,9,22,11,23,22,7,20,21,20
+orig: chains with a reset 4/5 [37.6%, 96.4%]; other stops 0; events 97 (ok 93); isolate changes on ok events 0
+  reset event number: 20,10,22,21
+  rows of the reset event: mx:4
+  ok events before a stop whose rows are not mx: 0
+  stop events that are not storage resets: 
+  rows of those stop events: 
+  stop event number: 
+nowait: chains with a reset 20/20 [83.9%, 100.0%]; other stops 0; events 288 (ok 268); isolate changes on ok events 0
+  reset event number: 11,12,14,19,10,12,12,12,9,13,20,19,22,9,18,22,10,12,10,22
+  rows of the reset event: mxyz:19 (none):1
+  ok events before a stop whose rows are not mxyz: 0
+  stop events that are not storage resets: 
+  rows of those stop events: 
+  stop event number: 
+
+successor cost: first request after the reset against the warm one right after
+source        n   fail(median,max)  toFirstOk ms (median)  first wall  warm wall  first cpu  warm cpu  instance differs at +3 s
+memory-during 10  0,0               231                    231         37         0 (n10)    0 (n9)    0
+memory-after  10  0,0               207                    207         38         0 (n10)    0 (n10)   0
+cpu-during    10  0,0               205                    205         43         1 (n10)    0 (n10)   0
+cpu-after     10  0,0               168                    168         45         1 (n10)    0 (n10)   0
+storage-orig  4   0,0               229                    229         59         null (n0)  null (n0) 0
+storage-nowait 20  0,0               244                    244         49         1 (n3)     null (n0) 0
+(chains that ended with no reset and no error: 3)
+
+unreachable time and failures after each reset (per source)
+memory-during: toFirstOk ms 239,291,247,101,157,219,150,294,231,226 | failures 0,0,0,0,0,0,0,0,0,0
+memory-after: toFirstOk ms 259,174,168,78,207,208,164,83,259,361 | failures 0,0,0,0,0,0,0,0,0,0
+cpu-during: toFirstOk ms 239,229,141,180,247,196,144,187,239,205 | failures 0,0,0,0,0,0,0,0,0,0
+cpu-after: toFirstOk ms 130,168,113,106,84,224,123,228,316,220 | failures 0,0,0,0,0,0,0,0,0,0
+storage-orig: toFirstOk ms 209,229,270,225 | failures 0,0,0,0 | first errors 
+storage-nowait: toFirstOk ms 262,223,250,241,246,241,222,226,217,224,232,299,224,259,248,288,266,194,244,329 | failures 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 | first errors 

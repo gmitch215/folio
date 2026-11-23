@@ -1,0 +1,8 @@
+{
+	"name": "folio-reset-sync-1123",
+	"main": "m1-worker.mjs",
+	"compatibility_date": "2026-09-20",
+	"workers_dev": true,
+	"durable_objects": { "bindings": [{ "name": "M", "class_name": "M1" }] },
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["M1"] }]
+}
