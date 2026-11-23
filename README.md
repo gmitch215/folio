@@ -6,9 +6,8 @@ Folio is a toolkit for running, resetting and bounding WebAssembly modules in Ja
 Its core runs native WebAssembly across several V8 isolates that share one physical memory
 allocation. It finds inline memory regions and pure calls in ordinary programs, validates the ones
 it cannot prove independent, and keeps the serial result. Around the core sit task and slice pools,
-exact stream folds, instance checkpoints that reset a private instance between jobs, baked boot
-images that start a module from a booted heap, and a growth governor that caps a guest's memory. A
-portable client connects workerd and managed Cloudflare Workers to the same engine.
+exact stream folds, instance checkpoints, baked boot images, a growth governor and a portable client
+for workerd and managed Cloudflare Workers.
 
 ## Table of Contents
 
@@ -17,46 +16,28 @@ portable client connects workerd and managed Cloudflare Workers to the same engi
 - [Install](#-install)
 - [Getting Started](#-getting-started)
 - [Examples](#-examples)
-- [Asynchronous Host Effects](#-asynchronous-host-effects)
-- [Execution Host](#-execution-host)
-- [Managed Workers](#-managed-workers)
-- [Browser Execution and Page Leases](#-browser-execution-and-page-leases)
-- [Task Pool](#-task-pool)
-- [Slice Pool](#-slice-pool)
-- [Certified Stream Folds](#-certified-stream-folds)
-- [Ownership Certificates](#-ownership-certificates)
-- [Router](#-router)
-- [Context Checkpoints](#-context-checkpoints)
-- [Baked Boot Images](#-baked-boot-images)
-- [Growth Governor](#-growth-governor)
-- [Continuations](#-continuations)
-- [Execution and Memory](#-execution-and-memory)
-- [API Reference](#-api-reference)
-- [Consumer Harness](#-consumer-harness)
-- [Measured Results](#-measured-results)
+- [Modules](#-modules)
+- [Limits](#-limits)
 - [Development](#-development)
 - [Contributing](#-contributing)
 - [License](#-license)
 
 ## 🧭 Why Folio
 
-A Worker, a Linux machine in a Durable Object and a PHP interpreter all end up as one Wasm
-instance on one thread. Folio spreads the work of that instance across cores without asking the
-program to be rewritten. The caller passes one ordinary entry point. The compiler discovers the
-regions, so on the automatic route there are no access annotations and no caller-created chunks.
-The task pool, slice pool and chunked recurrences take a caller declaration instead, and the report
-says which checks each route runs. The same package manages the instance itself: it resets a private
+A Worker, a Linux machine in a Durable Object and a PHP interpreter all end up as one Wasm instance
+on one thread. Folio spreads the work of that instance across cores without asking the program to be
+rewritten. The caller passes one ordinary entry point, and the compiler discovers the regions. The
+task pool, slice pool and chunked recurrences take a caller declaration instead, and the report says
+which checks each route runs. The same package manages the instance itself: it resets a private
 instance between jobs, starts a module from a booted heap and refuses memory growth past a cap.
 
-- **Native Sharing.** Isolates map the same backing allocation, so a 256 MiB arena costs about 4 MiB
-  to attach to another isolate instead of a copy.
+- **Native Sharing.** Isolates map the same backing allocation. Four isolates attach to a touched 64
+  MiB backing for 3.871 MiB of additional resident memory, against 259.930 MiB for copied buffers.
 - **Serial Semantics.** On the automatic routes, uncertain dependencies run on private overlays and
   commit in original order. A conflict replays against committed state, and a trap keeps its
-  preceding writes. Routes where the caller declares independence keep that contract and offer an
-  audit.
-- **Original Stack.** JSPI suspends the program's own Wasm stack at joins, so branches, scalar
-  carry and host effects behave as they do natively. Scalar results, control flow and opaque state
-  stay in the original Wasm instance.
+  preceding writes.
+- **Original Stack.** JSPI suspends the program's own Wasm stack at joins, so branches, scalar carry
+  and host effects behave as they do natively.
 - **Instance Control.** Checkpoints restore a private instance between jobs, boot images start a
   module from a booted memory, and the growth governor turns an oversized allocation into a failure
   the guest can report.
@@ -68,54 +49,19 @@ and a small job loses to dispatch overhead.
 
 ## ✨ Features
 
-### Parallel Execution
-
-- 🧵 **Automatic region discovery** across branches, loops, switches, nested calls and reductions.
-- 🧠 **Ordered validation** with byte-granular conflict detection, replay and budget fallback.
-- 🛡️ **Native guards** that prove footprints, bounds and finite loops, then run on plain native
-  instructions with no tracking.
-- 🔌 **Arbitrary Wasm input** as bytes, `ArrayBuffer`, `WebAssembly.Module` or a prepared plan,
-  with imported memories, tables, globals and host functions bound as in native instantiation.
-- ⏳ **Asynchronous host effects** through JSPI, executed once and in call order.
-- 🛑 **Stall guard** (`iterationStall`, off by default) that stops an iteration batch that does not
-  return and finishes the loop serially, for programs whose iterations can loop on state another
-  iteration is changing.
-
-### Pools and Folds
-
-- 🧰 **Task pool** that runs named functions in private contexts on other threads, with ordered
-  joins and an optional differential audit.
-- 🍰 **Slice pool** that runs slices of a call range in place on one shared memory, with a private
-  stack per worker and an optional serial audit, for calls the caller declares independent.
-- 🧮 **Exact chunked recurrences** that split one CRC-32, Adler-32 or AES-CTR stream across the
-  task pool and join the chunk states into the serial result.
-- 🔏 **Ownership certificates** that check whether the fixed-address scratch of a record function is
-  private to each record, so a certified loop of records runs in place on the slice pool. Each
-  certificate lists the premises it relies on.
-- 🚦 **Router** that picks the certified summary, the certified window, tracked speculation or
-  serial for each call, caches certificates and refusals, and names the reason for every refusal.
-
-### Instance Control
-
-- 🔄 **Context checkpoints** that restore a private instance's memories, globals and tables
-  between independent jobs, rewriting only the pages that changed.
-- 🧊 **Baked boot images** that write a booted memory into the module as data segments.
-- 🚧 **Growth governor** that refuses `memory.grow` past a byte cap, so a guest reports out of
-  memory and keeps its size.
-
-### Runtimes
-
-- 🌐 **Execution host and portable client** for workerd, with sessions, quotas and joined cleanup.
-- ☁️ **Managed backend** that runs entirely in Workers and Durable Objects, with binary frames and
-  copied snapshots or learned byte ranges between lanes.
-- 🔗 **Browser backend** that attaches Web Workers to one shared memory, with page leases for
-  transports that copy bytes.
-
-### Measurement
-
-- 📊 **Opt-in profiling** of worker time, validation, commit and replay cost.
-- 🧪 **Consumer harness** that times any Wasm module against a native instance of itself and stops
-  on the first mismatch.
+| Feature                                                                           | What it does                                                                                              | Module                                                           |
+| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Region discovery, ordered validation, native guards and asynchronous host effects | Runs one ordinary entry on several cores and keeps the serial result                                      | [Core](docs/modules/core.md)                                     |
+| Task pool and slice pool                                                          | Run named tasks in private contexts, or slices of a call range in place on one shared memory              | [Pools](docs/modules/pools.md)                                   |
+| Exact chunked recurrences and certified stream folds                              | Split one CRC-32, Adler-32 or AES-CTR stream across workers and join the chunk states                     | [Folds and Certificates](docs/modules/folds-and-certificates.md) |
+| Ownership certificates and the router                                             | Prove that a record loop keeps its scratch private, and pick a route per call with a stated reason        | [Folds and Certificates](docs/modules/folds-and-certificates.md) |
+| Execution host and instance checkpoints                                           | Serve a program over an authenticated fetch handler, and restore a private instance between jobs          | [Core](docs/modules/core.md)                                     |
+| Managed Workers and portable client                                               | Run entirely in Workers and Durable Objects, with binary frames and learned byte ranges between lanes     | [Workers](docs/modules/workers.md)                               |
+| Browser backend                                                                   | Attach Web Workers to one shared memory, with page leases for transports that copy bytes                  | [Browser](docs/modules/browser.md)                               |
+| Growth governor, page directory and leases                                        | Refuse `memory.grow` past a byte cap, and hold bounded resident pages                                     | [Memory](docs/modules/memory.md)                                 |
+| Baked boot images                                                                 | Write a booted memory into the module as data segments                                                    | [Boot](docs/modules/boot.md)                                     |
+| Continuations                                                                     | Run a Wasm guest across Durable Object alarm events with page-hash checkpoints in SQLite                  | [Continuation](docs/modules/continuation.md)                     |
+| Profiling and the consumer harness                                                | Time worker, validation, commit and replay cost, and time any Wasm module against a native instance of it | [Core](docs/modules/core.md)                                     |
 
 ## 📦 Install
 
@@ -126,7 +72,7 @@ npm install @gmitch215/folio
 ```
 
 The Node backend needs Node 26 or later. Async host imports and the managed backend need WebAssembly
-JSPI. The browser counted-loop backend works without JSPI; page-owner transports are portable.
+JSPI. The browser counted-loop backend works without JSPI, and page-owner transports are portable.
 Builds from the main branch publish to the `snapshot` tag.
 
 ## 🚀 Getting Started
@@ -147,48 +93,16 @@ try {
 ```
 
 `Folio.open(input, options)` accepts a `Uint8Array`, an `ArrayBuffer`, a `WebAssembly.Module` or the
-result of `prepare(bytes)`. A compiled module has no inspectable bytes and uses its native entry.
-Imported memory is allocated from the module's limits when omitted. Pass `memory` to bind an
-existing single imported memory, or bind several by their exact names in `imports`. Missing host
-functions, tables, globals, tags and memory64 bindings are supplied as with native instantiation.
-`prepare(bytes, { parallel: 'off' })` disables optimization and leaves the program unchanged.
-Prepared plans are trusted build artifacts.
-
-A region runs on a worker only when its estimated work pays for dispatch, joining and validation.
-`prepare` estimates each candidate in instruction units, charges 3,600 units for every tracked load
-or store, and keeps the region at its owner below `minimumRegionWork` (200,000 by default, about
-39 microseconds of native work on an Apple M2 Pro). A loop bounded by a constant uses that count, a
-loop bounded by an untouched parameter or a countdown from one is checked against the arguments at
-each call, and any other loop is assumed to run `assumedTripCount` times (1,000). A module with no
-region above the threshold and no eligible loop gets no control plan and runs as the original Wasm, so
-a small kernel, a memory-bound loop or a serial recurrence stays at native speed.
-`minimumRegionWork: 0` admits every pure region. `folio.diagnostics` says why a plan was refused.
-
-A function with one countdown loop whose iterations are calls, such as a program that hashes several
-files, runs its iterations on workers when `memory` is a shared `WebAssembly.Memory`. Iterations write
-in place on private stack slots, validate in order and replay serially on a conflict. The first iteration
-runs on the owner, and its measured time and the time of each batch decide whether dispatch continues. A
-loop that writes more per iteration than the undo log holds, or whose batches lose to the serial time,
-finishes serially. With an unshared memory, or one the library cannot grow by the arena it needs, the run
-stays serial and the report names the reason.
-
-Five `Folio.open` options adjust the iteration route. All five are off by default.
-
-| Option                  | Effect                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `iterationReadWindows`  | Learns read windows from the first batch that finishes without a conflict, so loads of the input the iterations stream through set no per-access mark. A window can cost a false conflict, never a different result.                                                                                                                                                                                   |
-| `iterationReadSummary`  | Keeps a summary of the 64-word blocks of each read bitmap that a read touched, so workers scan those blocks and not the whole bitmap. The conflicts found do not change. It adds a few instructions to every tracked read.                                                                                                                                                                             |
-| `iterationSecondChance` | Judges a loop a little under the dispatch floor on one timed batch, and lets the batches a running loop has shown decide whether the rest pays. A probe that loses ends the dispatch and the loop runs serially for the next 16 calls. The result is the same either way.                                                                                                                              |
-| `iterationLogCeiling`   | A number of undo entries per iteration. When a batch exhausts the default log, the logs grow to this size and the batch retries once. Unset, that batch finishes serially. On padded LZ4 the retry cost more than the dispatch gained, because ordered validation is quadratic in the logged entries.                                                                                                  |
-| `iterationStall`        | `true` or `{ factor, floorMs }`. Workers poll a stop word at every loop start. A batch that runs past `factor` times the serial time of its iterations (50 by default), and at least `floorMs` (2000 ms), traps and rolls back from the undo logs, and the loop finishes serially with `iteration.stopped` set to `stalled`. The poll cost 0.9% to 11.2% of worker time on the four programs measured. |
-
-A program whose iterations can read state another iteration is changing and then loop on it, such as
-a linked structure two iterations rewrite, needs `iterationStall`.
+result of `prepare(bytes)`. `folio.run` returns a report that names the mode (`serial`,
+`speculative` or `native-shared`), the workers that took part and the reason a call stayed serial. A
+region runs on a worker only when its estimated work pays for dispatch, joining and validation, so a
+small kernel, a memory-bound loop or a serial recurrence stays at native speed.
+[Getting Started](docs/getting-started.md) walks through the report and the choice between routes.
 
 ## 🧩 Examples
 
-The [examples](examples) run against the built package with `node examples/<name>.ts` after
-`bun run build:c` and `bun run build`:
+The [examples](https://github.com/gmitch215/folio/tree/master/examples) run against the built
+package with `node examples/<name>.ts` after `bun run build:c` and `bun run build`:
 
 - `basic` runs one entry.
 - `routing` reads the report and shows capped and adaptive routing.
@@ -200,795 +114,37 @@ The [examples](examples) run against the built package with `node examples/<name
   one.
 - `boot-image` bakes captured memory into a module.
 - `growth-governor` caps `memory.grow` on a guest's memory and shows the guest's failed allocation.
-
-## ⏳ Asynchronous Host Effects
-
-```ts
-import { Folio, suspending } from '@gmitch215/folio';
-
-const folio = await Folio.open(module, {
-  imports: {
-    host: {
-      read: suspending(async (key) => (await fetch(new URL(String(key), storageUrl))).status)
-    }
-  },
-  promising: ['main']
-});
-const report = await folio.run('main', [42]);
-await folio.close();
-```
-
-This needs a runtime with WebAssembly JSPI. Listed async exports and numeric-result coordinator
-entries receive a promising wrapper. Reference-returning exports keep their native ABI, because
-Promise assimilation would change an externref Promise's identity. Host effects run once in call
-order and exceptions keep their identity. Opaque references stay in the original isolate. Closing
-joins a suspended native call; it cannot cancel an arbitrary external Promise.
-
-## 🌉 Execution Host
-
-`FolioHost` in `@gmitch215/folio` registers trusted artifacts, bindings and export allowlists. Its
-authenticated fetch handler exposes ordered run, read, write and close operations with joined
-disposal and bounded admission. `RemoteFolio` in `@gmitch215/folio/workers` is the client for it.
-
-```ts
-import { RemoteFolio } from '@gmitch215/folio/workers';
-
-const remote = await RemoteFolio.open(endpoint, 'fixture', {
-  headers: { authorization: `Bearer ${token}` },
-  workers: 4
-});
-try {
-  await remote.write(1024, inputBytes);
-  const report = await remote.run('program', [1024, wordCount, rounds]);
-  const output = await remote.read(1024, inputBytes.length);
-} finally {
-  await remote.close();
-}
-```
-
-The client runs in stock workerd with no Node imports and no runtime Wasm compilation. Requests and
-results cross a serialized transport, and physical sharing happens inside the host. Each session
-caches its last accepted result, so `retryPending()` recovers a lost response without repeating
-effects. The cache is bounded and held in memory. Memory admission checks the initial accessible
-backing, and trusted artifact factories enforce growth maxima and private-memory budgets.
-
-## 📡 Managed Workers
-
-`@gmitch215/folio/workers` exports `ManagedFolio` and `FolioLane` for execution entirely in managed
-Workers and Durable Objects. `ManagedFolio` takes precompiled artifact modules and lane transports
-whose `execute(frame)` returns a binary response, and `FolioLane` runs the tracked region module.
-The original JSPI coordinator keeps control flow and host effects, and copied snapshots with
-ordered byte validation connect independent lanes. A transport failure falls back to native owner
-execution. Snapshot, frame, fuel and tracking bounds are configurable, and the canonical memory
-must fit the owner runtime. Frames carry the whole snapshot by default. `snapshotEncoding: 'auto'`
-omits pages that are all zero, which saves traffic for sparse arenas, and lanes older than 1.0.1
-reject its frames. The snapshot limit is 31 MiB by default. A frame over `maximumFrameBytes` (the
-snapshot limit plus 1 MiB, capped below the 32 MiB Workers RPC argument limit) is not sent: that
-call runs at the owner and `diagnostics` names the frame size and the limit. See
-[the managed procedure](experiments/managed/METHOD.md).
-
-Four options change what a call costs. `ranges` ships the byte ranges a region reads and writes,
-learned from earlier calls, instead of a snapshot: an 8 MiB arena sends about 0.2% of the bytes.
-`inline` on a `FolioLane` runs a module that tracks accesses in its own code, so a lane no longer
-calls back into JavaScript on every load and store. `runs: true` makes lanes answer in sorted byte
-runs that the owner validates and commits as intervals. `memo` reuses a recorded result when the
-bytes a region read are unchanged, through the same ordered validation. `fuel` bounds the
-speculative back-edges of one call (100,000,000 by default); a call that runs out finishes serially
-at the owner, so a long kernel needs a larger `fuel`.
-
-Lane placement decides whether lanes overlap. Service-bound Worker lanes share a thread with their
-caller, so four of them take as long as one lane run four times. Durable Object lanes run on their
-own isolates and overlap. A decomposition that fits a managed lane is a few large explicit units
-with a merge the caller declares, such as SQLite shards that each scan a row-id range; a loop of
-small records does not pay for a lane call. The
-[sharded SQLite probe](experiments/sqlite-lanes/README.md) runs 1,000,000-row queries 2.0x to 9.7x
-faster than one object at four and eight shards, with every result equal to the serial one.
-
-## 🔗 Browser Execution and Page Leases
-
-`@gmitch215/folio/browser` exports `BrowserFolio` for Chromium and other hosts without JSPI. It
-takes a precompiled original module and the `loops`, `native`, `reasons` and `memories` metadata
-that `prepare` produced offline. `open()` attaches dedicated module workers to the supplied shared
-memory. `run(name, args)` derives guarded partitions from one ordinary counted-loop call and joins
-before it returns, with no snapshot and no runtime compiler. Other entries use the original owner.
-The caller keeps exclusive ownership of the arena. A failure after native writes closes the pool,
-and the application restores a checkpoint before retrying.
-
-`@gmitch215/folio/memory` exports `PageDirectory`, `MemoryPageOwner`, `ResidentPageLease` and the
-`PageOwner` transport contract. `acquire({ read, write })` obtains bounded resident pages and
-`lease.view(page)` returns a private view of one. `commit()` stages immutable versions and
-atomically publishes their manifest, `abort()` discards local changes, and `collect()` reclaims
-retired versions with delayed-message fencing. The directory holds page metadata, not a whole heap.
-
-Leases work on copied bytes, and the bundled owners and directory keep their state in memory. The
-[technical report](TECHNICAL_REPORT.md) covers failure semantics, the native Wasm measurements and
-the limits of both modules.
-
-## 🧰 Task Pool
-
-`TaskPool` and `serveTasks` in `@gmitch215/folio` run independent work that a program names itself. A `TaskPool` owns one
-channel per worker. The caller starts each worker with `pool.link(index)` and calls `serveTasks`
-there with a function that runs a named task. The owner calls `submit(name, input)` and keeps going,
-then `join(handle)` blocks until the output arrives, or `joinAsync(handle)` waits without blocking
-the event loop. `run(jobs)` submits a list and returns the results in submission order, and
-`runSync(jobs)` does the same where the caller cannot yield, such as inside a synchronous Wasm
-import. Input and output are strings or bytes, `submitJson` and `result.json()` cover structured
-values, and `pool.width` limits how many workers take tasks. Input on a `SharedArrayBuffer` is copied
-at submit so a later write cannot reach the task. `submit`, `run` and `runSync` take `{ share: true }`
-to post such an input as it is, which removes the copy when the caller promises not to write those
-bytes until the task is joined.
-
-```ts
-import { Worker } from 'node:worker_threads';
-import { TaskPool } from '@gmitch215/folio';
-
-const pool = new TaskPool(4);
-for (let index = 0; index < pool.size; index++) {
-  const link = pool.link(index);
-  new Worker(new URL('./task-worker.js', import.meta.url), {
-    workerData: { link },
-    transferList: [link.port]
-  });
-}
-
-const results = await pool.run([
-  ['render', 'page-1'],
-  ['render', 'page-2']
-]);
-console.log(results.map((result) => result.text()));
-```
-
-```ts
-import { workerData } from 'node:worker_threads';
-import { serveTasks } from '@gmitch215/folio';
-
-serveTasks(workerData.link, (name, input) => {
-  // run the task called `name` on `input` and return its output
-  return String(input);
-});
-```
-
-A worker shares nothing with the owner. Each task runs against that worker's own state, so a task
-that reads or writes state the serial program would have shared returns a different result than the
-serial run. `audit: { run, every }` runs every nth task again in the joining thread and throws
-`TaskConflictError` with the first differing byte. The audit costs one serial execution per checked
-task and is meant for tests and canaries. `drain()` returns a record per joined task with its worker,
-start and end time, thread CPU time and byte counts, and `peakConcurrency(records)` reports how many
-tasks ran at the same time.
-
-The pool does not discover independent work. Region discovery and ordered validation stay in the
-core engine, and the task pool covers programs that can say which calls are independent.
-
-The fold helpers in `@gmitch215/folio` cover one case where a single call is not independent but still splits
-exactly. A CRC-32, an Adler-32 or an AES-CTR stream over one input is a recurrence with an exact
-combine, so chunks run on separate tasks and join into the serial result. `chunkRanges(length,
-count, align)` cuts the input, `foldChunks(pool, input, { task, initial, combine })` runs one task
-per chunk and combines the results in order, and `crc32Combine`, `adler32Combine` and `ctrAdvance`
-supply the algebra. AES chunks must be multiples of 16 bytes except the last. Chunks are copied into
-their tasks, and 64 MiB of CRC-32 on eight workers ran 3.52x faster than serial with the result equal
-to `zlib.crc32`. A recurrence with no known combine, such as one SHA-256 message, stays serial.
-
-## 🍰 Slice Pool
-
-`SlicePool` in `@gmitch215/folio` runs an exported function over a range of calls on several threads, on one
-shared memory, with no copy and no tracking. The caller declares that the calls are independent. A
-`SlicePool` compiles the module once, marks its imported memory shared, grows the memory by one
-private stack per worker when the module keeps a stack pointer global, and starts the workers.
-`run(entry, count, args)` splits `[0, count)` into slices, and `args(from, to)` returns the arguments
-of the call for a slice. The records go into `pool.memory` after `open`, because opening applies the
-module's data segments, and the results are read from it afterwards.
-
-```ts
-import { SlicePool } from '@gmitch215/folio';
-
-const memory = new WebAssembly.Memory({ initial: 256, maximum: 4096, shared: true });
-const pool = await SlicePool.open(bytes, { memory, workers: 8 });
-write(pool.memory, records); // table, input bytes and an output area
-
-const report = await pool.run('bulk', records.length, (from, to) => [
-  table + 16 * from,
-  to - from,
-  out + from * slot
-]);
-read(pool.memory, out, records.length * slot);
-await pool.close();
-```
-
-The module must import its memory with a declared maximum that leaves room for the stacks, and keep
-at most one mutable global, which is taken to be the stack pointer. A start function, a dropped
-data segment or a second mutable global refuses the module. Arguments and results are i32 or i64
-(`bigint`). Imports other than the memory come from `imports`, a module specifier whose default export
-returns them, because functions do not cross threads.
-
-Nothing here checks independence. A program that writes state the serial program would share
-returns a different result. `run(..., { audit: true })` copies the memory before the run, runs the
-same slices serially on the copy and compares every returned value and every byte below the
-stacks, and throws `SliceConflictError` with the first difference. The audit costs a serial run and a
-memory copy and is meant for tests and canaries. A route that copies each task's records into a
-private context cannot win on a kernel whose speed is the copy's bandwidth; the slice pool has no
-copy, and on the quiet rig xxHash, Adler-32 and LZ4 decompress over thousands of records ran 1.7x
-to 4.9x faster than serial on eight workers (see the technical report).
-
-## 🧮 Certified Stream Folds
-
-`certifyStream` in `@gmitch215/folio` decides whether an exported function `entry(state, ptr, len)`
-over a byte stream is the left fold of one affine byte step, for every length of at least one byte,
-and `foldCertified` in the same package runs such a function on workers. `certifyStream(bytes, entry)` returns a
-certificate or the reason it refused. The proof executes the function symbolically, so it covers the
-unrolled main loop and tail that clang emits, tables the module carries or builds on its first call,
-64-bit states and internal calls. The step is affine in the state over GF(2) (bit operations), over
-Z/2^w (add and multiply) or over two 16-bit residues of one modulus (Adler-32 keeps its two sums this
-way), and it may apply any pure function to the input bytes.
-
-A certificate names the module digest. `verifyCertificate(bytes, certificate)` re-derives it from the
-module, and `guardInput` checks that an input range stays inside memory and clear of the bytes the proof
-read. With a certificate, `foldCertified` runs every chunk once from state zero on its own worker, reads
-the input in place from shared memory and combines the end states with the recovered model. It does not
-run a second pass, because the certificate replaces the validation that `foldAffine` needs when it only
-has a sampled model.
-
-```ts
-import { Worker } from 'node:worker_threads';
-import { certifyStream, foldCertified, installPrefill, shareCertified } from '@gmitch215/folio';
-import { TaskPool } from '@gmitch215/folio';
-
-const certificate = certifyStream(bytes, 'crc32c');
-if (certificate.kind === 'refusal') throw new Error(certificate.reason);
-
-const pages = 256;
-const subject = shareCertified(bytes, certificate, pages);
-const memory = new WebAssembly.Memory({ initial: pages, maximum: pages, shared: true });
-installPrefill(subject, memory);
-const module = new WebAssembly.Module(subject.bytes);
-
-const pool = new TaskPool(8);
-for (let index = 0; index < 8; index++) {
-  const link = pool.link(index);
-  // worker.ts calls serveCertified(link, { module, memory, layout }) from workerData
-  new Worker(new URL('./worker.ts', import.meta.url), {
-    workerData: { link, module, memory, layout: certificate.layout },
-    transferList: [link.port]
-  });
-}
-
-const input = new Uint8Array(memory.buffer, 1 << 20, 64 * 1024 * 1024);
-// fill the input here
-const { state } = foldCertified(pool, input, memory, certificate);
-```
-
-A function that also rewrites its input in place, such as a stream cipher that xors a keystream into
-the buffer, gets an `output` field when the proof shows that byte i becomes a fixed function of the
-original byte and the fold state before it, and that nothing else is written. When the state does not
-read the input bytes, `reconstructCertified` starts every chunk at its own state, which the model gives
-without running the kernel, and each worker rewrites its own bytes once. A chunk that ends in a state
-the model did not predict makes it throw, because the input is already rewritten. `foldCertified`
-throws for a certificate with `output`: chunks that start from state zero would write the wrong bytes.
-
-A refusal describes the checker and not the function: a function it cannot prove runs serially or through
-`foldAffine` in exact mode. The checker refuses a branch on input data or on the state, a pointer or
-length used as data, state kept in memory or globals, stores other than the in-place byte rewrite,
-imports, a start function and passive data segments. A function that depends on the alignment of
-its pointer or reads past its input is refused. `zeroLength` in the certificate says what a call over no bytes returns, and
-`foldCertified` runs an empty input as the serial call.
-
-## 🔏 Ownership Certificates
-
-`certifyOwnership` in `@gmitch215/folio` checks whether a function that loops over records keeps its scratch
-memory private to each record. Compiled drivers often write a fixed address (a scratch buffer, a
-static table, a cursor) before they read it back, and records that run on several threads over one
-memory collide there. `certifyOwnership(bytes, options)` takes an entry that is `bulk(table, count,
-out, ...)` by default (`entry` and `convention` name another function and record layout), finds the
-fixed-address windows the records write, and returns a certificate or a refusal. A certificate
-covers six obligations: state isolation, read before write, aliasing through indirect pointers and
-bulk operations, the final state the owner must rebuild, escaping addresses, and failure (a trap or
-aborted iteration publishes nothing). The `prefix`, `config`, `recursion` and `allocator` options
-widen the domain the checker handles, and each adds premises that the certificate lists.
-
-A refusal carries a `reason` from the closed list `OWNERSHIP_REASONS`, the `obligation` it belongs
-to, a `detail` and, where there is one, an `address`. The reasons are one per obligation
-(`isolation`, `read-before-write`, `aliasing`, `final-state`, `escape`, `failure`), the pointer
-rules of the allocator mode (`ptr-store`, `ptr-return`, `ptr-import`, `ptr-compare`, `ptr-control`,
-`ptr-deref`, `allocator`), `prefix-store`, `prefix-cover`, `config-store`, and four about scope:
-`no-window`, `unsupported`, `budget` and `invalid`. `budget` means the analysis hit its step limit
-(4,000,000 by default) and says nothing about the program. Any refusal says what the checker could
-not establish, and the function runs serially or on another route. On the 10 development drivers
-that fail the plain slice pool, 6 certify.
-
-`verifyOwnership(bytes, certificate)` re-derives the certificate from the module and compares
-everything except the work counters. A certificate names the module digest and the checker version
-(`OWNERSHIP_CHECKER`).
-
-Two routes run a certified driver. `ownershipSlices` from `@gmitch215/folio`
-redirects every window access to a private copy per worker and runs the records in place on the
-slice pool. A trap in any slice puts `writes` back and runs the calls serially in place, so the
-serial run decides the memory and the trap. `ownershipSlices` throws `OwnershipSlicesError` with
-code `wild-store` for a certificate that records stores no record owns. `run` throws it with code
-`layout` when a record region overlaps a window, and with `config` when the memory differs from a
-configuration the certificate assumed. `redirectOwnership` and `ownershipRoute` from
-`@gmitch215/folio` make the same rewrite and hand it to the iteration pool,
-which tracks every access and paid less on the module measured.
-
-```ts
-import { certifyOwnership, ownershipSlices, verifyOwnership } from '@gmitch215/folio';
-
-const certificate = certifyOwnership(bytes, { entry: 'bulk' });
-if (certificate.kind === 'refusal') {
-  throw new Error(`${certificate.reason} (${certificate.obligation}): ${certificate.detail}`);
-}
-if (!verifyOwnership(bytes, certificate)) throw new Error('the certificate does not re-derive');
-
-const memory = new WebAssembly.Memory({ initial: 8, maximum: 40, shared: true });
-const pool = await ownershipSlices(bytes, certificate, { memory, workers: 4 });
-try {
-  // write the record table, the inputs and the output area into pool.memory here
-  const report = await pool.run(
-    count,
-    (from, to) => [table + 16 * from, to - from, out + 64 * from],
-    {
-      regions: [
-        [table, table + 16 * count],
-        [input, input + inputBytes],
-        [out, out + 64 * count]
-      ],
-      writes: [[out, out + 64 * count]]
-    }
-  );
-  console.log(report.ownership?.replayed);
-} finally {
-  await pool.close();
-}
-```
-
-A certificate rests on premises that the checker does not prove, and a run that breaks one can
-return a different result than the serial program:
-
-- The record regions (table, output slots, inputs, auxiliary data, arena slices and stack slots)
-  do not overlap a window. `OwnershipSlices.run` checks the `regions` and `writes` the caller
-  passes, so they must be complete.
-- Record-derived pointers stay inside their regions. The library does not check this one.
-- The entry branches on its loop counters and the record count only to end or repeat its loop.
-- A trap discards the private copies and the serial path decides what happens next.
-- The start function and the host leave the window bytes the private copies start from.
-- The stack pointer discipline and the stack residue are not proved.
-
-The `allocator`, `prefix` and `config` modes add their own premises, which the certificate lists in
-`allocator.assumptions`, `prefix.rules` and `config.rules`. The checker has produced false
-certificates. A red team round found three classes of them that earlier mutation testing had not
-found, and the fixes are part of this release. Red team round 3 found four more classes before the
-checker was frozen, and those are closed too. On the frozen checker, the adversary families and two
-generators of 20,000 modules each found no module whose certificate was wrong. The adversary
-families accept the same number of modules as before the fixes, so they do not exercise the new
-refusals, and the generators have blind spots. The premises above still apply.
-
-## 🚦 Router
-
-`Router` in `@gmitch215/folio` picks one route for a call from the module bytes and a description of
-the call, runs it and says why. A call is `{ kind: 'stream', entry, ptr, len }` for one function
-`entry(state, ptr, len)` over a byte stream, or `{ kind: 'records', entry, count, args, regions,
-writes }` for a loop of independent calls, where `args(from, to)` returns the arguments of a slice.
-`Router.open(bytes, call, options)` decides and builds the memory and pools its route needs, and
-`router.run()` executes the call. `decide(bytes, call, options)` returns the decision without
-running anything. A parallel route over a records call needs a module that imports its memory,
-which the router allocates shared.
-
-The order is fixed. A stream takes the certified summary when `certifyStream` returns a
-certificate. A loop of records takes the certified window when the ownership certificate exists,
-records no wild stores and the regions clear its windows, then the explicit runner in
-`options.explicit` if the caller supplied one, then tracked speculation, then serial. Tracked
-speculation runs only after an ownership refusal for allocator state or a missing window, and only
-when `assume` states that imports are deterministic (or absent) and that nothing reads the stack
-zone afterwards. `mode` limits the routes: `router` is the whole chain, `serial` never leaves the
-owner, `w1` is the summary only and `w2` the window only, and `independent` and `shared` try the
-summary and then the window, with the module analyses made independently or shared. The last
-four are the arms of the development ablation.
-
-Certificates and refusals go into a `CertificateCache`, keyed by the module's SHA-256 and by the
-backend, the checker versions, `ROUTER_VERSION` (`folio-router-2`) and the options that change a
-certificate. A refused module costs a map lookup after the first call, and `serialize()` and
-`load()` move the cache between processes. A route has a floor: the window route stays serial below
-0.8 ms of remaining serial work and the summary route below 1 MiB, both in `routerConstants`, and
-the tracked and explicit routes use the admission floor of the iteration route. The router runs the
-first records of a call serially to estimate that time, and it stops dispatching after two losing
-dispatches in a row. The constants were fitted on development data, so a result on the development
-drivers describes the fit, and the figure on the frozen final corpus is in Measured Results.
-
-```ts
-import { Router } from '@gmitch215/folio';
-
-const router = await Router.open(
-  bytes,
-  {
-    kind: 'records',
-    entry: 'bulk',
-    count,
-    args: (from, to) => [table + 16 * from, to - from, out + 64 * from],
-    regions: [
-      [table, table + 16 * count],
-      [input, input + inputBytes],
-      [out, out + 64 * count]
-    ],
-    writes: [[out, out + 64 * count]]
-  },
-  { mode: 'router', pages: 8, maxPages: 40, workers: 4 }
-);
-try {
-  console.log(router.decision.route, router.decision.reason, router.decision.detail);
-  for (const step of router.decision.considered) {
-    console.log(step.route, step.verdict, step.reason);
-  }
-  // write the record table, the inputs and the output area into router.memory here
-  const run = await router.run();
-  console.log(run.route, run.reason, run.wallMs);
-} finally {
-  await router.close();
-}
-```
-
-A refusal is a decision with `route: 'serial'` and a `reason` from the closed list
-`ROUTER_REASONS`. The first four reasons are routes taken (`certified-summary`,
-`certified-window`, `explicit-runner`, `tracked-eligible`) and the rest are refusals, such as
-`allocator-state`, `shared-state`, `wild-store`, `layout-overlap`, `assumption-unasserted`,
-`memory-not-imported` and `below-floor`. `decision.considered` lists each route in the order the
-router looked at it, with a `verdict` of `taken`, `refused` or `skipped`, its reason and a `detail`
-that quotes the certifier's refusal. `decision.cacheHit` and `certifyMs` say whether the analysis
-was paid for on this call. The `route` that `run()` returns is the route that executed, which
-differs from the decision when a floor sends the call to the owner (`below-floor`) or the loss rule
-stops a dispatch (`dispatch-lost`).
-
-## 🔄 Context Checkpoints
-
-`InstanceCheckpoint` in `@gmitch215/folio` resets a private Wasm instance between independent jobs.
-`prepareContext(bytes)` from the same package adds exports for every memory, mutable
-numeric global and table, and leaves function bodies and start sections as they are. An
-`InstanceCheckpoint` copies that state once after initialization. `restore()` compares each 64 KiB
-page with the copy, rewrites the pages that differ, and puts back globals and table references.
-`restore('full')` copies every byte instead. Different inputs may dirty different pages, so the
-checkpoint learns no page set from an earlier run.
-
-```ts
-import { InstanceCheckpoint, prepareContext } from '@gmitch215/folio';
-
-const plan = prepareContext(bytes);
-const instance = new WebAssembly.Instance(new WebAssembly.Module(plan.bytes), imports);
-initialize(instance);
-const checkpoint = new InstanceCheckpoint(instance, plan);
-
-for (const job of jobs) {
-  run(instance, job);
-  checkpoint.restore();
-}
-```
-
-A module that drops a passive data or element segment, uses Wasm GC objects, or holds a reference or
-`v128` global cannot be restored through exports. `prepareContext` then keeps the original bytes and
-lists the causes in `plan.reasons`, and `InstanceCheckpoint` throws so the caller creates a fresh
-instance for each job. Memory or table growth throws `ContextResetError` before anything is
-written, and the caller instantiates a new context. Host resources and the objects behind
-`externref` values stay with the caller. `restore()` reads every page, so its cost follows the memory
-size and not the number of changed pages.
-
-A job that writes its whole input region before it runs can skip that region.
-`restore('changed', ranges)` takes `{ offset, length }` ranges (and a `memory` index when the plan has
-more than one) that it neither compares nor copies back, and `skippedBytes` in the report counts them.
-The caller must write every byte of a range before the program reads it, because those bytes keep the
-previous job's contents. Everything outside the ranges is restored as before, and an invalid range
-throws a `RangeError` before anything changes.
-
-## 🧊 Baked Boot Images
-
-`@gmitch215/folio/boot` moves a booted memory into the module. `captureImage(booted, fresh)` compares
-a booted memory with a fresh instance of the same module and keeps the 64 KiB pages that differ.
-`bakeModule(bytes, image)` returns the module with those pages as active data segments after its own,
-so instantiating it starts from the booted memory. It uses binaryen, loaded on the first bake, and
-writes memory 0.
-
-```ts
-import { bakeModule, captureImage, imagePages, moduleDigest } from '@gmitch215/folio/boot';
-
-const fresh = new WebAssembly.Memory({ initial: 1024 });
-const booted = new WebAssembly.Memory({ initial: 1024 });
-// instantiate `bytes` on each memory, then run the boot sequence on `booted`
-
-const image = captureImage(booted, fresh, { module: await moduleDigest(bytes) });
-const baked = await bakeModule(bytes, image);
-
-const memory = new WebAssembly.Memory({ initial: imagePages(image).memoryPages });
-const { instance } = await WebAssembly.instantiate(baked, { env: { memory } });
-```
-
-The caller creates an imported memory with at least `memoryPages` pages. A defined memory that
-starts smaller has its initial pages raised to the image size, and its maximum, shared and memory64
-flags stay as they are. A page that boot zeroed but the module's own data had set is stored as
-zeros, and pages that are zero in both are left out. Pass the global values and a pre-boot copy of
-the same instance's table references to `captureImage` as `globals` and `table`; it records what boot
-changed. `bakeModule` writes changed i32, i64, f32 and f64 globals into their initial values and
-refuses changed table slots unless `allowTableChanges` is set. It throws `ImageMismatchError`, which
-has a `code`, for a wrong module digest, a start function, no memory, an image over the memory
-maximum and a global it cannot rewrite. Adjacent pages become one segment of at most `maxSegmentBytes` (64 MiB).
-
-`applyImage(memory, image)` copies the pages into a fresh instance's memory without baking. It
-cannot set a module's globals or table slots, so an image that records changed ones is refused with
-code `global` or `table`; `{ memoryOnly: true }` copies the memory anyway and leaves the instance
-with its fresh globals, which is not a booted instance. A module whose boot changes globals (the
-PHP 8.5.12 build changes its stack bounds) belongs in `bakeModule`.
-`captureImage` takes a `context` string beside the module digest, a digest of whatever else shapes
-the heap (settings, shims, assets), and `applyImage(memory, image, { module, context })` refuses an
-image whose module or context differs, or that carries none, with `ImageMismatchError` code `digest`
-or `context` and before it writes a byte. `encodeImage` and `decodeImage` store an image beside the
-module and reject truncated or unknown input with `ImageFormatError`. `checkBaked(baked, image)`
-reads the data segments back and compares them with the image without instantiating.
-`bakeModule` throws code `memories` for a module with more than one memory.
-
-The image is the heap as it was, so anything the booted process held is in the baked module and
-becomes public with it. State kept in JavaScript, such as handles and open descriptors, is not
-captured. `findInImage(image, needles)` returns every offset where a needle's bytes occur in the
-image pages, so a secret and its base64 and hex forms can be searched for before the module ships.
-Freed memory is not zeroed, so a secret that was ever in the heap cannot be scrubbed out of an
-image afterwards: bake a site whose key and salt are throwaway values, and give the replaying site
-its own.
-
-For a Drupal heap that means three replacements after the replay. The hash salt lives in the static
-`Settings` object; the private key lives in the `State` cache collector, which serves it from memory
-once read; and PHP's Mersenne Twister state is in the heap, so every replayed instance would draw
-the same `mt_rand()` sequence. Values the bake computed from the old key and salt, such as the
-permissions hash of the anonymous user, sit in the `cache.memory` bin. This snippet makes the
-replayed instance use the replaying site's values, with `$salt` set to that site's hash salt:
-
-```php
-use Drupal\Core\Site\Settings;
-
-(function (string $salt) {
-	$this->storage['hash_salt'] = $salt;
-})->call(Settings::getInstance(), $salt);
-
-(function () {
-	$this->reset();
-	$this->keysSetDuringRequest = [];
-})->call(Drupal::state());
-
-Drupal::service('cache.memory')->deleteAll();
-mt_srand(unpack('V', random_bytes(4))[1]);
-```
-
-Run it before any other PHP in the replayed instance. The bake request's PHP session identifier also
-stays in the heap and the library cannot renew it, so the host sets each request's own identifier
-before it serves the request. A host that resets `State` at the start of
-each request still needs the salt and the random seed, and needs the key step for code that runs
-before the first request. The measured effect for a PHP interpreter is in the Baked Boot Images
-section of the technical report.
-
-## 🚧 Growth Governor
-
-`@gmitch215/folio/memory` caps `memory.grow` on one `WebAssembly.Memory`.
-`governGrowth(memory, { capBytes, onRefuse })` wraps the memory's `grow` method and throws a
-`RangeError` for any grow whose final size would pass `capBytes`. An Emscripten guest then sees
-`emscripten_resize_heap` fail and reports out of memory, with its memory left at its size. The cap
-sits on `grow` because the glue first tries the current size times 1.2, which a cap on the requested
-size would let through.
-
-```ts
-import { governGrowth } from '@gmitch215/folio/memory';
-
-const memory = new WebAssembly.Memory({ initial: 64, maximum: 4096 });
-const governor = governGrowth(memory, {
-  capBytes: 8 * 1024 * 1024,
-  onRefuse: ({ fromBytes, toBytes }) => console.log('refused', fromBytes, toBytes)
-});
-
-// run the guest; governor.refused counts the grows it turned away
-governor.restore();
-```
-
-Governors stack. A later one calls the one it replaced, so both caps hold, and `restore()` must run
-in reverse install order. A cap below the memory's current size refuses every grow and does not
-shrink the memory. The [growth-governor example](examples/growth-governor.ts) drives the Emscripten
-resize loop by hand, and the [experiment](experiments/growth-governor/README.md) runs a PHP guest
-under a cap.
-
-## 🔁 Continuations
-
-`@gmitch215/folio/continuation` runs a Wasm guest across Durable Object alarm events. Each event runs the guest for a step budget. When the budget runs out, the event commits the pages that changed, the mutable globals and a small host state record to the object's SQLite storage, then arms the next alarm. When the platform raises the CPU warning, the event stops without a commit, and the next event commits before it runs the guest. If the isolate changed, the next event restores the last commit first.
-
-The guest exports `memory`, a `run(budget)` function that returns a nonzero value when the job is finished, and a `get_steps` counter. It returns from `run` only at a point where its state lives in linear memory and its globals. A guest that polls the `__instance_signal` word returns early when the platform raises it.
-
-```ts
-import { cpuSignal, runSlice, type DurableObjectStorage } from '@gmitch215/folio/continuation';
-
-export class Job {
-  private readonly storage: DurableObjectStorage;
-  private readonly module: WebAssembly.Module;
-  private instance?: WebAssembly.Instance;
-
-  constructor(storage: DurableObjectStorage, module: WebAssembly.Module) {
-    this.storage = storage;
-    this.module = module;
-  }
-
-  async alarm(): Promise<void> {
-    const instance = (this.instance ??= new WebAssembly.Instance(this.module));
-    const memory = instance.exports.memory as WebAssembly.Memory;
-    const run = instance.exports.run as (budget: number) => number;
-    const steps = instance.exports.get_steps as () => number;
-    const signal = cpuSignal(instance, memory);
-    await runSlice({
-      storage: this.storage,
-      memory,
-      signal,
-      run(budget) {
-        if (run(budget)) return 'finished';
-        return signal?.raised ? 'signal' : 'budget';
-      },
-      steps
-    });
-  }
-}
-```
-
-`runSlice` is called from `alarm()`. It re-arms the alarm unless the job finished. The [technical report](TECHNICAL_REPORT.md#-continuation-across-invocations) gives the model, the proofs, the measurements and the boundaries of this approach.
-
-## 🧱 Execution and Memory
-
-Proved finite, nontrapping i32 kernels use runtime bounds and cross-region overlap checks, then
-run native instructions against the shared allocation with no tracking or commit copy. A failed
-guard falls back to tracked execution.
-
-Tracked regions read a frozen shared base and keep private byte overlays. Once every reader stops,
-Folio validates and commits in order. Conflicts replay against committed state, budgets discard
-speculation, and ordered traps keep their preceding writes while later results are discarded.
-
-The coordinator keeps admitted scalar control flow and live results. Inline numeric-memory spans
-become regions when modified locals have no external live-outs and are assigned before reads on
-every admitted path. Pure nonrecursive calls with unused results also qualify. Opaque functions,
-recursion, host effects and state operations join preceding regions and run at their original
-owner. Transactional memory covers i32, i64, f32 and f64 scalar operations plus `memory.copy` and
-`memory.fill`, including unaligned access, overlap, NaN payloads, bounds and traps. Growth and
-initialization stay at the coordinator. Unsupported instructions, reference and vector state,
-memory64 and multiple memories keep native execution.
-
-Shared source memory has zero-copy physical backing across the worker group. Ordinary source memory
-keeps its original identity and buffer semantics, with an explicit shared snapshot per speculative
-batch and ordered writeback, and the report counts the snapshot bytes. Regions travel in batches of
-up to 16 per worker, and a singleton at a join runs locally.
-
-Each isolate keeps its own stack, globals, table, JS heap and instance. Shared linear bytes do not
-merge GC heaps or make arbitrary callbacks transferable. Give Folio exclusive access to its
-memories and native exports until a run settles, and refresh views after shared growth. A failure
-during direct native writes can leave partial memory, so the failed group closes and the
-application restores a checkpoint before retrying. Instruction-defined traps keep their order and
-writes. Native stack capacity and allocation failure can differ between isolates.
-
-## 📖 API Reference
-
-| Member                                 | Contract                                                                     |
-| -------------------------------------- | ---------------------------------------------------------------------------- |
-| `run(name, args?, options?)`           | One entry, automatic region discovery when supported                         |
-| `runAll([{ export, args }], options?)` | Ordered sequence of calls; the lower-level speculation primitive             |
-| `inspect(name)`                        | Automatic plan and native guard availability, with analysis diagnostics      |
-| `diagnostics`                          | Module-wide optimization refusals                                            |
-| `capabilities`                         | Active same-process sharing, automatic extraction and validation mode        |
-| `memory`                               | The unique accessible arena, including a coordinator-exposed hidden memory   |
-| `memories`                             | Named imported and exported memory wrappers                                  |
-| `exports`                              | Original native exports for trusted host integration                         |
-| `close()` and async disposal           | Join worker termination and outstanding JSPI calls; repeated close shares it |
-
-A run returns `values`, `mode`, participating `workers`, `regions`, `replayed`, `fallbacks` and an
-optional routing `reason`. Generalized execution also reports `extraction`, `memoryMode` and
-`snapshotBytes`. Mode is `serial`, `speculative` or `native-shared`, and a serial run reports zero
-participating workers. An analysis refusal is distinct from a runtime dependency, a failed guard
-and a small-workload decision.
-
-Run options:
-
-- `parallel: 'auto' | 'off' | 'speculate'` chooses automatic routing, original execution or tracked
-  regions.
-- `maximumWorkers` caps participating workers without recreating the group, which limits
-  contention or leaves CPU for other jobs.
-
-Pool options are `workers` (up to four by default), `memory`, `imports`, `minimumParallelWork`
-(100,000 estimated iterations for proved kernels), `minimumRegionWork` and `assumedTripCount` (both
-apply when `open` prepares raw bytes), `fuel` (100,000,000), `maxTransactionBytes` (262,144),
-`promising`, `profile` and `adaptiveRouting`. With `adaptiveRouting`, a call shape (entry, width,
-memory size and numeric arguments) whose last two runs mostly replayed or fell back runs natively
-for the next 16 calls and is then probed again. It is off by default. A one-worker pool uses its
-native entry and creates no idle worker.
-
-Profiling is opt-in. `report.profile` holds elapsed time, worker observations, validation, commit
-and replay time, and tracked read and write bytes. On generalized batches `workerWallMs` and
-`workerCpuMs` hold per-region observations. Measure process CPU once at the coordinator, because
-summing overlapping process-wide counters double counts.
-
-Folio has six subpaths. Each one names a runtime boundary or a feature, and the sections above show
-the exports in use.
-
-| Import                          | Runs on                     | Contents                                                                                                                                   |
-| ------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `@gmitch215/folio`              | Node                        | `Folio`, the compiler and analysis, folds, certification, ownership certificates, the router, task and slice pools, and the execution host |
-| `@gmitch215/folio/workers`      | Workers and Durable Objects | `ManagedFolio`, `FolioLane`, the remote client `RemoteFolio`, and the frame and value codecs                                               |
-| `@gmitch215/folio/browser`      | Browsers without JSPI       | `BrowserFolio`, which runs one counted-loop call on shared memory                                                                          |
-| `@gmitch215/folio/memory`       | Portable                    | Page directories and leases (`PageDirectory`, `MemoryPageOwner`, `ResidentPageLease`) and the growth governor (`governGrowth`)             |
-| `@gmitch215/folio/boot`         | Portable                    | Boot images: `bakeModule`, `captureImage`, `applyImage`, `checkBaked` and the image errors                                                 |
-| `@gmitch215/folio/continuation` | Portable                    | Wasm guests across Durable Object alarm events, with page-hash checkpoints in Durable Object SQLite                                        |
-
-Subpaths from 1.1 that are not in this table are no longer exported. The CHANGELOG lists where
-each of their names moved.
-
-The generated API reference is published to GitHub Pages from `bun run docs:build`.
-
-## 🧪 Consumer Harness
-
-`scripts/probe/consumer.ts` measures any Wasm module against a native instance of itself. A consumer
-file exports the module bytes, a factory for fresh imports and a list of cases. Each case prepares
-state on the raw exports and returns the calls to time. The harness opens a native arm and one pool
-per worker count, alternates the arms inside every round, and compares the whole memory and every
-return value before it records a sample. A mismatch stops the run.
-
-```sh
-node scripts/probe/consumer.ts scripts/probe/consumers/tinyimg.ts results/mine/tinyimg.jsonl 20 1,2,4,8
-bun scripts/analyze/paired.ts mine tinyimg.jsonl
-```
-
-`FOLIO_OLD_BUILD=1` adds an `old-N` arm per worker count that runs the archived source from before
-static admission (`results/execution/admission/old-build-src.tar.gz`), alternating with the current
-build in the same rounds. The summary then reports `versusOld`, the old build's wall time divided by
-the current one.
-
-Every row carries wall time, process CPU and what Folio dispatched: workers, regions, replays,
-fallbacks, mode and the reason it stayed serial. The closing row holds `inspect` coverage for each
-entry that ran. The summary reports the paired speedup (native over Folio, within each round) and
-the CPU ratio, so a run that finds nothing to split says so with its numbers. The consumers in
-`scripts/probe/consumers/` cover tinyimg, a Linux machine core and a process ABI probe, a serial
-recurrence, the compute kernel and a kernel whose trip count is too small to pay for dispatch.
-`scripts/probe/php-workloads.ts` runs the same comparison on a PHP 8.5 build that serves Drupal.
-
-`scripts/probe/php-contexts.ts` opens N private PHP instances, one per worker thread, and runs a
-snippet or the uncached Drupal render in each. Every result carries timestamps from inside the
-thread and thread CPU, so a run can show that two instances executed at the same time.
-`scripts/probe/php-concurrent.ts` uses it for the four-arm comparison of independent requests
-(native serial, native concurrent, Folio serial, Folio concurrent). Independent requests scale
-with the number of instances whether or not Folio is involved; the library adds nothing to that
-result and the numbers are in the technical report.
-
-`scripts/probe/php-regen.ts` regenerates a set of Drupal pages with private contexts pulling from
-one queue and aborts if any page differs from the serial render. On ten cores it reproduced 31 pages
-7.65x faster than one context. It also runs under Bun, which the task pool supports.
-
-## 📈 Measured Results
-
-| Backend                            | Environment                                                                     | Result                                                                                                                                                                                                                               |
-| ---------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Node, shared allocation            | Ryzen 9 9900X, eight pinned workers, 256 MiB arena                              | 7.52x median elapsed speedup on a normally inlined C entry, 4.87% extra CPU work, every byte exact                                                                                                                                   |
-| Node, compute kernel               | eight workers, 207 byte-exact samples                                           | 7.62x, with total CPU 1.037x of serial                                                                                                                                                                                               |
-| Node, Drupal regeneration          | Ryzen 9 9900X, ten private contexts, 31 pages, n=20                             | 7.65x median over one context, 1.087x process CPU, every page equal to the serial render                                                                                                                                             |
-| Managed Workers                    | deployed Durable Object lanes                                                   | 39 of 39 rows exact over RPC, fetch, streams and WebSockets; 1.62x end to end at four lanes                                                                                                                                          |
-| Browser Run                        | deployed Chromium, eight workers on one 256 MiB allocation                      | 3.87x with four workers on explicit partitions                                                                                                                                                                                       |
-| Browser automatic extraction       | Free plan account, no JSPI, one ordinary counted-loop call over 256 MiB         | 3.45x at eight workers, all memory and returns exact; n=3 exploratory wall time                                                                                                                                                      |
-| Baked boot image                   | PHP 8.5.12 Drupal host in a Durable Object, assets, n=4 per arm                 | first request 72.9% less cpuTime and 52.4% less wall; serve after a drop 43.9% less cpuTime                                                                                                                                          |
-| Independent corpus                 | 21 kernels from nine upstream projects, Ryzen 9 9900X and Apple M2 Pro          | default admission finds no plan and dispatches no worker for any kernel; forcing admission makes all 11 kernels that receive regions slower than native                                                                              |
-| Explicit tasks on private contexts | the same 21 kernels, eight batched `TaskPool` workers                           | 18 of 21 reach 2x or more with a learned-page reset and 8 of 21 with the input-independent checkpoint reset; the eight-worker arm varies by up to 1.5x between runs                                                                  |
-| Iteration route, outside program   | BLAKE3 1.8.7 unmodified, 32 x 4 MiB and 128 x 256 KiB, Ryzen 9 9900X and M2 Pro | default admission through `Folio.run`: 2.4x to 3.1x and 2.0x on the Ryzen machine, 3.2x to 3.5x and 2.8x to 2.9x on the M2 Pro (warm calls, equal digests); 1.00x before. SHA-256 with a helper per input 1.7x to 2.1x, LZ4 no gain  |
-| Baked Drupal lifecycle             | Apple M2 Pro, 15 paired rounds, compile through first render                    | 830.5 ms to 444.7 ms elapsed (1.90x), process CPU 0.56 of native, 12 of 13 selected configurations reuse the image                                                                                                                   |
-| Managed range lanes                | deployed Durable Object lanes, 8 MiB arena, 65,536 rounds                       | 1.98x to 2.00x over serial with `fuel` raised to 1e9 and 0.2% of the snapshot bytes on the wire; 0.84x to 0.90x at the default fuel, where the owner finishes serially                                                               |
-| Managed SQLite shards              | deployed Durable Object lanes, 1,000,000 rows, 4 and 8 shards, declared merges  | 2.0x to 9.7x over one object across five queries, 178 samples equal to the serial result                                                                                                                                             |
-| Record-level corpus                | 30 bulk drivers, Ryzen 9 9900X, three sessions of five rounds                   | default admission wins on 7 drivers (SHA-256 2.01x, MD5 1.46x, SHA-1 1.55x, miniz CRC-32 1.52x, AES-CTR 1.21x, LZ4 compress 1.06x); explicit private contexts win on 26 (1.48x to 3.64x on 25); every output equal to the serial one |
-| Exact chunked recurrences          | one 64 MiB stream, eight task workers, Apple M2 Pro                             | CRC-32 4.25x, Adler-32 5.00x, AES-128-CTR 3.69x with shared input; CRC-32 3.52x with copied chunks; outputs equal to `zlib` and `node:crypto`                                                                                        |
-| Certified stream folds             | ten stream subjects, eight task workers, three sessions, Ryzen 9 9900X          | 3.4x to 4.1x at 8 MiB and 4.7x to 6.8x at 64 MiB over the serial call (serial median over steady median, median of sessions), process CPU 1.02 to 1.10 of serial at 64 MiB, every result equal to the serial call                    |
-| Ownership certificate, slice route | frozen final corpus, 47 drivers from 10 projects                                | window certificate on 1 of 47 drivers (`minimp3-mp3dec_init`), run on the window in 21 of 30 arm64 rounds and 0 of 30 x86_64 rounds; router geomean stays 0.90, gate missed (`router-ablation-final.ts`, rig and Mac)                |
-| Router                             | frozen final corpus, 47 drivers from 10 projects                                | geomean 0.899 (0.861 to 0.935) on the Ryzen 9 9900X rig and 0.900 (0.858 to 0.941) on the Apple M2 Pro, three sessions each, against 1.20; slowest of the five slowest 0.594 and 0.561 against 0.90; 17,484 rows, 0 wrong; not met   |
-| Unmodified external programs       | aobench, 6pack with FastLZ and llama2.c at `-O2`, Ryzen 9 9900X, seven rounds   | the automatic route stays serial on all three: 1.002 (0.999 to 1.007), 1.002 (0.996 to 1.004) and 1.001 (0.998 to 1.003) over serial Wasm; the 1.20 pass line is not met; 0 wrong outputs in 126 timed samples                       |
-| Software translation for paging    | PHP stock front page render, Ryzen 9 9900X, ten pairs per cell                  | tau 1.581 (1.537 to 1.617), translated render over native minus one, against a gate of at most 1: not met at default V8 tiering; the objective stays open                                                                            |
-
-Two memory checks from 1.2, run on a Drupal site on Durable Objects, have their own pages. The growth governor refuses every
-glue attempt past a cap and the guest reports out of memory with its memory unchanged
-([growth-governor](experiments/growth-governor/README.md)). Committing an event with `storage.sync()`
-before an alarm moves earlier did not remove Durable Object storage resets on a deployed site:
-11 resets in 150 requests against 1 in 150 for the old path (Fisher exact p = 0.005), the opposite of
-what the change predicts ([alarm-discipline](experiments/alarm-discipline/README.md)).
-
-A streaming workload stops improving near four workers, and `maximumWorkers` caps the pool per run.
-Managed Workers cannot share physical memory across isolates, so that backend copies snapshots. The
-[technical report](TECHNICAL_REPORT.md) lists every figure with its instrument, the raw samples
-live in [results/](results), and the Cloudflare probes are described in
-[experiments/](experiments/README.md).
+- `continuation` runs a guest across alarm events with checkpoints in storage.
+
+[Advanced Usage](ADVANCED_USAGE.md) combines these for specialised cases.
+
+## 🗂️ Modules
+
+Folio has six subpaths. Each one names a runtime boundary or a feature.
+
+| Import                          | Runs on                     | Purpose                                                                                             | Page                                         |
+| ------------------------------- | --------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `@gmitch215/folio`              | Node                        | `Folio`, the compiler, folds, certificates, the router, task and slice pools, the execution host    | [Core](docs/modules/core.md)                 |
+| `@gmitch215/folio/workers`      | Workers and Durable Objects | `ManagedFolio`, `FolioLane`, the remote client `RemoteFolio` and the frame and value codecs         | [Workers](docs/modules/workers.md)           |
+| `@gmitch215/folio/browser`      | Browsers without JSPI       | `BrowserFolio`, which runs one counted-loop call on shared memory                                   | [Browser](docs/modules/browser.md)           |
+| `@gmitch215/folio/memory`       | Portable                    | Page directories and leases, the growth governor and elastic regions                                | [Memory](docs/modules/memory.md)             |
+| `@gmitch215/folio/boot`         | Portable                    | Boot images: `bakeModule`, `captureImage`, `applyImage`, `checkBaked` and the image errors          | [Boot](docs/modules/boot.md)                 |
+| `@gmitch215/folio/continuation` | Portable                    | Wasm guests across Durable Object alarm events, with page-hash checkpoints in Durable Object SQLite | [Continuation](docs/modules/continuation.md) |
+
+[Modules](docs/modules/README.md) helps choose between them, and
+[Configuration](docs/configuration.md) lists every option. Subpaths from 1.1 that are not in this
+table are no longer exported, and the
+[CHANGELOG](https://github.com/gmitch215/folio/blob/master/CHANGELOG.md) lists where each of their
+names moved. The generated API reference is published to GitHub Pages from `bun run docs:build`.
+
+## ⚠️ Limits
+
+Folio keeps the serial result and does not promise a speedup. The automatic routes found no gain on
+independent library kernels and on three unmodified outside programs, and the explicit routes win
+where the caller names the independent work. [Limits](docs/limits.md) lists what does not
+parallelize, the gates that were not met and the platform limits, and the
+[technical report](TECHNICAL_REPORT.md) holds the figures, the instruments and the raw samples under
+[results](https://github.com/gmitch215/folio/tree/master/results).
 
 ## 🔧 Development
 
@@ -1003,11 +159,13 @@ bun run example
 ```
 
 Fixtures need `clang` and `wasm-ld` with the `wasm32` target. Tests need Node 26 for JSPI.
-`bun run test:coverage` runs the unit and integration projects with coverage, and `bun run
-test:e2e` deploys the probes to a Cloudflare account when `FREE_CLOUDFLARE_ACCOUNT_ID` and
-`FREE_CLOUDFLARE_API_TOKEN` are set; the experiments also accept `FOLIO_CLOUDFLARE_ACCOUNT_ID` and
-`FOLIO_CLOUDFLARE_API_TOKEN`. Layout notes live in [tests/](tests/README.md),
-[scripts/](scripts/README.md) and [experiments/](experiments/README.md).
+`bun run test:coverage` runs the unit and integration projects with coverage, and `bun run test:e2e`
+deploys the probes to a Cloudflare account when `FREE_CLOUDFLARE_ACCOUNT_ID` and
+`FREE_CLOUDFLARE_API_TOKEN` are set. The experiments also accept `FOLIO_CLOUDFLARE_ACCOUNT_ID` and
+`FOLIO_CLOUDFLARE_API_TOKEN`. Layout notes live in
+[tests/](https://github.com/gmitch215/folio/blob/master/tests/README.md),
+[scripts/](https://github.com/gmitch215/folio/blob/master/scripts/README.md) and
+[experiments/](https://github.com/gmitch215/folio/blob/master/experiments/README.md).
 
 ## 🤝 Contributing
 
@@ -1018,4 +176,5 @@ samples.
 
 ## 📄 License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See [LICENSE](https://github.com/gmitch215/folio/blob/master/LICENSE). The documentation
+favicons in `docs/` are the Fluent UI Emoji tram car from Microsoft, licensed under MIT.
