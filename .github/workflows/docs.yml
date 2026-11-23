@@ -28,5 +28,7 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Build Documentation
         run: bun run docs:build
+      - name: Check Documentation
+        run: bun run docs:check
       - name: Deploy Documentation
         run: bash typedoc.sh "${GITHUB_SHA::7}"

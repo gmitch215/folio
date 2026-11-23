@@ -1,0 +1,166 @@
+{
+	"groups": [
+		{
+			"title": "Start",
+			"pages": [
+				{
+					"title": "Overview",
+					"path": "README.md",
+					"description": "What Folio does, the install and the first program."
+				},
+				{
+					"title": "Getting Started",
+					"path": "docs/getting-started.md",
+					"description": "Install, prepare one module, run it and read the result."
+				},
+				{
+					"title": "Examples",
+					"url": "https://github.com/gmitch215/folio/tree/master/examples",
+					"description": "Runnable programs for each part of the library, on GitHub."
+				}
+			]
+		},
+		{
+			"title": "Modules",
+			"pages": [
+				{
+					"title": "All Modules",
+					"path": "docs/modules/README.md",
+					"description": "The six import paths and the page for each."
+				}
+			],
+			"sections": [
+				{
+					"title": "Parallelism",
+					"pages": [
+						{
+							"title": "Core",
+							"path": "docs/modules/core.md",
+							"description": "Folio, prepare, the execution host, async host effects and context checkpoints."
+						},
+						{
+							"title": "Pools",
+							"path": "docs/modules/pools.md",
+							"description": "The task pool, the slice pool and the iteration route."
+						},
+						{
+							"title": "Folds and Certificates",
+							"path": "docs/modules/folds-and-certificates.md",
+							"description": "Certified stream folds, ownership certificates and the router."
+						}
+					]
+				},
+				{
+					"title": "Platforms",
+					"pages": [
+						{
+							"title": "Workers",
+							"path": "docs/modules/workers.md",
+							"description": "Managed Workers, Durable Object lanes and the portable client."
+						},
+						{
+							"title": "Browser",
+							"path": "docs/modules/browser.md",
+							"description": "Browser execution and page leases."
+						}
+					]
+				},
+				{
+					"title": "Memory and State",
+					"pages": [
+						{
+							"title": "Memory",
+							"path": "docs/modules/memory.md",
+							"description": "The growth governor, page directory and leases, and elastic regions."
+						},
+						{
+							"title": "Boot",
+							"path": "docs/modules/boot.md",
+							"description": "Baked boot images."
+						},
+						{
+							"title": "Continuation",
+							"path": "docs/modules/continuation.md",
+							"description": "Long jobs across invocations: runSlice, checkpoints and loss detection."
+						}
+					]
+				}
+			]
+		},
+		{
+			"title": "Guides",
+			"pages": [
+				{
+					"title": "Configuration",
+					"path": "docs/configuration.md",
+					"description": "The options each module takes, with defaults."
+				},
+				{
+					"title": "Limits",
+					"path": "docs/limits.md",
+					"description": "What Folio does not do, and where each limit is measured."
+				},
+				{
+					"title": "Advanced Usage",
+					"path": "ADVANCED_USAGE.md",
+					"description": "Specialised uses and combinations of the modules."
+				}
+			]
+		},
+		{
+			"title": "Studies",
+			"pages": [
+				{
+					"title": "All Studies",
+					"path": "docs/studies/README.md",
+					"description": "The measurement studies behind the modules, with the page for each."
+				},
+				{
+					"title": "Storage Resets",
+					"path": "docs/studies/storage-resets.md",
+					"description": "Alarm retirement, alarm discipline, the commit ladder and the idle floor."
+				},
+				{
+					"title": "Continuation Across Events",
+					"path": "docs/studies/continuation-across-events.md",
+					"description": "The continuation model, PHP park and the deployed runs."
+				},
+				{
+					"title": "Elastic Memory",
+					"path": "docs/studies/elastic-memory.md",
+					"description": "Translation cost, paging, closed compression and arenas, and the guard count."
+				},
+				{
+					"title": "Boot Images",
+					"path": "docs/studies/boot-images.md",
+					"description": "What a baked boot image saves and what it costs."
+				},
+				{
+					"title": "Memory Accounting",
+					"path": "docs/studies/memory-accounting.md",
+					"description": "The memory ladder, the growth governor and the platform memory line."
+				},
+				{
+					"title": "Parallel Execution",
+					"path": "docs/studies/parallel-execution.md",
+					"description": "Scaling, pools, certification and the router gates."
+				}
+			]
+		},
+		{
+			"title": "Reference",
+			"pages": [
+				{
+					"title": "Technical Report",
+					"path": "TECHNICAL_REPORT.md",
+					"description": "The evidence, the method and the limits behind every claim."
+				},
+				{
+					"title": "API Reference",
+					"path": "api",
+					"description": "Every exported class, function, interface and type."
+				}
+			]
+		}
+	]
+}

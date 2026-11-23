@@ -6,6 +6,8 @@ git config --local user.name "GitHub Action"
 
 tmpdir="$(mktemp -d)"
 cp -R typedoc/. "$tmpdir/"
+# staged before the branch switch, then copied to the publish root
+cp docs/CNAME "$tmpdir/CNAME"
 
 # a first deploy has no gh-pages to branch from, so start an orphan rather than force-pushing
 if git fetch origin gh-pages 2> /dev/null; then
