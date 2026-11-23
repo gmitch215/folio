@@ -54,10 +54,15 @@ with this table:
   `commit-ladder` (commit size), `idle-floor` (idle restart rate), `memory-ladder` (which allocations
   count toward the memory limit) and `growth-governor` (the cap on a PHP guest). Each README states its
   instrument, sample counts and limits.
-- `@gmitch215/folio/memory` exports `ElasticRegion`, `AsyncElasticRegion`, `sqlHolder` and `peerHolder`
-  for memory larger than one window. A region keeps a fixed set of chunk frames, fetches a missing
+- `@gmitch215/folio/memory` exports `ElasticRegion`, `AsyncElasticRegion`, `sqlHolder`, `peerHolder` and
+  `peerStore` for memory larger than one window. A region keeps a fixed set of chunk frames, fetches a missing
   chunk on access, writes a dirty chunk back with a raised version, and refuses a chunk whose holder
   copy is stale or missing with `StaleChunkError`.
+
+- A documentation site built with TypeDoc by `bun run docs:build`: a page for each of the six subpaths
+  under `docs/modules/`, study summaries under `docs/studies/`, `docs/getting-started.md`,
+  `docs/configuration.md`, `docs/limits.md` and `ADVANCED_USAGE.md`. `bun run docs:check` checks its links,
+  anchors and contrast.
 
 ### Changed
 

@@ -8,7 +8,9 @@ tooling, Node 26 for anything that needs `worker_threads` or JSPI, strict ESM Ty
 erasable syntax only.
 
 `TECHNICAL_REPORT.md` is the evidence and the limits. Read its "Limits and Open Questions" before
-claiming anything about speed, isolates, accounts or consumers.
+claiming anything about speed, isolates, accounts or consumers. `README.md` is the short first
+copy, `ADVANCED_USAGE.md` covers specialised use and combinations, and `CHANGELOG.md` holds the
+release notes.
 
 ## Layout
 
@@ -32,8 +34,14 @@ claiming anything about speed, isolates, accounts or consumers.
   - `browser/` the browser pool and its worker.
 - `tests/c/` freestanding C fixtures, `tests/unit/` the gate, `tests/integration/` local workerd,
   `tests/e2e/` live deploys. See `tests/README.md`.
+- `docs/` the documentation site sources. `getting-started.md`, `configuration.md` and `limits.md`
+  are the user pages, `modules/` has one page per subpath, `studies/` has one summary page per family
+  of studies, and `nav.json` is the sidebar. `typedoc.json` lists the pages and `typedoc.sh`
+  publishes the build.
 - `scripts/` build, analysis, probes and the timing rig. The folder decides the runtime. See
-  `scripts/README.md`.
+  `scripts/README.md`. `scripts/docs/` makes the sidebar (`nav.ts`), checks links, anchors and
+  contrast (`check.ts`), typechecks the TypeScript snippets of the pages (`fences.ts`) and renders
+  diagrams and math in the browser (`render.js`).
 - `experiments/` the Cloudflare and browser probes (`cloud`, `managed`, `elastic`, `elastic-limits`,
   `elastic-ladder`, `browser`, `consumer`, `bootimage`, `rpc`, `ranges`, `concurrency`,
   `sqlite-lanes`, `corpus-lanes`, `alarm-discipline`, `alarm-retirement`, `commit-ladder`,
@@ -46,12 +54,14 @@ claiming anything about speed, isolates, accounts or consumers.
 
 ```sh
 bun run build:c          # compile tests/c/*.c to build/*.wasm
-bun run typecheck        # root plus eleven experiment projects
+bun run typecheck        # root plus twelve experiment projects
 bun run test             # unit gate
 bun run test:integration # local workerd, about 25 s
 bun run test:coverage
-bun run build    # dist/
-bun run test:e2e # live deploy, needs FREE_CLOUDFLARE_ACCOUNT_ID and FREE_CLOUDFLARE_API_TOKEN
+bun run build      # dist/
+bun run docs:build # typedoc site into typedoc/, then the sidebar
+bun run docs:check # links, anchors and contrast in typedoc/
+bun run test:e2e   # live deploy, needs FREE_CLOUDFLARE_ACCOUNT_ID and FREE_CLOUDFLARE_API_TOKEN
 bun run prettier
 bun run prettier:check
 ```
