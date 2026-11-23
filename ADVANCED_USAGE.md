@@ -1,6 +1,6 @@
 # Advanced Usage
 
-This page covers the combinations the module pages leave out: a job that outlasts one Durable Object event, a PHP application host, a Linux userland, memory larger than one isolate, pools used together, resets and bounds on a guest, and how to read the evidence. Each section gives what the feature is, when to use it, the smallest working code and its limit. The basics of each module are in [Modules](docs/modules/README.md), and every figure comes from [the technical report](TECHNICAL_REPORT.md) or a study under [results](https://github.com/gmitch215/folio/blob/master/results/README.md).
+This page covers the combinations the module pages leave out: a job that outlasts one Durable Object event, a PHP application host, a Linux userland, memory larger than one isolate, durable task lanes, pools used together, resets and bounds on a guest, and how to read the evidence. Each section gives what the feature is, when to use it, the smallest working code and its limit. The basics of each module are in [Modules](docs/modules/README.md), and every figure comes from [the technical report](TECHNICAL_REPORT.md) or a study under [results](https://github.com/gmitch215/folio/blob/master/results/README.md).
 
 The limits that apply to every route are in [Limits](docs/limits.md). The measurement behind each section has a page under [Studies](docs/studies/README.md).
 
@@ -311,9 +311,23 @@ The memory meter shapes chunk size and window. The platform meter charged linear
 
 ### Closed Mechanisms
 
-Compressing evicted chunks does not pay on the fault path. A decoder must run faster than about 520 to 850 MiB/s, and the synchronous decoders in `node:zlib` read 257 MiB/s inside a deployed object, which makes a compressed fault cost 2.3 to 3.1 times the CPU of an uncompressed read from the object's own storage. Narrow arenas, which put several small windows in the module, read a tau of 1.75 to 2.80 for four arenas on Thunder admin where a prediction said 0.59 to 0.64. Translating every access of a PHP module costs a tau of 1.581 on the stock front page at default tiering. The dynamic guard count of an epoch design is 0.308 per access on admin, and its projected tau of 0.18 to 0.19 is a prediction ([Elastic Memory Study](TECHNICAL_REPORT.md#elastic-memory-study)).
+Compressing evicted chunks does not pay on the fault path. A decoder must run faster than about 520 to 850 MiB/s, and the synchronous decoders in `node:zlib` read 257 MiB/s inside a deployed object, which makes a compressed fault cost 2.3 to 3.1 times the CPU of an uncompressed read from the object's own storage. Narrow arenas, which put several small windows in the module, read a tau of 1.75 to 2.80 for four arenas on Thunder admin where a prediction said 0.59 to 0.64. Translating every access of a PHP module costs a tau of 1.581 on the stock front page at default tiering. The dynamic guard count of an epoch design is 0.308 per access on admin and predicted a tau of 0.18 to 0.19, and the built per-base epoch arm read 0.783 on admin against 0.834 for the per-access arm, so that mechanism is closed at the current shapes ([Elastic Memory Study](TECHNICAL_REPORT.md#elastic-memory-study)).
 
 **Limit.** `ElasticRegion` serves host code and explicit spans. A native Wasm guest cannot address a region transparently, and the software translation that would let it misses its gate on every PHP route. The managed page plane missed its gates on both Free plan days it ran, and a region has one trusted writer ([Elastic Memory](docs/studies/elastic-memory.md)).
+
+## Durable Task Lanes
+
+`LanePool` spreads independent CPU units across Durable Object lanes. The coordinator holds a task table in its SQLite, lanes with distinct object ids claim tasks by RPC under a lease, and the coordinator folds the results in id order. The module page, [Workers](docs/modules/workers.md#task-lanes), has the code. This section states what the pool promises.
+
+**The result is written once.** A task id has one result row. The first completion wins and a later completion of the same id changes nothing, including a completion from an attempt whose lease had already ended.
+
+**The body runs at least once.** A lane can reset after it did the work and before it reported, and the lease then replays the task. A task that fails is retried up to `maxAttempts` and then marked `failed`, and a poison task stops there.
+
+**So the effect is once for deterministic or idempotent tasks.** A task that computes a value from its arguments, or whose effects commute or repeat harmlessly, gives the same result however many times it runs. A task with any other effect, such as sending mail or calling an outside service, can repeat that effect. Put such an effect behind an idempotency key that the receiver checks, which moves the duplicate to the receiver. `Outbox` carries those effects on the same table. Each row has a kind, and the kind's policy says what a successor does when a lease ended while the effect may have run: `resend` runs it again (at least once), `report` ends the row as `failed` and never runs it again (at most once). The effect receives the row id as its idempotency key. [Workers](docs/modules/workers.md#outbox) has the four rules and the limits, including that `storage.sync()` has not been measured against a CPU kill.
+
+**A transition is durable once it is flushed.** The pool awaits the flush you pass after a submit, after a claim before the lane sees it and after a completion before it answers. A reset loses the writes since the last flush and keeps the earlier ones, and the next claim replays any task whose claim or completion was lost. Two writes with no flush between them can be lost in either order, so the table has no statement that depends on another statement of the same event. A marker written before an effect, with no flush between them, can lose the marker and repeat the effect.
+
+The limits are these. A unit has to cost tens of milliseconds or more, because every claim and completion is a call. The lease is at least 5 s, so a replay waits at least that long, and a synchronous task has to finish inside it. Arguments and results are SQLite values and RPC arguments, so keep them small. The pool's speed-up is calculated, not measured: a fixed overhead of about 430 ms for 16 tasks at four lanes puts serial over pool at about 1.7 for 100 ms units and 2.3 for 190 ms, with a break-even near 50 ms ([the model](https://github.com/gmitch215/folio/blob/master/experiments/lane-pool/model.ts)).
 
 ## Pools in Combination
 

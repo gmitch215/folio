@@ -2,11 +2,13 @@
 
 ## Overview
 
-`@gmitch215/folio/workers` is the entry for hosts that cannot create threads or compile WebAssembly at request time, such as Cloudflare Workers and Durable Objects. It exports two clients.
+`@gmitch215/folio/workers` is the entry for hosts that cannot create threads or compile WebAssembly at request time, such as Cloudflare Workers and Durable Objects. It exports two clients and a durable task pool for Durable Object lanes.
 
 `RemoteFolio` is the portable client. A Worker keeps its URL and asks a Folio execution host to run a registered artifact. Sharing happens inside the host, and requests and results cross a serialized transport. The client uses `fetch` or a service binding, imports nothing from Node and compiles no Wasm. `FolioHost` is the other end, described in [Core](core.md). `encodeValue`, `decodeValue`, `encodeBytes`, `decodeBytes`, `RemoteError` and `UncertainDelivery` belong to the same client.
 
 `ManagedFolio` runs a program entirely inside managed Workers and Durable Objects. The original Wasm stack and its JSPI coordinator stay in the owner. Region batches travel as binary frames, with a frozen copy of memory, to lane objects that run a tracked module. The owner validates the results in order and commits them. Memory is copied and kept coherent, and none of it is shared. `FolioLane` is the lane runtime. A transport failure falls back to native execution at the owner. The frame codec in `src/remote/frames.ts` is internal and the entry does not export it.
+
+`LanePool`, `serveLane` and `TaskTable` run independent named tasks on lane objects with leases, so a lane that resets is replayed. `Outbox` runs effects such as mail on the same table with a replay policy per kind. [Task Lanes](#task-lanes) describes them.
 
 Use `RemoteFolio` when a host that can share memory already exists and the Worker is the edge in front of it. Use `ManagedFolio` when everything must stay on the platform. A run returns a `ManagedReport`:
 
@@ -266,6 +268,231 @@ The local control for this route is a stock workerd with a service binding to th
 
 `src/managed/index.ts`, `src/remote/frames.ts`, `src/remote/index.ts` and `src/remote/values.ts` stay free of Node imports and of runtime Wasm compilation, so they run unchanged on Node, Workers and browsers. A change to any of them keeps that property.
 
+## Task Lanes
+
+`LanePool` and `serveLane` spread independent CPU units across Durable Object lanes with tasks that live in SQL. The coordinator object holds a task table in its own SQLite. Lane objects, each with its own id, claim tasks from the coordinator by RPC under a lease, run a named function and report the result. The coordinator folds the results in id order. A lane that resets loses only the task it was running. Its lease ends and the next claim replays the task. A coordinator that resets loses only the transitions since its last flush, and a new pool over the same storage continues the run.
+
+Use it for a batch of independent units that each cost tens of milliseconds or more, such as image derivatives, search shards, cron work and bench or census jobs. It differs from `ManagedFolio`, which ships Wasm regions with a memory snapshot. A task here is a function name and an argument, and the lane runs ordinary code.
+
+The contract has three parts. The result of a task id is written once: the first completion wins and a later one changes nothing. The body of a task runs at least once, because a lane can reset after the work and before the report. The result is therefore effectively once for a task whose body is deterministic or idempotent. Any other effect, such as mail or an outbound request, belongs in the [Outbox](#outbox), which adds a replay policy per kind and an idempotency key.
+
+### Running a Pool
+
+The example below runs four lanes in one process over an in-memory SQLite stand-in for the coordinator's storage, so it runs on Node 26 and deploys nothing. The same classes, with Durable Object bindings in place of the plain objects, are in [`examples/lane-pool.ts`](https://github.com/gmitch215/folio/blob/master/examples/lane-pool.ts).
+
+```ts
+import { DatabaseSync } from 'node:sqlite';
+import { LanePool, serveLane } from '@gmitch215/folio/workers';
+import type { SqlStorage } from '@gmitch215/folio/continuation';
+
+const db = new DatabaseSync(':memory:');
+const sql: SqlStorage = {
+  exec(query, ...bindings) {
+    const args = bindings.map((value) =>
+      value instanceof ArrayBuffer ? new Uint8Array(value) : value
+    );
+    const statement = db.prepare(query);
+    const rows = /^\s*SELECT|RETURNING/i.test(query)
+      ? (statement.all(...args) as Record<string, unknown>[])
+      : (statement.run(...args), []);
+    return { toArray: () => rows };
+  }
+};
+
+const lane = serveLane({ square: (args) => String(Number(args) ** 2) });
+const pool: LanePool = new LanePool(sql, {
+  width: 4,
+  transport: { work: (index) => lane.work(pool) }
+});
+
+await pool.submit(
+  Array.from({ length: 8 }, (_, i) => ({ id: `n${i}`, name: 'square', args: String(i) }))
+);
+const report = await pool.run();
+console.log(report.done, report.failed);
+console.log(pool.fold((sum, result) => sum + result.json<number>(), 0));
+```
+
+```text
+8 0
+140
+```
+
+`submit` adds tasks and flushes them. `run` calls the lanes and waits until every task is `done` or `failed`. `fold` joins the results in id order whatever order the lanes finished in, and throws if a task failed or is still open. `results()` returns every task with its state, so a failed task can be read instead of thrown.
+
+### Lanes on Durable Objects
+
+On Workers the coordinator and each lane are Durable Objects. The coordinator exposes the four methods a lane calls, and a lane calls them through a stub. Lanes need distinct object ids to get distinct isolates.
+
+```ts no-check
+import { LanePool, serveLane, type LaneHold } from '@gmitch215/folio/workers';
+import { DurableObject } from 'cloudflare:workers';
+
+interface Env {
+  COORD: DurableObjectNamespace<Coordinator>;
+  LANES: DurableObjectNamespace<Lane>;
+}
+
+const registry = {
+  hash: async (args: string | Uint8Array) => {
+    const bytes = typeof args === 'string' ? new TextEncoder().encode(args) : args;
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+  }
+};
+
+export class Lane extends DurableObject<Env> {
+  work(coordinatorName: string) {
+    const stub = this.env.COORD.get(this.env.COORD.idFromName(coordinatorName));
+    return serveLane(registry).work(stub);
+  }
+}
+
+export class Coordinator extends DurableObject<Env> {
+  #pool = new LanePool(this.ctx.storage.sql, {
+    width: 4,
+    flush: () => this.ctx.storage.sync(),
+    transport: {
+      work: (lane) =>
+        this.env.LANES.get(this.env.LANES.idFromName(`lane-${lane}`)).work(this.ctx.id.name!)
+    }
+  });
+
+  claim() {
+    return this.#pool.claim();
+  }
+  complete(id: string, attempt: number, result: string | Uint8Array) {
+    return this.#pool.complete(id, attempt, result);
+  }
+  fail(id: string, attempt: number, error: string) {
+    return this.#pool.fail(id, attempt, error);
+  }
+  renew(holds: LaneHold[]) {
+    return this.#pool.renew(holds);
+  }
+
+  async digest(inputs: string[]) {
+    await this.#pool.submit(
+      inputs.map((input, i) => ({
+        id: `h${String(i).padStart(6, '0')}`,
+        name: 'hash',
+        args: input
+      }))
+    );
+    await this.#pool.run();
+    return this.#pool.fold((all: string[], result) => [...all, result.text()], []);
+  }
+}
+```
+
+The lane receives the coordinator's name and builds the stub itself, so no stub crosses the RPC boundary. `experiments/lane-pool/worker.ts` is a deployable version of these two classes.
+
+### Options
+
+`LanePool` takes these options besides the transport.
+
+| Option        | Default               | What it does                                                                                         |
+| ------------- | --------------------- | ---------------------------------------------------------------------------------------------------- |
+| `width`       | required              | Lanes called at once. The transport receives an index from 0 up to `width - 1`.                      |
+| `leaseMs`     | 15,000, minimum 5,000 | How long a claim is valid. The alarm that checks leases cannot be set sooner than 5 s ahead.         |
+| `maxAttempts` | 3                     | Executions a task may start. A task that throws or loses its lease that many times becomes `failed`. |
+| `claimBatch`  | 1                     | Tasks a lane claims per call. A larger batch saves calls and makes later tasks of the batch wait.    |
+| `flush`       | none                  | Awaited after a submit, after a claim and after a completion. Pass `() => ctx.storage.sync()`.       |
+| `clock`       | `Date.now` and timers | An object with `now()` and `sleep(ms, signal)`, for tests.                                           |
+| `table`       | `folio_tasks`         | The SQL table name.                                                                                  |
+
+Task arguments and results are `string | Uint8Array`, as in the task pool. Pass structured data as JSON: `argsJson` on a task spec serializes into `args`, and `result.json()` parses a result. Ids sort in byte order, so zero-pad a number to keep numeric order.
+
+A lane renews the lease of a task that returns a promise, on a timer, while it runs. Between the tasks of one claimed batch it renews the ones it still holds and skips any whose lease it lost. A task that runs synchronously cannot renew, so it has to finish inside `leaseMs`.
+
+### Resuming After a Reset
+
+Every transition is durable once an await or a flush has passed it. The pool flushes before it reports a submit, before a claim reaches the lane and before a completion is acknowledged. A lane that resets after its claim and before its report leaves a running row, and `claim` takes the row again once the lease ends. A coordinator that resets between a claim and its flush loses the claim, and the next claim returns the task again.
+
+An alarm calls `resume()` on a pool built over the same storage. It makes one pass: it fails tasks that have no attempts left, calls lanes for the work that is ready, waits for those calls and returns a report. The report's `wake` is the time to arm the next alarm, at least 5 s ahead and never before the soonest lease ends, and it is unset when nothing is open.
+
+```ts no-check
+export class Coordinator extends DurableObject<Env> {
+  // ...the pool and the four methods from above
+
+  async alarm() {
+    const report = await this.#pool.resume();
+    if (report.wake !== undefined) await this.ctx.storage.setAlarm(report.wake);
+  }
+}
+```
+
+`run()` waits for lane calls and for leases, and returns when every task is final. It throws `LanePoolError` with code `stalled` when lanes keep returning without claiming work that is ready, which means the transport is not reaching a lane that can claim.
+
+### Outbox
+
+`Outbox` carries effects that must not be lost or repeated without notice, such as mail, outbound requests, Redis commands and cron units. Its rows are rows of the same task table, each with a `kind`. The outbox runs the effect callback in the object that owns the table, one row at a time or up to `width` at once.
+
+Four rules define it.
+
+1. **Replay policy per kind.** When a successor finds a `running` row whose lease ended, the earlier attempt may have run its effect. A kind set to `resend` runs the effect again, so it runs at least once. A kind set to `report` ends the row as `failed` with an error that names the policy and the lost attempt, and never runs the effect again, so it runs at most once. A kind with no policy is `report`. Policies are set when the outbox is built, not per call.
+2. **The key reaches the effect.** The callback receives `{ id, kind, attempt, key, args }`. `key` is the row id and is the same on every attempt. Use it as the `Message-ID` of a mail or the `Idempotency-Key` header of a request, so the receiver can drop a repeat.
+3. **Permanent and transient failures.** An effect that throws a `PermanentError` ends its row as `failed` at once. Any other throw puts the row back in the queue while attempts remain, and the next `drain` or `resume` runs it again. Throw a plain error only when the effect did not happen.
+4. **Order.** Each row goes through claim, flush, effect, complete, flush. The flush after the claim is what gives `report` its meaning, because a reset after it leaves a row the successor knows may have run. A reset before it loses the claim and nothing ran. The flush after the completion keeps a finished effect from being replayed after a reset.
+
+```ts
+import { DatabaseSync } from 'node:sqlite';
+import { Outbox, PermanentError } from '@gmitch215/folio/workers';
+import type { SqlStorage } from '@gmitch215/folio/continuation';
+
+const db = new DatabaseSync(':memory:');
+const sql: SqlStorage = {
+  exec(query, ...bindings) {
+    const args = bindings.map((value) =>
+      value instanceof ArrayBuffer ? new Uint8Array(value) : value
+    );
+    const statement = db.prepare(query);
+    const rows = /^\s*SELECT|RETURNING/i.test(query)
+      ? (statement.all(...args) as Record<string, unknown>[])
+      : (statement.run(...args), []);
+    return { toArray: () => rows };
+  }
+};
+
+// stands in for a mail service that drops a repeated Message-ID
+const delivered = new Map<string, string>();
+
+const outbox = new Outbox(sql, {
+  policies: { mail: 'report', http: 'resend' },
+  effect: ({ kind, key, args }) => {
+    if (kind !== 'mail') return;
+    if (!String(args).includes('@')) throw new PermanentError('no recipient');
+    delivered.set(key, String(args));
+  }
+});
+
+await outbox.enqueue([
+  { id: 'mail-0001', kind: 'mail', args: 'a@example.test' },
+  { id: 'mail-0002', kind: 'mail', args: 'nobody' }
+]);
+console.log(await outbox.drain());
+console.log(outbox.results().map((row) => `${row.id} ${row.state}`));
+```
+
+```text
+{ done: 1, failed: 1, retried: 0, reported: 0 }
+[ 'mail-0001 done', 'mail-0002 failed' ]
+```
+
+`enqueue` adds rows and flushes them, and an id that exists is ignored. `drain` runs every row that is ready and returns `{ done, failed, retried, reported }`. A row whose effect threw waits for the next `drain` instead of running again at once. In a Durable Object, pass `flush: () => ctx.storage.sync()` and call `resume()` from an alarm. `resume()` drains and returns the same counts with a `wake` time, at least 5 s ahead and never before the soonest lease ends. An effect that returns a promise has its lease renewed while it runs, and a synchronous effect has to finish inside `leaseMs`. Options are `effect`, `policies`, `flush`, `clock`, `leaseMs` (15,000 by default, 5,000 at least), `maxAttempts` (3), `width` (1) and `table`.
+
+A `reported` row is the operator's. It is final, and sending the effect again means enqueueing a new id. The row's error says which attempt was lost.
+
+The outbox has these limits.
+
+- `resend` is at least once and `report` is at most once. Neither is exactly once. A `resend` effect has to tolerate a repeat, which the key lets the receiver enforce.
+- A reported row can hide an effect that succeeded. If the process died after the effect and before its completion was flushed, the effect happened and the row says `failed`. Check the receiver before you send it again.
+- The effect callback decides what a throw means. A plain error is retried whatever the kind, so an effect that can fail after it had its effect should throw a `PermanentError`.
+- The guarantees rest on `flush` making earlier writes durable. `await storage.sync()` kept two earlier plain writes across a CPU kill in 10 of 10 bare objects. A claim inside `transactionSync`, and memory or storage resets after a flush, are not measured, and no deployed outbox has run.
+- `drain` runs in memory. A reset ends it, and nothing continues until `drain` or `resume` is called again, so arm an alarm.
+- A clock that moves back delays a replay or a report, and a clock that moves forward brings it early. Use one clock for every incarnation.
+- Arguments and results are SQLite values, so keep them small.
+
 ## Limits
 
 - The canonical memory must fit the owner's budget. The managed backend has no distributed page ownership, residency leases or native memory larger than the owner. See [Managed Coherent Backend](../../TECHNICAL_REPORT.md#managed-coherent-backend).
@@ -276,6 +503,12 @@ The local control for this route is a stock workerd with a service binding to th
 - `snapshotEncoding: 'auto'` is exact in unit tests and has no deployed measurement.
 - `RemoteFolio` has been run against a local workerd. A publicly deployed Worker to host endpoint and its network latency are not measured. See [Execution Host and Portable Client](../../TECHNICAL_REPORT.md#execution-host-and-portable-client).
 - `module UUID` values in a managed report identify module instances. They are not isolate identities.
+- The lane pool's speed is calculated and has no completed measurement. A fit to the five valid pairs of a deployed four-lane run, whose units cost about 54 ms, gives a fixed overhead of about 430 ms for 16 tasks. That projects serial over pool at about 1.25 for 54 ms units, 1.7 for 100 ms, 2.3 for 190 ms and 2.5 for 234 ms, with a break-even near 50 ms. The model assumes the overhead does not grow with the unit cost, and the pairs it is fitted to ranged from 1.08 to 1.86. It is in [the lane pool experiment](https://github.com/gmitch215/folio/blob/master/experiments/lane-pool/README.md). Each claim and each completion is a call to the coordinator, so units of a few milliseconds do not pay for it; plan for tens of milliseconds or more, with small arguments.
+- A replay of a lost task waits for its lease, which is at least 5 s. A task that runs synchronously for longer than `leaseMs` is replayed while it is still running, and the first completion wins.
+- Lanes overlap only on distinct isolates. Durable Object lanes with distinct ids overlapped in the lane-concurrency study, and a single local workerd process runs them in one isolate. See [Lane Concurrency](../../TECHNICAL_REPORT.md#lane-concurrency).
+- Arguments and results are SQLite values and RPC arguments, so each is bounded by the 32 MiB RPC argument limit and by the row limits of Durable Object SQLite. Keep them small and pass a key to larger data.
+- The result is written once and the body runs at least once. Effects other than the result need an idempotency key at the receiver, and the outbox that would carry them is not built.
+- Durability of a transition rests on `storage.sync()`. The reset behavior it relies on was measured for three reset kinds on a bare object, and the pool has not run with `sync()` in the path of a deployed reset. A bare object kept two earlier plain writes across a CPU kill after `await storage.sync()` in 10 of 10 trials. See [Storage Resets and the Growth Governor](../../TECHNICAL_REPORT.md#storage-resets-and-the-growth-governor).
 
 [Limits](../limits.md) lists the limits that cross modules.
 
@@ -285,5 +518,6 @@ The local control for this route is a stock workerd with a service binding to th
 - [Core](core.md) for `FolioHost`, the execution host that `RemoteFolio` talks to.
 - [Browser](browser.md) for the platform that has no JSPI.
 - [Continuation](continuation.md) for long jobs across Durable Object events.
+- [Advanced Usage](../../ADVANCED_USAGE.md) for the exactly-once contract of the lane pool.
 - [Managed Cloudflare Deployment](../../TECHNICAL_REPORT.md#managed-cloudflare-deployment) in the technical report.
 - [Parallel Execution](../studies/parallel-execution.md) for the studies behind the measured costs.

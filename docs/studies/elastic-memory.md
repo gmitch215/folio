@@ -8,16 +8,17 @@ Can a guest address a logical heap larger than one isolate's memory while the ex
 
 ## Instruments
 
-| Study                                                                                                                             | Question                                                               | Instrument                                   |
-| --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------- |
-| [capacity-local](https://github.com/gmitch215/folio/blob/master/results/execution/elastic-memory/capacity-local/README.md)        | Does a 192 MiB to 2 GiB logical heap run exactly in 327,680 Wasm bytes | `scripts/probe/elastic/run.ts`, local        |
-| [managed-envelope](https://github.com/gmitch215/folio/blob/master/results/execution/elastic-memory/managed-envelope/README.md)    | Does the 192 MiB fixture complete on the Free managed plan             | `experiments/elastic`, one live run          |
-| [platform-ladder](https://github.com/gmitch215/folio/blob/master/results/execution/platform-ladder/README.md)                     | What do hops, writes, stub calls and the memory meter cost             | `experiments/elastic-limits`, Free plan      |
-| [elastic-ladder-free-days](https://github.com/gmitch215/folio/blob/master/results/execution/elastic-ladder-free-days/README.md)   | Does one object run the dense fixture with pages in its own SQLite     | `experiments/elastic-ladder`, Free plan      |
-| [translation-tax](https://github.com/gmitch215/folio/blob/master/results/execution/translation-tax/README.md)                     | What does software translation of every access cost on PHP renders     | `scripts/research/elastic-translate.ts`, Mac |
-| [translation-tau-rig](https://github.com/gmitch215/folio/blob/master/results/execution/translation-tau-rig/README.md)             | The same on a quiet machine, with idealized bounds                     | the same arms, Ryzen 9 9900X container       |
-| [translation-check-elision](https://github.com/gmitch215/folio/blob/master/results/execution/translation-check-elision/README.md) | Does removing provably redundant checks lower tau                      | the same arms                                |
-| [guard-count](https://github.com/gmitch215/folio/blob/master/results/execution/guard-count/README.md)                             | How many guards would an epoch design pay per access                   | an instrumented PHP module, Node 26          |
+| Study                                                                                                                             | Question                                                               | Instrument                                     |
+| --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------- |
+| [capacity-local](https://github.com/gmitch215/folio/blob/master/results/execution/elastic-memory/capacity-local/README.md)        | Does a 192 MiB to 2 GiB logical heap run exactly in 327,680 Wasm bytes | `scripts/probe/elastic/run.ts`, local          |
+| [managed-envelope](https://github.com/gmitch215/folio/blob/master/results/execution/elastic-memory/managed-envelope/README.md)    | Does the 192 MiB fixture complete on the Free managed plan             | `experiments/elastic`, one live run            |
+| [platform-ladder](https://github.com/gmitch215/folio/blob/master/results/execution/platform-ladder/README.md)                     | What do hops, writes, stub calls and the memory meter cost             | `experiments/elastic-limits`, Free plan        |
+| [elastic-ladder-free-days](https://github.com/gmitch215/folio/blob/master/results/execution/elastic-ladder-free-days/README.md)   | Does one object run the dense fixture with pages in its own SQLite     | `experiments/elastic-ladder`, Free plan        |
+| [translation-tax](https://github.com/gmitch215/folio/blob/master/results/execution/translation-tax/README.md)                     | What does software translation of every access cost on PHP renders     | `scripts/research/elastic-translate.ts`, Mac   |
+| [translation-tau-rig](https://github.com/gmitch215/folio/blob/master/results/execution/translation-tau-rig/README.md)             | The same on a quiet machine, with idealized bounds                     | the same arms, Ryzen 9 9900X container         |
+| [translation-check-elision](https://github.com/gmitch215/folio/blob/master/results/execution/translation-check-elision/README.md) | Does removing provably redundant checks lower tau                      | the same arms                                  |
+| [guard-count](https://github.com/gmitch215/folio/blob/master/results/execution/guard-count/README.md)                             | How many guards would an epoch design pay per access                   | an instrumented PHP module, Node 26            |
+| [epoch-arm](https://github.com/gmitch215/folio/blob/master/results/execution/epoch-arm/README.md)                                 | Does one check per base local with an epoch re-check lower tau         | the epoch translation, Ryzen 9 9900X container |
 
 The PHP workloads are Drupal renders: the stock front page, and the login, admin and flush routes of Thunder, a Drupal distribution. Tau is the translated render over the native render minus one. The gate was a median tau of at most 1 on each PHP render route at default V8 tiering.
 
@@ -114,17 +115,48 @@ An instrumented build counted the guards a design with one residency check per b
 | Stock front, second warm  |   117,009,980 |            0.2640 |           0.0199 |            0.2840 |
 | Stock front, third warm   |   110,657,199 |            0.2668 |           0.0202 |            0.2870 |
 
-The static count over the module is 0.3280. Every counted render matched the plain render's normalized hash, and two repeats agree on the ratio to four decimals. The flush route was not counted. A linear projection from an unchecked-access floor of 0.039 and the full range cover's 0.542 on admin gives a tau of about 0.18 to 0.19. That figure is a prediction: no translator emits this design, it assumes a span check costs one compare and that module growth adds nothing, and the narrow-arena arms showed that module growth raises tau ([guard-count](https://github.com/gmitch215/folio/blob/master/results/execution/guard-count/README.md)). The drop criteria were set before the count: a guard rate of 0.7 or more, module growth over 30%, a re-check loop that does not settle, and an epoch arm above 0.40 on admin.
+The static count over the module is 0.3280. Every counted render matched the plain render's normalized hash, and two repeats agree on the ratio to four decimals. The flush route was not counted. A linear projection from an unchecked-access floor of 0.039 and the full range cover's 0.542 on admin predicted a tau of about 0.18 to 0.19 on admin, or 0.35 to 0.49 if the checked bases take the page-table path ([guard-count](https://github.com/gmitch215/folio/blob/master/results/execution/guard-count/README.md)). The drop criteria were set before the build: a guard rate of 0.7 or more (not met by the count), module growth over 30%, a re-check loop that does not settle, and an epoch arm above 0.40 on admin.
+
+### The Epoch Arm
+
+A translation was then built with one residency check per base local and a global epoch re-checked after calls. It keeps the per-access arm it starts from: one arena that covers the static data, the stack window and the first 32 MiB of heap, with a 64 KiB page table for everything outside it, and stack and static accesses stay exempt.
+
+| Part              | What it does                                                                                                                                          |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Groups            | accesses through the same base local, with `base + constant` folded, form a group; a `local.set` or `local.tee` of the local starts a new group       |
+| Group check       | the first access of a group carries one check over the group's byte span; later accesses the check covers use the checked base                        |
+| Outside the arena | the check calls a shared function that returns the page's frame delta, and the group's accesses use `base + delta`                                    |
+| Epoch             | a global word that the host raises on every eviction; after each call and each lookup that can fault, live groups compare it with a local copy        |
+| Re-check          | if the epoch moved, the live groups are checked again until a full round leaves it unchanged; after 8 rounds the module traps with a distinct message |
+| Per-access code   | an access no group covers, and a group with a single member, keeps the per-access code                                                                |
+
+The proof is 41 of 41 fixtures passing against the untranslated module, a random test of 48,000 comparisons with 0 failures, and three deliberate breakages that each fail some of them. The module is 46.7 MB, 12.4% smaller than the per-access arm, and every translated sample returns the untranslated module's normalized HTML (flush returns no HTML).
+
+Ten pairs per cell on the rig, tau against the per-access arm:
+
+| Route          | Epoch arm | Interval       | Per-access arm | Interval       |
+| -------------- | --------: | -------------- | -------------: | -------------- |
+| Stock front    |     1.013 | [0.970, 1.078] |          1.354 | [1.313, 1.398] |
+| Thunder login  |     0.800 | [0.756, 0.871] |          1.038 | [0.959, 1.104] |
+| Thunder flush  |     0.806 | [0.722, 0.868] |          0.786 | [0.747, 0.822] |
+| Thunder admin  |     0.783 | [0.747, 0.828] |          0.834 | [0.751, 0.872] |
+| Thunder ladder |     0.853 | [0.820, 0.888] |          0.830 | [0.791, 0.891] |
+
+The epoch arm is 0.34 better on the front and 0.24 on login, about 0.05 better on admin where the intervals overlap, and equal on flush and the ladder. The admin line of 0.40 was missed. The prediction missed because group checks cover only 28% of the checked accesses on admin, at 29 accesses per check, and 65.9% of the groups take the table helper. Of 271,335 static check sites left per-access, 239,718 do not read a base local: 203,706 take a pointer straight from a load and 16,362 from a `local.tee`. The rig never evicts, so the timings measure the check and not the re-check, which is proven on fixtures and random programs only ([epoch-arm](https://github.com/gmitch215/folio/blob/master/results/execution/epoch-arm/README.md)).
+
+The fixtures found a defect that is not in this arm alone: hoisted-loop keys can evict each other on the per-access translator, so a later key's fault evicts the frame an earlier key's delta points at and the loop reads the wrong page. The cause is in the hoisted prologue alone. On a pager with a CLOCK hand, a two-key loop on two frames returned 140 where the original returns 77, and a three-key loop on two frames returned 1,470 where the original returns 777. Of 4,000 random cases, 33 of 2,497 with frames at least equal to the keys and every one of 658 with fewer frames were wrong.
+
+The defect is fixed. `scripts/research/elastic-translate.ts` now compares each key's delta with the page table after the lookups and repeats them until they agree, and traps with a distinct message after 8 rounds, so fewer frames than keys refuse and no longer return a wrong value. No published translation number depends on it. The translation studies ran every page resident on a host that never evicts (350 of 350 rig rows and 33 of 33 Mac rows record only page-straddle calls), the PHP module has 3 multi-key hoisted loops with at most 3 keys, all off one base within 128 bytes, and hoisted accesses are 16 of 1.9 billion on the stock front. The paged ladder and capacity runs use their own fixtures and do not use the translator. The four arms with hoisting now build to different bytes (671 to 971 bytes larger) and the three without it are byte-identical, so the byte counts recorded in `results/` are those of the translator that was timed.
 
 ## Reading
 
-Translating each access costs more than the render can absorb at default tiering, and removing provably redundant checks closes little of the gap on this module. The checks are the tax: with none, tau is 0.039. Paging itself works. The local runs are exact down to 327,680 Wasm bytes, the managed run completes, and the one-object ladder is exact on every completed run. The open question is the price of the test per access, and the guard count shows how many tests an epoch design would run.
+Translating each access costs more than the render can absorb at default tiering, and removing provably redundant checks closes little of the gap on this module. The checks are the tax: with none, tau is 0.039. Paging itself works. The local runs are exact down to 327,680 Wasm bytes, the managed run completes, and the one-object ladder is exact on every completed run. The open question is the price of the test per access. A per-base epoch translation cuts the checks and lowers tau on the front and login routes, and it does not reach the unchecked floor.
 
 ## Closed and Open
 
-Closed mechanisms: software per-access translation as the PHP paging mechanism at default tiering, static check elision on this module, compressed pages on the fault path, and narrow arenas. The managed page plane misses G-E2 on days 1 and 2.
+Closed mechanisms: software per-access translation as the PHP paging mechanism at default tiering, static check elision on this module, compressed pages on the fault path, narrow arenas, and per-base epoch translation at the current shapes. The managed page plane misses G-E2 on days 1 and 2.
 
-The objective stays open. Designs that remove the test remain untried: resident pages made free by faulting, hot data pinned by construction, and late switching with retry on kill. The epoch design has a count and a prediction and no build. The growth governor is built and unit tested as the guard for that branch ([Memory Accounting](memory-accounting.md)).
+The objective stays open: tau toward the unchecked floor. A first-access check for pointers that come from loads is closed by construction: such a pointer is used once, so its check is a group of one and removes nothing. What remains is a cheaper out-of-arena path, since 40.5% of the per-access checks on admin leave the arena, and an inline one-entry translation cache ahead of the helper call is untried. Designs that remove the test remain untried: resident pages made free by faulting, hot data pinned by construction, and late switching with retry on kill. The epoch re-check has no timing on an evicting rig. The growth governor is built and unit tested as the guard for that branch ([Memory Accounting](memory-accounting.md)).
 
 ## See Also
 

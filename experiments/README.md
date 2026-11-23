@@ -15,6 +15,7 @@ raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup a
 | [Ordinary Worker Lanes](rpc/README.md)         | Do service-bound Workers overlap CPU work, and what does range transfer save?                             | Deployed Workers (Free)                           |
 | [Range Lanes](ranges/README.md)                | Do learned byte ranges over service bindings cut bytes and wall against snapshots?                        | workerd and Workers (Free)                        |
 | [Concurrent Lane Calls](concurrency/README.md) | Do four lane calls issued at once overlap, and which lane type or placement restores it?                  | Deployed Workers (paid)                           |
+| [Lane Pool](lane-pool/README.md)               | Does a durable lane pool gain wall time on independent CPU units and replay a lane that resets?           | Durable Objects (paid)                            |
 | [SQLite Lanes](sqlite-lanes/README.md)         | Does sharding a SQLite table across Durable Object lanes speed up queries with an exact merge?            | Durable Objects (paid)                            |
 | [Corpus Lanes](corpus-lanes/README.md)         | Do corpus kernels run as range lanes over Durable Objects, and at what cost per record?                   | workerd and Durable Objects                       |
 | [Elastic](elastic/README.md)                   | Can the dense 192 MiB fixture complete on the Free managed plan with a 64 KiB executor memory?            | Durable Objects (Free)                            |

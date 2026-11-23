@@ -219,11 +219,29 @@ eight arenas on admin at 0.59 to 0.64. The Ryzen machine read 1.75 to 2.80 for f
 to 4.30 for eight, because the translator emits one range test per arena and the modules grew from
 53 MB to 74 and 102 MB ([Elastic Memory Study](../TECHNICAL_REPORT.md#elastic-memory-study)).
 
-**The guard count is a count.** An instrumented build pays 0.308 guards per access on admin after
-login and 0.327 on a cold stock front render. The projected tau of about 0.18 to 0.19 for an epoch
-design is a prediction, because no translator emits that design
+**Per-base epoch translation is closed at the current shapes.** The guard count was 0.308 per access
+on admin after login and 0.327 on a cold stock front render, and it predicted a tau of about 0.18 to
+0.19 on admin. The built arm reads 0.783 on admin (interval 0.747 to 0.828) against 0.834 for the
+per-access arm, 1.013 on the stock front, 0.800 on login, 0.806 on flush and 0.853 on the ladder,
+because group checks cover 28% of the checked accesses on admin and 65.9% of the groups take the
+table helper. The objective stays open. A first-access check for pointers that come from loads is
+closed by construction: such a pointer is used once, so its check is a group of one and removes
+nothing. What remains is a cheaper out-of-arena path, since 40.5% of the per-access checks on admin
+leave the arena, and an inline one-entry translation cache ahead of the helper call is untried. The rig never evicts, so the re-check is proven on fixtures and not timed
 ([Elastic Memory Study](../TECHNICAL_REPORT.md#elastic-memory-study),
+[epoch-arm](https://github.com/gmitch215/folio/blob/master/results/execution/epoch-arm/README.md),
 [guard-count](https://github.com/gmitch215/folio/blob/master/results/execution/guard-count/README.md)).
+
+**The hoisted-loop eviction defect is fixed.** On the per-access translator a later key's fault
+evicted the frame an earlier key's delta points at, and the loop read the wrong page. A two-key loop
+on two frames returned 140 where the original returns 77. `scripts/research/elastic-translate.ts`
+now compares each key's delta with the page table and repeats the lookups until they agree, and
+traps after 8 rounds, so fewer frames than keys refuse and no longer return a wrong value. No
+published translation number depends on it: those studies ran with every page resident on a host
+that never evicts. The four arms that hoist build to bytes 671 to 971 larger, and the three that do
+not are unchanged
+([Elastic Memory Study](../TECHNICAL_REPORT.md#elastic-memory-study),
+[epoch-arm](https://github.com/gmitch215/folio/blob/master/results/execution/epoch-arm/README.md)).
 
 **The managed page plane misses its gate.** Dense runs miss the p90 rule on days 1 and 2, the
 unpaged pair reads 5.8x, and the time model misses on the chase cells. One call returned after 1,012
@@ -240,6 +258,29 @@ every request path read 5 of 900 requests (0.56%, Wilson 95% interval 0.24% to 1
 tell a 5 s floor from a 15 s one. Committing with `storage.sync()` before an alarm moves earlier
 made resets more frequent: 11 of 150 against 1 of 150
 ([Storage Resets and the Growth Governor](../TECHNICAL_REPORT.md#storage-resets-and-the-growth-governor)).
+
+**An idle request does not reset a bare object.** None of 120 fresh objects and none of 45 warm
+chains (1,080 events) reset with an idle request of 2, 4 or 8 s, with the alarm armed at its start 1,
+5, 10 or 15 s ahead
+([Storage Resets and the Growth Governor](../TECHNICAL_REPORT.md#storage-resets-and-the-growth-governor)).
+
+**A reset keeps what was written before the last yield.** On bare objects, a marker followed by an
+awaited yield survived every reset kind tested, and a marker followed directly by the effect can be
+lost with the effect repeated. `await storage.sync()` before a CPU kill kept both earlier rows in 10
+of 10 objects, with no flush losing both in 10 of 10 (plain writes only; a claim inside
+`transactionSync`, and memory or storage resets after a flush, are not measured)
+([Storage Resets and the Growth Governor](../TECHNICAL_REPORT.md#storage-resets-and-the-growth-governor),
+[reset-commit](https://github.com/gmitch215/folio/blob/master/results/continuation/reset-commit/README.md)).
+
+**CPU use is a candidate cause of storage resets.** A request that burns CPU reset at its first
+storage write after the loop on 5 of 10 fresh objects at the heaviest setting, about 1 s of object
+CPU. Read after the fact, all 8 requests at 1,038 ms or more reset and the 7 below 1,000 ms did not,
+with one reset at 128 ms that does not fit. The pre-set prediction of a knee between 0.5 and 2 s of
+nominal CPU was refuted, and the rate for a heavy request (about 1 of 2) is far above the site's
+rate (about 2 percent), so CPU is necessary and not sufficient. The storage-yield and alarm-cadence
+arms did not run, so whether the timer yield and not the CPU resets a bare object is open
+([Storage Resets and the Growth Governor](../TECHNICAL_REPORT.md#storage-resets-and-the-growth-governor),
+[cpu-bare-objects](https://github.com/gmitch215/folio/blob/master/results/continuation/cpu-bare-objects/README.md)).
 
 ## Boot
 

@@ -117,7 +117,40 @@ The remainder is not the alarm that the request itself arms coming due near the 
 
 ## CPU as a Candidate
 
-The tail counts above hint that long CPU use matters: heavy requests that never waited on I/O reset more often than those that did. No arm varies CPU alone on this site. CPU use is a candidate cause, with the tail counts as its only support in this repository.
+CPU use is the candidate that remains. A recount of the tail records of two header-alternated runs on the deployed site, split by the object CPU of each request, reads 9 of 426 requests at 4 s of CPU or more resetting, against 2 of 1,072 below 4 s. Bare Durable Objects were run to isolate it, with 8 resets of 15 at the heaviest setting and none for idle requests.
+
+| Arm                                                                                                      | Result                                                                 |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Idle request of 2, 4 or 8 s of wall time, alarm armed at its start 1, 5, 10 or 15 s ahead, fresh objects | 0 resets in 120 objects                                                |
+| The same, warm chains of 24 events                                                                       | none of 45 chains reset or retired (1,080 events)                      |
+| CPU burned in slices with a timer between them, no alarm, 10 fresh objects per cell                      | 0, 0, 0, 2, 0 and 5 of 10 at 0, 0.25, 0.5, 1, 2 and 4 s of nominal CPU |
+| The same with a 15 s alarm armed, 5 objects per cell                                                     | 3 of 5 at the heaviest setting and none below it                       |
+| Five chains of six requests at 1 s nominal CPU, no alarm                                                 | 5 resets in 30 events, once per chain, each followed by a new isolate  |
+
+An idle request cannot reproduce the reset. In the cells where the alarm was set 1 s ahead it came due inside the request, and the request still returned. A request that burns CPU resets at its first storage write after the loop (`Durable Object reset because its code was updated`), with no alarm armed as well as with one. A nominal slice cost about 60 ms of measured CPU, so the heaviest setting is about 1 s of object CPU. The pre-set prediction, a knee between 0.5 and 2 s of nominal CPU, was refuted as stated: 2 s gave 0 of 15.
+
+Post hoc, the heaviest setting splits on measured CPU: all 8 requests at 1,038 ms or more reset and the 7 below 1,000 ms did not. That reading was made after the outcome and is not a test of a prediction. One reset at 1 s nominal had measured CPU of 128 ms and does not fit, and the two groups overlap in measured CPU, so no clean threshold shows.
+
+The storage-yield arm and the alarm-cadence arm did not run: the clock did not advance over storage awaits, so the smoke check failed. Whether the timer yield, and not the CPU, is what resets a bare object is open. The bare-object rate for a heavy request (about 1 of 2) is far above the site's per-long-event rate (about 2 percent), so CPU is necessary and not sufficient. The rows are in [idle-requests](https://github.com/gmitch215/folio/blob/master/results/continuation/idle-requests/README.md) and [cpu-bare-objects](https://github.com/gmitch215/folio/blob/master/results/continuation/cpu-bare-objects/README.md).
+
+## What a Reset Commits
+
+A bare Durable Object event wrote a marker row `m` and a row `y`, awaited 50 ms, then wrote a row `x` and, in a separate transaction, a row `z`, and a reset killed the event. A fresh stub read the rows back, and a second read 3 s later agreed in every trial. With n = 10 per cell:
+
+| Kind and variant                                | Rows kept           | Reading                        |
+| ----------------------------------------------- | ------------------- | ------------------------------ |
+| Memory reset, memory held before the yield      | `m`, `y` (10 of 10) | `x` and `z` lost               |
+| Memory reset, memory held after the last write  | all four (10 of 10) | nothing lost                   |
+| CPU kill, burn between the writes and the yield | none (10 of 10)     | `m` and `y` lost with the rest |
+| CPU kill, burn after the last write             | `m`, `y` (10 of 10) | `x` and `z` lost               |
+
+Read after the fact, each kind kept what was written before the last yield and lost what came after it. Two cases differ: the memory reset after the last write lost nothing, and a CPU kill with no yield since the writes lost all of them. The pre-set prediction that a CPU kill after all writes keeps nothing was refuted, because the two rows written before the yield survived.
+
+Storage resets, pooled over the runs that produced the `Internal error in Durable Object storage` text, kept all rows in 23 events, none in 1 and a partial set in 0, against 105, 14 and 0 of 119 in the earlier read-back. The handler shape of this test, with a yield before the second write, produced 0 of 20 such resets. 18 of 20 chains stopped at the first storage write after the yield with `Durable Object reset because its code was updated`, with `m` and `y` kept in all 18. A supplementary arm without the yield gave the storage resets: 20 of 20 chains, all four rows in 19 and none in 1.
+
+The first request after a reset took about 170 to 265 ms of client wall time, against about 40 to 60 ms for the next one on the same object, with at most 1 ms of CPU for either (the storage-reset CPU rests on 3 samples). No unreachable window was seen: 82 of 82 first reads succeeded at the first attempt. The rows are in [reset-commit](https://github.com/gmitch215/folio/blob/master/results/continuation/reset-commit/README.md).
+
+A design that writes a marker before an effect may rely on this much: a marker followed by an awaited yield survived every reset kind here. A marker followed directly by the effect can be lost with the effect repeated. A separate arm tested the flush: after two plain writes, `await storage.sync()` and then a burn past the CPU limit kept both rows in 10 of 10 objects, against none of 10 with no flush, and a 50 ms yield after the flush changed nothing ([sync-commit](https://github.com/gmitch215/folio/blob/master/results/continuation/sync-commit/README.md)). A claim inside `transactionSync`, and memory or storage resets after a flush, are not measured.
 
 ## Reading
 
@@ -125,9 +158,9 @@ The 5 s floor fixes request-path storage resets to about 0.6%. Two designs that 
 
 ## Closed and Open
 
-Closed: alarm isolation by `sync()` as a fix on the deployed site, the earlier alarm move as the cause of admin page resets, and the request's own alarm coming due near its end as the cause of the resets that remain under the floor.
+Closed: alarm isolation by `sync()` as a fix on the deployed site, the earlier alarm move as the cause of admin page resets, and the request's own alarm coming due near its end as the cause of the resets that remain under the floor, and an idle request, with or without a near alarm, as a way to reproduce the reset on a bare object.
 
-Open: the cause of the remaining resets and of the generic storage reset, whether a longer floor reaches zero (300 requests per arm cannot tell a 5 s floor from a 15 s one), whether the retirement result holds on the deployed site, and whether request-only reuse changes the reset rate at the same drive. Retry safety after a reset is not covered here.
+Open: the CPU candidate (a clean threshold, and whether the timer yield and not the CPU resets a bare object, since the storage-yield and alarm-cadence arms did not run), the cause of the remaining resets and of the generic storage reset, whether a longer floor reaches zero (300 requests per arm cannot tell a 5 s floor from a 15 s one), whether the retirement result holds on the deployed site, and whether request-only reuse changes the reset rate at the same drive. Retry safety after a reset is not covered here.
 
 ## See Also
 

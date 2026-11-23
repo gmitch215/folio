@@ -45,7 +45,7 @@ release notes.
 - `experiments/` the Cloudflare and browser probes (`cloud`, `managed`, `elastic`, `elastic-limits`,
   `elastic-ladder`, `browser`, `consumer`, `bootimage`, `rpc`, `ranges`, `concurrency`,
   `sqlite-lanes`, `corpus-lanes`, `alarm-discipline`, `alarm-retirement`, `commit-ladder`,
-  `idle-floor`, `memory-ladder`, `growth-governor`, `continuation`, `continuation-php`). See `experiments/README.md`.
+  `idle-floor`, `memory-ladder`, `growth-governor`, `continuation`, `continuation-php`, `lane-pool`). See `experiments/README.md`.
 - `results/` raw samples, source snapshots and summaries, one directory per study
   (`results/<topic>/<study>/` with a README, `raw/` and a manifest). Never edit a summary by hand.
   `scripts/research/evidence.ts` verifies every manifest.

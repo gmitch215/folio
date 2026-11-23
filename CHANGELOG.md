@@ -58,6 +58,20 @@ with this table:
   `peerStore` for memory larger than one window. A region keeps a fixed set of chunk frames, fetches a missing
   chunk on access, writes a dirty chunk back with a raised version, and refuses a chunk whose holder
   copy is stale or missing with `StaleChunkError`.
+- `@gmitch215/folio/workers` exports `LanePool`, `serveLane` and `TaskTable`, a durable pool of tasks for
+  Durable Object lanes. Tasks are rows in the coordinator's SQLite; lanes on other objects claim them by
+  RPC under a lease, run `registry[name](args)` and complete them, and a task whose lane reset is replayed
+  when its lease ends, up to `maxAttempts`. A result is written once per task id, and `fold` joins results
+  in id order. The pool flushes an enqueue, a claim and a completion before anything depends on it, and
+  `resume()` continues after a coordinator reset from an alarm. `experiments/lane-pool` holds the
+  deployable check, and `model.ts` there projects the pool's speed from a fitted overhead.
+- `@gmitch215/folio/workers` exports `Outbox` and `PermanentError`, a durable outbox for effects that
+  must not be lost or repeated without notice, on the same task table. Each row has a `kind`, and the
+  kind's replay policy (`resend` for at least once, `report` for at most once, `report` by default)
+  decides what a successor does with a running row whose lease ended. The effect receives the row id as
+  its idempotency key, a `PermanentError` ends a row without a retry, and each row goes claim, flush,
+  effect, complete, flush. `TaskTable.enqueue` takes a kind and `claim` takes `policies`; a table made
+  before the `kind` column gains it.
 
 - A documentation site built with TypeDoc by `bun run docs:build`: a page for each of the six subpaths
   under `docs/modules/`, study summaries under `docs/studies/`, `docs/getting-started.md`,
