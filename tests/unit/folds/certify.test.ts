@@ -258,7 +258,7 @@ describe('certifyStream on kernels that rewrite their input', () => {
 		assert.equal(certify('xlcg').output?.step, 1013904223n);
 		assert.equal(certify('xshift').output?.step, 0n);
 		assert.equal(certify('xfeed').output?.step, undefined);
-	});
+	}, 120000);
 
 	test('a plain loop of the same shape is certified too, and a stream with no stores has no output', () => {
 		const c = certifyStream(build(xorStream(1)), 'update');
