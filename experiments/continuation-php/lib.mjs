@@ -8,6 +8,7 @@ export const START = "echo cfw_park_run(file_get_contents('/work.php'));";
 export const RESUME = 'echo cfw_park_resume_interrupt();';
 export const MARK_PARK = 'PARKED_INTERRUPT';
 export const MARK_DONE = 'DONE';
+export const BATCH = 16;
 
 // B0 is in polls; 10,000,000 polls ran in about one second on the Mac.
 export const SCHEDULE = {
@@ -20,6 +21,13 @@ export const SCHEDULE = {
 
 export class CommitCut extends Error {}
 export class RestoreError extends Error {}
+
+// the patch cannot report the polls run before a signal park, so the budget falls to 0.7 of the one in force
+export const budgetAfterSignal = (budget, B0) => Math.max(B0, Math.round(0.7 * budget));
+
+// module scope, so one id per isolate; the first call is inside an event handler
+let isolate = null;
+export const isolateId = () => (isolate ??= crypto.randomUUID());
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
@@ -115,37 +123,63 @@ export async function listing(FS) {
 	return out;
 }
 
-// Per-page hashes, then the 1 MiB groups whose hash differs from prevHashes.
+// Hash of one 1 MiB group: the digests of its pages, hashed again. No copy of the group is made.
+async function groupHash(buffer, gi) {
+	const end = Math.min((gi + 1) * GROUP, buffer.byteLength);
+	let pages = '';
+	for (let at = gi * GROUP; at < end; at += PAGE) {
+		pages += await sha256Hex(new Uint8Array(buffer, at, PAGE));
+	}
+	return sha256Hex(enc.encode(pages));
+}
+
+// Hashes every group and lists the ones whose hash differs from prevHashes. Copies nothing.
 export async function capture(p, prevHashes) {
-	const t0 = performance.now();
 	const bytes = p.memory.buffer.byteLength;
 	const groups = Math.ceil(bytes / GROUP);
-	const pages = bytes / PAGE;
-	const pageHex = [];
-	for (let i = 0; i < pages; i++) {
-		pageHex.push(await sha256Hex(new Uint8Array(p.memory.buffer, i * PAGE, PAGE)));
-	}
 	const hashes = [];
-	for (let gi = 0; gi < groups; gi++) {
-		hashes.push(pageHex.slice(gi * PAGES_PER_GROUP, (gi + 1) * PAGES_PER_GROUP).join(''));
-	}
 	const changed = [];
-	const copies = new Map();
 	for (let gi = 0; gi < groups; gi++) {
-		if (prevHashes[gi] === hashes[gi]) continue;
-		changed.push(gi);
-		const len = Math.min(GROUP, bytes - gi * GROUP);
-		copies.set(gi, new Uint8Array(p.memory.buffer, gi * GROUP, len).slice());
+		const h = await groupHash(p.memory.buffer, gi);
+		hashes.push(h);
+		if (prevHashes[gi] !== h) changed.push(gi);
 	}
-	return { bytes, groups, hashes, changed, copies, ms: performance.now() - t0 };
+	return { bytes, groups, hashes, changed };
+}
+
+// Writes each live group from its row straight into memory, then checks every group's hash. Only the
+// manifest selects a row; rows of another epoch are left by a commit that never finished.
+export async function restoreGroups(memory, m, rows) {
+	const bytes = memory.buffer.byteLength;
+	const seen = new Array(m.groups).fill(0);
+	const cursor = rows[Symbol.iterator]();
+	// the row is bound inside the body, so the previous row is free while the next one is read
+	for (;;) {
+		const step = cursor.next();
+		if (step.done) break;
+		const r = step.value;
+		if (m.epochs[r.idx] !== r.epoch) continue;
+		const src = new Uint8Array(r.bytes);
+		const at = r.idx * GROUP;
+		if (src.length !== Math.min(GROUP, bytes - at)) {
+			throw new RestoreError(`group ${r.idx} holds ${src.length} bytes`);
+		}
+		new Uint8Array(memory.buffer, at, src.length).set(src);
+		seen[r.idx] += 1;
+	}
+	if (seen.some((n) => n !== 1)) throw new RestoreError('group rows do not match the manifest');
+	for (let gi = 0; gi < m.groups; gi++) {
+		if ((await groupHash(memory.buffer, gi)) !== m.hashes[gi]) {
+			throw new RestoreError(`hash of group ${gi} at restore of epoch ${m.epoch}`);
+		}
+	}
 }
 
 // Rebuild an instance from the last checkpoint. The glue's own resize import grows the memory, so
 // its heap views follow; the request is the exact committed size.
-export async function restore(factory, module, work, ck) {
+export async function restore(factory, module, work, m, rows) {
 	const p = await boot(factory, module);
 	await initPhp(p, work);
-	const m = ck.manifest;
 	const files = await listing(p.php.FS);
 	if (JSON.stringify(files) !== JSON.stringify(m.listing)) {
 		throw new RestoreError(`MEMFS listing differs at restore of epoch ${m.epoch}`);
@@ -160,8 +194,7 @@ export async function restore(factory, module, work, ck) {
 			);
 		}
 	}
-	const view = new Uint8Array(p.memory.buffer);
-	for (let gi = 0; gi < m.groups; gi++) view.set(ck.groups[gi], gi * GROUP);
+	await restoreGroups(p.memory, m, rows);
 	p.ex._emscripten_stack_restore(m.sp);
 	if (p.ex.emscripten_stack_get_current() !== m.sp) throw new RestoreError('stack pointer');
 	if (p.ex.emscripten_stack_get_base() !== m.base) throw new RestoreError('stack base');
@@ -169,6 +202,70 @@ export async function restore(factory, module, work, ck) {
 	p.ex.setTempRet0(m.tempRet0);
 	if (p.ex.getTempRet0() !== m.tempRet0) throw new RestoreError('tempRet0');
 	return p;
+}
+
+// Checkpoint store over a Durable Object's storage. A commit copies one group at a time, inserts it
+// under the new epoch in batches of BATCH groups, then writes the manifest and prunes in one
+// transaction. Restore follows only the manifest, so a commit cut before that point is invisible.
+export function sqlStore(storage) {
+	const sql = storage.sql;
+	return {
+		async live() {
+			const r = sql.exec('SELECT body FROM manifest WHERE id = 1').toArray()[0];
+			return r ? JSON.parse(r.body) : null;
+		},
+		rows() {
+			return sql.exec('SELECT epoch, idx, bytes FROM grp');
+		},
+		async write({ memory, changed, epoch, manifest, hooks }) {
+			let rows = 0;
+			for (let i = 0; i < changed.length; i += BATCH) {
+				storage.transactionSync(() => {
+					for (const gi of changed.slice(i, i + BATCH)) {
+						hooks?.beforeRow?.(rows);
+						const len = Math.min(GROUP, memory.buffer.byteLength - gi * GROUP);
+						const copy = new Uint8Array(memory.buffer, gi * GROUP, len).slice();
+						sql.exec(
+							'INSERT OR REPLACE INTO grp (epoch, idx, bytes) VALUES (?, ?, ?)',
+							epoch,
+							gi,
+							copy.buffer
+						);
+						rows++;
+					}
+				});
+				await storage.sync();
+			}
+			const live = new Set(manifest.epochs.map((e, gi) => `${e}:${gi}`));
+			const stale = [];
+			for (const r of sql.exec('SELECT epoch, idx FROM grp')) {
+				if (!live.has(`${r.epoch}:${r.idx}`)) stale.push([r.epoch, r.idx]);
+			}
+			storage.transactionSync(() => {
+				sql.exec(
+					'INSERT OR REPLACE INTO manifest (id, body) VALUES (1, ?)',
+					JSON.stringify(manifest)
+				);
+				for (const [epoch, idx] of stale) {
+					sql.exec('DELETE FROM grp WHERE epoch = ? AND idx = ?', epoch, idx);
+				}
+			});
+			return { rows: rows + 1 };
+		},
+		async appendEvent(rec) {
+			sql.exec('INSERT INTO events (body) VALUES (?)', JSON.stringify(rec));
+		},
+		async saveState(s) {
+			sql.exec(
+				'INSERT OR REPLACE INTO state (id, body) VALUES (1, ?)',
+				JSON.stringify({ ...s, pending: '' })
+			);
+		},
+		// a write is lost if the invocation is reset before its output gate opens; sync waits for it
+		async flush() {
+			await storage.sync();
+		}
+	};
 }
 
 // The protocol state machine. One call to event() is one event (C9 with the drops and signals of
@@ -218,15 +315,19 @@ export class Protocol {
 		const s = this.s;
 		const p = this.p;
 		setSignal(p, 0);
-		const t0 = performance.now();
-		const cap = await capture(p, await this.store.hashes());
+		const t0 = Date.now();
+		const live = await this.store.live();
+		const cap = await capture(p, live?.hashes ?? []);
 		s.epoch += 1;
+		const changed = new Set(cap.changed);
 		const manifest = {
 			epoch: s.epoch,
 			kind,
 			k,
 			memBytes: cap.bytes,
 			groups: cap.groups,
+			hashes: cap.hashes,
+			epochs: cap.hashes.map((_, gi) => (changed.has(gi) ? s.epoch : live.epochs[gi])),
 			sp: p.ex.emscripten_stack_get_current(),
 			base: p.ex.emscripten_stack_get_base(),
 			end: p.ex.emscripten_stack_get_end(),
@@ -245,14 +346,20 @@ export class Protocol {
 				}
 			};
 		}
-		const w = await this.store.write(cap, manifest, hooks);
+		const w = await this.store.write({
+			memory: p.memory,
+			changed: cap.changed,
+			epoch: s.epoch,
+			manifest,
+			hooks
+		});
 		s.out += s.pending;
 		s.pending = '';
 		return {
 			kind,
 			k,
 			epoch: s.epoch,
-			ms: performance.now() - t0,
+			ms: Date.now() - t0,
 			changed: cap.changed.length,
 			rows: w.rows,
 			memBytes: cap.bytes
@@ -262,18 +369,46 @@ export class Protocol {
 	async event() {
 		const s = this.s;
 		const sched = this.sched;
+		const attempt = s.attempt;
+		s.attempt = null;
+		if (attempt) s.k = attempt.k - 1;
 		s.k += 1;
 		const k = s.k;
 		if (sched.dropBefore.includes(k)) this.p = null;
+		let lost = null;
+		if (attempt) {
+			const live = await this.store.live();
+			if ((live?.epoch ?? -1) === attempt.epoch) {
+				lost = {
+					from: attempt.budget,
+					to: Math.max(sched.B0, Math.floor(attempt.budget / 2))
+				};
+				this.p = null;
+				s.budget = lost.to;
+				s.seenSignal = true;
+				await this.store.appendEvent({
+					k,
+					status: 'LOST',
+					reason: 'KILL',
+					budget: lost.from,
+					budgetAfter: lost.to
+				});
+			}
+		}
 		let restoredFrom = null;
 		if (this.p === null) {
-			const ck = await this.store.load();
-			if (ck) {
-				this.p = await restore(this.factory, this.module, this.work, ck);
-				s.out = ck.manifest.out;
+			const m = await this.store.live();
+			if (m) {
+				if (!lost) {
+					s.budget = m.budget;
+					s.seenSignal = m.seenSignal;
+				}
+				s.epoch = m.epoch;
+				this.p = await restore(this.factory, this.module, this.work, m, this.store.rows());
+				s.out = m.out;
 				s.pending = '';
 				s.unsaved = false;
-				restoredFrom = ck.manifest.epoch;
+				restoredFrom = m.epoch;
 			} else {
 				if (s.started) throw new RestoreError('no checkpoint for a started job');
 				this.p = await this.boot();
@@ -285,12 +420,15 @@ export class Protocol {
 		const p = this.p;
 		const sigFirst = sched.signalEvents.includes(k);
 		if (sigFirst) setSignal(p, SIGNAL_WORD);
+		s.attempt = { k, budget: s.budget, epoch: s.epoch };
+		await this.store.saveState(s);
+		await this.store.flush();
 		const before = counters(p);
 		arm(p, s.budget);
-		const t0 = performance.now();
+		const t0 = Date.now();
 		const res = await run(p, s.started ? RESUME : START);
-		const evMs = performance.now() - t0;
 		s.started = true;
+		s.attempt = null;
 		setSignal(p, 0);
 		const after = counters(p);
 		const status = classify(res);
@@ -311,8 +449,8 @@ export class Protocol {
 			budget: s.budget,
 			sigFirst,
 			restoredFrom,
+			isolate: isolateId(),
 			refusals: after.refusals - before.refusals,
-			evMs: Math.round(evMs),
 			stackOk,
 			markers: ['A-done', 'B-done', 'C-done', 'D-done'].filter((m) => body.includes(m)),
 			commit: null,
@@ -321,12 +459,11 @@ export class Protocol {
 		if (status === 'PARKED' && reason === 'SIGNAL') {
 			s.unsaved = true;
 			s.seenSignal = true;
-			const stepsAtSignal = 0; // written before the run, so no poll ran
-			s.budget = Math.max(sched.B0, Math.round(0.7 * stepsAtSignal));
+			s.budget = budgetAfterSignal(s.budget, sched.B0);
 		} else if (status === 'PARKED') {
+			s.budget = Math.round((s.seenSignal ? 1.02 : 2) * s.budget);
 			try {
 				rec.commit = await this.commit('budget', k);
-				s.budget = Math.round((s.seenSignal ? 1.02 : 2) * s.budget);
 			} catch (e) {
 				if (!(e instanceof CommitCut)) throw e;
 				rec.cut = true;
@@ -339,8 +476,9 @@ export class Protocol {
 			s.done = true;
 		}
 		if (sched.dropAfter.includes(k) && this.p !== null) this.p = null;
-		await this.store.appendEvent(rec);
 		await this.store.saveState(s);
+		rec.evMs = Date.now() - t0;
+		await this.store.appendEvent(rec);
 		return rec;
 	}
 }

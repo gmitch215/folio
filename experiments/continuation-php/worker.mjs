@@ -1,7 +1,7 @@
 import { DurableObject } from 'cloudflare:workers';
 import factory from './build/php8.5-worker.mjs';
 import wasmModule from './build/php8.5-worker.mjs.wasm';
-import { Protocol, SCHEDULE } from './lib.mjs';
+import { Protocol, SCHEDULE, sqlStore } from './lib.mjs';
 
 globalThis.self ??= globalThis;
 globalThis.location ??= { href: 'http://localhost/' };
@@ -19,7 +19,7 @@ export class Job extends DurableObject {
 				'CREATE TABLE IF NOT EXISTS job (id INTEGER PRIMARY KEY CHECK (id = 1), work TEXT)'
 			);
 			this.sql.exec(
-				'CREATE TABLE IF NOT EXISTS grp (idx INTEGER PRIMARY KEY, hash TEXT NOT NULL, bytes BLOB NOT NULL)'
+				'CREATE TABLE IF NOT EXISTS grp (epoch INTEGER NOT NULL, idx INTEGER NOT NULL, bytes BLOB NOT NULL, PRIMARY KEY (epoch, idx))'
 			);
 			this.sql.exec(
 				'CREATE TABLE IF NOT EXISTS manifest (id INTEGER PRIMARY KEY CHECK (id = 1), body TEXT NOT NULL)'
@@ -33,60 +33,8 @@ export class Job extends DurableObject {
 		});
 	}
 
-	// The checkpoint store. Group rows are overwritten in place inside one transaction with the
-	// manifest, so a rollback leaves the previous checkpoint whole.
 	store() {
-		const sql = this.sql;
-		const ctx = this.ctx;
-		return {
-			async hashes() {
-				const arr = [];
-				for (const r of sql.exec('SELECT idx, hash FROM grp ORDER BY idx').toArray())
-					arr[r.idx] = r.hash;
-				return arr;
-			},
-			write(cap, manifest, hooks) {
-				let rows = 0;
-				ctx.storage.transactionSync(() => {
-					for (const gi of cap.changed) {
-						hooks?.beforeRow?.(rows);
-						sql.exec(
-							'INSERT OR REPLACE INTO grp (idx, hash, bytes) VALUES (?, ?, ?)',
-							gi,
-							cap.hashes[gi],
-							cap.copies.get(gi).buffer
-						);
-						rows++;
-					}
-					sql.exec(
-						'INSERT OR REPLACE INTO manifest (id, body) VALUES (1, ?)',
-						JSON.stringify(manifest)
-					);
-				});
-				return { rows: rows + 1 };
-			},
-			async load() {
-				const m = sql.exec('SELECT body FROM manifest WHERE id = 1').toArray()[0];
-				if (!m) return null;
-				const manifest = JSON.parse(m.body);
-				const groups = [];
-				for (const r of sql.exec('SELECT idx, bytes FROM grp ORDER BY idx').toArray()) {
-					groups[r.idx] = new Uint8Array(r.bytes);
-				}
-				if (groups.length !== manifest.groups)
-					throw new Error('group rows do not match the manifest');
-				return { manifest, groups };
-			},
-			async appendEvent(rec) {
-				sql.exec('INSERT INTO events (body) VALUES (?)', JSON.stringify(rec));
-			},
-			async saveState(s) {
-				sql.exec(
-					'INSERT OR REPLACE INTO state (id, body) VALUES (1, ?)',
-					JSON.stringify({ ...s, pending: '' })
-				);
-			}
-		};
+		return sqlStore(this.ctx.storage);
 	}
 
 	protocol() {

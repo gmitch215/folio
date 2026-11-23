@@ -121,27 +121,32 @@ async function p1(reference) {
 // in-memory checkpoint store for the Node arm
 class MemoryStore {
 	constructor() {
-		this.hashesArr = [];
-		this.groups = [];
+		this.groups = new Map();
 		this.man = null;
 		this.events = [];
 		this.state = null;
 	}
-	async hashes() {
-		return this.hashesArr;
+	async live() {
+		return this.man;
 	}
-	async write(cap, manifest) {
-		let rows = 0;
-		for (const gi of cap.changed) {
-			this.groups[gi] = cap.copies.get(gi);
-			this.hashesArr[gi] = cap.hashes[gi];
-			rows++;
+	rows() {
+		return [...this.groups].map(([key, bytes]) => {
+			const [epoch, idx] = key.split(':').map(Number);
+			return { epoch, idx, bytes: bytes.slice().buffer };
+		});
+	}
+	async write({ memory, changed, epoch, manifest }) {
+		for (const gi of changed) {
+			const len = Math.min(L.GROUP, memory.buffer.byteLength - gi * L.GROUP);
+			this.groups.set(
+				`${epoch}:${gi}`,
+				new Uint8Array(memory.buffer, gi * L.GROUP, len).slice()
+			);
 		}
+		const live = new Set(manifest.epochs.map((e, gi) => `${e}:${gi}`));
+		for (const key of this.groups.keys()) if (!live.has(key)) this.groups.delete(key);
 		this.man = manifest;
-		return { rows: rows + 1 };
-	}
-	async load() {
-		return this.man ? { manifest: this.man, groups: this.groups } : null;
+		return { rows: changed.length + 1 };
 	}
 	async appendEvent(rec) {
 		this.events.push(rec);
@@ -149,6 +154,7 @@ class MemoryStore {
 	async saveState(s) {
 		this.state = { ...s, pending: '' };
 	}
+	async flush() {}
 }
 
 const summaryBase = (arm) => ({ ...header, arm });
