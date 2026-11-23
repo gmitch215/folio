@@ -45,11 +45,19 @@ with this table:
   hashes changed, into `sqlCheckpointStore` (one row per 1 MiB group by default) or
   `memoryCheckpointStore`. `cpuSignal` reads the platform CPU warning from an exported
   `__instance_signal` word. A checkpoint that fails its hash check throws `CheckpointError`.
+- `runSlice` detects a killed attempt. It writes and flushes an attempt row before the guest runs; the
+  next event in a new isolate that finds the row with no commit after it halves the budget (never
+  below `initialBudget`), stops doubling and returns `{ lost: { k, from, to } }`. `CheckpointStore`
+  gains an optional `flush`, and `sqlCheckpointStore` takes a `sync` option that provides it.
 - Experiments for Durable Object storage resets and memory accounting: `alarm-discipline` (alarm moves
   inside an event), `alarm-retirement` (which alarm shapes turn an isolate retirement into a reset),
   `commit-ladder` (commit size), `idle-floor` (idle restart rate), `memory-ladder` (which allocations
   count toward the memory limit) and `growth-governor` (the cap on a PHP guest). Each README states its
   instrument, sample counts and limits.
+- `@gmitch215/folio/memory` exports `ElasticRegion`, `AsyncElasticRegion`, `sqlHolder` and `peerHolder`
+  for memory larger than one window. A region keeps a fixed set of chunk frames, fetches a missing
+  chunk on access, writes a dirty chunk back with a raised version, and refuses a chunk whose holder
+  copy is stale or missing with `StaleChunkError`.
 
 ### Changed
 
