@@ -20,12 +20,20 @@ const STEPS = 4096;
 const SIGNAL = 1024;
 const CELLS = 8192;
 
-// a durable object's storage over an in-memory SQLite database; a new object stands for a new isolate
+interface Hooks {
+	beforeInsert?: () => void;
+	beforeSync?: () => void;
+}
+
+// a durable object's storage over an in-memory SQLite database; a new object stands for a new isolate.
+// with crash set, a write survives a kill only once sync() has returned
 function openStorage(
 	db: DatabaseSync,
 	log: string[] = [],
-	hooks: { beforeInsert?: () => void } = {}
+	hooks: Hooks = {},
+	crash = false
 ): DurableObjectStorage {
+	if (crash && !db.isTransaction) db.exec('BEGIN');
 	const sql = {
 		exec(query: string, ...bindings: (string | number | null | ArrayBuffer)[]) {
 			const args = bindings.map((value) =>
@@ -44,18 +52,26 @@ function openStorage(
 	return {
 		sql,
 		transactionSync<T>(closure: () => T): T {
-			db.exec('BEGIN');
+			const [open, close, undo] = crash
+				? ['SAVEPOINT t', 'RELEASE t', 'ROLLBACK TO t; RELEASE t']
+				: ['BEGIN', 'COMMIT', 'ROLLBACK'];
+			db.exec(open);
 			try {
 				const value = closure();
-				db.exec('COMMIT');
+				db.exec(close);
 				return value;
 			} catch (error) {
-				db.exec('ROLLBACK');
+				db.exec(undo);
 				throw error;
 			}
 		},
 		async sync() {
+			hooks.beforeSync?.();
 			log.push('sync');
+			if (crash) {
+				db.exec('COMMIT');
+				db.exec('BEGIN');
+			}
 		},
 		async setAlarm() {
 			log.push('alarm');
@@ -332,13 +348,16 @@ test('bad store and save arguments throw typed errors', () => {
 });
 
 // runSlice cases: one isolate is a storage object plus its memory; a move makes new ones over the same database
-function world(target = Infinity) {
+const KILLED = new Error('invocation killed');
+
+function world(target = Infinity, crash = false) {
 	const db = new DatabaseSync(':memory:');
 	const log: string[] = [];
-	const hooks: { beforeInsert?: () => void } = {};
-	let storage = openStorage(db, log, hooks);
+	const hooks: Hooks = {};
+	let storage = openStorage(db, log, hooks, crash);
 	let memory = new WebAssembly.Memory({ initial: 2, maximum: 16 });
 	let guest = guestOver(memory, target);
+	let dying = false;
 	const slice = async (options: { initialBudget?: number } = {}) => {
 		log.push('slice');
 		return runSlice({
@@ -348,29 +367,52 @@ function world(target = Infinity) {
 			initialBudget: options.initialBudget ?? 100,
 			run(n) {
 				log.push('run');
+				if (dying) {
+					dying = false;
+					throw KILLED;
+				}
 				return guest.run(n);
 			},
 			steps: () => guest.steps()
 		});
+	};
+	const move = (target2 = target) => {
+		storage = openStorage(db, log, hooks, crash);
+		memory = new WebAssembly.Memory({ initial: 2, maximum: 16 });
+		guest = guestOver(memory, target2);
 	};
 	return {
 		db,
 		log,
 		hooks,
 		slice,
+		move,
 		get guest() {
 			return guest;
 		},
 		get memory() {
 			return memory;
 		},
-		move(target2 = target) {
-			storage = openStorage(db, log, hooks);
-			memory = new WebAssembly.Memory({ initial: 2, maximum: 16 });
-			guest = guestOver(memory, target2);
+		// the next run throws, and the slice rejects with KILLED
+		dieInRun() {
+			dying = true;
+		},
+		// the invocation ends where it stands: unsynced writes are gone and the isolate with them
+		async kill(attempt: Promise<unknown>) {
+			await assert.rejects(attempt, (error) => error === KILLED);
+			db.exec('ROLLBACK');
+			db.exec('BEGIN');
+			move();
 		}
 	};
 }
+
+const marker = (w: ReturnType<typeof world>) =>
+	({ ...w.db.prepare('SELECT k, budget, open FROM continuation_attempt').get() }) as {
+		k: number;
+		budget: number;
+		open: number;
+	};
 
 test('runSlice in the same isolate does not restore', async () => {
 	const w = world();
@@ -486,4 +528,137 @@ test('after a move that follows a signal stop, the budget comes back from the ma
 test('runSlice refuses a non-positive initialBudget', async () => {
 	const w = world();
 	await assert.rejects(w.slice({ initialBudget: 0 }), RangeError);
+});
+
+// loss detection: a kill is the only thing that leaves an attempt with no commit after it
+async function committed(w: ReturnType<typeof world>, count: number) {
+	for (let i = 0; i < count; i++) await w.slice();
+}
+
+test('a killed attempt halves the budget at the next event and reports it', async () => {
+	const w = world(Infinity, true);
+	await committed(w, 2);
+	w.dieInRun();
+	await w.kill(w.slice());
+	assert.deepEqual(marker(w), { k: 3, budget: 400, open: 1 });
+
+	const retry = await w.slice();
+	assert.deepEqual(retry.lost, { k: 3, from: 400, to: 200 });
+	assert.equal(retry.restored, true);
+	assert.equal(w.guest.steps(), 300 + 200);
+	assert.equal(retry.budget, 204);
+	assert.equal(retry.epoch, 3);
+	assert.equal((await w.slice()).lost, undefined);
+	assert.equal(marker(w).k, 4);
+});
+
+test('repeated kills reach the initial budget and stay there', async () => {
+	const w = world(Infinity, true);
+	await committed(w, 3);
+	const seen: number[] = [];
+	for (let i = 0; i < 5; i++) {
+		w.dieInRun();
+		await w.kill(w.slice());
+		const { k, budget } = marker(w);
+		assert.equal(k, 4);
+		seen.push(budget);
+	}
+	assert.deepEqual(seen, [800, 400, 200, 100, 100]);
+	const retry = await w.slice();
+	assert.deepEqual(retry.lost, { k: 4, from: 100, to: 100 });
+	assert.equal(retry.budget, 102);
+});
+
+test('a kill before the marker flush returns loses the marker, so the next event does not halve', async () => {
+	const w = world(Infinity, true);
+	await committed(w, 2);
+	w.hooks.beforeSync = () => {
+		w.hooks.beforeSync = undefined;
+		throw KILLED;
+	};
+	await w.kill(w.slice());
+	assert.equal(marker(w).k, 2);
+
+	const retry = await w.slice();
+	assert.equal(retry.lost, undefined);
+	assert.equal(retry.restored, true);
+	assert.equal(w.guest.steps(), 300 + 400);
+	assert.equal(retry.budget, 800);
+});
+
+test('after a loss the budget grows 2% per commit, not double, and a signal still resets it', async () => {
+	const w = world(Infinity, true);
+	await committed(w, 2);
+	w.dieInRun();
+	await w.kill(w.slice());
+	const budgets: number[] = [];
+	budgets.push((await w.slice()).budget);
+	budgets.push((await w.slice()).budget);
+	w.guest.signalAt = w.guest.steps() + 150;
+	const signalled = await w.slice();
+	assert.equal(signalled.stop, 'signal');
+	budgets.push(signalled.budget);
+	w.guest.signalAt = Infinity;
+	budgets.push((await w.slice()).budget);
+	assert.deepEqual(budgets, [204, 208, 105, 107]);
+});
+
+test('a restore keeps the measured flag, so the budget does not double after a signal', async () => {
+	const w = world();
+	await w.slice();
+	w.guest.signalAt = w.guest.steps() + 150;
+	await w.slice();
+	w.guest.signalAt = Infinity;
+	assert.equal((await w.slice()).budget, 107);
+	w.move();
+	const moved = await w.slice();
+	assert.equal(moved.restored, true);
+	assert.equal(moved.budget, 109);
+});
+
+test('a signal stop and a cut close the attempt, so a move after them is not a loss', async () => {
+	const w = world();
+	await w.slice();
+	w.guest.signalAt = w.guest.steps() + 20;
+	assert.equal((await w.slice()).stop, 'signal');
+	w.guest.signalAt = Infinity;
+	w.move();
+	assert.equal((await w.slice()).lost, undefined);
+
+	const memory = w.memory;
+	w.hooks.beforeInsert = () => {
+		w.hooks.beforeInsert = undefined;
+		new DataView(memory.buffer).setUint32(SIGNAL, 24, true);
+	};
+	assert.equal((await w.slice()).stop, 'cut');
+	w.move();
+	assert.equal((await w.slice()).lost, undefined);
+});
+
+test('a run that throws in the same isolate is not a loss', async () => {
+	const w = world();
+	await w.slice();
+	w.dieInRun();
+	await assert.rejects(w.slice(), (error) => error === KILLED);
+	assert.equal((await w.slice()).lost, undefined);
+});
+
+test('the attempt row is flushed after it is written and before the guest runs', async () => {
+	const w = world();
+	w.log.length = 0;
+	await w.slice();
+	const run = w.log.indexOf('run');
+	const write = w.log.findIndex((entry) => entry.startsWith('write INSERT OR REPLACE'));
+	assert.ok(write >= 0 && w.log.indexOf('sync', write) < run, w.log.join(' | '));
+});
+
+test('sqlCheckpointStore exposes flush only when it is given a sync', async () => {
+	const db = new DatabaseSync(':memory:');
+	const log: string[] = [];
+	const storage = openStorage(db, log);
+	assert.equal(sqlCheckpointStore(storage.sql).flush, undefined);
+	const store = sqlCheckpointStore(storage.sql, { sync: () => storage.sync() });
+	await store.flush!();
+	assert.deepEqual(log, ['sync']);
+	assert.equal(memoryCheckpointStore().flush, undefined);
 });

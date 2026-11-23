@@ -138,12 +138,14 @@ export interface CheckpointManifest {
 
 /**
  * Storage behind a checkpoint. `commit` is all or nothing; `pages` returns the newest copy at or
- * below `epoch`.
+ * below `epoch`. `flush`, when the store has one, resolves once every earlier write survives a
+ * killed invocation.
  */
 export interface CheckpointStore {
 	latest(): CheckpointManifest | undefined;
 	pages(epoch: number, indexes: number[]): Map<number, Uint8Array>;
 	commit(manifest: CheckpointManifest, pages: Map<number, Uint8Array>): void;
+	flush?(): Promise<void>;
 }
 
 /** A checkpoint that cannot be loaded: a `hash`, `size`, `global` or `manifest` mismatch. */
@@ -189,6 +191,8 @@ export function memoryCheckpointStore(): CheckpointStore {
 interface SqlStoreOptions {
 	prefix?: string;
 	groupPages?: number;
+	/** Becomes the store's `flush`; pass `() => storage.sync()` inside a Durable Object. */
+	sync?: () => Promise<void>;
 }
 
 type Row = Record<string, unknown>;
@@ -242,6 +246,7 @@ function openSqlStore(sql: SqlStorage, options: SqlStoreOptions = {}, guard?: ()
 	const latestRow = () => run(`SELECT * FROM ${manifests} ORDER BY epoch DESC LIMIT 1`)[0];
 
 	return {
+		...(options.sync ? { flush: options.sync } : {}),
 		latest(): CheckpointManifest | undefined {
 			const row = latestRow();
 			if (!row) return undefined;
@@ -485,6 +490,57 @@ interface Envelope {
 	host?: string;
 }
 
+/** A slice whose previous attempt died before it committed. */
+export interface SliceLoss {
+	/** The event number, which the retry keeps. */
+	k: number;
+	/** Budget of the attempt that died. */
+	from: number;
+	/** Budget the retry runs with. */
+	to: number;
+}
+
+interface Attempt {
+	k: number;
+	epoch: number;
+	budget: number;
+	open: boolean;
+}
+
+// one row written and flushed before the guest runs; a commit moves the epoch past it
+function openAttempts(sql: SqlStorage) {
+	const run = (query: string, ...bindings: (string | number | null | ArrayBuffer)[]) =>
+		sql.exec(query, ...bindings).toArray();
+	run(
+		'CREATE TABLE IF NOT EXISTS continuation_attempt (id INTEGER PRIMARY KEY, k INTEGER NOT NULL, epoch INTEGER NOT NULL, budget INTEGER NOT NULL, open INTEGER NOT NULL)'
+	);
+	return {
+		read(): Attempt | undefined {
+			const row = run(
+				'SELECT k, epoch, budget, open FROM continuation_attempt WHERE id = 1'
+			)[0];
+			if (!row) return undefined;
+			return {
+				k: Number(row.k),
+				epoch: Number(row.epoch),
+				budget: Number(row.budget),
+				open: Number(row.open) !== 0
+			};
+		},
+		mark(attempt: Omit<Attempt, 'open'>) {
+			run(
+				'INSERT OR REPLACE INTO continuation_attempt (id, k, epoch, budget, open) VALUES (1, ?, ?, ?, 1)',
+				attempt.k,
+				attempt.epoch,
+				attempt.budget
+			);
+		},
+		close() {
+			run('UPDATE continuation_attempt SET open = 0 WHERE id = 1');
+		}
+	};
+}
+
 // per storage object: a module-scope entry exists only in the isolate that wrote it
 const tracks = new WeakMap<DurableObjectStorage, Track>();
 const CUT = new Error('signal raised during a commit');
@@ -513,9 +569,13 @@ function readEnvelope(state: string | undefined): Envelope {
 
 /**
  * Runs one alarm event of a guest: restores or commits as needed, runs the guest with the event
- * budget, and commits at a budget stop. A signal stop writes nothing and only re-arms.
+ * budget, and commits at a budget stop. A signal stop writes nothing before it re-arms.
  * The manifest state holds a runSlice record (budget, step count, host state), so
  * `loadCheckpoint(...).json()` returns that record for checkpoints written here.
+ * Before the guest runs, an attempt row with the event number and budget is written and flushed.
+ * An event that starts in a new isolate and finds an attempt with no commit after it knows the
+ * previous attempt was killed: it halves that budget (never below `initialBudget`), stops doubling
+ * and reports the halving in `lost`.
  * Call it from alarm().
  */
 export async function runSlice(options: SliceOptions): Promise<{
@@ -524,6 +584,7 @@ export async function runSlice(options: SliceOptions): Promise<{
 	stop: StopReason | 'cut';
 	epoch: number;
 	budget: number;
+	lost?: SliceLoss;
 }> {
 	const { storage, memory, signal, run, steps, initialBudget = 2000 } = options;
 	if (!Number.isInteger(initialBudget) || initialBudget < 1)
@@ -534,7 +595,8 @@ export async function runSlice(options: SliceOptions): Promise<{
 				if (signal.raised) throw CUT;
 			}
 		: undefined;
-	const store = openSqlStore(storage.sql, {}, guard);
+	const store = openSqlStore(storage.sql, { sync: () => storage.sync() }, guard);
+	const attempts = openAttempts(storage.sql);
 	const commit = (budget: number, measured: boolean) =>
 		storage.transactionSync(() =>
 			saveCheckpoint(store, memory, {
@@ -547,6 +609,7 @@ export async function runSlice(options: SliceOptions): Promise<{
 				} satisfies Envelope)
 			})
 		);
+	let lost: SliceLoss | undefined;
 	const outcome = (
 		finished: boolean,
 		restored: boolean,
@@ -557,7 +620,8 @@ export async function runSlice(options: SliceOptions): Promise<{
 		restored,
 		stop,
 		epoch: store.latest()?.epoch ?? 0,
-		budget
+		budget,
+		...(lost ? { lost } : {})
 	});
 	const signalStop = async (
 		track: Track,
@@ -568,6 +632,8 @@ export async function runSlice(options: SliceOptions): Promise<{
 		track.budget = Math.max(initialBudget, Math.round(0.7 * ran));
 		track.measured = true;
 		await storage.setAlarm(Date.now());
+		// no commit follows this attempt, so close it after the re-arm
+		attempts.close();
 		return outcome(false, restored, stop, track.budget);
 	};
 
@@ -575,7 +641,17 @@ export async function runSlice(options: SliceOptions): Promise<{
 	let track: Track;
 	let restored = false;
 	const known = tracks.get(storage);
-	if (known && known.memory === memory) {
+	const attempt = attempts.read();
+	// a live track means the previous call ended in this isolate; only a kill removes the isolate
+	const live = known !== undefined && known.memory === memory;
+	if (!live && attempt?.open && attempt.epoch === (store.latest()?.epoch ?? 0))
+		lost = {
+			k: attempt.k,
+			from: attempt.budget,
+			to: Math.max(initialBudget, Math.floor(attempt.budget / 2))
+		};
+	const k = attempt ? (lost ? attempt.k : attempt.k + 1) : 1;
+	if (known && live) {
 		track = known;
 		if (steps() > track.committed) {
 			try {
@@ -601,9 +677,16 @@ export async function runSlice(options: SliceOptions): Promise<{
 			measured = envelope.measured;
 			committed = envelope.steps;
 		}
+		if (lost) {
+			budget = lost.to;
+			measured = true;
+		}
 		track = { memory, budget, measured, committed };
 		tracks.set(storage, track);
 	}
+
+	attempts.mark({ k, epoch: store.latest()?.epoch ?? 0, budget: track.budget });
+	await store.flush?.();
 
 	const before = steps();
 	const reason = await run(track.budget);
