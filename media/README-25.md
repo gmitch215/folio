@@ -1,52 +1,104 @@
-# Differential Guards
+# LZ4 Consumer
 
-Question: do generated programs and guard-refusal fixtures stay equal to native execution on a
-second seed, and does a guard ever refuse?
+Question: does the iteration route speed up a second outside program with a loop over several inputs, and
+what happens to a loop it cannot win?
 
-This extends the [differential campaign](../differential/README.md). It runs two seeds with the
-same generator and adds a family of counted loops whose 4-byte stores use a stride of 1, 2 and 4
-bytes. Strides 1 and 2 overlap at region boundaries, so the disjointness guard refuses them.
-Stride 4 does not overlap. Each loop also runs one out-of-range input that traps natively.
+The program is the C implementation of LZ4 (`lz4/lz4`, commit `ebb370ca83af`, archive SHA256 `eb1a93e9...ffa9`,
+BSD-2-Clause), `lib/lz4.c` built freestanding to wasm32 and unmodified. `scripts/research/cases/lz4-compress-all.c`
+adds one entry, `compress_all(table, n, out, capacity)`, which calls `LZ4_compress_default` for each of `n` inputs
+into its own slot of `capacity` bytes, stores each size after the slots and returns the total compressed
+size. It carries no hint. `scripts/research/lz4-build.ts` checks the archive digest and writes the modules
+below. This record does not interpret the licence file of the project.
+
+Inputs are seeded pseudo-text with a compression ratio of 2.03 to 2.06, generated in the bench. Every sample
+asserts that the output equals the serial run, and the bench decodes the serial output with an independent
+block decoder and checks every input round-trips.
+
+## Modules
+
+| File | What it is |
+| --- | --- |
+| `lz4-compress-all.wasm` | the entry as specified: the slot size is a run-time argument and the loop returns a running total |
+| `lz4-compress-slots-{64k,256k,4m}.wasm` | the same loop with a compile-time slot size (`compress_slots(table, n, out)`), no total, one 4-byte size per loop step ("packed" below) |
+| `lz4-compress-padded-{64k,256k,4m}.wasm` | as `slots`, with each size in its own 32-byte granule ("padded" below) |
+
+A slot is `LZ4_compressBound` of the input rounded up to 4 KiB: 69,632, 266,240 and 4,214,784 bytes for 64 KiB,
+256 KiB and 4 MiB inputs.
+
+## What the route does with it
+
+`prepare(bytes).iterationRoute` on `lz4-compress-all.wasm` is not eligible. The loop is a countdown loop with
+a constant-stride table pointer and a run-time-stride output pointer, which the route accepts, and it also
+writes `total`, a local that the code after the loop reads. The route refuses an accumulator it cannot
+reproduce, so `Folio.run` runs the entry serially. A shared host memory passed to this module gives
+`LinkError` at `Folio.open`, because the module declares an unshared memory; the `default` arm passes an
+unshared memory and runs serially with `reason: unsupported-module`.
+
+The `slots` and `padded` modules are eligible. Their deepest stack use is 16,416 bytes (the 16 KiB
+`LZ4_stream_t`), inside the 32 KiB slot of an iteration.
+
+## Method
+
+Ryzen 9 9900X, Node 26.10.0, cores 4 to 11, `nice -n 19`, `powersave` governor, 3 sessions of 9 rounds after
+2 warmups, width 8, one pool alive at a time, each arm paired with a native serial run in the same round.
+Arms: `default` (unshared host memory, serial by design, so about 1.00x is pair noise) and `automatic`
+(`Folio.open(bytes, { memory, workers: 8 })` with a shared host memory, then `run`). Wall time includes
+placing the inputs. Workloads: `large` is 32 inputs of 4 MiB, `small` is 128 inputs of 256 KiB and `tiny` is
+512 inputs of 64 KiB (padded module only).
 
 ## Results
 
-| | Seed 12648430 | Seed 464367618 |
-| --- | ---: | ---: |
-| Programs | 128 | 128 |
-| Comparisons | 6,228 | 6,228 |
-| Trapping comparisons | 2,976 | 3,008 |
-| Host exceptions | 1,024 | 1,024 |
-| Replayed regions | 3,668 | 3,701 |
-| Dispatched comparisons | 1,923 | 1,893 |
-| Native shared route | 12 | 12 |
-| Guard refusals (`guard-failed`) | 12 | 12 |
+Paired median speedup of the `automatic` arm over the serial run, with the range over rounds, three sessions.
 
-All 12,456 comparisons match native in complete memory, return value, ordered host effects and
-trap or host exception identity, at widths 1, 2, 4 and 8. The earlier campaign reported zero guard
-refusals; the overlap family produces 12 per seed and each falls back to speculation with the
-native result.
+| Workload | Module | Session 1 | Session 2 | Session 3 | Outcome of the route |
+| --- | --- | --- | --- | --- | --- |
+| 32 x 4 MiB | packed | 0.99x (0.99 to 1.00) | 0.99x (0.97 to 1.00) | 0.99x (0.99 to 1.00) | `log-exhausted` after a few iterations |
+| 32 x 4 MiB | padded | 0.99x (0.98 to 1.00) | 0.99x (0.99 to 1.00) | 0.99x (0.98 to 1.00) | `log-exhausted` |
+| 128 x 256 KiB | packed | 0.97x (0.95 to 0.99) | 0.97x (0.95 to 0.98) | 0.96x (0.93 to 0.98) | `log-exhausted` |
+| 128 x 256 KiB | padded | 0.97x (0.96 to 0.98) | 0.97x (0.96 to 0.98) | 0.96x (0.93 to 0.98) | `log-exhausted` |
+| 512 x 64 KiB | padded | 0.87x (0.86 to 0.94) | 0.86x (0.86 to 0.92) | 0.87x (0.85 to 0.92) | `no-admission` after one batch |
+| 128 x 256 KiB | spec shape | serial | serial | serial | `unsupported-module`, no route |
 
-Each seed draws each of the seven grammar shapes between 13 and 30 times. The shapes cover scalar 32-bit load,
-rotate, xor and store; 64-bit load, add and store; `memory.copy`; 32-bit and 64-bit float
-load and store; saturating float-to-integer conversion; and 16-bit store with a sign-extended byte
-load and `clz`. Four input modes cross each shape: a shared destination, an aliased source, a
-destination at the page boundary and a trap. The grammar does not generate `memory.fill`,
-`memory.init`, atomic operations or SIMD, so those transformations have no generated coverage.
+The speedup is 1.00x or below in every cell, and there is no cell where the route helps LZ4.
 
-The campaign is finite evidence of equality on these shapes. It is not a proof of correctness for
-the transformation.
+- **The undo log is the limit.** An iteration that writes more than 2,048 granules (64 KiB) of tracked bytes
+  exhausts its log. At 4 MiB and 256 KiB the compressed output alone is about 2 MiB and 128 KiB, so the
+  first iterations exhaust the log, the batch rolls back, and the loop runs serially with
+  `reason: 'log-exhausted'`. When an iteration fails, the workers start no further iteration of its batch, so
+  the lost work is the iterations already running: 5 to 8 of the 32 of a batch. The cost is 1% to 4% of the
+  serial wall. `Folio.open` has no option for a larger log and no default changed.
+- **The packed size table also conflicts.** Eight 4-byte sizes share one 32-byte write granule, which the
+  validator reports as write-after-write. It never decides the result here, because the log is exhausted
+  first, and the padded module shows the same speedups.
+- **At 64 KiB inputs the iterations fit the log and still lose.** The route runs one batch of 32
+  iterations, finds its wall 2.1 to 3.9 times the serial time of those iterations (iteration 0 takes about
+  0.11 ms) and ends dispatch, which costs 13% of the serial wall (0.87x). The cost of tracked execution and validation of about 1,500 granules per iteration was not
+  separated from dispatch.
+- **Equality.** Output equals the serial run in every sample, and every input round-trips.
+
+Limits: one library, one machine, three module families, inputs of a fixed ratio. There is no `explicit` arm
+for LZ4. Whether a larger undo log would make 256 KiB and 4 MiB inputs profitable was not tested, because the
+log capacity is not reachable through `Folio.open`. The 64 KiB workload was added to see the route run
+without a stop for the log.
 
 ## Reproduction
 
 ```sh
-node scripts/research/differential.ts build/research/seed-12648430 128 12648430
-node scripts/research/differential.ts build/research/seed-464367618 128 464367618
+node scripts/research/lz4-build.ts
+node scripts/research/lz4-bench.ts out.jsonl 9 32 4 slots
+node scripts/research/analyze.ts out.jsonl summary.json
 ```
 
-The records ran on an Apple M2 Pro with Node 26.8.2.
+`scripts/research/lz4.sh SESSIONS ROUNDS [OUTPUT_DIRECTORY]` runs the six cells for each session under the timing
+lock with `nice -n 19` and cores 4 to 11. The build downloads the pinned archive and refuses a digest that
+differs.
 
 ## Artifacts
 
-- `seed-12648430.jsonl`, `seed-464367618.jsonl`: raw records.
-- `seed-12648430.summary.json`, `seed-464367618.summary.json`: totals as the campaign wrote them.
+- `rig-{packed,padded}-{large,small}-N.jsonl`, `rig-padded-tiny-N.jsonl` and `rig-spec-shape-small-N.jsonl` (N
+  from 1 to 3): raw records, with `*.summary.json` paired summaries from `analyze.ts`. `packed` is the
+  `slots` module, `spec-shape` is `lz4-compress-all.wasm`.
+- `lz4-compress-*.wasm`: the modules the sessions ran.
+- `rig-before.log`: memory, load and governor at the start.
+- `source.tar.gz`: `src/`, `scripts/research/` and `package.json` as run.
 - `manifest.json`: byte lengths and SHA256 digests.

@@ -1,36 +1,23 @@
-# Default Entry Repeat
+# Changed-Page Reset
 
-Question: do the single-entry timings of the [default-admission study](../serial/README.md)
-reproduce when nothing else runs on the host?
-
-The earlier run overlapped other local work. This repeat runs the same 21 upstream entries with
-the same arms, native and Folio at widths 1, 2, 4 and 8, 9 paired rounds, on two machines.
-
-## Results
-
-All 21 entries take the serial original-module route on both machines: `mode` is `serial` and no
-worker is dispatched. The eight-worker Folio arm runs at 0.42x to 0.99x of native on the Ryzen
-machine and 0.47x to 1.05x on the M2 Pro. The slowest ratios belong to entries under 20
-microseconds, where the wrapper cost is a large share of a call. The largest per-kernel difference
-from the earlier run's eight-worker median is 0.25.
-
-Entries of 0.10 ms and longer (AES, miniz, SHA, MD5, the 6502 emulator) sit between 0.94x and 1.0x. This is a measurement of the route default admission chooses; it contains no speedup claim.
+Same independent operations and timing method as contexts. The fixed deterministic entry is run once to identify changed64KiB pages, then initialized state is restored. Only those pages are reset per operation. Every verification operation still compares all8MiB and returns. This is a corpus-specific specialization for unchanged code/input/host state, not a generic dirty-memory tracker or automatic extraction. Each run has its own matched native baseline.
 
 ## Reproduction
 
+Run from the repository root with Node26 and the existing LLVM toolchain. Build the corpus first with `node scripts/research/corpus.ts build build/research/corpus/build.jsonl`. Use a new output path; recorded runs are not overwritten.
+
 ```sh
-node scripts/research/corpus-serial.ts build/research/default-entry 9
-node scripts/research/analyze.ts build/research/default-entry/raw.jsonl summary.json
+FOLIO_CORPUS_RESET=pages node scripts/research/corpus-mechanisms.ts build/research/pages-repeat 7 4
 ```
 
-The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
-shared timing lock. The M2 Pro record ran unpinned on macOS.
+Analyze sample records with `node scripts/research/analyze.ts RAW.jsonl SUMMARY.json`; differential/upstream records have their own schemas. Timing requires an otherwise quiet host. The retained source archives in [contexts](../../corpus/contexts/README.md) and [page-reset](../../corpus/page-reset/README.md) preserve the measured source; install pinned dependencies from package.json and use the artifact digests in the upstream records. Source revisions can precede later safety fixes and formatting.
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 945 samples each.
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries.
-- `manifest.json`: byte lengths and SHA256 digests.
+- [raw.jsonl](raw.jsonl)
+- [source.tar.gz](source.tar.gz)
+- [summary.json](summary.json)
 
-Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
-[reset-policies](../reset-policies/source.tar.gz).
+`manifest.json` records byte lengths and SHA256 digests. Environment/source hashes, inputs,counts and routing observations are in raw records. Intervals are within-run paired-round bootstrap intervals, not independent-host replication.
+
+A repeat of this study on the same machine, with three reset policies in one session, is in [reset policies](../reset-policies/README.md). It reports 4.80x for AES-CBC decrypt at eight batched workers where this record reports 7.42x; native and one-worker arms agree between the runs.

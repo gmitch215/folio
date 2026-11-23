@@ -1,50 +1,60 @@
-# Forced Admission Complete
+# Graded Conflicts
 
-Question: when the admission threshold is set to zero, which corpus entries receive regions, and
-does running those regions in parallel pay?
+Question: how does speculative execution change as the share of conflicting regions and the work
+per region vary?
 
-This completes the [interrupted diagnostic](../forced-admission/README.md), which stopped at 16 of
-21 cases. Each case runs in its own process with `minimumRegionWork` set to 0, native and Folio at
-widths 1, 2, 4 and 8, 3 paired rounds and a 60 second cap per case. Production defaults are
-unchanged; this is a diagnostic of what the default threshold declines.
+A batch of 64 `mix` calls from the fixture module runs as one ordered sequence. In each cell a
+fraction of the calls updates one shared word, so each of them reads what the previous one wrote
+and must replay; the rest update distinct words. The fraction takes six values (0, 1/16, 1/8, 1/4,
+1/2, 1) and the work per call takes three (16, 1024 and 65,536 rounds, about 0.1, 1.2 and 76
+microseconds on the Ryzen machine). Arms are native, forced speculation at widths 2, 4 and 8, and
+the default route at width 8, in 9 paired rounds after 2 warmups. Every sample compares complete
+memory with the native result. The study replaces the two fixed conflict cells of the
+[crossover sweep](../crossover/README.md) with a graded set.
 
 ## Results
 
-Twenty cases completed inside the cap. `m6502` reached the cap in the first run (0 samples, SIGTERM,
-retained in `m6502-capped.jsonl`), and a separate run with a 900 second cap completed it.
+Eight-worker forced speculation, paired median speedup over native, 65,536 rounds per call:
 
-| Outcome | Cases |
-| --- | ---: |
-| Dispatch workers and run speculatively | 11 |
-| Stay on the serial original-module route | 10 |
-| Replay or fall back to native | 0 fallbacks, replays in 4 |
-| Speculative cases faster than native at any width | 0 of 11 |
+| Conflicting calls | Ryzen | M2 Pro |
+| ---: | ---: | ---: |
+| 0 | 3.50x | 3.54x |
+| 1/16 | 2.81x | 3.05x |
+| 1/8 | 2.09x | 2.31x |
+| 1/4 | 1.65x | 1.77x |
+| 1/2 | 1.11x | 1.24x |
+| all | 0.74x | 0.77x |
 
-The eleven speculative cases are AES-CBC decrypt, AES-CTR, LZ4 compress, MD5, miniz compress and
-decompress, QOI encode and decode, SHA-1, SHA-256 and the 6502 emulator. At width 8 their wall time
-is between 108 and 45,645 times native by paired median: 0.06 ms native against 2,899 ms for QOI decode, 0.2 ms
-against 6,987 ms for the 6502 emulator, 0.2 ms against 225 ms for SHA-256. They split work into
-thousands of regions (67,600 for SHA-256, 77,824 for AES-CTR, 170,390 for the 6502 emulator), each far smaller than the cost of
-dispatching it.
+Break-even lies between half and all of the calls conflicting at this region size. At 1,024 rounds
+the best cell is 0.26x on the Ryzen machine (0.23x on the M2 Pro) with no conflicts, falling to
+0.09x with all conflicting. At 16 rounds every cell is 0.02x or lower. Below about 76 microseconds
+per call, dispatch and tracking cost more than the work they distribute, whether or not the calls
+conflict.
 
-All outputs match native in every sample. The diagnostic supports the default threshold of 200,000
-net work units: lowering it on this corpus produces regions and no speedup.
+Ordered validation is not the limiting cost. Its share of wall time is at most 0.3% in the
+65,536 round cells and at most 2.2% in any cell. The default route at width 8 gives similar results
+to forced speculation in every cell. The two machines agree to within about 13% in every 65,536
+round cell.
+
+Admission defaults are unchanged. The measured crossover is consistent with the existing floor of
+200,000 estimated work units, and the data does not support lowering it.
 
 ## Reproduction
 
 ```sh
-node scripts/research/admission-diagnostic.ts build/research/forced 60
-FOLIO_CORPUS_ADMISSION=0 node scripts/research/corpus-serial.ts build/research/forced-m6502 3 m6502
+node scripts/research/graded.ts build/research/graded 9
+node scripts/research/analyze.ts build/research/graded/raw.jsonl summary.json
 ```
+
+The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
+shared timing lock. The M2 Pro record ran unpinned on macOS. The raw files here hold the graded
+rows only; the routing rows of the same run are in [adaptive routing](../adaptive-routing/README.md).
 
 ## Artifacts
 
-- `raw.jsonl`: environment, sample and closed records for the 20 completed cases plus the 900
-  second `m6502` run.
-- `summary.json`: paired summary generated from `raw.jsonl`.
-- `index.json`: the diagnostic's per-case completion table, including the capped `m6502` row.
-- `m6502-capped.jsonl`: the records the 60 second `m6502` process wrote before it was stopped.
+- `ryzen.jsonl`, `m2.jsonl`: raw records, 810 samples each (18 cells, 5 arms, 9 rounds).
+- `ryzen.summary.json`, `m2.summary.json`: paired summaries, including validation and commit time.
 - `manifest.json`: byte lengths and SHA256 digests.
 
-Three paired rounds per arm is a small sample. The ratios are large enough that the sign and order
-of magnitude do not depend on it.
+Sources are identified by SHA256 in each environment row. The Ryzen source archive is in
+[reset-policies](../../corpus/reset-policies/source.tar.gz).

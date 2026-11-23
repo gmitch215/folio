@@ -1,0 +1,413 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Parallel Execution | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-guide"><script>try{document.documentElement.dataset.theme=localStorage.getItem("tsd-theme")||"os"}catch(e){document.documentElement.dataset.theme="os"}</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><button type="button" class="docs-menu" popovertarget="docs-sidebar">Menu</button><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog></div></header>
+<div class="container container-main">
+<div class="docs-sidebar" id="docs-sidebar" popover><div class="docs-sidebar-head"><span>Documentation</span><button type="button" class="docs-close" popovertarget="docs-sidebar" popovertargetaction="hide">Close</button></div><nav class="docs-nav" aria-label="Documentation"><details class="docs-group" data-group="Start"><summary>Start</summary><ul><li><a href="../index.html">Overview</a></li><li><a href="../documents/docs_getting-started.html">Getting Started</a></li><li><a href="https://github.com/gmitch215/folio/tree/master/examples" class="docs-ext" rel="noopener">Examples</a></li></ul></details><details class="docs-group" data-group="Modules"><summary>Modules</summary><ul><li><a href="../documents/docs_modules_README.html">All Modules</a></li></ul><p class="docs-section" id="docs-section-1-0">Parallelism</p><ul aria-labelledby="docs-section-1-0"><li><a href="../documents/docs_modules_core.html">Core</a></li><li><a href="../documents/docs_modules_pools.html">Pools</a></li><li><a href="../documents/docs_modules_folds-and-certificates.html">Folds and Certificates</a></li></ul><p class="docs-section" id="docs-section-1-1">Platforms</p><ul aria-labelledby="docs-section-1-1"><li><a href="../documents/docs_modules_workers.html">Workers</a></li><li><a href="../documents/docs_modules_browser.html">Browser</a></li></ul><p class="docs-section" id="docs-section-1-2">Memory and State</p><ul aria-labelledby="docs-section-1-2"><li><a href="../documents/docs_modules_memory.html">Memory</a></li><li><a href="../documents/docs_modules_boot.html">Boot</a></li><li><a href="../documents/docs_modules_continuation.html">Continuation</a></li></ul></details><details class="docs-group" data-group="Guides"><summary>Guides</summary><ul><li><a href="../documents/docs_configuration.html">Configuration</a></li><li><a href="../documents/docs_limits.html">Limits</a></li><li><a href="../documents/ADVANCED_USAGE.html">Advanced Usage</a></li></ul></details><details class="docs-group" data-group="Studies" open><summary>Studies</summary><ul><li><a href="../documents/docs_studies_README.html">All Studies</a></li><li><a href="../documents/docs_studies_storage-resets.html">Storage Resets</a></li><li><a href="../documents/docs_studies_continuation-across-events.html">Continuation Across Events</a></li><li><a href="../documents/docs_studies_elastic-memory.html">Elastic Memory</a></li><li><a href="../documents/docs_studies_boot-images.html">Boot Images</a></li><li><a href="../documents/docs_studies_memory-accounting.html">Memory Accounting</a></li><li><a href="../documents/docs_studies_parallel-execution.html" aria-current="page">Parallel Execution</a></li></ul></details><details class="docs-group" data-group="Reference"><summary>Reference</summary><ul><li><a href="../documents/TECHNICAL_REPORT.html">Technical Report</a></li><li><a href="../modules.html">API Reference</a></li></ul></details></nav><a class="docs-side-gh" href="https://github.com/gmitch215/folio">GitHub</a></div>
+<main class="col-content" id="docs-main" tabindex="-1">
+<p class="docs-eyebrow">Studies</p>
+<div class="tsd-panel tsd-typography"><h1 id="parallel-execution" class="tsd-anchor-link">Parallel Execution<a href="#parallel-execution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Folio runs native WebAssembly across several V8 isolates over one physical memory allocation. This page covers what the measurements found about scaling, the explicit pools, the certified routes and the router, including the gates that were set in advance and not met.</p>
+<h2 id="question" class="tsd-anchor-link">Question<a href="#question" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>When does running a Wasm program on several isolates beat the serial program, which routes keep the serial result, and does automatic discovery of independent work help on programs Folio did not shape?</p>
+<h2 id="instruments" class="tsd-anchor-link">Instruments<a href="#instruments" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Study</th>
+<th>What it measures</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/memory/sharing/README.md">sharing</a></td>
+<td>resident memory of shared against copied buffers</td>
+<td>Node 26.10.0</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/scaling/README.md">scaling</a></td>
+<td>one unannotated entry on 1 to 8 workers</td>
+<td>Ryzen rig</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/placement/README.md">placement</a></td>
+<td>pinned against unpinned workers on normally inlined C</td>
+<td>Ryzen rig</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/corpus/reset-policies/README.md">reset-policies</a></td>
+<td>the reset between explicit tasks on 21 kernels</td>
+<td>Ryzen and M2 Pro</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/corpus/slice-pool-census/README.md">slice-pool-census</a></td>
+<td>30 record-level drivers through <code>SlicePool</code></td>
+<td>Ryzen rig, quiet</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/certification/stream-certifier/README.md">stream-certifier</a></td>
+<td>the proof that a stream function is an affine fold</td>
+<td>Ryzen rig</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/ownership-slice-gates/README.md">ownership-slice-gates</a></td>
+<td>the six ownership certificates on the slice route</td>
+<td>Mac and rig</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/router-development-sweep/README.md">router-development-sweep</a></td>
+<td>the router over 38 development drivers</td>
+<td>Ryzen rig, quiet</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/final-evaluation/README.md">final-evaluation</a></td>
+<td>the router on 47 frozen final drivers, pre-registered gates</td>
+<td>x86_64 rig and arm64 Mac</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/external-applications/README.md">external-applications</a></td>
+<td>three unmodified outside programs</td>
+<td>Ryzen rig</td>
+</tr>
+</tbody>
+</table>
+<p>Timing comes from an AMD Ryzen 9 9900X and an Apple M2 Pro. Speedup is the median over rounds of the paired ratio serial time over arm time. A claim about speed needs raw samples under <code>results/</code> and the instrument named.</p>
+<h2 id="design" class="tsd-anchor-link">Design<a href="#design" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Who names the independence</th>
+<th>What it checks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Iteration route</td>
+<td>nobody; Folio finds loops</td>
+<td>every iteration's reads and writes at 64 B and 32 B granules, in order, with an undo log and replay</td>
+</tr>
+<tr>
+<td>Task pool</td>
+<td>the caller</td>
+<td>nothing by default; <code>audit</code> reruns every nth task serially and compares the output bytes</td>
+</tr>
+<tr>
+<td>Slice pool</td>
+<td>the caller</td>
+<td>nothing by default; <code>audit: true</code> replays every slice serially on a copy</td>
+</tr>
+<tr>
+<td>Certified stream fold</td>
+<td>a proof</td>
+<td>the certificate holds for every length and split of the module</td>
+</tr>
+<tr>
+<td>Ownership slice route</td>
+<td>a proof, with premises</td>
+<td>six obligations of the certificate; the premises are not proved</td>
+</tr>
+<tr>
+<td>Router</td>
+<td>the certificates</td>
+<td>picks one of the routes above per call, or native serial</td>
+</tr>
+</tbody>
+</table>
+<p>The router chooses in a fixed order: certified summary, certified private window in place, an explicit runner, tracked speculation where its assumptions hold, and native serial otherwise.</p>
+<h2 id="results" class="tsd-anchor-link">Results<a href="#results" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="sharing-and-scaling" class="tsd-anchor-link">Sharing and Scaling<a href="#sharing-and-scaling" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Four isolates over a touched 64 MiB backing add 3.871 MiB of resident memory, against 259.930 MiB for copied buffers.</p>
+<p>The scaling sweep used one unannotated C entry, one shared arena and a serial oracle, with CPU affinity across eight distinct physical cores. All 207 samples compare the complete 268,500,992-byte allocation exactly, and none was discarded.</p>
+<table>
+<thead>
+<tr>
+<th>Compute: 4,096 words, 32,768 mixes</th>
+<th style="text-align:right">Elapsed median</th>
+<th style="text-align:right">Paired speedup [range]</th>
+<th style="text-align:right">Total CPU ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Untouched serial</td>
+<td style="text-align:right">150.706 ms</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>Two native workers</td>
+<td style="text-align:right">76.191 ms</td>
+<td style="text-align:right">1.976 [1.952 to 1.987]</td>
+<td style="text-align:right">1.009</td>
+</tr>
+<tr>
+<td>Four native workers</td>
+<td style="text-align:right">38.591 ms</td>
+<td style="text-align:right">3.903 [3.892 to 3.932]</td>
+<td style="text-align:right">1.017</td>
+</tr>
+<tr>
+<td>Eight native workers</td>
+<td style="text-align:right">19.780 ms</td>
+<td style="text-align:right">7.619 [7.525 to 7.705]</td>
+<td style="text-align:right">1.037</td>
+</tr>
+<tr>
+<td>Four tracked workers</td>
+<td style="text-align:right">41.398 ms</td>
+<td style="text-align:right">3.640 [3.550 to 3.661]</td>
+<td style="text-align:right">1.070</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Streaming 256 MiB, one mix per word</th>
+<th style="text-align:right">Elapsed median</th>
+<th style="text-align:right">Paired speedup</th>
+<th style="text-align:right">Total CPU ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Untouched serial</td>
+<td style="text-align:right">38.777 ms</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>Two workers</td>
+<td style="text-align:right">20.415 ms</td>
+<td style="text-align:right">1.898</td>
+<td style="text-align:right">1.040</td>
+</tr>
+<tr>
+<td>Four workers</td>
+<td style="text-align:right">11.096 ms</td>
+<td style="text-align:right">3.497</td>
+<td style="text-align:right">1.097</td>
+</tr>
+<tr>
+<td>Eight workers</td>
+<td style="text-align:right">11.166 ms</td>
+<td style="text-align:right">3.474</td>
+<td style="text-align:right">1.791</td>
+</tr>
+</tbody>
+</table>
+<p>Eight workers did about the same computation in one eighth of the time and did not reduce total CPU work. Compute scales to eight while streaming stops near four, which fits a shared memory system or cache contention, but no bandwidth or stall counters were collected. Normally inlined C with automatic region discovery reads 7.519x at eight pinned workers and 5.636x unpinned (<a href="https://github.com/gmitch215/folio/blob/master/results/execution/placement/README.md">placement</a>). A 4,096-word stream took 0.01089 ms raw, 0.02490 ms through the pool's automatic serial route and 3.47807 ms with forced tracking, so tiny jobs lose to dispatch overhead.</p>
+<h3 id="automatic-extraction-on-programs-folio-did-not-shape" class="tsd-anchor-link">Automatic Extraction on Programs Folio Did Not Shape<a href="#automatic-extraction-on-programs-folio-did-not-shape" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>On 21 library kernels from nine projects, default admission dispatches no worker, and forced admission makes all 11 kernels that receive regions 108 to 45,645 times slower. On three unmodified outside programs built at <code>-O2</code> and run as one call of <code>main</code>, the pass line was a paired speedup of at least 1.20 with an interval above 1.0.</p>
+<table>
+<thead>
+<tr>
+<th>Program</th>
+<th>Route taken</th>
+<th>Paired speedup (interval)</th>
+<th>Wrong outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aobench</td>
+<td>serial, <code>unsupported-module</code></td>
+<td>1.002 (0.999 to 1.007)</td>
+<td>0 in 126 timed samples across the three programs</td>
+</tr>
+<tr>
+<td>6pack with FastLZ</td>
+<td>serial, <code>unsupported-module</code></td>
+<td>1.002 (0.996 to 1.004)</td>
+<td></td>
+</tr>
+<tr>
+<td>llama2.c</td>
+<td>serial, <code>unsupported-module</code></td>
+<td>1.001 (0.998 to 1.003)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The pass line is not met. No region reaches the 200,000-unit admission threshold, and the iteration route refuses all three because the hot loops nest inside one function or inline into a larger one. This closes automatic discovery on unmodified <code>-O2</code> builds of these three programs.</p>
+<p>The iteration route does find one loop shape in an outside program. On BLAKE3 over several inputs it reaches 2.0x to 3.1x under default admission on the Ryzen machine and 2.8x to 3.5x on the M2 Pro, against 1.00x without it. SHA-256 gains 1.7x to 2.1x with the per-input work in a helper, and LZ4 gains nothing (0.87x to 0.99x) because its output exceeds the undo log.</p>
+<h3 id="explicit-pools" class="tsd-anchor-link">Explicit Pools<a href="#explicit-pools" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A caller-named boundary with private contexts speeds up all 21 kernels at least slightly, and 18 of 21 by 2x or more on eight batched <code>TaskPool</code> workers with learned-page reset. With the checkpoint reset, 8 of 21 reach 2x. Eight batched workers, speedup over native and process CPU as a ratio of native CPU:</p>
+<table>
+<thead>
+<tr>
+<th>Kernel</th>
+<th>Machine</th>
+<th style="text-align:right"><code>whole</code></th>
+<th style="text-align:right"><code>pages</code></th>
+<th style="text-align:right"><code>checkpoint</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AES-CBC decrypt</td>
+<td>Ryzen</td>
+<td style="text-align:right">3.19x / 1.97</td>
+<td style="text-align:right">4.80x / 1.05</td>
+<td style="text-align:right">4.52x / 1.30</td>
+</tr>
+<tr>
+<td>SHA-256</td>
+<td>Ryzen</td>
+<td style="text-align:right">0.92x / 5.93</td>
+<td style="text-align:right">3.79x / 1.10</td>
+<td style="text-align:right">2.52x / 2.35</td>
+</tr>
+<tr>
+<td>LZ4 compress</td>
+<td>Ryzen</td>
+<td style="text-align:right">0.44x / 12.67</td>
+<td style="text-align:right">3.11x / 1.52</td>
+<td style="text-align:right">1.14x / 4.59</td>
+</tr>
+<tr>
+<td>xxHash32</td>
+<td>Ryzen</td>
+<td style="text-align:right">0.43x / 12.62</td>
+<td style="text-align:right">2.48x / 1.80</td>
+<td style="text-align:right">1.40x / 3.93</td>
+</tr>
+</tbody>
+</table>
+<p>The eight-worker arm varies by up to 1.5x between runs of the same machine. In the held-out set of eight drivers from six new projects, explicit private contexts win all 8 (1.94x to 3.96x, every output equal to serial), automatic admission wins 1 and the slice pool is exact on 2.</p>
+<p>The slice pool, where the caller declares the records independent, was run on 30 drivers at eight workers, three sessions of five rounds. Twenty run exact at 1.94x to 3.88x. Ten fail the output check in at least one session: miniz, the QOI drivers and the <code>-shared</code> variants, which are file-scope statics and allocator cursors. Four of the ten passed in some sessions and failed in others, which is what a race on shared state looks like. With <code>audit: true</code> the pool threw <code>SliceConflictError</code> on seven of eight failing drivers tried, agreed with the serial run on four passing drivers, and trapped on the eighth.</p>
+<table>
+<thead>
+<tr>
+<th>Mode over the 30 loops (failed or inapplicable counted as serial)</th>
+<th style="text-align:right">Geometric mean speedup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Automatic admission</td>
+<td style="text-align:right">0.98</td>
+</tr>
+<tr>
+<td>Forced admission</td>
+<td style="text-align:right">0.56</td>
+</tr>
+<tr>
+<td>Explicit private contexts</td>
+<td style="text-align:right">1.89</td>
+</tr>
+<tr>
+<td>Slice pool</td>
+<td style="text-align:right">2.10</td>
+</tr>
+<tr>
+<td>Best exact mode per loop</td>
+<td style="text-align:right">2.72</td>
+</tr>
+</tbody>
+</table>
+<p>The same drivers compiled natively with a parallel-for over the records reach 3.46x geometric mean with output equal to serial on 37 of 38 drivers. The best exact Wasm mode per driver reaches 2.80x, which is 0.81 of native. The native code has no sandbox, bounds checks or linear memory, so it is an upper reference.</p>
+<h3 id="certification" class="tsd-anchor-link">Certification<a href="#certification" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>certifyStream</code> proves from the module bytes that <code>entry(state, ptr, len)</code> is the left fold of one affine byte step for every length and split. Fourteen compiled subjects were run with ground truth from execution at lengths from 1 byte to 1 MiB.</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Count or figure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Valid compiled subjects certified</td>
+<td>7 (CRC-32C, CRC-16, CRC-64, a hash, an LCG, miniz CRC-32, Adler-32 over two residues)</td>
+</tr>
+<tr>
+<td>Kernels that rewrite their input in place, certified</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Split-sensitive constructed modules refused</td>
+<td>all 14</td>
+</tr>
+<tr>
+<td>In-class valid red-team modules certified</td>
+<td>506 of 519</td>
+</tr>
+<tr>
+<td>Certificates that disagree with execution after the fixes</td>
+<td>none in 1,096 red-team modules or 3,492 round-three modules</td>
+</tr>
+<tr>
+<td>Refused</td>
+<td>FNV-1a and the SHA-256 compression function</td>
+</tr>
+<tr>
+<td>False certificates found by two adversary rounds and two reviews</td>
+<td>one in each, all fixed</td>
+</tr>
+</tbody>
+</table>
+<p>One pass on shared memory at eight workers reads 3.4x to 4.1x at 8 MiB and 4.7x to 6.8x at 64 MiB at a CPU ratio of 1.02 to 1.10, with wide ranges between sessions. The checker is not formally verified, its ground truth is sampled execution, and both reviewers share the author's model family.</p>
+<p>The ownership certificate treats a driver as a proof with six obligations. The locked gate was 8 of the 10 failing development drivers certified, and the result is 6 of 10, so the gate is NOT MET. Each of the six passes the slice route's gate over widths 1, 2, 4 and 8 with trapping records included: 72 of 72, 72 of 72, 72 of 72, 108 of 108, 84 of 84 and 84 of 84 runs equal to serial, and a negative control that empties the copy-out differs for all six. On <code>aes-cbc-decrypt-shared</code>, 256 records, 15 paired rounds, eight workers read 4.07x with six CPUs and 5.64x with ten. That is one driver. The redirect route on the iteration pool does not pay on the same module (0.76x with six CPUs and 1.10x with ten at eight workers).</p>
+<h3 id="the-router" class="tsd-anchor-link">The Router<a href="#the-router" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The router's gates were pre-registered, and the final corpus was drawn once before any Folio run on it: 47 drivers from 10 projects, three sessions of ten rounds on an x86_64 rig and three on an arm64 Mac, 17,484 rows.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>x86_64</th>
+<th>arm64</th>
+<th>Gate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gate 1: geometric mean of 47 router speedups</td>
+<td>0.899 (sessions 0.897, 0.900, 0.900)</td>
+<td>0.900 (0.894, 0.906, 0.898)</td>
+<td>1.20</td>
+</tr>
+<tr>
+<td>Gate 2: slowest of the five slowest drivers</td>
+<td>0.594</td>
+<td>0.561</td>
+<td>0.90</td>
+</tr>
+<tr>
+<td>Bootstrap interval of the geomean</td>
+<td>0.861 to 0.935</td>
+<td>0.858 to 0.941</td>
+<td></td>
+</tr>
+<tr>
+<td>Probability of reaching 1.20</td>
+<td>0.00</td>
+<td>0.00</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Gate 3 is met, with 0 wrong outputs in 17,484 rows. Gates 1 and 2 are not met on either architecture in any session. The router ran serial for 46 of 47 drivers on both architectures: 23 refused as <code>unclassified-dependency</code> and 23 below the route floor. The one window certificate, <code>minimp3-mp3dec_init</code>, ran the window route in 21 of 30 arm64 rounds and in none on x86_64. 41 drivers read below 1.00 on x86_64 and 42 on arm64, led by drivers whose serial call takes 0.002 to 0.04 ms. The study did not examine the cause of the serial-path overhead.</p>
+<p>On the 38 development drivers the router's geomean was 1.209 with a driver-level bootstrap interval of 1.068 to 1.395, and the probability of reaching 1.20 was 0.52. The margin rested on a few drivers: without <code>qoa-encode</code> it is 1.182. Those drivers were also the data the router constants were fitted on, so that figure did not carry over to the frozen corpus.</p>
+<p>Pooled geomean per mode, x86_64 then arm64: serial 1.000 (control), <code>w1</code> 0.895 and 0.905, <code>w2</code> 0.910 and 0.902, <code>independent</code> 0.908 and 0.903, <code>shared</code> 0.857 and 0.875, <code>router</code> 0.899 and 0.900.</p>
+<h2 id="reading" class="tsd-anchor-link">Reading<a href="#reading" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Speedups come from boundaries that someone names or proves. A single call with automatic extraction does not gain on library kernels or on three outside programs. Explicit private contexts reach 2x or more on most kernels, at a reset cost that depends on the policy. The slice pool and the certified fold avoid the reset or the check, at the price of a declaration or a proof. The router's value on the final corpus is that it kept every output equal to serial. It did not speed anything up there, because it ran serial on 46 of 47 drivers.</p>
+<p>The classes that do not benefit are calls whose serial time is under about 0.05 ms, programs whose records share an allocator or statics, loops whose output exceeds the undo log, and one uncached PHP render.</p>
+<h2 id="closed-and-open" class="tsd-anchor-link">Closed and Open<a href="#closed-and-open" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Closed mechanisms: existing region extraction on single calls of the 21 kernels, forced admission, a gate fitted on the 30 drivers (it failed on the held-out set), coarsening, windows, the summary and second chance for the five xxHash and Adler-32 drivers, and automatic discovery on the three outside programs.</p>
+<p>Open: a full application, automatic discovery of independent task boundaries, other loop shapes and programs, iterations of unequal size, a third measurement machine, and review of the harnesses and claims by anyone outside the author's model family. The ownership certificates are tested by three red team rounds and a re-audit and are not proved. The final corpus is a development set after any change to Folio.</p>
+<h2 id="see-also" class="tsd-anchor-link">See Also<a href="#see-also" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>Report: <a href="TECHNICAL_REPORT.html#router-and-development-ablation">Router and Development Ablation</a>, <a href="TECHNICAL_REPORT.html#final-corpus-and-baselines">Final Corpus and Baselines</a>, <a href="TECHNICAL_REPORT.html#certified-stream-folds">Certified Stream Folds</a>, <a href="TECHNICAL_REPORT.html#ownership-certificate-and-the-slice-route">Ownership Certificate and the Slice Route</a></li>
+<li>Modules: <a href="docs_modules_pools.html">Pools</a>, <a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a>, <a href="docs_modules_core.html">Core</a></li>
+<li>Related study: <a href="docs_studies_memory-accounting.html">Memory Accounting</a></li>
+</ul>
+</div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_studies_memory-accounting.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">Memory Accounting</span><span class="docs-pager-desc">The memory ladder, the growth governor and the platform memory line.</span></a><a rel="next" class="docs-pager-next" href="../documents/TECHNICAL_REPORT.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Technical Report</span><span class="docs-pager-desc">The evidence, the method and the limits behind every claim.</span></a></nav></main>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#design">Design</a></li><li class="docs-toc-h2"><a href="#results">Results</a></li><li class="docs-toc-h3"><a href="#sharing-and-scaling">Sharing and Scaling</a></li><li class="docs-toc-h3"><a href="#automatic-extraction-on-programs-folio-did-not-shape">Automatic Extraction on Programs Folio Did Not Shape</a></li><li class="docs-toc-h3"><a href="#explicit-pools">Explicit Pools</a></li><li class="docs-toc-h3"><a href="#certification">Certification</a></li><li class="docs-toc-h3"><a href="#the-router">The Router</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

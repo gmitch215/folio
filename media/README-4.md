@@ -1,52 +1,52 @@
-# `tests/`
+# Lane Concurrency
 
-| where                | what                                                                                                     | runs                                            |
-| -------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `tests/c/`           | freestanding C fixtures: `fixture.c`, `sharing.c`, `generalized.c`, `records.c`                          | compiled to `build/*.wasm` by `bun run build:c` |
-| `tests/unit/`        | the gate, in folders that mirror `src/`; `scripts/` and `experiments/` tests sit under their own folders | `bun run test`, about 40 seconds in all         |
-| `tests/helpers/`     | worker entry points the task tests and `scripts/probe/tasks-runtime.ts` spawn: the task pool             | spawned by `tests/unit/node/` and `scripts/`    |
-| `tests/integration/` | local stock workerd through Miniflare: host probe, capability probe, managed lanes                       | `bun run test:integration`, about 25 seconds    |
-| `tests/e2e/`         | live deploys to a Cloudflare account                                                                     | `bun run test:e2e`, skipped without credentials |
+Question: when a coordinator issues four lane calls at once, do they overlap on the deployed platform, and which lane type restores overlap when they do not?
 
-`tests/setup.ts` rebuilds the C fixtures when a source file is newer than its output, so a fresh
-checkout runs the gate after installing `clang` and `lld`.
+## Method
 
-## Fixtures
+One coordinator Worker, four lane Workers reached by service binding, and a Durable Object namespace of four instances, deployed on a paid account, measured and deleted. Each lane runs a pure Wasm loop whose length is set by a `rounds` argument and returns its checksum, which the driver checks against the same loop in JavaScript. The levels are about 100 ms and about 380 ms of CPU per call, calibrated from client wall minus the empty-loop wall because a Worker's clock does not advance during a loop.
 
-Each C file is a separate artifact and a separate claim. `fixture.c` builds with inlining off and
-holds the counted-loop kernels. `generalized.c` builds with ordinary inlining and holds the branchy
-entry with a scalar carried across iterations. `sharing.c` holds the atomic and aliasing controls.
-`records.c` holds one loop that calls a function per record, the shape the iteration route runs on
-workers, and backs `examples/iteration.ts`.
-Fixture bytes must not depend on the machine's `PATH`; `tests/unit/scripts/build/fixtures.test.ts` checks that.
+Five arms, each run alone (one call) and four at once, 12 repetitions after one warmup, arms interleaved and rotated per repetition:
 
-## Conventions
+- `worker`: four different lane Workers over service bindings.
+- `worker-one`: one lane Worker called four times at once.
+- `do-same`: four Durable Object instances in default placement.
+- `do-hint`: four Durable Object instances, each created with a different `locationHint`.
+- `direct`: four separate top-level requests, no coordinator.
 
-- `tests/unit/` and `tests/integration/` mirror `src/`: `src/<folder>/<file>.ts` is tested by
-  `<folder>/<file>.test.ts`, and a folder's `index.ts` by `index.test.ts`.
-- One spec file per domain. Extend `tests/unit/managed/index.test.ts` rather than adding a second
-  managed spec.
-- The gate is hermetic. Nothing in `unit/` opens a network connection or a real Cloudflare binding.
-- Each unit spec file is meant to run in under 2 seconds on an idle machine. Under load some files take
-  longer.
-- Probe workers run in `experiments/`, and their logic is tested here by importing the exports with
-  the platform modules mocked (`tests/unit/experiments/browser/probe.test.ts`).
-- A bug fix lands with the regression test that would have caught it.
+The overlap index is the wall of four calls at once minus the empty-loop wall, over the same for one call. 1.0 is full overlap and 4.0 is fully serialized. Lane CPU over wall comes from `wrangler tail` events (`cpuTime` and `wallTime` per invocation), joined to calls by a log line. The rule, fixed before the run in [METHOD.md](../../../experiments/concurrency/METHOD.md): an arm overlaps when the index is at most 1.5 and CPU over wall is at least 0.8.
 
-## Live Deploys
+## Results
 
-`tests/e2e/live-deploy.test.ts` runs `experiments/deploy.ts` for the capability probe and the
-managed lanes. Each run snapshots the account's Workers and Durable Object namespaces first and
-fails if they differ afterwards. Set `FOLIO_E2E_BROWSER=1` to include Browser Run, which has a daily
-minute allowance on Free.
+| Arm | Index at 100 / 380 ms | Lane CPU over wall | Rule |
+| --- | --- | --- | --- |
+| `worker` | 4.07 / 3.87 | 0.27 | fails |
+| `worker-one` | 4.13 / 3.94 | 0.28 / 0.25 | fails |
+| `do-same` | 1.42 / 1.42 | 0.94 / 0.98 | passes |
+| `do-hint` | 1.86 / 1.81 | 0.57 / 0.83 | fails |
+| `direct` | 1.84 / 1.48 | 0.99 / 1.00 | passes at 380 ms only |
 
-The Free plan allows 100,000 Durable Object rows written per UTC day across the account. Before the
-first deploy the suite reads the account's rows written today and skips with a notice that names the
-reset time when a run would not fit; a deploy that the platform refuses for the same reason skips
-too, instead of failing. The meter can under-read on Free, so the refusal text is the second check.
+Four calls to four different service-bound Workers took about four times as long as one call, with lane CPU at 27% of lane wall. Four Durable Object instances took about 1.4 times as long as one call. Location hints placed the objects in different data centers and added round-trip time without improving overlap. The run created and deleted its own scripts and Durable Object class. The coordinator's data center was IAD, and the default-placement objects landed in IAD and EWR.
 
-## Continuation
+## Scope
 
-`tests/unit/memory/continuation.test.ts` covers `src/memory/continuation.ts` on a fake storage and a memory
-seam, with no Durable Object. The continuation experiments are not tests; they are described in
-[experiments/continuation](../experiments/continuation/README.md).
+- One account and one coordinator location. The platform documentation says service-bound Workers run on the same thread by default and that objects of one class can share an isolate; this run measures what those two lane types did over 12 repetitions and is not a guarantee.
+- An earlier probe with a 4 ms kernel reported an index of 1.42 for service-bound Workers ([ordinary-worker-lanes](../ordinary-worker-lanes/README.md)). It does not reproduce at 100 and 380 ms, and the cause was not isolated.
+- Tail event coverage was 25% to 100% by cell; cells with low coverage carry the CPU over wall from the events that arrived.
+- The raw tail events here keep only timing, outcome, route and data center. Client addresses, headers and locations were removed at export.
+
+## Artifacts
+
+- `run/raw.jsonl`: every cell, failures included.
+- `run/tail.jsonl`: one scrubbed tail event per line.
+- `run/summary.json`: rows, verdicts, leftovers and foreign changes.
+- `run/environment.json`: the run record, the calibration and the recorded placement.
+
+## Reproduction
+
+```sh
+node experiments/concurrency/prepare.ts
+node experiments/concurrency/run.ts --dry-run
+FOLIO_CLOUDFLARE_ACCOUNT_ID=... FOLIO_CLOUDFLARE_API_TOKEN=... node experiments/concurrency/run.ts
+node scripts/research/lane-evidence.ts experiments/concurrency/runs/<name> results/managed/lane-concurrency/run
+```

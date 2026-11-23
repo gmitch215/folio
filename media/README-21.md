@@ -1,84 +1,98 @@
-# Focused Repeat
+# BLAKE3 Feasibility
 
-Question: is the spread in the eight-worker speedup (AES-CBC decrypt reads 7.42x in one run and 4.80x
-in a repeat) caused by the idle worker pools that the [reset-policy harness](../reset-policies/README.md)
-keeps open, or does it have another source?
-
-The reset-policy harness opens an ordinary and a `TaskPool` pool at widths 1, 2, 4 and 8 and rotates
-through all of them, so 30 worker threads exist while any one arm is timed. This study times one
-active pool at a time, with the serial run paired in the same round, and runs the idle pools only as
-a separate condition.
+Question: why does default admission refuse the BLAKE3 file loop, and would inline tracking with a
+private stack per iteration make it dispatch? The [blake3-consumer](../blake3-consumer/README.md) study
+shows the refusal. This study holds the analysis and the prototype that led to the
+[iteration route](../iteration-route/README.md), so the numbers in the report's BLAKE3 sections can be
+traced to raw records.
 
 ## Method
 
-Four kernels (AES-CBC decrypt, SHA-256, LZ4 compress and xxHash32, the shortest), three reset
-policies, ordinary workers and `TaskPool`, 16 jobs of 4 operations per sample. Each cell runs 2
-warmup and 9 measured pairs, and each pair runs the serial control and the pool back to back,
-alternating which goes first. Arms per kernel and policy: width 8 alone, width 8 with the 22 idle
-worker threads of every other pool open (the original condition), and width 1 alone. The arm order
-is shuffled from the session label. Five independent sessions, each a new process, ran on the
-Ryzen machine under `nice -n 19` on cores 4 to 11. Every sample compares every return and the
-final context state with the serial result, and records the load average and the frequency of each
-allowed CPU before the timed run. The governor was `powersave`.
+**Analysis.** Run on an Apple M2 Pro (Node 26.8.2) with other work in progress (load 3.3 to 6.6), so its
+timings are diagnostic. It used an edited copy of the library (`analysis/fsrc` in `source.tar.gz`) that prints each
+region candidate's estimate and records the reader, writer and address of every conflict. The analysis
+files are `analysis-*`.
+
+**Prototype.** A standalone binaryen pass adds inline read marks (64-byte granules), write marks (32-byte
+granules) and a copy-on-first-write undo record to a module with no host call. A small owner
+dispatches iterations to workers over one shared memory, each on its own 32 KiB stack slot, validates in
+order and rolls back and replays what fails. The loop body is outlined by hand in C (`hash_one`); the
+route in the library does that automatically. Three workloads: `large` (32 inputs of 4 MiB), `small` (128 inputs of
+256 KiB) and `mixed` (the 100-input set, 223,053,295 bytes, two inputs of 64 MiB). Each arm is paired with a
+serial run in the same round, 9 rounds after 2 warmups, three sessions, one pool alive at a time, width
+1 to 8. The `ceiling` arm is the same worker pool with no marks and no validation.
+
+The prototype ran on the Mac (`prototype-mac-*`) and was repeated on the Ryzen 9 9900X (Node 26.10.0,
+cores 4 to 11, `nice -n 19`, `powersave` governor; `prototype-rig-*`).
 
 ## Results
 
-Paired median speedup over the serial control, per session.
+**Why no region clears the floor.** At the default floor of 200,000 net work the extractor finds 9 pure
+functions and admits none. At `minimumRegionWork` 0 it forms 31 regions from 35 sites. The estimate
+charges 3,600 units per tracked access, and BLAKE3 does at most 40 units of work per access (compress:
+1,291 over 32), so the best site has a net of 0 and `blake3_compress_in_place_portable` has -113,909.
+Counting hook calls on a 1 MiB input gives 774,712 tracked accesses (47.3 per block). Tracked execution
+runs 92x slower than native on 1 MiB, 42x on 64 KiB and 8x on 4 KiB, which is 0.13 to 0.17 microseconds
+per access against the 0.605 that the calibration assigns. A second reason is independent of the
+estimate: the default transaction budget of 262,144 bytes is exhausted by the 26 inputs of 256 KiB or more,
+which hold 99.4% of the bytes of the 100-input set.
 
-- **Idle pools are not the cause.** For the 24 pairs of a width-8 cell with and without the idle
-  pools, the idle-to-clean ratio of the five-session median is 0.945 to 1.253. 19 pairs are within
-  5% and 23 within 10%. The largest, xxHash32 under learned pages with ordinary workers (1.25), is
-  also the cell with the widest spread.
-- **The spread persists with a clean pool.** AES-CBC decrypt under learned pages reads 4.07x to
-  5.34x with ordinary workers and 4.00x to 4.69x with `TaskPool` across the five sessions, and the
-  five-session medians are 4.67x and 4.59x. Under the whole-arena reset it reads 2.73x to 3.05x, and
-  under the checkpoint 3.68x to 4.51x. The 7.4x reading appears once in these 20 learned-page
-  readings of that kernel (7.23x, ordinary workers with idle pools, one session) and never in a clean
-  cell.
-- **The serial control and the one-worker arms are stable for long kernels.** Serial wall time is
-  68.8 to 71.5 ms for AES decrypt in the learned-page cells. One-worker arms read 0.97x to 1.01x for
-  AES and SHA-256, and are noisy for the two shortest kernels (0.64x to 1.17x for LZ4 and xxHash32 under
-  learned pages).
-- **The variation is in the eight-worker arm and is wider under learned pages.** The ratio of the
-  largest to the smallest session median for a width-8 cell is 1.12 to 2.04 under learned pages,
-  1.06 to 1.56 under the whole-arena reset and 1.05 to 1.31 under the checkpoint. The eight
-  cells above 1.5 are all learned-page or short-kernel cells.
-- **Ordinary workers and `TaskPool` agree.** The five-session median of `TaskPool` over ordinary
-  workers is 0.89 to 1.14 across the 12 kernel and policy pairs, with no consistent sign, so the
-  spread is not specific to the pool type.
-- **The CPU frequency before a run explains part of it.** The Spearman correlation between the
-  median frequency read before a width-8 run and its wall time is negative in 9 of 12 kernel and
-  policy groups, down to -0.48 (SHA-256 under the checkpoint), and near zero for AES decrypt under
-  learned pages (-0.06). The governor was `powersave`, and the median allowed CPU read below 1 GHz
-  before 51% of the pool samples, so a 10 to 18 ms burst can start before the clock has ramped. The
-  load average of the box was about 1.2 to 3.6 during these sessions, from other work that the pinning does not exclude.
+**Why 696 of 4,240 regions replay.** Every conflict is on the shadow stack: one region reads a callee
+frame that an earlier region of the same iteration wrote (`finalize_seek` hands its 32 finished bytes to
+`memcpy`). None touches the table, the output or the inputs. Giving each iteration its own stack slot
+(`analysis-stack-experiment.txt`) leaves all 696 in place, and the same eight reader and writer pairs. The
+conflicts are within one iteration, not across iterations.
 
-Reading: the 4.8x to 7.4x spread is not caused by the idle pools, and no pool type or reset policy
-reproduces the 7.4x. The evidence fits run-to-run variation of short eight-thread bursts on a shared
-box, with a measured but partial frequency effect. It does not show a defect in the eight-worker
-implementation, and it does not rule one out for the learned-page policy, whose spread is the widest.
-Quote the eight-worker AES decrypt speedup as 4x to 5x for learned pages on this machine, with
-occasional readings near 7x.
+**Untracked ceiling.** Workers with private stacks and no tracking reach 3.3x on the 100-input set, which two
+64 MiB inputs (30% each) bound (`analysis-ceiling-full.json`).
 
-Five sessions on one machine are a small sample, and the frequency readings come before the run and
-not during it.
+**The prototype, Ryzen machine, width 8.** Speedup over serial, tracked arm, three session medians, and
+tracked over the untracked ceiling:
+
+| Workload | Tracked | Ceiling | Tracked over ceiling |
+| --- | --- | --- | --- |
+| `large`: 32 x 4 MiB | 3.20x, 3.23x, 3.29x | 4.45x, 4.39x, 5.03x | 1.39, 1.36, 1.53 |
+| `small`: 128 x 256 KiB | 2.47x, 2.46x, 2.49x | 4.38x, 4.66x, 4.38x | 1.77, 1.89, 1.76 |
+| `mixed`: 100-input set | 1.59x, 1.59x, 1.61x | 2.62x, 2.61x, 2.61x | 1.65, 1.64, 1.62 |
+
+Digests and memory equal serial in every sample, and no workload had a replay. The Mac gave 3.73x, 3.20x
+and 1.79x for the same cells. One of three rig sessions on `large` misses a 1.5x overhead bound over the
+ceiling.
+
+**What the prototype found.**
+
+- Ordered validation has to check write-after-read and write-after-write as well as read-after-write,
+  because writes land in place. A negative test (`prototype-test-negative.txt`) shows the
+  read-after-write rule alone ends with memory that differs from serial.
+- A 64-byte write granule makes the 32-byte output slots of neighbouring iterations share a granule, so
+  every batch fails validation (32 of 32 replayed). The 32-byte write granule is the measured design.
+- Tracking costs 1.38x to 1.45x of native on one thread (`prototype-test-single.json`). An earlier estimate
+  of 1.18x to 1.25x left out the mark for the second granule of an access that crosses a boundary.
+- The first Mac run is kept as `prototype-mac-invalid-large-1.jsonl` and is invalid: two arms shared a
+  memory, which left stale write bits and skipped the undo capture for tracked runs at widths 2, 4 and
+  8. It was fixed and all three sessions were rerun.
+
+## Limits
+
+- The analysis timings are diagnostic (loaded Mac, edited library copy). The rig numbers are the ones
+  to quote.
+- The prototype outlines the loop body by hand and is not the library. The library's own measurements are in
+  the iteration-route study and agree within the spread of the rig sessions.
+- One program. The 100-input set is bound by its two 64 MiB inputs at 3.3x before any overhead.
 
 ## Reproduction
 
-```sh
-node scripts/research/focused.ts build/research/focused-session-1 9
-node scripts/research/analyze.ts build/research/focused-session-1/raw.jsonl summary.json
-node scripts/research/derive.ts session-spread spread.json session-*.summary.json
-```
-
-`scripts/research/focused.sh SESSIONS PAIRS` runs the sessions under the timing lock with `nice -n 19`
-and cores 4 to 11.
+`source.tar.gz` holds the analysis scripts (`analysis/`), the edited library copy (`analysis/fsrc`) and the prototype
+(`prototype/`, with `rig.sh`, `smoke.sh` and `run-tests.sh`). The BLAKE3 sources and inputs are the ones of the
+blake3-consumer study; `prototype/gen-sizes.ts` and `analysis/inputs.ts` regenerate the inputs.
 
 ## Artifacts
 
-- `session-1.jsonl` to `session-5.jsonl`: raw records, 1,296 samples each.
-- `session-N.summary.json`: paired summaries, one per session.
-- `spread.json`: per-cell medians across sessions and the idle-pool ratios.
-- `before.log`: memory, disk, load and governor at the start.
-- `source.tar.gz`: the source the sessions used.
+- `analysis-*`: census and estimate listings, the stack experiment output, the conflict traces and the
+  ceiling record.
+- `prototype-{rig,mac}-{large,small,mixed}-N.jsonl` (N from 1 to 3): raw records, with
+  `prototype-*.summary.json` and `prototype-mac-*.table.txt` summaries and `prototype-mac-pooled.md`.
+- `prototype-test-*`: equality, negative, random, range, single-thread and test-vector checks.
+- `prototype-*-before.log`, `prototype-*-after.log`: load, memory and governor.
+- `source.tar.gz`: the scripts above.
 - `manifest.json`: byte lengths and SHA256 digests.

@@ -1,0 +1,93 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>All Modules | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-guide"><script>try{document.documentElement.dataset.theme=localStorage.getItem("tsd-theme")||"os"}catch(e){document.documentElement.dataset.theme="os"}</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><button type="button" class="docs-menu" popovertarget="docs-sidebar">Menu</button><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog></div></header>
+<div class="container container-main">
+<div class="docs-sidebar" id="docs-sidebar" popover><div class="docs-sidebar-head"><span>Documentation</span><button type="button" class="docs-close" popovertarget="docs-sidebar" popovertargetaction="hide">Close</button></div><nav class="docs-nav" aria-label="Documentation"><details class="docs-group" data-group="Start"><summary>Start</summary><ul><li><a href="../index.html">Overview</a></li><li><a href="../documents/docs_getting-started.html">Getting Started</a></li><li><a href="https://github.com/gmitch215/folio/tree/master/examples" class="docs-ext" rel="noopener">Examples</a></li></ul></details><details class="docs-group" data-group="Modules" open><summary>Modules</summary><ul><li><a href="../documents/docs_modules_README.html" aria-current="page">All Modules</a></li></ul><p class="docs-section" id="docs-section-1-0">Parallelism</p><ul aria-labelledby="docs-section-1-0"><li><a href="../documents/docs_modules_core.html">Core</a></li><li><a href="../documents/docs_modules_pools.html">Pools</a></li><li><a href="../documents/docs_modules_folds-and-certificates.html">Folds and Certificates</a></li></ul><p class="docs-section" id="docs-section-1-1">Platforms</p><ul aria-labelledby="docs-section-1-1"><li><a href="../documents/docs_modules_workers.html">Workers</a></li><li><a href="../documents/docs_modules_browser.html">Browser</a></li></ul><p class="docs-section" id="docs-section-1-2">Memory and State</p><ul aria-labelledby="docs-section-1-2"><li><a href="../documents/docs_modules_memory.html">Memory</a></li><li><a href="../documents/docs_modules_boot.html">Boot</a></li><li><a href="../documents/docs_modules_continuation.html">Continuation</a></li></ul></details><details class="docs-group" data-group="Guides"><summary>Guides</summary><ul><li><a href="../documents/docs_configuration.html">Configuration</a></li><li><a href="../documents/docs_limits.html">Limits</a></li><li><a href="../documents/ADVANCED_USAGE.html">Advanced Usage</a></li></ul></details><details class="docs-group" data-group="Studies"><summary>Studies</summary><ul><li><a href="../documents/docs_studies_README.html">All Studies</a></li><li><a href="../documents/docs_studies_storage-resets.html">Storage Resets</a></li><li><a href="../documents/docs_studies_continuation-across-events.html">Continuation Across Events</a></li><li><a href="../documents/docs_studies_elastic-memory.html">Elastic Memory</a></li><li><a href="../documents/docs_studies_boot-images.html">Boot Images</a></li><li><a href="../documents/docs_studies_memory-accounting.html">Memory Accounting</a></li><li><a href="../documents/docs_studies_parallel-execution.html">Parallel Execution</a></li></ul></details><details class="docs-group" data-group="Reference"><summary>Reference</summary><ul><li><a href="../documents/TECHNICAL_REPORT.html">Technical Report</a></li><li><a href="../modules.html">API Reference</a></li></ul></details></nav><a class="docs-side-gh" href="https://github.com/gmitch215/folio">GitHub</a></div>
+<main class="col-content" id="docs-main" tabindex="-1">
+<p class="docs-eyebrow">Modules</p>
+<div class="tsd-panel tsd-typography"><h1 id="modules" class="tsd-anchor-link">Modules<a href="#modules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>Folio has six subpaths. Each one names a runtime boundary or a feature, and each has a page with an
+overview, a smallest working example, the options that come next, its limits and links to the
+reference.</p>
+<table>
+<thead>
+<tr>
+<th>Import</th>
+<th>Runs on</th>
+<th>Purpose</th>
+<th>Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@gmitch215/folio</code></td>
+<td>Node</td>
+<td>Parallel execution, instance checkpoints, the execution host, task and slice pools, folds, certificates and the router</td>
+<td><a href="docs_modules_core.html">Core</a>, <a href="docs_modules_pools.html">Pools</a>, <a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a></td>
+</tr>
+<tr>
+<td><code>@gmitch215/folio/workers</code></td>
+<td>Workers and Durable Objects</td>
+<td>Managed execution on Durable Object lanes and the portable client of the execution host</td>
+<td><a href="docs_modules_workers.html">Workers</a></td>
+</tr>
+<tr>
+<td><code>@gmitch215/folio/browser</code></td>
+<td>Browsers without JSPI</td>
+<td>One counted-loop call on shared memory across Web Workers</td>
+<td><a href="docs_modules_browser.html">Browser</a></td>
+</tr>
+<tr>
+<td><code>@gmitch215/folio/memory</code></td>
+<td>Portable</td>
+<td>The growth governor, page directories and leases, and elastic regions</td>
+<td><a href="docs_modules_memory.html">Memory</a></td>
+</tr>
+<tr>
+<td><code>@gmitch215/folio/boot</code></td>
+<td>Portable</td>
+<td>Baked boot images that start a module from a booted heap</td>
+<td><a href="docs_modules_boot.html">Boot</a></td>
+</tr>
+<tr>
+<td><code>@gmitch215/folio/continuation</code></td>
+<td>Portable</td>
+<td>Wasm guests across Durable Object alarm events, with page-hash checkpoints in SQLite</td>
+<td><a href="docs_modules_continuation.html">Continuation</a></td>
+</tr>
+</tbody>
+</table>
+<p>Subpaths from 1.1 that are not in this table are no longer exported. The CHANGELOG lists where each
+of their names moved.</p>
+<h2 id="which-module-do-i-need" class="tsd-anchor-link">Which Module Do I Need<a href="#which-module-do-i-need" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Start from what you have and what you want.</p>
+<ul>
+<li><strong>A Wasm program on Node and you want several cores.</strong> Use <a href="docs_modules_core.html">Core</a>. <code>Folio.run</code> finds the
+regions and keeps the serial result.</li>
+<li><strong>Independent jobs you can name.</strong> Use the task pool in <a href="docs_modules_pools.html">Pools</a>. For records in one
+memory that you declare independent, use the slice pool.</li>
+<li><strong>One checksum or cipher stream over a large input.</strong> Use the folds in
+<a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a>.</li>
+<li><strong>A record loop and you want proof that its scratch is private.</strong> Use an ownership certificate, or
+let the router choose, in <a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a>.</li>
+<li><strong>Execution inside Workers and Durable Objects.</strong> Use <a href="docs_modules_workers.html">Workers</a>. Managed Workers
+cannot share physical memory, so that backend copies snapshots or learned byte ranges.</li>
+<li><strong>A browser page.</strong> Use <a href="docs_modules_browser.html">Browser</a> when the runtime has no JSPI.</li>
+<li><strong>A guest that must not exceed a memory size.</strong> Use the growth governor in <a href="docs_modules_memory.html">Memory</a>.</li>
+<li><strong>A module that boots slowly.</strong> Bake the booted heap into the module with <a href="docs_modules_boot.html">Boot</a>.</li>
+<li><strong>A job that needs more CPU than one Durable Object event allows.</strong> Use
+<a href="docs_modules_continuation.html">Continuation</a>.</li>
+<li><strong>A private instance that must reset between jobs.</strong> Use the instance checkpoints in
+<a href="docs_modules_core.html">Core</a>.</li>
+</ul>
+<p><a href="docs_getting-started.html">Getting Started</a> runs the first program,
+<a href="docs_configuration.html">Configuration</a> lists every option, and <a href="docs_limits.html">Limits</a> lists what each
+module does not do.</p>
+</div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_getting-started.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">Getting Started</span><span class="docs-pager-desc">Install, prepare one module, run it and read the result.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_modules_core.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Core</span><span class="docs-pager-desc">Folio, prepare, the execution host, async host effects and context checkpoints.</span></a></nav></main>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#which-module-do-i-need">Which Module Do I Need</a></li></ul></nav></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

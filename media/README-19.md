@@ -1,33 +1,52 @@
-# Varied Inputs
+# Differential Guards
 
-Question: does checkpoint reset stay exact when the same private contexts run different inputs?
+Question: do generated programs and guard-refusal fixtures stay equal to native execution on a
+second seed, and does a guard ever refuse?
 
-The [reset study](../reset-policies/README.md) uses one fixed input per kernel. This study builds
-the 21 corpus kernels with a runtime input seed and runs five input profiles (seeds 0 to 4) on two
-persistent `TaskPool` workers. JSON inputs change in size and the FFT phases change. Each result is
-compared with a fresh native instance that ran the same seed: return value, all 8 MiB of memory
-and ordered host effects. Float host effects are compared as IEEE 754 bits, because JSON text
-drops the sign of zero.
+This extends the [differential campaign](../differential/README.md). It runs two seeds with the
+same generator and adds a family of counted loops whose 4-byte stores use a stride of 1, 2 and 4
+bytes. Strides 1 and 2 overlap at region boundaries, so the disjointness guard refuses them.
+Stride 4 does not overlap. Each loop also runs one out-of-range input that traps natively.
 
 ## Results
 
-210 of 210 comparisons match. No context was recreated and `prepareContext` produced no refusal
-for any of the 21 kernels, so every restore used the generalized checkpoint. The record is a
-correctness check on 21 library kernels and carries no timing.
+| | Seed 12648430 | Seed 464367618 |
+| --- | ---: | ---: |
+| Programs | 128 | 128 |
+| Comparisons | 6,228 | 6,228 |
+| Trapping comparisons | 2,976 | 3,008 |
+| Host exceptions | 1,024 | 1,024 |
+| Replayed regions | 3,668 | 3,701 |
+| Dispatched comparisons | 1,923 | 1,893 |
+| Native shared route | 12 | 12 |
+| Guard refusals (`guard-failed`) | 12 | 12 |
+
+All 12,456 comparisons match native in complete memory, return value, ordered host effects and
+trap or host exception identity, at widths 1, 2, 4 and 8. The earlier campaign reported zero guard
+refusals; the overlap family produces 12 per seed and each falls back to speculation with the
+native result.
+
+Each seed draws each of the seven grammar shapes between 13 and 30 times. The shapes cover scalar 32-bit load,
+rotate, xor and store; 64-bit load, add and store; `memory.copy`; 32-bit and 64-bit float
+load and store; saturating float-to-integer conversion; and 16-bit store with a sign-extended byte
+load and `clz`. Four input modes cross each shape: a shared destination, an aliased source, a
+destination at the page boundary and a trap. The grammar does not generate `memory.fill`,
+`memory.init`, atomic operations or SIMD, so those transformations have no generated coverage.
+
+The campaign is finite evidence of equality on these shapes. It is not a proof of correctness for
+the transformation.
 
 ## Reproduction
 
 ```sh
-FOLIO_CORPUS_INPUTS_READY=1 node scripts/research/inputs.ts build/research/inputs
+node scripts/research/differential.ts build/research/seed-12648430 128 12648430
+node scripts/research/differential.ts build/research/seed-464367618 128 464367618
 ```
 
-Omit the variable to build the input-seeded artifacts first. Use a new output path for each run.
-The record ran on an Apple M2 Pro with Node 26.8.2.
+The records ran on an Apple M2 Pro with Node 26.8.2.
 
 ## Artifacts
 
-- `raw.jsonl`: environment, 210 comparison records and a closing record.
+- `seed-12648430.jsonl`, `seed-464367618.jsonl`: raw records.
+- `seed-12648430.summary.json`, `seed-464367618.summary.json`: totals as the campaign wrote them.
 - `manifest.json`: byte lengths and SHA256 digests.
-
-The environment row names the sources by SHA256. An earlier run of the same command against a
-previous revision of `src/compiler.ts` also matched 210 of 210 and is not retained.

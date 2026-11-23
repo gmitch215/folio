@@ -1,0 +1,322 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Boot Images | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-guide"><script>try{document.documentElement.dataset.theme=localStorage.getItem("tsd-theme")||"os"}catch(e){document.documentElement.dataset.theme="os"}</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><button type="button" class="docs-menu" popovertarget="docs-sidebar">Menu</button><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog></div></header>
+<div class="container container-main">
+<div class="docs-sidebar" id="docs-sidebar" popover><div class="docs-sidebar-head"><span>Documentation</span><button type="button" class="docs-close" popovertarget="docs-sidebar" popovertargetaction="hide">Close</button></div><nav class="docs-nav" aria-label="Documentation"><details class="docs-group" data-group="Start"><summary>Start</summary><ul><li><a href="../index.html">Overview</a></li><li><a href="../documents/docs_getting-started.html">Getting Started</a></li><li><a href="https://github.com/gmitch215/folio/tree/master/examples" class="docs-ext" rel="noopener">Examples</a></li></ul></details><details class="docs-group" data-group="Modules"><summary>Modules</summary><ul><li><a href="../documents/docs_modules_README.html">All Modules</a></li></ul><p class="docs-section" id="docs-section-1-0">Parallelism</p><ul aria-labelledby="docs-section-1-0"><li><a href="../documents/docs_modules_core.html">Core</a></li><li><a href="../documents/docs_modules_pools.html">Pools</a></li><li><a href="../documents/docs_modules_folds-and-certificates.html">Folds and Certificates</a></li></ul><p class="docs-section" id="docs-section-1-1">Platforms</p><ul aria-labelledby="docs-section-1-1"><li><a href="../documents/docs_modules_workers.html">Workers</a></li><li><a href="../documents/docs_modules_browser.html">Browser</a></li></ul><p class="docs-section" id="docs-section-1-2">Memory and State</p><ul aria-labelledby="docs-section-1-2"><li><a href="../documents/docs_modules_memory.html">Memory</a></li><li><a href="../documents/docs_modules_boot.html">Boot</a></li><li><a href="../documents/docs_modules_continuation.html">Continuation</a></li></ul></details><details class="docs-group" data-group="Guides"><summary>Guides</summary><ul><li><a href="../documents/docs_configuration.html">Configuration</a></li><li><a href="../documents/docs_limits.html">Limits</a></li><li><a href="../documents/ADVANCED_USAGE.html">Advanced Usage</a></li></ul></details><details class="docs-group" data-group="Studies" open><summary>Studies</summary><ul><li><a href="../documents/docs_studies_README.html">All Studies</a></li><li><a href="../documents/docs_studies_storage-resets.html">Storage Resets</a></li><li><a href="../documents/docs_studies_continuation-across-events.html">Continuation Across Events</a></li><li><a href="../documents/docs_studies_elastic-memory.html">Elastic Memory</a></li><li><a href="../documents/docs_studies_boot-images.html" aria-current="page">Boot Images</a></li><li><a href="../documents/docs_studies_memory-accounting.html">Memory Accounting</a></li><li><a href="../documents/docs_studies_parallel-execution.html">Parallel Execution</a></li></ul></details><details class="docs-group" data-group="Reference"><summary>Reference</summary><ul><li><a href="../documents/TECHNICAL_REPORT.html">Technical Report</a></li><li><a href="../modules.html">API Reference</a></li></ul></details></nav><a class="docs-side-gh" href="https://github.com/gmitch215/folio">GitHub</a></div>
+<main class="col-content" id="docs-main" tabindex="-1">
+<p class="docs-eyebrow">Studies</p>
+<div class="tsd-panel tsd-typography"><h1 id="boot-images" class="tsd-anchor-link">Boot Images<a href="#boot-images" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>A Wasm interpreter pays for its boot on every cold start, and the heap state it builds is the same each time. This page covers the studies that moved that state into the compiled module and measured the saving, the cost of delivering it, and what the image gets wrong.</p>
+<h2 id="question" class="tsd-anchor-link">Question<a href="#question" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>How much of a cold start does a baked image remove, what does it cost to deliver on the edge, and when does it serve the wrong state?</p>
+<h2 id="instruments" class="tsd-anchor-link">Instruments<a href="#instruments" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Study</th>
+<th>What it measures</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/boot/php-852/README.md">php-852</a></td>
+<td>image anatomy, delivery and the open-plus-render saving on PHP 8.5.2</td>
+<td>Mac, M2 Pro, Node 26.8.2</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/boot/php-8512/README.md">php-8512</a></td>
+<td>the same on PHP 8.5.12</td>
+<td>Mac</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/boot/replay-852/README.md">replay-852</a></td>
+<td>secrets in the image and the rekey step</td>
+<td>Mac</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/boot/lifecycle/README.md">lifecycle</a></td>
+<td>45 Drupal executions from compile through first render</td>
+<td>Mac, 15 paired rounds</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/boot/configurations/README.md">configurations</a></td>
+<td>13 configurations in four arms on a Drupal host</td>
+<td>Mac</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/boot/initializer-repeat/README.md">initializer-repeat</a></td>
+<td>the 21 corpus initializers</td>
+<td>Ryzen 9 9900X, quiet</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/experiments/bootimage/README.md">bootimage</a></td>
+<td>delivery as data segments and as static assets on Durable Objects</td>
+<td>Free and Paid plans</td>
+</tr>
+</tbody>
+</table>
+<p>The library path is <code>captureImage</code>, <code>bakeModule</code> and <code>applyImage</code> in <code>@gmitch215/folio/boot</code>. Everything below is the PHP 8.5.2 module (13,401,751 bytes) with a stock Drupal site unless it says deployed or 8.5.12.</p>
+<h2 id="design" class="tsd-anchor-link">Design<a href="#design" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>A booted context's memory is captured, the 64 KiB pages that differ from a fresh instance are written into a rewritten module as active data segments with binaryen, and instantiating the module initializes memory from them with no database read and no inflate. A memory image does not carry state that lives in JavaScript. Rendering from it needed four things rebuilt: the handle table that <code>pib_init</code> creates, the open <code>/dev/urandom</code> descriptor, and four registered handles. Boot changes no global except the stack pointer's value, which equals its initial value, and no table slot.</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plain boot</td>
+<td>the unmodified module, booted on every start</td>
+</tr>
+<tr>
+<td>Baked after boot</td>
+<td>the 111 pages (7.27 MB) that differ after boot</td>
+</tr>
+<tr>
+<td>Baked after first render</td>
+<td>the 727 pages (47.6 MB) that differ after the first render</td>
+</tr>
+</tbody>
+</table>
+<p>After boot the memory is 67,108,864 bytes with 174 nonzero pages (11.4 MB). After the first render it is 86,638,592 bytes with 790 nonzero pages (51.8 MB). Deflated at 200,000-byte rows the two deltas are 1.7 MB and 14.4 MB.</p>
+<h2 id="results" class="tsd-anchor-link">Results<a href="#results" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="the-saving-locally" class="tsd-anchor-link">The Saving, Locally<a href="#the-saving-locally" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Open plus first render, first context in a fresh process, median of 10 processes per arm:</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th style="text-align:right">ms (min to max)</th>
+<th style="text-align:right">Saved</th>
+<th style="text-align:right">Second context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plain boot</td>
+<td style="text-align:right">1,246.6 (1,209 to 1,375)</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">1,033.7</td>
+</tr>
+<tr>
+<td>Baked after boot</td>
+<td style="text-align:right">1,172.8 (1,142 to 1,250)</td>
+<td style="text-align:right">74 ms</td>
+<td style="text-align:right">991.5</td>
+</tr>
+<tr>
+<td>Baked after first render</td>
+<td style="text-align:right">372.7 (361 to 393)</td>
+<td style="text-align:right">874 ms (70%)</td>
+<td style="text-align:right">276.7</td>
+</tr>
+</tbody>
+</table>
+<p>The boot image saves little because the first render is 53 ms slower with it: functions that the kernel boot used to compile now compile during the render. The after-render image removes the first render's cost (884 ms to 127 ms). What stays is the SQLite seed, the JS imports, the mounts and the bridge, about 215 ms. Renders equal a booted context's normalized sha256 in 80 of 80 per image.</p>
+<p>Instantiating the baked module takes 4.8 ms (boot image) and 9.1 ms (after-render image) against 3.7 ms unmodified. Reading the same images as 200,000-byte deflated rows from an in-memory <code>node:sqlite</code> file, inflating and copying takes 62 ms and 302 ms.</p>
+<p>On PHP 8.5.12 (module sha256 <code>3fb16024...b80ce</code>, 14,011,467 bytes) the page counts equal the 8.5.2 ones: 107 delta pages after boot and 771 after the first render.</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th style="text-align:right">8.5.12 ms</th>
+<th style="text-align:right">Saved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plain boot</td>
+<td style="text-align:right">1,343.7</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td>Baked after boot</td>
+<td style="text-align:right">1,268.8</td>
+<td style="text-align:right">6%</td>
+</tr>
+<tr>
+<td>Baked after first render</td>
+<td style="text-align:right">349.7</td>
+<td style="text-align:right">74%</td>
+</tr>
+</tbody>
+</table>
+<p>The 8.5.12 module has four mutable defined globals and boot changes two of them, so this was the first time <code>bakeModule</code>'s globals rewrite ran on real values. <code>applyImage</code> copies memory only, and it now refuses an image that records changed globals or table slots unless the caller passes <code>memoryOnly: true</code>.</p>
+<h3 id="lifecycle-and-initializers" class="tsd-anchor-link">Lifecycle and Initializers<a href="#lifecycle-and-initializers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The lifecycle study measured 45 Drupal executions from compile through first render on the M2 Pro:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align:right">native</th>
+<th style="text-align:right">image in the module</th>
+<th style="text-align:right">copied image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total elapsed, median</td>
+<td style="text-align:right">830.5 ms</td>
+<td style="text-align:right">444.7 ms</td>
+<td style="text-align:right">460.6 ms</td>
+</tr>
+<tr>
+<td>Process CPU, median</td>
+<td style="text-align:right">1,412.8 ms</td>
+<td style="text-align:right">806.5 ms</td>
+<td style="text-align:right">814.7 ms</td>
+</tr>
+<tr>
+<td>Paired speedup</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">1.90x [1.82, 1.97]</td>
+<td style="text-align:right">1.88x [1.79, 1.91]</td>
+</tr>
+<tr>
+<td>Warm second render</td>
+<td style="text-align:right">66.0 ms</td>
+<td style="text-align:right">62.9 ms</td>
+<td style="text-align:right">64.3 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Generating the image costs 10.4 s elapsed and 11.4 s CPU. Taking the difference of the medians, the image pays for itself after 27 boots in elapsed time and 19 in CPU, excluding shipping, storage and retention. That is a model, and fleet amortization was not measured.</p>
+<p>The 21 fixed corpus initializers are small. Restoring an image after instantiation is 1.08x to 1.40x faster than conventional initialization, and a whole-memory application cache is slower on every kernel (0.52x to 0.94x). All 21 bake attempts refuse the module's start section, so a fresh instance followed by <code>applyImage</code> is the route measured.</p>
+<h3 id="delivery-on-the-edge" class="tsd-anchor-link">Delivery on the Edge<a href="#delivery-on-the-edge" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The Free plan account accepted the 13.4, 20.7 and 61.0 MB modules with a reported startup of 3 ms each. Instantiating in a Durable Object took 11 ms (unmodified), 16 ms (boot image) and 46 ms (after-render image) of cpuTime, so the extra cost follows the size of the delta. As active data segments, the after-render image exceeded the uncompressed upload limit, so it was delivered as static assets: 13 files of 4 MiB plus an index of page numbers and a 32-bit hash per page. The object reads the files from its <code>ASSETS</code> binding and writes them straight into the memory view, one 4 MiB buffer at a time. The bundle grew by 0.55 KiB and fetch, copy and instantiate cost 124 to 144 ms of cpuTime per cold object (hashing all 771 pages adds about 20 ms and found none wrong), against 46 ms for the data-segment module and 1.6 to 2.0 s for the host's rows route.</p>
+<h3 id="deployed-drupal-host" class="tsd-anchor-link">Deployed Drupal Host<a href="#deployed-drupal-host" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>First request of a fresh site that matches the pack, n=5 per arm, alternating, fresh deploy, one normalized body hash and one CSRF token across arms, no memory reset:</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th style="text-align:right">Control cpuTime (ms)</th>
+<th style="text-align:right">Baked cpuTime (ms)</th>
+<th style="text-align:right">Saved</th>
+<th style="text-align:right">Control wall (ms)</th>
+<th style="text-align:right">Baked wall (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align:right">3,375</td>
+<td style="text-align:right">945</td>
+<td style="text-align:right">72.0%</td>
+<td style="text-align:right">4,175</td>
+<td style="text-align:right">2,317</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:right">2,837</td>
+<td style="text-align:right">1,139</td>
+<td style="text-align:right">59.9%</td>
+<td style="text-align:right">3,607</td>
+<td style="text-align:right">2,163</td>
+</tr>
+</tbody>
+</table>
+<p>The baked arm was faster in 10 of 10 paired rounds. On PHP 8.5.12, on a second account, n=5 per arm, the first request took 3,709 ms of cpuTime plain and 1,039 ms baked with four chunk fetches in flight (72.0%, wall 4,283 and 1,855 ms).</p>
+<p>The serve path is what a host does after an eviction: drop the interpreter, then render. PHP 8.5.12, host commit <code>f902595ccb</code>, Workers Paid account, n=4 per arm, alternating, medians of cpuTime with ranges in brackets:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th style="text-align:right">Plain boot</th>
+<th style="text-align:right">Baked image</th>
+<th style="text-align:right">Saved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First request</td>
+<td style="text-align:right">3,822 [3,699 to 3,897]</td>
+<td style="text-align:right">1,035 [815 to 1,078]</td>
+<td style="text-align:right">72.9% (wall 52.4%)</td>
+</tr>
+<tr>
+<td>Serve after drop</td>
+<td style="text-align:right">989 [970 to 1,092]</td>
+<td style="text-align:right">555 [413 to 707]</td>
+<td style="text-align:right">43.9% (wall 8.9%)</td>
+</tr>
+<tr>
+<td>First <code>/bootphase</code></td>
+<td style="text-align:right">1,028 [906 to 1,334]</td>
+<td style="text-align:right">1,016 [876 to 1,497]</td>
+<td style="text-align:right">1.2% (wall 51% worse)</td>
+</tr>
+</tbody>
+</table>
+<p>The baked arm was cheaper in all 4 paired rounds of the serve step, and it moves 161 KB out through the SQL bridge against 1.196 MB for the plain boot. Four idle probes were real evictions: the plain boot's cold boot took 1,751 ms and 2,035 ms of cpuTime and the baked arm's 682 ms and 799 ms (n=2 per arm).</p>
+<p>The <code>/bootphase</code> rows measure an instrument. It drops the interpreter and builds a second kernel from the database, ignoring the kernel the image carries, so the first <code>/bootphase</code> rebuilds caches that the image holds only in memory. Those rows do not describe the serving path.</p>
+<h3 id="stale-state" class="tsd-anchor-link">Stale State<a href="#stale-state" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The image holds the baking site's heap, and the first version served it to a site whose database had changed. After a rename, a cold boot from the image rendered the baking site's name while a plain boot of the same database rendered the new one. A second key, a digest of the 175 <code>config</code> rows read at boot (1 to 6 ms), sends such a site to the plain boot.</p>
+<table>
+<thead>
+<tr>
+<th>Edit (table the render reads)</th>
+<th>Key that changed</th>
+<th>Cold boot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>site name (config)</td>
+<td>config digest</td>
+<td>plain boot</td>
+</tr>
+<tr>
+<td>promoted node, block label (node, config)</td>
+<td>config digest</td>
+<td>plain boot</td>
+</tr>
+<tr>
+<td>maintenance mode (key_value)</td>
+<td>none</td>
+<td>image, body equal</td>
+</tr>
+<tr>
+<td>path alias (path_alias)</td>
+<td>none</td>
+<td>image, body equal</td>
+</tr>
+<tr>
+<td>module install (config, key_value)</td>
+<td>module fingerprint</td>
+<td>plain boot</td>
+</tr>
+<tr>
+<td>theme color, visible (config)</td>
+<td>config digest</td>
+<td>plain boot</td>
+</tr>
+</tbody>
+</table>
+<p>A site boots from the image only when its pack generation, module set, driver and config rows all equal the bake's. The configuration study ran 13 selected configurations in four arms: a strict configuration key admits 7 of 13, and a module key plus the consumer's configuration and entity reset admits 12 of 13. Enabling a module falls back to a fresh boot. All 39 safe-arm first responses match native status and normalized HTML, and the unguarded arm serves stale site-name and theme-color output. Those cases give no production eligibility rate.</p>
+<h3 id="secrets" class="tsd-anchor-link">Secrets<a href="#secrets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>An after-render image holds the heap of the process that produced it, including the site's private key, the configured hash salt and the state of the userland random generator. A safe image is built from a state that never held a real secret, and the real values are put in on replay. The real key and salt, a test user's name, mail and password hash and a planted session cookie are absent from the image and the baked module in raw, base64 and hex form, and a control bake that read real values contains all of them. After replay, a rekey step makes a CSRF token validate in a reference boot with the site's key and fail in one with the bake's, 9 of 9 and 0 of 9. The step costs 11.5 ms on 8.5.12 and 14.3 ms on 8.5.2. The bake request's PHP session identifier stays in the image, and the host must set a new one at the start of every request. The Drupal consumer does and tests it.</p>
+<h3 id="shrinking-the-image" class="tsd-anchor-link">Shrinking the Image<a href="#shrinking-the-image" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The delta image is 771 pages (50.5 MB). The allocator is dlmalloc, 32-bit, and 734 of the 771 pages are at least 90% live. Dropping pages that lie wholly inside free chunks removes 4 pages, 262,144 bytes, 0.52% of the image. A second search poisoned candidate pages and rendered eight steps: 98 pages (6.4 MB, 12.7%) did not change the output, which means only that those pages were not read on those paths. Neither drop changes the time: a cold first request is 1,286 ms plain against 310 to 340 ms for the full, the sound and the empirical image alike.</p>
+<h2 id="reading" class="tsd-anchor-link">Reading<a href="#reading" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>An after-render image removes about 70% of the open-plus-first-render time locally and 60% to 73% of the first request's cpuTime for a fresh site on a Durable Object host. The image is a published file with a heap in it, so it needs throwaway secrets, a renewal step and a context key. The saving is limited to sites whose configuration equals the pack.</p>
+<h2 id="closed-and-open" class="tsd-anchor-link">Closed and Open<a href="#closed-and-open" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Closed: shrinking the image by dropping free pages (0.52%), and the <code>/bootphase</code> re-boot as a measure of the serving path.</p>
+<p>Open: the share of real sites whose configuration equals the pack's, an eviction cost for a baked object beyond n=2 per arm, what spool serving adds to a page view, a per-site bake (it would cost a boot and 50 MB of assets per site), and any gain for a site whose configuration has changed. Menu links, user data, authenticated sessions, extension credentials, sockets, transactions and changed drivers were not tested. Only memory 0 of a module with several memories is written.</p>
+<h2 id="see-also" class="tsd-anchor-link">See Also<a href="#see-also" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>Report: <a href="TECHNICAL_REPORT.html#baked-boot-images">Baked Boot Images</a>, <a href="TECHNICAL_REPORT.html#replay-safety-contract">Replay-Safety Contract</a></li>
+<li>Module: <a href="docs_modules_boot.html">Boot</a></li>
+<li>Related study: <a href="docs_studies_memory-accounting.html">Memory Accounting</a> for the memory cost of a larger image</li>
+</ul>
+</div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_studies_elastic-memory.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">Elastic Memory</span><span class="docs-pager-desc">Translation cost, paging, closed compression and arenas, and the guard count.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_studies_memory-accounting.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Memory Accounting</span><span class="docs-pager-desc">The memory ladder, the growth governor and the platform memory line.</span></a></nav></main>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#design">Design</a></li><li class="docs-toc-h2"><a href="#results">Results</a></li><li class="docs-toc-h3"><a href="#the-saving-locally">The Saving, Locally</a></li><li class="docs-toc-h3"><a href="#lifecycle-and-initializers">Lifecycle and Initializers</a></li><li class="docs-toc-h3"><a href="#delivery-on-the-edge">Delivery on the Edge</a></li><li class="docs-toc-h3"><a href="#deployed-drupal-host">Deployed Drupal Host</a></li><li class="docs-toc-h3"><a href="#stale-state">Stale State</a></li><li class="docs-toc-h3"><a href="#secrets">Secrets</a></li><li class="docs-toc-h3"><a href="#shrinking-the-image">Shrinking the Image</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

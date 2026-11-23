@@ -1,0 +1,1182 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Configuration | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-guide"><script>try{document.documentElement.dataset.theme=localStorage.getItem("tsd-theme")||"os"}catch(e){document.documentElement.dataset.theme="os"}</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><button type="button" class="docs-menu" popovertarget="docs-sidebar">Menu</button><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog></div></header>
+<div class="container container-main">
+<div class="docs-sidebar" id="docs-sidebar" popover><div class="docs-sidebar-head"><span>Documentation</span><button type="button" class="docs-close" popovertarget="docs-sidebar" popovertargetaction="hide">Close</button></div><nav class="docs-nav" aria-label="Documentation"><details class="docs-group" data-group="Start"><summary>Start</summary><ul><li><a href="../index.html">Overview</a></li><li><a href="../documents/docs_getting-started.html">Getting Started</a></li><li><a href="https://github.com/gmitch215/folio/tree/master/examples" class="docs-ext" rel="noopener">Examples</a></li></ul></details><details class="docs-group" data-group="Modules"><summary>Modules</summary><ul><li><a href="../documents/docs_modules_README.html">All Modules</a></li></ul><p class="docs-section" id="docs-section-1-0">Parallelism</p><ul aria-labelledby="docs-section-1-0"><li><a href="../documents/docs_modules_core.html">Core</a></li><li><a href="../documents/docs_modules_pools.html">Pools</a></li><li><a href="../documents/docs_modules_folds-and-certificates.html">Folds and Certificates</a></li></ul><p class="docs-section" id="docs-section-1-1">Platforms</p><ul aria-labelledby="docs-section-1-1"><li><a href="../documents/docs_modules_workers.html">Workers</a></li><li><a href="../documents/docs_modules_browser.html">Browser</a></li></ul><p class="docs-section" id="docs-section-1-2">Memory and State</p><ul aria-labelledby="docs-section-1-2"><li><a href="../documents/docs_modules_memory.html">Memory</a></li><li><a href="../documents/docs_modules_boot.html">Boot</a></li><li><a href="../documents/docs_modules_continuation.html">Continuation</a></li></ul></details><details class="docs-group" data-group="Guides" open><summary>Guides</summary><ul><li><a href="../documents/docs_configuration.html" aria-current="page">Configuration</a></li><li><a href="../documents/docs_limits.html">Limits</a></li><li><a href="../documents/ADVANCED_USAGE.html">Advanced Usage</a></li></ul></details><details class="docs-group" data-group="Studies"><summary>Studies</summary><ul><li><a href="../documents/docs_studies_README.html">All Studies</a></li><li><a href="../documents/docs_studies_storage-resets.html">Storage Resets</a></li><li><a href="../documents/docs_studies_continuation-across-events.html">Continuation Across Events</a></li><li><a href="../documents/docs_studies_elastic-memory.html">Elastic Memory</a></li><li><a href="../documents/docs_studies_boot-images.html">Boot Images</a></li><li><a href="../documents/docs_studies_memory-accounting.html">Memory Accounting</a></li><li><a href="../documents/docs_studies_parallel-execution.html">Parallel Execution</a></li></ul></details><details class="docs-group" data-group="Reference"><summary>Reference</summary><ul><li><a href="../documents/TECHNICAL_REPORT.html">Technical Report</a></li><li><a href="../modules.html">API Reference</a></li></ul></details></nav><a class="docs-side-gh" href="https://github.com/gmitch215/folio">GitHub</a></div>
+<main class="col-content" id="docs-main" tabindex="-1">
+<p class="docs-eyebrow">Guides</p>
+<div class="tsd-panel tsd-typography"><h1 id="configuration" class="tsd-anchor-link">Configuration<a href="#configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>This page lists every option a caller sets, grouped by module. Types, defaults and effects come from
+the option types in <code>src/</code>. An option marked off by default does nothing until the caller sets it.</p>
+<h2 id="environment" class="tsd-anchor-link">Environment<a href="#environment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node</td>
+<td>26 or later</td>
+<td>The Node backend and the test gate need it. <code>package.json</code> declares <code>engines.node</code> as <code>&gt;=26</code>.</td>
+</tr>
+<tr>
+<td>WebAssembly JSPI</td>
+<td>runtime feature</td>
+<td>Async host imports (<code>suspending</code>, <code>promising</code>) and the managed backend need it. The browser counted-loop backend does not.</td>
+</tr>
+<tr>
+<td><code>FREE_CLOUDFLARE_ACCOUNT_ID</code> and <code>FREE_CLOUDFLARE_API_TOKEN</code></td>
+<td>environment</td>
+<td><code>bun run test:e2e</code> deploys the probes to that account when both are set.</td>
+</tr>
+<tr>
+<td><code>FOLIO_CLOUDFLARE_ACCOUNT_ID</code> and <code>FOLIO_CLOUDFLARE_API_TOKEN</code></td>
+<td>environment</td>
+<td>The experiments accept these in place of the first pair.</td>
+</tr>
+<tr>
+<td><code>FOLIO_OLD_BUILD=1</code></td>
+<td>environment</td>
+<td>The consumer harness adds an <code>old-N</code> arm that runs the archived pre-admission source (see <a href="docs_modules_core.html">Core</a>).</td>
+</tr>
+<tr>
+<td>Package builds</td>
+<td><code>snapshot</code> tag</td>
+<td>Builds from the main branch publish to the <code>snapshot</code> tag of <code>@gmitch215/folio</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="core" class="tsd-anchor-link">Core<a href="#core" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="folioopen" class="tsd-anchor-link">Folio.open<a href="#folioopen" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>Folio.open(input, options)</code> takes these options.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>memory</code></td>
+<td><code>WebAssembly.Memory</code></td>
+<td>allocated from the module limits</td>
+<td>Binds an existing single imported memory. The iteration route needs it shared, and it grows the memory by the arena it asks for. An unshared or fixed-size memory keeps the program serial.</td>
+</tr>
+<tr>
+<td><code>workers</code></td>
+<td><code>number</code></td>
+<td>up to 4 (<code>min(4, availableParallelism())</code>)</td>
+<td>Isolate count. One worker uses the native entry and creates no thread.</td>
+</tr>
+<tr>
+<td><code>imports</code></td>
+<td><code>WebAssembly.Imports</code></td>
+<td>none</td>
+<td>Host imports, memories, tables and globals as for native instantiation.</td>
+</tr>
+<tr>
+<td><code>fuel</code></td>
+<td><code>number</code></td>
+<td>100,000,000</td>
+<td>Instruction budget per speculative region before it yields to the native head.</td>
+</tr>
+<tr>
+<td><code>maxTransactionBytes</code></td>
+<td><code>number</code></td>
+<td>262,144</td>
+<td>Bytes of read and write tracking a lane may retain.</td>
+</tr>
+<tr>
+<td><code>minimumParallelWork</code></td>
+<td><code>number</code></td>
+<td>100,000</td>
+<td>Estimated iterations below which a proved kernel stays at its original entry.</td>
+</tr>
+<tr>
+<td><code>promising</code></td>
+<td><code>readonly string[]</code></td>
+<td>none</td>
+<td>Exports that return a Promise because they suspend on async host imports.</td>
+</tr>
+<tr>
+<td><code>profile</code></td>
+<td><code>boolean</code></td>
+<td>off</td>
+<td>Collects execution timings into <code>report.profile</code>.</td>
+</tr>
+<tr>
+<td><code>minimumRegionWork</code></td>
+<td><code>number</code></td>
+<td>200,000</td>
+<td>Static admission threshold when <code>open</code> prepares raw bytes. A prepared plan keeps its own. <code>0</code> admits every pure region.</td>
+</tr>
+<tr>
+<td><code>assumedTripCount</code></td>
+<td><code>number</code></td>
+<td>1,000</td>
+<td>Iterations assumed for loops with no constant bound when <code>open</code> prepares raw bytes.</td>
+</tr>
+<tr>
+<td><code>adaptiveRouting</code></td>
+<td><code>boolean</code></td>
+<td>off</td>
+<td>Runs a call shape natively for 16 calls after two runs that mostly replayed or fell back, then probes again. A shape is the entry, width, memory size and numeric arguments.</td>
+</tr>
+<tr>
+<td><code>iterationLogCeiling</code></td>
+<td><code>number</code></td>
+<td>off</td>
+<td>Undo entries per iteration the logs may grow to when a batch exhausts the default capacity. The batch retries once.</td>
+</tr>
+<tr>
+<td><code>iterationReadWindows</code></td>
+<td><code>boolean</code></td>
+<td>off</td>
+<td>Learns read windows from the first conflict-free batch of an iteration loop.</td>
+</tr>
+<tr>
+<td><code>iterationReadSummary</code></td>
+<td><code>boolean</code></td>
+<td>off</td>
+<td>Keeps a summary of the 64-word blocks of each read bitmap that a read touched.</td>
+</tr>
+<tr>
+<td><code>iterationStall</code></td>
+<td><code>boolean</code> or <code>{ factor, floorMs }</code></td>
+<td>off</td>
+<td>Stops an iteration batch that does not return and finishes the loop serially. <code>factor</code> defaults to 50 and <code>floorMs</code> to 2000.</td>
+</tr>
+<tr>
+<td><code>iterationSecondChance</code></td>
+<td><code>boolean</code></td>
+<td>off</td>
+<td>Judges a loop a little under the dispatch floor on one timed batch.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="prepare-and-run" class="tsd-anchor-link">Prepare and Run<a href="#prepare-and-run" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Where</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parallel</code></td>
+<td><code>prepare(bytes, options)</code></td>
+<td><code>'auto'</code> or <code>'off'</code></td>
+<td><code>'auto'</code></td>
+<td><code>'off'</code> keeps the original module with no plan.</td>
+</tr>
+<tr>
+<td><code>minimumRegionWork</code></td>
+<td><code>prepare(bytes, options)</code></td>
+<td><code>number</code></td>
+<td>200,000</td>
+<td>Static admission threshold in instruction units.</td>
+</tr>
+<tr>
+<td><code>assumedTripCount</code></td>
+<td><code>prepare(bytes, options)</code></td>
+<td><code>number</code></td>
+<td>1,000</td>
+<td>Iterations assumed for loops with no constant bound.</td>
+</tr>
+<tr>
+<td><code>parallel</code></td>
+<td><code>folio.run(name, args, options)</code></td>
+<td><code>'auto'</code>, <code>'off'</code> or <code>'speculate'</code></td>
+<td><code>'auto'</code></td>
+<td>Automatic routing, original execution or tracked regions.</td>
+</tr>
+<tr>
+<td><code>maximumWorkers</code></td>
+<td><code>folio.run(name, args, options)</code></td>
+<td><code>number</code></td>
+<td>pool width</td>
+<td>Caps participating workers without recreating the group.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="execution-host" class="tsd-anchor-link">Execution Host<a href="#execution-host" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>new FolioHost(options)</code> takes <code>artifacts</code>, <code>authorize</code>, <code>limits</code> and <code>path</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>artifacts</code></td>
+<td><code>Record&lt;string, HostArtifact&gt;</code></td>
+<td>required</td>
+<td>Trusted programs by artifact id. Each has a <code>program</code>, an <code>exports</code> allowlist and an optional <code>create</code> that returns pool options and a <code>dispose</code>.</td>
+</tr>
+<tr>
+<td><code>authorize</code></td>
+<td><code>(request: Request) =&gt; boolean or Promise&lt;boolean&gt;</code></td>
+<td>required</td>
+<td>Decides whether a request may proceed.</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td><code>string</code></td>
+<td><code>/folio</code></td>
+<td>Path the handler serves.</td>
+</tr>
+<tr>
+<td><code>limits.liveGroups</code></td>
+<td><code>number</code></td>
+<td>4</td>
+<td>Groups open at once. Further opens are refused.</td>
+</tr>
+<tr>
+<td><code>limits.workersPerGroup</code></td>
+<td><code>number</code></td>
+<td>8</td>
+<td>Workers a single session may request.</td>
+</tr>
+<tr>
+<td><code>limits.memoryBytesPerGroup</code></td>
+<td><code>number</code></td>
+<td>64 MiB</td>
+<td>Initial accessible canonical backing admitted per group. Trusted bindings enforce growth maxima.</td>
+</tr>
+<tr>
+<td><code>limits.requestBytes</code></td>
+<td><code>number</code></td>
+<td>2 MiB</td>
+<td>Largest request body.</td>
+</tr>
+<tr>
+<td><code>limits.responseBytes</code></td>
+<td><code>number</code></td>
+<td>2 MiB</td>
+<td>Largest response body. It must leave at least 512 bytes for errors.</td>
+</tr>
+<tr>
+<td><code>limits.readBytes</code></td>
+<td><code>number</code></td>
+<td>512 KiB</td>
+<td>Largest single memory read.</td>
+</tr>
+<tr>
+<td><code>limits.writeBytes</code></td>
+<td><code>number</code></td>
+<td>512 KiB</td>
+<td>Largest single memory write.</td>
+</tr>
+<tr>
+<td><code>limits.argumentsPerCall</code></td>
+<td><code>number</code></td>
+<td>64</td>
+<td>Most arguments in one call.</td>
+</tr>
+<tr>
+<td><code>limits.idleMilliseconds</code></td>
+<td><code>number</code></td>
+<td>300,000</td>
+<td>Idle time before a session expires. Active operations postpone expiry.</td>
+</tr>
+<tr>
+<td><code>limits.retainedSessions</code></td>
+<td><code>number</code></td>
+<td>64</td>
+<td>Sessions whose last response the host keeps for <code>retryPending()</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Every limit is a positive safe integer.</p>
+<h3 id="instance-checkpoints" class="tsd-anchor-link">Instance Checkpoints<a href="#instance-checkpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>restore(strategy, overwrite)</code></td>
+<td><code>strategy</code></td>
+<td><code>'changed'</code> or <code>'full'</code></td>
+<td><code>'changed'</code></td>
+<td><code>'changed'</code> compares each 64 KiB page and rewrites the pages that differ. <code>'full'</code> copies every byte.</td>
+</tr>
+<tr>
+<td><code>restore(strategy, overwrite)</code></td>
+<td><code>overwrite</code></td>
+<td><code>{ memory?, offset, length }[]</code></td>
+<td>none</td>
+<td>Ranges that are neither compared nor copied back. The caller writes every byte of them before the program reads it.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pools" class="tsd-anchor-link">Pools<a href="#pools" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="taskpool" class="tsd-anchor-link">TaskPool<a href="#taskpool" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>new TaskPool(count or links, options)</code> takes a worker count or the owner ends of existing links.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>audit.run</code></td>
+<td><code>(name, input) =&gt; TaskInput</code></td>
+<td>none</td>
+<td>Reruns a task in the joining thread. A differing output throws <code>TaskConflictError</code>.</td>
+</tr>
+<tr>
+<td><code>audit.every</code></td>
+<td><code>number</code></td>
+<td>1</td>
+<td>Reruns every nth task.</td>
+</tr>
+<tr>
+<td><code>pool.width</code></td>
+<td><code>number</code> (property)</td>
+<td><code>size</code></td>
+<td>How many workers take tasks, from 1 to <code>size</code>.</td>
+</tr>
+<tr>
+<td><code>share</code></td>
+<td><code>boolean</code> (option of <code>submit</code>, <code>run</code> and <code>runSync</code>)</td>
+<td><code>false</code></td>
+<td>Posts a <code>SharedArrayBuffer</code>-backed input without copying it. The caller does not write it until the task is joined.</td>
+</tr>
+</tbody>
+</table>
+<p><code>serveTasks(link, run, options)</code> takes <code>cpu</code>, a function that reads the thread's CPU time in
+milliseconds and defaults to <code>process.threadCpuUsage</code>.</p>
+<h3 id="slicepool" class="tsd-anchor-link">SlicePool<a href="#slicepool" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>SlicePool.open(bytes, options)</code> takes these options.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>memory</code></td>
+<td><code>WebAssembly.Memory</code></td>
+<td>required</td>
+<td>The shared memory every worker runs on. It needs a declared maximum with room for one stack per worker.</td>
+</tr>
+<tr>
+<td><code>workers</code></td>
+<td><code>number</code></td>
+<td><code>min(availableParallelism(), 8)</code></td>
+<td>Worker count.</td>
+</tr>
+<tr>
+<td><code>stackBytes</code></td>
+<td><code>number</code></td>
+<td>65,536</td>
+<td>Private stack per worker, a multiple of 65,536. Only modules with a stack pointer global get stacks.</td>
+</tr>
+<tr>
+<td><code>imports</code></td>
+<td><code>string</code> or <code>URL</code></td>
+<td>none</td>
+<td>A module whose default export returns the imports besides the memory. Each worker loads it.</td>
+</tr>
+<tr>
+<td><code>ownership</code></td>
+<td><code>OwnershipPlan</code></td>
+<td>none</td>
+<td>The plan of a module that <code>redirectOwnership</code> rewrote. <code>ownershipSlices</code> sets it.</td>
+</tr>
+</tbody>
+</table>
+<p><code>pool.run(entry, count, args, options)</code> takes these options.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grain</code></td>
+<td><code>number</code></td>
+<td>even split over the workers</td>
+<td>Calls per slice.</td>
+</tr>
+<tr>
+<td><code>audit</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Replays the slices serially on a copy and throws <code>SliceConflictError</code> on a difference.</td>
+</tr>
+<tr>
+<td><code>writes</code></td>
+<td><code>[number, number][]</code></td>
+<td>none</td>
+<td>Byte ranges the calls write outside the windows. A pool opened with <code>ownership</code> needs them.</td>
+</tr>
+<tr>
+<td><code>snapshotLimit</code></td>
+<td><code>number</code></td>
+<td>64 MiB</td>
+<td>Largest copy of <code>writes</code> in bytes. Past it the calls run serially in place.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="folds-and-certificates" class="tsd-anchor-link">Folds and Certificates<a href="#folds-and-certificates" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foldChunks(pool, input, options)</code></td>
+<td><code>align</code></td>
+<td><code>number</code></td>
+<td>1</td>
+<td>Every chunk but the last starts and ends on a multiple of this.</td>
+</tr>
+<tr>
+<td><code>foldChunks(pool, input, options)</code></td>
+<td><code>chunks</code></td>
+<td><code>{ start, end }[]</code></td>
+<td><code>pool.width</code> aligned chunks</td>
+<td>Explicit chunk ranges.</td>
+</tr>
+<tr>
+<td><code>foldChunks(pool, input, options)</code></td>
+<td><code>task</code></td>
+<td><code>(chunk) =&gt; string</code></td>
+<td>required</td>
+<td>Name of the task that runs one chunk.</td>
+</tr>
+<tr>
+<td><code>foldChunks(pool, input, options)</code></td>
+<td><code>initial</code></td>
+<td><code>State</code></td>
+<td>required</td>
+<td>State before the first chunk.</td>
+</tr>
+<tr>
+<td><code>foldChunks(pool, input, options)</code></td>
+<td><code>combine</code></td>
+<td><code>(state, part, chunk) =&gt; State</code></td>
+<td>required</td>
+<td>Folds one chunk's joined result into the state, in order.</td>
+</tr>
+<tr>
+<td><code>certifyStream(bytes, entry, options)</code></td>
+<td><code>layout</code></td>
+<td><code>{ state, ptr, len }</code></td>
+<td>0, 1, 2</td>
+<td>Parameter positions of the state, the pointer and the length.</td>
+</tr>
+<tr>
+<td><code>certifyStream(bytes, entry, options)</code></td>
+<td><code>block</code></td>
+<td><code>number</code></td>
+<td>4, then 16</td>
+<td>Lengths below this run concretely, the rest as quotient and remainder.</td>
+</tr>
+<tr>
+<td><code>certifyStream(bytes, entry, options)</code></td>
+<td><code>maxMs</code></td>
+<td><code>number</code></td>
+<td>30,000</td>
+<td>Wall clock limit of the whole call across the block ladder.</td>
+</tr>
+<tr>
+<td><code>certifyStream(bytes, entry, options)</code></td>
+<td><code>ring</code></td>
+<td><code>'gf2'</code>, <code>'z2w'</code> or <code>'zp'</code></td>
+<td>tries <code>gf2</code>, <code>z2w</code>, <code>zp</code></td>
+<td>Restricts the analysis to one ring.</td>
+</tr>
+<tr>
+<td><code>foldCertified(pool, input, memory, certificate, options)</code></td>
+<td><code>initial</code></td>
+<td><code>bigint</code></td>
+<td>0</td>
+<td>State before the first byte.</td>
+</tr>
+<tr>
+<td><code>foldCertified(pool, input, memory, certificate, options)</code></td>
+<td><code>chunks</code></td>
+<td><code>{ start, end }[]</code></td>
+<td><code>pool.width</code> chunks</td>
+<td>Explicit chunk ranges.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>entry</code></td>
+<td><code>string</code></td>
+<td><code>bulk</code></td>
+<td>Exported function that runs the records loop.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>convention</code></td>
+<td><code>{ table, count, out, pointers, recordBytes }</code></td>
+<td>0, 1, 2; pointers at 0, 8, 12; 16 bytes</td>
+<td>Parameter positions and the record layout.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>proposed</code></td>
+<td><code>{ low, end }[]</code></td>
+<td>none</td>
+<td>Windows proposed by a probe. They only add bytes to the windows the checker derives.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>maxSteps</code></td>
+<td><code>number</code></td>
+<td>4,000,000</td>
+<td>Step limit of one analysis pass.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>allocator</code></td>
+<td><code>{ arenaBytes, arenaWord?, assumeInArena? }</code></td>
+<td>off</td>
+<td>The allocator mode, where the record's arena pointer may be stored in a window and used to allocate.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>prefix</code></td>
+<td><code>true</code> or <code>{ cell, base }</code></td>
+<td>off</td>
+<td>The prefix-written domain: a buffer filled up to a cursor cell.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>config</code></td>
+<td><code>{ word, at, bytes, extent }</code></td>
+<td>off</td>
+<td>A configuration every record shares and none writes.</td>
+</tr>
+<tr>
+<td><code>certifyOwnership(bytes, options)</code></td>
+<td><code>recursion</code></td>
+<td><code>number</code></td>
+<td>off</td>
+<td>The deepest nesting of one function in the call stack the checker follows. Without it recursion is refused.</td>
+</tr>
+</tbody>
+</table>
+<p><code>ownershipSlices(bytes, certificate, options)</code> takes the <code>SlicePool</code> options except <code>ownership</code>. Its
+<code>run(count, args, options)</code> takes the slice run options with <code>regions</code> added, the regions every
+record touches, and <code>writes</code> made required.</p>
+<h3 id="router" class="tsd-anchor-link">Router<a href="#router" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>Router.open(bytes, call, options)</code> takes these options.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td><code>RouterMode</code></td>
+<td>required</td>
+<td><code>router</code>, <code>serial</code>, <code>w1</code>, <code>w2</code>, <code>independent</code> or <code>shared</code>.</td>
+</tr>
+<tr>
+<td><code>pages</code></td>
+<td><code>number</code></td>
+<td>required</td>
+<td>Initial pages of the memory the router allocates.</td>
+</tr>
+<tr>
+<td><code>maxPages</code></td>
+<td><code>number</code></td>
+<td>the module's own limit</td>
+<td>Declared maximum of the shared memory a records call runs on.</td>
+</tr>
+<tr>
+<td><code>workers</code></td>
+<td><code>number</code></td>
+<td><code>min(availableParallelism(), 8)</code></td>
+<td>Worker count.</td>
+</tr>
+<tr>
+<td><code>cache</code></td>
+<td><code>CertificateCache</code></td>
+<td>new cache</td>
+<td>Holds certificates and refusals between calls.</td>
+</tr>
+<tr>
+<td><code>imports</code></td>
+<td><code>string</code> or <code>URL</code></td>
+<td>none</td>
+<td>A module whose default export returns the imports besides the memory.</td>
+</tr>
+<tr>
+<td><code>assume</code></td>
+<td><code>{ importsDeterministic?, residueUnobserved? }</code></td>
+<td>none</td>
+<td>What the caller knows that no static test can establish. Tracked speculation needs it.</td>
+</tr>
+<tr>
+<td><code>explicit</code></td>
+<td><code>(call) =&gt; Promise&lt;void&gt;</code></td>
+<td>none</td>
+<td>Runs the records on a route the caller built. Chosen after the window route in <code>router</code> mode.</td>
+</tr>
+<tr>
+<td><code>floors</code></td>
+<td><code>Partial&lt;RouterConstants&gt;</code></td>
+<td><code>routerConstants</code></td>
+<td>Overrides for the window floor (0.8 ms), the tracked floor and the summary minimum (1 MiB). A sweep sets them to 0 to force a dispatch.</td>
+</tr>
+<tr>
+<td><code>ownership</code></td>
+<td><code>OwnershipOptions</code></td>
+<td>none</td>
+<td>Certifier options that change a certificate, and so the cache key.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="workers" class="tsd-anchor-link">Workers<a href="#workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>new ManagedFolio(artifact, options)</code> takes these options.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lanes</code></td>
+<td><code>ManagedLaneTransport[]</code></td>
+<td>required</td>
+<td>From 1 to 64 transports. Each sends a binary frame to a <code>FolioLane</code>.</td>
+</tr>
+<tr>
+<td><code>imports</code></td>
+<td><code>WebAssembly.Imports</code></td>
+<td>none</td>
+<td>Host imports. Bind several memories by name here.</td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td><code>WebAssembly.Memory</code></td>
+<td>none</td>
+<td>Binds a single imported memory.</td>
+</tr>
+<tr>
+<td><code>fuel</code></td>
+<td><code>number</code></td>
+<td>100,000,000</td>
+<td>Speculative back-edges per call, from 1 to 1,000,000,000. A call that runs out finishes serially at the owner.</td>
+</tr>
+<tr>
+<td><code>maxTransactionBytes</code></td>
+<td><code>number</code></td>
+<td>262,144</td>
+<td>Tracking budget, from 8 bytes to 1 MiB.</td>
+</tr>
+<tr>
+<td><code>maximumSnapshotBytes</code></td>
+<td><code>number</code></td>
+<td>31 MiB</td>
+<td>Largest arena a run may snapshot.</td>
+</tr>
+<tr>
+<td><code>maximumFrameBytes</code></td>
+<td><code>number</code></td>
+<td>snapshot limit plus 1 MiB, below the 32 MiB RPC limit</td>
+<td>Largest request frame a transport accepts. A larger frame is not sent and the call runs at the owner.</td>
+</tr>
+<tr>
+<td><code>promising</code></td>
+<td><code>readonly string[]</code></td>
+<td>none</td>
+<td>Exports that return a Promise because they suspend on async host imports.</td>
+</tr>
+<tr>
+<td><code>snapshotEncoding</code></td>
+<td><code>'auto'</code> or <code>'dense'</code></td>
+<td><code>'dense'</code></td>
+<td><code>'dense'</code> sends the whole snapshot. <code>'auto'</code> omits zero pages, which lanes older than 1.0.1 reject.</td>
+</tr>
+<tr>
+<td><code>ranges</code></td>
+<td><code>{ maxRounds?, cacheEntries? }</code></td>
+<td>off</td>
+<td>Ships learned byte ranges instead of a snapshot. <code>maxRounds</code> defaults to 3 (1 to 8) and <code>cacheEntries</code> to 1,024.</td>
+</tr>
+<tr>
+<td><code>runs</code></td>
+<td><code>boolean</code></td>
+<td>off</td>
+<td>Asks lanes to answer in sorted byte runs that the owner validates and commits as intervals.</td>
+</tr>
+<tr>
+<td><code>memo</code></td>
+<td><code>{ bytes?, entries? }</code></td>
+<td>off</td>
+<td>Reuses recorded results of regions whose read bytes are unchanged, through the same ordered validation.</td>
+</tr>
+</tbody>
+</table>
+<p><code>new FolioLane(module, options)</code> takes <code>initial</code> and <code>maximum</code> (pages), and optionally
+<code>maximumMemoryBytes</code>, <code>maximumFrameBytes</code>, <code>dataSegments</code> (the start and length of each active data
+segment) and <code>inline</code> (<code>{ module, logEntries }</code>, where <code>logEntries</code> defaults to 8,192 write granules
+of 32 bytes). <code>inline</code> is off unless set.</p>
+<p><code>RemoteFolio.open(url, artifact, options)</code> takes <code>fetch</code> (a service binding's fetch or an ordinary
+one), <code>headers</code> (sent with every request, usually <code>authorization</code>), <code>maximumResponseBytes</code> (2 MiB by
+default) and <code>workers</code>.</p>
+<h2 id="browser" class="tsd-anchor-link">Browser<a href="#browser" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>BrowserFolio.open</code> takes these options.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>memory</code></td>
+<td><code>WebAssembly.Memory</code></td>
+<td>none</td>
+<td>The shared memory the workers attach to. The caller keeps exclusive ownership.</td>
+</tr>
+<tr>
+<td><code>imports</code></td>
+<td><code>WebAssembly.Imports</code></td>
+<td>none</td>
+<td>Host imports.</td>
+</tr>
+<tr>
+<td><code>workers</code></td>
+<td><code>number</code></td>
+<td>4</td>
+<td>Worker count, an integer from 1 to 32.</td>
+</tr>
+<tr>
+<td><code>workerURL</code></td>
+<td><code>string</code> or <code>URL</code></td>
+<td>the package worker</td>
+<td>Entry of the dedicated module workers.</td>
+</tr>
+<tr>
+<td><code>workerFactory</code></td>
+<td><code>(index) =&gt; BrowserWorkerPort</code></td>
+<td>none</td>
+<td>Creates each worker port in place of <code>workerURL</code>.</td>
+</tr>
+<tr>
+<td><code>minimumParallelWork</code></td>
+<td><code>number</code></td>
+<td>100,000</td>
+<td>Estimated iterations below which a call runs at the owner.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="memory" class="tsd-anchor-link">Memory<a href="#memory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>governGrowth(memory, options)</code></td>
+<td><code>capBytes</code></td>
+<td><code>number</code></td>
+<td>required</td>
+<td>Refuses any <code>memory.grow</code> whose final size would pass this. A positive integer.</td>
+</tr>
+<tr>
+<td><code>governGrowth(memory, options)</code></td>
+<td><code>onRefuse</code></td>
+<td><code>({ fromBytes, toBytes }) =&gt; void</code></td>
+<td>none</td>
+<td>Called for each refused grow.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>scope</code></td>
+<td><code>PageScope</code></td>
+<td>required</td>
+<td>Fresh incarnation for one trusted active directory. Never reuse it after a restart.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>owners</code></td>
+<td><code>readonly PageOwner[]</code></td>
+<td>required</td>
+<td>Page owners.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>initialPages</code></td>
+<td><code>number</code></td>
+<td>0</td>
+<td>Pages in the fresh zero-filled arena.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>maximumPages</code></td>
+<td><code>number</code></td>
+<td>65,536</td>
+<td>Most pages, up to 65,536.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>maximumLeases</code></td>
+<td><code>number</code></td>
+<td>64</td>
+<td>Most live leases.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>maximumLeasePages</code></td>
+<td><code>number</code></td>
+<td>256</td>
+<td>Most pages one lease holds.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>maximumResidentPages</code></td>
+<td><code>number</code></td>
+<td>512</td>
+<td>Most resident pages.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>maximumRetiredPages</code></td>
+<td><code>number</code></td>
+<td>1,024</td>
+<td>Most retired versions kept before <code>collect()</code>.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>leaseMilliseconds</code></td>
+<td><code>number</code></td>
+<td>30,000</td>
+<td>Lease lifetime.</td>
+</tr>
+<tr>
+<td><code>new PageDirectory(options)</code></td>
+<td><code>clock</code></td>
+<td><code>() =&gt; number</code></td>
+<td><code>Date.now</code></td>
+<td>Time source.</td>
+</tr>
+<tr>
+<td><code>new MemoryPageOwner(id, scope, bytes)</code></td>
+<td><code>maximumBytes</code></td>
+<td><code>number</code></td>
+<td>required</td>
+<td>Credit in bytes, at least one page.</td>
+</tr>
+<tr>
+<td><code>new Lease(options)</code></td>
+<td><code>manifest</code></td>
+<td><code>LeaseManifest</code></td>
+<td>required</td>
+<td>The page hashes of the remote immutable object.</td>
+</tr>
+<tr>
+<td><code>new Lease(options)</code></td>
+<td><code>fetchRange</code></td>
+<td><code>(offset, length) =&gt; Promise&lt;Uint8Array&gt;</code></td>
+<td>required</td>
+<td>The remote read.</td>
+</tr>
+<tr>
+<td><code>new Lease(options)</code></td>
+<td><code>residentBytes</code></td>
+<td><code>number</code></td>
+<td>4 MiB</td>
+<td>LRU budget in bytes, raised to one page when smaller.</td>
+</tr>
+<tr>
+<td><code>new Lease(options)</code></td>
+<td><code>retries</code></td>
+<td><code>number</code></td>
+<td>1</td>
+<td>Refetches of a page whose bytes failed verification.</td>
+</tr>
+<tr>
+<td>elastic regions</td>
+<td><code>byteLength</code></td>
+<td><code>number</code></td>
+<td>required</td>
+<td>Logical size in bytes, a whole number of chunks.</td>
+</tr>
+<tr>
+<td>elastic regions</td>
+<td><code>chunkBytes</code></td>
+<td><code>number</code></td>
+<td>required</td>
+<td>A power of two from 4 KiB to 8 MiB.</td>
+</tr>
+<tr>
+<td>elastic regions</td>
+<td><code>frames</code></td>
+<td><code>number</code></td>
+<td>required</td>
+<td>Resident window in chunks, at least 1.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="boot" class="tsd-anchor-link">Boot<a href="#boot" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>captureImage(...)</code></td>
+<td><code>module</code></td>
+<td><code>string</code></td>
+<td>none</td>
+<td>SHA-256 hex of the module bytes. <code>moduleDigest(bytes)</code> computes it.</td>
+</tr>
+<tr>
+<td><code>captureImage(...)</code></td>
+<td><code>context</code></td>
+<td><code>string</code></td>
+<td>none</td>
+<td>A digest of whatever else shapes the heap (settings, shims, assets).</td>
+</tr>
+<tr>
+<td><code>captureImage(...)</code></td>
+<td><code>globals</code></td>
+<td><code>{ booted, fresh }</code> by global index</td>
+<td>none</td>
+<td>Global values read from the booted and the fresh instance.</td>
+</tr>
+<tr>
+<td><code>captureImage(...)</code></td>
+<td><code>table</code></td>
+<td><code>{ booted, fresh }</code> tables</td>
+<td>none</td>
+<td>The table after boot and a table holding the pre-boot function references.</td>
+</tr>
+<tr>
+<td><code>bakeModule(bytes, image, options)</code></td>
+<td><code>maxSegmentBytes</code></td>
+<td><code>number</code></td>
+<td>64 MiB</td>
+<td>Largest data segment, a multiple of 65,536.</td>
+</tr>
+<tr>
+<td><code>bakeModule(bytes, image, options)</code></td>
+<td><code>allowTableChanges</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Bakes an image that reports changed table slots. The caller restores them.</td>
+</tr>
+<tr>
+<td><code>applyImage(memory, image, options)</code></td>
+<td><code>module</code></td>
+<td><code>string</code></td>
+<td>none</td>
+<td>Refuses an image whose module digest differs, or that carries none.</td>
+</tr>
+<tr>
+<td><code>applyImage(memory, image, options)</code></td>
+<td><code>context</code></td>
+<td><code>string</code></td>
+<td>none</td>
+<td>Refuses an image whose context digest differs, or that carries none.</td>
+</tr>
+<tr>
+<td><code>applyImage(memory, image, options)</code></td>
+<td><code>memoryOnly</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Copies the pages of an image that records changed globals or table slots and leaves those fresh.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="continuation" class="tsd-anchor-link">Continuation<a href="#continuation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>storage</code></td>
+<td><code>DurableObjectStorage</code></td>
+<td>required</td>
+<td>The object's storage.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>memory</code></td>
+<td><code>WebAssembly.Memory</code></td>
+<td>required</td>
+<td>The guest's memory.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>run</code></td>
+<td><code>(budgetSteps) =&gt; StopReason</code></td>
+<td>required</td>
+<td>Runs up to the budget and returns <code>finished</code>, <code>signal</code> or <code>budget</code> at a quiescent point.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>steps</code></td>
+<td><code>() =&gt; number</code></td>
+<td>required</td>
+<td>The guest's monotonic step counter.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>signal</code></td>
+<td><code>CpuSignal</code></td>
+<td>none</td>
+<td>From <code>cpuSignal()</code>. Cleared at the start of each slice.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>globals</code></td>
+<td><code>Record&lt;string, WebAssembly.Global&gt;</code></td>
+<td>none</td>
+<td>Mutable globals saved with each checkpoint.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>initialBudget</code></td>
+<td><code>number</code></td>
+<td>2,000</td>
+<td>Step budget of the first slice.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>state</code></td>
+<td><code>() =&gt; string or undefined</code></td>
+<td>none</td>
+<td>Host state saved with each checkpoint.</td>
+</tr>
+<tr>
+<td><code>runSlice(options)</code></td>
+<td><code>restore</code></td>
+<td><code>(state) =&gt; void</code></td>
+<td>none</td>
+<td>Called after a restore and before <code>run</code>.</td>
+</tr>
+<tr>
+<td><code>saveCheckpoint(store, memory, options)</code></td>
+<td><code>globals</code></td>
+<td><code>Record&lt;string, WebAssembly.Global&gt;</code></td>
+<td>none</td>
+<td>Mutable globals saved with the pages.</td>
+</tr>
+<tr>
+<td><code>saveCheckpoint(store, memory, options)</code></td>
+<td><code>state</code>, <code>stateJson</code></td>
+<td><code>string</code>, <code>unknown</code></td>
+<td>none</td>
+<td>Host state record. Pass one of them, not both.</td>
+</tr>
+<tr>
+<td><code>sqlCheckpointStore(sql, options)</code></td>
+<td><code>prefix</code></td>
+<td><code>string</code></td>
+<td><code>continuation_</code></td>
+<td>Table name prefix.</td>
+</tr>
+<tr>
+<td><code>sqlCheckpointStore(sql, options)</code></td>
+<td><code>groupPages</code></td>
+<td><code>number</code></td>
+<td>16</td>
+<td>Pages per row, 1 MiB at the default.</td>
+</tr>
+<tr>
+<td><code>sqlCheckpointStore(sql, options)</code></td>
+<td><code>sync</code></td>
+<td><code>() =&gt; Promise&lt;void&gt;</code></td>
+<td>none</td>
+<td>Becomes the store's <code>flush</code>. Pass <code>() =&gt; storage.sync()</code> inside a Durable Object.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="see-also" class="tsd-anchor-link">See Also<a href="#see-also" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="docs_getting-started.html">Getting Started</a> for the first run, and <a href="docs_limits.html">Limits</a> for what each
+setting cannot change.</li>
+<li>The module pages explain each option in context: <a href="docs_modules_core.html">Core</a>,
+<a href="docs_modules_pools.html">Pools</a>, <a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a>,
+<a href="docs_modules_workers.html">Workers</a>, <a href="docs_modules_browser.html">Browser</a>, <a href="docs_modules_memory.html">Memory</a>,
+<a href="docs_modules_boot.html">Boot</a> and <a href="docs_modules_continuation.html">Continuation</a>.</li>
+</ul>
+</div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_modules_continuation.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">Continuation</span><span class="docs-pager-desc">Long jobs across invocations: runSlice, checkpoints and loss detection.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_limits.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Limits</span><span class="docs-pager-desc">What Folio does not do, and where each limit is measured.</span></a></nav></main>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#environment">Environment</a></li><li class="docs-toc-h2"><a href="#core">Core</a></li><li class="docs-toc-h3"><a href="#folioopen">Folio.open</a></li><li class="docs-toc-h3"><a href="#prepare-and-run">Prepare and Run</a></li><li class="docs-toc-h3"><a href="#execution-host">Execution Host</a></li><li class="docs-toc-h3"><a href="#instance-checkpoints">Instance Checkpoints</a></li><li class="docs-toc-h2"><a href="#pools">Pools</a></li><li class="docs-toc-h3"><a href="#taskpool">TaskPool</a></li><li class="docs-toc-h3"><a href="#slicepool">SlicePool</a></li><li class="docs-toc-h2"><a href="#folds-and-certificates">Folds and Certificates</a></li><li class="docs-toc-h3"><a href="#router">Router</a></li><li class="docs-toc-h2"><a href="#workers">Workers</a></li><li class="docs-toc-h2"><a href="#browser">Browser</a></li><li class="docs-toc-h2"><a href="#memory">Memory</a></li><li class="docs-toc-h2"><a href="#boot">Boot</a></li><li class="docs-toc-h2"><a href="#continuation">Continuation</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

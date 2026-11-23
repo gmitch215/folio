@@ -1,52 +1,50 @@
-# Lane Concurrency
+# Forced Admission Complete
 
-Question: when a coordinator issues four lane calls at once, do they overlap on the deployed platform, and which lane type restores overlap when they do not?
+Question: when the admission threshold is set to zero, which corpus entries receive regions, and
+does running those regions in parallel pay?
 
-## Method
-
-One coordinator Worker, four lane Workers reached by service binding, and a Durable Object namespace of four instances, deployed on a paid account, measured and deleted. Each lane runs a pure Wasm loop whose length is set by a `rounds` argument and returns its checksum, which the driver checks against the same loop in JavaScript. The levels are about 100 ms and about 380 ms of CPU per call, calibrated from client wall minus the empty-loop wall because a Worker's clock does not advance during a loop.
-
-Five arms, each run alone (one call) and four at once, 12 repetitions after one warmup, arms interleaved and rotated per repetition:
-
-- `worker`: four different lane Workers over service bindings.
-- `worker-one`: one lane Worker called four times at once.
-- `do-same`: four Durable Object instances in default placement.
-- `do-hint`: four Durable Object instances, each created with a different `locationHint`.
-- `direct`: four separate top-level requests, no coordinator.
-
-The overlap index is the wall of four calls at once minus the empty-loop wall, over the same for one call. 1.0 is full overlap and 4.0 is fully serialized. Lane CPU over wall comes from `wrangler tail` events (`cpuTime` and `wallTime` per invocation), joined to calls by a log line. The rule, fixed before the run in [METHOD.md](../../../experiments/concurrency/METHOD.md): an arm overlaps when the index is at most 1.5 and CPU over wall is at least 0.8.
+This completes the [interrupted diagnostic](../forced-admission/README.md), which stopped at 16 of
+21 cases. Each case runs in its own process with `minimumRegionWork` set to 0, native and Folio at
+widths 1, 2, 4 and 8, 3 paired rounds and a 60 second cap per case. Production defaults are
+unchanged; this is a diagnostic of what the default threshold declines.
 
 ## Results
 
-| Arm | Index at 100 / 380 ms | Lane CPU over wall | Rule |
-| --- | --- | --- | --- |
-| `worker` | 4.07 / 3.87 | 0.27 | fails |
-| `worker-one` | 4.13 / 3.94 | 0.28 / 0.25 | fails |
-| `do-same` | 1.42 / 1.42 | 0.94 / 0.98 | passes |
-| `do-hint` | 1.86 / 1.81 | 0.57 / 0.83 | fails |
-| `direct` | 1.84 / 1.48 | 0.99 / 1.00 | passes at 380 ms only |
+Twenty cases completed inside the cap. `m6502` reached the cap in the first run (0 samples, SIGTERM,
+retained in `m6502-capped.jsonl`), and a separate run with a 900 second cap completed it.
 
-Four calls to four different service-bound Workers took about four times as long as one call, with lane CPU at 27% of lane wall. Four Durable Object instances took about 1.4 times as long as one call. Location hints placed the objects in different data centers and added round-trip time without improving overlap. The run created and deleted its own scripts and Durable Object class. The coordinator's data center was IAD, and the default-placement objects landed in IAD and EWR.
+| Outcome | Cases |
+| --- | ---: |
+| Dispatch workers and run speculatively | 11 |
+| Stay on the serial original-module route | 10 |
+| Replay or fall back to native | 0 fallbacks, replays in 4 |
+| Speculative cases faster than native at any width | 0 of 11 |
 
-## Scope
+The eleven speculative cases are AES-CBC decrypt, AES-CTR, LZ4 compress, MD5, miniz compress and
+decompress, QOI encode and decode, SHA-1, SHA-256 and the 6502 emulator. At width 8 their wall time
+is between 108 and 45,645 times native by paired median: 0.06 ms native against 2,899 ms for QOI decode, 0.2 ms
+against 6,987 ms for the 6502 emulator, 0.2 ms against 225 ms for SHA-256. They split work into
+thousands of regions (67,600 for SHA-256, 77,824 for AES-CTR, 170,390 for the 6502 emulator), each far smaller than the cost of
+dispatching it.
 
-- One account and one coordinator location. The platform documentation says service-bound Workers run on the same thread by default and that objects of one class can share an isolate; this run measures what those two lane types did over 12 repetitions and is not a guarantee.
-- An earlier probe with a 4 ms kernel reported an index of 1.42 for service-bound Workers ([ordinary-worker-lanes](../ordinary-worker-lanes/README.md)). It does not reproduce at 100 and 380 ms, and the cause was not isolated.
-- Tail event coverage was 25% to 100% by cell; cells with low coverage carry the CPU over wall from the events that arrived.
-- The raw tail events here keep only timing, outcome, route and data center. Client addresses, headers and locations were removed at export.
-
-## Artifacts
-
-- `run/raw.jsonl`: every cell, failures included.
-- `run/tail.jsonl`: one scrubbed tail event per line.
-- `run/summary.json`: rows, verdicts, leftovers and foreign changes.
-- `run/environment.json`: the run record, the calibration and the recorded placement.
+All outputs match native in every sample. The diagnostic supports the default threshold of 200,000
+net work units: lowering it on this corpus produces regions and no speedup.
 
 ## Reproduction
 
 ```sh
-node experiments/concurrency/prepare.ts
-node experiments/concurrency/run.ts --dry-run
-FOLIO_CLOUDFLARE_ACCOUNT_ID=... FOLIO_CLOUDFLARE_API_TOKEN=... node experiments/concurrency/run.ts
-node scripts/research/lane-evidence.ts experiments/concurrency/runs/<name> results/managed/lane-concurrency/run
+node scripts/research/admission-diagnostic.ts build/research/forced 60
+FOLIO_CORPUS_ADMISSION=0 node scripts/research/corpus-serial.ts build/research/forced-m6502 3 m6502
 ```
+
+## Artifacts
+
+- `raw.jsonl`: environment, sample and closed records for the 20 completed cases plus the 900
+  second `m6502` run.
+- `summary.json`: paired summary generated from `raw.jsonl`.
+- `index.json`: the diagnostic's per-case completion table, including the capped `m6502` row.
+- `m6502-capped.jsonl`: the records the 60 second `m6502` process wrote before it was stopped.
+- `manifest.json`: byte lengths and SHA256 digests.
+
+Three paired rounds per arm is a small sample. The ratios are large enough that the sign and order
+of magnitude do not depend on it.

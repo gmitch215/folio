@@ -1,64 +1,109 @@
-# Experiments
+# Ordinary Worker Lanes
 
-Executable probes for runtime capabilities, native sharing, managed execution and boot images.
-Sanitized records live under [results](../results/README.md). Each harness keeps its METHOD.md;
-raw deployment logs and resource snapshots stay in ignored `runs/` for cleanup and recovery.
+Question: can ordinary Workers (no Durable Objects) joined by service bindings run CPU work in
+parallel, and does sending only a region's bytes recover the speed that a full snapshot copy loses?
 
-| Harness                                        | Question                                                                                                  | Environment                                       |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [Cloud](cloud/README.md)                       | Which runtime capabilities and host transports are available?                                             | workerd and deployed isolates                     |
-| [Managed](managed/README.md)                   | What do copied snapshots and ordered validation cost?                                                     | Durable Objects                                   |
-| [Browser](browser/README.md)                   | Can agents share an arena and extract counted loops without JSPI?                                         | Chromium and Browser Run                          |
-| [Consumer](consumer/README.md)                 | How do unchanged applications route and compare with native execution?                                    | Chromium, isolates and Node                       |
-| [Boot Images](bootimage/README.md)             | How do captured images behave during delivery, startup and replay?                                        | workerd and Durable Objects                       |
-| [Ordinary Worker Lanes](rpc/README.md)         | Do service-bound Workers overlap CPU work, and what does range transfer save?                             | Deployed Workers (Free)                           |
-| [Range Lanes](ranges/README.md)                | Do learned byte ranges over service bindings cut bytes and wall against snapshots?                        | workerd and Workers (Free)                        |
-| [Concurrent Lane Calls](concurrency/README.md) | Do four lane calls issued at once overlap, and which lane type or placement restores it?                  | Deployed Workers (paid)                           |
-| [SQLite Lanes](sqlite-lanes/README.md)         | Does sharding a SQLite table across Durable Object lanes speed up queries with an exact merge?            | Durable Objects (paid)                            |
-| [Corpus Lanes](corpus-lanes/README.md)         | Do corpus kernels run as range lanes over Durable Objects, and at what cost per record?                   | workerd and Durable Objects                       |
-| [Elastic](elastic/README.md)                   | Can the dense 192 MiB fixture complete on the Free managed plan with a 64 KiB executor memory?            | Durable Objects (Free)                            |
-| [Elastic Limits](elastic-limits/README.md)     | What do the platform's storage calls, stub hops, CPU caps and memory meter cost?                          | Workers and Durable Objects (Free)                |
-| [Elastic Ladder](elastic-ladder/README.md)     | Can one Durable Object run the 192 MiB dense program with its pages in its own SQLite, and at what cost?  | Durable Objects, Free plan and Paid plan accounts |
-| [Alarm Discipline](alarm-discipline/README.md) | Does moving an alarm earlier inside an event reset the object, and does committing first stop it?         | Durable Objects (paid)                            |
-| [Alarm Retirement](alarm-retirement/README.md) | Which alarm shapes turn an isolate retirement into a storage reset, and which avoid it?                   | Durable Objects (paid)                            |
-| [Idle Floor](idle-floor/README.md)             | What fraction of small commits on an idle SQLite Durable Object fail with a reset over several hours?     | Durable Objects (paid)                            |
-| [Memory Ladder](memory-ladder/README.md)       | Which allocations count toward the Durable Object memory limit, and does a dropped one still count?       | Durable Objects (paid)                            |
-| [Commit Ladder](commit-ladder/README.md)       | Does one event's commit size reset a SQLite Durable Object, and does a blocked event lower the threshold? | Durable Objects (paid)                            |
-| [Growth Governor](growth-governor/README.md)   | Does capping `memory.grow` make an oversized guest request fail cleanly instead of overgrowing?           | Node and the shipped php-wasm module              |
-| [Continuation](continuation/README.md)         | Do alarm events, JSPI chains, SQLite checkpoints and boundary commits keep a Wasm guest exact?            | Durable Objects, Node 26                          |
-| [Continuation PHP](continuation-php/README.md) | Does an interrupt park in a PHP build keep the stack, memory and output exact across stops and restores?  | Node 26 and a local Durable Object                |
-| [Shared Tools](lib/README.md)                  | Account access, metering, bundling and lifecycle helpers                                                  | Node 26                                           |
+This is a feasibility probe, not a Folio execution. A coordinator Worker and four lane Workers ran a
+known kernel, and no program, plan or validation of Folio's was involved. The
+[method](../../../experiments/rpc/METHOD.md) fixed both decision rules before each run.
 
-## Local Runs
+## Method
+
+Five scripts on the Free account (a coordinator and four lanes, bound by service bindings), deployed,
+measured and deleted per run. The account's Workers, Durable Object namespaces, KV, R2 and D1 ids were
+the same afterward. In the transfer run the R2 listing was unavailable at the start (read as `null`) and
+empty at the end, which tripped the driver's equality assertion after all data was written; scripts,
+namespaces, KV and D1 were identical. Wall time is read by the coordinator around awaited calls, because a
+Worker's clock advances only on I/O. CPU time was not measured. One coordinator location, 14 paired
+rounds after 2 warmups, cell order rotating every round.
+
+Overlap (`overlap-*`): each lane runs a CPU loop of calibrated length (about 4 ms per call, under the 10 ms
+Free CPU cap). The coordinator awaits `k` lanes at once, six times in a row, and a cell's compute time is
+its wall minus the wall of the same cell with an empty loop. An earlier run with a loop of about 1 ms
+could not separate overlap from jitter and is not reported.
+
+Transfer (`transfer-*`): a Wasm kernel rewrites a 16 KiB partition in place. Four partitions sit in an arena
+of 128 KiB, 1 MiB or 8 MiB (zero-filled outside the partitions). Four waves per cell, each feeding the
+previous wave's output forward. `serial` runs the four partitions on one lane that keeps them resident,
+`full` sends every lane the whole arena each wave, `range` sends each lane its partition each wave, and
+`retained` sends the partition once.
+
+## Results
+
+**Overlap.** Wall in ms, median with the range over 14 rounds.
+
+| Lanes at once | With the loop | Empty loop | Compute |
+| --- | --- | --- | --- |
+| 1 | 35.5 (33 to 42) | 13 (10 to 19) | 22.5 |
+| 2 | 39.5 (36 to 71) | | |
+| 4 | 51.5 (42 to 64) | 19.5 (15 to 24) | 32 |
+
+The serialization index (compute with four lanes over compute with one) is 1.42, against 4.0 for fully
+serialized lanes. The rule fixed before the run called overlap established at 1.5 or less, so the margin is
+thin. Four distinct lane instances answered, every call returned 200, and the observed wall overlap is about
+2.8x, which is not a guarantee of parallel CPU execution. Fetching a lane's workers.dev URL from inside a Worker returned 404 in every sample, so that route
+is unavailable here.
+
+**Transfer.** Wall in ms, median; speedup is the paired median over the same round's `serial`
+run, with the range over rounds. Bytes are what the coordinator sent per request, and every mode returned
+262,144 bytes.
+
+| Arena | Mode | Wall | Speedup over serial | Bytes sent | Failed requests |
+| --- | --- | --- | --- | --- | --- |
+| 128 KiB | serial | 113 | | 65,536 | 1 of 14 |
+| 128 KiB | full | 43.5 | 2.64x (1.74 to 2.92) | 2,097,152 | 0 |
+| 128 KiB | range | 41 | 2.71x (2.05 to 3.47) | 262,144 | 0 |
+| 128 KiB | retained | 37.5 | 2.82x (2.22 to 3.70) | 65,536 | 0 |
+| 1 MiB | serial | 109 | | 65,536 | 0 |
+| 1 MiB | full | 110 | 1.03x (0.77 to 1.27) | 16,777,216 | 1 |
+| 1 MiB | range | 42 | 2.55x (1.86 to 3.42) | 262,144 | 0 |
+| 1 MiB | retained | 40 | 2.97x (1.89 to 3.82) | 65,536 | 1 |
+| 8 MiB | serial | 114.5 | | 65,536 | 0 |
+| 8 MiB | full | 510 | 0.22x (0.12 to 0.29) | 134,217,728 | 3 |
+| 8 MiB | range | 40 | 2.88x (1.72 to 3.70) | 262,144 | 0 |
+| 8 MiB | retained | 38 | 3.11x (2.27 to 3.88) | 65,536 | 1 |
+
+- **The rule fixed before the run holds.** At 8 MiB `range` and `retained` are 2.88x and 3.11x faster
+  than `serial`, every ok row's digest equals the serial run's of the same round, the payload is 0.2% and
+  0.05% of `full`, and `full` is slower than `range`.
+- **Bytes are the lever.** `full` falls from 2.64x at 128 KiB to 1.03x at 1 MiB and 0.22x at 8 MiB, which
+  points the same way as the managed backend's later-operation cost at 8 MiB (0.71x) in the
+  [operations study](../operations/README.md). `range` and `retained` stay at 2.6x to 3.1x at every size,
+  close to the 2.8x of the overlap run.
+- **Seven of 168 requests returned 503**, three of them in `full` at 8 MiB and the rest one each in four
+  other cells. The cause was not isolated. A failed request is not in the medians; no digest differed.
+
+## Limits
+
+- **The ranges were declared.** The kernel touches exactly its partition, so the coordinator knew the
+  footprint before the call. Folio does not know a region's footprint before it runs, except for kernels a
+  guard has proven, and a wrong range would give a wrong result. Nothing here shows how to get
+  footprints for general programs.
+- **No Folio code ran.** There was no conflict, rollback, replay or ordered validation, and the four
+  partitions were disjoint by construction.
+- **Wall only.** No CPU, billing or per-isolate placement was measured, so the 2.8x is an observed wall
+  overlap and says nothing about CPU time or price.
+- **The platform documentation says service-bound Workers run on the same thread of the same server by
+  default,** and a local workerd process gave 0.99x to 1.01x for a similar shape. The deployed result
+  here does not match either, and the reason was not isolated: placement may vary by account, location
+  or time.
+- One account, one coordinator location, 14 rounds, four lanes, a 4 ms kernel and 16 KiB partitions.
+  Zero-filled arena bytes could be handled specially by the platform.
+
+## Reproduction
 
 ```sh
-bun run build:c
-node experiments/cloud/local.ts
-node experiments/cloud/host-probe.ts
-node experiments/managed/prepare.ts
-node experiments/managed/local.ts
-node experiments/browser/extraction/prepare.ts
-node experiments/browser/extraction/local.ts
+node experiments/rpc/prepare.ts
+node experiments/rpc/run.ts
+FOLIO_RPC_MODE=transfer node experiments/rpc/run.ts
 ```
 
-Node 26 runs the drivers. Workers are TypeScript bundled by Wrangler, and each Worker
-project has its own tsconfig. Browser assets are compiled before serving them to Chromium.
+## Artifacts
 
-## Deployments
-
-`node experiments/deploy.ts KIND` runs the selected bounded probe. It reads
-`FOLIO_CLOUDFLARE_ACCOUNT_ID` and `FOLIO_CLOUDFLARE_API_TOKEN`, with the
-`FREE_CLOUDFLARE_*` CI pair as fallback. It snapshots Workers, Durable Object namespaces,
-KV, R2 and D1 before provisioning and verifies the baseline after retirement and deletion.
-`node experiments/cleanup.ts NAME KIND` resumes cleanup after an interrupted driver.
-
-Read the harness METHOD.md for request, storage and session bounds before a live run.
-Browser Run has a daily session allowance. Durable Object rows are shared across all activity
-in the account, and usage meters may lag. A fresh resource name does not reset account quotas.
-
-## Evidence
-
-Publish sanitized records under `results/<topic>/<study>/`, with short role names and a README.
-Keep timestamps, source hashes, configuration, sample counts and environment in metadata.
-Label local and deployed results separately. Preserve raw bytes and include failures and resets.
-Source archives retain the measured implementation.
+- `overlap-run.json`, `overlap-calibration.json`, `overlap-samples.json`, `overlap-summary.json`: the
+  overlap run.
+- `transfer-run.json`, `transfer-calibration.json`, `transfer-samples.json`, `transfer-summary.json`: the
+  transfer run.
+- `source.tar.gz`: `experiments/rpc` as run. It predates the `FOLIO_RPC_MODE` name and reads
+  `FOLIO_RPC_STAGE=xfer` for the transfer run.
+- `manifest.json`: byte lengths and SHA256 digests.

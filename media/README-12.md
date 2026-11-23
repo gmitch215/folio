@@ -1,57 +1,76 @@
-# SQLite Lanes
+# Reset Policies
 
-Question: can a program that was never written to run in parallel, SQLite, run faster on managed lanes when each lane keeps its own instance over a shard of the data and the owner merges the partial results?
+Question: for explicit independent operations on private contexts, what does the reset between
+operations cost, and what does a generalized reset give up against one tuned to a fixed input?
 
-## Method
+Three policies restore the 8 MiB arena of each context between operations:
 
-SQLite 3.50.4 compiled freestanding to a 1,003,837-byte WebAssembly module (single thread, read-only deserialized image). The fixture is a deterministic table of 1,000,000 rows (`id`, `k INTEGER`, `v INTEGER`, `s TEXT` of 24 bytes), a 52,772,864-byte image whose SHA-256 matches the one used for the Node task-pool measurements. The table is also split by rowid range into 4 and 8 shard images of at most 14 MiB, each a complete database with the same schema.
+- `whole` copies the whole arena.
+- `pages` copies the pages that the first execution of a fixed input changed. It is valid only for
+  unchanged code, input and host state.
+- `checkpoint` compares every page of current memory with the initial copy and rewrites the pages
+  that differ, so it learns nothing from an earlier run. Globals and table references are restored
+  too.
 
-One Worker script with 13 Durable Object names: one `serial` object that holds the whole table (shipped in two parts), four `shards-4` objects and eight `shards-8` objects. Each object loads its image once and keeps the SQLite instance, so queries are warm. For each of five queries the owner runs three arms, interleaved and rotated, 12 repetitions after 2 warmups:
-
-- `serial`: one object, whole table.
-- `shards-4` and `shards-8`: the owner sends the query to every shard at once and merges the partials with the merge declared for that query (counts and sums add, group tables merge, top-10 lists merge).
-
-The queries are an index range aggregate, a full-scan `GROUP BY` on `k % 64`, a `LIKE '%x%'` scan, a join with a 1,000-row table and a top-10 by a non-indexed column. A query with no declared merge is refused. The recursive CTE and `CREATE INDEX` are refused because each row depends on the previous one. Every merged result is compared byte for byte with the serial result. Lane work is also counted in SQLite virtual-machine steps, because a Worker's clock does not advance during compute.
+All three runs use the same 21 kernels, arms and parameters in one session per machine: 7 paired
+rounds, 4 repeats, 16 jobs per round, native, conventional workers and `TaskPool` at widths 1, 2, 4
+and 8, each batched and unbatched. Every sample checks the final context state and every return
+value. These are explicit independent operations, not automatic extraction.
 
 ## Results
 
-Median client wall in ms over the 12 repetitions, deployed on a paid account, each figure including the client round trip to the owner:
+Paired median speedup over native for eight batched `TaskPool` workers, with process CPU as a ratio
+of native CPU. The full set is in the summaries.
 
-| Query | Serial | 4 shards | 8 shards | Speedup at 4 / 8 |
-| --- | --- | --- | --- | --- |
-| range aggregate | 192.6 | 94.5 | 80.2 | 2.04 / 2.40 |
-| group by | 2,208.4 | 413.4 | 228.2 | 5.34 / 9.68 |
-| LIKE scan | 253.2 | 107.7 | 92.0 | 2.35 / 2.75 |
-| join | 480.6 | 174.4 | 117.2 | 2.76 / 4.10 |
-| top-10 | 799.4 | 289.4 | 211.4 | 2.76 / 3.78 |
+| Kernel | Machine | `whole` | `pages` | `checkpoint` |
+| --- | --- | ---: | ---: | ---: |
+| AES-CBC decrypt | Ryzen | 3.19x / 1.97 | 4.80x / 1.05 | 4.52x / 1.30 |
+| SHA-256 | Ryzen | 0.92x / 5.93 | 3.79x / 1.10 | 2.52x / 2.35 |
+| LZ4 compress | Ryzen | 0.44x / 12.67 | 3.11x / 1.52 | 1.14x / 4.59 |
+| xxHash32 | Ryzen | 0.43x / 12.62 | 2.48x / 1.80 | 1.40x / 3.93 |
+| AES-CBC decrypt | M2 Pro | 5.22x / 1.30 | 4.85x / 1.12 | 5.21x / 1.40 |
+| SHA-256 | M2 Pro | 3.69x / 1.66 | 5.15x / 1.11 | 3.93x / 1.81 |
+| LZ4 compress | M2 Pro | 2.06x / 2.80 | 3.07x / 1.64 | 2.27x / 3.05 |
+| xxHash32 | M2 Pro | 1.69x / 4.21 | 2.27x / 1.99 | 2.20x / 3.05 |
 
-- All 178 returned samples were exact. Two samples (one in `topk` at 4 shards, one in `group` at 8 shards) received a 409 because a shard object had been evicted, and the owner reloaded it (1.0 to 1.4 s); they carry no result and are not counted as mismatches or speedups.
-- The total VDBE steps are the same in every arm of a query (for example 19.0 million for the group-by in all three arms), so the shards do the same work.
-- Cold load: the whole table took about 1.9 s per 26 MB part; each 13 MB shard about 1.0 to 1.15 s. The measured speedups are for warm shards.
-- The group-by speedup at 8 shards (9.7x on 8 lanes) is above the lane count. Wall per VDBE step is about 116 ns in the serial object and at most about 95 ns per lane in an 8-way shard (that bound includes the fixed round trip), which fits a smaller working set per lane. A Node control found that one worker on a one-eighth shard runs 2.2 times faster per row than one-eighth of the whole-table time, and neither a page cache sized to the shard nor the whole-table cache changed it. About 2.2x of the group-by figure is therefore a single-thread effect of the smaller table, and the cause of that effect is not isolated.
-- The run created and deleted its own script and Durable Object class: no leftover resources and no foreign changes.
+On the Ryzen machine `pages` is ahead of `checkpoint` and `checkpoint` is ahead of `whole` for all
+21 kernels. The checkpoint recovers most of the gain for large kernels and little for small ones,
+because it reads every page on every restore. On the M2 Pro the gaps are smaller and the ordering
+is not consistent: `whole` and `checkpoint` match `pages` for AES-CBC decrypt (5.22x and 5.21x
+against 4.85x), and `pages` leads on most other kernels.
 
-## Scope
-
-- One account, one coordinator location, one fixture and five queries. The merges are declared by hand for these queries; a general query needs a planner that proves a merge.
-- Speedups use a warm shard set. Shards must stay resident; an evicted shard costs a reload of 1 to 1.4 s.
-- The serial arm holds the full 52.7 MB table in one 128 MB isolate, and it fit.
-- Owner CPU and lane CPU were not parsed from the tail events; the record carries client wall and VDBE steps.
-- The tail events here keep timing, outcome, route and data center only.
-
-## Artifacts
-
-- `run/raw.jsonl`: every request, failures included.
-- `run/samples.json`: per-sample query, arm, equality, warm flag, VDBE steps and wall.
-- `run/loads.jsonl`: the shard uploads and their walls.
-- `run/summary.json` and `run/environment.json`: medians, counts, leftovers and the run record.
-- `run/tail.jsonl`: scrubbed tail events.
+The earlier [changed-page study](../page-reset/README.md) reports 7.42x for AES-CBC decrypt with the
+`pages` policy under the same parameters on the same machine. This run reports 4.80x. Native
+(69.9 ms against 69.5 ms) and one-worker arms agree within 1% between the two runs. The eight-worker
+arm does not (9.44 ms against 14.55 ms), and the box load average was 0.1 at the start of the first
+run and 1.41 at the start of this one. The eight-worker figure for this kernel is a range from 4.8x
+to 7.4x on this machine, not a point value.
 
 ## Reproduction
 
+From the repository root with Node 26 and the built corpus (`node scripts/research/corpus.ts build
+build/research/corpus/build.jsonl`):
+
 ```sh
-FOLIO_SQLITE_SOURCE=/path/to/sqlite-amalgamation node experiments/sqlite-lanes/prepare.ts
-node experiments/sqlite-lanes/run.ts --dry-run
-FOLIO_CLOUDFLARE_ACCOUNT_ID=... FOLIO_CLOUDFLARE_API_TOKEN=... node experiments/sqlite-lanes/run.ts
-node scripts/research/lane-evidence.ts experiments/sqlite-lanes/runs/<name> results/managed/sqlite-lanes/run
+FOLIO_CORPUS_RESET=checkpoint node scripts/research/corpus-mechanisms.ts build/research/reset-checkpoint 7 4
+node scripts/research/analyze.ts build/research/reset-checkpoint/raw.jsonl summary.json
 ```
+
+Use `whole` and `pages` for the other policies and a new output path for each run.
+`scripts/research/matched.sh` runs the three policies back to back under a shared timing lock with
+`nice -n 19`, `--max-old-space-size=128` and, on Linux, `taskset -c 4-11`. The Ryzen records come
+from that script on Linux with Node 26.10.0, cores 4 to 11 and the `powersave` governor. The M2 Pro
+records ran on macOS with Node 26.8.2 and no pinning.
+
+## Artifacts
+
+- `ryzen-whole.jsonl`, `ryzen-pages.jsonl`, `ryzen-checkpoint.jsonl`: raw records, 2,499 samples
+  each.
+- `m2-whole.jsonl`, `m2-pages.jsonl`, `m2-checkpoint.jsonl`: the same on the second machine.
+- `*.summary.json`: paired summaries generated from the matching raw file with `analyze.ts`.
+- `source.tar.gz`: the source the Ryzen runs used. The M2 Pro records name their sources by SHA256
+  in the environment row; the corpus harness and `src/` match the archive byte for byte.
+- `manifest.json`: byte lengths and SHA256 digests.
+
+Intervals in the summaries are bootstrap intervals over paired rounds within one run. They do not
+cover run-to-run variation, which the eight-worker arm shows is large.

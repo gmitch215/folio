@@ -1,0 +1,301 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Memory Accounting | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-guide"><script>try{document.documentElement.dataset.theme=localStorage.getItem("tsd-theme")||"os"}catch(e){document.documentElement.dataset.theme="os"}</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><button type="button" class="docs-menu" popovertarget="docs-sidebar">Menu</button><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog></div></header>
+<div class="container container-main">
+<div class="docs-sidebar" id="docs-sidebar" popover><div class="docs-sidebar-head"><span>Documentation</span><button type="button" class="docs-close" popovertarget="docs-sidebar" popovertargetaction="hide">Close</button></div><nav class="docs-nav" aria-label="Documentation"><details class="docs-group" data-group="Start"><summary>Start</summary><ul><li><a href="../index.html">Overview</a></li><li><a href="../documents/docs_getting-started.html">Getting Started</a></li><li><a href="https://github.com/gmitch215/folio/tree/master/examples" class="docs-ext" rel="noopener">Examples</a></li></ul></details><details class="docs-group" data-group="Modules"><summary>Modules</summary><ul><li><a href="../documents/docs_modules_README.html">All Modules</a></li></ul><p class="docs-section" id="docs-section-1-0">Parallelism</p><ul aria-labelledby="docs-section-1-0"><li><a href="../documents/docs_modules_core.html">Core</a></li><li><a href="../documents/docs_modules_pools.html">Pools</a></li><li><a href="../documents/docs_modules_folds-and-certificates.html">Folds and Certificates</a></li></ul><p class="docs-section" id="docs-section-1-1">Platforms</p><ul aria-labelledby="docs-section-1-1"><li><a href="../documents/docs_modules_workers.html">Workers</a></li><li><a href="../documents/docs_modules_browser.html">Browser</a></li></ul><p class="docs-section" id="docs-section-1-2">Memory and State</p><ul aria-labelledby="docs-section-1-2"><li><a href="../documents/docs_modules_memory.html">Memory</a></li><li><a href="../documents/docs_modules_boot.html">Boot</a></li><li><a href="../documents/docs_modules_continuation.html">Continuation</a></li></ul></details><details class="docs-group" data-group="Guides"><summary>Guides</summary><ul><li><a href="../documents/docs_configuration.html">Configuration</a></li><li><a href="../documents/docs_limits.html">Limits</a></li><li><a href="../documents/ADVANCED_USAGE.html">Advanced Usage</a></li></ul></details><details class="docs-group" data-group="Studies" open><summary>Studies</summary><ul><li><a href="../documents/docs_studies_README.html">All Studies</a></li><li><a href="../documents/docs_studies_storage-resets.html">Storage Resets</a></li><li><a href="../documents/docs_studies_continuation-across-events.html">Continuation Across Events</a></li><li><a href="../documents/docs_studies_elastic-memory.html">Elastic Memory</a></li><li><a href="../documents/docs_studies_boot-images.html">Boot Images</a></li><li><a href="../documents/docs_studies_memory-accounting.html" aria-current="page">Memory Accounting</a></li><li><a href="../documents/docs_studies_parallel-execution.html">Parallel Execution</a></li></ul></details><details class="docs-group" data-group="Reference"><summary>Reference</summary><ul><li><a href="../documents/TECHNICAL_REPORT.html">Technical Report</a></li><li><a href="../modules.html">API Reference</a></li></ul></details></nav><a class="docs-side-gh" href="https://github.com/gmitch215/folio">GitHub</a></div>
+<main class="col-content" id="docs-main" tabindex="-1">
+<p class="docs-eyebrow">Studies</p>
+<div class="tsd-panel tsd-typography"><h1 id="memory-accounting" class="tsd-anchor-link">Memory Accounting<a href="#memory-accounting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>A Durable Object is reset when it exceeds a memory limit, and the number that decides the reset is not the documented one. This page covers what the platform meter counts, how an object's own storage writes show up in it, and the guards Folio built around a guest's linear memory.</p>
+<h2 id="question" class="tsd-anchor-link">Question<a href="#question" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Which allocations count toward the memory limit that resets a Durable Object, how does the meter charge linear memory, and what can a host do to keep a guest under the line?</p>
+<h2 id="instruments" class="tsd-anchor-link">Instruments<a href="#instruments" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Instrument</th>
+<th>What it measures</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/experiments/memory-ladder/README.md">memory-ladder</a></td>
+<td>allocation kinds, cumulative holds and whether a dropped buffer still counts</td>
+<td>bare objects, paid plan</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/platform-ladder/README.md">platform-ladder</a></td>
+<td>the meter against a <code>WebAssembly.Memory</code> of 64 and 128 MiB</td>
+<td>Free plan</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/spill-memory/README.md">spill-memory</a></td>
+<td>the meter against bytes written to an object's own storage</td>
+<td>Free plan</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/experiments/growth-governor/README.md">growth-governor</a></td>
+<td>a cap on <code>memory.grow</code> under an Emscripten PHP guest</td>
+<td>Node 22 and the PHP module</td>
+</tr>
+<tr>
+<td>the Drupal host probes, in <a href="TECHNICAL_REPORT.html#a-drupal-distribution-on-durable-objects">the report</a></td>
+<td>idle charge, retained buffers, boot garbage, stack shrink</td>
+<td>local workerd and a Paid account</td>
+</tr>
+</tbody>
+</table>
+<p>The platform meter is the account's GraphQL dataset <code>durableObjectsPeriodicGroups</code>, field <code>max { memoryUsageBytes }</code>, per class and minute. Every figure is one account, one deployment and one day unless it says more. The Drupal host figures come from deploys whose raw rows are not all exported to <code>results/</code>.</p>
+<h2 id="design" class="tsd-anchor-link">Design<a href="#design" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The memory ladder sends each sample to a fresh object with two requests. The first allocates, and the second releases everything and returns the instance id, so a changed id means the object restarted. The allocation failure is not caught inside the object, so a reset reaches the caller as an error. The arms are an <code>ArrayBuffer</code>, a <code>WebAssembly.Memory</code> and a built string at each rung, a swap arm that drops a buffer, waits and allocates a second, and cumulative arms that hold many chunks without releasing.</p>
+<h2 id="results" class="tsd-anchor-link">Results<a href="#results" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="what-the-ladder-showed" class="tsd-anchor-link">What the Ladder Showed<a href="#what-the-ladder-showed" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Rung (MiB)</th>
+<th><code>ArrayBuffer</code></th>
+<th><code>WebAssembly.Memory</code></th>
+<th>String</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">96</td>
+<td>6 ok</td>
+<td>6 ok</td>
+<td>6 ok</td>
+</tr>
+<tr>
+<td style="text-align:right">128</td>
+<td>6 ok</td>
+<td>6 ok</td>
+<td>6 ok</td>
+</tr>
+<tr>
+<td style="text-align:right">160 to 256</td>
+<td>6 of 6 refused</td>
+<td>6 of 6 refused</td>
+<td>6 of 6 refused</td>
+</tr>
+</tbody>
+</table>
+<p>Each cell is six samples. No sample reached a memory reset in the rung ladder. The failures at 160 MiB and above were allocation errors inside the runtime: <code>Invalid array buffer length</code>, <code>WebAssembly.Memory(): could not allocate memory</code> and <code>RangeError</code>. Touched 128 MiB was ok and touched 130 MiB was refused for both buffer and memory, so the single-block edge lies between 128 and 130 MiB.</p>
+<p>The cumulative arms hold chunks of 32 MiB and add up:</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>Held</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>32 MiB chunks, <code>ArrayBuffer</code> and <code>WebAssembly.Memory</code></td>
+<td>96 to 224 MiB</td>
+<td>ok, 6 of 6 per cell</td>
+</tr>
+<tr>
+<td>64 MiB buffer plus 32 MiB memories</td>
+<td>128 to 224 MiB</td>
+<td>ok, 6 of 6 per cell</td>
+</tr>
+<tr>
+<td>32 MiB chunks</td>
+<td>256 MiB</td>
+<td>memory-limit reset, 6 of 6 per cell</td>
+</tr>
+<tr>
+<td>Touched 32 MiB chunks</td>
+<td>192 MiB</td>
+<td>ok, 6 of 6 per cell</td>
+</tr>
+</tbody>
+</table>
+<p>The reset error text was &quot;Durable Object's isolate exceeded its memory limit and was reset.&quot; The instance id changed on every sample at 192 MiB held or more, with those samples returning ok, and no sample changed instance below 192 MiB. The run does not show the cause of those instance changes.</p>
+<p>A dropped buffer does not keep counting. After 192 MiB was held and then dropped, a 96 MiB allocation succeeded at delays of 0, 5 and 30 seconds. If the dropped charge still counted, the total would have been 288 MiB, above the 256 MiB that reset the chunked arms. A swap of an <code>ArrayBuffer</code> of 64, 96 or 112 MiB at those delays was ok in all 54 samples.</p>
+<h3 id="how-the-meter-charges-linear-memory" class="tsd-anchor-link">How the Meter Charges Linear Memory<a href="#how-the-meter-charges-linear-memory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A Durable Object allocated a <code>WebAssembly.Memory</code> of 64 or 128 MiB, wrote one byte per 4 KiB page or touched nothing, and held for 75 s.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Linear memory</th>
+<th>Arm</th>
+<th style="text-align:right">Meter reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">64 MiB</td>
+<td>written</td>
+<td style="text-align:right">65.5 MiB</td>
+</tr>
+<tr>
+<td style="text-align:right">64 MiB</td>
+<td>untouched</td>
+<td style="text-align:right">65.5 MiB</td>
+</tr>
+<tr>
+<td style="text-align:right">128 MiB</td>
+<td>written</td>
+<td style="text-align:right">129.5 MiB</td>
+</tr>
+<tr>
+<td style="text-align:right">128 MiB</td>
+<td>untouched</td>
+<td style="text-align:right">129.5 MiB</td>
+</tr>
+</tbody>
+</table>
+<p>The slope is 1.00 MiB per MiB with an offset of 1.5 MiB, and written and untouched pages do not differ. A touched page and a reserved page cost the same.</p>
+<h3 id="what-storage-writes-cost-the-meter" class="tsd-anchor-link">What Storage Writes Cost the Meter<a href="#what-storage-writes-cost-the-meter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Writing to an object's own storage raises the meter on the writing object, and the rise follows the row size.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Spilled</th>
+<th>Row size</th>
+<th style="text-align:right">Meter rise (MiB)</th>
+<th style="text-align:right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">64 MiB</td>
+<td>1 MiB</td>
+<td style="text-align:right">34.5</td>
+<td style="text-align:right">6 per arm</td>
+</tr>
+<tr>
+<td style="text-align:right">16 MiB</td>
+<td>4 KiB</td>
+<td style="text-align:right">1.875 to 1.945</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td style="text-align:right">16 MiB</td>
+<td>6 KiB</td>
+<td style="text-align:right">16.496</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">16 MiB</td>
+<td>8 KiB</td>
+<td style="text-align:right">16.25</td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td style="text-align:right">16 MiB</td>
+<td>16 KiB</td>
+<td style="text-align:right">16.25</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">16 MiB</td>
+<td>64 KiB</td>
+<td style="text-align:right">16.0</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">128 MiB</td>
+<td>1 MiB</td>
+<td style="text-align:right">32.5</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td style="text-align:right">256 MiB</td>
+<td>1 MiB</td>
+<td style="text-align:right">28.5</td>
+<td style="text-align:right">3</td>
+</tr>
+</tbody>
+</table>
+<p>The meter holds up to a ceiling near 36 MiB for the writing object, on the writing object and not on its caller. Rows of 6 KiB or more hold everything written up to the ceiling, and rows of 4 KiB hold much less. The held memory does not decay while the object keeps receiving requests, and every reading taken five minutes or more after a spill was 0.0. Deleting the storage did not release the memory in two of three repeats. The curve against spill size is not proportional and not a clean plateau: 32 MiB read 2.5 MiB in all three repeats, for a cause that is unknown. Most cells have one to three repeats. A dedicated owner object absorbs the memory at the price of a stub call per spill step.</p>
+<h3 id="the-drupal-host" class="tsd-anchor-link">The Drupal Host<a href="#the-drupal-host" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>On the Paid account an idle instantiated PHP module reads linear memory plus 9.02 MiB on the meter, against 1.51 MiB for an empty module. The 7.5 MiB difference does not move when the module loses 30 percent of its function bytes, 60 percent or its 3.7 MB of data bytes (spread 0.00 across six deploys), and the slope is 1.000 per MiB of touched memory. At most 6 to 10 percent of the 72.6 to 125.3 MiB idle offset of the Thunder host is the idle instance.</p>
+<p>On local workerd a booted Thunder isolate retains 59 to 71 MiB outside the wasm linear memory after a full collection: compiled-code state 18.5 to 19.4, JS heap 20 to 30, the pack blob 12.4, other buffers 6 to 7 and the pack index 1.3. The buffers the plan named as suspects (boot image, database image, heap-store buffers) were 0.</p>
+<p>One boot allocates about 1 GiB of short-lived strings, 285 MiB in the installed-module mount and 235 MiB in the lazy pack mount, because path creation has no directory cache in the per-row loop. Locally, a directory cache cut boot allocation from 998.5 to 776.6 MiB (one run each) and did not lower the heap high-water mark. Deployed, the patch showed no meter effect: peaks of 249 and 250 MiB against 241 and 245 for the control.</p>
+<p>On a bare Durable Object the meter tracks live heap and not committed heap, at n = 1 per variant. A 40 MiB live set reads 44.16 MiB. The same set after 1 GiB of string churn reads 58.97 MiB for the first two to three minutes and 42.16 MiB from the fourth minute, while the same churn leaves 106.9 MiB committed against 43.7 used locally. A 150 MiB synchronous burst never showed in the meter.</p>
+<h3 id="stack-shrink" class="tsd-anchor-link">Stack Shrink<a href="#stack-shrink" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Rewritten modules with a 4 MiB stack end 28.0 MiB lower in touched memory (from the run notes, not recounted). A finite <code>array_map</code> recursion of 2,647 to 2,656 levels returned the right answer with the stack overrun and static data below the stack end changed, in 5 of 5 runs, so a native stack that guards 4 MiB is refuted. A stack-limit check pass inserts a check before every stack-pointer lowering (12,977 checks, module size +1.30 percent) and turns the silent cases into clean traps with static data unchanged: about 950 harness runs at the default and 62 MB native stacks, 0 silent and 0 hangs. On the quiet rig, 340 interleaved pairs per arm over four routes, the guarded module over the unguarded module has a median of 1.000 to 1.013 with an interval top of 1.021. A guard trap loses the request, and writes through bad pointers into static data are not covered.</p>
+<p>With one deploy per arm the savings on the platform were 17.9 MiB (4 MiB stack) and 33.3 MiB (4 MiB plus 256 import pages) for cold admin, against 27.7 predicted. Spread between arms exceeded the effect, and all three arms were killed above the line, with meter peaks of 222 to 248 MiB. A repeat with two or three deploys per arm counted reset markers on cold admin of 2 of 2 (control), 1 of 3 (guarded 4 MiB) and 0 of 3 (guarded 4 MiB with 256 pages). Every arm crossed 203 MiB on the meter, the guard never fired, and the intervals overlap in every row, so the effect is neither shown nor refuted.</p>
+<h3 id="the-growth-governor" class="tsd-anchor-link">The Growth Governor<a href="#the-growth-governor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>governGrowth</code> in <code>@gmitch215/folio/memory</code> wraps the <code>grow</code> method of one <code>WebAssembly.Memory</code> and refuses any grow whose final size would pass a byte cap. The cap has to sit on <code>grow</code>. The Emscripten glue tries the current size times 1.2, 1.1 and 1.05, never below the request, and a cap on the requested size let a 107,548,672-byte request take linear memory to 115.25 MiB under a 104 MiB cap. The experiment boots a PHP 8.5 interpreter with <code>memory_limit=96M</code> and runs a 64 MiB string allocation.</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>Cap</th>
+<th>Refusals</th>
+<th>PHP output</th>
+<th style="text-align:right">Final memory (bytes)</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>open</code></td>
+<td>none</td>
+<td>0</td>
+<td>none</td>
+<td style="text-align:right">120,848,384</td>
+<td>completes; sha256 matches</td>
+</tr>
+<tr>
+<td><code>capped</code></td>
+<td>104 MiB</td>
+<td>2</td>
+<td>none</td>
+<td style="text-align:right">107,610,112</td>
+<td>completes on the third attempt</td>
+</tr>
+<tr>
+<td><code>capped-trycatch</code></td>
+<td>104 MiB</td>
+<td>2</td>
+<td><code>completed</code></td>
+<td style="text-align:right">107,610,112</td>
+<td>completes; the <code>catch</code> block never runs</td>
+</tr>
+<tr>
+<td><code>capped-fit</code></td>
+<td>160 MiB</td>
+<td>0</td>
+<td>none</td>
+<td style="text-align:right">120,848,384</td>
+<td>completes; sha256 matches</td>
+</tr>
+<tr>
+<td><code>capped</code></td>
+<td>100 MiB</td>
+<td>6, two per attempt</td>
+<td><code>[error] Out of memory</code></td>
+<td style="text-align:right">100,663,296</td>
+<td><code>_run</code> throws <code>ExitStatus</code> with status 1</td>
+</tr>
+</tbody>
+</table>
+<p>With the 100 MiB cap, PHP's own <code>catch</code> never ran, the memory stayed at its 96 MiB boot size, and shutdown, startup and <code>1+1</code> still worked. Every run repeated byte for byte (<a href="https://github.com/gmitch215/folio/blob/master/experiments/growth-governor/README.md">growth-governor</a>). The governor guards linear memory only. It turns a platform memory reset into a failed request and does not bound the JS-side charge.</p>
+<h3 id="the-platform-line" class="tsd-anchor-link">The Platform Line<a href="#the-platform-line" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The measured kill line of the Drupal host is about 203 MiB on the platform meter, and the documented 128 MB sizes nothing there. On the Free plan a Durable Object isolate was not reset at 128 MB: with the unmodified module and 64 MiB of memory it held 216 MiB of live memory and buffers before a reset, and with 1,322 pages 194.6 MiB (n=3 objects each, one 8 MiB step per request). The larger memory cost 40 MiB of headroom for 18.6 MiB of added memory, and the cause of the factor of 2.1 is not determined. The two numbers are not reconciled, and the platform meter reading is the measured one.</p>
+<h2 id="reading" class="tsd-anchor-link">Reading<a href="#reading" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The meter charges a reserved page as much as a touched one, counts live heap and not committed heap, and holds storage writes on the writing object for minutes. A dropped buffer does not keep counting. Single allocations stop near 128 MiB, and chunked holds reach 224 MiB before a reset. The governor turns an oversized <code>memory.grow</code> into a failed request with the memory unchanged, which is the guard a paged design needs. The cap for a given build is not measured: the request-reuse arm of one earlier build held 113.9 MiB after its full workload, which a 112 MiB cap would refuse.</p>
+<h2 id="closed-and-open" class="tsd-anchor-link">Closed and Open<a href="#closed-and-open" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Closed: the idle module charge, retained buffers, boot garbage with a directory cache, and committed heap as the meter's basis.</p>
+<p>Open: whether <code>WebAssembly.Memory</code> counts toward the reset limit the same way as an <code>ArrayBuffer</code> (the allocation failures came first), the reset threshold between 224 and 256 MiB, what sets the allocation ceilings between 128 and 160 MiB, whether the instance changes at 192 MiB held share a mechanism with the reset at 256 MiB, whether the guarded stack shrink lowers the kill rate on the platform, and the memory fit of the translated module on Workers. No deployed fix completes the failing Thunder routes.</p>
+<h2 id="see-also" class="tsd-anchor-link">See Also<a href="#see-also" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>Report: <a href="TECHNICAL_REPORT.html#a-drupal-distribution-on-durable-objects">A Drupal Distribution on Durable Objects</a>, <a href="TECHNICAL_REPORT.html#storage-resets-and-the-growth-governor">Storage Resets and the Growth Governor</a></li>
+<li>Module: <a href="docs_modules_memory.html">Memory</a></li>
+<li>Related studies: <a href="docs_studies_elastic-memory.html">Elastic Memory</a>, <a href="docs_studies_storage-resets.html">Storage Resets</a></li>
+</ul>
+</div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_studies_boot-images.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">Boot Images</span><span class="docs-pager-desc">What a baked boot image saves and what it costs.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_studies_parallel-execution.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Parallel Execution</span><span class="docs-pager-desc">Scaling, pools, certification and the router gates.</span></a></nav></main>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#design">Design</a></li><li class="docs-toc-h2"><a href="#results">Results</a></li><li class="docs-toc-h3"><a href="#what-the-ladder-showed">What the Ladder Showed</a></li><li class="docs-toc-h3"><a href="#how-the-meter-charges-linear-memory">How the Meter Charges Linear Memory</a></li><li class="docs-toc-h3"><a href="#what-storage-writes-cost-the-meter">What Storage Writes Cost the Meter</a></li><li class="docs-toc-h3"><a href="#the-drupal-host">The Drupal Host</a></li><li class="docs-toc-h3"><a href="#stack-shrink">Stack Shrink</a></li><li class="docs-toc-h3"><a href="#the-growth-governor">The Growth Governor</a></li><li class="docs-toc-h3"><a href="#the-platform-line">The Platform Line</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

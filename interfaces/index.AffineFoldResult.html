@@ -1,11 +1,12 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>AffineFoldResult | @gmitch215/folio - v1.2.0</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
-<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@gmitch215/folio - v1.2.0</a>
-<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>AffineFoldResult | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-api"><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
 <ul role="listbox" id="tsd-search-results"></ul>
 <div id="tsd-search-status" aria-live="polite" aria-atomic="true">
 <div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
 <div class="container container-main">
-<div class="col-content">
+<main class="col-content" id="docs-main" tabindex="-1">
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb" aria-label="Breadcrumb">
 <li><a href="../modules/index.html">index</a></li>
@@ -13,7 +14,7 @@
 <h1>Interface AffineFoldResult</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">AffineFoldResult</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#audited">audited</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#chunks">chunks</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#fallbackbytes">fallbackBytes</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#mismatchat">mismatchAt</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#mode">mode</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;audit&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;exact&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#state">state</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tasks">tasks</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#validated">validated</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L79">src/folds/affine.ts:79</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L79">src/folds/affine.ts:79</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -39,48 +40,48 @@
 <div class="tsd-comment tsd-typography"><p>Audit mode: the chunks that were rerun.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L89">src/folds/affine.ts:89</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L89">src/folds/affine.ts:89</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="chunks"><span>chunks</span><a href="#chunks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">chunks</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L82">src/folds/affine.ts:82</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L82">src/folds/affine.ts:82</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="fallbackbytes"><span>fallback<wbr/>Bytes</span><a href="#fallbackbytes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fallbackBytes</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Bytes that ran again serially after a mismatch.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L91">src/folds/affine.ts:91</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L91">src/folds/affine.ts:91</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="mismatchat"><span>mismatch<wbr/>At</span><a href="#mismatchat" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">mismatchAt</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>The first chunk whose real end state differed from the prediction, or -1.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L87">src/folds/affine.ts:87</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L87">src/folds/affine.ts:87</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="mode"><span>mode</span><a href="#mode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">mode</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;audit&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;exact&quot;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L80">src/folds/affine.ts:80</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L80">src/folds/affine.ts:80</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="state"><span>state</span><a href="#state" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">state</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">bigint</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L81">src/folds/affine.ts:81</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L81">src/folds/affine.ts:81</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="tasks"><span>tasks</span><a href="#tasks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tasks</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L83">src/folds/affine.ts:83</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L83">src/folds/affine.ts:83</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="validated"><span>validated</span><a href="#validated" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">validated</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Chunk boundaries where the real end state equalled the predicted start of the next chunk.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/folds/affine.ts#L85">src/folds/affine.ts:85</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/affine.ts#L85">src/folds/affine.ts:85</a></li></ul></aside></section></section></details></main>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

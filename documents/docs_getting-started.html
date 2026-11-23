@@ -1,0 +1,188 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Getting Started | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-guide"><script>try{document.documentElement.dataset.theme=localStorage.getItem("tsd-theme")||"os"}catch(e){document.documentElement.dataset.theme="os"}</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><button type="button" class="docs-menu" popovertarget="docs-sidebar">Menu</button><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog></div></header>
+<div class="container container-main">
+<div class="docs-sidebar" id="docs-sidebar" popover><div class="docs-sidebar-head"><span>Documentation</span><button type="button" class="docs-close" popovertarget="docs-sidebar" popovertargetaction="hide">Close</button></div><nav class="docs-nav" aria-label="Documentation"><details class="docs-group" data-group="Start" open><summary>Start</summary><ul><li><a href="../index.html">Overview</a></li><li><a href="../documents/docs_getting-started.html" aria-current="page">Getting Started</a></li><li><a href="https://github.com/gmitch215/folio/tree/master/examples" class="docs-ext" rel="noopener">Examples</a></li></ul></details><details class="docs-group" data-group="Modules"><summary>Modules</summary><ul><li><a href="../documents/docs_modules_README.html">All Modules</a></li></ul><p class="docs-section" id="docs-section-1-0">Parallelism</p><ul aria-labelledby="docs-section-1-0"><li><a href="../documents/docs_modules_core.html">Core</a></li><li><a href="../documents/docs_modules_pools.html">Pools</a></li><li><a href="../documents/docs_modules_folds-and-certificates.html">Folds and Certificates</a></li></ul><p class="docs-section" id="docs-section-1-1">Platforms</p><ul aria-labelledby="docs-section-1-1"><li><a href="../documents/docs_modules_workers.html">Workers</a></li><li><a href="../documents/docs_modules_browser.html">Browser</a></li></ul><p class="docs-section" id="docs-section-1-2">Memory and State</p><ul aria-labelledby="docs-section-1-2"><li><a href="../documents/docs_modules_memory.html">Memory</a></li><li><a href="../documents/docs_modules_boot.html">Boot</a></li><li><a href="../documents/docs_modules_continuation.html">Continuation</a></li></ul></details><details class="docs-group" data-group="Guides"><summary>Guides</summary><ul><li><a href="../documents/docs_configuration.html">Configuration</a></li><li><a href="../documents/docs_limits.html">Limits</a></li><li><a href="../documents/ADVANCED_USAGE.html">Advanced Usage</a></li></ul></details><details class="docs-group" data-group="Studies"><summary>Studies</summary><ul><li><a href="../documents/docs_studies_README.html">All Studies</a></li><li><a href="../documents/docs_studies_storage-resets.html">Storage Resets</a></li><li><a href="../documents/docs_studies_continuation-across-events.html">Continuation Across Events</a></li><li><a href="../documents/docs_studies_elastic-memory.html">Elastic Memory</a></li><li><a href="../documents/docs_studies_boot-images.html">Boot Images</a></li><li><a href="../documents/docs_studies_memory-accounting.html">Memory Accounting</a></li><li><a href="../documents/docs_studies_parallel-execution.html">Parallel Execution</a></li></ul></details><details class="docs-group" data-group="Reference"><summary>Reference</summary><ul><li><a href="../documents/TECHNICAL_REPORT.html">Technical Report</a></li><li><a href="../modules.html">API Reference</a></li></ul></details></nav><a class="docs-side-gh" href="https://github.com/gmitch215/folio">GitHub</a></div>
+<main class="col-content" id="docs-main" tabindex="-1">
+<p class="docs-eyebrow">Start</p>
+<div class="tsd-panel tsd-typography"><h1 id="getting-started" class="tsd-anchor-link">Getting Started<a href="#getting-started" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>This page installs Folio, runs one program, reads the report and picks the route that fits a
+workload. The <a href="../">README</a> shows the same first call in less space, and the
+<a href="docs_modules_README.html">module pages</a> cover each subpath in depth.</p>
+<h2 id="install" class="tsd-anchor-link">Install<a href="#install" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">add</span><span class="hl-1"> </span><span class="hl-2">@gmitch215/folio</span><br/><span class="hl-3"># or</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">@gmitch215/folio</span>
+</code><button type="button">Copy</button></pre>
+
+<p>The Node backend needs Node 26 or later. Async host imports and the managed backend need WebAssembly
+JSPI. The examples in the repository need the C fixtures and the package build:</p>
+<pre><code class="sh"><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build:c</span><br/><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">build</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>bun run build:c</code> needs <code>clang</code> and <code>wasm-ld</code> (the <code>lld</code> package) on <code>PATH</code>.</p>
+<h2 id="run-one-program" class="tsd-anchor-link">Run One Program<a href="#run-one-program" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>examples/basic.ts</code> opens a prepared module with a shared memory, runs one export and closes the
+pool:</p>
+<pre><code class="ts"><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">Folio</span><span class="hl-1">, </span><span class="hl-5">prepare</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;@gmitch215/folio&#39;</span><span class="hl-1">;</span><br/><span class="hl-4">import</span><span class="hl-1"> { </span><span class="hl-5">readFileSync</span><span class="hl-1"> } </span><span class="hl-4">from</span><span class="hl-1"> </span><span class="hl-2">&#39;node:fs&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">program</span><span class="hl-1"> = </span><span class="hl-0">prepare</span><span class="hl-1">(</span><span class="hl-0">readFileSync</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">URL</span><span class="hl-1">(</span><span class="hl-2">&#39;../build/fixture.wasm&#39;</span><span class="hl-1">, </span><span class="hl-4">import</span><span class="hl-1">.</span><span class="hl-5">meta</span><span class="hl-1">.</span><span class="hl-5">url</span><span class="hl-1">)));</span><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">memory</span><span class="hl-1"> = </span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-5">WebAssembly</span><span class="hl-1">.</span><span class="hl-0">Memory</span><span class="hl-1">({ </span><span class="hl-5">initial:</span><span class="hl-1"> </span><span class="hl-8">2</span><span class="hl-1">, </span><span class="hl-5">maximum:</span><span class="hl-1"> </span><span class="hl-8">8192</span><span class="hl-1">, </span><span class="hl-5">shared:</span><span class="hl-1"> </span><span class="hl-6">true</span><span class="hl-1"> });</span><br/><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Uint32Array</span><span class="hl-1">(</span><span class="hl-5">memory</span><span class="hl-1">.</span><span class="hl-5">buffer</span><span class="hl-1">, </span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-8">37</span><span class="hl-1">).</span><span class="hl-0">fill</span><span class="hl-1">(</span><span class="hl-8">1</span><span class="hl-1">);</span><br/><br/><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">folio</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">Folio</span><span class="hl-1">.</span><span class="hl-0">open</span><span class="hl-1">(</span><span class="hl-5">program</span><span class="hl-1">, { </span><span class="hl-5">memory</span><span class="hl-1">, </span><span class="hl-5">workers:</span><span class="hl-1"> </span><span class="hl-8">4</span><span class="hl-1"> });</span><br/><span class="hl-4">try</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-6">const</span><span class="hl-1"> </span><span class="hl-7">report</span><span class="hl-1"> = </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">run</span><span class="hl-1">(</span><span class="hl-2">&#39;program&#39;</span><span class="hl-1">, [</span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-8">37</span><span class="hl-1">, </span><span class="hl-8">10000</span><span class="hl-1">]);</span><br/><span class="hl-1">  </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-5">report</span><span class="hl-1">);</span><br/><span class="hl-1">  </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-6">new</span><span class="hl-1"> </span><span class="hl-0">Uint32Array</span><span class="hl-1">(</span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-5">memory</span><span class="hl-1">.</span><span class="hl-5">buffer</span><span class="hl-1">, </span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-8">4</span><span class="hl-1">));</span><br/><span class="hl-1">} </span><span class="hl-4">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-4">await</span><span class="hl-1"> </span><span class="hl-5">folio</span><span class="hl-1">.</span><span class="hl-0">close</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>prepare(bytes)</code> analyses the module once. It keeps the original native module and adds a plan for
+the regions it can prove or track. A module that has no region worth dispatching gets no plan and
+runs as the original Wasm. <code>Folio.open</code> takes the plan, or raw bytes, which it prepares itself. The
+<code>memory</code> is shared so that every worker reads and writes the same bytes. <code>workers: 4</code> is the default
+when the machine has four cores or more. <code>run(name, args)</code> calls one export, and <code>close()</code> joins the
+workers and any suspended native call.</p>
+<p>Run it with <code>node examples/basic.ts</code>. After the report, the last line prints the first four words of
+the arena.</p>
+<h2 id="read-the-report" class="tsd-anchor-link">Read the Report<a href="#read-the-report" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p><code>run</code> returns a report. The one from the example above is:</p>
+<pre><code class="text">{
+  values: [ undefined ],
+  workers: 4,
+  regions: 4,
+  replayed: 0,
+  fallbacks: 0,
+  mode: &#39;native-shared&#39;
+}
+</code><button type="button">Copy</button></pre>
+
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>values</code></td>
+<td>The return values of the call, or of each call in a batch.</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td><code>native-shared</code> ran proved kernels on the shared allocation, <code>speculative</code> ran tracked regions, <code>serial</code> ran the original entry.</td>
+</tr>
+<tr>
+<td><code>workers</code></td>
+<td>Workers that executed regions. A serial run reports zero.</td>
+</tr>
+<tr>
+<td><code>regions</code></td>
+<td>Regions discovered and dispatched.</td>
+</tr>
+<tr>
+<td><code>replayed</code></td>
+<td>Regions that conflicted and replayed against committed state.</td>
+</tr>
+<tr>
+<td><code>fallbacks</code></td>
+<td>Regions or batches that fell back to native execution at the owner.</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td>Why a run stayed serial or left the fast path, such as <code>small-workload</code>, <code>no-parallel-plan</code> or <code>dependency</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>A call that is too small to pay for dispatch stays serial and says so. <code>examples/routing.ts</code> runs a
+small call, a large call, a capped call and a dependent call, and prints one line each:</p>
+<pre><code class="text">small work { mode: &#39;serial&#39;, workers: 0, reason: &#39;small-workload&#39; }
+large work { mode: &#39;native-shared&#39;, workers: 4, reason: undefined }
+capped { mode: &#39;native-shared&#39;, workers: 2, reason: undefined }
+dependent 0 { mode: &#39;speculative&#39;, workers: 4, reason: &#39;dependency&#39; }
+</code><button type="button">Copy</button></pre>
+
+<p>Check the report before assuming a call ran in parallel. <code>folio.inspect(name)</code> and
+<code>folio.diagnostics</code> say why a plan was refused. <a href="docs_modules_core.html">Core</a> lists every report field and
+option.</p>
+<h2 id="choose-a-route" class="tsd-anchor-link">Choose a Route<a href="#choose-a-route" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The right entry depends on who can say which work is independent.</p>
+<table>
+<thead>
+<tr>
+<th>Workload</th>
+<th>Use</th>
+<th>Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One ordinary entry with inline loops or pure calls</td>
+<td><code>Folio.run</code></td>
+<td><a href="docs_modules_core.html">Core</a></td>
+</tr>
+<tr>
+<td>A loop of per-record calls over a shared memory</td>
+<td><code>Folio.run</code>, which runs the iteration route and validates it</td>
+<td><a href="docs_modules_core.html">Core</a>, <a href="docs_modules_pools.html">Pools</a></td>
+</tr>
+<tr>
+<td>A batch of jobs you can name, each with its own state</td>
+<td><code>TaskPool</code></td>
+<td><a href="docs_modules_pools.html">Pools</a></td>
+</tr>
+<tr>
+<td>Records in one memory, one exported function, calls you declare independent</td>
+<td><code>SlicePool</code></td>
+<td><a href="docs_modules_pools.html">Pools</a></td>
+</tr>
+<tr>
+<td>One CRC-32, Adler-32 or AES-CTR stream</td>
+<td><code>foldChunks</code>, or <code>certifyStream</code> with <code>foldCertified</code></td>
+<td><a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a></td>
+</tr>
+<tr>
+<td>A record loop whose driver writes fixed-address scratch</td>
+<td><code>certifyOwnership</code> with <code>ownershipSlices</code></td>
+<td><a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a></td>
+</tr>
+<tr>
+<td>A call where you want the route chosen and explained</td>
+<td><code>Router</code></td>
+<td><a href="docs_modules_folds-and-certificates.html">Folds and Certificates</a></td>
+</tr>
+<tr>
+<td>A private instance reset between jobs</td>
+<td><code>InstanceCheckpoint</code></td>
+<td><a href="docs_modules_core.html">Core</a></td>
+</tr>
+<tr>
+<td>Execution in Workers and Durable Objects</td>
+<td><code>ManagedFolio</code> and <code>FolioLane</code></td>
+<td><a href="docs_modules_workers.html">Workers</a></td>
+</tr>
+<tr>
+<td>A browser without JSPI</td>
+<td><code>BrowserFolio</code></td>
+<td><a href="docs_modules_browser.html">Browser</a></td>
+</tr>
+<tr>
+<td>A memory cap, a page directory or a booted heap</td>
+<td><code>governGrowth</code>, <code>PageDirectory</code>, <code>bakeModule</code></td>
+<td><a href="docs_modules_memory.html">Memory</a>, <a href="docs_modules_boot.html">Boot</a></td>
+</tr>
+<tr>
+<td>A guest that needs more CPU than one Durable Object event allows</td>
+<td><code>runSlice</code></td>
+<td><a href="docs_modules_continuation.html">Continuation</a></td>
+</tr>
+</tbody>
+</table>
+<p>Accepted input does not guarantee a speedup. A program with a true serial dependency runs serially,
+and a small job loses to dispatch overhead. <a href="docs_limits.html">Limits</a> lists what does not parallelize and
+which gates were not met.</p>
+<h2 id="where-to-go-next" class="tsd-anchor-link">Where to Go Next<a href="#where-to-go-next" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="docs_modules_README.html">Modules</a> maps the six subpaths and helps choose between them.</li>
+<li><a href="docs_configuration.html">Configuration</a> lists every option with its type and default.</li>
+<li><a href="ADVANCED_USAGE.html">Advanced Usage</a> combines the modules for specialised cases.</li>
+<li>The <a href="TECHNICAL_REPORT.html">technical report</a> holds the evidence, the instruments and the open
+questions.</li>
+</ul>
+</div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../index.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">Overview</span><span class="docs-pager-desc">What Folio does, the install and the first program.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_modules_README.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">All Modules</span><span class="docs-pager-desc">The six import paths and the page for each.</span></a></nav></main>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#install">Install</a></li><li class="docs-toc-h2"><a href="#run-one-program">Run One Program</a></li><li class="docs-toc-h2"><a href="#read-the-report">Read the Report</a></li><li class="docs-toc-h2"><a href="#choose-a-route">Choose a Route</a></li><li class="docs-toc-h2"><a href="#where-to-go-next">Where to Go Next</a></li></ul></nav></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

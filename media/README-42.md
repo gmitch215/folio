@@ -1,35 +1,31 @@
-# Boundary Commit
+# PHP Park
 
-Does committing a checkpoint at the end of every budget-stopped event, with the commit written inside a transaction that rolls back when the signal is raised, keep a chain exact across isolate moves?
+Does an interrupt park inside a PHP interpreter build (a PHP build with the interrupt-park patch) keep the stack, memory and output exact across budget and signal stops, commits and restores?
 
 ## Instrument
 
-`experiments/continuation/deferred` with the `bc` mode. The budget starts at 1,000 or 2,000 steps, doubles after each commit, falls to 0.7 of the steps at the first signal, and then grows 2% per commit. `g0` is a local run with a simulated signal at step 5,000 and a cut in the commit of event 6. `g1` is three deployed objects running 120,000 steps with no forced loss.
+`experiments/continuation-php` runs a PHP workload (`workload.php`) under a local event protocol. `P1` runs in Node 26 with an in-memory store. `P2` runs in a local Durable Object under `wrangler dev`. Each event records its stop reason, the refusals counted before the park, the stack checks and the commit. The workload has two refused regions: an `array_map` with a closure and a generator loop.
+
+`P0` is the uninterrupted reference.
 
 ## Rows
 
-`raw.jsonl` holds one `event` row per event, with the stop reason (`commit`, `signal`, `cut`, `final`), the budget before and after, the end step and the number of rows written. The `g1` events come from the retrace file; the first trace file lacks the event-1 end for two objects. Isolate ids are replaced by ordinals.
+`raw.jsonl` holds one `event` row per event for `P1` and `P2`, and one `run` row per arm, with `P0` as the reference. The markers of each event are counted, not stored.
 
-`raw-driver.jsonl` holds one `object-final` row per object: the driver's comparison of the final value and the memory SHA-256 with the reference (30,000 steps for `g0`, 120,000 for `g1`). The driver kept the two booleans, not the values, so the rows carry the match results and the reference values.
+`raw-output.jsonl` holds one `output` row per arm: the SHA-256 of the output and, for `P0`, its byte length. `P0`'s hash is computed from its output file. `P1` and `P2` carry their hash in their run records (`P1` names it `finalSha256`, `P2` names it `outputSha256`). Neither record holds a byte length, so those rows have `bytes` null. `summary.json` reports `outputEqual` for `P1` and `P2` against `P0`'s hash.
 
 ## Reproduce
 
 ```sh
-node experiments/continuation/build.ts
-node experiments/continuation/deferred/run.ts g1   # deployed arm, needs account variables
+FOLIO_PHP_WASM_DIR=<directory with the interpreter module> node experiments/continuation-php/run.mjs P0
+FOLIO_PHP_WASM_DIR=<directory with the interpreter module> node experiments/continuation-php/run.mjs P1
 node experiments/continuation/export.ts
 node scripts/analyze/continuation.ts
 node scripts/research/evidence.ts
 ```
 
-`export.ts` writes `raw-driver.jsonl` from `runs/g0.json`, `runs/g1.json` and `runs/reference.json`. The `g1` object ordinals follow the key order of `runs/g1-bc-retrace.json`, the same order the event rows use.
-
 ## Scope
 
-All three moves in the deployed arm followed a commit. No move followed a signal stop, so that boundary is not measured. The end step for two first events comes from the checkpoint note because the end note was missing from the tail; the export records which source each row used.
+Local only. The refused regions delay parks until the next admissible poll, so a region longer than one event never completes. The strict generator-region check is not met in the recorded runs; the rows show each park's reason and refusal count, and the check's reading is left to the study record.
 
-## Moves and loss
-
-The three moves in `g1` each lost 0 steps. A move's loss is the previous event's end step minus the start step of the event that restored the manifest. `summary.json` lists each move with `lostSteps` and the source of the previous end.
-
-`finalMatch` holds for every object: 3 of 3 in `g1` against the 120,000-step reference, and 1 of 1 in `g0` against the 30,000-step reference. The summary counts objects whose final value and SHA-256 both matched (`finalMatch.finalAndShaMatch`).
+The "not met" reading used the wrong refused region. That check counted the whole generator loop as refused, which the specification got wrong. In the generator loop the first admissible poll is the consumer's `foreach` iteration, inside the loop. The park landed there, at event 42 (reason BUDGET, 26 refusals before it, in both `P1` and `P2`). The `summary.json` counts are unchanged.

@@ -1,45 +1,33 @@
-# Corpus Denominators
+# Varied Inputs
 
-Question: how many of the corpus programs reach each stage, from build to a measured speedup, and
-what does the corpus not represent?
+Question: does checkpoint reset stay exact when the same private contexts run different inputs?
 
-The table counts distinct things. A project is an upstream source tree, a kernel is one exported
-entry of a library, and a full application would be a program that a user runs. The corpus has
-nine projects and 21 kernels. It has no full application and no database workload.
+The [reset study](../reset-policies/README.md) uses one fixed input per kernel. This study builds
+the 21 corpus kernels with a runtime input seed and runs five input profiles (seeds 0 to 4) on two
+persistent `TaskPool` workers. JSON inputs change in size and the FFT phases change. Each result is
+compared with a fresh native instance that ran the same seed: return value, all 8 MiB of memory
+and ordered host effects. Float host effects are compared as IEEE 754 bits, because JSON text
+drops the sign of zero.
 
-| Stage | Count | Source |
-| --- | ---: | --- |
-| Projects | 9 | [upstream](../upstream/README.md) |
-| Kernels selected and built | 21 of 21 | [upstream](../upstream/README.md) |
-| Kernels whose Folio and native runs match in all 8 MiB, returns and effects | 21 of 21 | [upstream](../upstream/README.md) |
-| Kernels with an automatic plan under default admission | 0 of 21 | [upstream](../upstream/README.md) |
-| Kernels that dispatch workers under default admission | 0 of 21 | [default entry repeat](../default-entry-repeat/README.md) |
-| Kernels that receive regions at threshold 0 | 11 of 21 | [forced admission](../forced-admission-complete/README.md) |
-| Of those, kernels faster than native | 0 of 11 | [forced admission](../forced-admission-complete/README.md) |
-| Input profiles exact against a fresh native instance | 210 of 210 | [varied inputs](../varied-inputs/README.md) |
+## Results
 
-Explicit independent operations are a different route with its own denominator. Kernels of 21 with
-a paired median speedup of at least the bar at eight batched `TaskPool` workers:
-
-| Machine and reset policy | At least 1x | At least 2x | At least 3x |
-| --- | ---: | ---: | ---: |
-| Ryzen, whole arena | 5 | 2 | 1 |
-| Ryzen, learned pages | 21 | 18 | 13 |
-| Ryzen, checkpoint | 21 | 8 | 3 |
-| M2 Pro, whole arena | 21 | 14 | 8 |
-| M2 Pro, learned pages | 21 | 17 | 15 |
-| M2 Pro, checkpoint | 21 | 20 | 9 |
-
-The numbers are from [reset policies](../reset-policies/README.md). They need the caller to name
-the independent operations and reset private contexts. They do not come from automatic extraction.
+210 of 210 comparisons match. No context was recreated and `prepareContext` produced no refusal
+for any of the 21 kernels, so every restore used the generalized checkpoint. The record is a
+correctness check on 21 library kernels and carries no timing.
 
 ## Reproduction
 
 ```sh
-node scripts/research/denominators.ts results/corpus results/corpus/denominators/denominators.json
+FOLIO_CORPUS_INPUTS_READY=1 node scripts/research/inputs.ts build/research/inputs
 ```
+
+Omit the variable to build the input-seeded artifacts first. Use a new output path for each run.
+The record ran on an Apple M2 Pro with Node 26.8.2.
 
 ## Artifacts
 
-- `denominators.json`: every count in the tables, derived from the studies above.
+- `raw.jsonl`: environment, 210 comparison records and a closing record.
 - `manifest.json`: byte lengths and SHA256 digests.
+
+The environment row names the sources by SHA256. An earlier run of the same command against a
+previous revision of `src/compiler.ts` also matched 210 of 210 and is not retained.

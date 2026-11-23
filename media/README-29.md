@@ -1,101 +1,104 @@
-# Iteration Admission
+# Dynamic Guard Count for Paged Memory Access in a PHP WebAssembly Build
 
-Question: when the iteration route has a loop it could dispatch, does the admission decision pick the cases
-where dispatch wins and refuse the ones where it loses?
+This study counts memory accesses, residency checks and calls made by one PHP 8.5 WebAssembly
+module while it renders two web pages. The counts give the dynamic ratio of checks and calls to
+memory accesses, which a paged-memory translation would pay on top of each access.
 
-The route is `Folio.run` on the unmodified BLAKE3 consumer (see [blake3-consumer](../blake3-consumer/README.md)).
-The decision uses time that the run itself measures, with no calibrated model of tracking cost:
+## Instrument
 
-1. The owner runs iteration 0 as the serial program's own first iteration and times it (`plainIterationMs`).
-2. Before any dispatch, `admitIteration` (`src/iteration-admission.ts`) compares the remaining serial time,
-   `(trip - 1) * plainIterationMs`, with a floor of `fixedMs * margin` (2 ms times 1.25). A loop under the floor
-   runs serially and reports `no-admission` with the numbers.
-3. After every batch of up to 32 iterations the executor compares the batch wall (dispatch, validation,
-   rollback and replay) with the serial time of its iterations at the speed of iteration 0. A batch is slow
-   when its wall times 1.25 exceeds that serial time, and dispatch ends after two slow batches in a row or
-   after one batch whose wall is more than 1.5 times the serial time. A first batch also pays for waking the
-   workers, so one mildly slow batch is not a verdict.
-4. Structural stops end dispatch at once: an exhausted undo log (`log-exhausted`), a frame conflict
-   (`frame-carried dependence`) and a batch that replays more than half of its iterations (`dependency`).
+`count-pass.mjs` rewrites a WebAssembly module with binaryen. It adds three exported mutable i64
+globals, `q_access`, `q_check` and `q_call`, and wraps each of these in a block that increments
+the matching counter:
 
-The rest of the loop then runs serially, and `iteration.stopped` names the reason.
+- Every `i32.load` and `i32.store`, and every `memory.copy` and `memory.fill`, increments
+  `q_access`.
+- A load or store through a base local counts one check the first time it runs after that local
+  was last set. A `local.set` or `local.tee` of the base clears the flag. A load through any other
+  pointer expression counts one check.
+- Every `call` and `call_indirect` increments `q_call`.
 
-## Method
+A base is a `local.get`, or a `local.get` plus a constant. Flags are added as new i32 locals per
+function, so they start at zero on every call.
 
-`scripts/research/iteration-admission.ts` sweeps input size (4, 16, 64, 256, 1024 and 4096 KiB) by iteration
-count (8, 32 and 128). Each cell pairs three arms in the same round, alternating the order: a serial native
-run, `automatic` (what the library decides) and `forced` (a pool that dispatches regardless, through the
-module-private `admissionSeam`, with the batch rule off). Timings cover the call and leave the input copy
-outside, as for a program whose memory already holds its data. Inputs cycle through 8 distinct pseudo-random
-buffers.
+`count-pass.test.mjs` runs the pass on a small module with a loop. The loop re-sets its base
+locals on every iteration, and the test expects one check per iteration for each re-set base.
 
-Ryzen 9 9900X, Node 26.10.0, cores 4 to 11, `nice -n 19`, `powersave` governor, one pool alive at a time,
-3 sessions of 5 rounds after 2 warmups, so 15 samples per arm and cell. Width 8 is `w8-sweep-N.jsonl` and
-width 4 is `w4-sweep-N.jsonl`. `fixedMs` and `margin` were fixed before this sweep from an earlier Mac sweep
-and were not changed after it.
+`bench-count.diff` is the only change to the rig harness. It lets the harness load a module from
+an environment variable, and it reads the counters before and after each render.
 
-## Results
+## Modules
 
-Speedup over the serial run, medians over the 15 samples. The count in brackets is how many of the 15
-`automatic` samples dispatched. Native is the serial wall in milliseconds.
+| Module | Size (bytes) | SHA-256 |
+| --- | ---: | --- |
+| Shipping native module | 14,011,467 | `3fb160241bdc702ab6b9d1b8a1a9e0acceae30e0e0ce5f4456f90214192b80ce` |
+| Instrumented module | 47,495,637 | `98c1073e28cbd59a9248dd3879555d71a39f471f30ac017ca39b84c7ad07e4bc` |
+| Harness with counter readout | 913,660 | `4f342d0c3fec121b02c88b9adeda66f5fff137435c5dc28e103ff8f261e0f4ec` |
 
-| Cell | Native ms (width 8) | Width 8 forced | Width 8 automatic | Width 4 forced | Width 4 automatic |
-| --- | ---: | ---: | --- | ---: | --- |
-| 4 KiB x 8 | 0.0 | 0.13x | 0.51x (0/15) | 0.16x | 0.57x (0/15) |
-| 4 KiB x 32 | 0.1 | 0.25x | 0.86x (0/15) | 0.23x | 0.83x (0/15) |
-| 4 KiB x 128 | 0.4 | 0.26x | 0.87x (0/15) | 0.27x | 0.91x (0/15) |
-| 16 KiB x 8 | 0.1 | 0.45x | 0.91x (0/15) | 0.52x | 0.91x (0/15) |
-| 16 KiB x 32 | 0.4 | 0.79x | 0.96x (0/15) | 0.69x | 0.97x (0/15) |
-| 16 KiB x 128 | 1.7 | 0.73x | 0.98x (0/15) | 0.71x | 0.98x (0/15) |
-| 64 KiB x 8 | 0.4 | 1.00x | 0.97x (0/15) | 1.26x | 0.97x (0/15) |
-| 64 KiB x 32 | 1.7 | 1.46x | 0.98x (0/15) | 1.13x | 0.98x (0/15) |
-| 64 KiB x 128 | 6.9 | 1.57x | 1.66x (15/15) | 1.31x | 1.09x (15/15) |
-| 256 KiB x 8 | 1.7 | 1.49x | 0.99x (0/15) | 1.49x | 0.97x (0/15) |
-| 256 KiB x 32 | 6.9 | 2.78x | 2.37x (15/15) | 1.73x | 1.72x (15/15) |
-| 256 KiB x 128 | 27.7 | 2.41x | 2.45x (15/15) | 1.69x | 1.70x (15/15) |
-| 1 MiB x 8 | 6.9 | 1.60x | 1.73x (15/15) | 1.61x | 1.63x (15/15) |
-| 1 MiB x 32 | 27.4 | 3.01x | 2.95x (15/15) | 2.01x | 2.01x (15/15) |
-| 1 MiB x 128 | 110.5 | 2.86x | 3.03x (15/15) | 2.00x | 2.00x (15/15) |
-| 4 MiB x 8 | 27.4 | 2.06x | 2.07x (15/15) | 1.74x | 1.73x (15/15) |
-| 4 MiB x 32 | 111.5 | 3.26x | 3.25x (15/15) | 2.10x | 2.12x (15/15) |
-| 4 MiB x 128 | 442.5 | 3.32x | 3.29x (15/15) | 2.12x | 2.10x (15/15) |
+The instrumented module keeps the 103 imports of the shipping module. Its feature set is the
+set the shipping module validates with: MVP, sign extension, saturating float to int, multivalue,
+bulk memory, bulk memory operations and mutable globals.
 
-- **No cell dispatched and lost.** Every cell where `automatic` dispatched ran at 1.09x or more of the serial
-  wall, and every cell where forced dispatch lost was refused. The refusals cost 1% to 14% of a serial wall
-  of 0.1 to 1.7 ms (0.5x on the 0.03 ms loop of 4 KiB x 8); the overhead of the lowered owner was not
-  attributed further.
-- **Four refusals gave up a speedup.** The summary flags two wrong decisions at each width: 64 KiB x 32
-  (forced 1.46x) and 256 KiB x 8 (1.49x) at width 8, and 64 KiB x 8 (1.26x) and 256 KiB x 8 (1.49x) at
-  width 4. The serial wall of these loops is 0.4 to 6.9 ms.
-- **One cell stopped part way.** At width 4, 64 KiB x 128 dispatched in every sample and the batch rule
-  ended dispatch in 5 of 15, which leaves the cell at 1.09x against 1.31x forced.
-- **The floor splits the sweep cleanly.** Cells with a serial wall of 1.7 ms or less are refused and cells
-  with 6.9 ms or more dispatch. No cell fell between the two.
+## Routes
 
-Limits: one program, one machine, widths 4 and 8, equal-size iterations, 5 rounds per session. Width 2 is not
-swept. `fixedMs` 2 and `margin` 1.25 are not fitted to the rig. The estimate
-of a batch's serial time is `iterations * plainIterationMs`, so a loop whose first iteration is much cheaper
-or much dearer than the rest can be misjudged; mixed-size loops were not swept. A stop lasts for one call of the
-owner; the next call starts again at iteration 0. The time of iteration 0 on the first call of a process was
-not separated from later calls.
+Each route is one render in a fresh process, run under Node 26 and V8 14.6. The reported counts
+are the difference between the counter values before and after the render call.
 
-## Reproduction
+- `front`: the front page of the default site profile. The first render after boot is reported
+  as `request`. Two warm renders in the same process are reported as `request2` and `request3`.
+- `admin`: the content administration page of a second site profile, reached after a login.
+  Only the render is counted.
 
-```sh
-node scripts/research/blake3-build.ts
-node scripts/research/iteration-admission.ts run out.jsonl 5 8
-node scripts/research/iteration-admission.ts summary out.jsonl --json summary.json
-```
+The flush route is not measured. Its harness path does not call the render function that
+carries the counters.
 
-`scripts/research/iteration-admission.sh SESSIONS ROUNDS [OUTPUT_DIRECTORY]` runs the sessions under the timing
-lock with `nice -n 19` and cores 4 to 11; `FOLIO_WIDTH=4` selects width 4. The summary columns `trk fac`,
-`plain/trk` and `imbal` are computed from each report and feed no constant.
+## Counts
 
-## Artifacts
+Each row is one render. `q` is `(checks + calls) / accesses`. Two counted runs were made for
+each route, and the table gives both.
 
-- `w8-sweep-N.jsonl`, `w4-sweep-N.jsonl` (N from 1 to 3): raw records with the constants in the environment row.
-- `w8-summary.json`, `w4-summary.json`: the sweep's own `summary` mode over the three sessions of each width.
-- `w8-summary.txt`, `w4-summary.txt`: the printed tables.
-- `w8-before.log`, `w4-before.log`: memory, load and governor at the start of each width.
-- `source.tar.gz`: `src/`, `scripts/research/` and `package.json` as run.
-- `manifest.json`: byte lengths and SHA256 digests.
+| Route | Render | Run | Accesses | Checks | Calls | q | Checks / access | Calls / access |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| admin | request | 1 | 4,404,477,769 | 1,273,034,314 | 84,735,206 | 0.3083 | 0.2890 | 0.0192 |
+| admin | request | 2 | 4,404,634,455 | 1,273,135,000 | 84,735,240 | 0.3083 | 0.2890 | 0.0192 |
+| front | request | 1 | 1,907,973,973 | 587,832,697 | 35,754,530 | 0.3268 | 0.3081 | 0.0187 |
+| front | request | 2 | 1,907,982,783 | 587,834,152 | 35,754,513 | 0.3268 | 0.3081 | 0.0187 |
+| front | request2 | 1 | 117,009,980 | 30,893,017 | 2,333,781 | 0.2840 | 0.2640 | 0.0199 |
+| front | request2 | 2 | 117,011,452 | 30,895,044 | 2,333,820 | 0.2840 | 0.2640 | 0.0199 |
+| front | request3 | 1 | 110,657,199 | 29,524,149 | 2,233,212 | 0.2870 | 0.2668 | 0.0202 |
+| front | request3 | 2 | 110,643,728 | 29,515,310 | 2,233,106 | 0.2869 | 0.2668 | 0.0202 |
+
+The static count over the shipping module gives `(bases + calls) / accesses` of 0.3280. It counts
+1,243,219 accesses, 312,673 distinct bases per function and 95,100 calls in functions that contain
+an access. The static count does not weight sites by how often they run.
+
+Every counted render produced the same normalized response hash as the plain render of the same
+route. The plain renders are `075d2ff46df9d9e99b38c8ce6f9c6327ae6ee1935ee07472e561456666a8b80c`
+for admin and `607acccc80413af3de38246caa3e77fb4fbac37359652c7254dd615cf75ad08d` for front.
+
+Counts are not bit-identical between runs. Across the two runs the access count differs by up to
+0.004 percent, and the checks and calls differ by similar small amounts. The ratio q agrees to
+four decimal places.
+
+## Limits
+
+- The counts describe one module and two routes. Each route is one process, and boot work is
+  not counted.
+- The counters record site-level counts at run time. They do not measure cost, cache behaviour
+  or the time a translation would take.
+- Accesses are counted at the instruction level. A translation may treat a bulk operation or a
+  group of nearby accesses differently.
+- The pointer rule matches the static count. A base is a `local.get`, or a `local.get` plus any
+  constant with any binary operator. An `and` with a constant would therefore count as a base.
+- Run-to-run variation comes from the module and the harness. The source of the variation was
+  not isolated.
+
+## Files
+
+- `count-pass.mjs`: the instrumentation pass and its command-line entry point.
+- `count-pass.test.mjs`: fixture test for the pass.
+- `bench-count.diff`: the harness change.
+- `run-route.sh`: the runner for one render. Its paths are placeholders.
+- `analyze-q.mjs`: computes the table from the run files and writes `summary.json`.
+- `access-bases-tuned.txt`: the static count output for the shipping module.
+- `raw-rows.json`: one row per counted or plain render, with counts, hashes and timing.
+- `summary.json`: the table and the hash check.

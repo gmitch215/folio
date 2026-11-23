@@ -1,0 +1,318 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Storage Resets | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-guide"><script>try{document.documentElement.dataset.theme=localStorage.getItem("tsd-theme")||"os"}catch(e){document.documentElement.dataset.theme="os"}</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><button type="button" class="docs-menu" popovertarget="docs-sidebar">Menu</button><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<ul role="listbox" id="tsd-search-results"></ul>
+<div id="tsd-search-status" aria-live="polite" aria-atomic="true">
+<div>Preparing search index...</div></div></dialog></div></header>
+<div class="container container-main">
+<div class="docs-sidebar" id="docs-sidebar" popover><div class="docs-sidebar-head"><span>Documentation</span><button type="button" class="docs-close" popovertarget="docs-sidebar" popovertargetaction="hide">Close</button></div><nav class="docs-nav" aria-label="Documentation"><details class="docs-group" data-group="Start"><summary>Start</summary><ul><li><a href="../index.html">Overview</a></li><li><a href="../documents/docs_getting-started.html">Getting Started</a></li><li><a href="https://github.com/gmitch215/folio/tree/master/examples" class="docs-ext" rel="noopener">Examples</a></li></ul></details><details class="docs-group" data-group="Modules"><summary>Modules</summary><ul><li><a href="../documents/docs_modules_README.html">All Modules</a></li></ul><p class="docs-section" id="docs-section-1-0">Parallelism</p><ul aria-labelledby="docs-section-1-0"><li><a href="../documents/docs_modules_core.html">Core</a></li><li><a href="../documents/docs_modules_pools.html">Pools</a></li><li><a href="../documents/docs_modules_folds-and-certificates.html">Folds and Certificates</a></li></ul><p class="docs-section" id="docs-section-1-1">Platforms</p><ul aria-labelledby="docs-section-1-1"><li><a href="../documents/docs_modules_workers.html">Workers</a></li><li><a href="../documents/docs_modules_browser.html">Browser</a></li></ul><p class="docs-section" id="docs-section-1-2">Memory and State</p><ul aria-labelledby="docs-section-1-2"><li><a href="../documents/docs_modules_memory.html">Memory</a></li><li><a href="../documents/docs_modules_boot.html">Boot</a></li><li><a href="../documents/docs_modules_continuation.html">Continuation</a></li></ul></details><details class="docs-group" data-group="Guides"><summary>Guides</summary><ul><li><a href="../documents/docs_configuration.html">Configuration</a></li><li><a href="../documents/docs_limits.html">Limits</a></li><li><a href="../documents/ADVANCED_USAGE.html">Advanced Usage</a></li></ul></details><details class="docs-group" data-group="Studies" open><summary>Studies</summary><ul><li><a href="../documents/docs_studies_README.html">All Studies</a></li><li><a href="../documents/docs_studies_storage-resets.html" aria-current="page">Storage Resets</a></li><li><a href="../documents/docs_studies_continuation-across-events.html">Continuation Across Events</a></li><li><a href="../documents/docs_studies_elastic-memory.html">Elastic Memory</a></li><li><a href="../documents/docs_studies_boot-images.html">Boot Images</a></li><li><a href="../documents/docs_studies_memory-accounting.html">Memory Accounting</a></li><li><a href="../documents/docs_studies_parallel-execution.html">Parallel Execution</a></li></ul></details><details class="docs-group" data-group="Reference"><summary>Reference</summary><ul><li><a href="../documents/TECHNICAL_REPORT.html">Technical Report</a></li><li><a href="../modules.html">API Reference</a></li></ul></details></nav><a class="docs-side-gh" href="https://github.com/gmitch215/folio">GitHub</a></div>
+<main class="col-content" id="docs-main" tabindex="-1">
+<p class="docs-eyebrow">Studies</p>
+<div class="tsd-panel tsd-typography"><h1 id="storage-resets" class="tsd-anchor-link">Storage Resets<a href="#storage-resets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>A Durable Object that writes to its SQLite storage can fail with &quot;Internal error in Durable Object storage ... caused object to be reset&quot;. This page covers the experiments that looked for what triggers the reset on a Drupal site running on Durable Objects, which alarm shapes avoid it, and what the fix reaches.</p>
+<h2 id="question" class="tsd-anchor-link">Question<a href="#question" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Which request and alarm shapes turn a healthy object into a storage reset, and does any change to those shapes remove the resets on a deployed site?</p>
+<h2 id="instruments" class="tsd-anchor-link">Instruments<a href="#instruments" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Instrument</th>
+<th>Object under test</th>
+<th>Plan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/experiments/alarm-discipline/README.md">alarm-discipline</a></td>
+<td>bare SQLite object and a deployed site</td>
+<td>paid</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/experiments/alarm-retirement/README.md">alarm-retirement</a></td>
+<td>bare SQLite object</td>
+<td>paid</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/experiments/commit-ladder/README.md">commit-ladder</a></td>
+<td>bare SQLite object</td>
+<td>paid</td>
+</tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/experiments/idle-floor/README.md">idle-floor</a></td>
+<td>bare SQLite object</td>
+<td>paid</td>
+</tr>
+</tbody>
+</table>
+<p>The deployed A/B and the 5 s floor runs used one Drupal site, alternating arms by request header and clearing the caches between blocks. Their per-request rows are not exported to <code>results/</code>, so those figures come from <a href="TECHNICAL_REPORT.html#storage-resets-and-the-growth-governor">the report</a>.</p>
+<h2 id="where-the-resets-fall" class="tsd-anchor-link">Where the Resets Fall<a href="#where-the-resets-fall" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The first look was a count over the tails of five drives of the site and one fresh fixture. 464 requests used more than 300 ms of CPU.</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Reset requests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>An alarm handler overlapped the request</td>
+<td>1 of 319</td>
+</tr>
+<tr>
+<td>No alarm handler overlapped the request</td>
+<td>25 of 145</td>
+</tr>
+<tr>
+<td>A second sample, with an overlapping alarm</td>
+<td>1 of 361</td>
+</tr>
+<tr>
+<td>A second sample, without an overlapping alarm</td>
+<td>3 of 69</td>
+</tr>
+<tr>
+<td>Heavy requests that never waited on I/O for a second</td>
+<td>22 of 220</td>
+</tr>
+<tr>
+<td>Heavy requests that waited on I/O for a full second</td>
+<td>0 of 56</td>
+</tr>
+</tbody>
+</table>
+<p>The page mattered less than the shape: status 14 of 93, modules 6 of 48, performance 3 of 65 and content 0 of 33. These drives were not designed as experiments, so the counts locate the failures without isolating a cause.</p>
+<h2 id="bare-object-arms" class="tsd-anchor-link">Bare Object Arms<a href="#bare-object-arms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The platform's SQLite actor takes a synchronous alarm-manager call before a commit that moves the alarm earlier. A failure there would break the output gate for every write in the commit, so an alarm set 1 ms ahead on every render was the leading suspect.</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>setAlarm(+1 ms)</code> before an awaited fetch, 2,000 small rows and a 30,000-row read, 4 s to 6 s of CPU</td>
+<td>5 of 142 requests reset</td>
+</tr>
+<tr>
+<td>Every other alarm-bearing arm</td>
+<td>0 of 166</td>
+</tr>
+<tr>
+<td>A single commit of 4.5 MB</td>
+<td>0 of 120</td>
+</tr>
+<tr>
+<td>The same commit with <code>sync()</code> every ten blobs</td>
+<td>0 of 60</td>
+</tr>
+<tr>
+<td>The same commit with an awaited fetch in the middle</td>
+<td>0 of 60</td>
+</tr>
+</tbody>
+</table>
+<p>The difference between 5 of 142 and 0 of 166 has a hypergeometric p of about 0.02 and a rate of 3.5% (eight runs, <a href="https://github.com/gmitch215/folio/blob/master/experiments/alarm-discipline/README.md">alarm-discipline</a>).</p>
+<h2 id="deployed-ab" class="tsd-anchor-link">Deployed A/B<a href="#deployed-ab" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The treatment commits the event with <code>storage.sync()</code> before an alarm moves earlier, so the move travels in a commit of its own. Fifty blocks alternated the treatment with the old path by request header, 150 requests per arm, on one deployed site.</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>Storage resets</th>
+<th>Memory resets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Old path</td>
+<td>1 of 150</td>
+<td>9</td>
+</tr>
+<tr>
+<td>Commit first</td>
+<td>11 of 150</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<p>Fisher's exact test gives p = 0.005 for the storage resets and p = 0.6 for the memory resets. The old path made 72 earlier alarm moves and none of them reset. Ten of the treatment's 11 resets came on requests that made an isolated move, 10 of 66. An earlier alarm move did not reset this object, and committing first made resets more frequent. The site ran a frozen copy of the application without the request-only PHP reuse of the earlier drives, so its baseline rate differs from theirs.</p>
+<h2 id="retirement-and-alarm-shape" class="tsd-anchor-link">Retirement and Alarm Shape<a href="#retirement-and-alarm-shape" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>On a bare object the platform retires an isolate near event 20 to 23 of a chain, silently when no alarm is pending. With an alarm due within about a second at that boundary, every retirement was a storage reset. Each cell is 20 objects or chains, with a nominal 0.25 s of CPU per chain event.</p>
+<table>
+<thead>
+<tr>
+<th>Arm (first event of a fresh object)</th>
+<th>Reset rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No alarm</td>
+<td>0 of 20</td>
+</tr>
+<tr>
+<td>Alarm 1 ms ahead</td>
+<td>14 of 20</td>
+</tr>
+<tr>
+<td>Alarm 10 ms ahead</td>
+<td>13 of 20</td>
+</tr>
+<tr>
+<td>Alarm 100 ms ahead</td>
+<td>14 of 20</td>
+</tr>
+<tr>
+<td>Alarm 1 s ahead</td>
+<td>16 of 20</td>
+</tr>
+<tr>
+<td>Alarm 5 s ahead</td>
+<td>0 of 20</td>
+</tr>
+<tr>
+<td>Alarm 60 s ahead</td>
+<td>0 of 20</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Arm (chains of up to 24 events)</th>
+<th>Chains with a reset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No alarm</td>
+<td>0 of 20</td>
+</tr>
+<tr>
+<td>Start of event, alarm moved to 1 ms, awaited</td>
+<td>9 of 20</td>
+</tr>
+<tr>
+<td>Start of event, alarm moved to 1 ms, unawaited</td>
+<td>6 of 20</td>
+</tr>
+<tr>
+<td>Start of event, no row writes</td>
+<td>10 of 20</td>
+</tr>
+<tr>
+<td>Start of event, alarm moved to 5 s</td>
+<td>0 of 20</td>
+</tr>
+<tr>
+<td>End of event, <code>sync()</code> then alarm at 1 ms</td>
+<td>0 of 20</td>
+</tr>
+<tr>
+<td>End of event, alarm at 1 ms, awaited, then <code>sync()</code></td>
+<td>9 of 20</td>
+</tr>
+<tr>
+<td>End of event, alarm at 1 ms, unawaited</td>
+<td>6 of 20</td>
+</tr>
+<tr>
+<td>End of event, alarm at 1 ms, events back to back</td>
+<td>11 of 20</td>
+</tr>
+<tr>
+<td>End of event, alarm at 60 s</td>
+<td>0 of 20</td>
+</tr>
+</tbody>
+</table>
+<p>In the arms that reset, every retirement was a reset, except one arm that read 0.90 resets per retirement (an awaited alarm move followed by <code>sync()</code>). A <code>sync()</code> at the end of the start shape did not avoid it (9 of 20), and a burn-only event with the same alarm move reset as often (10 of 20), so unsynced writes are not required. The count of chains that retire within 24 events varies from run to run. All of these are bare objects, nominal CPU, and no mechanism is shown (<a href="https://github.com/gmitch215/folio/blob/master/experiments/alarm-retirement/README.md">alarm-retirement</a>).</p>
+<h2 id="the-idle-floor-and-the-commit-ladder" class="tsd-anchor-link">The Idle Floor and the Commit Ladder<a href="#the-idle-floor-and-the-commit-ladder" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The idle-floor experiment sets a floor under the background failure rate of ordinary small commits. Ten idle objects woke every 3 minutes for four hours, each alarm run inserting a row, syncing, inserting a second row and syncing.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alarm runs begun</td>
+<td>800</td>
+</tr>
+<tr>
+<td>Runs completed</td>
+<td>800</td>
+</tr>
+<tr>
+<td>Failed runs</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Instance changes beyond the first</td>
+<td>790</td>
+</tr>
+<tr>
+<td>Upper bound on the failure rate, 95%</td>
+<td>0.48%</td>
+</tr>
+</tbody>
+</table>
+<p>The commit ladder wrote events of increasing size to fresh objects, six counted events per cell. Commits of up to 40,000 rows or 32 MiB showed no storage reset, memory limit, CPU limit or timeout, which leaves a reset rate of up to 39% possible at this sample size. Rows at 100,000 per commit were not measured. In the blocked cells, the first two events per object took 3.9 s to 5.2 s and later events 0.7 s to 1.2 s (<a href="https://github.com/gmitch215/folio/blob/master/experiments/idle-floor/README.md">idle-floor</a>, <a href="https://github.com/gmitch215/folio/blob/master/experiments/commit-ladder/README.md">commit-ladder</a>).</p>
+<h2 id="the-5-s-alarm-floor" class="tsd-anchor-link">The 5 s Alarm Floor<a href="#the-5-s-alarm-floor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The site now moves its alarm at least 5 s ahead on every request path. Three deployed runs sent 300 requests per arm, in blocks that clear the caches and then visit the performance, status, modules and content pages.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>With the floor</th>
+<th>Without the floor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First, header-alternated</td>
+<td>0 of 300</td>
+<td>47 of 300</td>
+</tr>
+<tr>
+<td>Second, header-alternated</td>
+<td>1 of 300</td>
+<td>34 of 300</td>
+</tr>
+<tr>
+<td>Third, two sites</td>
+<td>4 of 300</td>
+<td>33 of 300</td>
+</tr>
+<tr>
+<td>Pooled</td>
+<td>5 of 900 (0.56%, 95% interval 0.24% to 1.29%)</td>
+<td>114 of 900 (12.7%, 10.7% to 15.0%)</td>
+</tr>
+</tbody>
+</table>
+<p>A 2 s floor read 7 of 300 in an earlier run. The third run's one-sided Fisher test gives p = 2.6e-7 by request and 6.6e-4 by block. Its pre-set gate of at most 2 of 300 was not met, and three of the four resets fell in the first 8 of 50 blocks after a fresh install. The per-request rows are not exported.</p>
+<p>The remainder is not the alarm that the request itself arms coming due near the request's end. In the run that recorded each request's alarm move, the floor read 1 of 300. None of its 85 requests that moved the alarm reset, and the one reset was a request that made no move. Without the floor in the same run, 24 of 190 movers (12.6%) and 10 of 110 non-movers (9.1%) reset, which the run cannot separate (Fisher two-sided p = 0.45). A non-mover can still run while an alarm set by an earlier request or a firing comes due, and the header does not record that.</p>
+<h2 id="cpu-as-a-candidate" class="tsd-anchor-link">CPU as a Candidate<a href="#cpu-as-a-candidate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The tail counts above hint that long CPU use matters: heavy requests that never waited on I/O reset more often than those that did. No arm varies CPU alone on this site. CPU use is a candidate cause, with the tail counts as its only support in this repository.</p>
+<h2 id="reading" class="tsd-anchor-link">Reading<a href="#reading" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The 5 s floor fixes request-path storage resets to about 0.6%. Two designs that looked like the cause did not hold up: an earlier alarm move by itself (a move 5 s ahead did not reset a bare object) and committing before the move (it made resets more frequent). On a bare object, a commit followed by a near alarm at the end of an event did not reset in 20 chains, and a near alarm at an isolate boundary did.</p>
+<h2 id="closed-and-open" class="tsd-anchor-link">Closed and Open<a href="#closed-and-open" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Closed: alarm isolation by <code>sync()</code> as a fix on the deployed site, the earlier alarm move as the cause of admin page resets, and the request's own alarm coming due near its end as the cause of the resets that remain under the floor.</p>
+<p>Open: the cause of the remaining resets and of the generic storage reset, whether a longer floor reaches zero (300 requests per arm cannot tell a 5 s floor from a 15 s one), whether the retirement result holds on the deployed site, and whether request-only reuse changes the reset rate at the same drive. Retry safety after a reset is not covered here.</p>
+<h2 id="see-also" class="tsd-anchor-link">See Also<a href="#see-also" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li>Report: <a href="TECHNICAL_REPORT.html#storage-resets-and-the-growth-governor">Storage Resets and the Growth Governor</a></li>
+<li>Module: <a href="docs_modules_continuation.html">Continuation</a>, which uses the same alarm discipline</li>
+<li>Related study: <a href="docs_studies_memory-accounting.html">Memory Accounting</a> for the growth governor</li>
+</ul>
+</div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_studies_README.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">All Studies</span><span class="docs-pager-desc">The measurement studies behind the modules, with the page for each.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_studies_continuation-across-events.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Continuation Across Events</span><span class="docs-pager-desc">The continuation model, PHP park and the deployed runs.</span></a></nav></main>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#where-the-resets-fall">Where the Resets Fall</a></li><li class="docs-toc-h2"><a href="#bare-object-arms">Bare Object Arms</a></li><li class="docs-toc-h2"><a href="#deployed-ab">Deployed A/B</a></li><li class="docs-toc-h2"><a href="#retirement-and-alarm-shape">Retirement and Alarm Shape</a></li><li class="docs-toc-h2"><a href="#the-idle-floor-and-the-commit-ladder">The Idle Floor and the Commit Ladder</a></li><li class="docs-toc-h2"><a href="#the-5-s-alarm-floor">The 5 s Alarm Floor</a></li><li class="docs-toc-h2"><a href="#cpu-as-a-candidate">CPU as a Candidate</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
+<p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
+<div class="overlay"></div></body></html>

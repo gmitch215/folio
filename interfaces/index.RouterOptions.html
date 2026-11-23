@@ -1,11 +1,12 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>RouterOptions | @gmitch215/folio - v1.2.0</title><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar">
-<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@gmitch215/folio - v1.2.0</a>
-<div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>RouterOptions | @gmitch215/folio - v1.2.0</title><link rel="icon" href="../assets/favicon.ico" sizes="any"/><link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon_128.png"/><link rel="apple-touch-icon" href="../assets/favicon.png"/><meta name="description" content="Documentation for @gmitch215/folio"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body class="docs-api"><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><a class="docs-skip" href="#docs-main">Skip to content</a>
+<header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container"><a href="../index.html" class="title">@gmitch215/folio <span class="docs-version">v1.2.0</span></a>
+<button id="tsd-search-trigger" class="tsd-widget docs-search" type="button"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg><span>Search the docs</span><kbd aria-hidden="true">/</kbd></button><a class="docs-github" href="https://github.com/gmitch215/folio">GitHub</a><button type="button" class="docs-theme" id="docs-theme" hidden><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg><span class="docs-sr">Theme</span></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/>
 <ul role="listbox" id="tsd-search-results"></ul>
 <div id="tsd-search-status" aria-live="polite" aria-atomic="true">
 <div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header>
 <div class="container container-main">
-<div class="col-content">
+<main class="col-content" id="docs-main" tabindex="-1">
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb" aria-label="Breadcrumb">
 <li><a href="../modules/index.html">index</a></li>
@@ -13,7 +14,7 @@
 <h1>Interface RouterOptions</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">RouterOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#assume">assume</a><span class="tsd-signature-symbol">?:</span> <a href="index.RouterAssumptions.html" class="tsd-signature-type tsd-kind-interface">RouterAssumptions</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cache">cache</a><span class="tsd-signature-symbol">?:</span> <a href="../classes/index.CertificateCache.html" class="tsd-signature-type tsd-kind-class">CertificateCache</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#explicit">explicit</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">call</span><span class="tsd-signature-symbol">:</span> <a href="index.RecordsCall.html" class="tsd-signature-type tsd-kind-interface">RecordsCall</a><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#floors">floors</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="index.RouterConstants.html" class="tsd-signature-type tsd-kind-interface">RouterConstants</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#imports">imports</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">URL</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxpages">maxPages</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#mode">mode</a><span class="tsd-signature-symbol">:</span> <a href="../types/index.RouterMode.html" class="tsd-signature-type tsd-kind-type-alias">RouterMode</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ownership">ownership</a><span class="tsd-signature-symbol">?:</span> <a href="index.OwnershipOptions.html" class="tsd-signature-type tsd-kind-interface">OwnershipOptions</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#pages">pages</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#workers">workers</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L131">src/routing/index.ts:131</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L131">src/routing/index.ts:131</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -39,64 +40,64 @@
 <h3 class="tsd-anchor-link" id="assume"><code class="tsd-tag">Optional</code><span>assume</span><a href="#assume" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">assume</span><span class="tsd-signature-symbol">?:</span> <a href="index.RouterAssumptions.html" class="tsd-signature-type tsd-kind-interface">RouterAssumptions</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L141">src/routing/index.ts:141</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L141">src/routing/index.ts:141</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="cache"><code class="tsd-tag">Optional</code><span>cache</span><a href="#cache" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cache</span><span class="tsd-signature-symbol">?:</span> <a href="../classes/index.CertificateCache.html" class="tsd-signature-type tsd-kind-class">CertificateCache</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L138">src/routing/index.ts:138</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L138">src/routing/index.ts:138</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="explicit"><code class="tsd-tag">Optional</code><span>explicit</span><a href="#explicit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">explicit</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">call</span><span class="tsd-signature-symbol">:</span> <a href="index.RecordsCall.html" class="tsd-signature-type tsd-kind-interface">RecordsCall</a><span class="tsd-signature-symbol">)</span> <span class="tsd-signature-symbol">=&gt;</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>Runs the records on a route the caller built; chosen after the window route in <code>router</code> mode.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L143">src/routing/index.ts:143</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L143">src/routing/index.ts:143</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="floors"><code class="tsd-tag">Optional</code><span>floors</span><a href="#floors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">floors</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="index.RouterConstants.html" class="tsd-signature-type tsd-kind-interface">RouterConstants</a><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>Overrides for <code>routerConstants</code>; a sweep sets them to 0 to force a dispatch.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L145">src/routing/index.ts:145</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L145">src/routing/index.ts:145</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="imports"><code class="tsd-tag">Optional</code><span>imports</span><a href="#imports" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">imports</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">URL</span></div>
 <div class="tsd-comment tsd-typography"><p>A module specifier or URL whose default export returns the imports besides the memory.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L140">src/routing/index.ts:140</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L140">src/routing/index.ts:140</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxpages"><code class="tsd-tag">Optional</code><span>max<wbr/>Pages</span><a href="#maxpages" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxPages</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Declared maximum of the shared memory a records call runs on; the module's own limit if lower.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L136">src/routing/index.ts:136</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L136">src/routing/index.ts:136</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="mode"><span>mode</span><a href="#mode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">mode</span><span class="tsd-signature-symbol">:</span> <a href="../types/index.RouterMode.html" class="tsd-signature-type tsd-kind-type-alias">RouterMode</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L132">src/routing/index.ts:132</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L132">src/routing/index.ts:132</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="ownership"><code class="tsd-tag">Optional</code><span>ownership</span><a href="#ownership" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ownership</span><span class="tsd-signature-symbol">?:</span> <a href="index.OwnershipOptions.html" class="tsd-signature-type tsd-kind-interface">OwnershipOptions</a></div>
 <div class="tsd-comment tsd-typography"><p>Certifier options that change a certificate, and so the cache key.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L147">src/routing/index.ts:147</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L147">src/routing/index.ts:147</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="pages"><span>pages</span><a href="#pages" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">pages</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Initial pages of the memory the router allocates.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L134">src/routing/index.ts:134</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L134">src/routing/index.ts:134</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="workers"><code class="tsd-tag">Optional</code><span>workers</span><a href="#workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">workers</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/993b72f5163108f647a1b9265fc9cfbf58e58b9b/src/routing/index.ts#L137">src/routing/index.ts:137</a></li></ul></aside></section></section></details></div>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/routing/index.ts#L137">src/routing/index.ts:137</a></li></ul></aside></section></section></details></main>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
