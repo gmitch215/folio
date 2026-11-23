@@ -1,34 +1,43 @@
-# Adaptive Routing
+# Graded Conflicts
 
-Question: when the same conflicting call shape repeats, does running it natively after two bad runs
-recover the lost time?
+Question: how does speculative execution change as the share of conflicting regions and the work
+per region vary?
 
-Two fixture entries conflict by construction: `aliased_program` updates one word in every
-iteration and `dependent_program` reads the previous element. Each arm calls one entry 40 times in
-a row over 9 rounds (360 calls per arm), with the memory reset before each call and every result
-compared with native. Arms are native, the default route at width 8, and the same route with
-`adaptiveRouting: true`. Adaptive routing keys a call shape by entry, width, memory size and numeric
-arguments. After two runs that mostly replayed or fell back, it runs the shape natively for 16
-calls and then probes again. It is off by default.
+A batch of 64 `mix` calls from the fixture module runs as one ordered sequence. In each cell a
+fraction of the calls updates one shared word, so each of them reads what the previous one wrote
+and must replay; the rest update distinct words. The fraction takes six values (0, 1/16, 1/8, 1/4,
+1/2, 1) and the work per call takes three (16, 1024 and 65,536 rounds, about 0.1, 1.2 and 76
+microseconds on the Ryzen machine). Arms are native, forced speculation at widths 2, 4 and 8, and
+the default route at width 8, in 9 paired rounds after 2 warmups. Every sample compares complete
+memory with the native result. The study replaces the two fixed conflict cells of the
+[crossover sweep](../crossover/README.md) with a graded set.
 
 ## Results
 
-Paired median speedup over native at width 8, with process CPU as a ratio of native CPU:
+Eight-worker forced speculation, paired median speedup over native, 65,536 rounds per call:
 
-| Entry | Machine | Native | Default | Adaptive |
-| --- | --- | ---: | ---: | ---: |
-| `aliased_program` | Ryzen | 0.31 ms | 0.62x, CPU 2.7 | 0.99x, CPU 1.0 |
-| `aliased_program` | M2 Pro | 0.49 ms | 0.61x, CPU 3.1 | 0.99x, CPU 1.0 |
-| `dependent_program` | Ryzen | 1 µs | 0.003x, CPU 291 | 0.20x, CPU 3.0 |
-| `dependent_program` | M2 Pro | 1 µs | 0.003x, CPU 349 | 0.25x, CPU 3.0 |
+| Conflicting calls | Ryzen | M2 Pro |
+| ---: | ---: | ---: |
+| 0 | 3.50x | 3.54x |
+| 1/16 | 2.81x | 3.05x |
+| 1/8 | 2.09x | 2.31x |
+| 1/4 | 1.65x | 1.77x |
+| 1/2 | 1.11x | 1.24x |
+| all | 0.74x | 0.77x |
 
-Adaptive routing served 337 of 360 calls natively (`previous-conflicts`) and spent 23 on probes or
-the first two runs. It removes most of the penalty and does not remove all of it: the probes and the
-route decision still cost time on a 1 µs entry.
+Break-even lies between half and all of the calls conflicting at this region size. At 1,024 rounds
+the best cell is 0.26x on the Ryzen machine (0.23x on the M2 Pro) with no conflicts, falling to
+0.09x with all conflicting. At 16 rounds every cell is 0.02x or lower. Below about 76 microseconds
+per call, dispatch and tracking cost more than the work they distribute, whether or not the calls
+conflict.
 
-The result covers one repeated shape on two synthetic entries. A workload whose arguments change on
-every call never repeats a shape, so it gets no benefit. The option stays off by default. Enabling
-it by default needs a consumer whose call shapes repeat.
+Ordered validation is not the limiting cost. Its share of wall time is at most 0.3% in the
+65,536 round cells and at most 2.2% in any cell. The default route at width 8 gives similar results
+to forced speculation in every cell. The two machines agree to within about 13% in every 65,536
+round cell.
+
+Admission defaults are unchanged. The measured crossover is consistent with the existing floor of
+200,000 estimated work units, and the data does not support lowering it.
 
 ## Reproduction
 
@@ -38,13 +47,13 @@ node scripts/research/analyze.ts build/research/graded/raw.jsonl summary.json
 ```
 
 The Ryzen record ran through `scripts/research/matched.sh` with `nice -n 19`, cores 4 to 11 and a
-shared timing lock. The M2 Pro record ran unpinned on macOS. The raw files here hold the routing
-rows only; the graded cells of the same run are in [graded conflicts](../graded-conflicts/README.md).
+shared timing lock. The M2 Pro record ran unpinned on macOS. The raw files here hold the graded
+rows only; the routing rows of the same run are in [adaptive routing](../adaptive-routing/README.md).
 
 ## Artifacts
 
-- `ryzen.jsonl`, `m2.jsonl`: raw records, 2,160 samples each (2 entries, 3 arms, 360 calls).
-- `ryzen.summary.json`, `m2.summary.json`: paired summaries with routing reason counts.
+- `ryzen.jsonl`, `m2.jsonl`: raw records, 810 samples each (18 cells, 5 arms, 9 rounds).
+- `ryzen.summary.json`, `m2.summary.json`: paired summaries, including validation and commit time.
 - `manifest.json`: byte lengths and SHA256 digests.
 
 Sources are identified by SHA256 in each environment row. The Ryzen source archive is in

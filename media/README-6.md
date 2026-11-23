@@ -1,59 +1,59 @@
-# State Loss
+# Managed Phases
 
-Question: why did the owner lose its in-memory state in the managed phase studies, and is the cause
-replacement, routing or the instrumentation?
+Instrument: [phases](../../../experiments/managed/phases/README.md).
+[METHOD.md](../../../experiments/managed/phases/METHOD.md) defines the comparison and clocks.
+All eight deployed studies restored their account baseline. Records preserve exact completed
+operations and state-loss failures; no memory or return mismatch occurred.
 
-The [phase studies](../phases/README.md) preserve four request arrangements and a final
-direct-invocation arrangement. This study reads those records. For each cell it compares the
-identifiers returned by setup with those of later successful operations, groups failures by error
-message, and splits them by whether the cell runs the native workload in the owner (`native`) or
-through lanes (`automatic`). The `settled-separate` record is a new run of the separate-request
-arrangement with the driver's 65 second wait after starting tail, which the older arrangements did
-not have in the same form.
+| Record | Completed Operations | State-Loss Failures | Invocation Structure |
+| --- | ---: | ---: | --- |
+| [separate.json](separate.json) | 77 | 42 | Separate external requests |
+| [held.json](held.json) | 78 | 41 | One entry request per cell |
+| [reentrant-pilot.json](reentrant-pilot.json) | 8 | 2 | Two self-RPC pilot cells |
+| [reentrant.json](reentrant.json) | 77 | 13 | Self-RPC matrix |
+| [settled-separate.json](settled-separate.json) | 49 | 12 | Separate external requests after a 65 second tail settle wait |
+| [width-four.json](width-four.json) | 36 | 0 | Direct calls, width four, 128 KiB and 8 MiB |
+| [large-snapshots.json](large-snapshots.json) | 34 | 2 | Direct calls, width two, 16 MiB and 32 MiB |
+| [complete.json](complete.json) | 32 | 0 | Direct calls within an owner invocation |
 
-## Results
+Each record has a matching `.summary.json`. `settled-separate.json` (61 external requests), `width-four.json` (4) and `large-snapshots.json` (4) are later runs with no SQL calls; the request totals below cover the first five. The settled run feeds the [state-loss analysis](../state-loss/README.md).
 
-| Arrangement | Failed operations | In native cells | In automatic cells | Later operations in a new module | On a different object |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Separate external requests | 42 | 33 | 9 | 14 of 121 | 0 |
-| One entry request per cell | 41 | 33 | 8 | 15 of 120 | 0 |
-| Self-RPC | 13 | 10 | 3 | 45 of 149 | 0 |
-| Separate requests after a settle wait | 12 | 12 | 0 | 4 of 41 | 0 |
-| Direct calls in one invocation | 0 | 0 | 0 | 0 of 56 | 0 |
+At 16 MiB the four automatic operations complete through the lanes with no fallback and 67.1 MB sent per operation. At 32 MiB, the default snapshot limit, every lane call fails: the serialized frame is 33,554,540 bytes against the platform's 32 MiB limit for RPC arguments. The four operations still complete exact through native fallback (`transportFallbacks` 4), and the two diagnostic frame-copy phases fail with the same error. The usable snapshot is therefore below 32 MiB by the frame header. At width four the wire bytes per automatic operation equal the width-two figures (551,776 at 128 KiB, 33,581,920 at 8 MiB); CPU was not recovered for these runs. The final four-operation cells retain identical
+instance nonces, module UUIDs and object IDs. One cell has complete live-tail CPU; the others retain
+null tail aggregates. [stored.json](stored.json) joins 449 persisted log/event records by request
+identity and recovers all 192 expected invocation metrics, completing CPU for all eight final cells.
+Five studies made 245 measured external requests plus eight readiness requests,
+582 owner RPCs, 688 execution lane RPCs and 224 echo RPCs. Cleanup lane RPCs add at most 314:
+the total request upper bound is 2,061. Some state-loss cleanup calls find no pool, so that is
+not an exact total. Platform administrative API calls and deployment validation are separate.
+The initial refused deployment used global random initialization; its source/log and restored
+baseline remain in the ignored run directory.
 
-Every failure reports that the owner's state is absent and setup is required. What the records show:
+| Memory | Width | Instrumented Lifecycle Ratio | Snapshot Protocol Bytes / Automatic Operation |
+| --- | ---: | ---: | ---: |
+| 128 KiB | 2 | 1.189x | 551,776 |
+| 128 KiB | 8 | 1.419x | 1,077,696 |
+| 8 MiB | 2 | 0.880x | 33,581,920 |
+| 8 MiB | 8 | 0.841x | 67,137,984 |
 
-- **Routing is excluded.** The object identifier never differs from setup's in any later operation.
-- **The owner's state is replaced.** Some later operations report a new module identifier, and
-  every failure finds the state gone. Module identifiers are not isolate identities, so the record
-  does not name the platform event.
-- **The tail wait removes the automatic-cell failures and not the native-cell ones.** Across the
-  three older arrangements, 20 of 96 failures are in automatic cells. After the wait, 0 of 4
-  automatic cells lose state and all 4 native cells do, after 1 to 3 successful operations. Four
-  cells is a small sample, but the direction matches Cloudflare's documentation that starting tail
-  can replace instances.
-- **Native cells lose state with or without the wait.** There the owner runs the 64-region workload
-  itself, 0.3 s to 0.6 s of CPU per operation. The records correlate the loss with that work and do
-  not establish why. Memory size does not explain it, since 128 KiB cells lose state as well.
-- **Direct calls in one invocation lose nothing**, in 32 operations across 8 cells.
+| Memory | Width | Native CPU ms / Completed Operation | Automatic CPU ms / Completed Operation |
+| --- | ---: | ---: | ---: |
+| 128 KiB | 2 | 300.25 | 398.50 |
+| 128 KiB | 8 | 300.25 | 383.75 |
+| 8 MiB | 2 | 622.75 | 690.00 |
+| 8 MiB | 8 | 635.75 | 871.25 |
 
-A reusable session on this backend cannot assume the owner's state survives between requests, and
-should either rebuild its state from a request that carries it or run every operation inside one
-invocation. The backend does not provide durable recovery of an owner. Whether a longer wait, a
-smaller per-operation CPU cost or a different arrangement keeps native cells alive is untested.
+CPU uses complete stored invocation telemetry for the entire instrumented lifecycle. It includes
+the oracle and diagnostics; it does not isolate region compute, validation or transfer CPU.
 
-## Reproduction
+Ratios compare one native and one automatic instrumented lifecycle per cell, including oracle,
+four operations, diagnostic frame copies, echo fanout and close. They are not warm application
+speedups. Larger unused canonical heaps increase wire traffic and reverse the small-arena gain.
+First-use/warm automatic latency and every individual report remain in the raw records. The
+current implementation still requires the canonical heap to fit its owner.
 
-```sh
-node scripts/research/derive.ts state-loss state-loss.json separate.json held.json reentrant.json settled-separate.json complete.json
-```
-
-with the records from the phase study. The settled run is
-`FOLIO_PHASE_ENTRY=separate FOLIO_PHASE_PAGES=2,128 FOLIO_PHASE_WIDTHS=2,4 node experiments/managed/phases/drive.ts`
-on a Free account, followed by the analyzer with the role `settled-separate`. It made 61 external
-requests, no SQL calls, and restored the account baseline.
-
-## Artifacts
-
-- `state-loss.json`: counts per arrangement and the SHA256 of each input record.
-- `manifest.json`: byte lengths and SHA256 digests.
+Public records replace instance/module/object identities with consistent references. Original
+tail and inventories include deployment metadata and remain ignored. Source hashes, environment,
+raw-file digests and before/after baseline equality are in each public record. Analysis uses the
+command in the instrument README; historical source archives remain in the corresponding ignored
+run directory. Paid rate equivalents are models; no attributable paid bill was observed.

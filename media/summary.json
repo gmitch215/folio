@@ -1,0 +1,76 @@
+{
+  "schema": "folio.continuation.summary.v1",
+  "study": "checkpoint-cost",
+  "rows": 62,
+  "exact": {
+    "value_equal": true,
+    "sha_equal": true,
+    "events": 200
+  },
+  "handoffAlarmMedianMs": 0.019,
+  "durableRun2Checkpoints": 19,
+  "hashPass": [
+    {
+      "mib": 32,
+      "wasmGiBs": 3.831,
+      "sha256GiBs": 2.311
+    },
+    {
+      "mib": 64,
+      "wasmGiBs": 3.948,
+      "sha256GiBs": 2.257
+    },
+    {
+      "mib": 128,
+      "wasmGiBs": 3.888,
+      "sha256GiBs": 2.251
+    }
+  ],
+  "pollTaxMedianRatio": 0.965,
+  "pollTaxRatioRange": [0.816, 1.165],
+  "hashPagesBench": {
+    "32MiB": {
+      "runs": 5,
+      "nodeVersion": ["v26.8.2"],
+      "hashPagesMedianGiBs": 1.258,
+      "hashPagesRangeGiBs": [1.225, 1.292],
+      "sha256MedianGiBs": 2.047,
+      "pairedRatioMedian": 0.629,
+      "pairedRatioRange": [0.587, 0.913]
+    },
+    "128MiB": {
+      "runs": 5,
+      "nodeVersion": ["v26.8.2"],
+      "hashPagesMedianGiBs": 1.009,
+      "hashPagesRangeGiBs": [0.253, 1.32],
+      "sha256MedianGiBs": 2.077,
+      "pairedRatioMedian": 0.486,
+      "pairedRatioRange": [0.124, 1.172]
+    }
+  },
+  "eventCost": {
+    "inputs": {
+      "signalEventCpuS": 32.475,
+      "checkpointS16MiB": 0.078,
+      "handoffMs": [51, 71],
+      "handoffSource": "recorded in the experiment notes, not in a raw file",
+      "lossTerm": "S / M_f, with S = signalEventCpuS: a move after a deferred event loses the whole slice",
+      "mfLowerCpuS": 261.2,
+      "aimdRatio": 0.7,
+      "aimdGrowth": 1.02,
+      "aimdCyclesFull": 18.01,
+      "aimdCyclesText": [13, 18]
+    },
+    "commitPctAtHandoff": [0.397, 0.459],
+    "aimdPctAtHandoff": {
+      "cycles13": [1.354, 1.415],
+      "cyclesFull": [1.088, 1.149]
+    },
+    "deferredOnlyPctAtHandoff": [12.83, 12.892],
+    "lossPct": {
+      "aimdCycles13": 0.956,
+      "aimdCyclesFull": 0.69,
+      "deferredOnly": 12.433
+    }
+  }
+}

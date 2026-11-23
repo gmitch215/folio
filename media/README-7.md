@@ -1,109 +1,77 @@
-# Ordinary Worker Lanes
+# Managed Operations
 
-Question: can ordinary Workers (no Durable Objects) joined by service bindings run CPU work in
-parallel, and does sending only a region's bytes recover the speed that a full snapshot copy loses?
+Question: what does one operation cost on managed lanes once setup, the serial oracle, diagnostics
+and close are taken out, and how does the first operation differ from later ones?
 
-This is a feasibility probe, not a Folio execution. A coordinator Worker and four lane Workers ran a
-known kernel, and no program, plan or validation of Folio's was involved. The
-[method](../../../experiments/rpc/METHOD.md) fixed both decision rules before each run.
+The [phase studies](../phases/README.md) time a whole lifecycle that includes an oracle, frame-copy
+diagnostics and an echo fanout. Here each invocation runs setup, a counted number of operations and
+close, with no diagnostics. Invocations with 0, 1 and 5 operations share the same setup, so the
+difference between counts isolates the first operation and the later ones. The instrument is the
+[phases](../../../experiments/managed/phases/README.md) probe in `measure` mode.
 
 ## Method
 
-Five scripts on the Free account (a coordinator and four lanes, bound by service bindings), deployed,
-measured and deleted per run. The account's Workers, Durable Object namespaces, KV, R2 and D1 ids were
-the same afterward. In the transfer run the R2 listing was unavailable at the start (read as `null`) and
-empty at the end, which tripped the driver's equality assertion after all data was written; scripts,
-namespaces, KV and D1 were identical. Wall time is read by the coordinator around awaited calls, because a
-Worker's clock advances only on I/O. CPU time was not measured. One coordinator location, 14 paired
-rounds after 2 warmups, cell order rotating every round.
-
-Overlap (`overlap-*`): each lane runs a CPU loop of calibrated length (about 4 ms per call, under the 10 ms
-Free CPU cap). The coordinator awaits `k` lanes at once, six times in a row, and a cell's compute time is
-its wall minus the wall of the same cell with an empty loop. An earlier run with a loop of about 1 ms
-could not separate overlap from jitter and is not reported.
-
-Transfer (`transfer-*`): a Wasm kernel rewrites a 16 KiB partition in place. Four partitions sit in an arena
-of 128 KiB, 1 MiB or 8 MiB (zero-filled outside the partitions). Four waves per cell, each feeding the
-previous wave's output forward. `serial` runs the four partitions on one lane that keeps them resident,
-`full` sends every lane the whole arena each wave, `range` sends each lane its partition each wave, and
-`retained` sends the partition once.
+Free account, width four, 64 regions of 2,097,152 mixing rounds, arenas of 128 KiB and 8 MiB, native
+(`parallel: 'off'`) and automatic arms, 3 repeats of each count: 36 invocations in a seeded random
+order, one owner per invocation, calls made directly inside the owner so state is not lost between
+requests. Every operation compares its scalar and the whole arena with an oracle and passes. CPU is
+the sum of stored invocation CPU for the entry, owner and lane events of one invocation, joined by
+request identity. 35 of 36 invocations have a complete event set. The 36th (8 MiB, automatic, no
+operations) lost one event and is left out of the CPU medians. Wall time per operation is the
+difference of external wall time between invocations, and bytes come from each operation's report.
+The account baseline was restored. The run made 36 external requests, no SQL calls and no billed
+usage.
 
 ## Results
 
-**Overlap.** Wall in ms, median with the range over 14 rounds.
+Medians of three invocations per count, in milliseconds unless stated.
 
-| Lanes at once | With the loop | Empty loop | Compute |
-| --- | --- | --- | --- |
-| 1 | 35.5 (33 to 42) | 13 (10 to 19) | 22.5 |
-| 2 | 39.5 (36 to 71) | | |
-| 4 | 51.5 (42 to 64) | 19.5 (15 to 24) | 32 |
+| Arena | Arm | Setup CPU | First operation CPU | Later operation CPU | Later operation wall | Bytes sent per operation |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| 128 KiB | native | 265 | 468 | 211 | 267 | 0 |
+| 128 KiB | automatic | 258 | 315 | 304 | 155 | 541,948 |
+| 8 MiB | native | 285 | 706 | 405 | 425 | 0 |
+| 8 MiB | automatic | 260 | 676 | 676 | 599 | 33,572,092 |
 
-The serialization index (compute with four lanes over compute with one) is 1.42, against 4.0 for fully
-serialized lanes. The rule fixed before the run called overlap established at 1.5 or less, so the margin is
-thin. Four distinct lane instances answered, every call returned 200, and the observed wall overlap is about
-2.8x, which is not a guarantee of parallel CPU execution. Fetching a lane's workers.dev URL from inside a Worker returned 404 in every sample, so that route
-is unavailable here.
+Each automatic operation sends four lane requests and receives 9,828 bytes. Every automatic
+operation ran speculatively with no replay, no fallback and no transport fallback.
 
-**Transfer.** Wall in ms, median; speedup is the paired median over the same round's `serial`
-run, with the range over rounds. Bytes are what the coordinator sent per request, and every mode returned
-262,144 bytes.
+- **At 128 KiB a later operation costs more CPU, and its wall time is probably lower.** The
+  automatic arm uses 304 ms of CPU against 211 ms natively (1.44x), spread over the owner and four
+  lanes. Its wall time per operation is 155 ms against 267 ms (1.72x), from invocations of five and
+  one operations that differ by 622 ms and 1,068 ms. That gap of about 450 ms is as large as the spread
+  of setup wall time (671 to 1,112 ms) and rests on three invocations per count, so treat the wall
+  advantage as indicative and not resolved.
+- **The first operation is slower than later ones.** In the automatic arm the owner waits 344 to
+  574 ms for the first operation and 97 to 158 ms for later ones at 128 KiB, and 601 to 661 ms
+  against 334 to 501 ms at 8 MiB. The native arm pays a first-operation CPU premium as well (468
+  ms against 211 ms at 128 KiB).
+- **At 8 MiB there is no window.** A later operation takes 599 ms against 425 ms natively (0.71x),
+  uses 676 ms of CPU against 405 ms (1.67x) and sends 33.6 MB.
+- **Setup costs the same in every cell,** 258 to 285 ms of CPU, because the oracle runs serially at
+  the owner.
 
-| Arena | Mode | Wall | Speedup over serial | Bytes sent | Failed requests |
-| --- | --- | --- | --- | --- | --- |
-| 128 KiB | serial | 113 | | 65,536 | 1 of 14 |
-| 128 KiB | full | 43.5 | 2.64x (1.74 to 2.92) | 2,097,152 | 0 |
-| 128 KiB | range | 41 | 2.71x (2.05 to 3.47) | 262,144 | 0 |
-| 128 KiB | retained | 37.5 | 2.82x (2.22 to 3.70) | 65,536 | 0 |
-| 1 MiB | serial | 109 | | 65,536 | 0 |
-| 1 MiB | full | 110 | 1.03x (0.77 to 1.27) | 16,777,216 | 1 |
-| 1 MiB | range | 42 | 2.55x (1.86 to 3.42) | 262,144 | 0 |
-| 1 MiB | retained | 40 | 2.97x (1.89 to 3.82) | 65,536 | 1 |
-| 8 MiB | serial | 114.5 | | 65,536 | 0 |
-| 8 MiB | full | 510 | 0.22x (0.12 to 0.29) | 134,217,728 | 3 |
-| 8 MiB | range | 40 | 2.88x (1.72 to 3.70) | 262,144 | 0 |
-| 8 MiB | retained | 38 | 3.11x (2.27 to 3.88) | 65,536 | 1 |
-
-- **The rule fixed before the run holds.** At 8 MiB `range` and `retained` are 2.88x and 3.11x faster
-  than `serial`, every ok row's digest equals the serial run's of the same round, the payload is 0.2% and
-  0.05% of `full`, and `full` is slower than `range`.
-- **Bytes are the lever.** `full` falls from 2.64x at 128 KiB to 1.03x at 1 MiB and 0.22x at 8 MiB, which
-  points the same way as the managed backend's later-operation cost at 8 MiB (0.71x) in the
-  [operations study](../operations/README.md). `range` and `retained` stay at 2.6x to 3.1x at every size,
-  close to the 2.8x of the overlap run.
-- **Seven of 168 requests returned 503**, three of them in `full` at 8 MiB and the rest one each in four
-  other cells. The cause was not isolated. A failed request is not in the medians; no digest differed.
-
-## Limits
-
-- **The ranges were declared.** The kernel touches exactly its partition, so the coordinator knew the
-  footprint before the call. Folio does not know a region's footprint before it runs, except for kernels a
-  guard has proven, and a wrong range would give a wrong result. Nothing here shows how to get
-  footprints for general programs.
-- **No Folio code ran.** There was no conflict, rollback, replay or ordered validation, and the four
-  partitions were disjoint by construction.
-- **Wall only.** No CPU, billing or per-isolate placement was measured, so the 2.8x is an observed wall
-  overlap and says nothing about CPU time or price.
-- **The platform documentation says service-bound Workers run on the same thread of the same server by
-  default,** and a local workerd process gave 0.99x to 1.01x for a similar shape. The deployed result
-  here does not match either, and the reason was not isolated: placement may vary by account, location
-  or time.
-- One account, one coordinator location, 14 rounds, four lanes, a 4 ms kernel and 16 KiB partitions.
-  Zero-filled arena bytes could be handled specially by the platform.
+So the only window the data points to is a small arena reused for several operations, and the wall-time half of it is not resolved. Three
+repeats per count is a small sample: CPU for one count varies by up to about 200 ms between
+invocations (the native 128 KiB arm reads 541 to 746 ms for one operation), and setup wall time
+alone varies from 671 to 1,112 ms, so wall differences below a few hundred milliseconds are not
+resolved, and the first-operation wall value stored in `operations.json` (21.55 ms for 128 KiB
+automatic) is noise and not a result. Not measured: any
+price, a deployed run at the 31 MiB default, widths other than four, and a different kernel.
 
 ## Reproduction
 
 ```sh
-node experiments/rpc/prepare.ts
-node experiments/rpc/run.ts
-FOLIO_RPC_MODE=transfer node experiments/rpc/run.ts
+FOLIO_PHASE_ENTRY=measure FOLIO_PHASE_WIDTHS=4 node experiments/managed/phases/drive.ts
+node experiments/managed/phases/measure.ts experiments/managed/runs/RUN operations.json
 ```
+
+`measure.ts` reads the stored telemetry for the run with the Observability query API and saves the
+response beside the run, where it stays ignored.
 
 ## Artifacts
 
-- `overlap-run.json`, `overlap-calibration.json`, `overlap-samples.json`, `overlap-summary.json`: the
-  overlap run.
-- `transfer-run.json`, `transfer-calibration.json`, `transfer-samples.json`, `transfer-summary.json`: the
-  transfer run.
-- `source.tar.gz`: `experiments/rpc` as run. It predates the `FOLIO_RPC_MODE` name and reads
-  `FOLIO_RPC_STAGE=xfer` for the transfer run.
+- `operations.json`: costs per arena and arm, and every invocation with its CPU, wall time and
+  per-operation await, bytes and report fields. The stored telemetry response is identified by its
+  SHA256.
 - `manifest.json`: byte lengths and SHA256 digests.

@@ -1,42 +1,45 @@
-# Extraction Blockers
+# Corpus Denominators
 
-Question: which analysis results keep the 21 corpus entries out of automatic extraction, and would
-a single compiler extension change that?
+Question: how many of the corpus programs reach each stage, from build to a measured speedup, and
+what does the corpus not represent?
 
-`blockers.json` counts the diagnostics `inspect` reports for each kernel, taken from the coverage
-records of the [reset study](../reset-policies/README.md). Reasons that differ only in a number are
-merged, and a kernel counts once for each reason.
+The table counts distinct things. A project is an upstream source tree, a kernel is one exported
+entry of a library, and a full application would be a program that a user runs. The corpus has
+nine projects and 21 kernels. It has no full application and no database workload.
 
-## Results
+| Stage | Count | Source |
+| --- | ---: | --- |
+| Projects | 9 | [upstream](../upstream/README.md) |
+| Kernels selected and built | 21 of 21 | [upstream](../upstream/README.md) |
+| Kernels whose Folio and native runs match in all 8 MiB, returns and effects | 21 of 21 | [upstream](../upstream/README.md) |
+| Kernels with an automatic plan under default admission | 0 of 21 | [upstream](../upstream/README.md) |
+| Kernels that dispatch workers under default admission | 0 of 21 | [default entry repeat](../default-entry-repeat/README.md) |
+| Kernels that receive regions at threshold 0 | 11 of 21 | [forced admission](../forced-admission-complete/README.md) |
+| Of those, kernels faster than native | 0 of 11 | [forced admission](../forced-admission-complete/README.md) |
+| Input profiles exact against a fresh native instance | 210 of 210 | [varied inputs](../varied-inputs/README.md) |
 
-| Reason | Original module | Shared bit only |
-| --- | ---: | ---: |
-| Start function | 19 | 19 |
-| Shared wasm32 memory required | 19 | 0 |
-| Unsupported expression | 14 | 14 |
-| Global state | 14 | 14 |
-| Data segments require initialization isolation | 11 | 11 |
-| Host or non-memory imports | 2 | 2 |
-| No region reached the net-work threshold | 21 | 21 |
+Explicit independent operations are a different route with its own denominator. Kernels of 21 with
+a paired median speedup of at least the bar at eight batched `TaskPool` workers:
 
-Importing the memory as shared removes one reason and leaves the rest. Every kernel also fails the
-200,000-unit admission floor. The [forced admission study](../forced-admission-complete/README.md)
-shows what the floor declines: regions of a few microseconds that are slower in parallel by two to
-four orders of magnitude. No checkpoint refusal occurred for any kernel.
+| Machine and reset policy | At least 1x | At least 2x | At least 3x |
+| --- | ---: | ---: | ---: |
+| Ryzen, whole arena | 5 | 2 | 1 |
+| Ryzen, learned pages | 21 | 18 | 13 |
+| Ryzen, checkpoint | 21 | 8 | 3 |
+| M2 Pro, whole arena | 21 | 14 | 8 |
+| M2 Pro, learned pages | 21 | 17 | 15 |
+| M2 Pro, checkpoint | 21 | 20 | 9 |
 
-Extending the extractor to cover start functions, data initialization or global state would admit
-more entries and would not make their regions profitable. This corpus does not support building
-one.
+The numbers are from [reset policies](../reset-policies/README.md). They need the caller to name
+the independent operations and reset private contexts. They do not come from automatic extraction.
 
 ## Reproduction
 
 ```sh
-node scripts/research/derive.ts blockers blockers.json raw.jsonl
+node scripts/research/denominators.ts results/corpus results/corpus/denominators/denominators.json
 ```
-
-with a reset record as `raw.jsonl`.
 
 ## Artifacts
 
-- `blockers.json`: the histogram and the SHA256 of its input.
+- `denominators.json`: every count in the tables, derived from the studies above.
 - `manifest.json`: byte lengths and SHA256 digests.

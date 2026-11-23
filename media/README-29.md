@@ -1,104 +1,101 @@
-# LZ4 Consumer
+# Iteration Admission
 
-Question: does the iteration route speed up a second outside program with a loop over several inputs, and
-what happens to a loop it cannot win?
+Question: when the iteration route has a loop it could dispatch, does the admission decision pick the cases
+where dispatch wins and refuse the ones where it loses?
 
-The program is the C implementation of LZ4 (`lz4/lz4`, commit `ebb370ca83af`, archive SHA256 `eb1a93e9...ffa9`,
-BSD-2-Clause), `lib/lz4.c` built freestanding to wasm32 and unmodified. `scripts/research/cases/lz4-compress-all.c`
-adds one entry, `compress_all(table, n, out, capacity)`, which calls `LZ4_compress_default` for each of `n` inputs
-into its own slot of `capacity` bytes, stores each size after the slots and returns the total compressed
-size. It carries no hint. `scripts/research/lz4-build.ts` checks the archive digest and writes the modules
-below. This record does not interpret the licence file of the project.
+The route is `Folio.run` on the unmodified BLAKE3 consumer (see [blake3-consumer](../blake3-consumer/README.md)).
+The decision uses time that the run itself measures, with no calibrated model of tracking cost:
 
-Inputs are seeded pseudo-text with a compression ratio of 2.03 to 2.06, generated in the bench. Every sample
-asserts that the output equals the serial run, and the bench decodes the serial output with an independent
-block decoder and checks every input round-trips.
+1. The owner runs iteration 0 as the serial program's own first iteration and times it (`plainIterationMs`).
+2. Before any dispatch, `admitIteration` (`src/iteration-admission.ts`) compares the remaining serial time,
+   `(trip - 1) * plainIterationMs`, with a floor of `fixedMs * margin` (2 ms times 1.25). A loop under the floor
+   runs serially and reports `no-admission` with the numbers.
+3. After every batch of up to 32 iterations the executor compares the batch wall (dispatch, validation,
+   rollback and replay) with the serial time of its iterations at the speed of iteration 0. A batch is slow
+   when its wall times 1.25 exceeds that serial time, and dispatch ends after two slow batches in a row or
+   after one batch whose wall is more than 1.5 times the serial time. A first batch also pays for waking the
+   workers, so one mildly slow batch is not a verdict.
+4. Structural stops end dispatch at once: an exhausted undo log (`log-exhausted`), a frame conflict
+   (`frame-carried dependence`) and a batch that replays more than half of its iterations (`dependency`).
 
-## Modules
-
-| File | What it is |
-| --- | --- |
-| `lz4-compress-all.wasm` | the entry as specified: the slot size is a run-time argument and the loop returns a running total |
-| `lz4-compress-slots-{64k,256k,4m}.wasm` | the same loop with a compile-time slot size (`compress_slots(table, n, out)`), no total, one 4-byte size per loop step ("packed" below) |
-| `lz4-compress-padded-{64k,256k,4m}.wasm` | as `slots`, with each size in its own 32-byte granule ("padded" below) |
-
-A slot is `LZ4_compressBound` of the input rounded up to 4 KiB: 69,632, 266,240 and 4,214,784 bytes for 64 KiB,
-256 KiB and 4 MiB inputs.
-
-## What the route does with it
-
-`prepare(bytes).iterationRoute` on `lz4-compress-all.wasm` is not eligible. The loop is a countdown loop with
-a constant-stride table pointer and a run-time-stride output pointer, which the route accepts, and it also
-writes `total`, a local that the code after the loop reads. The route refuses an accumulator it cannot
-reproduce, so `Folio.run` runs the entry serially. A shared host memory passed to this module gives
-`LinkError` at `Folio.open`, because the module declares an unshared memory; the `default` arm passes an
-unshared memory and runs serially with `reason: unsupported-module`.
-
-The `slots` and `padded` modules are eligible. Their deepest stack use is 16,416 bytes (the 16 KiB
-`LZ4_stream_t`), inside the 32 KiB slot of an iteration.
+The rest of the loop then runs serially, and `iteration.stopped` names the reason.
 
 ## Method
 
-Ryzen 9 9900X, Node 26.10.0, cores 4 to 11, `nice -n 19`, `powersave` governor, 3 sessions of 9 rounds after
-2 warmups, width 8, one pool alive at a time, each arm paired with a native serial run in the same round.
-Arms: `default` (unshared host memory, serial by design, so about 1.00x is pair noise) and `automatic`
-(`Folio.open(bytes, { memory, workers: 8 })` with a shared host memory, then `run`). Wall time includes
-placing the inputs. Workloads: `large` is 32 inputs of 4 MiB, `small` is 128 inputs of 256 KiB and `tiny` is
-512 inputs of 64 KiB (padded module only).
+`scripts/research/iteration-admission.ts` sweeps input size (4, 16, 64, 256, 1024 and 4096 KiB) by iteration
+count (8, 32 and 128). Each cell pairs three arms in the same round, alternating the order: a serial native
+run, `automatic` (what the library decides) and `forced` (a pool that dispatches regardless, through the
+module-private `admissionSeam`, with the batch rule off). Timings cover the call and leave the input copy
+outside, as for a program whose memory already holds its data. Inputs cycle through 8 distinct pseudo-random
+buffers.
+
+Ryzen 9 9900X, Node 26.10.0, cores 4 to 11, `nice -n 19`, `powersave` governor, one pool alive at a time,
+3 sessions of 5 rounds after 2 warmups, so 15 samples per arm and cell. Width 8 is `w8-sweep-N.jsonl` and
+width 4 is `w4-sweep-N.jsonl`. `fixedMs` and `margin` were fixed before this sweep from an earlier Mac sweep
+and were not changed after it.
 
 ## Results
 
-Paired median speedup of the `automatic` arm over the serial run, with the range over rounds, three sessions.
+Speedup over the serial run, medians over the 15 samples. The count in brackets is how many of the 15
+`automatic` samples dispatched. Native is the serial wall in milliseconds.
 
-| Workload | Module | Session 1 | Session 2 | Session 3 | Outcome of the route |
-| --- | --- | --- | --- | --- | --- |
-| 32 x 4 MiB | packed | 0.99x (0.99 to 1.00) | 0.99x (0.97 to 1.00) | 0.99x (0.99 to 1.00) | `log-exhausted` after a few iterations |
-| 32 x 4 MiB | padded | 0.99x (0.98 to 1.00) | 0.99x (0.99 to 1.00) | 0.99x (0.98 to 1.00) | `log-exhausted` |
-| 128 x 256 KiB | packed | 0.97x (0.95 to 0.99) | 0.97x (0.95 to 0.98) | 0.96x (0.93 to 0.98) | `log-exhausted` |
-| 128 x 256 KiB | padded | 0.97x (0.96 to 0.98) | 0.97x (0.96 to 0.98) | 0.96x (0.93 to 0.98) | `log-exhausted` |
-| 512 x 64 KiB | padded | 0.87x (0.86 to 0.94) | 0.86x (0.86 to 0.92) | 0.87x (0.85 to 0.92) | `no-admission` after one batch |
-| 128 x 256 KiB | spec shape | serial | serial | serial | `unsupported-module`, no route |
+| Cell | Native ms (width 8) | Width 8 forced | Width 8 automatic | Width 4 forced | Width 4 automatic |
+| --- | ---: | ---: | --- | ---: | --- |
+| 4 KiB x 8 | 0.0 | 0.13x | 0.51x (0/15) | 0.16x | 0.57x (0/15) |
+| 4 KiB x 32 | 0.1 | 0.25x | 0.86x (0/15) | 0.23x | 0.83x (0/15) |
+| 4 KiB x 128 | 0.4 | 0.26x | 0.87x (0/15) | 0.27x | 0.91x (0/15) |
+| 16 KiB x 8 | 0.1 | 0.45x | 0.91x (0/15) | 0.52x | 0.91x (0/15) |
+| 16 KiB x 32 | 0.4 | 0.79x | 0.96x (0/15) | 0.69x | 0.97x (0/15) |
+| 16 KiB x 128 | 1.7 | 0.73x | 0.98x (0/15) | 0.71x | 0.98x (0/15) |
+| 64 KiB x 8 | 0.4 | 1.00x | 0.97x (0/15) | 1.26x | 0.97x (0/15) |
+| 64 KiB x 32 | 1.7 | 1.46x | 0.98x (0/15) | 1.13x | 0.98x (0/15) |
+| 64 KiB x 128 | 6.9 | 1.57x | 1.66x (15/15) | 1.31x | 1.09x (15/15) |
+| 256 KiB x 8 | 1.7 | 1.49x | 0.99x (0/15) | 1.49x | 0.97x (0/15) |
+| 256 KiB x 32 | 6.9 | 2.78x | 2.37x (15/15) | 1.73x | 1.72x (15/15) |
+| 256 KiB x 128 | 27.7 | 2.41x | 2.45x (15/15) | 1.69x | 1.70x (15/15) |
+| 1 MiB x 8 | 6.9 | 1.60x | 1.73x (15/15) | 1.61x | 1.63x (15/15) |
+| 1 MiB x 32 | 27.4 | 3.01x | 2.95x (15/15) | 2.01x | 2.01x (15/15) |
+| 1 MiB x 128 | 110.5 | 2.86x | 3.03x (15/15) | 2.00x | 2.00x (15/15) |
+| 4 MiB x 8 | 27.4 | 2.06x | 2.07x (15/15) | 1.74x | 1.73x (15/15) |
+| 4 MiB x 32 | 111.5 | 3.26x | 3.25x (15/15) | 2.10x | 2.12x (15/15) |
+| 4 MiB x 128 | 442.5 | 3.32x | 3.29x (15/15) | 2.12x | 2.10x (15/15) |
 
-The speedup is 1.00x or below in every cell, and there is no cell where the route helps LZ4.
+- **No cell dispatched and lost.** Every cell where `automatic` dispatched ran at 1.09x or more of the serial
+  wall, and every cell where forced dispatch lost was refused. The refusals cost 1% to 14% of a serial wall
+  of 0.1 to 1.7 ms (0.5x on the 0.03 ms loop of 4 KiB x 8); the overhead of the lowered owner was not
+  attributed further.
+- **Four refusals gave up a speedup.** The summary flags two wrong decisions at each width: 64 KiB x 32
+  (forced 1.46x) and 256 KiB x 8 (1.49x) at width 8, and 64 KiB x 8 (1.26x) and 256 KiB x 8 (1.49x) at
+  width 4. The serial wall of these loops is 0.4 to 6.9 ms.
+- **One cell stopped part way.** At width 4, 64 KiB x 128 dispatched in every sample and the batch rule
+  ended dispatch in 5 of 15, which leaves the cell at 1.09x against 1.31x forced.
+- **The floor splits the sweep cleanly.** Cells with a serial wall of 1.7 ms or less are refused and cells
+  with 6.9 ms or more dispatch. No cell fell between the two.
 
-- **The undo log is the limit.** An iteration that writes more than 2,048 granules (64 KiB) of tracked bytes
-  exhausts its log. At 4 MiB and 256 KiB the compressed output alone is about 2 MiB and 128 KiB, so the
-  first iterations exhaust the log, the batch rolls back, and the loop runs serially with
-  `reason: 'log-exhausted'`. When an iteration fails, the workers start no further iteration of its batch, so
-  the lost work is the iterations already running: 5 to 8 of the 32 of a batch. The cost is 1% to 4% of the
-  serial wall. `Folio.open` has no option for a larger log and no default changed.
-- **The packed size table also conflicts.** Eight 4-byte sizes share one 32-byte write granule, which the
-  validator reports as write-after-write. It never decides the result here, because the log is exhausted
-  first, and the padded module shows the same speedups.
-- **At 64 KiB inputs the iterations fit the log and still lose.** The route runs one batch of 32
-  iterations, finds its wall 2.1 to 3.9 times the serial time of those iterations (iteration 0 takes about
-  0.11 ms) and ends dispatch, which costs 13% of the serial wall (0.87x). The cost of tracked execution and validation of about 1,500 granules per iteration was not
-  separated from dispatch.
-- **Equality.** Output equals the serial run in every sample, and every input round-trips.
-
-Limits: one library, one machine, three module families, inputs of a fixed ratio. There is no `explicit` arm
-for LZ4. Whether a larger undo log would make 256 KiB and 4 MiB inputs profitable was not tested, because the
-log capacity is not reachable through `Folio.open`. The 64 KiB workload was added to see the route run
-without a stop for the log.
+Limits: one program, one machine, widths 4 and 8, equal-size iterations, 5 rounds per session. Width 2 is not
+swept. `fixedMs` 2 and `margin` 1.25 are not fitted to the rig. The estimate
+of a batch's serial time is `iterations * plainIterationMs`, so a loop whose first iteration is much cheaper
+or much dearer than the rest can be misjudged; mixed-size loops were not swept. A stop lasts for one call of the
+owner; the next call starts again at iteration 0. The time of iteration 0 on the first call of a process was
+not separated from later calls.
 
 ## Reproduction
 
 ```sh
-node scripts/research/lz4-build.ts
-node scripts/research/lz4-bench.ts out.jsonl 9 32 4 slots
-node scripts/research/analyze.ts out.jsonl summary.json
+node scripts/research/blake3-build.ts
+node scripts/research/iteration-admission.ts run out.jsonl 5 8
+node scripts/research/iteration-admission.ts summary out.jsonl --json summary.json
 ```
 
-`scripts/research/lz4.sh SESSIONS ROUNDS [OUTPUT_DIRECTORY]` runs the six cells for each session under the timing
-lock with `nice -n 19` and cores 4 to 11. The build downloads the pinned archive and refuses a digest that
-differs.
+`scripts/research/iteration-admission.sh SESSIONS ROUNDS [OUTPUT_DIRECTORY]` runs the sessions under the timing
+lock with `nice -n 19` and cores 4 to 11; `FOLIO_WIDTH=4` selects width 4. The summary columns `trk fac`,
+`plain/trk` and `imbal` are computed from each report and feed no constant.
 
 ## Artifacts
 
-- `rig-{packed,padded}-{large,small}-N.jsonl`, `rig-padded-tiny-N.jsonl` and `rig-spec-shape-small-N.jsonl` (N
-  from 1 to 3): raw records, with `*.summary.json` paired summaries from `analyze.ts`. `packed` is the
-  `slots` module, `spec-shape` is `lz4-compress-all.wasm`.
-- `lz4-compress-*.wasm`: the modules the sessions ran.
-- `rig-before.log`: memory, load and governor at the start.
+- `w8-sweep-N.jsonl`, `w4-sweep-N.jsonl` (N from 1 to 3): raw records with the constants in the environment row.
+- `w8-summary.json`, `w4-summary.json`: the sweep's own `summary` mode over the three sessions of each width.
+- `w8-summary.txt`, `w4-summary.txt`: the printed tables.
+- `w8-before.log`, `w4-before.log`: memory, load and governor at the start of each width.
 - `source.tar.gz`: `src/`, `scripts/research/` and `package.json` as run.
 - `manifest.json`: byte lengths and SHA256 digests.

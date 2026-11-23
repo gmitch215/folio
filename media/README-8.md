@@ -1,52 +1,59 @@
-# Lane Concurrency
+# State Loss
 
-Question: when a coordinator issues four lane calls at once, do they overlap on the deployed platform, and which lane type restores overlap when they do not?
+Question: why did the owner lose its in-memory state in the managed phase studies, and is the cause
+replacement, routing or the instrumentation?
 
-## Method
-
-One coordinator Worker, four lane Workers reached by service binding, and a Durable Object namespace of four instances, deployed on a paid account, measured and deleted. Each lane runs a pure Wasm loop whose length is set by a `rounds` argument and returns its checksum, which the driver checks against the same loop in JavaScript. The levels are about 100 ms and about 380 ms of CPU per call, calibrated from client wall minus the empty-loop wall because a Worker's clock does not advance during a loop.
-
-Five arms, each run alone (one call) and four at once, 12 repetitions after one warmup, arms interleaved and rotated per repetition:
-
-- `worker`: four different lane Workers over service bindings.
-- `worker-one`: one lane Worker called four times at once.
-- `do-same`: four Durable Object instances in default placement.
-- `do-hint`: four Durable Object instances, each created with a different `locationHint`.
-- `direct`: four separate top-level requests, no coordinator.
-
-The overlap index is the wall of four calls at once minus the empty-loop wall, over the same for one call. 1.0 is full overlap and 4.0 is fully serialized. Lane CPU over wall comes from `wrangler tail` events (`cpuTime` and `wallTime` per invocation), joined to calls by a log line. The rule, fixed before the run in [METHOD.md](../../../experiments/concurrency/METHOD.md): an arm overlaps when the index is at most 1.5 and CPU over wall is at least 0.8.
+The [phase studies](../phases/README.md) preserve four request arrangements and a final
+direct-invocation arrangement. This study reads those records. For each cell it compares the
+identifiers returned by setup with those of later successful operations, groups failures by error
+message, and splits them by whether the cell runs the native workload in the owner (`native`) or
+through lanes (`automatic`). The `settled-separate` record is a new run of the separate-request
+arrangement with the driver's 65 second wait after starting tail, which the older arrangements did
+not have in the same form.
 
 ## Results
 
-| Arm | Index at 100 / 380 ms | Lane CPU over wall | Rule |
-| --- | --- | --- | --- |
-| `worker` | 4.07 / 3.87 | 0.27 | fails |
-| `worker-one` | 4.13 / 3.94 | 0.28 / 0.25 | fails |
-| `do-same` | 1.42 / 1.42 | 0.94 / 0.98 | passes |
-| `do-hint` | 1.86 / 1.81 | 0.57 / 0.83 | fails |
-| `direct` | 1.84 / 1.48 | 0.99 / 1.00 | passes at 380 ms only |
+| Arrangement | Failed operations | In native cells | In automatic cells | Later operations in a new module | On a different object |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Separate external requests | 42 | 33 | 9 | 14 of 121 | 0 |
+| One entry request per cell | 41 | 33 | 8 | 15 of 120 | 0 |
+| Self-RPC | 13 | 10 | 3 | 45 of 149 | 0 |
+| Separate requests after a settle wait | 12 | 12 | 0 | 4 of 41 | 0 |
+| Direct calls in one invocation | 0 | 0 | 0 | 0 of 56 | 0 |
 
-Four calls to four different service-bound Workers took about four times as long as one call, with lane CPU at 27% of lane wall. Four Durable Object instances took about 1.4 times as long as one call. Location hints placed the objects in different data centers and added round-trip time without improving overlap. The run created and deleted its own scripts and Durable Object class. The coordinator's data center was IAD, and the default-placement objects landed in IAD and EWR.
+Every failure reports that the owner's state is absent and setup is required. What the records show:
 
-## Scope
+- **Routing is excluded.** The object identifier never differs from setup's in any later operation.
+- **The owner's state is replaced.** Some later operations report a new module identifier, and
+  every failure finds the state gone. Module identifiers are not isolate identities, so the record
+  does not name the platform event.
+- **The tail wait removes the automatic-cell failures and not the native-cell ones.** Across the
+  three older arrangements, 20 of 96 failures are in automatic cells. After the wait, 0 of 4
+  automatic cells lose state and all 4 native cells do, after 1 to 3 successful operations. Four
+  cells is a small sample, but the direction matches Cloudflare's documentation that starting tail
+  can replace instances.
+- **Native cells lose state with or without the wait.** There the owner runs the 64-region workload
+  itself, 0.3 s to 0.6 s of CPU per operation. The records correlate the loss with that work and do
+  not establish why. Memory size does not explain it, since 128 KiB cells lose state as well.
+- **Direct calls in one invocation lose nothing**, in 32 operations across 8 cells.
 
-- One account and one coordinator location. The platform documentation says service-bound Workers run on the same thread by default and that objects of one class can share an isolate; this run measures what those two lane types did over 12 repetitions and is not a guarantee.
-- An earlier probe with a 4 ms kernel reported an index of 1.42 for service-bound Workers ([ordinary-worker-lanes](../ordinary-worker-lanes/README.md)). It does not reproduce at 100 and 380 ms, and the cause was not isolated.
-- Tail event coverage was 25% to 100% by cell; cells with low coverage carry the CPU over wall from the events that arrived.
-- The raw tail events here keep only timing, outcome, route and data center. Client addresses, headers and locations were removed at export.
-
-## Artifacts
-
-- `run/raw.jsonl`: every cell, failures included.
-- `run/tail.jsonl`: one scrubbed tail event per line.
-- `run/summary.json`: rows, verdicts, leftovers and foreign changes.
-- `run/environment.json`: the run record, the calibration and the recorded placement.
+A reusable session on this backend cannot assume the owner's state survives between requests, and
+should either rebuild its state from a request that carries it or run every operation inside one
+invocation. The backend does not provide durable recovery of an owner. Whether a longer wait, a
+smaller per-operation CPU cost or a different arrangement keeps native cells alive is untested.
 
 ## Reproduction
 
 ```sh
-node experiments/concurrency/prepare.ts
-node experiments/concurrency/run.ts --dry-run
-FOLIO_CLOUDFLARE_ACCOUNT_ID=... FOLIO_CLOUDFLARE_API_TOKEN=... node experiments/concurrency/run.ts
-node scripts/research/lane-evidence.ts experiments/concurrency/runs/<name> results/managed/lane-concurrency/run
+node scripts/research/derive.ts state-loss state-loss.json separate.json held.json reentrant.json settled-separate.json complete.json
 ```
+
+with the records from the phase study. The settled run is
+`FOLIO_PHASE_ENTRY=separate FOLIO_PHASE_PAGES=2,128 FOLIO_PHASE_WIDTHS=2,4 node experiments/managed/phases/drive.ts`
+on a Free account, followed by the analyzer with the role `settled-separate`. It made 61 external
+requests, no SQL calls, and restored the account baseline.
+
+## Artifacts
+
+- `state-loss.json`: counts per arrangement and the SHA256 of each input record.
+- `manifest.json`: byte lengths and SHA256 digests.

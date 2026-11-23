@@ -1,57 +1,52 @@
-# SQLite Lanes
+# Lane Concurrency
 
-Question: can a program that was never written to run in parallel, SQLite, run faster on managed lanes when each lane keeps its own instance over a shard of the data and the owner merges the partial results?
+Question: when a coordinator issues four lane calls at once, do they overlap on the deployed platform, and which lane type restores overlap when they do not?
 
 ## Method
 
-SQLite 3.50.4 compiled freestanding to a 1,003,837-byte WebAssembly module (single thread, read-only deserialized image). The fixture is a deterministic table of 1,000,000 rows (`id`, `k INTEGER`, `v INTEGER`, `s TEXT` of 24 bytes), a 52,772,864-byte image whose SHA-256 matches the one used for the Node task-pool measurements. The table is also split by rowid range into 4 and 8 shard images of at most 14 MiB, each a complete database with the same schema.
+One coordinator Worker, four lane Workers reached by service binding, and a Durable Object namespace of four instances, deployed on a paid account, measured and deleted. Each lane runs a pure Wasm loop whose length is set by a `rounds` argument and returns its checksum, which the driver checks against the same loop in JavaScript. The levels are about 100 ms and about 380 ms of CPU per call, calibrated from client wall minus the empty-loop wall because a Worker's clock does not advance during a loop.
 
-One Worker script with 13 Durable Object names: one `serial` object that holds the whole table (shipped in two parts), four `shards-4` objects and eight `shards-8` objects. Each object loads its image once and keeps the SQLite instance, so queries are warm. For each of five queries the owner runs three arms, interleaved and rotated, 12 repetitions after 2 warmups:
+Five arms, each run alone (one call) and four at once, 12 repetitions after one warmup, arms interleaved and rotated per repetition:
 
-- `serial`: one object, whole table.
-- `shards-4` and `shards-8`: the owner sends the query to every shard at once and merges the partials with the merge declared for that query (counts and sums add, group tables merge, top-10 lists merge).
+- `worker`: four different lane Workers over service bindings.
+- `worker-one`: one lane Worker called four times at once.
+- `do-same`: four Durable Object instances in default placement.
+- `do-hint`: four Durable Object instances, each created with a different `locationHint`.
+- `direct`: four separate top-level requests, no coordinator.
 
-The queries are an index range aggregate, a full-scan `GROUP BY` on `k % 64`, a `LIKE '%x%'` scan, a join with a 1,000-row table and a top-10 by a non-indexed column. A query with no declared merge is refused. The recursive CTE and `CREATE INDEX` are refused because each row depends on the previous one. Every merged result is compared byte for byte with the serial result. Lane work is also counted in SQLite virtual-machine steps, because a Worker's clock does not advance during compute.
+The overlap index is the wall of four calls at once minus the empty-loop wall, over the same for one call. 1.0 is full overlap and 4.0 is fully serialized. Lane CPU over wall comes from `wrangler tail` events (`cpuTime` and `wallTime` per invocation), joined to calls by a log line. The rule, fixed before the run in [METHOD.md](../../../experiments/concurrency/METHOD.md): an arm overlaps when the index is at most 1.5 and CPU over wall is at least 0.8.
 
 ## Results
 
-Median client wall in ms over the 12 repetitions, deployed on a paid account, each figure including the client round trip to the owner:
+| Arm | Index at 100 / 380 ms | Lane CPU over wall | Rule |
+| --- | --- | --- | --- |
+| `worker` | 4.07 / 3.87 | 0.27 | fails |
+| `worker-one` | 4.13 / 3.94 | 0.28 / 0.25 | fails |
+| `do-same` | 1.42 / 1.42 | 0.94 / 0.98 | passes |
+| `do-hint` | 1.86 / 1.81 | 0.57 / 0.83 | fails |
+| `direct` | 1.84 / 1.48 | 0.99 / 1.00 | passes at 380 ms only |
 
-| Query | Serial | 4 shards | 8 shards | Speedup at 4 / 8 |
-| --- | --- | --- | --- | --- |
-| range aggregate | 192.6 | 94.5 | 80.2 | 2.04 / 2.40 |
-| group by | 2,208.4 | 413.4 | 228.2 | 5.34 / 9.68 |
-| LIKE scan | 253.2 | 107.7 | 92.0 | 2.35 / 2.75 |
-| join | 480.6 | 174.4 | 117.2 | 2.76 / 4.10 |
-| top-10 | 799.4 | 289.4 | 211.4 | 2.76 / 3.78 |
-
-- All 178 returned samples were exact. Two samples (one in `topk` at 4 shards, one in `group` at 8 shards) received a 409 because a shard object had been evicted, and the owner reloaded it (1.0 to 1.4 s); they carry no result and are not counted as mismatches or speedups.
-- The total VDBE steps are the same in every arm of a query (for example 19.0 million for the group-by in all three arms), so the shards do the same work.
-- Cold load: the whole table took about 1.9 s per 26 MB part; each 13 MB shard about 1.0 to 1.15 s. The measured speedups are for warm shards.
-- The group-by speedup at 8 shards (9.7x on 8 lanes) is above the lane count. Wall per VDBE step is about 116 ns in the serial object and at most about 95 ns per lane in an 8-way shard (that bound includes the fixed round trip), which fits a smaller working set per lane. A Node control found that one worker on a one-eighth shard runs 2.2 times faster per row than one-eighth of the whole-table time, and neither a page cache sized to the shard nor the whole-table cache changed it. About 2.2x of the group-by figure is therefore a single-thread effect of the smaller table, and the cause of that effect is not isolated.
-- The run created and deleted its own script and Durable Object class: no leftover resources and no foreign changes.
+Four calls to four different service-bound Workers took about four times as long as one call, with lane CPU at 27% of lane wall. Four Durable Object instances took about 1.4 times as long as one call. Location hints placed the objects in different data centers and added round-trip time without improving overlap. The run created and deleted its own scripts and Durable Object class. The coordinator's data center was IAD, and the default-placement objects landed in IAD and EWR.
 
 ## Scope
 
-- One account, one coordinator location, one fixture and five queries. The merges are declared by hand for these queries; a general query needs a planner that proves a merge.
-- Speedups use a warm shard set. Shards must stay resident; an evicted shard costs a reload of 1 to 1.4 s.
-- The serial arm holds the full 52.7 MB table in one 128 MB isolate, and it fit.
-- Owner CPU and lane CPU were not parsed from the tail events; the record carries client wall and VDBE steps.
-- The tail events here keep timing, outcome, route and data center only.
+- One account and one coordinator location. The platform documentation says service-bound Workers run on the same thread by default and that objects of one class can share an isolate; this run measures what those two lane types did over 12 repetitions and is not a guarantee.
+- An earlier probe with a 4 ms kernel reported an index of 1.42 for service-bound Workers ([ordinary-worker-lanes](../ordinary-worker-lanes/README.md)). It does not reproduce at 100 and 380 ms, and the cause was not isolated.
+- Tail event coverage was 25% to 100% by cell; cells with low coverage carry the CPU over wall from the events that arrived.
+- The raw tail events here keep only timing, outcome, route and data center. Client addresses, headers and locations were removed at export.
 
 ## Artifacts
 
-- `run/raw.jsonl`: every request, failures included.
-- `run/samples.json`: per-sample query, arm, equality, warm flag, VDBE steps and wall.
-- `run/loads.jsonl`: the shard uploads and their walls.
-- `run/summary.json` and `run/environment.json`: medians, counts, leftovers and the run record.
-- `run/tail.jsonl`: scrubbed tail events.
+- `run/raw.jsonl`: every cell, failures included.
+- `run/tail.jsonl`: one scrubbed tail event per line.
+- `run/summary.json`: rows, verdicts, leftovers and foreign changes.
+- `run/environment.json`: the run record, the calibration and the recorded placement.
 
 ## Reproduction
 
 ```sh
-FOLIO_SQLITE_SOURCE=/path/to/sqlite-amalgamation node experiments/sqlite-lanes/prepare.ts
-node experiments/sqlite-lanes/run.ts --dry-run
-FOLIO_CLOUDFLARE_ACCOUNT_ID=... FOLIO_CLOUDFLARE_API_TOKEN=... node experiments/sqlite-lanes/run.ts
-node scripts/research/lane-evidence.ts experiments/sqlite-lanes/runs/<name> results/managed/sqlite-lanes/run
+node experiments/concurrency/prepare.ts
+node experiments/concurrency/run.ts --dry-run
+FOLIO_CLOUDFLARE_ACCOUNT_ID=... FOLIO_CLOUDFLARE_API_TOKEN=... node experiments/concurrency/run.ts
+node scripts/research/lane-evidence.ts experiments/concurrency/runs/<name> results/managed/lane-concurrency/run
 ```

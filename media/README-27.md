@@ -1,101 +1,98 @@
-# Iteration Admission
+# BLAKE3 Feasibility
 
-Question: when the iteration route has a loop it could dispatch, does the admission decision pick the cases
-where dispatch wins and refuse the ones where it loses?
-
-The route is `Folio.run` on the unmodified BLAKE3 consumer (see [blake3-consumer](../blake3-consumer/README.md)).
-The decision uses time that the run itself measures, with no calibrated model of tracking cost:
-
-1. The owner runs iteration 0 as the serial program's own first iteration and times it (`plainIterationMs`).
-2. Before any dispatch, `admitIteration` (`src/iteration-admission.ts`) compares the remaining serial time,
-   `(trip - 1) * plainIterationMs`, with a floor of `fixedMs * margin` (2 ms times 1.25). A loop under the floor
-   runs serially and reports `no-admission` with the numbers.
-3. After every batch of up to 32 iterations the executor compares the batch wall (dispatch, validation,
-   rollback and replay) with the serial time of its iterations at the speed of iteration 0. A batch is slow
-   when its wall times 1.25 exceeds that serial time, and dispatch ends after two slow batches in a row or
-   after one batch whose wall is more than 1.5 times the serial time. A first batch also pays for waking the
-   workers, so one mildly slow batch is not a verdict.
-4. Structural stops end dispatch at once: an exhausted undo log (`log-exhausted`), a frame conflict
-   (`frame-carried dependence`) and a batch that replays more than half of its iterations (`dependency`).
-
-The rest of the loop then runs serially, and `iteration.stopped` names the reason.
+Question: why does default admission refuse the BLAKE3 file loop, and would inline tracking with a
+private stack per iteration make it dispatch? The [blake3-consumer](../blake3-consumer/README.md) study
+shows the refusal. This study holds the analysis and the prototype that led to the
+[iteration route](../iteration-route/README.md), so the numbers in the report's BLAKE3 sections can be
+traced to raw records.
 
 ## Method
 
-`scripts/research/iteration-admission.ts` sweeps input size (4, 16, 64, 256, 1024 and 4096 KiB) by iteration
-count (8, 32 and 128). Each cell pairs three arms in the same round, alternating the order: a serial native
-run, `automatic` (what the library decides) and `forced` (a pool that dispatches regardless, through the
-module-private `admissionSeam`, with the batch rule off). Timings cover the call and leave the input copy
-outside, as for a program whose memory already holds its data. Inputs cycle through 8 distinct pseudo-random
-buffers.
+**Analysis.** Run on an Apple M2 Pro (Node 26.8.2) with other work in progress (load 3.3 to 6.6), so its
+timings are diagnostic. It used an edited copy of the library (`analysis/fsrc` in `source.tar.gz`) that prints each
+region candidate's estimate and records the reader, writer and address of every conflict. The analysis
+files are `analysis-*`.
 
-Ryzen 9 9900X, Node 26.10.0, cores 4 to 11, `nice -n 19`, `powersave` governor, one pool alive at a time,
-3 sessions of 5 rounds after 2 warmups, so 15 samples per arm and cell. Width 8 is `w8-sweep-N.jsonl` and
-width 4 is `w4-sweep-N.jsonl`. `fixedMs` and `margin` were fixed before this sweep from an earlier Mac sweep
-and were not changed after it.
+**Prototype.** A standalone binaryen pass adds inline read marks (64-byte granules), write marks (32-byte
+granules) and a copy-on-first-write undo record to a module with no host call. A small owner
+dispatches iterations to workers over one shared memory, each on its own 32 KiB stack slot, validates in
+order and rolls back and replays what fails. The loop body is outlined by hand in C (`hash_one`); the
+route in the library does that automatically. Three workloads: `large` (32 inputs of 4 MiB), `small` (128 inputs of
+256 KiB) and `mixed` (the 100-input set, 223,053,295 bytes, two inputs of 64 MiB). Each arm is paired with a
+serial run in the same round, 9 rounds after 2 warmups, three sessions, one pool alive at a time, width
+1 to 8. The `ceiling` arm is the same worker pool with no marks and no validation.
+
+The prototype ran on the Mac (`prototype-mac-*`) and was repeated on the Ryzen 9 9900X (Node 26.10.0,
+cores 4 to 11, `nice -n 19`, `powersave` governor; `prototype-rig-*`).
 
 ## Results
 
-Speedup over the serial run, medians over the 15 samples. The count in brackets is how many of the 15
-`automatic` samples dispatched. Native is the serial wall in milliseconds.
+**Why no region clears the floor.** At the default floor of 200,000 net work the extractor finds 9 pure
+functions and admits none. At `minimumRegionWork` 0 it forms 31 regions from 35 sites. The estimate
+charges 3,600 units per tracked access, and BLAKE3 does at most 40 units of work per access (compress:
+1,291 over 32), so the best site has a net of 0 and `blake3_compress_in_place_portable` has -113,909.
+Counting hook calls on a 1 MiB input gives 774,712 tracked accesses (47.3 per block). Tracked execution
+runs 92x slower than native on 1 MiB, 42x on 64 KiB and 8x on 4 KiB, which is 0.13 to 0.17 microseconds
+per access against the 0.605 that the calibration assigns. A second reason is independent of the
+estimate: the default transaction budget of 262,144 bytes is exhausted by the 26 inputs of 256 KiB or more,
+which hold 99.4% of the bytes of the 100-input set.
 
-| Cell | Native ms (width 8) | Width 8 forced | Width 8 automatic | Width 4 forced | Width 4 automatic |
-| --- | ---: | ---: | --- | ---: | --- |
-| 4 KiB x 8 | 0.0 | 0.13x | 0.51x (0/15) | 0.16x | 0.57x (0/15) |
-| 4 KiB x 32 | 0.1 | 0.25x | 0.86x (0/15) | 0.23x | 0.83x (0/15) |
-| 4 KiB x 128 | 0.4 | 0.26x | 0.87x (0/15) | 0.27x | 0.91x (0/15) |
-| 16 KiB x 8 | 0.1 | 0.45x | 0.91x (0/15) | 0.52x | 0.91x (0/15) |
-| 16 KiB x 32 | 0.4 | 0.79x | 0.96x (0/15) | 0.69x | 0.97x (0/15) |
-| 16 KiB x 128 | 1.7 | 0.73x | 0.98x (0/15) | 0.71x | 0.98x (0/15) |
-| 64 KiB x 8 | 0.4 | 1.00x | 0.97x (0/15) | 1.26x | 0.97x (0/15) |
-| 64 KiB x 32 | 1.7 | 1.46x | 0.98x (0/15) | 1.13x | 0.98x (0/15) |
-| 64 KiB x 128 | 6.9 | 1.57x | 1.66x (15/15) | 1.31x | 1.09x (15/15) |
-| 256 KiB x 8 | 1.7 | 1.49x | 0.99x (0/15) | 1.49x | 0.97x (0/15) |
-| 256 KiB x 32 | 6.9 | 2.78x | 2.37x (15/15) | 1.73x | 1.72x (15/15) |
-| 256 KiB x 128 | 27.7 | 2.41x | 2.45x (15/15) | 1.69x | 1.70x (15/15) |
-| 1 MiB x 8 | 6.9 | 1.60x | 1.73x (15/15) | 1.61x | 1.63x (15/15) |
-| 1 MiB x 32 | 27.4 | 3.01x | 2.95x (15/15) | 2.01x | 2.01x (15/15) |
-| 1 MiB x 128 | 110.5 | 2.86x | 3.03x (15/15) | 2.00x | 2.00x (15/15) |
-| 4 MiB x 8 | 27.4 | 2.06x | 2.07x (15/15) | 1.74x | 1.73x (15/15) |
-| 4 MiB x 32 | 111.5 | 3.26x | 3.25x (15/15) | 2.10x | 2.12x (15/15) |
-| 4 MiB x 128 | 442.5 | 3.32x | 3.29x (15/15) | 2.12x | 2.10x (15/15) |
+**Why 696 of 4,240 regions replay.** Every conflict is on the shadow stack: one region reads a callee
+frame that an earlier region of the same iteration wrote (`finalize_seek` hands its 32 finished bytes to
+`memcpy`). None touches the table, the output or the inputs. Giving each iteration its own stack slot
+(`analysis-stack-experiment.txt`) leaves all 696 in place, and the same eight reader and writer pairs. The
+conflicts are within one iteration, not across iterations.
 
-- **No cell dispatched and lost.** Every cell where `automatic` dispatched ran at 1.09x or more of the serial
-  wall, and every cell where forced dispatch lost was refused. The refusals cost 1% to 14% of a serial wall
-  of 0.1 to 1.7 ms (0.5x on the 0.03 ms loop of 4 KiB x 8); the overhead of the lowered owner was not
-  attributed further.
-- **Four refusals gave up a speedup.** The summary flags two wrong decisions at each width: 64 KiB x 32
-  (forced 1.46x) and 256 KiB x 8 (1.49x) at width 8, and 64 KiB x 8 (1.26x) and 256 KiB x 8 (1.49x) at
-  width 4. The serial wall of these loops is 0.4 to 6.9 ms.
-- **One cell stopped part way.** At width 4, 64 KiB x 128 dispatched in every sample and the batch rule
-  ended dispatch in 5 of 15, which leaves the cell at 1.09x against 1.31x forced.
-- **The floor splits the sweep cleanly.** Cells with a serial wall of 1.7 ms or less are refused and cells
-  with 6.9 ms or more dispatch. No cell fell between the two.
+**Untracked ceiling.** Workers with private stacks and no tracking reach 3.3x on the 100-input set, which two
+64 MiB inputs (30% each) bound (`analysis-ceiling-full.json`).
 
-Limits: one program, one machine, widths 4 and 8, equal-size iterations, 5 rounds per session. Width 2 is not
-swept. `fixedMs` 2 and `margin` 1.25 are not fitted to the rig. The estimate
-of a batch's serial time is `iterations * plainIterationMs`, so a loop whose first iteration is much cheaper
-or much dearer than the rest can be misjudged; mixed-size loops were not swept. A stop lasts for one call of the
-owner; the next call starts again at iteration 0. The time of iteration 0 on the first call of a process was
-not separated from later calls.
+**The prototype, Ryzen machine, width 8.** Speedup over serial, tracked arm, three session medians, and
+tracked over the untracked ceiling:
+
+| Workload | Tracked | Ceiling | Tracked over ceiling |
+| --- | --- | --- | --- |
+| `large`: 32 x 4 MiB | 3.20x, 3.23x, 3.29x | 4.45x, 4.39x, 5.03x | 1.39, 1.36, 1.53 |
+| `small`: 128 x 256 KiB | 2.47x, 2.46x, 2.49x | 4.38x, 4.66x, 4.38x | 1.77, 1.89, 1.76 |
+| `mixed`: 100-input set | 1.59x, 1.59x, 1.61x | 2.62x, 2.61x, 2.61x | 1.65, 1.64, 1.62 |
+
+Digests and memory equal serial in every sample, and no workload had a replay. The Mac gave 3.73x, 3.20x
+and 1.79x for the same cells. One of three rig sessions on `large` misses a 1.5x overhead bound over the
+ceiling.
+
+**What the prototype found.**
+
+- Ordered validation has to check write-after-read and write-after-write as well as read-after-write,
+  because writes land in place. A negative test (`prototype-test-negative.txt`) shows the
+  read-after-write rule alone ends with memory that differs from serial.
+- A 64-byte write granule makes the 32-byte output slots of neighbouring iterations share a granule, so
+  every batch fails validation (32 of 32 replayed). The 32-byte write granule is the measured design.
+- Tracking costs 1.38x to 1.45x of native on one thread (`prototype-test-single.json`). An earlier estimate
+  of 1.18x to 1.25x left out the mark for the second granule of an access that crosses a boundary.
+- The first Mac run is kept as `prototype-mac-invalid-large-1.jsonl` and is invalid: two arms shared a
+  memory, which left stale write bits and skipped the undo capture for tracked runs at widths 2, 4 and
+  8. It was fixed and all three sessions were rerun.
+
+## Limits
+
+- The analysis timings are diagnostic (loaded Mac, edited library copy). The rig numbers are the ones
+  to quote.
+- The prototype outlines the loop body by hand and is not the library. The library's own measurements are in
+  the iteration-route study and agree within the spread of the rig sessions.
+- One program. The 100-input set is bound by its two 64 MiB inputs at 3.3x before any overhead.
 
 ## Reproduction
 
-```sh
-node scripts/research/blake3-build.ts
-node scripts/research/iteration-admission.ts run out.jsonl 5 8
-node scripts/research/iteration-admission.ts summary out.jsonl --json summary.json
-```
-
-`scripts/research/iteration-admission.sh SESSIONS ROUNDS [OUTPUT_DIRECTORY]` runs the sessions under the timing
-lock with `nice -n 19` and cores 4 to 11; `FOLIO_WIDTH=4` selects width 4. The summary columns `trk fac`,
-`plain/trk` and `imbal` are computed from each report and feed no constant.
+`source.tar.gz` holds the analysis scripts (`analysis/`), the edited library copy (`analysis/fsrc`) and the prototype
+(`prototype/`, with `rig.sh`, `smoke.sh` and `run-tests.sh`). The BLAKE3 sources and inputs are the ones of the
+blake3-consumer study; `prototype/gen-sizes.ts` and `analysis/inputs.ts` regenerate the inputs.
 
 ## Artifacts
 
-- `w8-sweep-N.jsonl`, `w4-sweep-N.jsonl` (N from 1 to 3): raw records with the constants in the environment row.
-- `w8-summary.json`, `w4-summary.json`: the sweep's own `summary` mode over the three sessions of each width.
-- `w8-summary.txt`, `w4-summary.txt`: the printed tables.
-- `w8-before.log`, `w4-before.log`: memory, load and governor at the start of each width.
-- `source.tar.gz`: `src/`, `scripts/research/` and `package.json` as run.
+- `analysis-*`: census and estimate listings, the stack experiment output, the conflict traces and the
+  ceiling record.
+- `prototype-{rig,mac}-{large,small,mixed}-N.jsonl` (N from 1 to 3): raw records, with
+  `prototype-*.summary.json` and `prototype-mac-*.table.txt` summaries and `prototype-mac-pooled.md`.
+- `prototype-test-*`: equality, negative, random, range, single-thread and test-vector checks.
+- `prototype-*-before.log`, `prototype-*-after.log`: load, memory and governor.
+- `source.tar.gz`: the scripts above.
 - `manifest.json`: byte lengths and SHA256 digests.

@@ -1,52 +1,49 @@
-# Differential Guards
+# Backing Ablation
 
-Question: do generated programs and guard-refusal fixtures stay equal to native execution on a
-second seed, and does a guard ever refuse?
+Question: with the call boundary held equal, does a shared base memory run faster than a copied one?
 
-This extends the [differential campaign](../differential/README.md). It runs two seeds with the
-same generator and adds a family of counted loops whose 4-byte stores use a stride of 1, 2 and 4
-bytes. Strides 1 and 2 overlap at region boundaries, so the disjointness guard refuses them.
-Stride 4 does not overlap. Each loop also runs one out-of-range input that traps natively.
+The [crossover sweep](../crossover/README.md) compared a shared-memory arm with a copied-snapshot arm
+through different entry points, so the comparison changed the boundary as well as the backing. Here
+both backings run the same `runAll` call list with forced speculation. The two modules have the same
+instructions and memory size; only the import's shared flag differs. Cells use 64 `mix` calls at
+1,024 and 65,536 rounds, with none and a quarter of the calls updating one shared word. Arms are
+native and both backings at widths 2, 4 and 8, in 9 paired rounds after 2 warmups. Every sample
+compares complete memory with the native result.
 
 ## Results
 
-| | Seed 12648430 | Seed 464367618 |
-| --- | ---: | ---: |
-| Programs | 128 | 128 |
-| Comparisons | 6,228 | 6,228 |
-| Trapping comparisons | 2,976 | 3,008 |
-| Host exceptions | 1,024 | 1,024 |
-| Replayed regions | 3,668 | 3,701 |
-| Dispatched comparisons | 1,923 | 1,893 |
-| Native shared route | 12 | 12 |
-| Guard refusals (`guard-failed`) | 12 | 12 |
+Paired median speedup over native, shared against copied:
 
-All 12,456 comparisons match native in complete memory, return value, ordered host effects and
-trap or host exception identity, at widths 1, 2, 4 and 8. The earlier campaign reported zero guard
-refusals; the overlap family produces 12 per seed and each falls back to speculation with the
-native result.
+| Cell | Width | Ryzen | M2 Pro |
+| --- | ---: | --- | --- |
+| 65,536 rounds, no conflicts | 4 | 1.22x, 1.21x | 2.74x, 2.67x |
+| 65,536 rounds, no conflicts | 8 | 2.24x, 2.12x | 3.40x, 3.04x |
+| 65,536 rounds, a quarter conflicting | 4 | 1.56x, 1.75x | 1.71x, 1.65x |
+| 65,536 rounds, a quarter conflicting | 8 | 1.48x, 1.67x | 1.87x, 1.86x |
 
-Each seed draws each of the seven grammar shapes between 13 and 30 times. The shapes cover scalar 32-bit load,
-rotate, xor and store; 64-bit load, add and store; `memory.copy`; 32-bit and 64-bit float
-load and store; saturating float-to-integer conversion; and 16-bit store with a sign-extended byte
-load and `clz`. Four input modes cross each shape: a shared destination, an aliased source, a
-destination at the page boundary and a trap. The grammar does not generate `memory.fill`,
-`memory.init`, atomic operations or SIMD, so those transformations have no generated coverage.
+At 1,024 rounds every cell is 0.22x or lower with either backing. Across the 24 cells of each machine
+the two backings differ by up to about 20% in either direction, and neither is consistently faster.
+With the boundary equal, backing is not the limiting cost of speculation. The overlays, dispatch and
+validation are the same work in both.
 
-The campaign is finite evidence of equality on these shapes. It is not a proof of correctness for
-the transformation.
+The Ryzen speedups here are lower than in [graded conflicts](../graded-conflicts/README.md) for the
+same cell (2.24x against 3.50x at width 8 with no conflicts). This run keeps six pools and 28 worker
+threads open and rotates seven arms, which the graded run does not. Compare the two backings inside
+this run and not against the graded figures.
 
 ## Reproduction
 
 ```sh
-node scripts/research/differential.ts build/research/seed-12648430 128 12648430
-node scripts/research/differential.ts build/research/seed-464367618 128 464367618
+node scripts/research/backing.ts build/research/backing 9
+node scripts/research/analyze.ts build/research/backing/raw.jsonl summary.json
 ```
 
-The records ran on an Apple M2 Pro with Node 26.8.2.
+`scripts/research/backing.sh` runs it on the Linux rig under a timing lock with `nice -n 19` and cores 4
+to 11. The M2 Pro record ran unpinned on macOS.
 
 ## Artifacts
 
-- `seed-12648430.jsonl`, `seed-464367618.jsonl`: raw records.
-- `seed-12648430.summary.json`, `seed-464367618.summary.json`: totals as the campaign wrote them.
+- `ryzen.jsonl`, `m2.jsonl`: raw records, 252 samples each (4 cells, 7 arms, 9 rounds).
+- `ryzen.summary.json`, `m2.summary.json`: paired summaries.
+- `source.tar.gz`: the source the Ryzen run used.
 - `manifest.json`: byte lengths and SHA256 digests.

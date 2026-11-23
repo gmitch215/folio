@@ -1,49 +1,43 @@
-# Initialized Drupal lifecycle
+# Initializer Repeat
 
-Fifteen paired rounds compare actual Drupal boot plus first render in fresh Node
-processes. All 45 outputs equal native status and normalized HTML. Embedded images
-and copied initialized memory save boot work; this is serial-work elimination,
-with a separate heap per execution.
+Question: do the initializer timings of the [initializer study](../corpus/README.md) hold when
+nothing else runs on the host?
 
-| Path              | Wall median | Aggregate CPU median | Paired speedup, 95% interval | CPU/native ratio |
-| ----------------- | ----------- | -------------------- | ---------------------------- | ---------------- |
-| Native            | 830.53 ms   | 1,412.78 ms          | 1.00×                        | 1.00             |
-| Embedded image    | 444.73 ms   | 806.49 ms            | 1.903× [1.821, 1.972]        | 0.558            |
-| Memory-image copy | 460.55 ms   | 814.66 ms            | 1.876× [1.786, 1.908]        | 0.578            |
+The earlier run overlapped other local work. This repeat runs the same three arms on the 21 fixed
+corpus initializers, 15 paired rounds each: conventional initialization, a fresh instance followed
+by `applyImage`, and a whole-memory application cache.
 
-Intervals bootstrap paired rounds in this one execution. They do not establish
-independent replication or managed-platform render latency. The warm second render
-medians are 66.02, 62.94 and 64.31 ms respectively: retaining an already initialized
-application remains cheaper than restoring it. The copied-image path spends a
-median 10.82 ms applying pages/globals. Renewal is included in total elapsed/CPU but
-is not separately timed. Native rendering finishes with 69,992,448 heap bytes;
-restored rendering uses 87,687,168, so this speedup carries a larger heap.
+## Results
 
-A separate image generation observation costs 10,366.68 ms elapsed and 11,362.81 ms
-CPU, including boot/render, capture, bake, gzip, files and database backup. Baking
-alone costs 3,947.95 ms. It produces a 61,852,825-byte Wasm module and 47,844,350-byte
-encoded image. A model using these costs and cohort median savings breaks even at
-27 embedded-image or 29 memory-copy boots by elapsed time, 19 by CPU. Distribution,
-deployment, storage and retention are excluded; these are calculated thresholds,
-not observed fleet outcomes. The generated heap is not safe to publish as raw data.
+Paired median speedup over conventional initialization on the Ryzen machine:
 
-The capture restores four mutable globals, one filesystem stream, four named/sealed
-host handles and initialization replay. All 30 restored RNG triples are unique;
-key/salt hashes match native, and replay/renewal report no errors. This does not
-serialize arbitrary JavaScript, changed function tables or external resources.
+| Arm | Isolated repeat | Earlier run |
+| --- | ---: | ---: |
+| Image restore | 1.08x to 1.40x | 1.00x to 2.05x |
+| Application cache | 0.52x to 0.94x | 0.69x to 1.20x |
 
-Current [deployed delivery](delivery/README.md) proves this embedded module can be
-uploaded and instantiated on Free, alongside the asset-copy alternative. That
-instrument uses stub imports and measures no Drupal rendering. Prior actual
-managed host render evidence remains in [deployed-serve](../deployed-serve/README.md).
+Restoring an image after instantiation is modestly faster than running these initializers. The
+application cache is slower than initializing on every kernel. The earlier run overstated both, so
+use these figures for the corpus. They say nothing about the PHP image, whose
+[lifecycle](../lifecycle/README.md) saving comes from a much larger initialization.
 
-| Artifact                           | Contents                                                       |
-| ---------------------------------- | -------------------------------------------------------------- |
-| [raw.jsonl](raw.jsonl)             | 45 samples, exact environment, inputs and phase observations   |
-| [summary.json](summary.json)       | Equality, safety, paired statistics and raw digest             |
-| [phases.json](phases.json)         | Compilation, instantiation, first/warm render and heap medians |
-| [generation.json](generation.json) | Separate generation observation and scoped amortization model  |
-| [source.tar.gz](source.tar.gz)     | Public harness and measured library/helper sources             |
+All 945 samples match: complete memory and returns equal across arms. All 21 bake attempts refuse
+the module's start section, so `applyImage` after a fresh instantiation is the route measured.
 
-See [method](../../../experiments/bootimage/research/METHOD.md) and
-[reproduction](../../../experiments/bootimage/research/README.md).
+## Reproduction
+
+```sh
+node scripts/research/boot-eligibility.ts build/research/initializer 15
+node scripts/research/analyze.ts build/research/initializer/raw.jsonl summary.json
+```
+
+The record ran through `scripts/research/matched.sh` on Linux with Node 26.10.0, `nice -n 19`,
+cores 4 to 11 and a shared timing lock.
+
+## Artifacts
+
+- `ryzen.jsonl`: raw records, 945 samples.
+- `ryzen.summary.json`: paired summary.
+- `manifest.json`: byte lengths and SHA256 digests.
+
+The source archive is in [reset-policies](../../corpus/reset-policies/source.tar.gz).
