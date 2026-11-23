@@ -15,7 +15,12 @@
 		"verbatimModuleSyntax": true,
 		"skipLibCheck": true,
 		"paths": {
-			"@gmitch215/folio": ["./src/index.ts"]
+			"@gmitch215/folio": ["./src/index.ts"],
+			"@gmitch215/folio/workers": ["./src/workers.ts"],
+			"@gmitch215/folio/browser": ["./src/browser.ts"],
+			"@gmitch215/folio/memory": ["./src/memory.ts"],
+			"@gmitch215/folio/boot": ["./src/boot.ts"],
+			"@gmitch215/folio/continuation": ["./src/continuation.ts"]
 		}
 	},
 	"include": [
