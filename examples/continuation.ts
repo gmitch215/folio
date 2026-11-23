@@ -22,8 +22,8 @@ export class ContinuationObject {
 	}
 
 	async fetch(): Promise<Response> {
-		// far enough ahead; a near-due alarm move outside alarm() can reset the object
-		await this.storage.setAlarm(Date.now() + 1000);
+		// at least 5 s ahead; a near-due alarm move outside alarm() can reset the object
+		await this.storage.setAlarm(Date.now() + 5000);
 		return new Response('started');
 	}
 
