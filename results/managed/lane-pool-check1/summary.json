@@ -1,0 +1,36 @@
+{
+  "finished": "complete",
+  "requests": 55,
+  "passes": 466,
+  "pairRatios": [
+    1.2145752610526133,
+    9.369227763403206,
+    1.1042301311797995,
+    8.12427877220896,
+    6.684311030771077,
+    1.0849855963851602,
+    1.5064462658214277,
+    10.743323930666651,
+    1.8643509233176663,
+    10.198223535632863
+  ],
+  "verdict": "reject",
+  "gain": 4.274330977044372,
+  "reasons": [
+    "5 pairs returned outputs that differ from the serial run",
+    "3 burn runs did not reset a lane"
+  ],
+  "leftovers": [],
+  "foreignChanges": [
+    {
+      "type": "scripts",
+      "change": "modified",
+      "mine": false
+    },
+    {
+      "type": "scripts",
+      "change": "removed",
+      "mine": false
+    }
+  ]
+}
