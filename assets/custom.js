@@ -1,6 +1,78 @@
 (() => {
 	const MERMAID = 'https://cdn.jsdelivr.net/npm/mermaid@12.1.0/dist/mermaid.esm.min.mjs';
 	const KATEX = 'https://cdn.jsdelivr.net/npm/katex@0.18.11/dist/';
+	const LIGHT = {
+		darkMode: false,
+		background: '#ffffff',
+		primaryColor: '#dcf0e4',
+		primaryTextColor: '#14221b',
+		primaryBorderColor: '#0b6b3d',
+		secondaryColor: '#f3f8f5',
+		secondaryTextColor: '#14221b',
+		secondaryBorderColor: '#5f7a6c',
+		tertiaryColor: '#ffffff',
+		tertiaryTextColor: '#14221b',
+		tertiaryBorderColor: '#5f7a6c',
+		lineColor: '#4a5e54',
+		textColor: '#14221b',
+		mainBkg: '#dcf0e4',
+		nodeBorder: '#0b6b3d',
+		clusterBkg: '#f3f8f5',
+		clusterBorder: '#5f7a6c',
+		edgeLabelBackground: '#ffffff',
+		noteBkgColor: '#f3f8f5',
+		noteTextColor: '#14221b',
+		noteBorderColor: '#5f7a6c',
+		actorBkg: '#dcf0e4',
+		actorBorder: '#0b6b3d',
+		actorTextColor: '#14221b',
+		actorLineColor: '#5f7a6c',
+		signalColor: '#14221b',
+		signalTextColor: '#14221b',
+		labelBoxBkgColor: '#f3f8f5',
+		labelBoxBorderColor: '#5f7a6c',
+		labelTextColor: '#14221b',
+		loopTextColor: '#14221b',
+		activationBkgColor: '#cfe6d9',
+		activationBorderColor: '#0b6b3d',
+		sequenceNumberColor: '#ffffff'
+	};
+	const DARK = {
+		darkMode: true,
+		background: '#0b1210',
+		primaryColor: '#1a3329',
+		primaryTextColor: '#e3ece7',
+		primaryBorderColor: '#6fdba5',
+		secondaryColor: '#111b17',
+		secondaryTextColor: '#e3ece7',
+		secondaryBorderColor: '#7f9a8d',
+		tertiaryColor: '#0b1210',
+		tertiaryTextColor: '#e3ece7',
+		tertiaryBorderColor: '#7f9a8d',
+		lineColor: '#a3b5ab',
+		textColor: '#e3ece7',
+		mainBkg: '#1a3329',
+		nodeBorder: '#6fdba5',
+		clusterBkg: '#111b17',
+		clusterBorder: '#7f9a8d',
+		edgeLabelBackground: '#0b1210',
+		noteBkgColor: '#111b17',
+		noteTextColor: '#e3ece7',
+		noteBorderColor: '#7f9a8d',
+		actorBkg: '#1a3329',
+		actorBorder: '#6fdba5',
+		actorTextColor: '#e3ece7',
+		actorLineColor: '#7f9a8d',
+		signalColor: '#e3ece7',
+		signalTextColor: '#e3ece7',
+		labelBoxBkgColor: '#111b17',
+		labelBoxBorderColor: '#7f9a8d',
+		labelTextColor: '#e3ece7',
+		loopTextColor: '#e3ece7',
+		activationBkgColor: '#2a5a46',
+		activationBorderColor: '#6fdba5',
+		sequenceNumberColor: '#0b1210'
+	};
 	const blocks = [...document.querySelectorAll('pre > code.mermaid, pre > code.math')];
 	const isMath = (code) => code.classList.contains('math');
 	const dark = () =>
@@ -48,7 +120,8 @@
 				startOnLoad: false,
 				securityLevel: 'strict',
 				suppressErrorRendering: true,
-				theme: dark() ? 'dark' : 'default',
+				theme: 'base',
+				themeVariables: dark() ? DARK : LIGHT,
 				// narrower sequence layout keeps three-participant diagrams at 0.55 scale or better at 390 px
 				sequence: { width: 100, diagramMarginX: 20 }
 			});

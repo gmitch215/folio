@@ -14,7 +14,7 @@
 <h1>Interface CertifyOptions</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">CertifyOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#block">block</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#layout">layout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">len</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">ptr</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">state</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxms">maxMs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ring">ring</a><span class="tsd-signature-symbol">?:</span> <a href="../types/index.CertifiedRing.html" class="tsd-signature-type tsd-kind-type-alias">CertifiedRing</a><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L11">src/folds/certify.ts:11</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L11">src/folds/certify.ts:11</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -36,28 +36,28 @@
 <div class="tsd-comment tsd-typography"><p>Lengths below this run concretely, the rest as quotient and remainder. Default: 4, then 16.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L15">src/folds/certify.ts:15</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L15">src/folds/certify.ts:15</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="layout"><code class="tsd-tag">Optional</code><span>layout</span><a href="#layout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">layout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">len</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">ptr</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">state</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span> <span class="tsd-signature-symbol">}</span></div>
 <div class="tsd-comment tsd-typography"><p>Parameter positions of the state, the pointer and the length. The default is 0, 1, 2.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L13">src/folds/certify.ts:13</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L13">src/folds/certify.ts:13</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxms"><code class="tsd-tag">Optional</code><span>max<wbr/>Ms</span><a href="#maxms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxMs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Wall clock limit of the whole call across the block ladder, in milliseconds. Default 30000.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L17">src/folds/certify.ts:17</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L17">src/folds/certify.ts:17</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="ring"><code class="tsd-tag">Optional</code><span>ring</span><a href="#ring" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ring</span><span class="tsd-signature-symbol">?:</span> <a href="../types/index.CertifiedRing.html" class="tsd-signature-type tsd-kind-type-alias">CertifiedRing</a></div>
 <div class="tsd-comment tsd-typography"><p>Restricts the analysis to one ring. The default tries <code>gf2</code>, then <code>z2w</code>, then <code>zp</code>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L19">src/folds/certify.ts:19</a></li></ul></aside></section></section></details></main>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L19">src/folds/certify.ts:19</a></li></ul></aside></section></section></details></main>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

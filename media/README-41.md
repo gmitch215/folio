@@ -1,26 +1,22 @@
-# Deferred Chain
+# Signal
 
-Does a checkpoint written only on the same isolate, with the signal stopping each event, keep a chain exact? What does the first isolate move lose?
+Does a Durable Object alarm event receive the CPU warning from the platform, and does a Wasm guest that stops on it avoid a CPU reset?
 
 ## Instrument
 
-`experiments/continuation/deferred` runs a 120,000-step chain in five arms:
+A deployed Durable Object (`experiments/continuation/signal`) runs a 64-bit LCG kernel, `burn.wat`, that polls the signal word at 1024. Calibration calls burn a fixed number of blocks per request. The signal calls burn 102,680 blocks in up to three events per object and report the word before and after each event. The sync chain (`/chain?mode=sync`) carries state in storage across alarm slices.
 
-- `f0`: local, 3,000 steps, drops at slices 7, 15 and 22.
-- `f1`: three deployed objects, signal stops, deferred checkpoints.
-- `f2`: forced aborts after slices 2 and 4.
-- `f3`: mid-event checkpoints with a budget.
-- `f4`: placement, 500-step checkpoints until 4,000 steps, then signal stops.
+Platform: a Durable Object in one account, one isolate per object until the platform moves it. Figures are CPU and wall times from `wrangler tail` joined to the Durable Object's own responses.
 
 ## Rows
 
-`raw.jsonl` holds one `chain` row per object, one `slice` row per slice (restore, steps lost, signal steps, outcome, checkpoint rows) and one `move` row per isolate move in `f4`. Isolate ids are replaced by ordinals.
+`raw.jsonl` holds one row per call (`calibration`, `signal`), one row per chain (`sync-chain`) and one row per slice (`sync-slice`). Object ids are replaced by ordinals. The `prose` row records a probe that was reported in text only.
 
 ## Reproduce
 
 ```sh
 node experiments/continuation/build.ts
-node experiments/continuation/deferred/run.ts f1   # deployed arms need account variables
+node experiments/continuation/signal/run.ts a1     # deployed arms need account variables, see experiments/continuation/README.md
 node experiments/continuation/export.ts
 node scripts/analyze/continuation.ts
 node scripts/research/evidence.ts
@@ -28,12 +24,6 @@ node scripts/research/evidence.ts
 
 ## Scope
 
-In the forced-abort arm the post-signal write did not land at either forced abort (slices 2 and 4; `signalWrites` in `summary.json` shows `landed` false for both). The driver's abort is a `ctx.abort()` call. The loss recorded by the job row is smaller than the steps that ran during the signal, and the summary reports both numbers. The `f4` placement cutoff causes its moves to lose the signal steps beyond 4,000; this is the design as run, not a fix.
+One account, one deployment, runs in November 2026. A reset in the first event of an object came from a pending write held across a long synchronous stretch; the probe does not separate that cause from the signal. The signal's timing is platform policy and may change.
 
-## Moves after signal stops
-
-Every isolate move in `f1` to `f4` followed a slice that ended on the signal, except the `f4` object that the platform reset (`reset: true`). The seven signal-ended moves each lost the whole slice, 33,831 to 36,456 steps. The `f2` move is the seventh signal-ended move. It follows slice 1, which ran to the signal at 34,668 steps, and it loses those 34,668 steps. It does not follow a forced abort: the forced aborts follow slices 2 and 4, and the object stayed on the same isolate across both. The earlier note listed the first, third and fourth runs and left this one out. `summary.json` lists each move with `lostStepsComputed` (previous signal steps minus the restored start) beside the raw `lost` field. The two agree on every move with a signal.
-
-## Move rate
-
-`moveRate` sums the cpu of each object's slices from its first isolate change. A slice is left out and counted in `skippedSlices` when it has no cpu, or when it ran at least 5,000 steps at a rate outside 500 to 2,000 steps per cpu-second. Three slices are left out: two in `f3`, one in `f1` object 2. The `isolate-life` and `boundary-commit` raw rows carry no per-slice cpu, so this study is the only input. No object had a later isolate change. The exposure is 782.6 CPU-s, which gives an upper bound of 3.83e-3 moves per CPU-s and a mean CPU between moves of at least 261 s.
+`finalMatch` is false for all 3 sync chains. This probe carried only a block count across events, not the guest's state (worker.mjs), so its final value is not expected to match after a reset. The study tests signal stops and completion, not state continuity; the durable-chain and boundary-commit studies test continuity. The value is in `syncChains.finalMatchNote` in `summary.json`.

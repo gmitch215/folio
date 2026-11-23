@@ -18,7 +18,7 @@ of at least one byte. It holds for a module with hash <code>moduleSha256</code>,
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">StreamCertificate</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#bits">bits</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">32</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">64</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#block">block</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#checker">checker</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#entry">entry</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#exclusions">exclusions</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#image">image</a><span class="tsd-signature-symbol">:</span> <a href="index.CertificateRange.html" class="tsd-signature-type tsd-kind-interface">CertificateRange</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#initialization">initialization</a><span class="tsd-signature-symbol">:</span> <a href="index.CertificateWrite.html" class="tsd-signature-type tsd-kind-interface">CertificateWrite</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#kind">kind</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;certificate&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#layout">layout</a><span class="tsd-signature-symbol">:</span> <a href="index.AffineLayout.html" class="tsd-signature-type tsd-kind-interface">AffineLayout</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#model">model</a><span class="tsd-signature-symbol">:</span> <a href="index.AffineModel.html" class="tsd-signature-type tsd-kind-interface">AffineModel</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#modulesha256">moduleSha256</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#output">output</a><span class="tsd-signature-symbol">?:</span> <a href="index.CertificateOutput.html" class="tsd-signature-type tsd-kind-interface">CertificateOutput</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ring">ring</a><span class="tsd-signature-symbol">:</span> <a href="../types/index.CertifiedRing.html" class="tsd-signature-type tsd-kind-type-alias">CertifiedRing</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#schema">schema</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;folio.certificate.v1&quot;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#stats">stats</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">expressions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">loops</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">paths</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#zerolength">zeroLength</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;identity&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;transforms&quot;</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L46">src/folds/certify.ts:46</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L46">src/folds/certify.ts:46</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -50,92 +50,92 @@ of at least one byte. It holds for a module with hash <code>moduleSha256</code>,
 <h3 class="tsd-anchor-link" id="bits"><span>bits</span><a href="#bits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">bits</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">32</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">64</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L53">src/folds/certify.ts:53</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L53">src/folds/certify.ts:53</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="block"><span>block</span><a href="#block" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">block</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L54">src/folds/certify.ts:54</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L54">src/folds/certify.ts:54</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="checker"><span>checker</span><a href="#checker" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">checker</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L49">src/folds/certify.ts:49</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L49">src/folds/certify.ts:49</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="entry"><span>entry</span><a href="#entry" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">entry</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L51">src/folds/certify.ts:51</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L51">src/folds/certify.ts:51</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="exclusions"><span>exclusions</span><a href="#exclusions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">exclusions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Byte ranges, start inclusive and end exclusive, that an input must not overlap.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L66">src/folds/certify.ts:66</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L66">src/folds/certify.ts:66</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="image"><span>image</span><a href="#image" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">image</span><span class="tsd-signature-symbol">:</span> <a href="index.CertificateRange.html" class="tsd-signature-type tsd-kind-interface">CertificateRange</a><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Memory the proof read, as it must be when the call starts.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L62">src/folds/certify.ts:62</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L62">src/folds/certify.ts:62</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="initialization"><span>initialization</span><a href="#initialization" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">initialization</span><span class="tsd-signature-symbol">:</span> <a href="index.CertificateWrite.html" class="tsd-signature-type tsd-kind-interface">CertificateWrite</a><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Bytes the first call writes before it reads them, for modules that build a table lazily.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L64">src/folds/certify.ts:64</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L64">src/folds/certify.ts:64</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="kind"><span>kind</span><a href="#kind" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">kind</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;certificate&quot;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L47">src/folds/certify.ts:47</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L47">src/folds/certify.ts:47</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="layout"><span>layout</span><a href="#layout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">layout</span><span class="tsd-signature-symbol">:</span> <a href="index.AffineLayout.html" class="tsd-signature-type tsd-kind-interface">AffineLayout</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L55">src/folds/certify.ts:55</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L55">src/folds/certify.ts:55</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="model"><span>model</span><a href="#model" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">model</span><span class="tsd-signature-symbol">:</span> <a href="index.AffineModel.html" class="tsd-signature-type tsd-kind-interface">AffineModel</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L56">src/folds/certify.ts:56</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L56">src/folds/certify.ts:56</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="modulesha256"><span>module<wbr/>Sha256</span><a href="#modulesha256" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">moduleSha256</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L50">src/folds/certify.ts:50</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L50">src/folds/certify.ts:50</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="output"><code class="tsd-tag">Optional</code><span>output</span><a href="#output" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">output</span><span class="tsd-signature-symbol">?:</span> <a href="index.CertificateOutput.html" class="tsd-signature-type tsd-kind-interface">CertificateOutput</a></div>
 <div class="tsd-comment tsd-typography"><p>Present when the call also rewrites its input, which <code>CertificateOutput</code> describes.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L58">src/folds/certify.ts:58</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L58">src/folds/certify.ts:58</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="ring"><span>ring</span><a href="#ring" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ring</span><span class="tsd-signature-symbol">:</span> <a href="../types/index.CertifiedRing.html" class="tsd-signature-type tsd-kind-type-alias">CertifiedRing</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L52">src/folds/certify.ts:52</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L52">src/folds/certify.ts:52</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="schema"><span>schema</span><a href="#schema" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">schema</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;folio.certificate.v1&quot;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L48">src/folds/certify.ts:48</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L48">src/folds/certify.ts:48</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="stats"><span>stats</span><a href="#stats" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">stats</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-kind-property">expressions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">loops</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span> <span class="tsd-kind-property">paths</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span> <span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L67">src/folds/certify.ts:67</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L67">src/folds/certify.ts:67</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="zerolength"><span>zero<wbr/>Length</span><a href="#zerolength" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">zeroLength</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;identity&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;transforms&quot;</span></div>
 <div class="tsd-comment tsd-typography"><p>What a call over zero bytes returns: the state itself, or a function of it.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/folds/certify.ts#L60">src/folds/certify.ts:60</a></li></ul></aside></section></section></details></main>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/folds/certify.ts#L60">src/folds/certify.ts:60</a></li></ul></aside></section></section></details></main>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

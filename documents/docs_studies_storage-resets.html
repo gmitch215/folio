@@ -300,12 +300,82 @@
 <p>A 2 s floor read 7 of 300 in an earlier run. The third run's one-sided Fisher test gives p = 2.6e-7 by request and 6.6e-4 by block. Its pre-set gate of at most 2 of 300 was not met, and three of the four resets fell in the first 8 of 50 blocks after a fresh install. The per-request rows are not exported.</p>
 <p>The remainder is not the alarm that the request itself arms coming due near the request's end. In the run that recorded each request's alarm move, the floor read 1 of 300. None of its 85 requests that moved the alarm reset, and the one reset was a request that made no move. Without the floor in the same run, 24 of 190 movers (12.6%) and 10 of 110 non-movers (9.1%) reset, which the run cannot separate (Fisher two-sided p = 0.45). A non-mover can still run while an alarm set by an earlier request or a firing comes due, and the header does not record that.</p>
 <h2 id="cpu-as-a-candidate" class="tsd-anchor-link">CPU as a Candidate<a href="#cpu-as-a-candidate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>The tail counts above hint that long CPU use matters: heavy requests that never waited on I/O reset more often than those that did. No arm varies CPU alone on this site. CPU use is a candidate cause, with the tail counts as its only support in this repository.</p>
+<p>CPU use is the candidate that remains. A recount of the tail records of two header-alternated runs on the deployed site, split by the object CPU of each request, reads 9 of 426 requests at 4 s of CPU or more resetting, against 2 of 1,072 below 4 s. Bare Durable Objects were run to isolate it, with 8 resets of 15 at the heaviest setting and none for idle requests.</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Idle request of 2, 4 or 8 s of wall time, alarm armed at its start 1, 5, 10 or 15 s ahead, fresh objects</td>
+<td>0 resets in 120 objects</td>
+</tr>
+<tr>
+<td>The same, warm chains of 24 events</td>
+<td>none of 45 chains reset or retired (1,080 events)</td>
+</tr>
+<tr>
+<td>CPU burned in slices with a timer between them, no alarm, 10 fresh objects per cell</td>
+<td>0, 0, 0, 2, 0 and 5 of 10 at 0, 0.25, 0.5, 1, 2 and 4 s of nominal CPU</td>
+</tr>
+<tr>
+<td>The same with a 15 s alarm armed, 5 objects per cell</td>
+<td>3 of 5 at the heaviest setting and none below it</td>
+</tr>
+<tr>
+<td>Five chains of six requests at 1 s nominal CPU, no alarm</td>
+<td>5 resets in 30 events, once per chain, each followed by a new isolate</td>
+</tr>
+</tbody>
+</table>
+<p>An idle request cannot reproduce the reset. In the cells where the alarm was set 1 s ahead it came due inside the request, and the request still returned. A request that burns CPU resets at its first storage write after the loop (<code>Durable Object reset because its code was updated</code>), with no alarm armed as well as with one. A nominal slice cost about 60 ms of measured CPU, so the heaviest setting is about 1 s of object CPU. The pre-set prediction, a knee between 0.5 and 2 s of nominal CPU, was refuted as stated: 2 s gave 0 of 15.</p>
+<p>Post hoc, the heaviest setting splits on measured CPU: all 8 requests at 1,038 ms or more reset and the 7 below 1,000 ms did not. That reading was made after the outcome and is not a test of a prediction. One reset at 1 s nominal had measured CPU of 128 ms and does not fit, and the two groups overlap in measured CPU, so no clean threshold shows.</p>
+<p>The storage-yield arm and the alarm-cadence arm did not run: the clock did not advance over storage awaits, so the smoke check failed. Whether the timer yield, and not the CPU, is what resets a bare object is open. The bare-object rate for a heavy request (about 1 of 2) is far above the site's per-long-event rate (about 2 percent), so CPU is necessary and not sufficient. The rows are in <a href="https://github.com/gmitch215/folio/blob/master/results/continuation/idle-requests/README.md">idle-requests</a> and <a href="https://github.com/gmitch215/folio/blob/master/results/continuation/cpu-bare-objects/README.md">cpu-bare-objects</a>.</p>
+<h2 id="what-a-reset-commits" class="tsd-anchor-link">What a Reset Commits<a href="#what-a-reset-commits" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>A bare Durable Object event wrote a marker row <code>m</code> and a row <code>y</code>, awaited 50 ms, then wrote a row <code>x</code> and, in a separate transaction, a row <code>z</code>, and a reset killed the event. A fresh stub read the rows back, and a second read 3 s later agreed in every trial. With n = 10 per cell:</p>
+<table>
+<thead>
+<tr>
+<th>Kind and variant</th>
+<th>Rows kept</th>
+<th>Reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Memory reset, memory held before the yield</td>
+<td><code>m</code>, <code>y</code> (10 of 10)</td>
+<td><code>x</code> and <code>z</code> lost</td>
+</tr>
+<tr>
+<td>Memory reset, memory held after the last write</td>
+<td>all four (10 of 10)</td>
+<td>nothing lost</td>
+</tr>
+<tr>
+<td>CPU kill, burn between the writes and the yield</td>
+<td>none (10 of 10)</td>
+<td><code>m</code> and <code>y</code> lost with the rest</td>
+</tr>
+<tr>
+<td>CPU kill, burn after the last write</td>
+<td><code>m</code>, <code>y</code> (10 of 10)</td>
+<td><code>x</code> and <code>z</code> lost</td>
+</tr>
+</tbody>
+</table>
+<p>Read after the fact, each kind kept what was written before the last yield and lost what came after it. Two cases differ: the memory reset after the last write lost nothing, and a CPU kill with no yield since the writes lost all of them. The pre-set prediction that a CPU kill after all writes keeps nothing was refuted, because the two rows written before the yield survived.</p>
+<p>Storage resets, pooled over the runs that produced the <code>Internal error in Durable Object storage</code> text, kept all rows in 23 events, none in 1 and a partial set in 0, against 105, 14 and 0 of 119 in the earlier read-back. The handler shape of this test, with a yield before the second write, produced 0 of 20 such resets. 18 of 20 chains stopped at the first storage write after the yield with <code>Durable Object reset because its code was updated</code>, with <code>m</code> and <code>y</code> kept in all 18. A supplementary arm without the yield gave the storage resets: 20 of 20 chains, all four rows in 19 and none in 1.</p>
+<p>The first request after a reset took about 170 to 265 ms of client wall time, against about 40 to 60 ms for the next one on the same object, with at most 1 ms of CPU for either (the storage-reset CPU rests on 3 samples). No unreachable window was seen: 82 of 82 first reads succeeded at the first attempt. The rows are in <a href="https://github.com/gmitch215/folio/blob/master/results/continuation/reset-commit/README.md">reset-commit</a>.</p>
+<p>A design that writes a marker before an effect may rely on this much: a marker followed by an awaited yield survived every reset kind here. A marker followed directly by the effect can be lost with the effect repeated. A separate arm tested the flush: after two plain writes, <code>await storage.sync()</code> and then a burn past the CPU limit kept both rows in 10 of 10 objects, against none of 10 with no flush, and a 50 ms yield after the flush changed nothing (<a href="https://github.com/gmitch215/folio/blob/master/results/continuation/sync-commit/README.md">sync-commit</a>). A claim inside <code>transactionSync</code>, and memory or storage resets after a flush, are not measured.</p>
 <h2 id="reading" class="tsd-anchor-link">Reading<a href="#reading" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>The 5 s floor fixes request-path storage resets to about 0.6%. Two designs that looked like the cause did not hold up: an earlier alarm move by itself (a move 5 s ahead did not reset a bare object) and committing before the move (it made resets more frequent). On a bare object, a commit followed by a near alarm at the end of an event did not reset in 20 chains, and a near alarm at an isolate boundary did.</p>
 <h2 id="closed-and-open" class="tsd-anchor-link">Closed and Open<a href="#closed-and-open" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Closed: alarm isolation by <code>sync()</code> as a fix on the deployed site, the earlier alarm move as the cause of admin page resets, and the request's own alarm coming due near its end as the cause of the resets that remain under the floor.</p>
-<p>Open: the cause of the remaining resets and of the generic storage reset, whether a longer floor reaches zero (300 requests per arm cannot tell a 5 s floor from a 15 s one), whether the retirement result holds on the deployed site, and whether request-only reuse changes the reset rate at the same drive. Retry safety after a reset is not covered here.</p>
+<p>Closed: alarm isolation by <code>sync()</code> as a fix on the deployed site, the earlier alarm move as the cause of admin page resets, and the request's own alarm coming due near its end as the cause of the resets that remain under the floor, and an idle request, with or without a near alarm, as a way to reproduce the reset on a bare object.</p>
+<p>Open: the CPU candidate (a clean threshold, and whether the timer yield and not the CPU resets a bare object, since the storage-yield and alarm-cadence arms did not run), the cause of the remaining resets and of the generic storage reset, whether a longer floor reaches zero (300 requests per arm cannot tell a 5 s floor from a 15 s one), whether the retirement result holds on the deployed site, and whether request-only reuse changes the reset rate at the same drive. Retry safety after a reset is not covered here.</p>
 <h2 id="see-also" class="tsd-anchor-link">See Also<a href="#see-also" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
 <li>Report: <a href="TECHNICAL_REPORT.html#storage-resets-and-the-growth-governor">Storage Resets and the Growth Governor</a></li>
@@ -313,6 +383,6 @@
 <li>Related study: <a href="docs_studies_memory-accounting.html">Memory Accounting</a> for the growth governor</li>
 </ul>
 </div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_studies_README.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">All Studies</span><span class="docs-pager-desc">The measurement studies behind the modules, with the page for each.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_studies_continuation-across-events.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Continuation Across Events</span><span class="docs-pager-desc">The continuation model, PHP park and the deployed runs.</span></a></nav></main>
-<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#where-the-resets-fall">Where the Resets Fall</a></li><li class="docs-toc-h2"><a href="#bare-object-arms">Bare Object Arms</a></li><li class="docs-toc-h2"><a href="#deployed-ab">Deployed A/B</a></li><li class="docs-toc-h2"><a href="#retirement-and-alarm-shape">Retirement and Alarm Shape</a></li><li class="docs-toc-h2"><a href="#the-idle-floor-and-the-commit-ladder">The Idle Floor and the Commit Ladder</a></li><li class="docs-toc-h2"><a href="#the-5-s-alarm-floor">The 5 s Alarm Floor</a></li><li class="docs-toc-h2"><a href="#cpu-as-a-candidate">CPU as a Candidate</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#where-the-resets-fall">Where the Resets Fall</a></li><li class="docs-toc-h2"><a href="#bare-object-arms">Bare Object Arms</a></li><li class="docs-toc-h2"><a href="#deployed-ab">Deployed A/B</a></li><li class="docs-toc-h2"><a href="#retirement-and-alarm-shape">Retirement and Alarm Shape</a></li><li class="docs-toc-h2"><a href="#the-idle-floor-and-the-commit-ladder">The Idle Floor and the Commit Ladder</a></li><li class="docs-toc-h2"><a href="#the-5-s-alarm-floor">The 5 s Alarm Floor</a></li><li class="docs-toc-h2"><a href="#cpu-as-a-candidate">CPU as a Candidate</a></li><li class="docs-toc-h2"><a href="#what-a-reset-commits">What a Reset Commits</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
 <p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
 <div class="overlay"></div></body></html>

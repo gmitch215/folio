@@ -1,29 +1,77 @@
-# Signal
+# Idle Restart Floor
 
-Does a Durable Object alarm event receive the CPU warning from the platform, and does a Wasm guest that stops on it avoid a CPU reset?
+How often does a small commit on an idle, lightly written SQLite Durable Object fail with a reset
+over several hours? The object gets no requests. Its own alarm drives every write, so the result is
+the background failure rate of ordinary small commits, with no load to explain a reset.
 
-## Instrument
+## Files
 
-A deployed Durable Object (`experiments/continuation/signal`) runs a 64-bit LCG kernel, `burn.wat`, that polls the signal word at 1024. Calibration calls burn a fixed number of blocks per request. The signal calls burn 102,680 blocks in up to three events per object and report the word before and after each event. The sync chain (`/chain?mode=sync`) carries state in storage across alarm slices.
+| File             | Role                                                            |
+| ---------------- | --------------------------------------------------------------- |
+| `worker.mjs`     | the `Idle` Durable Object, its alarm chain and the Worker entry |
+| `wrangler.jsonc` | one SQLite-backed class, `Idle`, bound as `I`                   |
+| `idle.ts`        | the `start` and `stat` driver; writes `runs/idle-<time>.json`   |
 
-Platform: a Durable Object in one account, one isolate per object until the platform moves it. Figures are CPU and wall times from `wrangler tail` joined to the Durable Object's own responses.
+## Alarm Chain
 
-## Rows
+Each alarm run inserts a row into `started`, syncs, inserts a row into `done`, syncs, and sets the
+next alarm. The `started` and `done` tables share the run number `k`. The `meta` table keeps the
+run counter (`alarmStarts`), the instance id last seen by the alarm handler (`inst`) and the number
+of distinct instances seen (`instances`).
 
-`raw.jsonl` holds one row per call (`calibration`, `signal`), one row per chain (`sync-chain`) and one row per slice (`sync-slice`). Object ids are replaced by ordinals. The `prose` row records a probe that was reported in text only.
+A run that fails at either commit leaves a `started` row with no `done` row. The handler does not
+catch exceptions, so a failed run surfaces in the logs.
 
-## Reproduce
+The chain stops itself. The run that reaches `MAX_FIRES` does not set another alarm. At the
+defaults (180 seconds, 80 runs) that is about four hours, so a deployment left running ends by
+itself.
+
+## Running
 
 ```sh
-node experiments/continuation/build.ts
-node experiments/continuation/signal/run.ts a1     # deployed arms need account variables, see experiments/continuation/README.md
-node experiments/continuation/export.ts
-node scripts/analyze/continuation.ts
-node scripts/research/evidence.ts
+npx wrangler deploy --config experiments/idle-floor/wrangler.jsonc
+WORKER_URL=$WORKER_URL node experiments/idle-floor/idle.ts start
+WORKER_URL=$WORKER_URL node experiments/idle-floor/idle.ts stat
+npx wrangler delete --config experiments/idle-floor/wrangler.jsonc
 ```
 
-## Scope
+`start` sends one request per object to create it, then starts its chain once. `stat` prints a
+row per object and the totals, and writes the same data to `runs/`.
 
-One account, one deployment, runs in November 2026. A reset in the first event of an object came from a pending write held across a long synchronous stretch; the probe does not separate that cause from the signal. The signal's timing is platform policy and may change.
+| Variable     | Default | Use                                      |
+| ------------ | ------- | ---------------------------------------- |
+| `WORKER_URL` | none    | origin of the deployed Worker (required) |
+| `OBJECTS`    | `10`    | number of objects                        |
+| `OUT`        | `runs/` | output directory                         |
 
-`finalMatch` is false for all 3 sync chains. This probe carried only a block count across events, not the guest's state (worker.mjs), so its final value is not expected to match after a reset. The study tests signal stops and completion, not state continuity; the durable-chain and boundary-commit studies test continuity. The value is in `syncChains.finalMatchNote` in `summary.json`.
+The Worker reads `PERIOD_MS` (default `180000`) and `MAX_FIRES` (default `80`) from its
+environment. Each `stat` call adds a request to every object.
+
+## Reading the Output
+
+| Field                | Meaning                                                             |
+| -------------------- | ------------------------------------------------------------------- |
+| `fires`              | alarm runs that began (`started` rows)                              |
+| `completed`          | runs that wrote their `done` row                                    |
+| `failed`             | `fires` minus `completed`: started runs with no `done` row          |
+| `startsMinusCounter` | `started` rows minus `alarmStarts`; zero when every run writes both |
+| `instanceChanges`    | distinct instance ids seen by the alarm handler, minus one          |
+| `wilsonUpper95`      | 95% Wilson upper bound on `failed / fires`                          |
+
+If the platform retries a run that did not commit, its rows look the same as a failed run's, so
+the schema cannot separate the two. The `started` and `done` rows give counts per run number only.
+
+## Results
+
+One deployment, run from 2026-11-22 04:56 UTC for four hours. Ten objects, 80 alarm runs each, no
+requests after start.
+
+| Measure                                | Value |
+| -------------------------------------- | ----- |
+| Alarm runs begun                       | 800   |
+| Runs completed                         | 800   |
+| Failed runs (started, no done row)     | 0     |
+| Instance changes beyond the first      | 790   |
+| 95% Wilson upper bound on failure rate | 0.48% |
+
+No failures in 800 fires. The 95% upper bound on the failure rate is 0.48%.

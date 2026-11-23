@@ -14,7 +14,7 @@
 <h1>Interface AllocatorEvidence</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">AllocatorEvidence</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#arenabytes">arenaBytes</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#arenataint">arenaTaint</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#arenaword">arenaWord</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#assumptions">assumptions</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#derefsproved">derefsProved</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#pointercells">pointerCells</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#rules">rules</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/index.ProvenanceRule.html" class="tsd-signature-type tsd-kind-type-alias">ProvenanceRule</a><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#shiftrule">shiftRule</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L147">src/ownership/index.ts:147</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L147">src/ownership/index.ts:147</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -38,50 +38,50 @@
 <h3 class="tsd-anchor-link" id="arenabytes"><span>arena<wbr/>Bytes</span><a href="#arenabytes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">arenaBytes</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L148">src/ownership/index.ts:148</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L148">src/ownership/index.ts:148</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="arenataint"><span>arena<wbr/>Taint</span><a href="#arenataint" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">arenaTaint</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Arena offsets where an arena-derived value may have been stored; the bytes there may differ between bases.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L153">src/ownership/index.ts:153</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L153">src/ownership/index.ts:153</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="arenaword"><span>arena<wbr/>Word</span><a href="#arenaword" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">arenaWord</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L149">src/ownership/index.ts:149</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L149">src/ownership/index.ts:149</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="assumptions"><span>assumptions</span><a href="#assumptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">assumptions</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L159">src/ownership/index.ts:159</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L159">src/ownership/index.ts:159</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="derefsproved"><span>derefs<wbr/>Proved</span><a href="#derefsproved" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">derefsProved</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Heap dereferences the interval domain put inside the arena.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L155">src/ownership/index.ts:155</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L155">src/ownership/index.ts:155</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="pointercells"><span>pointer<wbr/>Cells</span><a href="#pointercells" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">pointerCells</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>Window ranges that may hold an arena-derived pointer; the last record supplies their serial values.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L151">src/ownership/index.ts:151</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L151">src/ownership/index.ts:151</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="rules"><span>rules</span><a href="#rules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">rules</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/index.ProvenanceRule.html" class="tsd-signature-type tsd-kind-type-alias">ProvenanceRule</a><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L156">src/ownership/index.ts:156</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L156">src/ownership/index.ts:156</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="shiftrule"><span>shift<wbr/>Rule</span><a href="#shiftrule" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">shiftRule</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>What a router that moves the arena must do.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/ownership/index.ts#L158">src/ownership/index.ts:158</a></li></ul></aside></section></section></details></main>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/ownership/index.ts#L158">src/ownership/index.ts:158</a></li></ul></aside></section></section></details></main>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

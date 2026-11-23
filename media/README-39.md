@@ -1,46 +1,82 @@
-# Checkpoint Cost
+# Sync Commit
 
-What do the hash pass, the page-hash checkpoint and the restore cost on a local Node 26 runtime, and is an interrupted run exact?
+Does `await ctx.storage.sync()` make a write survive a CPU kill that follows it with no other yield?
 
 ## Instrument
 
-`experiments/continuation/local` (Node 26, JSPI, `node:sqlite`, Apple M2 Pro). The guest raises the signal every K steps from inside Wasm, because a synchronous guest cannot be interrupted from JavaScript. Run 1 checks exactness and the per-event handoff. Run 2 runs a durable chain with checkpoints every tenth yield, kills at three yields, restores, and corrupts one byte to test refusal. Run 3 times the hash pass and the checkpoint at 32, 64 and 128 MiB with 0 to 64 MiB changed. Run 4 measures the poll tax on one kernel.
+The `M1` Durable Object class (`experiments/alarm-retirement/m1-worker.mjs`, config `sync-wrangler.jsonc`) takes a `sync` query parameter on `/ev`. It writes the marker `m` and the row `y` with `sql.exec`, applies the flush arm, then burns 100e9 units, far past the 30 s CPU limit, and writes nothing afterwards. The driver (`sync-driver.mjs`, run by `sync-run.sh`) reads the rows back from a fresh stub right after the kill and again 3 s later. The analysis is `sync-analyze.mjs`.
 
-The host ran other work during the runs. Timing spreads are wide.
+Files:
 
-## Rows
+- `raw-trials.jsonl`: one row per trial, label `grid`.
+- `raw-tail.jsonl`: the invocation records from `wrangler tail`, trimmed with `tail-trim.mjs`.
+- `summary.txt`: the output of `sync-analyze.mjs` on these files.
 
-`raw.jsonl` holds the summary of each run, one `timing` row per handoff measurement, one `checkpoints` row per checkpoint in run 2, `hash-pass` and `checkpoint` rows for run 3, and one `poll-pair` row per pair in run 4. `raw-hashpages.jsonl` holds one `hash-bench` row per run (see Hash rate).
+## Design
 
-## Reproduce
+Ten fresh objects per arm, run as two passes of five with the arm order rotated: `none`, `sync`, `syncyield` in pass 0 and `sync`, `syncyield`, `none` in pass 1. Two objects ran at a time. A plain event that commits `m`, `y`, `x`, `z` gated each run, and a smoke run of one object per arm came first.
+
+| Arm         | After writing `m` and `y`                                       | Objects |
+| ----------- | --------------------------------------------------------------- | ------: |
+| `none`      | burn                                                            |      10 |
+| `sync`      | `await storage.sync()`, then burn                               |      10 |
+| `syncyield` | `await storage.sync()`, `await scheduler.wait(50)`, then burn   |      10 |
+
+A trial where the request returned instead of being killed counts as `injected: false` and leaves the arm's n. There were none.
+
+Predictions, written before the run: `none` loses `m` and `y` in 10 of 10, as the CPU DURING cell of `reset-commit` did. `sync` and `syncyield` keep both rows, with no prediction on the exact rate. A result where `sync` loses the rows and `syncyield` keeps them would mean the yield, not the flush, commits.
+
+## Results
+
+Rows of the killed event, read from a fresh stub. Wilson 95% intervals.
+
+| Arm         | n  | Injected false | Rows after the kill | Both rows kept       | Rows 3 s later |
+| ----------- | -: | -------------: | ------------------- | -------------------- | -------------- |
+| `none`      | 10 | 0              | none: 10            | 0/10 [0.0%, 27.8%]   | none: 10       |
+| `sync`      | 10 | 0              | `my`: 10            | 10/10 [72.2%, 100%]  | `my`: 10       |
+| `syncyield` | 10 | 0              | `my`: 10            | 10/10 [72.2%, 100%]  | `my`: 10       |
+
+The rows agreed across both passes in every arm (5 and 5). The caller and the tail disagree on the kill text, as in `reset-commit`:
+
+| Arm         | Result at the caller             | Tail outcome for the killed request |
+| ----------- | -------------------------------- | ----------------------------------- |
+| `none`      | storage timeout text: 10         | `exceededWallTime`: 10              |
+| `sync`      | CPU time limit text: 10          | `exceededCpu`: 10                   |
+| `syncyield` | CPU time limit text: 10          | `exceededCpu`: 10                   |
+
+Every tail exception reads "Durable Object exceeded its CPU time limit and was reset." Every first read after the kill succeeded on the first attempt. The first read reported a different isolate id for each of the 10 objects in every arm.
+
+## Reading
+
+`await storage.sync()` committed the writes before it. A CPU kill that followed it with no further yield kept `m` and `y` in 10 of 10 trials, and the control arm without the flush lost both in 10 of 10. The `syncyield` arm gave the same rows as `sync`, so the 50 ms yield added nothing once the flush had run.
+
+The caller's error text split with the arm: the arms with a flush reported the CPU limit and the tail's `exceededCpu`, and the control reported the storage timeout text and `exceededWallTime`. This repeats the correlation `reset-commit` found between the two. This study did not test why.
+
+## Limits
+
+- Ten objects per arm. A rate of 10 of 10 has a Wilson lower bound of 72.2%, so a failure rate of a few percent is not excluded.
+- One kill shape: two `sql.exec` writes and the flush, then CPU burn. It does not cover a flush after a `transactionSync`, a larger write, or a kill by memory or storage reset.
+- The burn unit was not calibrated. The platform killed the request at about 32 s of CPU in every trial.
+- The read-back returns the rows the successor sees. It does not show whether the writes reached disk before the kill or were recovered afterwards.
+- Run on one Worker deployment on one day, from one client host over the public Worker route.
+- The smoke run (one object per arm, same Worker, a first deploy) gave the same rows: `none` none, `sync` `my`, `syncyield` `my`. Its teardown hit a DNS failure and the Worker was deleted by hand on retry. The records of that run are not exported.
+
+## How to Reproduce
+
+Summary, from the repository root:
 
 ```sh
-PATH=/opt/homebrew/opt/node/bin:$PATH node experiments/continuation/local/run.mjs
-node experiments/continuation/export.ts
-node scripts/analyze/continuation.ts
-node scripts/research/evidence.ts
+d=$(mktemp -d)
+cp results/continuation/sync-commit/raw-trials.jsonl "$d/trials.jsonl"
+node experiments/alarm-retirement/sync-analyze.mjs "$d" results/continuation/sync-commit/raw-tail.jsonl \
+	> results/continuation/sync-commit/summary.txt
 ```
 
-Run 3 takes about 10 seconds. The whole script takes several minutes.
+The raw tail is made from the `wrangler tail --format json` output of the run's Worker:
 
-`export.ts` rebuilds `raw-hashpages.jsonl` from the recorded I9 samples in `experiments/continuation/local/runs/hashpages-i9.json`. Running `node scripts/probe/hashpages-bench.ts` measures again and prints new `hash-bench` rows on stdout. Those rows are new samples, not the recorded ones, so the bench output does not replace `raw-hashpages.jsonl`.
+```sh
+node experiments/alarm-retirement/tail-trim.mjs <tail-full.jsonl> \
+	> results/continuation/sync-commit/raw-tail.jsonl
+```
 
-## Scope
-
-Local Node timing, not workerd and not a Durable Object. Run 4 does not resolve the poll tax at seven pairs. The guest in this study is not the PHP guest.
-
-## Event cost
-
-`eventCost` costs one commit per event: the 16 MiB checkpoint from `durable-chain` (78 ms median) plus a handoff of 51 to 71 ms. The handoff is recorded in the experiment notes, not in a raw file, so it is a labelled input. The move-rate input is the lower bound on mean CPU between moves from `deferred-chain`, 261 s.
-
-The loss term is S / M_f, with S the signal-first event CPU (32.475 CPU-s median). A move after a deferred event loses the whole slice, so each move costs one event's CPU. A signal stop comes every 18.0 events under AIMD (ratio 0.7, growth 2%), and the text's 13 to 18 range is shown as well. Deferred-only, with every event ending on the signal, pays the loss term at every move.
-
-With these inputs AIMD costs 1.09 to 1.15% per event over a full cycle, or 1.35 to 1.42% at 13 events. Deferred-only costs 12.83 to 12.89%: the loss term is 12.43% (S / M_f) and the commit 0.40 to 0.46%. These do not reproduce the 0.93% and 2.95% in the text. The gap is the move-rate input: this study supports a mean CPU between moves of at least 261 s, not 681 s.
-
-## Hash rate
-
-`raw-hashpages.jsonl` holds the I9 hash-rate samples: five paired runs at 32 MiB and five at 128 MiB, on Node 26.8.2 on one machine. Each run times `hashPages` and then SHA-256 (`crypto.subtle.digest`) on the same buffer, so the ratio is taken within a run. The host ran other work during the runs.
-
-The median `hashPages` rate is 1.258 GiB/s at 32 MiB (range 1.225 to 1.292) and 1.009 GiB/s at 128 MiB (range 0.253 to 1.320). The SHA-256 medians are 2.047 and 2.077 GiB/s, and the paired ratio medians are 0.63 and 0.49. The 128 MiB runs are split: three at 1.01 to 1.32 GiB/s and two near 0.25 GiB/s. The cause is not measured.
-
-The rerun is not recorded here. One run of `scripts/probe/hashpages-bench.ts` on the same Mac, made while adding the script, gave `hashPages` medians of 1.222 GiB/s at 32 MiB (two of five runs near 0.26) and 1.323 GiB/s at 128 MiB. The spread between runs is wide, so treat any single median from this study as a range.
+The deployed run needs a Cloudflare account and the `wrangler` CLI. `sync-run.sh` deploys one Worker, runs `sync-driver.mjs` in the mode `smoke` or `full`, and deletes the Worker in its exit trap.

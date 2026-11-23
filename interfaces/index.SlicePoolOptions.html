@@ -17,7 +17,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SlicePoolOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#imports">imports</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">URL</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#memory">memory</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Memory</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ownership">ownership</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">OwnershipPlan</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#stackbytes">stackBytes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#workers">workers</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/slices/index.ts#L11">src/slices/index.ts:11</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/slices/index.ts#L11">src/slices/index.ts:11</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -41,7 +41,7 @@
 its memory. Each worker loads it, because functions do not cross threads.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/slices/index.ts#L28">src/slices/index.ts:28</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/slices/index.ts#L28">src/slices/index.ts:28</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="memory"><span>memory</span><a href="#memory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">memory</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Memory</span></div>
@@ -49,7 +49,7 @@ its memory. Each worker loads it, because functions do not cross threads.</p>
 that leaves room for one private stack per worker. The pool grows it by that much at open.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/slices/index.ts#L16">src/slices/index.ts:16</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/slices/index.ts#L16">src/slices/index.ts:16</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="ownership"><code class="tsd-tag">Optional</code><span>ownership</span><a href="#ownership" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ownership</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">OwnershipPlan</span></div>
@@ -58,7 +58,7 @@ window next to its stack, the owner copies the last record's bytes back after a 
 a trap in any slice restores <code>writes</code> and runs the calls serially in place.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/slices/index.ts#L34">src/slices/index.ts:34</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/slices/index.ts#L34">src/slices/index.ts:34</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="stackbytes"><code class="tsd-tag">Optional</code><span>stack<wbr/>Bytes</span><a href="#stackbytes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">stackBytes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -66,14 +66,14 @@ a trap in any slice restores <code>writes</code> and runs the calls serially in 
 pointer global gets stacks. The default is 65,536.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/slices/index.ts#L23">src/slices/index.ts:23</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/slices/index.ts#L23">src/slices/index.ts:23</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="workers"><code class="tsd-tag">Optional</code><span>workers</span><a href="#workers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">workers</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Worker count. The default is the available parallelism, at most 8.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/slices/index.ts#L18">src/slices/index.ts:18</a></li></ul></aside></section></section></details></main>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/slices/index.ts#L18">src/slices/index.ts:18</a></li></ul></aside></section></section></details></main>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

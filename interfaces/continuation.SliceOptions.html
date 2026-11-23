@@ -17,7 +17,7 @@
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SliceOptions</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#globals">globals</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">Global</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-keyword">keyof</span> <span class="tsd-signature-type">ValueTypeMap</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#initialbudget">initialBudget</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#memory">memory</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Memory</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#signal">signal</a><span class="tsd-signature-symbol">?:</span> <a href="continuation.CpuSignal.html" class="tsd-signature-type tsd-kind-interface">CpuSignal</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#storage">storage</a><span class="tsd-signature-symbol">:</span> <a href="continuation.DurableObjectStorage.html" class="tsd-signature-type tsd-kind-interface">DurableObjectStorage</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-call-signature" href="#restore-1">restore</a><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">state</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-call-signature" href="#run-1">run</a><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">budgetSteps</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <a href="../types/continuation.StopReason.html" class="tsd-signature-type tsd-kind-type-alias">StopReason</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/continuation.StopReason.html" class="tsd-signature-type tsd-kind-type-alias">StopReason</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-call-signature" href="#state-1">state</a><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-call-signature" href="#steps-1">steps</a><span class="tsd-signature-symbol">()</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L461">src/memory/continuation.ts:461</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L461">src/memory/continuation.ts:461</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -55,7 +55,7 @@
 <li><span><span class="tsd-kind-parameter">state</span>: <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L476">src/memory/continuation.ts:476</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L476">src/memory/continuation.ts:476</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="run"><span>run</span><a href="#run" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -70,7 +70,7 @@
 <li><span><span class="tsd-kind-parameter">budgetSteps</span>: <span class="tsd-signature-type">number</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/continuation.StopReason.html" class="tsd-signature-type tsd-kind-type-alias">StopReason</a> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/continuation.StopReason.html" class="tsd-signature-type tsd-kind-type-alias">StopReason</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L468">src/memory/continuation.ts:468</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L468">src/memory/continuation.ts:468</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="state"><code class="tsd-tag">Optional</code><span>state</span><a href="#state" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -81,7 +81,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">undefined</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L474">src/memory/continuation.ts:474</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L474">src/memory/continuation.ts:474</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="steps"><span>steps</span><a href="#steps" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -92,7 +92,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L470">src/memory/continuation.ts:470</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L470">src/memory/continuation.ts:470</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Properties"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="properties-1">Properties<a href="#properties-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -100,31 +100,31 @@
 <h3 class="tsd-anchor-link" id="globals"><code class="tsd-tag">Optional</code><span>globals</span><a href="#globals" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">globals</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">Global</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-keyword">keyof</span> <span class="tsd-signature-type">ValueTypeMap</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L464">src/memory/continuation.ts:464</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L464">src/memory/continuation.ts:464</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="initialbudget"><code class="tsd-tag">Optional</code><span>initial<wbr/>Budget</span><a href="#initialbudget" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">initialBudget</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Step budget of the first slice, default 2000.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L472">src/memory/continuation.ts:472</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L472">src/memory/continuation.ts:472</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="memory"><span>memory</span><a href="#memory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">memory</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Memory</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L463">src/memory/continuation.ts:463</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L463">src/memory/continuation.ts:463</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="signal"><code class="tsd-tag">Optional</code><span>signal</span><a href="#signal" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">signal</span><span class="tsd-signature-symbol">?:</span> <a href="continuation.CpuSignal.html" class="tsd-signature-type tsd-kind-interface">CpuSignal</a></div>
 <div class="tsd-comment tsd-typography"><p>From <code>cpuSignal()</code>; cleared at the start of each slice.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L466">src/memory/continuation.ts:466</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L466">src/memory/continuation.ts:466</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="storage"><span>storage</span><a href="#storage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">storage</span><span class="tsd-signature-symbol">:</span> <a href="continuation.DurableObjectStorage.html" class="tsd-signature-type tsd-kind-interface">DurableObjectStorage</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gmitch215/folio/blob/377905d085db757a91b31b2f334ccad928c50382/src/memory/continuation.ts#L462">src/memory/continuation.ts:462</a></li></ul></aside></section></section></details></main>
+<li>Defined in <a href="https://github.com/gmitch215/folio/blob/5d9bf10bff7c46df145cb7f9dfaa0a46479c85c9/src/memory/continuation.ts#L462">src/memory/continuation.ts:462</a></li></ul></aside></section></section></details></main>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

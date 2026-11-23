@@ -63,6 +63,11 @@
 <td>How many guards would an epoch design pay per access</td>
 <td>an instrumented PHP module, Node 26</td>
 </tr>
+<tr>
+<td><a href="https://github.com/gmitch215/folio/blob/master/results/execution/epoch-arm/README.md">epoch-arm</a></td>
+<td>Does one check per base local with an epoch re-check lower tau</td>
+<td>the epoch translation, Ryzen 9 9900X container</td>
+</tr>
 </tbody>
 </table>
 <p>The PHP workloads are Drupal renders: the stock front page, and the login, admin and flush routes of Thunder, a Drupal distribution. Tau is the translated render over the native render minus one. The gate was a median tau of at most 1 on each PHP render route at default V8 tiering.</p>
@@ -315,12 +320,101 @@
 </tr>
 </tbody>
 </table>
-<p>The static count over the module is 0.3280. Every counted render matched the plain render's normalized hash, and two repeats agree on the ratio to four decimals. The flush route was not counted. A linear projection from an unchecked-access floor of 0.039 and the full range cover's 0.542 on admin gives a tau of about 0.18 to 0.19. That figure is a prediction: no translator emits this design, it assumes a span check costs one compare and that module growth adds nothing, and the narrow-arena arms showed that module growth raises tau (<a href="https://github.com/gmitch215/folio/blob/master/results/execution/guard-count/README.md">guard-count</a>). The drop criteria were set before the count: a guard rate of 0.7 or more, module growth over 30%, a re-check loop that does not settle, and an epoch arm above 0.40 on admin.</p>
+<p>The static count over the module is 0.3280. Every counted render matched the plain render's normalized hash, and two repeats agree on the ratio to four decimals. The flush route was not counted. A linear projection from an unchecked-access floor of 0.039 and the full range cover's 0.542 on admin predicted a tau of about 0.18 to 0.19 on admin, or 0.35 to 0.49 if the checked bases take the page-table path (<a href="https://github.com/gmitch215/folio/blob/master/results/execution/guard-count/README.md">guard-count</a>). The drop criteria were set before the build: a guard rate of 0.7 or more (not met by the count), module growth over 30%, a re-check loop that does not settle, and an epoch arm above 0.40 on admin.</p>
+<h3 id="the-epoch-arm" class="tsd-anchor-link">The Epoch Arm<a href="#the-epoch-arm" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>A translation was then built with one residency check per base local and a global epoch re-checked after calls. It keeps the per-access arm it starts from: one arena that covers the static data, the stack window and the first 32 MiB of heap, with a 64 KiB page table for everything outside it, and stack and static accesses stay exempt.</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Groups</td>
+<td>accesses through the same base local, with <code>base + constant</code> folded, form a group; a <code>local.set</code> or <code>local.tee</code> of the local starts a new group</td>
+</tr>
+<tr>
+<td>Group check</td>
+<td>the first access of a group carries one check over the group's byte span; later accesses the check covers use the checked base</td>
+</tr>
+<tr>
+<td>Outside the arena</td>
+<td>the check calls a shared function that returns the page's frame delta, and the group's accesses use <code>base + delta</code></td>
+</tr>
+<tr>
+<td>Epoch</td>
+<td>a global word that the host raises on every eviction; after each call and each lookup that can fault, live groups compare it with a local copy</td>
+</tr>
+<tr>
+<td>Re-check</td>
+<td>if the epoch moved, the live groups are checked again until a full round leaves it unchanged; after 8 rounds the module traps with a distinct message</td>
+</tr>
+<tr>
+<td>Per-access code</td>
+<td>an access no group covers, and a group with a single member, keeps the per-access code</td>
+</tr>
+</tbody>
+</table>
+<p>The proof is 41 of 41 fixtures passing against the untranslated module, a random test of 48,000 comparisons with 0 failures, and three deliberate breakages that each fail some of them. The module is 46.7 MB, 12.4% smaller than the per-access arm, and every translated sample returns the untranslated module's normalized HTML (flush returns no HTML).</p>
+<p>Ten pairs per cell on the rig, tau against the per-access arm:</p>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th style="text-align:right">Epoch arm</th>
+<th>Interval</th>
+<th style="text-align:right">Per-access arm</th>
+<th>Interval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stock front</td>
+<td style="text-align:right">1.013</td>
+<td>[0.970, 1.078]</td>
+<td style="text-align:right">1.354</td>
+<td>[1.313, 1.398]</td>
+</tr>
+<tr>
+<td>Thunder login</td>
+<td style="text-align:right">0.800</td>
+<td>[0.756, 0.871]</td>
+<td style="text-align:right">1.038</td>
+<td>[0.959, 1.104]</td>
+</tr>
+<tr>
+<td>Thunder flush</td>
+<td style="text-align:right">0.806</td>
+<td>[0.722, 0.868]</td>
+<td style="text-align:right">0.786</td>
+<td>[0.747, 0.822]</td>
+</tr>
+<tr>
+<td>Thunder admin</td>
+<td style="text-align:right">0.783</td>
+<td>[0.747, 0.828]</td>
+<td style="text-align:right">0.834</td>
+<td>[0.751, 0.872]</td>
+</tr>
+<tr>
+<td>Thunder ladder</td>
+<td style="text-align:right">0.853</td>
+<td>[0.820, 0.888]</td>
+<td style="text-align:right">0.830</td>
+<td>[0.791, 0.891]</td>
+</tr>
+</tbody>
+</table>
+<p>The epoch arm is 0.34 better on the front and 0.24 on login, about 0.05 better on admin where the intervals overlap, and equal on flush and the ladder. The admin line of 0.40 was missed. The prediction missed because group checks cover only 28% of the checked accesses on admin, at 29 accesses per check, and 65.9% of the groups take the table helper. Of 271,335 static check sites left per-access, 239,718 do not read a base local: 203,706 take a pointer straight from a load and 16,362 from a <code>local.tee</code>. The rig never evicts, so the timings measure the check and not the re-check, which is proven on fixtures and random programs only (<a href="https://github.com/gmitch215/folio/blob/master/results/execution/epoch-arm/README.md">epoch-arm</a>).</p>
+<p>The fixtures found a defect that is not in this arm alone: hoisted-loop keys can evict each other on the per-access translator, so a later key's fault evicts the frame an earlier key's delta points at and the loop reads the wrong page. The cause is in the hoisted prologue alone. On a pager with a CLOCK hand, a two-key loop on two frames returned 140 where the original returns 77, and a three-key loop on two frames returned 1,470 where the original returns 777. Of 4,000 random cases, 33 of 2,497 with frames at least equal to the keys and every one of 658 with fewer frames were wrong.</p>
+<p>The defect is fixed. <code>scripts/research/elastic-translate.ts</code> now compares each key's delta with the page table after the lookups and repeats them until they agree, and traps with a distinct message after 8 rounds, so fewer frames than keys refuse and no longer return a wrong value. No published translation number depends on it. The translation studies ran every page resident on a host that never evicts (350 of 350 rig rows and 33 of 33 Mac rows record only page-straddle calls), the PHP module has 3 multi-key hoisted loops with at most 3 keys, all off one base within 128 bytes, and hoisted accesses are 16 of 1.9 billion on the stock front. The paged ladder and capacity runs use their own fixtures and do not use the translator. The four arms with hoisting now build to different bytes (671 to 971 bytes larger) and the three without it are byte-identical, so the byte counts recorded in <code>results/</code> are those of the translator that was timed.</p>
 <h2 id="reading" class="tsd-anchor-link">Reading<a href="#reading" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Translating each access costs more than the render can absorb at default tiering, and removing provably redundant checks closes little of the gap on this module. The checks are the tax: with none, tau is 0.039. Paging itself works. The local runs are exact down to 327,680 Wasm bytes, the managed run completes, and the one-object ladder is exact on every completed run. The open question is the price of the test per access, and the guard count shows how many tests an epoch design would run.</p>
+<p>Translating each access costs more than the render can absorb at default tiering, and removing provably redundant checks closes little of the gap on this module. The checks are the tax: with none, tau is 0.039. Paging itself works. The local runs are exact down to 327,680 Wasm bytes, the managed run completes, and the one-object ladder is exact on every completed run. The open question is the price of the test per access. A per-base epoch translation cuts the checks and lowers tau on the front and login routes, and it does not reach the unchecked floor.</p>
 <h2 id="closed-and-open" class="tsd-anchor-link">Closed and Open<a href="#closed-and-open" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Closed mechanisms: software per-access translation as the PHP paging mechanism at default tiering, static check elision on this module, compressed pages on the fault path, and narrow arenas. The managed page plane misses G-E2 on days 1 and 2.</p>
-<p>The objective stays open. Designs that remove the test remain untried: resident pages made free by faulting, hot data pinned by construction, and late switching with retry on kill. The epoch design has a count and a prediction and no build. The growth governor is built and unit tested as the guard for that branch (<a href="docs_studies_memory-accounting.html">Memory Accounting</a>).</p>
+<p>Closed mechanisms: software per-access translation as the PHP paging mechanism at default tiering, static check elision on this module, compressed pages on the fault path, narrow arenas, and per-base epoch translation at the current shapes. The managed page plane misses G-E2 on days 1 and 2.</p>
+<p>The objective stays open: tau toward the unchecked floor. A first-access check for pointers that come from loads is closed by construction: such a pointer is used once, so its check is a group of one and removes nothing. What remains is a cheaper out-of-arena path, since 40.5% of the per-access checks on admin leave the arena, and an inline one-entry translation cache ahead of the helper call is untried. Designs that remove the test remain untried: resident pages made free by faulting, hot data pinned by construction, and late switching with retry on kill. The epoch re-check has no timing on an evicting rig. The growth governor is built and unit tested as the guard for that branch (<a href="docs_studies_memory-accounting.html">Memory Accounting</a>).</p>
 <h2 id="see-also" class="tsd-anchor-link">See Also<a href="#see-also" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
 <li>Report: <a href="TECHNICAL_REPORT.html#elastic-memory-study">Elastic Memory Study</a></li>
@@ -328,6 +422,6 @@
 <li>Related studies: <a href="docs_studies_memory-accounting.html">Memory Accounting</a>, <a href="docs_studies_parallel-execution.html">Parallel Execution</a></li>
 </ul>
 </div><nav class="docs-pager" aria-label="Previous and next pages"><a rel="prev" class="docs-pager-prev" href="../documents/docs_studies_continuation-across-events.html"><span class="docs-pager-label">Previous</span><span class="docs-pager-title">Continuation Across Events</span><span class="docs-pager-desc">The continuation model, PHP park and the deployed runs.</span></a><a rel="next" class="docs-pager-next" href="../documents/docs_studies_boot-images.html"><span class="docs-pager-label">Next</span><span class="docs-pager-title">Boot Images</span><span class="docs-pager-desc">What a baked boot image saves and what it costs.</span></a></nav></main>
-<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#design">Design</a></li><li class="docs-toc-h2"><a href="#results">Results</a></li><li class="docs-toc-h3"><a href="#capacity">Capacity</a></li><li class="docs-toc-h3"><a href="#platform-costs">Platform Costs</a></li><li class="docs-toc-h3"><a href="#the-page-plane-on-one-object">The Page Plane on One Object</a></li><li class="docs-toc-h3"><a href="#translating-every-access">Translating Every Access</a></li><li class="docs-toc-h3"><a href="#static-check-elision">Static Check Elision</a></li><li class="docs-toc-h3"><a href="#compressed-pages-and-narrow-arenas">Compressed Pages and Narrow Arenas</a></li><li class="docs-toc-h3"><a href="#the-dynamic-guard-count">The Dynamic Guard Count</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
+<nav class="docs-toc" aria-labelledby="docs-toc-title"><p id="docs-toc-title">On this page</p><ul><li class="docs-toc-h2"><a href="#question">Question</a></li><li class="docs-toc-h2"><a href="#instruments">Instruments</a></li><li class="docs-toc-h2"><a href="#design">Design</a></li><li class="docs-toc-h2"><a href="#results">Results</a></li><li class="docs-toc-h3"><a href="#capacity">Capacity</a></li><li class="docs-toc-h3"><a href="#platform-costs">Platform Costs</a></li><li class="docs-toc-h3"><a href="#the-page-plane-on-one-object">The Page Plane on One Object</a></li><li class="docs-toc-h3"><a href="#translating-every-access">Translating Every Access</a></li><li class="docs-toc-h3"><a href="#static-check-elision">Static Check Elision</a></li><li class="docs-toc-h3"><a href="#compressed-pages-and-narrow-arenas">Compressed Pages and Narrow Arenas</a></li><li class="docs-toc-h3"><a href="#the-dynamic-guard-count">The Dynamic Guard Count</a></li><li class="docs-toc-h3"><a href="#the-epoch-arm">The Epoch Arm</a></li><li class="docs-toc-h2"><a href="#reading">Reading</a></li><li class="docs-toc-h2"><a href="#closed-and-open">Closed and Open</a></li><li class="docs-toc-h2"><a href="#see-also">See Also</a></li></ul></nav></div><footer>
 <p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer>
 <div class="overlay"></div></body></html>

@@ -1,25 +1,59 @@
 :root {
 	--light-color-background: #ffffff;
-	--light-color-background-secondary: #f5f8fc;
-	--light-color-accent: #e6eefb;
-	--light-color-text: #1b2430;
-	--light-color-text-aside: #4b5563;
-	--light-color-link: #1d4ed8;
-	--light-color-focus-outline: #1d4ed8;
-	--light-code-background: #f3f6fb;
-	--light-docs-edge: #6b7280;
-	--light-docs-rule: #dde4ee;
+	--light-color-background-secondary: #f3f8f5;
+	--light-color-background-active: #cfe6d9;
+	--light-color-accent: #dcf0e4;
+	--light-color-text: #14221b;
+	--light-color-text-aside: #4a5e54;
+	--light-color-link: #0b6b3d;
+	--light-color-focus-outline: #0b6b3d;
+	--light-color-alert-note: #0b6b3d;
+	--light-color-ts-class: #0b6b3d;
+	--light-color-ts-keyword: #0f766e;
+	--light-color-ts-variable: #3f6f4d;
+	--light-color-ts-function: #7a5c1e;
+	--light-code-background: #f3f8f5;
+	--light-docs-edge: #5f7a6c;
+	--light-docs-rule: #d3e3da;
+	--light-hl-0: #7a5c1e;
+	--light-hl-1: #14221b;
+	--light-hl-2: #a31515;
+	--light-hl-3: #3f6f4d;
+	--light-hl-4: #0b6b3d;
+	--light-hl-5: #2f4f3e;
+	--light-hl-6: #1b7a4d;
+	--light-hl-7: #0f766e;
+	--light-hl-8: #146c43;
+	--light-hl-9: #1d7a6b;
+	--light-hl-10: #14221b;
 
-	--dark-color-background: #0f1420;
-	--dark-color-background-secondary: #161d2c;
-	--dark-color-accent: #1e2d4f;
-	--dark-color-text: #e5e9f0;
-	--dark-color-text-aside: #a7b0c0;
-	--dark-color-link: #93c5fd;
-	--dark-color-focus-outline: #93c5fd;
-	--dark-code-background: #161d2c;
-	--dark-docs-edge: #8793a8;
-	--dark-docs-rule: #263148;
+	--dark-color-background: #0b1210;
+	--dark-color-background-secondary: #111b17;
+	--dark-color-background-active: #2a5a46;
+	--dark-color-accent: #1a3329;
+	--dark-color-text: #e3ece7;
+	--dark-color-text-aside: #a3b5ab;
+	--dark-color-link: #6fdba5;
+	--dark-color-focus-outline: #6fdba5;
+	--dark-color-alert-note: #2e9e6a;
+	--dark-color-ts-class: #7ee0b0;
+	--dark-color-ts-keyword: #5fd39c;
+	--dark-color-ts-variable: #a3e0bf;
+	--dark-color-ts-function: #e0cf8a;
+	--dark-code-background: #111b17;
+	--dark-docs-edge: #7f9a8d;
+	--dark-docs-rule: #22332c;
+	--dark-hl-0: #dcdcaa;
+	--dark-hl-1: #e3ece7;
+	--dark-hl-2: #ce9178;
+	--dark-hl-3: #7fae8c;
+	--dark-hl-4: #8fe3b5;
+	--dark-hl-5: #b7e4cc;
+	--dark-hl-6: #6fdba5;
+	--dark-hl-7: #5ed8c4;
+	--dark-hl-8: #b5cea8;
+	--dark-hl-9: #4ec9b0;
+	--dark-hl-10: #e3ece7;
 
 	--dim-toolbar-contents-height: 3.25rem;
 	--docs-edge: var(--light-docs-edge);
@@ -41,6 +75,11 @@
 :root[data-theme='dark'] {
 	--docs-edge: var(--dark-docs-edge);
 	--docs-rule: var(--dark-docs-rule);
+}
+
+::selection {
+	background: var(--color-accent);
+	color: var(--color-text);
 }
 
 .tsd-typography table {

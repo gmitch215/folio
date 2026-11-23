@@ -1,208 +1,101 @@
-# Alarm Retirement
+# Growth Governor
 
-Does an isolate retirement at an event boundary turn an alarm that is due within about a second into a
-storage reset? The experiment runs bare Durable Objects on the SQLite storage layer. Each arm changes
-where and how the alarm is set during an event, then counts storage resets on the first event of a
-fresh object and on chains of up to 24 events.
+`governGrowth` in `src/memory/growth-governor.ts` wraps the `grow` method of one `WebAssembly.Memory` and refuses any grow whose final size would pass a byte cap. This experiment checks whether that cap makes an oversized request fail cleanly in an Emscripten guest, instead of letting the memory grow past its budget.
 
-The measurements show which alarm shapes reset and which do not. They do not show the mechanism. The
-storage layer is closed source, so the arms describe behavior only.
-
-The `floor-*` files in this folder are a second set of harnesses for the alarm floor, the CPU dose
-and the idle-request questions. [Floor Harnesses](#floor-harnesses) lists them.
-
-## Layout
-
-| Path                           | What it is                                                    |
-| ------------------------------ | ------------------------------------------------------------- |
-| `worker.mjs`, `wrangler.jsonc` | the bare Durable Object, one arm per query string             |
-| `first-event.ts`               | driver for one first event per fresh object, with a read-back |
-| `chain.ts`                     | driver for chains of up to 24 events on one object name       |
-| `summarize.ts`                 | prints the first-event and chain tables for one run directory |
+The guest is a PHP 8.5 interpreter built with Emscripten (the module and glue are inputs). Each arm boots it with opcache off, `memory_limit=96M` and a `disable_functions` list, runs a 64 MiB string allocation, and records the outcome. The `open` arm is the control.
 
 ## Arms
 
-Each event writes a marker row, burns CPU, and writes an effect row. The `no-writes` arm burns CPU and
-writes nothing. All arms share one worker and one alarm handler. The handler sets the next alarm 240 s
-ahead and writes nothing. The `end-near-unawaited`, `end-far-unawaited` and `alarm-*` arms count their
-delay from the time of the call. The two older end arms count it from the start of the event.
-`chain.ts` sends the events of an arm whose name ends in `-no-gap` back to back, with no pause between
-them. The `alarm-*` arms run on first events only.
-
-| Arm                            | Start of event                                                              | Rows | End of event                                                     | Question                                  |
-| ------------------------------ | --------------------------------------------------------------------------- | ---- | ---------------------------------------------------------------- | ----------------------------------------- |
-| `no-alarm`                     | nothing                                                                     | yes  | nothing                                                          | control; the alarm is never set           |
-| `start-near-awaited`           | read the alarm; if none, or later than now + 50 ms, await set to now + 1 ms | yes  | nothing                                                          | an alarm set and awaited before the event |
-| `start-near-unawaited`         | as `start-near-awaited`, without the await                                  | yes  | nothing                                                          | does awaiting the move matter             |
-| `start-near-awaited-end-sync`  | as `start-near-awaited`                                                     | yes  | await sync                                                       | does a commit after the write help        |
-| `start-near-awaited-no-writes` | as `start-near-awaited`                                                     | no   | nothing                                                          | does the reset need row writes            |
-| `start-5s-awaited`             | as `start-near-awaited`, set to now + 5 s when the test passes              | yes  | nothing                                                          | alarm distance                            |
-| `end-sync-then-near`           | nothing                                                                     | yes  | await sync, then set to now + 1 ms without await                 | commit before the alarm move              |
-| `end-near-awaited-then-sync`   | nothing                                                                     | yes  | await set to now + 1 ms, then await sync                         | alarm move before the commit              |
-| `end-near-unawaited`           | nothing                                                                     | yes  | set to now + 1 ms without await or sync                          | an alarm set last, with no commit after   |
-| `end-far-unawaited`            | nothing                                                                     | yes  | set to now + 60 s without await or sync                          | alarm distance at the end of the event    |
-| `end-near-unawaited-no-gap`    | nothing                                                                     | yes  | as `end-near-unawaited`, events back to back                     | does the 0.5 s gap matter                 |
-| `alarm-1ms` to `alarm-60s`     | nothing                                                                     | yes  | set to now + 1 ms, 10 ms, 100 ms, 1 s, 5 s or 60 s without await | alarm distance on a first event           |
+| Arm               | Cap                 | Request                                    | Expected                                                      |
+| ----------------- | ------------------- | ------------------------------------------ | ------------------------------------------------------------- |
+| `open`            | none                | 64 MiB `str_repeat`                        | Completes. Control.                                           |
+| `capped`          | 104 MiB (109051904) | 64 MiB `str_repeat`                        | Refused grows; `[error] Out of memory` and exit status 1.     |
+| `capped-fit`      | 160 MiB (167772160) | 64 MiB `str_repeat`                        | Completes with a matching sha256; memory stays under the cap. |
+| `capped-trycatch` | 104 MiB (109051904) | 64 MiB `str_repeat` inside `try` / `catch` | Same as `capped` if PHP's `catch` receives the refusal.       |
 
 ## Running
 
-The drivers read their inputs from the environment. Nothing is hardcoded.
-
-| Variable       | Used by      | Meaning                                              |
-| -------------- | ------------ | ---------------------------------------------------- |
-| `WORKER_URL`   | both drivers | base URL of the deployed Worker (required)           |
-| `OUT`          | both drivers | directory for the JSONL output (required)            |
-| `ARMS`         | both drivers | comma-separated arm names; each driver has a default |
-| `SAMPLES`      | both drivers | objects per arm, default 20                          |
-| `GAP`          | both drivers | milliseconds between requests, default 1500 and 500  |
-| `EVENTS`       | `chain.ts`   | events per chain, default 24                         |
-| `CONC`         | `chain.ts`   | chains in flight at once, default 4                  |
-| `MAX_REQUESTS` | both drivers | stop after this many requests, default 7000          |
+Run from the folio root. The harness loads the `.ts` source directly. Tested on Node 22.23.3.
 
 ```sh
-npx wrangler deploy --config experiments/alarm-retirement/wrangler.jsonc
-WORKER_URL=$WORKER_URL OUT=runs/first-event bun experiments/alarm-retirement/first-event.ts
-WORKER_URL=$WORKER_URL OUT=runs/chain bun experiments/alarm-retirement/chain.ts
-bun experiments/alarm-retirement/summarize.ts runs/chain
+PHP_WASM=/path/to/php8.5.wasm PHP_GLUE=/path/to/php8.5-glue.mjs PHP_BASE=/path/to/PhpBase.mjs \
+  node experiments/growth-governor/php-grow-cap-check.mjs capped 1
 ```
 
-`summarize.ts` takes one directory. Point it at a directory that holds `first-event.jsonl`, `chain.jsonl`,
-or both. Run the first-event driver and the chain driver into the same directory to get both tables
-from one run. Remove the Worker with `npx wrangler delete` when the run ends.
+The second argument is a run label. The output is written to `OUT/<arm>-<label>.json`, and the label defaults to `1`.
 
-## Floor Harnesses
-
-These harnesses ask how a request of length `L` seconds that arms an alarm `F` seconds ahead behaves
-on a fresh object, and what the CPU and storage waits inside the request change. Every driver reads
-`WORKER_URL` and `OUT` from the environment and refuses to run without them. Each `.sh` script
-snapshots the account's Worker names, deploys one named Worker, tails it, runs a smoke check, runs the
-driver, copies the records, deletes the Worker and snapshots again. They expect a directory holding
-copies of these files (`RIG_DIR`, default `$HOME/floor-rig`), `wrangler` on `PATH` and the account
-variables in the environment. Run them detached, because a run lasts hours.
-
-| Path                                             | What it is                                                                                        |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| `floor-worker.mjs`, `floor-wrangler.jsonc`       | the Durable Object that burns nominal 250 ms slices for `L` seconds with an alarm `F` seconds out |
-| `floor-driver.mjs`                               | 12 cells of `L` (2, 4, 8) by `F` (1, 5, 10, 15), one fresh object per trial, shuffled             |
-| `floor-run.sh`                                   | deploys, smokes, drives and tears down the grid above                                             |
-| `floor-smoke.mjs`                                | three `L=2`, `F=15` requests that must finish within 1 s of 2 s                                   |
-| `floor-versions.mjs`                             | checks that the smoke requests ran one script version                                             |
-| `floor-tail.mjs`                                 | reads the pretty-printed `wrangler tail --format json` stream back into events                    |
-| `floor-analyze.mjs`                              | resets with Wilson intervals from `trials.jsonl`, `chains.jsonl` and `tail.jsonl`                 |
-| `floor-snap.mjs`                                 | writes the Worker script and namespace names of the account to `snap-<label>.json`                |
-| `floor-worker-idle.mjs`, `floor-idle-run.sh`     | the idle-request grid: `L` is wall time in 250 ms timer waits with no burn                        |
-| `floor-probe.mjs`, `floor-worker-probe.mjs`      | three requests per loop mode (`get`, `wait`, `both`) on fresh objects                             |
-| `floor-probe-run.sh`                             | one deploy that runs the loop-mode probe                                                          |
-| `floor-probe2.mjs`, `floor-worker-probe2.mjs`    | three requests for each pre-loop variant `A` to `E`                                               |
-| `floor-probe2-report.mjs`, `floor-probe2-run.sh` | one row per request with the error text, the first Floor frame and the tail alarm line            |
-| `floor-probe3.mjs`, `floor-worker-probe3.mjs`    | idle requests on three fresh objects per cell, with `(2,1)` as a positive control                 |
-| `floor-probe3-run.sh`                            | one deploy that runs the idle probe                                                               |
-| `floor-cpu-driver.mjs`, `floor-worker-cpu.mjs`   | CPU dose: no alarm, alarm armed before the loop, and warm back-to-back requests                   |
-| `floor-cpu-analyze.mjs`, `floor-cpu-run.sh`      | resets per cell and the measured CPU of each request from the tail                                |
-| `floor-cpu-smoke.mjs`                            | the smoke check for the CPU worker                                                                |
-| `floor-cpu2-driver.mjs`, `floor-worker-cpu2.mjs` | storage-yield arm and alarm-cadence arm, ten fresh objects per cell                               |
-| `floor-cpu2-analyze.mjs`, `floor-cpu2-run.sh`    | resets per cell and the sorted CPU of reset and ok requests per `C`                               |
-| `floor-cpu2-smoke.mjs`                           | the smoke check for the second CPU worker                                                         |
-| `floor-wrangler-*.jsonc`                         | one Wrangler config per worker above                                                              |
-
-The deployed results of the floor are in [Storage Resets and the Growth Governor](../../TECHNICAL_REPORT.md#storage-resets-and-the-growth-governor).
-The per-request rows of these runs are not exported to `results/`.
+| Variable    | Default                                      | Purpose                                                             |
+| ----------- | -------------------------------------------- | ------------------------------------------------------------------- |
+| `PHP_WASM`  | required                                     | Emscripten PHP module (`.wasm`).                                    |
+| `PHP_GLUE`  | required                                     | Emscripten glue of that module (`.mjs`, the module factory).        |
+| `PHP_BASE`  | required                                     | `PhpBase.mjs` from the public `php-wasm` package.                   |
+| `CAP_BYTES` | 109051904 for `capped` and `capped-trycatch` | Cap in bytes. `open` and `capped-fit` use fixed caps and ignore it. |
+| `OUT`       | `runs/` in this folder                       | Output directory. `experiments/*/runs/` is git-ignored.             |
 
 ## Results
 
-One measurement set. All arms ran on one deployed Worker with one alarm handler, first events first and
-chains second. Rates are counts over 20 samples per arm, with Wilson 95% intervals.
+### Request-Size Cap
 
-### First Event
+This check compared each request's size with the cap before the glue ran. `php-grow-cap-check.mjs` runs the grow cap below instead.
 
-Each sample is a fresh object. The first event runs once, and a read-back from a fresh stub 3 s later
-reads the marker and effect rows and the alarm time. A reset is a storage reset error on the event. The
-state columns count the reset samples by which rows the read-back found: both, neither, marker only,
-effect only.
+| Arm                                           | Refusals                              | Result                                                     | Memory (bytes)         | After the run                             |
+| --------------------------------------------- | ------------------------------------- | ---------------------------------------------------------- | ---------------------- | ----------------------------------------- |
+| `open`                                        | 0                                     | Completes; sha256 matches                                  | 100663296 to 120848384 | Not needed                                |
+| `capped` (cap 109051904)                      | 0                                     | Completes; the glue grows to 120848384, above the cap      | 120848384              | Alive; shutdown and startup ok; `1+1` = 2 |
+| `capped-1` (16 MiB fill, then 64 MiB request) | 2 (requested 124325888 and 124329984) | `[error] Out of memory`; thrown `ExitStatus` with status 1 | 100663296              | Alive; shutdown and startup ok; `1+1` = 2 |
 
-| Arm                           | Reset rate (95%)       | Reset samples, both/neither/marker/effect | Alarm ahead at read-back (median, ms) |
-| ----------------------------- | ---------------------- | ----------------------------------------- | ------------------------------------- |
-| `no-alarm`                    | 0/20 [0.00%, 16.11%]   | 0/0/0/0                                   | not set                               |
-| `start-near-awaited`          | 16/20 [58.40%, 91.93%] | 15/1/0/0                                  | 237136                                |
-| `start-near-unawaited`        | 14/20 [48.10%, 85.45%] | 14/0/0/0                                  | 237161                                |
-| `start-near-awaited-end-sync` | 16/20 [58.40%, 91.93%] | 12/4/0/0                                  | 237162                                |
-| `start-5s-awaited`            | 0/20 [0.00%, 16.11%]   | 0/0/0/0                                   | 536                                   |
-| `end-sync-then-near`          | 0/20 [0.00%, 16.11%]   | 0/0/0/0                                   | 236015                                |
-| `end-near-awaited-then-sync`  | 16/20 [58.40%, 91.93%] | 14/2/0/0                                  | 237161                                |
-| `alarm-1ms`                   | 14/20 [48.10%, 85.45%] | 12/2/0/0                                  | 237113                                |
-| `alarm-10ms`                  | 13/20 [43.29%, 81.88%] | 11/2/0/0                                  | 237079                                |
-| `alarm-100ms`                 | 14/20 [48.10%, 85.45%] | 13/1/0/0                                  | 237148                                |
-| `alarm-1s`                    | 16/20 [58.40%, 91.93%] | 14/2/0/0                                  | 237129                                |
-| `alarm-5s`                    | 0/20 [0.00%, 16.11%]   | 0/0/0/0                                   | 569                                   |
-| `alarm-60s`                   | 0/20 [0.00%, 16.11%]   | 0/0/0/0                                   | 55521                                 |
+The request-size check passed the 107548672-byte request, and the glue's overgrowth then took memory above the cap.
 
-Only 4 to 7 events per reset arm read back ok, so the instance-change column is not reported for them.
-The arms without a reset changed instance before the read-back on 20 of 20 samples (`start-5s-awaited`),
-11 (`end-sync-then-near`), 13 (`no-alarm`), 9 (`alarm-5s`) and 15 (`alarm-60s`).
+### Grow Cap
 
-### Chains
+The cap applies to every `memory.grow` call, including the glue's overgrowth. A refused grow throws a `RangeError` inside the glue, and the glue retries at a smaller size.
 
-Each chain uses one object name. Up to 24 events run in order, 0.5 s apart except in
-`end-near-unawaited-no-gap`, with a 0.25 s nominal burn per event. A retirement is an ok event whose
-isolate id differs from the previous ok event on the same chain. A reset is a storage reset error on
-the event.
+| Arm               | Cap (bytes) | Refused grow targets (bytes) | PHP output  | Final memory (bytes) | Outcome                                       |
+| ----------------- | ----------- | ---------------------------- | ----------- | -------------------- | --------------------------------------------- |
+| `open`            | none        | none                         | none        | 120848384            | Completes; sha256 matches the host digest     |
+| `capped`          | 109051904   | 120848384, 110755840         | none        | 107610112            | Completes; the third attempt, 107610112, fits |
+| `capped-trycatch` | 109051904   | 120848384, 110755840         | `completed` | 107610112            | Completes; the `catch` block never runs       |
+| `capped-fit`      | 167772160   | none                         | none        | 120848384            | Completes; sha256 matches the host digest     |
 
-| Arm                            | Chains with a reset (95%) | Resets | Retirements | Resets per retirement | First retirement or reset, event (median, min to max, n) | Ok events | Other events |
-| ------------------------------ | ------------------------- | -----: | ----------: | --------------------: | -------------------------------------------------------- | --------: | -----------: |
-| `no-alarm`                     | 0/20 [0.00%, 16.11%]      |      0 |           9 |                  0.00 | 22 (16 to 24, n 9)                                       |       480 |            0 |
-| `start-near-awaited`           | 9/20 [25.82%, 65.79%]     |      9 |           9 |                  1.00 | 22 (18 to 23, n 9)                                       |       471 |            0 |
-| `start-near-unawaited`         | 6/20 [14.55%, 51.90%]     |      6 |           6 |                  1.00 | 22 (16 to 23, n 6)                                       |       474 |            0 |
-| `start-near-awaited-end-sync`  | 9/20 [25.82%, 65.79%]     |      9 |           9 |                  1.00 | 21 (18 to 23, n 9)                                       |       471 |            0 |
-| `start-near-awaited-no-writes` | 10/20 [29.93%, 70.07%]    |     10 |          10 |                  1.00 | 21 (18 to 23, n 10)                                      |       470 |            0 |
-| `start-5s-awaited`             | 0/20 [0.00%, 16.11%]      |      0 |           8 |                  0.00 | 22 (18 to 24, n 8)                                       |       480 |            0 |
-| `end-sync-then-near`           | 0/20 [0.00%, 16.11%]      |      0 |          13 |                  0.00 | 22 (18 to 24, n 13)                                      |       480 |            0 |
-| `end-near-awaited-then-sync`   | 9/20 [25.82%, 65.79%]     |      9 |          10 |                  0.90 | 19 (12 to 23, n 10)                                      |       471 |            0 |
-| `end-near-unawaited`           | 6/20 [14.55%, 51.90%]     |      6 |           6 |                  1.00 | 22 (16 to 23, n 6)                                       |       474 |            0 |
-| `end-far-unawaited`            | 0/20 [0.00%, 16.11%]      |      0 |          11 |                  0.00 | 22 (14 to 24, n 11)                                      |       480 |            0 |
-| `end-near-unawaited-no-gap`    | 11/20 [34.21%, 74.18%]    |     11 |          11 |                  1.00 | 22 (17 to 23, n 11)                                      |       469 |            0 |
+In both capped arms at this cap, the instance survived shutdown, startup and `1+1`, which returned 2.
 
-Isolate changes by event index, on ok events:
+### Grow Cap at 100 MiB
 
-| Arm                            | 1 to 3 | 4 to 6 | 7 to 12 | 13 to 24 |
-| ------------------------------ | -----: | -----: | ------: | -------: |
-| `no-alarm`                     |   0/60 |   0/60 |   0/120 |    9/240 |
-| `start-near-awaited`           |   0/60 |   0/60 |   0/120 |    9/231 |
-| `start-near-unawaited`         |   0/60 |   0/60 |   0/120 |    6/234 |
-| `start-near-awaited-end-sync`  |   0/60 |   0/60 |   0/120 |    9/231 |
-| `start-near-awaited-no-writes` |   0/60 |   0/60 |   0/120 |   10/230 |
-| `start-5s-awaited`             |   0/60 |   0/60 |   0/120 |    8/240 |
-| `end-sync-then-near`           |   0/60 |   0/60 |   0/120 |   13/240 |
-| `end-near-awaited-then-sync`   |   0/60 |   0/60 |   1/119 |    9/232 |
-| `end-near-unawaited`           |   0/60 |   0/60 |   0/120 |    6/234 |
-| `end-far-unawaited`            |   0/60 |   0/60 |   0/120 |   11/240 |
-| `end-near-unawaited-no-gap`    |   0/60 |   0/60 |   0/120 |   11/229 |
+The rerun sets `CAP_BYTES=104857600`.
 
-In each reset chain, no ok event before the first reset changed isolate id. Retirements occur without a
-reset in `no-alarm`, `start-5s-awaited`, `end-sync-then-near` and `end-far-unawaited`.
+| Arm               | Refused grow targets (bytes), each attempt twice      | PHP output              | Outcome                                                           | Final memory (bytes) |
+| ----------------- | ----------------------------------------------------- | ----------------------- | ----------------------------------------------------------------- | -------------------- |
+| `capped`          | 120848384, 110755840, 107610112 (6 refusals in total) | `[error] Out of memory` | `_run` throws `ExitStatus` with status 1; PHP `catch` not entered | 100663296            |
+| `capped-trycatch` | 120848384, 110755840, 107610112 (6 refusals in total) | `[error] Out of memory` | Same as `capped`                                                  | 100663296            |
 
-### Reading the Results
+After the run, shutdown, startup and `1+1` (2) pass in both arms, and memory stays at the boot size. With the `try` wrapper, the first request is 107589632 bytes instead of 107548672. The glue's refused targets are the same.
 
-- With an awaited alarm move at the start of the event, the reset occurred in 9 of 20 chains. Without
-  the await it occurred in 6 of 20. The intervals overlap, so the two counts do not separate.
-- Removing the row writes left the count at 10 of 20 chains. A sync after the start move left it at 9
-  of 20.
-- Moving the alarm to 5 s at the start, setting it to 1 ms after a sync, and setting it to 60 s at the
-  end each gave 0 of 20 chains with a reset. All three arms still retired isolates.
-- Setting the alarm to 1 ms at the end of the event gave 6 of 20 chains with a reset without a sync,
-  and 9 of 20 with an awaited set followed by a sync. With events sent back to back, it gave 11 of 20.
-- On first events, alarms 1 ms to 1 s ahead reset in 13 to 16 of 20 samples. Alarms 5 s and 60 s ahead
-  reset in 0 of 20.
-- The first retirement or reset fell at a median of event 19 to 22 across the arms that had one.
+### Glue Growth
+
+The glue's `emscripten_resize_heap` tries three sizes in turn: the old heap size times 1.2, times 1.1 and times 1.05. Each size is capped at the request plus 96 MiB, never falls below the request, and is aligned up to 64 KiB. The glue calls `memory.grow` with a fractional page count, and native grow truncates it. The governor truncates the same way.
 
 ## Limits
 
-- Bare objects, one account plan, and one run. Each arm has 20 samples, so an interval that covers
-  another arm's rate does not separate the two.
-- Other work on the same account ran during the measurement. Its load is not controlled or recorded.
-- The 1.5 s first-event burn and the 0.25 s chain burn are nominal. CPU time is not measured, and the
-  nominal CPU at reset is not summarised here.
-- No mechanism is shown. The arms show when resets happen in these shapes. They do not show why.
-- No client-side `fetch failed` event occurred in this run. One without a Worker reply would count as
-  an other event and not as a reset.
-- Of the 119 first-event reset samples, 14 read back with neither the marker nor the effect row
-  present. The cause is not known.
+- One PHP module was run; its memory is defined by the module (it does not import one), so the harness guards the exported memory.
+- In this run, PHP's `catch` did not see the refusal. The request exits with status 1, which the host sees as a thrown `ExitStatus`, not a trap.
+- The governor covers WebAssembly memory only. JS-side memory is not guarded.
+- The harness boots with the ini lines in `php-grow-cap-check.mjs` only and runs no host-side boot shims.
+- Results come from Node 22.23.3 only.
+
+## Reproducing
+
+```sh
+export PHP_WASM=/path/to/php8.5.wasm
+export PHP_GLUE=/path/to/php8.5-glue.mjs
+export PHP_BASE=/path/to/PhpBase.mjs
+nvm use 22
+for n in 1 2; do
+  node experiments/growth-governor/php-grow-cap-check.mjs open $n
+  node experiments/growth-governor/php-grow-cap-check.mjs capped-fit $n
+  node experiments/growth-governor/php-grow-cap-check.mjs capped 104mib-$n
+  node experiments/growth-governor/php-grow-cap-check.mjs capped-trycatch 104mib-$n
+  CAP_BYTES=104857600 node experiments/growth-governor/php-grow-cap-check.mjs capped 100mib-$n
+  CAP_BYTES=104857600 node experiments/growth-governor/php-grow-cap-check.mjs capped-trycatch 100mib-$n
+done
+cmp experiments/growth-governor/runs/open-1.json experiments/growth-governor/runs/open-2.json
+```

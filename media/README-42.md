@@ -1,24 +1,27 @@
-# PHP Park
+# Durable Chain
 
-Does an interrupt park inside a PHP interpreter build (a PHP build with the interrupt-park patch) keep the stack, memory and output exact across budget and signal stops, commits and restores?
+Does a Wasm guest that stops on the signal, checkpoints its memory into Durable Object SQLite, and resumes in the next alarm event finish with the same result as an uninterrupted run? What does a checkpoint cost?
 
 ## Instrument
 
-`experiments/continuation-php` runs a PHP workload (`workload.php`) under a local event protocol. `P1` runs in Node 26 with an in-memory store. `P2` runs in a local Durable Object under `wrangler dev`. Each event records its stop reason, the refusals counted before the park, the stack checks and the commit. The workload has two refused regions: an `array_map` with a closure and a generator loop.
+`experiments/continuation/durable` deploys a Durable Object with a 120,000-step chain (the guest from `guests/durable-guest.wat`, hashed page by page with `hash.wat`). Four arms:
 
-`P0` is the uninterrupted reference.
+- `d1`: ten objects, burn events with the signal, every event's stop reason recorded.
+- `d2`: forced read after a burn, to see the state word after the kill.
+- `d3`: three full chains. Reported in text only.
+- `d5`: checkpoint cost at 0, 4 and 16 MiB of changed memory.
+
+`d0` is a local `wrangler dev` chain with three forced restores, reported in text only.
 
 ## Rows
 
-`raw.jsonl` holds one `event` row per event for `P1` and `P2`, and one `run` row per arm, with `P0` as the reference. The markers of each event are counted, not stored.
-
-`raw-output.jsonl` holds one `output` row per arm: the SHA-256 of the output and, for `P0`, its byte length. `P0`'s hash is computed from its output file. `P1` and `P2` carry their hash in their run records (`P1` names it `finalSha256`, `P2` names it `outputSha256`). Neither record holds a byte length, so those rows have `bytes` null. `summary.json` reports `outputEqual` for `P1` and `P2` against `P0`'s hash.
+`raw.jsonl` holds one row per Durable Object event (`init`, `burn`, `d2-call`), one row per dirty-size object (`checkpoint-cost`), and two `prose` rows.
 
 ## Reproduce
 
 ```sh
-FOLIO_PHP_WASM_DIR=<directory with the interpreter module> node experiments/continuation-php/run.mjs P0
-FOLIO_PHP_WASM_DIR=<directory with the interpreter module> node experiments/continuation-php/run.mjs P1
+node experiments/continuation/build.ts
+node experiments/continuation/durable/run.ts d1    # deployed arms need account variables
 node experiments/continuation/export.ts
 node scripts/analyze/continuation.ts
 node scripts/research/evidence.ts
@@ -26,6 +29,8 @@ node scripts/research/evidence.ts
 
 ## Scope
 
-Local only. The refused regions delay parks until the next admissible poll, so a region longer than one event never completes. The strict generator-region check is not met in the recorded runs; the rows show each park's reason and refusal count, and the check's reading is left to the study record.
+Checkpoint costs are the row count and CPU time measured per object; the rows count includes index writes. The `d3` arm lost its driver output; its numbers come from the tail records as stated in the text.
 
-The "not met" reading used the wrong refused region. That check counted the whole generator loop as refused, which the specification got wrong. In the generator loop the first admissible poll is the consumer's `foreach` iteration, inside the loop. The park landed there, at event 42 (reason BUDGET, 26 refusals before it, in both `P1` and `P2`). The `summary.json` counts are unchanged.
+## Polled returns
+
+`pollReturnCpuMs` gives the cpu of each `ok` burn by event index. Event 2 returns at 32,475 or 32,476 ms, event 3 at 31,975 or 31,976 ms, and event 4 at 29,998 to 30,000 ms. The raw holds no kill line, so `leadMs` is not measured. Event 4 returns at the 30 s line, so it cannot show a lead either.
